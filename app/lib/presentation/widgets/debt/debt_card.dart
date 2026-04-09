@@ -29,7 +29,7 @@ class DebtCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                if (phone != null) Text(phone!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                if (phone != null) Text(phone!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
               ],
             ),
           ),

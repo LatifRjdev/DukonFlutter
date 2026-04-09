@@ -73,7 +73,7 @@ class PermissionToggleRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: enabled ? AppColors.textPrimary : AppColors.disabled,
+                    color: enabled ? AppColors.lightTextPrimary : AppColors.disabled,
                   ),
                 ),
                 if (description != null)
@@ -81,7 +81,7 @@ class PermissionToggleRow extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       description!,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                     ),
                   ),
               ],

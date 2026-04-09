@@ -146,7 +146,7 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                             selected: isSelected,
                             selectedColor: AppColors.primary.withValues(alpha: 0.2),
                             labelStyle: TextStyle(
-                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                              color: isSelected ? AppColors.primary : AppColors.lightTextPrimary,
                               fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                             ),
                             onSelected: (_) =>
@@ -207,7 +207,7 @@ class _StepDot extends StatelessWidget {
         ? AppColors.primary
         : isCompleted
             ? AppColors.success
-            : AppColors.divider;
+            : AppColors.lightBorder;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -224,7 +224,7 @@ class _StepDot extends StatelessWidget {
                 : Text(
                     '$index',
                     style: TextStyle(
-                      color: isActive ? Colors.white : AppColors.textSecondary,
+                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -236,7 +236,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.textSecondary,
+            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

@@ -64,7 +64,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const SizedBox(height: 8),
                   const Text(
                     'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   PhoneInputField(

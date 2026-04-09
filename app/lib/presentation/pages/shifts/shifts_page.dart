@@ -88,7 +88,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -176,7 +176,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                                     Icon(Icons.access_time, size: 64, color: AppColors.disabled),
                                     SizedBox(height: 16),
                                     Text('Нет смен',
-                                      style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                                      style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                                   ],
                                 ),
                               ),
@@ -231,7 +231,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
           Text('Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}',
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
           const SizedBox(height: 4),
           Text('Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}',
             style: const TextStyle(fontSize: 13)),
@@ -275,7 +275,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   Row(
                     children: [
                       Text(dateFormat.format(shift.openedAt),
-                        style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                        style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                       const SizedBox(width: 8),
                       Text(shift.staffName ?? '—',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
@@ -284,7 +284,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   const SizedBox(height: 4),
                   Text(
                     '${timeFormat.format(shift.openedAt)}–${shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                   ),
                 ],
               ),

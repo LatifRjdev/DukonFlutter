@@ -54,7 +54,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
   Color _roleColor(String role) {
     switch (role) {
       case 'OWNER':
-        return AppColors.accent;
+        return AppColors.warning;
       case 'ADMIN':
         return AppColors.info;
       case 'CASHIER':
@@ -62,7 +62,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
       case 'WAREHOUSE':
         return AppColors.warning;
       default:
-        return AppColors.textSecondary;
+        return AppColors.lightTextSecondary;
     }
   }
 
@@ -103,7 +103,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
-                  color: AppColors.card,
+                  color: AppColors.lightSurface,
                   child: Column(
                     children: [
                       CircleAvatar(
@@ -139,11 +139,11 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.phone, size: 16, color: AppColors.textSecondary),
+                            const Icon(Icons.phone, size: 16, color: AppColors.lightTextSecondary),
                             const SizedBox(width: 4),
                             Text(
                               member.phone!,
-                              style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                              style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
                             ),
                           ],
                         ),
@@ -163,7 +163,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                           _InfoColumn(
                             label: 'Статус',
                             value: member.isOnShift ? 'На смене' : 'Нет смены',
-                            valueColor: member.isOnShift ? AppColors.success : AppColors.textSecondary,
+                            valueColor: member.isOnShift ? AppColors.success : AppColors.lightTextSecondary,
                           ),
                         ],
                       ),
@@ -173,7 +173,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                 TabBar(
                   controller: _tabController,
                   labelColor: AppColors.primary,
-                  unselectedLabelColor: AppColors.textSecondary,
+                  unselectedLabelColor: AppColors.lightTextSecondary,
                   indicatorColor: AppColors.primary,
                   tabs: const [
                     Tab(text: 'Смены'),
@@ -215,11 +215,11 @@ class _InfoColumn extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
-            color: valueColor ?? AppColors.textPrimary,
+            color: valueColor ?? AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
       ],
     );
   }
@@ -240,7 +240,7 @@ class _ShiftsTab extends StatelessWidget {
         if (state is ShiftLoaded) {
           if (state.shifts.isEmpty) {
             return const Center(
-              child: Text('Нет смен', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+              child: Text('Нет смен', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
             );
           }
           return ListView.separated(
@@ -273,7 +273,7 @@ class _StatsTab extends StatelessWidget {
       child: Column(
         children: [
           _StatRow(label: 'Продажи сегодня', value: '${member.todaySales?.toStringAsFixed(0) ?? "0"} TJS'),
-          const Divider(height: 1, color: AppColors.divider),
+          const Divider(height: 1, color: AppColors.lightBorder),
           _StatRow(label: 'Дата регистрации', value: '${member.createdAt.day.toString().padLeft(2, '0')}.${member.createdAt.month.toString().padLeft(2, '0')}.${member.createdAt.year}'),
         ],
       ),
@@ -293,7 +293,7 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+          Text(label, style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
           Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         ],
       ),

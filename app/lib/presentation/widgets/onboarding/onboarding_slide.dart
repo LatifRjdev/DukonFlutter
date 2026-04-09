@@ -52,7 +52,7 @@ class OnboardingSlide extends StatelessWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: AppColors.lightTextPrimary,
               fontFamily: 'Inter',
               height: 1.2,
             ),
@@ -65,7 +65,7 @@ class OnboardingSlide extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: AppColors.textSecondary,
+              color: AppColors.lightTextSecondary,
               fontFamily: 'Inter',
               height: 1.5,
             ),

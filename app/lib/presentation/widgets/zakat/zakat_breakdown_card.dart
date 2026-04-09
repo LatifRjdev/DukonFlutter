@@ -31,13 +31,13 @@ class ZakatBreakdownCard extends StatelessWidget {
               const Text('Закят (2.5%)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               Text(
                 '${calculation.zakatDue.toStringAsFixed(2)} TJS',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: calculation.isAboveNisab ? AppColors.primary : AppColors.textSecondary),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: calculation.isAboveNisab ? AppColors.primary : AppColors.lightTextSecondary),
               ),
             ],
           ),
           if (!calculation.isAboveNisab) ...[
             const SizedBox(height: AppConstants.spacingSm),
-            const Text('Активы ниже нисаба. Закят не обязателен.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+            const Text('Активы ниже нисаба. Закят не обязателен.', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 12)),
           ],
         ],
       ),
@@ -53,7 +53,7 @@ class ZakatBreakdownCard extends StatelessWidget {
           Text(label, style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.normal)),
           Text(
             '${isNegative ? "-" : ""}${value.abs().toStringAsFixed(2)} TJS',
-            style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.w500, color: isNegative ? AppColors.error : AppColors.textPrimary),
+            style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.w500, color: isNegative ? AppColors.error : AppColors.lightTextPrimary),
           ),
         ],
       ),

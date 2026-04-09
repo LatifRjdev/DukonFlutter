@@ -19,10 +19,10 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.card,
+      color: AppColors.lightSurface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: 1,
-      shadowColor: AppColors.shadow,
+      shadowColor: AppColors.overlay,
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingSm + 4),
         child: Row(
@@ -37,7 +37,7 @@ class CartItemWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: AppColors.lightTextPrimary,
                       fontFamily: 'Inter',
                     ),
                     maxLines: 1,
@@ -48,7 +48,7 @@ class CartItemWidget extends StatelessWidget {
                     Formatters.price(item.unitPrice),
                     style: const TextStyle(
                       fontSize: 13,
-                      color: AppColors.textSecondary,
+                      color: AppColors.lightTextSecondary,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -75,7 +75,7 @@ class CartItemWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: AppColors.lightTextPrimary,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -96,7 +96,7 @@ class CartItemWidget extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: AppColors.lightTextPrimary,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -123,7 +123,7 @@ class CartItemWidget extends StatelessWidget {
 
   Widget _buildQuantityButton(IconData icon, VoidCallback onTap) {
     return Material(
-      color: AppColors.background,
+      color: AppColors.lightBackground,
       borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       child: InkWell(
         onTap: onTap,

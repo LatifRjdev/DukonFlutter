@@ -72,7 +72,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
             const SizedBox(height: 16),
             const Center(
               child: Text('Список клиентов пуст',
-                  style: TextStyle(color: AppColors.textSecondary)),
+                  style: TextStyle(color: AppColors.lightTextSecondary)),
             ),
             const SizedBox(height: 16),
             AppButton(
@@ -205,14 +205,14 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                 const Text('Сумма долга',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: AppColors.textSecondary)),
+                                        color: AppColors.lightTextSecondary)),
                                 const SizedBox(height: 8),
                                 Text(
                                   '${total.toStringAsFixed(2)} сом.',
                                   style: const TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.accent,
+                                    color: AppColors.warning,
                                   ),
                                 ),
                               ],
@@ -252,13 +252,13 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                           ? FontWeight.w600
                                           : FontWeight.normal,
                                       color: _selectedCustomerId != null
-                                          ? AppColors.textPrimary
-                                          : AppColors.textHint,
+                                          ? AppColors.lightTextPrimary
+                                          : AppColors.lightTextHint,
                                     ),
                                   ),
                                 ),
                                 const Icon(Icons.chevron_right,
-                                    color: AppColors.textSecondary),
+                                    color: AppColors.lightTextSecondary),
                               ],
                             ),
                           ),
@@ -281,7 +281,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                 ),
                                 const Spacer(),
                                 const Icon(Icons.edit_outlined,
-                                    size: 20, color: AppColors.textSecondary),
+                                    size: 20, color: AppColors.lightTextSecondary),
                               ],
                             ),
                           ),

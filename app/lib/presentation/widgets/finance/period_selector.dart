@@ -27,14 +27,14 @@ class PeriodSelector extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.card,
+                color: isSelected ? AppColors.primary : AppColors.lightSurface,
                 borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
               ),
               alignment: Alignment.center,
               child: Text(
                 p.$2,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.textSecondary,
+                  color: isSelected ? Colors.white : AppColors.lightTextSecondary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   fontSize: 13,
                 ),

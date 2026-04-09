@@ -68,7 +68,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -127,7 +127,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                         ),
                         RadioListTile<String>(
                           title: const Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                          subtitle: const Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                           value: 'gold',
                           groupValue: _nisabStandard,
                           activeColor: AppColors.primary,
@@ -136,7 +136,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                         ),
                         RadioListTile<String>(
                           title: const Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                          subtitle: const Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                           value: 'silver',
                           groupValue: _nisabStandard,
                           activeColor: AppColors.primary,
@@ -220,12 +220,12 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                         _haulStartDate != null
                                             ? '${_haulStartDate!.day.toString().padLeft(2, '0')}.${_haulStartDate!.month.toString().padLeft(2, '0')}.${_haulStartDate!.year}'
                                             : 'Не выбрана',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
+                                const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 18),
                               ],
                             ),
                           ),
@@ -252,7 +252,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                     Text('Напоминание',
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                     Text('За 30 дней до окончания хавля',
-                                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                                   ],
                                 ),
                               ),
@@ -320,7 +320,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
 
   Widget _buildSectionLabel(String title) {
     return Text(title,
-      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600));
+      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600));
   }
 
   Widget _buildCard(List<Widget> children) {
@@ -347,7 +347,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               children: [
                 Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 if (subtitle != null)
-                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
               ],
             ),
           ),

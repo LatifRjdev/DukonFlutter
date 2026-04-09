@@ -41,7 +41,7 @@ class ImportProductsPage extends StatelessWidget {
               const Text(
                 'Импорт товаров из Excel и CSV файлов будет доступен в следующем обновлении.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: AppColors.textSecondary, height: 1.5),
+                style: TextStyle(fontSize: 16, color: AppColors.lightTextSecondary, height: 1.5),
               ),
               const SizedBox(height: 32),
               AppCard(
@@ -61,7 +61,7 @@ class ImportProductsPage extends StatelessWidget {
                       '• Шаблон для заполнения\n'
                       '• Предварительный просмотр данных\n'
                       '• Массовое создание товаров',
-                      style: TextStyle(color: AppColors.textSecondary, height: 1.6),
+                      style: TextStyle(color: AppColors.lightTextSecondary, height: 1.6),
                     ),
                   ],
                 ),

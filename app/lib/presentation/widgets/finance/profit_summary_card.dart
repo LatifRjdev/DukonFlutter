@@ -39,7 +39,7 @@ class ProfitSummaryCard extends StatelessWidget {
         Text(label, style: TextStyle(
           fontSize: isBold ? 16 : 14,
           fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
-          color: AppColors.textPrimary,
+          color: AppColors.lightTextPrimary,
         )),
         Text(
           '${value.toStringAsFixed(2)} $currency',

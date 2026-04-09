@@ -81,7 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.lightBackground,
         body: SafeArea(
           child: Column(
             children: [
@@ -201,12 +201,12 @@ class _DashboardPageState extends State<DashboardPage> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: AppColors.lightTextPrimary,
                         ),
                       ),
                       if (stores.length > 1)
                         const Icon(Icons.keyboard_arrow_down,
-                          color: AppColors.textSecondary),
+                          color: AppColors.lightTextSecondary),
                     ],
                   ),
                 );
@@ -221,7 +221,7 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined,
-                  color: AppColors.textPrimary),
+                  color: AppColors.lightTextPrimary),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Уведомления скоро появятся')),
@@ -279,7 +279,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     : Icons.radio_button_unchecked,
                 color: store.id == selectedId
                     ? AppColors.primary
-                    : AppColors.textSecondary,
+                    : AppColors.lightTextSecondary,
               ),
               title: Text(store.name),
               onTap: () {
@@ -312,14 +312,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     borderRadius: BorderRadius.circular(20),
                     border: isActive
                         ? null
-                        : Border.all(color: AppColors.divider),
+                        : Border.all(color: AppColors.lightBorder),
                   ),
                   child: Text(
                     p['label']!,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: isActive ? Colors.white : AppColors.textSecondary,
+                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
@@ -344,10 +344,10 @@ class _DashboardPageState extends State<DashboardPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.divider),
+                border: Border.all(color: AppColors.lightBorder),
               ),
               child: const Icon(Icons.calendar_today,
-                size: 16, color: AppColors.textSecondary),
+                size: 16, color: AppColors.lightTextSecondary),
             ),
           ),
         ],
@@ -366,7 +366,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 title: 'Продажи',
                 value: _formatPrice(stats.todayRevenue),
                 icon: Icons.trending_up,
-                valueColor: AppColors.textPrimary,
+                valueColor: AppColors.lightTextPrimary,
                 showArrow: true,
                 onTap: () => context.push('/sales/history', extra: _getStoreId()),
               ),
@@ -377,7 +377,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 title: 'Себестоимость',
                 value: _formatPrice(stats.todayCost),
                 icon: Icons.inventory_2_outlined,
-                valueColor: AppColors.textPrimary,
+                valueColor: AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -501,7 +501,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Icon(Icons.receipt_long, size: 48, color: AppColors.disabled),
                     const SizedBox(height: 8),
                     const Text('Пока нет продаж',
-                      style: TextStyle(color: AppColors.textSecondary)),
+                      style: TextStyle(color: AppColors.lightTextSecondary)),
                   ],
                 ),
               ),
@@ -548,7 +548,7 @@ class _KpiCard extends StatelessWidget {
               Icon(icon, size: 18, color: valueColor),
               const Spacer(),
               if (showArrow)
-                const Icon(Icons.chevron_right, size: 18, color: AppColors.textSecondary),
+                const Icon(Icons.chevron_right, size: 18, color: AppColors.lightTextSecondary),
             ],
           ),
           const SizedBox(height: 8),
@@ -561,7 +561,7 @@ class _KpiCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(title,
-            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
         ],
       ),
     );
@@ -599,7 +599,7 @@ class _QuickActionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
-              color: AppColors.shadow,
+              color: AppColors.overlay,
               blurRadius: 8,
               offset: Offset(0, 2),
             ),
@@ -622,7 +622,7 @@ class _QuickActionCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textPrimary,
+                color: AppColors.lightTextPrimary,
               ),
             ),
             if (subtitle.isNotEmpty) ...[
@@ -631,7 +631,7 @@ class _QuickActionCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: subtitleColor ?? AppColors.textSecondary,
+                  color: subtitleColor ?? AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -687,7 +687,7 @@ class _SaleCard extends StatelessWidget {
                 Text(
                   '${timeFormat.format(sale.createdAt)} · $paymentLabel',
                   style: const TextStyle(
-                    fontSize: 12, color: AppColors.textSecondary),
+                    fontSize: 12, color: AppColors.lightTextSecondary),
                 ),
               ],
             ),

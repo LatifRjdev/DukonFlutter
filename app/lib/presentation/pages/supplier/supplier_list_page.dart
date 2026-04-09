@@ -121,7 +121,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddSupplierDialog,
@@ -160,8 +160,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   onChanged: (_) => _loadSuppliers(),
                   decoration: const InputDecoration(
                     hintText: 'Поиск поставщика',
-                    hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+                    hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
@@ -189,7 +189,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           children: [
                             Icon(Icons.local_shipping_outlined, size: 64, color: AppColors.disabled),
                             SizedBox(height: 16),
-                            Text('Поставщиков пока нет', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                            Text('Поставщиков пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                           ],
                         ),
                       );
@@ -256,7 +256,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                         if (supplier.phone != null && supplier.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(supplier.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                                         ],
                                       ],
                                     ),
@@ -277,7 +277,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                     ],
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
                                 ],
                               ),
                             ),

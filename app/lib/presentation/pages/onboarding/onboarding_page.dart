@@ -72,7 +72,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         width: _currentPage == i ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == i ? AppColors.primary : AppColors.divider,
+                          color: _currentPage == i ? AppColors.primary : AppColors.lightBorder,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -142,7 +142,7 @@ class _OnboardingSlide extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(description,
-            style: const TextStyle(fontSize: 16, color: AppColors.textSecondary),
+            style: const TextStyle(fontSize: 16, color: AppColors.lightTextSecondary),
             textAlign: TextAlign.center,
           ),
         ],

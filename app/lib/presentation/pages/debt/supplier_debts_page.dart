@@ -97,7 +97,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                   ),
                   child: Column(
                     children: [
-                      const Text('Наш долг', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                      const Text('Наш долг', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.debt.toStringAsFixed(2)} TJS',
@@ -129,7 +129,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                   const Center(
                     child: Padding(
                       padding: EdgeInsets.all(AppConstants.spacingXl),
-                      child: Text('Нет записей об оплате', style: TextStyle(color: AppColors.textSecondary)),
+                      child: Text('Нет записей об оплате', style: TextStyle(color: AppColors.lightTextSecondary)),
                     ),
                   )
                 else
@@ -160,7 +160,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                                 children: [
                                   Text(method == 'CASH' ? 'Наличные' : 'Карта', style: const TextStyle(fontWeight: FontWeight.w500)),
                                   if (notes != null && notes.isNotEmpty)
-                                    Text(notes, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    Text(notes, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
                                 ],
                               ),
                             ),
@@ -169,7 +169,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                               children: [
                                 Text('${amount.toStringAsFixed(2)} TJS', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.success)),
                                 if (date.isNotEmpty)
-                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                               ],
                             ),
                           ],

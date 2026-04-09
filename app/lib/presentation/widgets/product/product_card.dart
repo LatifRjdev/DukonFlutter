@@ -17,10 +17,10 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.card,
+      color: AppColors.lightSurface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.shadow,
+      shadowColor: AppColors.overlay,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.background,
+                  color: AppColors.lightBackground,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(AppConstants.cardRadius),
                   ),
@@ -66,7 +66,7 @@ class ProductCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.lightTextPrimary,
                         fontFamily: 'Inter',
                       ),
                       maxLines: 2,
@@ -103,7 +103,7 @@ class ProductCard extends StatelessWidget {
     return const Center(
       child: Icon(
         Icons.inventory_2_outlined,
-        color: AppColors.textHint,
+        color: AppColors.lightTextHint,
         size: 40,
       ),
     );

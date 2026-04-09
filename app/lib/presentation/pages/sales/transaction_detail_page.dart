@@ -38,7 +38,7 @@ class TransactionDetailPage extends StatelessWidget {
       case 'COMPLETED': return AppColors.success;
       case 'REFUNDED': return AppColors.error;
       case 'PARTIALLY_REFUNDED': return const Color(0xFFFF9800);
-      default: return AppColors.textSecondary;
+      default: return AppColors.lightTextSecondary;
     }
   }
 
@@ -47,7 +47,7 @@ class TransactionDetailPage extends StatelessWidget {
     final dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -135,7 +135,7 @@ class TransactionDetailPage extends StatelessWidget {
                               child: Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text('Нет данных о товарах',
-                                  style: TextStyle(color: AppColors.textSecondary)),
+                                  style: TextStyle(color: AppColors.lightTextSecondary)),
                               ),
                             )
                           else
@@ -158,7 +158,7 @@ class TransactionDetailPage extends StatelessWidget {
                                             Text('${item.quantity} шт × ${_formatPrice(item.unitPrice)}',
                                               style: const TextStyle(
                                                 fontSize: 13,
-                                                color: AppColors.textSecondary,
+                                                color: AppColors.lightTextSecondary,
                                               )),
                                           ],
                                         ),
@@ -216,7 +216,7 @@ class TransactionDetailPage extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(color: AppColors.shadow, blurRadius: 8, offset: Offset(0, -2)),
+                  BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
                 ],
               ),
               child: Row(
@@ -275,7 +275,7 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+        Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
     );
@@ -296,7 +296,7 @@ class _TotalRow extends StatelessWidget {
       children: [
         Text(label,
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: AppColors.lightTextSecondary,
             fontSize: isBold ? 16 : 14,
           )),
         Text(value,

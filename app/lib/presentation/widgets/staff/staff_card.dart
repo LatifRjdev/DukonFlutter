@@ -29,7 +29,7 @@ class StaffCard extends StatelessWidget {
   Color _roleColor(String role) {
     switch (role) {
       case 'OWNER':
-        return AppColors.accent;
+        return AppColors.warning;
       case 'ADMIN':
         return AppColors.info;
       case 'CASHIER':
@@ -37,7 +37,7 @@ class StaffCard extends StatelessWidget {
       case 'WAREHOUSE':
         return AppColors.warning;
       default:
-        return AppColors.textSecondary;
+        return AppColors.lightTextSecondary;
     }
   }
 
@@ -105,7 +105,7 @@ class StaffCard extends StatelessWidget {
                       const SizedBox(width: AppConstants.spacingSm),
                       Text(
                         staff.phone!,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                       ),
                     ],
                   ],
@@ -123,7 +123,7 @@ class StaffCard extends StatelessWidget {
                 ),
                 const Text(
                   'сегодня',
-                  style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
                 ),
               ],
             ),

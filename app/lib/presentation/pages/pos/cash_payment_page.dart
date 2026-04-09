@@ -113,7 +113,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             child: Column(
                               children: [
                                 const Text('Сумма к оплате',
-                                  style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                                  style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                                 const SizedBox(height: 8),
                                 Text(_formatPrice(total),
                                   style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
@@ -126,7 +126,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Получено от клиента',
-                              style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                              style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -142,7 +142,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               hintStyle: const TextStyle(fontSize: 24, color: AppColors.disabled),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: AppColors.divider),
+                                borderSide: const BorderSide(color: AppColors.lightBorder),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -171,7 +171,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.divider),
+                                      border: Border.all(color: AppColors.lightBorder),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: const Center(
@@ -257,7 +257,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.divider),
+            border: Border.all(color: AppColors.lightBorder),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(

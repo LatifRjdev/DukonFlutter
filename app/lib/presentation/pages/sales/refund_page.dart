@@ -171,7 +171,7 @@ class _RefundPageState extends State<RefundPage> {
                               child: Text(
                                 'Выберите товары для возврата',
                                 style: TextStyle(
-                                    color: AppColors.textPrimary,
+                                    color: AppColors.lightTextPrimary,
                                     fontSize: 14),
                               ),
                             ),
@@ -185,7 +185,7 @@ class _RefundPageState extends State<RefundPage> {
                         'Чек ${widget.sale.receiptNo}',
                         style: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: AppColors.lightTextSecondary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -289,7 +289,7 @@ class _RefundPageState extends State<RefundPage> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.shadow,
+                      color: AppColors.overlay,
                       blurRadius: 8,
                       offset: Offset(0, -2),
                     ),
@@ -304,7 +304,7 @@ class _RefundPageState extends State<RefundPage> {
                         const Text('Сумма возврата:',
                             style: TextStyle(
                                 fontSize: 16,
-                                color: AppColors.textSecondary)),
+                                color: AppColors.lightTextSecondary)),
                         Text(
                           Formatters.price(_refundTotal),
                           style: const TextStyle(

@@ -17,10 +17,10 @@ class QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.card,
+      color: AppColors.lightSurface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.shadow,
+      shadowColor: AppColors.overlay,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -49,7 +49,7 @@ class QuickActionCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: AppColors.lightTextPrimary,
                   fontFamily: 'Inter',
                 ),
                 maxLines: 2,

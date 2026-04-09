@@ -53,10 +53,10 @@ class MonthSelector extends StatelessWidget {
         vertical: AppConstants.spacingXs,
       ),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         boxShadow: const [
-          BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -64,7 +64,7 @@ class MonthSelector extends StatelessWidget {
         children: [
           IconButton(
             onPressed: _previous,
-            icon: const Icon(Icons.chevron_left, color: AppColors.textPrimary),
+            icon: const Icon(Icons.chevron_left, color: AppColors.lightTextPrimary),
           ),
           Text(
             '${_monthNames[month - 1]} $year',
@@ -75,7 +75,7 @@ class MonthSelector extends StatelessWidget {
           ),
           IconButton(
             onPressed: _next,
-            icon: const Icon(Icons.chevron_right, color: AppColors.textPrimary),
+            icon: const Icon(Icons.chevron_right, color: AppColors.lightTextPrimary),
           ),
         ],
       ),

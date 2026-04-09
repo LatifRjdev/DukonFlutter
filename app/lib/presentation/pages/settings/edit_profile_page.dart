@@ -151,12 +151,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Безопасность',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             decoration: BoxDecoration(
-                              color: AppColors.background,
+                              color: AppColors.lightBackground,
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Column(
@@ -164,7 +164,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ListTile(
                                   title: const Text('Сменить пароль',
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                                  trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+                                  trailing: const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
                                   onTap: () => context.push('/settings/password'),
                                 ),
                               ],
@@ -214,11 +214,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       enabled: enabled,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        labelStyle: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.divider),
+          borderSide: const BorderSide(color: AppColors.lightBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

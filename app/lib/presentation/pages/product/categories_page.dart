@@ -171,13 +171,13 @@ class CategoriesPage extends StatelessWidget {
                             Text('${category.productCount} ${_pluralizeProducts(category.productCount)}',
                                 style: const TextStyle(
                                     fontSize: 13,
-                                    color: AppColors.textSecondary)),
+                                    color: AppColors.lightTextSecondary)),
                           ],
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.edit_outlined,
-                            size: 20, color: AppColors.textSecondary),
+                            size: 20, color: AppColors.lightTextSecondary),
                         onPressed: () => _showCategoryDialog(
                           context,
                           id: category.id,

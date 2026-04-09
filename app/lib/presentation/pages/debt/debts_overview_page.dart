@@ -66,7 +66,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           ),
                           child: Column(
                             children: [
-                              const Text('Нам должны', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                              const Text('Нам должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalCustomerDebt.toStringAsFixed(2)} TJS',
@@ -86,7 +86,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           ),
                           child: Column(
                             children: [
-                              const Text('Мы должны', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                              const Text('Мы должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalSupplierDebt.toStringAsFixed(2)} TJS',
@@ -146,7 +146,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           children: [
                             Icon(Icons.check_circle_outline, size: 64, color: AppColors.success),
                             const SizedBox(height: AppConstants.spacingMd),
-                            const Text('Нет активных долгов', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                            const Text('Нет активных долгов', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                           ],
                         ),
                       ),

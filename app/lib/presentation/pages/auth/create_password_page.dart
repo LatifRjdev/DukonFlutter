@@ -74,7 +74,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                   const SizedBox(height: 8),
                   const Text(
                     'Создайте новый пароль для вашего аккаунта',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   AppTextField(

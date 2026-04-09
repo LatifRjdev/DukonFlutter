@@ -17,10 +17,10 @@ class ProductListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.card,
+      color: AppColors.lightSurface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.shadow,
+      shadowColor: AppColors.overlay,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -33,7 +33,7 @@ class ProductListItem extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: AppColors.background,
+                  color: AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: product.imageUrl != null
@@ -58,7 +58,7 @@ class ProductListItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.lightTextPrimary,
                         fontFamily: 'Inter',
                       ),
                       maxLines: 1,
@@ -70,7 +70,7 @@ class ProductListItem extends StatelessWidget {
                         'SKU: ${product.sku}',
                         style: const TextStyle(
                           fontSize: 12,
-                          color: AppColors.textSecondary,
+                          color: AppColors.lightTextSecondary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -101,7 +101,7 @@ class ProductListItem extends StatelessWidget {
     return const Center(
       child: Icon(
         Icons.inventory_2_outlined,
-        color: AppColors.textHint,
+        color: AppColors.lightTextHint,
         size: 28,
       ),
     );

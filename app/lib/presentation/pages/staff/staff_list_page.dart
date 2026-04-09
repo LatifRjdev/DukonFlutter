@@ -33,9 +33,9 @@ class _StaffListPageState extends State<StaffListPage> {
   Color _roleBadgeColor(String role) {
     switch (role.toUpperCase()) {
       case 'ADMIN': return AppColors.primary;
-      case 'CASHIER': return AppColors.textSecondary;
+      case 'CASHIER': return AppColors.lightTextSecondary;
       case 'WAREHOUSE': return const Color(0xFF9C27B0);
-      default: return AppColors.textSecondary;
+      default: return AppColors.lightTextSecondary;
     }
   }
 
@@ -52,7 +52,7 @@ class _StaffListPageState extends State<StaffListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/staff/add', extra: widget.storeId),
@@ -97,7 +97,7 @@ class _StaffListPageState extends State<StaffListPage> {
                             Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
                             SizedBox(height: 16),
                             Text('Сотрудников пока нет',
-                              style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                           ],
                         ),
                       );
@@ -167,7 +167,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                               isOnShift ? 'На смене' : 'Не на смене',
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                color: isOnShift ? AppColors.success : AppColors.textSecondary,
+                                                color: isOnShift ? AppColors.success : AppColors.lightTextSecondary,
                                               ),
                                             ),
                                             if (isOnShift && staff.todaySales != null && staff.todaySales! > 0) ...[
@@ -186,7 +186,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
                                 ],
                               ),
                             ),

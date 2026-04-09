@@ -132,7 +132,7 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.divider),
+                    border: Border.all(color: AppColors.lightBorder),
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                   child: DropdownButtonHideUnderline(

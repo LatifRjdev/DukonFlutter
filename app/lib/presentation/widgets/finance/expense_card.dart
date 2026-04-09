@@ -57,7 +57,7 @@ class ExpenseCard extends StatelessWidget {
               children: [
                 Text(_categoryLabel(expense.category), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 if (expense.description != null)
-                  Text(expense.description!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(expense.description!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -65,7 +65,7 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('-${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.error, fontSize: 14)),
-              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
             ],
           ),
           if (onDelete != null) ...[

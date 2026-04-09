@@ -82,26 +82,26 @@ class _SupplierDetailView extends StatelessWidget {
                         Text(supplier.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                         if (supplier.phone != null) ...[
                           const SizedBox(height: 4),
-                          Text(supplier.phone!, style: const TextStyle(color: AppColors.textSecondary)),
+                          Text(supplier.phone!, style: const TextStyle(color: AppColors.lightTextSecondary)),
                         ],
                         if (supplier.email != null) ...[
                           const SizedBox(height: 2),
-                          Text(supplier.email!, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                          Text(supplier.email!, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
                         ],
                         if (supplier.address != null && supplier.address!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.location_on, size: 16, color: AppColors.textSecondary),
+                              const Icon(Icons.location_on, size: 16, color: AppColors.lightTextSecondary),
                               const SizedBox(width: 4),
-                              Text(supplier.address!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                              Text(supplier.address!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                             ],
                           ),
                         ],
                         if (supplier.notes != null && supplier.notes!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
-                          Text(supplier.notes!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary), textAlign: TextAlign.center),
+                          Text(supplier.notes!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
                         ],
                       ],
                     ),

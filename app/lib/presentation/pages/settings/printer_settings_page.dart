@@ -52,17 +52,17 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                   decoration: BoxDecoration(
                     color: state.connectedDevice != null
                         ? AppColors.success.withValues(alpha: 0.1)
-                        : AppColors.background,
+                        : AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                     border: Border.all(
-                      color: state.connectedDevice != null ? AppColors.success : AppColors.divider,
+                      color: state.connectedDevice != null ? AppColors.success : AppColors.lightBorder,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         state.connectedDevice != null ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
-                        color: state.connectedDevice != null ? AppColors.success : AppColors.textSecondary,
+                        color: state.connectedDevice != null ? AppColors.success : AppColors.lightTextSecondary,
                         size: 28,
                       ),
                       const SizedBox(width: 12),
@@ -75,13 +75,13 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: state.connectedDevice != null ? AppColors.success : AppColors.textSecondary,
+                                color: state.connectedDevice != null ? AppColors.success : AppColors.lightTextSecondary,
                               ),
                             ),
                             if (state.connectedDevice != null)
                               Text(
                                 state.connectedDevice!.name,
-                                style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                                style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
                               ),
                           ],
                         ),
@@ -99,13 +99,13 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                 // Default printer
                 if (state.defaultPrinterName != null) ...[
                   const Text('Принтер по умолчанию',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(AppConstants.spacingSm),
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: AppColors.lightBackground,
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                     child: Text(state.defaultPrinterName!, style: const TextStyle(fontSize: 14)),
@@ -185,9 +185,9 @@ class _DeviceTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(AppConstants.spacingSm),
       decoration: BoxDecoration(
-        color: isConnected ? AppColors.success.withValues(alpha: 0.05) : AppColors.card,
+        color: isConnected ? AppColors.success.withValues(alpha: 0.05) : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: isConnected ? AppColors.success : AppColors.divider),
+        border: Border.all(color: isConnected ? AppColors.success : AppColors.lightBorder),
       ),
       child: Row(
         children: [
@@ -219,7 +219,7 @@ class _DeviceTile extends StatelessWidget {
                   ],
                 ),
                 if (device.address != null)
-                  Text(device.address!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  Text(device.address!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
               ],
             ),
           ),

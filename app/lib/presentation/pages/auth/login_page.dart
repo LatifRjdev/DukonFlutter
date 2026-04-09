@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   const Text('Введите номер телефона и пароль',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                   const SizedBox(height: 40),
                   PhoneInputField(
                     controller: _phoneController,

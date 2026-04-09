@@ -49,7 +49,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
       height: sheetHeight,
       constraints: BoxConstraints(maxHeight: maxHeight),
       decoration: const BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.lightSurface,
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppConstants.radiusXl),
         ),
@@ -65,7 +65,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: AppColors.lightBorder,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -89,7 +89,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Inter',
-                      color: AppColors.textPrimary,
+                      color: AppColors.lightTextPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -99,7 +99,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(
                     Icons.close_rounded,
-                    color: AppColors.textSecondary,
+                    color: AppColors.lightTextSecondary,
                   ),
                   splashRadius: 20,
                   tooltip: 'Пӯшидан',
@@ -108,7 +108,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
             ),
           ),
 
-          const Divider(height: 1, color: AppColors.divider),
+          const Divider(height: 1, color: AppColors.lightBorder),
 
           // Content
           if (sheetHeight != null)

@@ -19,9 +19,9 @@ class ReceiptWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingLg),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: AppColors.lightBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,7 +33,7 @@ class ReceiptWidget extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: AppColors.lightTextPrimary,
               fontFamily: 'Inter',
             ),
           ),
@@ -43,7 +43,7 @@ class ReceiptWidget extends StatelessWidget {
             '#${sale.receiptNo}',
             style: const TextStyle(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: AppColors.lightTextSecondary,
               fontFamily: 'Inter',
             ),
           ),
@@ -53,7 +53,7 @@ class ReceiptWidget extends StatelessWidget {
             Formatters.dateTime(sale.createdAt),
             style: const TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: AppColors.lightTextSecondary,
               fontFamily: 'Inter',
             ),
           ),
@@ -71,7 +71,7 @@ class ReceiptWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: AppColors.lightTextSecondary,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -83,7 +83,7 @@ class ReceiptWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: AppColors.lightTextSecondary,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -96,7 +96,7 @@ class ReceiptWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: AppColors.lightTextSecondary,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -115,7 +115,7 @@ class ReceiptWidget extends StatelessWidget {
                         item.productName,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: AppColors.textPrimary,
+                          color: AppColors.lightTextPrimary,
                           fontFamily: 'Inter',
                         ),
                         maxLines: 1,
@@ -128,7 +128,7 @@ class ReceiptWidget extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: AppColors.textPrimary,
+                          color: AppColors.lightTextPrimary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -140,7 +140,7 @@ class ReceiptWidget extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: AppColors.textPrimary,
+                          color: AppColors.lightTextPrimary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -178,7 +178,7 @@ class ReceiptWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: AppColors.lightTextSecondary,
               fontFamily: 'Inter',
             ),
           ),
@@ -199,7 +199,7 @@ class ReceiptWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
-              color: AppColors.textPrimary,
+              color: AppColors.lightTextPrimary,
               fontFamily: 'Inter',
             ),
           ),
@@ -208,7 +208,7 @@ class ReceiptWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: AppColors.lightTextPrimary,
               fontFamily: 'Inter',
             ),
           ),
@@ -231,7 +231,7 @@ class ReceiptWidget extends StatelessWidget {
               width: dashWidth,
               height: 1,
               child: DecoratedBox(
-                decoration: BoxDecoration(color: AppColors.divider),
+                decoration: BoxDecoration(color: AppColors.lightBorder),
               ),
             );
           }),

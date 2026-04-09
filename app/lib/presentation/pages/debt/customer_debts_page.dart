@@ -134,7 +134,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                   ),
                   child: Column(
                     children: [
-                      const Text('Общий долг', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                      const Text('Общий долг', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.totalDebt.toStringAsFixed(2)} TJS',
@@ -147,7 +147,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                 const Text('Продажи с долгом', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppConstants.spacingSm),
                 if (state.sales.isEmpty)
-                  const Center(child: Text('Нет продаж с долгом', style: TextStyle(color: AppColors.textSecondary)))
+                  const Center(child: Text('Нет продаж с долгом', style: TextStyle(color: AppColors.lightTextSecondary)))
                 else
                   ...state.sales.map((sale) {
                     final saleId = sale['id'] as String? ?? '';
@@ -189,9 +189,9 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Итого: ${total.toStringAsFixed(2)} TJS', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                                Text('Итого: ${total.toStringAsFixed(2)} TJS', style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                                 if (date.isNotEmpty)
-                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                               ],
                             ),
                             const SizedBox(height: AppConstants.spacingSm),

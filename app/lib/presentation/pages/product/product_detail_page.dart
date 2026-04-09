@@ -54,7 +54,7 @@ class ProductDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -205,7 +205,7 @@ class ProductDetailPage extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: const [
-                          BoxShadow(color: AppColors.shadow, blurRadius: 8, offset: Offset(0, 2)),
+                          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, 2)),
                         ],
                       ),
                       child: Column(
@@ -220,7 +220,7 @@ class ProductDetailPage extends StatelessWidget {
                               Text('Текущий остаток: ${product.quantity} $unitName',
                                 style: const TextStyle(fontSize: 14)),
                               Text('Минимальный: ${product.minQuantity} $unitName',
-                                style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                                style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -229,7 +229,7 @@ class ProductDetailPage extends StatelessWidget {
                             child: LinearProgressIndicator(
                               value: stockPercent,
                               minHeight: 8,
-                              backgroundColor: AppColors.divider,
+                              backgroundColor: AppColors.lightBorder,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 product.isOutOfStock
                                     ? AppColors.error
@@ -252,7 +252,7 @@ class ProductDetailPage extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: const [
-                          BoxShadow(color: AppColors.shadow, blurRadius: 8, offset: Offset(0, 2)),
+                          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, 2)),
                         ],
                       ),
                       child: Column(
@@ -282,7 +282,7 @@ class ProductDetailPage extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(color: AppColors.shadow, blurRadius: 8, offset: Offset(0, -2)),
+                  BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
                 ],
               ),
               child: Row(
@@ -427,7 +427,7 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+        Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
     );

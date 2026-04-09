@@ -185,11 +185,11 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           width: double.infinity,
                           height: 160,
                           decoration: BoxDecoration(
-                            color: AppColors.background,
+                            color: AppColors.lightBackground,
                             borderRadius:
                                 BorderRadius.circular(AppConstants.cardRadius),
                             border: Border.all(
-                              color: AppColors.divider,
+                              color: AppColors.lightBorder,
                               style: BorderStyle.solid,
                             ),
                           ),
@@ -205,7 +205,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                                     SizedBox(height: 8),
                                     Text('Нажмите для загрузки',
                                         style: TextStyle(
-                                            color: AppColors.textSecondary)),
+                                            color: AppColors.lightTextSecondary)),
                                   ],
                                 ),
                         ),
@@ -270,7 +270,7 @@ class _StepDot extends StatelessWidget {
         ? AppColors.primary
         : isCompleted
             ? AppColors.success
-            : AppColors.divider;
+            : AppColors.lightBorder;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -287,7 +287,7 @@ class _StepDot extends StatelessWidget {
                 : Text(
                     '$index',
                     style: TextStyle(
-                      color: isActive ? Colors.white : AppColors.textSecondary,
+                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -299,7 +299,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.textSecondary,
+            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

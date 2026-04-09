@@ -39,7 +39,7 @@ class EmptyProductsPage extends StatelessWidget {
               const Text(
                 'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом',
                 style: TextStyle(
-                    color: AppColors.textSecondary, fontSize: 15, height: 1.4),
+                    color: AppColors.lightTextSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

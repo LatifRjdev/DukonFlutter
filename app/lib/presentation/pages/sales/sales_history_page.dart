@@ -58,7 +58,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -135,7 +135,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                             Text('Нет продаж', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                             SizedBox(height: 8),
                             Text('История продаж появится здесь',
-                              style: TextStyle(color: AppColors.textSecondary)),
+                              style: TextStyle(color: AppColors.lightTextSecondary)),
                           ],
                         ),
                       );
@@ -209,13 +209,13 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.divider),
+          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
         ),
         child: Text(label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
           )),
       ),
     );
@@ -289,7 +289,7 @@ class _SaleCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
-            BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 1)),
+            BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
           ],
         ),
         child: Row(
@@ -316,7 +316,7 @@ class _SaleCard extends StatelessWidget {
                       Text('Чек ${sale.receiptNo}',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(dateFormat.format(sale.createdAt),
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -325,7 +325,7 @@ class _SaleCard extends StatelessWidget {
                     children: [
                       Text(
                         '${sale.customerName ?? 'Розничный'}  •  ${sale.items.length} товаров',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                       ),
                     ],
                   ),
@@ -338,17 +338,17 @@ class _SaleCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: isRefund ? AppColors.error : AppColors.textPrimary,
+                          color: isRefund ? AppColors.error : AppColors.lightTextPrimary,
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(_paymentIcon(), size: 14, color: AppColors.textSecondary),
+                          Icon(_paymentIcon(), size: 14, color: AppColors.lightTextSecondary),
                           const SizedBox(width: 4),
                           Text(isRefund ? 'Возврат' : _paymentLabel(),
                             style: TextStyle(
                               fontSize: 12,
-                              color: isRefund ? AppColors.error : AppColors.textSecondary,
+                              color: isRefund ? AppColors.error : AppColors.lightTextSecondary,
                             )),
                         ],
                       ),

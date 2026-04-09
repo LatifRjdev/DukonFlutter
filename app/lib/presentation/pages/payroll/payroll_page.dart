@@ -159,7 +159,7 @@ class _PayrollPageState extends State<PayrollPage> {
             const SizedBox(height: AppConstants.spacingMd),
             const Text(
               'Выберите месяц и нажмите "Рассчитать"',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
             ),
           ],
         ),
@@ -179,12 +179,12 @@ class _PayrollPageState extends State<PayrollPage> {
               const SizedBox(height: AppConstants.spacingMd),
               const Text(
                 'Нет данных по зарплате',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
               ),
               const SizedBox(height: AppConstants.spacingSm),
               const Text(
                 'Выберите месяц и нажмите "Рассчитать"',
-                style: TextStyle(color: AppColors.textHint, fontSize: 14),
+                style: TextStyle(color: AppColors.lightTextHint, fontSize: 14),
               ),
             ],
           ),
@@ -272,7 +272,7 @@ class _PayrollPageState extends State<PayrollPage> {
                           const SizedBox(height: AppConstants.spacingMd),
                           const Text(
                             'Нет данных по сотрудникам',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                            style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
                           ),
                         ],
                       ),
@@ -353,7 +353,7 @@ class _PeriodCard extends StatelessWidget {
       case 'PAID':
         return AppColors.success;
       default:
-        return AppColors.textSecondary;
+        return AppColors.lightTextSecondary;
     }
   }
 
@@ -398,7 +398,7 @@ class _PeriodCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppConstants.spacingSm),
-              const Divider(height: 1, color: AppColors.divider),
+              const Divider(height: 1, color: AppColors.lightBorder),
               const SizedBox(height: AppConstants.spacingSm),
               Row(
                 children: [
@@ -416,7 +416,7 @@ class _PeriodCard extends StatelessWidget {
                         ),
                         const Text(
                           'Итого',
-                          style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                         ),
                       ],
                     ),
@@ -435,7 +435,7 @@ class _PeriodCard extends StatelessWidget {
                         ),
                         const Text(
                           'Выплачено',
-                          style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                         ),
                       ],
                     ),
@@ -445,7 +445,7 @@ class _PeriodCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.people_outline, size: 16, color: AppColors.textSecondary),
+                          const Icon(Icons.people_outline, size: 16, color: AppColors.lightTextSecondary),
                           const SizedBox(width: 4),
                           Text(
                             '$staffCount',
@@ -455,7 +455,7 @@ class _PeriodCard extends StatelessWidget {
                       ),
                       const Text(
                         'Сотрудники',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                       ),
                     ],
                   ),

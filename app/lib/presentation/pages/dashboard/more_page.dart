@@ -94,7 +94,7 @@ class MorePage extends StatelessWidget {
           _MenuItem(
             icon: Icons.local_shipping_outlined,
             label: 'Поставщики',
-            color: AppColors.secondary,
+            color: AppColors.primary,
             onTap: () => context.push(RouteNames.supplierList, extra: _getStoreId(context)),
           ),
           const Divider(height: 24),
@@ -102,7 +102,7 @@ class MorePage extends StatelessWidget {
           _MenuItem(
             icon: Icons.settings_outlined,
             label: 'Настройки',
-            color: AppColors.textSecondary,
+            color: AppColors.lightTextSecondary,
             onTap: () => context.push(RouteNames.settings),
           ),
         ],
@@ -125,7 +125,7 @@ class _SectionHeader extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: AppColors.textSecondary,
+          color: AppColors.lightTextSecondary,
           letterSpacing: 0.5,
         ),
       ),
@@ -159,7 +159,7 @@ class _MenuItem extends StatelessWidget {
         child: Icon(icon, color: color, size: 22),
       ),
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+      trailing: const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary),
       onTap: onTap,
     );
   }

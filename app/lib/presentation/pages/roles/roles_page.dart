@@ -58,7 +58,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textSecondary,
+          unselectedLabelColor: AppColors.lightTextSecondary,
           indicatorColor: AppColors.primary,
           tabs: _roleLabels.map((l) => Tab(text: l)).toList(),
         ),

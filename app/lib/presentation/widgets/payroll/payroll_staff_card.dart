@@ -58,7 +58,7 @@ class PayrollStaffCard extends StatelessWidget {
                     if (entry.staffRole != null)
                       Text(
                         _roleLabel(entry.staffRole),
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                       ),
                   ],
                 ),
@@ -81,7 +81,7 @@ class PayrollStaffCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          const Divider(height: 1, color: AppColors.divider),
+          const Divider(height: 1, color: AppColors.lightBorder),
           const SizedBox(height: AppConstants.spacingSm),
           Row(
             children: [
@@ -109,7 +109,7 @@ class PayrollStaffCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       adj.description,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                     ),
                   ),
                   Text(
@@ -164,11 +164,11 @@ class _PayrollItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
               fontSize: isBold ? 15 : 13,
-              color: isBold ? AppColors.primary : AppColors.textPrimary,
+              color: isBold ? AppColors.primary : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
         ],
       ),
     );

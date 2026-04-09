@@ -101,7 +101,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.divider),
+                    border: Border.all(color: AppColors.lightBorder),
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -148,12 +148,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   child: Container(
                     padding: const EdgeInsets.all(AppConstants.spacingMd),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.divider),
+                      border: Border.all(color: AppColors.lightBorder),
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.textSecondary, size: 20),
+                        const Icon(Icons.calendar_today, color: AppColors.lightTextSecondary, size: 20),
                         const SizedBox(width: AppConstants.spacingSm),
                         Text(
                           '${_date.day.toString().padLeft(2, '0')}.${_date.month.toString().padLeft(2, '0')}.${_date.year}',

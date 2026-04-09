@@ -74,15 +74,15 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         Text(customer.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                         if (customer.phone != null) ...[
                           const SizedBox(height: 4),
-                          Text(customer.phone!, style: const TextStyle(color: AppColors.textSecondary)),
+                          Text(customer.phone!, style: const TextStyle(color: AppColors.lightTextSecondary)),
                         ],
                         if (customer.email != null) ...[
                           const SizedBox(height: 2),
-                          Text(customer.email!, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                          Text(customer.email!, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
                         ],
                         if (customer.notes != null && customer.notes!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
-                          Text(customer.notes!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary), textAlign: TextAlign.center),
+                          Text(customer.notes!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
                         ],
                       ],
                     ),
@@ -125,7 +125,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       _ActionButton(
                         icon: Icons.edit_outlined,
                         label: 'Изменить',
-                        color: AppColors.textSecondary,
+                        color: AppColors.lightTextSecondary,
                         onTap: () => _showEditCustomerDialog(customer),
                       ),
                     ],
@@ -138,7 +138,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Потрачено', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                              const Text('Потрачено', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.totalSpent.toStringAsFixed(0)} TJS', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.success)),
                             ],
@@ -150,9 +150,9 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Долг', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                              const Text('Долг', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                               const SizedBox(height: 4),
-                              Text('${customer.debt.toStringAsFixed(0)} TJS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: customer.debt > 0 ? AppColors.error : AppColors.textPrimary)),
+                              Text('${customer.debt.toStringAsFixed(0)} TJS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: customer.debt > 0 ? AppColors.error : AppColors.lightTextPrimary)),
                             ],
                           ),
                         ),
@@ -162,7 +162,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Баллы', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                              const Text('Баллы', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.loyaltyPoints}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.primary)),
                             ],
@@ -192,7 +192,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(AppConstants.spacingXl),
-                        child: Text('Нет покупок', style: TextStyle(color: AppColors.textSecondary)),
+                        child: Text('Нет покупок', style: TextStyle(color: AppColors.lightTextSecondary)),
                       ),
                     )
                   else
@@ -208,7 +208,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                                 Text('Чек #${sale['receiptNo'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
                                   _formatDate(sale['createdAt'] as String? ?? ''),
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                                 ),
                               ],
                             ),
@@ -218,7 +218,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                                 Text('${((sale['total'] as num?) ?? 0).toStringAsFixed(2)} TJS', style: const TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
                                   _paymentLabel(sale['paymentType'] as String? ?? ''),
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                                 ),
                               ],
                             ),

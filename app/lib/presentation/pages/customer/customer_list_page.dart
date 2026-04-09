@@ -122,7 +122,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddCustomerDialog,
@@ -161,8 +161,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                   onChanged: (_) => _loadCustomers(),
                   decoration: const InputDecoration(
                     hintText: 'Поиск клиента',
-                    hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+                    hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
@@ -210,7 +210,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                           children: [
                             Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
                             SizedBox(height: 16),
-                            Text('Клиентов пока нет', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                            Text('Клиентов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                           ],
                         ),
                       );
@@ -292,12 +292,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         if (customer.phone != null && customer.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(customer.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                                         ],
                                         if (customer.totalSpent > 0) ...[
                                           const SizedBox(height: 2),
                                           Text('Покупок: ${_formatPrice(customer.totalSpent)}',
-                                            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                                         ],
                                       ],
                                     ),
@@ -316,7 +316,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     ],
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
                                 ],
                               ),
                             ),
@@ -344,13 +344,13 @@ class _CustomerListPageState extends State<CustomerListPage> {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.divider),
+          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
         ),
         child: Text(label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
           )),
       ),
     );

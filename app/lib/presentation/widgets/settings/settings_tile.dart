@@ -25,8 +25,8 @@ class SettingsTile extends StatelessWidget {
         child: Icon(icon, color: iconColor ?? AppColors.primary, size: 20),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15)),
-      subtitle: subtitle != null ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)) : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+      subtitle: subtitle != null ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)) : null,
+      trailing: trailing ?? const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary),
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: 2),
     );

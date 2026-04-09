@@ -31,10 +31,10 @@ class PaymentMethodTile extends StatelessWidget {
           vertical: AppConstants.spacingSm + 4,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.card,
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(AppConstants.cardRadius),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.divider,
+            color: isSelected ? AppColors.primary : AppColors.lightBorder,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -46,12 +46,12 @@ class PaymentMethodTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.primary.withValues(alpha: 0.15)
-                    : AppColors.background,
+                    : AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                color: isSelected ? AppColors.primary : AppColors.lightTextSecondary,
                 size: 22,
               ),
             ),
@@ -62,7 +62,7 @@ class PaymentMethodTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                  color: isSelected ? AppColors.primary : AppColors.lightTextPrimary,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -74,7 +74,7 @@ class PaymentMethodTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.divider,
+                  color: isSelected ? AppColors.primary : AppColors.lightBorder,
                   width: 2,
                 ),
               ),

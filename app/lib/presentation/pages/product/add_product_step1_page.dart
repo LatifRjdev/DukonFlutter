@@ -162,7 +162,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: _selectedImage != null ? AppColors.primary : AppColors.divider,
+                              color: _selectedImage != null ? AppColors.primary : AppColors.lightBorder,
                               width: _selectedImage != null ? 2 : 1,
                             ),
                           ),
@@ -189,11 +189,11 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
-                                        color: AppColors.textSecondary,
+                                        color: AppColors.lightTextSecondary,
                                       )),
                                     const SizedBox(height: 4),
                                     const Text('JPG, PNG до 5MB',
-                                      style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                                      style: TextStyle(fontSize: 12, color: AppColors.lightTextHint)),
                                   ],
                                 ),
                         ),
@@ -298,14 +298,14 @@ class _StepDot extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : AppColors.divider,
+            color: isActive ? AppColors.primary : AppColors.lightBorder,
             shape: BoxShape.circle,
           ),
           child: Center(
             child: Text(
               '$index',
               style: TextStyle(
-                color: isActive ? Colors.white : AppColors.textSecondary,
+                color: isActive ? Colors.white : AppColors.lightTextSecondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),
@@ -317,7 +317,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.textSecondary,
+            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

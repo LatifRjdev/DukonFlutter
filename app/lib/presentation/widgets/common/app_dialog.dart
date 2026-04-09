@@ -56,7 +56,7 @@ class _AppDialogContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       elevation: AppConstants.cardElevation,
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.lightSurface,
       insetPadding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingLg,
         vertical: AppConstants.spacingXl,
@@ -74,7 +74,7 @@ class _AppDialogContent extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Inter',
-                color: AppColors.textPrimary,
+                color: AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: AppConstants.spacingSm),
@@ -86,7 +86,7 @@ class _AppDialogContent extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'Inter',
-                color: AppColors.textSecondary,
+                color: AppColors.lightTextSecondary,
                 height: 1.5,
               ),
             ),
@@ -101,8 +101,8 @@ class _AppDialogContent extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textSecondary,
-                        side: const BorderSide(color: AppColors.divider),
+                        foregroundColor: AppColors.lightTextSecondary,
+                        side: const BorderSide(color: AppColors.lightBorder),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             AppConstants.buttonRadius,

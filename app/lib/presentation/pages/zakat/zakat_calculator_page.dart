@@ -29,7 +29,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -43,11 +43,11 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
+                    icon: const Icon(Icons.settings_outlined, color: AppColors.lightTextSecondary),
                     onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.list_alt_outlined, color: AppColors.textSecondary),
+                    icon: const Icon(Icons.list_alt_outlined, color: AppColors.lightTextSecondary),
                     onPressed: () => context.push('/zakat/history', extra: widget.storeId),
                   ),
                 ],
@@ -100,7 +100,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Row(
                           children: [
                             const Text('АКТИВЫ МАГАЗИНА',
-                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                              style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text(_formatPrice(totalAssets),
                               style: const TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
@@ -132,7 +132,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Row(
                           children: [
                             const Text('ВЫЧЕТЫ',
-                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                              style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text('-${_formatPrice(calc.payables)}',
                               style: const TextStyle(fontSize: 14, color: AppColors.error, fontWeight: FontWeight.w600)),
@@ -172,7 +172,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text('Облагаемая сумма:',
-                                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                                    style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                                   Text(_formatPrice(calc.netAssets),
                                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                                 ],
@@ -182,7 +182,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text('Нисаб (85г золота):',
-                                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                                    style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
                                   Row(
                                     children: [
                                       Text(_formatPrice(calc.nisabAmount),
@@ -343,7 +343,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                 ],
               ],
             ),
@@ -360,7 +360,7 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.divider
+      ..color = AppColors.lightBorder
       ..strokeWidth = 1;
     const dashWidth = 6.0;
     const dashSpace = 4.0;

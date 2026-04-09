@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+                                const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
                               ],
                             ),
                           ),
@@ -190,7 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildDivider(),
                           _buildTile(Icons.language_outlined, 'Язык',
                             trailing: const Text('Русский',
-                              style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                              style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
                             onTap: () {}),
                           _buildDivider(),
                           _buildTile(Icons.cloud_done_outlined, 'Офлайн-режим',
@@ -249,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildSectionLabel(String title) {
     return Text(title,
-      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary));
+      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary));
   }
 
   Widget _buildSectionCard(List<Widget> children) {
@@ -311,7 +311,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (trailing != null)
               trailing
             else
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
+              const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 18),
           ],
         ),
       ),

@@ -39,7 +39,7 @@ class EmptySalesPage extends StatelessWidget {
               const Text(
                 'Совершите первую продажу через кассу, и она появится здесь',
                 style: TextStyle(
-                    color: AppColors.textSecondary, fontSize: 15, height: 1.4),
+                    color: AppColors.lightTextSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

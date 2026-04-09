@@ -102,7 +102,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                       const Text(
                         'Укажите тип, сумму и описание корректировки',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                        style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
                       ),
                     ],
                   ),
@@ -213,10 +213,10 @@ class _TypeToggle extends StatelessWidget {
           horizontal: AppConstants.spacingSm,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : AppColors.surface,
+          color: isSelected ? color.withValues(alpha: 0.1) : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           border: Border.all(
-            color: isSelected ? color : AppColors.divider,
+            color: isSelected ? color : AppColors.lightBorder,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -227,7 +227,7 @@ class _TypeToggle extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? color : AppColors.textSecondary,
+                color: isSelected ? color : AppColors.lightTextSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 fontSize: 14,
               ),

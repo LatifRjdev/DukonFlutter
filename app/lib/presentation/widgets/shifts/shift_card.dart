@@ -38,12 +38,12 @@ class ShiftCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: (isOpen ? AppColors.success : AppColors.textSecondary).withValues(alpha: 0.1),
+                  color: (isOpen ? AppColors.success : AppColors.lightTextSecondary).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   isOpen ? Icons.access_time : Icons.check_circle_outline,
-                  color: isOpen ? AppColors.success : AppColors.textSecondary,
+                  color: isOpen ? AppColors.success : AppColors.lightTextSecondary,
                   size: 20,
                 ),
               ),
@@ -68,7 +68,7 @@ class ShiftCard extends StatelessWidget {
                           child: Text(
                             isOpen ? 'Открыта' : 'Закрыта',
                             style: TextStyle(
-                              color: isOpen ? AppColors.success : AppColors.textSecondary,
+                              color: isOpen ? AppColors.success : AppColors.lightTextSecondary,
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                             ),
@@ -79,7 +79,7 @@ class ShiftCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '${_formatDateTime(shift.openedAt)} - ${_formatDuration(shift.openedAt, shift.closedAt)}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
                     ),
                   ],
                 ),
@@ -93,7 +93,7 @@ class ShiftCard extends StatelessWidget {
                   ),
                   Text(
                     '${shift.salesCount} продаж',
-                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                    style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
                   ),
                 ],
               ),

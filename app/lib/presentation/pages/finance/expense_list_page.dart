@@ -98,9 +98,9 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   },
                   child: Chip(
                     label: Text(cat.$2),
-                    backgroundColor: isSelected ? AppColors.primary : AppColors.card,
+                    backgroundColor: isSelected ? AppColors.primary : AppColors.lightSurface,
                     labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : AppColors.textSecondary,
+                      color: isSelected ? Colors.white : AppColors.lightTextSecondary,
                       fontSize: 13,
                     ),
                     side: BorderSide.none,
@@ -126,7 +126,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                         children: [
                           Icon(Icons.receipt_long, size: 64, color: AppColors.disabled),
                           const SizedBox(height: AppConstants.spacingMd),
-                          const Text('Расходов пока нет', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                          const Text('Расходов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                         ],
                       ),
                     );
@@ -158,16 +158,16 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                             children: [
                               Column(
                                 children: [
-                                  const Text('Сегодня', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                  const Text('Сегодня', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(todayAmount)}',
                                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
                                 ],
                               ),
-                              Container(width: 1, height: 40, color: AppColors.divider),
+                              Container(width: 1, height: 40, color: AppColors.lightBorder),
                               Column(
                                 children: [
-                                  const Text('За период', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                  const Text('За период', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(totalAmount)}',
                                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
@@ -182,7 +182,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8, top: 8),
                             child: Text(dateKey,
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
                           ),
                           for (final expense in grouped[dateKey]!) ...[
                             ExpenseCard(

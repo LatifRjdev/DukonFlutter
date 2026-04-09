@@ -126,7 +126,7 @@ class _OtpInputState extends State<OtpInput> {
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Inter',
-                  color: AppColors.textPrimary,
+                  color: AppColors.lightTextPrimary,
                 ),
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -135,12 +135,12 @@ class _OtpInputState extends State<OtpInput> {
                   counterText: '',
                   contentPadding: EdgeInsets.zero,
                   filled: true,
-                  fillColor: AppColors.surface,
+                  fillColor: AppColors.lightSurface,
                   enabledBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(AppConstants.buttonRadius),
                     borderSide: const BorderSide(
-                      color: AppColors.divider,
+                      color: AppColors.lightBorder,
                       width: 1.5,
                     ),
                   ),

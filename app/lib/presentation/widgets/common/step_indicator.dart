@@ -87,8 +87,8 @@ class _StepCircle extends StatelessWidget {
               fontWeight:
                   state == _StepState.active ? FontWeight.w600 : FontWeight.w400,
               color: state == _StepState.upcoming
-                  ? AppColors.textHint
-                  : AppColors.textPrimary,
+                  ? AppColors.lightTextHint
+                  : AppColors.lightTextPrimary,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -151,7 +151,7 @@ class _ConnectingLine extends StatelessWidget {
           duration: AppConstants.animationNormal,
           height: 2,
           decoration: BoxDecoration(
-            color: isCompleted ? AppColors.primary : AppColors.divider,
+            color: isCompleted ? AppColors.primary : AppColors.lightBorder,
             borderRadius: BorderRadius.circular(1),
           ),
         ),

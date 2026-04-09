@@ -85,7 +85,7 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                       const Text(
                         'Укажите сумму наличных в кассе на начало смены',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                        style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
                       ),
                     ],
                   ),

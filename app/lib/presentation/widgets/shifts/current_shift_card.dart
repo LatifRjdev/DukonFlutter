@@ -74,7 +74,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                     const SizedBox(height: 2),
                     Text(
                       '${widget.shift.staffName ?? "Сотрудник"} - ${_formatElapsed(_elapsed)}',
-                      style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                      style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
                     ),
                   ],
                 ),
@@ -141,7 +141,7 @@ class _StatItem extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
           ),
         ],
       ),

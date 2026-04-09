@@ -72,12 +72,12 @@ class _ZReportPageState extends State<ZReportPage> {
                 const SizedBox(height: 4),
                 Text(
                   '${_formatDateTime(report.openedAt)} — ${_formatDateTime(report.closedAt)}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Длительность: ${report.duration}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
                 ),
               ],
             ),
@@ -95,7 +95,7 @@ class _ZReportPageState extends State<ZReportPage> {
                 _ReportRow(label: 'Наличные', value: '${report.cashTotal.toStringAsFixed(2)} TJS'),
                 _ReportRow(label: 'Карта', value: '${report.cardTotal.toStringAsFixed(2)} TJS'),
                 _ReportRow(label: 'В долг', value: '${report.debtTotal.toStringAsFixed(2)} TJS'),
-                const Divider(color: AppColors.divider),
+                const Divider(color: AppColors.lightBorder),
                 _ReportRow(
                   label: 'Итого продаж',
                   value: '${report.salesTotal.toStringAsFixed(2)} TJS',
@@ -136,10 +136,10 @@ class _ZReportPageState extends State<ZReportPage> {
                 _ReportRow(label: 'Продажи (нал.)', value: '+${report.cashSalesAmount.toStringAsFixed(2)} TJS', valueColor: AppColors.success),
                 _ReportRow(label: 'Возвраты (нал.)', value: '-${report.cashReturns.toStringAsFixed(2)} TJS', valueColor: AppColors.error),
                 _ReportRow(label: 'Изъятия', value: '-${report.withdrawals.toStringAsFixed(2)} TJS', valueColor: AppColors.error),
-                const Divider(color: AppColors.divider),
+                const Divider(color: AppColors.lightBorder),
                 _ReportRow(label: 'Ожидаемая сумма', value: '${report.expectedCash.toStringAsFixed(2)} TJS', isBold: true),
                 _ReportRow(label: 'Фактическая сумма', value: '${report.actualCash.toStringAsFixed(2)} TJS', isBold: true),
-                const Divider(color: AppColors.divider),
+                const Divider(color: AppColors.lightBorder),
                 _ReportRow(
                   label: 'Разница',
                   value: '${report.difference >= 0 ? '+' : ''}${report.difference.toStringAsFixed(2)} TJS',
@@ -173,7 +173,7 @@ class _ZReportPageState extends State<ZReportPage> {
                             width: 24,
                             child: Text(
                               '${index + 1}.',
-                              style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                              style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary),
                             ),
                           ),
                           Expanded(
@@ -181,7 +181,7 @@ class _ZReportPageState extends State<ZReportPage> {
                           ),
                           Text(
                             'x$qty',
-                            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
                           ),
                           const SizedBox(width: AppConstants.spacingMd),
                           Text(
@@ -258,10 +258,10 @@ class _SectionCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         boxShadow: const [
-          BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: child,
@@ -310,7 +310,7 @@ class _ReportRow extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 14,
-              color: isBold ? AppColors.textPrimary : AppColors.textSecondary,
+              color: isBold ? AppColors.lightTextPrimary : AppColors.lightTextSecondary,
               fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
             ),
           ),
@@ -319,7 +319,7 @@ class _ReportRow extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: valueColor ?? AppColors.textPrimary,
+              color: valueColor ?? AppColors.lightTextPrimary,
             ),
           ),
         ],

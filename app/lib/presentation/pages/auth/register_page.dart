@@ -68,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
                 const Text('Создайте аккаунт для управления магазином',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                  style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
                 const SizedBox(height: 32),
                 AppTextField(
                   controller: _nameController,

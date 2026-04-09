@@ -148,7 +148,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
           const SizedBox(height: 16),
           const Text(
             'Найдите товар для оформления прихода',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: AppColors.lightTextSecondary),
           ),
         ],
       ),
@@ -171,7 +171,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 const SizedBox(height: 16),
                 Text(
                   state.message,
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: const TextStyle(color: AppColors.lightTextSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -189,7 +189,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   const SizedBox(height: 16),
                   const Text(
                     'Товары не найдены',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: AppColors.lightTextSecondary),
                   ),
                 ],
               ),
@@ -229,7 +229,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                     return Container(
                       width: 48,
                       height: 48,
-                      color: AppColors.background,
+                      color: AppColors.lightBackground,
                       child: const Icon(Icons.inventory_2, color: AppColors.disabled),
                     );
                   },
@@ -239,7 +239,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.background,
+                  color: AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 ),
                 child: const Icon(Icons.inventory_2, color: AppColors.disabled),
@@ -256,7 +256,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
               'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
               style: TextStyle(
                 fontSize: 12,
-                color: product.isLowStock ? AppColors.warning : AppColors.textSecondary,
+                color: product.isLowStock ? AppColors.warning : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -300,7 +300,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                           return Container(
                             width: 64,
                             height: 64,
-                            color: AppColors.background,
+                            color: AppColors.lightBackground,
                             child: const Icon(Icons.inventory_2, size: 32, color: AppColors.disabled),
                           );
                         },
@@ -311,7 +311,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: AppColors.background,
+                        color: AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: const Icon(Icons.inventory_2, size: 32, color: AppColors.disabled),
@@ -331,11 +331,11 @@ class _StockIntakePageState extends State<StockIntakePage> {
                         const SizedBox(height: 4),
                         Text(
                           'Цена: ${Formatters.price(product.sellPrice, currency: currency)}',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          style: const TextStyle(color: AppColors.lightTextSecondary),
                         ),
                         Text(
                           'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          style: const TextStyle(color: AppColors.lightTextSecondary),
                         ),
                       ],
                     ),
@@ -429,7 +429,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   'Итоговая стоимость',
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: 4),

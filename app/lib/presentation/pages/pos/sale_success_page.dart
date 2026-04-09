@@ -111,7 +111,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
               if (sale.change > 0) ...[
                 const SizedBox(height: 8),
                 Text('Сдача: ${_formatPrice(sale.change)}',
-                  style: const TextStyle(fontSize: 16, color: AppColors.textSecondary)),
+                  style: const TextStyle(fontSize: 16, color: AppColors.lightTextSecondary)),
               ],
               const Spacer(),
 

@@ -17,10 +17,10 @@ class SaleListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.card,
+      color: AppColors.lightSurface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: 1,
-      shadowColor: AppColors.shadow,
+      shadowColor: AppColors.overlay,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -56,7 +56,7 @@ class SaleListItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.lightTextPrimary,
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -65,7 +65,7 @@ class SaleListItem extends StatelessWidget {
                       Formatters.time(sale.createdAt),
                       style: const TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: AppColors.lightTextSecondary,
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -81,7 +81,7 @@ class SaleListItem extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: AppColors.lightTextPrimary,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -114,7 +114,7 @@ class SaleListItem extends StatelessWidget {
         badgeLabel = 'В долг';
         break;
       default:
-        badgeColor = AppColors.textSecondary;
+        badgeColor = AppColors.lightTextSecondary;
         badgeLabel = sale.paymentType;
     }
 

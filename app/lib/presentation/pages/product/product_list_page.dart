@@ -76,7 +76,7 @@ class _ProductListPageState extends State<ProductListPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.lightBackground,
         body: SafeArea(
           child: Column(
             children: [
@@ -118,7 +118,7 @@ class _ProductListPageState extends State<ProductListPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
-                    BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 1)),
+                    BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
                   ],
                 ),
                 child: TextField(
@@ -128,13 +128,13 @@ class _ProductListPageState extends State<ProductListPage> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Поиск товара',
-                    hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.textSecondary),
+                    hintStyle: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                    prefixIcon: const Icon(Icons.search, color: AppColors.lightTextSecondary),
                     suffixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.qr_code_scanner, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.qr_code_scanner, color: AppColors.lightTextSecondary),
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
@@ -142,7 +142,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.tune, color: AppColors.textSecondary),
+                          icon: const Icon(Icons.tune, color: AppColors.lightTextSecondary),
                           onPressed: () {},
                         ),
                       ],
@@ -193,7 +193,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 8),
                           Text(state.message,
-                            style: const TextStyle(color: AppColors.textSecondary),
+                            style: const TextStyle(color: AppColors.lightTextSecondary),
                             textAlign: TextAlign.center),
                           const SizedBox(height: 24),
                           ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
@@ -225,7 +225,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                     state.products.isEmpty
                                         ? 'Добавьте первый товар'
                                         : 'Попробуйте изменить фильтр',
-                                    style: const TextStyle(color: AppColors.textSecondary),
+                                    style: const TextStyle(color: AppColors.lightTextSecondary),
                                   ),
                                 ],
                               ),
@@ -265,7 +265,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
-                              BoxShadow(color: AppColors.shadow, blurRadius: 8, offset: Offset(0, -2)),
+                              BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
                             ],
                           ),
                           child: Row(
@@ -275,20 +275,20 @@ class _ProductListPageState extends State<ProductListPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Общая сумма',
-                                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                                     Text(_formatPrice(totalValue),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                               ),
-                              Container(width: 1, height: 32, color: AppColors.divider),
+                              Container(width: 1, height: 32, color: AppColors.lightBorder),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Себестоимость',
-                                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
@@ -320,14 +320,14 @@ class _ProductListPageState extends State<ProductListPage> {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.divider),
+          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
           ),
         ),
       ),
@@ -371,7 +371,7 @@ class _ProductCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
-            BoxShadow(color: AppColors.shadow, blurRadius: 6, offset: Offset(0, 2)),
+            BoxShadow(color: AppColors.overlay, blurRadius: 6, offset: Offset(0, 2)),
           ],
         ),
         child: Row(
@@ -381,7 +381,7 @@ class _ProductCard extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppColors.background,
+                color: AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(10),
               ),
               clipBehavior: Clip.antiAlias,
@@ -407,13 +407,13 @@ class _ProductCard extends StatelessWidget {
                   if (product.sku != null && product.sku!.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text('Арт: ${product.sku}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                   ],
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text('На складе: ',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                       Text('${product.quantity} $unitName',
                         style: TextStyle(
                           fontSize: 12,
@@ -434,12 +434,12 @@ class _ProductCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: AppColors.lightTextPrimary,
                   )),
                 if (product.costPrice != null) ...[
                   const SizedBox(height: 2),
                   Text(formatPrice(product.costPrice!),
-                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                 ],
               ],
             ),

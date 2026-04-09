@@ -118,7 +118,7 @@ class _OtpPageState extends State<OtpPage> {
                 const SizedBox(height: 8),
                 Text(
                   'Введите 6-значный код, отправленный на\n${widget.phone}',
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                  style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
                 ),
                 const SizedBox(height: 40),
                 Row(
@@ -175,7 +175,7 @@ class _OtpPageState extends State<OtpPage> {
                         )
                       : Text(
                           'Повторная отправка через $_remainingSeconds сек.',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          style: const TextStyle(color: AppColors.lightTextSecondary),
                         ),
                 ),
               ],

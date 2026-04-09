@@ -39,7 +39,7 @@ class QuantitySelector extends StatelessWidget {
 
   Widget _buildButton(IconData icon, VoidCallback onTap) {
     return Material(
-      color: AppColors.background,
+      color: AppColors.lightBackground,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: onTap,
