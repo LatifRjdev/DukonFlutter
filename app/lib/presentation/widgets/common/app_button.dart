@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_shadows.dart';
 
 enum AppButtonType { primary, outlined, danger, text }
 
@@ -26,48 +28,69 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (type == AppButtonType.primary) {
+      return _buildGradientButton(context);
+    }
     return SizedBox(
       width: width ?? double.infinity,
       height: height,
       child: switch (type) {
-        AppButtonType.primary => ElevatedButton(
-          onPressed: isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
-            ),
-          ),
-          child: _buildChild(Colors.white),
-        ),
         AppButtonType.outlined => OutlinedButton(
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primary,
-            side: const BorderSide(color: AppColors.primary),
+            side: const BorderSide(color: AppColors.primary, width: 2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
             ),
           ),
           child: _buildChild(AppColors.primary),
         ),
-        AppButtonType.danger => ElevatedButton(
+        AppButtonType.danger => TextButton(
           onPressed: isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
-            foregroundColor: Colors.white,
+          style: TextButton.styleFrom(
+            backgroundColor: AppColors.error.withValues(alpha: 0.08),
+            foregroundColor: AppColors.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
             ),
           ),
-          child: _buildChild(Colors.white),
+          child: _buildChild(AppColors.error),
         ),
         AppButtonType.text => TextButton(
           onPressed: isLoading ? null : onPressed,
+          style: TextButton.styleFrom(
+            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            foregroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+            ),
+          ),
           child: _buildChild(AppColors.primary),
         ),
+        _ => const SizedBox.shrink(),
       },
+    );
+  }
+
+  Widget _buildGradientButton(BuildContext context) {
+    return Container(
+      width: width ?? double.infinity,
+      height: height,
+      decoration: BoxDecoration(
+        gradient: onPressed != null ? AppGradients.primary : null,
+        color: onPressed == null ? AppColors.disabled : null,
+        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        boxShadow: onPressed != null ? AppShadows.button : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : onPressed,
+          borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+          child: Center(child: _buildChild(Colors.white)),
+        ),
+      ),
     );
   }
 
@@ -76,22 +99,19 @@ class AppButton extends StatelessWidget {
       return SizedBox(
         width: 24,
         height: 24,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: color,
-        ),
+        child: CircularProgressIndicator(strokeWidth: 2, color: color),
       );
     }
     if (icon != null) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20),
+          Icon(icon, size: 20, color: color),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: color)),
         ],
       );
     }
-    return Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600));
+    return Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: color));
   }
 }
