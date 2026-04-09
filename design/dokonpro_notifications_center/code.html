@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Notifications Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102022",
+                        "alert-red": "#EF4444",
+                        "alert-green": "#22C55E",
+                        "alert-orange": "#F59E0B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .ios-shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] flex justify-center">
+<!-- iPhone 14 Pro Container (393x852px mockup) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark overflow-x-hidden border-x border-gray-100 flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center p-4 pb-2 justify-between mt-6">
+<button class="text-[#0d1a1c] dark:text-white flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-[#0d1a1c] dark:text-white text-[18px] font-semibold leading-tight flex-1 text-center">Уведомления</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="text-primary text-sm font-bold leading-normal shrink-0 whitespace-nowrap">Отметить все</button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="pb-1">
+<div class="flex border-b border-[#cee5e8] dark:border-gray-800 px-4 gap-6 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[10px] pt-3 shrink-0" href="#">
+<p class="text-sm font-bold tracking-wide">Все</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#49929c] pb-[10px] pt-3 shrink-0" href="#">
+<p class="text-sm font-bold tracking-wide">Товары</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#49929c] pb-[10px] pt-3 shrink-0" href="#">
+<p class="text-sm font-bold tracking-wide">Продажи</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#49929c] pb-[10px] pt-3 shrink-0" href="#">
+<p class="text-sm font-bold tracking-wide">Долги</p>
+</a>
+</div>
+</div>
+</header>
+<!-- Notification List -->
+<main class="flex flex-col gap-3 p-4">
+<!-- 1. Low Stock (Red Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-alert-red">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Товар заканчивается</p>
+<span class="text-[#49929c] text-xs font-normal">14:30</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal mb-3">Кофе растворимый, осталось 5 шт</p>
+<div class="flex justify-end">
+<button class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold">Заказать</button>
+</div>
+</div>
+</div>
+<!-- 2. Large Sale (Green Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-alert-green">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Крупная продажа</p>
+<span class="text-[#49929c] text-xs font-normal">14:20</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal">Чек #1234 на 15,000 TJS</p>
+</div>
+</div>
+<!-- 3. Overdue Debt (Orange Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-alert-orange">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Долг просрочен</p>
+<span class="text-[#49929c] text-xs font-normal">13:45</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal mb-3">Клиент Ахмад, 3,200 TJS, просрочен 5 дней</p>
+<div class="flex justify-end">
+<button class="bg-[#e7f2f4] text-[#0d1a1c] px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">call</span>
+                            Позвонить
+                        </button>
+</div>
+</div>
+</div>
+<!-- 4. Delivery (Turquoise Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-primary">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Поставка получена</p>
+<span class="text-[#49929c] text-xs font-normal">12:00</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal">45 товаров от ООО Оптовик</p>
+</div>
+</div>
+<!-- 5. Out of Stock (Red Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-alert-red">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Нет в наличии</p>
+<span class="text-[#49929c] text-xs font-normal">11:30</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal mb-3">Масло подсолнечное, 0 шт</p>
+<div class="flex justify-end">
+<button class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold">Заказать</button>
+</div>
+</div>
+</div>
+<!-- 6. Shift Opened (Turquoise Border) -->
+<div class="bg-white dark:bg-gray-900 rounded-lg ios-shadow overflow-hidden flex border-l-4 border-primary">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#0d1a1c] dark:text-white text-[15px] font-bold">Смена открыта</p>
+<span class="text-[#49929c] text-xs font-normal">10:15</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal">Кассир Алишер</p>
+</div>
+</div>
+<!-- Yesterday Divider -->
+<div class="mt-4 mb-1 px-1">
+<p class="text-[#49929c] text-[13px] font-medium uppercase tracking-wider">Вчера</p>
+</div>
+<!-- 7. Reminder (Grey Border, Light Grey Background) -->
+<div class="bg-[#e7f2f4]/30 dark:bg-gray-800/50 rounded-lg overflow-hidden flex border-l-4 border-gray-400">
+<div class="flex-1 p-4">
+<div class="flex justify-between items-start mb-1">
+<p class="text-[#49929c] dark:text-gray-300 text-[15px] font-bold">Напоминание</p>
+<span class="text-[#49929c] text-xs font-normal">вчера</span>
+</div>
+<p class="text-[#49929c] dark:text-gray-400 text-sm font-normal">Оплата поставщику через 5 дней</p>
+</div>
+</div>
+</main>
+<!-- Bottom Safe Area Spacer -->
+<div class="h-8"></div>
+</div>
+</body></html>

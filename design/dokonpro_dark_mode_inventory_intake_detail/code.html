@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dd7f2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "input-dark": "#2c2c2c",
+                        "divider-dark": "#333333",
+                        "warning-dark": "#332b00"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen flex flex-col max-w-[393px] mx-auto overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark px-4 py-4 flex items-center justify-between">
+<button class="flex items-center justify-center size-10">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<h1 class="text-white text-[20px] font-bold flex-1 px-2">Приход товара</h1>
+<button class="flex items-center justify-center size-10">
+<span class="material-symbols-outlined text-primary">history</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col gap-4 px-4 pb-32">
+<!-- Warning Banner -->
+<div class="bg-warning-dark border-l-4 border-orange-500 p-4 rounded-r-lg flex items-center justify-between gap-3">
+<div class="flex-1">
+<p class="text-orange-200 text-sm leading-tight">Доступны изменения цен от поставщика</p>
+</div>
+<button class="bg-orange-500 text-black text-xs font-bold px-3 py-2 rounded-lg">Обновить</button>
+</div>
+<!-- Information Card -->
+<section class="bg-card-dark rounded-xl p-4 flex flex-col gap-4">
+<h2 class="text-white text-base font-bold">Информация</h2>
+<div class="space-y-3">
+<!-- Supplier Dropdown -->
+<div class="relative">
+<div class="bg-input-dark rounded-lg px-4 py-3 flex items-center justify-between">
+<span class="text-white text-sm">ООО Саховат</span>
+<span class="material-symbols-outlined text-gray-400">expand_more</span>
+</div>
+</div>
+<div class="flex gap-3">
+<!-- Date Picker -->
+<div class="flex-1 bg-input-dark rounded-lg px-4 py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400 text-sm">calendar_today</span>
+<span class="text-white text-sm">03.02.2026</span>
+</div>
+<!-- Invoice Input -->
+<div class="flex-1 bg-input-dark rounded-lg px-4 py-3">
+<input class="bg-transparent border-none p-0 w-full text-white text-sm focus:ring-0 placeholder:text-gray-500" type="text" value="НКЛ-2024-0156"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Scan Area -->
+<div class="flex gap-2">
+<div class="flex-1 bg-card-dark rounded-xl flex items-center px-4 h-12">
+<span class="material-symbols-outlined text-white mr-3">search</span>
+<input class="bg-transparent border-none p-0 w-full text-white text-sm focus:ring-0 placeholder:text-gray-500" placeholder="Поиск товара" type="text"/>
+</div>
+<button class="bg-primary size-12 rounded-xl flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+</div>
+<!-- Items Card -->
+<section class="bg-card-dark rounded-xl overflow-hidden">
+<div class="p-4 flex items-center justify-between">
+<h3 class="text-white text-base font-bold">Товары</h3>
+<span class="text-gray-400 text-sm">3 позиции</span>
+</div>
+<div class="flex flex-col">
+<!-- Item 1 -->
+<div class="p-4 border-t border-divider-dark">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-white font-bold text-sm">Кофе растворимый</p>
+<p class="text-[#B0B0B0] text-xs">SKU: КФ-001</p>
+</div>
+<button class="text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center bg-input-dark rounded-lg overflow-hidden">
+<button class="px-3 py-1 text-primary text-xl font-bold border-r border-divider-dark">－</button>
+<input class="w-12 bg-transparent border-none text-center text-white text-sm focus:ring-0 p-1" type="text" value="50"/>
+<button class="px-3 py-1 text-primary text-xl font-bold border-l border-divider-dark">＋</button>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold">8,000 TJS</p>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-4 border-t border-divider-dark">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-white font-bold text-sm">Чай черный листовой</p>
+<p class="text-[#B0B0B0] text-xs">SKU: ЧЙ-042</p>
+</div>
+<button class="text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center bg-input-dark rounded-lg overflow-hidden">
+<button class="px-3 py-1 text-primary text-xl font-bold border-r border-divider-dark">－</button>
+<input class="w-12 bg-transparent border-none text-center text-white text-sm focus:ring-0 p-1" type="text" value="24"/>
+<button class="px-3 py-1 text-primary text-xl font-bold border-l border-divider-dark">＋</button>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold">3,120 TJS</p>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-4 border-t border-divider-dark">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-white font-bold text-sm">Сахар песок 1кг</p>
+<p class="text-[#B0B0B0] text-xs">SKU: СХ-011</p>
+</div>
+<button class="text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center bg-input-dark rounded-lg overflow-hidden">
+<button class="px-3 py-1 text-primary text-xl font-bold border-r border-divider-dark">－</button>
+<input class="w-12 bg-transparent border-none text-center text-white text-sm focus:ring-0 p-1" type="text" value="100"/>
+<button class="px-3 py-1 text-primary text-xl font-bold border-l border-divider-dark">＋</button>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold">2,540 TJS</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Total Card -->
+<section class="bg-card-dark rounded-xl p-4 flex flex-col gap-3">
+<div class="flex justify-between">
+<span class="text-gray-400 text-sm">Кол-во товаров:</span>
+<span class="text-white font-bold text-sm">3 позиции</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-400 text-sm">Общее кол-во:</span>
+<span class="text-white font-bold text-sm">174 шт</span>
+</div>
+<div class="border-t border-divider-dark pt-3 flex justify-between items-end">
+<span class="text-white text-base font-bold">Итоговая сумма:</span>
+<span class="text-primary text-[22px] font-bold leading-none">13,660 TJS</span>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Button -->
+<div class="fixed bottom-0 left-0 w-full max-w-[393px] p-4 bg-background-dark/80 backdrop-blur-md">
+<button class="w-full bg-primary h-14 rounded-xl flex items-center justify-center text-background-dark text-base font-bold tracking-wide">
+            Оприходовать
+        </button>
+</div>
+</body></html>

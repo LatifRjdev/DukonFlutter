@@ -1,0 +1,209 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../domain/entities/expense.dart';
+import '../../blocs/expense/expense_bloc.dart';
+import '../../blocs/expense/expense_event.dart';
+import '../../blocs/expense/expense_state.dart';
+import '../../widgets/finance/expense_card.dart';
+
+
+class ExpenseListPage extends StatefulWidget {
+  final String storeId;
+  const ExpenseListPage({super.key, required this.storeId});
+  @override
+  State<ExpenseListPage> createState() => _ExpenseListPageState();
+}
+
+class _ExpenseListPageState extends State<ExpenseListPage> {
+  String? _selectedCategory;
+
+  String _formatPrice(double value) {
+    final formatter = NumberFormat('#,##0', 'ru');
+    return '${formatter.format(value)} TJS';
+  }
+
+  String _formatDateHeader(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final expenseDay = DateTime(date.year, date.month, date.day);
+
+    if (expenseDay == today) return 'Сегодня';
+    if (expenseDay == yesterday) return 'Вчера';
+    return DateFormat('dd.MM.yyyy').format(date);
+  }
+
+  Map<String, List<Expense>> _groupExpensesByDate(List<Expense> expenses) {
+    final grouped = <String, List<Expense>>{};
+    for (final expense in expenses) {
+      final key = _formatDateHeader(expense.date);
+      grouped.putIfAbsent(key, () => []).add(expense);
+    }
+    return grouped;
+  }
+
+  final _categories = [
+    (null, 'Все'),
+    ('PURCHASE', 'Закупка'),
+    ('RENT', 'Аренда'),
+    ('SALARY', 'Зарплата'),
+    ('UTILITIES', 'Коммунальные'),
+    ('TRANSPORT', 'Транспорт'),
+    ('MARKETING', 'Маркетинг'),
+    ('OTHER', 'Другое'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExpenses();
+  }
+
+  void _loadExpenses() {
+    context.read<ExpenseBloc>().add(ExpenseListRequested(
+      storeId: widget.storeId,
+      category: _selectedCategory,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Расходы')),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primary,
+        onPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
+              itemCount: _categories.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final cat = _categories[index];
+                final isSelected = cat.$1 == _selectedCategory;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() => _selectedCategory = cat.$1);
+                    _loadExpenses();
+                  },
+                  child: Chip(
+                    label: Text(cat.$2),
+                    backgroundColor: isSelected ? AppColors.primary : AppColors.card,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.white : AppColors.textSecondary,
+                      fontSize: 13,
+                    ),
+                    side: BorderSide.none,
+                  ),
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<ExpenseBloc, ExpenseState>(
+              builder: (context, state) {
+                if (state is ExpenseLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is ExpenseError) {
+                  return Center(child: Text(state.message));
+                }
+                if (state is ExpenseLoaded) {
+                  if (state.expenses.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.receipt_long, size: 64, color: AppColors.disabled),
+                          const SizedBox(height: AppConstants.spacingMd),
+                          const Text('Расходов пока нет', style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                        ],
+                      ),
+                    );
+                  }
+                  final expenses = state.expenses;
+                  final totalAmount = expenses.fold<double>(0, (sum, e) => sum + e.amount);
+                  final now = DateTime.now();
+                  final today = DateTime(now.year, now.month, now.day);
+                  final todayAmount = expenses
+                      .where((e) => DateTime(e.date.year, e.date.month, e.date.day) == today)
+                      .fold<double>(0, (sum, e) => sum + e.amount);
+                  final grouped = _groupExpensesByDate(expenses);
+                  final dateKeys = grouped.keys.toList();
+
+                  return RefreshIndicator(
+                    onRefresh: () async => _loadExpenses(),
+                    child: ListView(
+                      padding: const EdgeInsets.all(AppConstants.spacingMd),
+                      children: [
+                        // Summary card
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppColors.error.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  const Text('Сегодня', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                  const SizedBox(height: 4),
+                                  Text('-${_formatPrice(todayAmount)}',
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                ],
+                              ),
+                              Container(width: 1, height: 40, color: AppColors.divider),
+                              Column(
+                                children: [
+                                  const Text('За период', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                  const SizedBox(height: 4),
+                                  Text('-${_formatPrice(totalAmount)}',
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Grouped expenses
+                        for (final dateKey in dateKeys) ...[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8, top: 8),
+                            child: Text(dateKey,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                          ),
+                          for (final expense in grouped[dateKey]!) ...[
+                            ExpenseCard(
+                              expense: expense,
+                              onDelete: () {
+                                context.read<ExpenseBloc>().add(ExpenseDeleteRequested(storeId: widget.storeId, id: expense.id));
+                              },
+                            ),
+                            const SizedBox(height: AppConstants.spacingSm),
+                          ],
+                        ],
+                      ],
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

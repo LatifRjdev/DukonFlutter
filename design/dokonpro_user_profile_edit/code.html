@@ -1,0 +1,150 @@
+<html class="light" lang="ru"><head>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] dark:text-white font-display">```html
+
+
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro User Profile Edit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-toggle:checked + .ios-toggle-label {
+            background-color: #00bdd6;
+        }
+        .ios-toggle:checked + .ios-toggle-label::after {
+            transform: translateX(20px);
+        }
+    </style>
+<!-- Screen Wrapper for iPhone 14 Pro aspect ratio simulation/centering -->
+<div class="mx-auto min-h-screen max-w-[393px] bg-white dark:bg-background-dark shadow-2xl flex flex-col relative">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 justify-between border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center w-12 cursor-pointer">
+<span class="material-symbols-outlined text-[#0c1b1d] dark:text-white">arrow_back</span>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Профиль</h2>
+<div class="flex w-12 items-center justify-end cursor-pointer">
+<p class="text-primary text-base font-bold leading-normal tracking-[0.015em] shrink-0">Сохранить</p>
+</div>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- ProfileHeader -->
+<div class="flex p-6 @container">
+<div class="flex w-full flex-col gap-3 items-center">
+<div class="flex gap-3 flex-col items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-4 border-white dark:border-gray-800 shadow-sm" data-alt="User profile avatar photo showing a professional person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuABSFaV5vl89TKpEKnwLIf4JY7NgfNem1JBulvUfAdlO-pPA9mc3AIVJ7rKY6kpft0reWxIL9zWJpLOPW8sV82-Pn47fa0Dn0n4AQY4V6vuGQ3OQboavcEMuSapKubB5Trt4unFF8OO78LQ-aRahWi3V_zrYGaKxxN6iXF0r_ONuDNna2JZFFkgcsloHN3JOkr9riqiouBzgruF9fUopttsaRHJYFFybMGq-zqo2nPEmZKtax8CQnSRv1wcT-GodEqLZ26i8r3I2CIC");'>
+</div>
+</div>
+<button class="text-primary text-sm font-semibold hover:opacity-80 transition-opacity">Изменить фото</button>
+</div>
+</div>
+</div>
+<!-- Role Badge (Non-editable) -->
+<div class="px-4 mb-4 flex justify-center">
+<div class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">lock</span>
+<span class="text-xs font-bold uppercase tracking-wider">Владелец</span>
+</div>
+</div>
+<!-- Form Fields Section -->
+<div class="space-y-1 px-4">
+<!-- TextField: Name -->
+<div class="flex flex-col py-2">
+<label class="flex flex-col w-full">
+<p class="text-[#0c1b1d] dark:text-gray-300 text-sm font-medium leading-normal pb-1.5 pl-1">Имя</p>
+<input class="form-input flex w-full rounded-xl text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 p-4 text-base font-normal leading-normal transition-all" type="text" value="Latif"/>
+</label>
+</div>
+<!-- TextField: Surname -->
+<div class="flex flex-col py-2">
+<label class="flex flex-col w-full">
+<p class="text-[#0c1b1d] dark:text-gray-300 text-sm font-medium leading-normal pb-1.5 pl-1">Фамилия</p>
+<input class="form-input flex w-full rounded-xl text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 p-4 text-base font-normal leading-normal transition-all" type="text" value="Rakhimov"/>
+</label>
+</div>
+<!-- TextField: Email -->
+<div class="flex flex-col py-2">
+<label class="flex flex-col w-full">
+<p class="text-[#0c1b1d] dark:text-gray-300 text-sm font-medium leading-normal pb-1.5 pl-1">Email</p>
+<input class="form-input flex w-full rounded-xl text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 p-4 text-base font-normal leading-normal transition-all" type="email" value="latif@example.com"/>
+</label>
+</div>
+<!-- TextField: Phone -->
+<div class="flex flex-col py-2">
+<label class="flex flex-col w-full">
+<p class="text-[#0c1b1d] dark:text-gray-300 text-sm font-medium leading-normal pb-1.5 pl-1">Телефон</p>
+<input class="form-input flex w-full rounded-xl text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 p-4 text-base font-normal leading-normal transition-all" type="tel" value="+992 93 123 45 67"/>
+</label>
+</div>
+</div>
+<!-- Security Section -->
+<div class="mt-8 px-4">
+<h3 class="text-[#0c1b1d] dark:text-white text-lg font-bold mb-3 px-1">Безопасность</h3>
+<div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+<!-- Change Password Row -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-50 dark:border-gray-700">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">lock_reset</span>
+<span class="text-[#0c1b1d] dark:text-white font-medium">Сменить пароль</span>
+</div>
+<span class="material-symbols-outlined text-gray-400">chevron_right</span>
+</button>
+<!-- Fingerprint Toggle Row -->
+<div class="w-full flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">fingerprint</span>
+<span class="text-[#0c1b1d] dark:text-white font-medium">Вход по отпечатку</span>
+</div>
+<div class="relative inline-block w-12 h-6 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="ios-toggle absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer hidden" id="fingerprint-toggle" name="toggle" type="checkbox"/>
+<label class="ios-toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 dark:bg-gray-600 cursor-pointer transition-colors duration-200 ease-in-out after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all after:duration-200" for="fingerprint-toggle"></label>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Action Button -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 active:scale-[0.98]">
+                Сохранить изменения
+            </button>
+</div>
+</div>
+</body></html><!-- End of code -->

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "chip-dark": "#2c2c2c",
+                        "text-muted": "#b0b0b0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white font-display">
+<div class="mx-auto min-h-screen max-w-[393px] flex flex-col relative pb-24 shadow-2xl">
+<div class="sticky top-0 z-30 bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-white cursor-pointer">arrow_back_ios</span>
+<h1 class="text-xl font-bold tracking-tight">История продаж</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-white cursor-pointer">tune</span>
+<span class="material-symbols-outlined text-white cursor-pointer">ios_share</span>
+</div>
+</div>
+<div class="flex gap-2 px-4 py-3 overflow-x-auto hide-scrollbar">
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-primary px-5 transition-colors">
+<p class="text-white text-sm font-semibold">Сегодня</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-chip-dark px-5">
+<p class="text-text-muted text-sm font-medium">Вчера</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-chip-dark px-5">
+<p class="text-text-muted text-sm font-medium">Неделя</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-chip-dark px-5">
+<p class="text-text-muted text-sm font-medium">Месяц</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-chip-dark px-5">
+<p class="text-text-muted text-sm font-medium">Квартал</p>
+</div>
+</div>
+<div class="px-4 py-4">
+<div class="relative overflow-hidden flex flex-col gap-1 rounded-xl bg-card-dark p-6 shadow-lg border-l-4 border-primary">
+<p class="text-text-muted text-sm font-medium uppercase tracking-wider">Итого за сегодня</p>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold tracking-tight">48,750 TJS</p>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-primary text-sm">shopping_bag</span>
+<p class="text-white text-sm font-medium">32 продажи</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 px-4 pb-4">
+<div class="flex items-center justify-between bg-card-dark p-4 rounded-xl">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-full bg-green-500/20 text-green-500">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-base font-semibold">Чек #1234</p>
+<p class="text-text-muted text-xs">30.01 14:35 • Розничный</p>
+<p class="text-text-muted text-xs">3 товара</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary text-lg font-bold">490 TJS</p>
+<div class="flex items-center justify-end gap-1 text-text-muted">
+<span class="material-symbols-outlined text-xs">payments</span>
+<span class="text-[10px] font-medium uppercase">Наличные</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between bg-card-dark p-4 rounded-xl">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-full bg-green-500/20 text-green-500">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-base font-semibold">Чек #1233</p>
+<p class="text-text-muted text-xs">13:20 • Мария К.</p>
+<p class="text-text-muted text-xs">Клиент лояльности</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary text-lg font-bold">180 TJS</p>
+<div class="flex items-center justify-end gap-1 text-text-muted">
+<span class="material-symbols-outlined text-xs">credit_card</span>
+<span class="text-[10px] font-medium uppercase">Карта</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between bg-card-dark p-4 rounded-xl">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-full bg-orange-500/20 text-orange-500">
+<span class="material-symbols-outlined">pending</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-base font-semibold">Чек #1232</p>
+<p class="text-text-muted text-xs">12:05 • Ахмад</p>
+<p class="text-orange-400 text-[10px] font-bold uppercase tracking-tight">В долг</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-white text-lg font-bold">3,200 TJS</p>
+<div class="flex items-center justify-end gap-1 text-text-muted">
+<span class="material-symbols-outlined text-xs">history_edu</span>
+<span class="text-[10px] font-medium uppercase">Запись</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between bg-card-dark p-4 rounded-xl">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-full bg-red-500/20 text-red-500">
+<span class="material-symbols-outlined">keyboard_return</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-base font-semibold">Чек #1231</p>
+<p class="text-text-muted text-xs">11:40 • Возврат товара</p>
+<p class="text-red-400 text-[10px] font-bold uppercase tracking-tight">Возврат</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-red-500 text-lg font-bold">-120 TJS</p>
+<div class="flex items-center justify-end gap-1 text-text-muted">
+<span class="material-symbols-outlined text-xs">undo</span>
+<span class="text-[10px] font-medium uppercase">Сторно</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] bg-card-dark border-t border-white/5 px-6 py-3 flex justify-between items-center z-40">
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined">storefront</span>
+<span class="text-[10px]">Магазин</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="text-[10px] font-semibold">История</span>
+</div>
+<div class="flex flex-col items-center -mt-8">
+<div class="size-14 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined text-white text-3xl">add</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px]">Склад</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px]">Профиль</span>
+</div>
+</div>
+</div>
+</body></html>

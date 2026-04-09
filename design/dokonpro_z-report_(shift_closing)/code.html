@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Z-Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-[#0d1a1c] flex flex-col items-center">
+<!-- iPhone 14 Pro Container (393x852px) -->
+<div class="w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark relative flex flex-col pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-start text-[#0d1a1c] dark:text-white">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+<h1 class="text-lg font-bold leading-tight flex-1 text-center pr-10 dark:text-white">Z-отчёт</h1>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar">
+<!-- Info Card (ActionPanel variant) -->
+<div class="px-4 py-2">
+<div class="rounded-xl bg-[#E0F7FA] dark:bg-primary/20 p-5 border border-[#cee5e8] dark:border-primary/30">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">account_circle</span>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold">Кассир: Алишер Каримов</p>
+</div>
+<p class="text-[#49929c] dark:text-cyan-300 text-sm font-medium mt-1">Смена: 09:00 – 18:35</p>
+<p class="text-[#49929c] dark:text-cyan-300 text-sm font-normal">Длительность: 9ч 35м</p>
+</div>
+</div>
+</div>
+<!-- Sales Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 ios-shadow">
+<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Продажи</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Наличные</span>
+<span class="font-medium dark:text-white">28,400 TJS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Карта</span>
+<span class="font-medium dark:text-white">12,200 TJS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Кредит</span>
+<span class="font-medium dark:text-white">8,150 TJS</span>
+</div>
+<div class="pt-3 border-t border-gray-100 dark:border-gray-700 mt-2">
+<div class="flex justify-between items-center">
+<span class="text-lg font-bold text-[#0d1a1c] dark:text-white">Итого продаж</span>
+<span class="text-lg font-bold text-primary">48,750 TJS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Refunds Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 ios-shadow">
+<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Возвраты</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Количество</span>
+<span class="font-medium dark:text-white">2</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Сумма возвратов</span>
+<span class="font-bold text-red-500">-1,320 TJS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cash Register Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 ios-shadow">
+<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Сверка кассы</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-gray-600 dark:text-gray-300">Ожидаемая сумма (наличные)</span>
+<span class="font-bold text-[#0d1a1c] dark:text-white">32,600 TJS</span>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-gray-400 uppercase">Фактическая сумма</label>
+<div class="relative">
+<input class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-xl font-bold focus:ring-0 focus:outline-none dark:text-white" placeholder="Введите сумму" type="text" value="32,450"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">TJS</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600">
+<span class="material-symbols-outlined">warning</span>
+<div class="flex-1 flex justify-between items-center">
+<span class="text-sm font-medium">Расхождение</span>
+<span class="font-bold">-150 TJS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Products Card -->
+<div class="px-4 py-2 mb-6">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 ios-shadow">
+<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Топ продаж</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-primary">1</div>
+<div class="flex-1">
+<p class="text-sm font-bold dark:text-white">Coca-Cola 0.5L</p>
+<p class="text-xs text-gray-500">42 шт.</p>
+</div>
+<p class="font-medium text-sm dark:text-white">336 TJS</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-primary">2</div>
+<div class="flex-1">
+<p class="text-sm font-bold dark:text-white">Хлеб "Бородино"</p>
+<p class="text-xs text-gray-500">28 шт.</p>
+</div>
+<p class="font-medium text-sm dark:text-white">112 TJS</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-primary">3</div>
+<div class="flex-1">
+<p class="text-sm font-bold dark:text-white">Lays Classic 140g</p>
+<p class="text-xs text-gray-500">15 шт.</p>
+</div>
+<p class="font-medium text-sm dark:text-white">225 TJS</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer Buttons -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 p-4 pb-8 space-y-3">
+<button class="w-full py-3.5 rounded-xl border-2 border-primary text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">print</span>
+                Печатать Z-отчёт
+            </button>
+<button class="w-full py-4 rounded-xl bg-primary text-white font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all">
+                Закрыть смену
+            </button>
+</footer>
+</div>
+</body></html>

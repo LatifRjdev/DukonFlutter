@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dd7f2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "divider-dark": "#333333"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen">
+<div class="max-w-[393px] mx-auto min-h-screen flex flex-col relative pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white cursor-pointer">arrow_back</span>
+<h1 class="text-white text-[18px] font-semibold leading-tight">Приход №НКЛ-2024-0156</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+<span class="material-symbols-outlined text-white">share</span>
+</button>
+</header>
+<!-- Status Card -->
+<div class="px-4 py-3">
+<div class="bg-card-dark rounded-xl border-t-4 border-primary p-4 flex flex-col gap-3 shadow-lg">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="text-[12px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full self-start">ОПРИХОДОВАНО</span>
+<p class="text-white text-lg font-bold">ООО Саховат</p>
+<p class="text-gray-400 text-sm font-normal">Создал: Алишер Каримов</p>
+</div>
+<div class="text-right">
+<p class="text-gray-400 text-xs font-normal">03.02.2026</p>
+<p class="text-gray-400 text-xs font-normal">14:32</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Price Info Alert -->
+<div class="px-4 py-2">
+<div class="bg-card-dark rounded-lg p-3 flex gap-3 items-start border border-primary/20">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">info</span>
+<div class="flex flex-col">
+<p class="text-white text-sm font-medium">Обновлена закупочная цена</p>
+<p class="text-[#B0B0B0] text-xs">Кофе растворимый: 150 → 160 TJS</p>
+</div>
+</div>
+</div>
+<!-- SectionHeader -->
+<div class="px-4 pt-4 pb-2">
+<h3 class="text-white text-base font-bold">Состав прихода</h3>
+</div>
+<!-- Items Card / List -->
+<div class="px-4">
+<div class="bg-card-dark rounded-xl overflow-hidden">
+<!-- Item 1 -->
+<div class="p-4 flex gap-4">
+<div class="w-[60px] h-[60px] bg-white/5 rounded-lg bg-cover bg-center shrink-0" data-alt="Bag of roasted coffee beans packaging" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVnX4LgIIDmNlUGk41AL7eDR6RWjPGVT_MtoRTCyrynPRMDqPX0tCo5fR1Djsvv8ewg0WxKrboXhj1dTIooL-08BbSatawtCW_htVTe15rpc9rI41EdZupr31TngxEIdkRwboES6ZTx8CjOyDsu1txWWAwFb6fDbpGtb5KkoMsFeSF3vpGysFJypwc9Eb3Djwlg7gK_hnIOY7SZ2QxNgye_6E6duBdtSmMc9g2rXA6DRGM7eB8G0xpwmg294PPcLb7ZAEDkXH2REGe')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white font-bold text-sm truncate">Кофе растворимый</p>
+<p class="text-primary font-bold text-sm">8,000 TJS</p>
+</div>
+<p class="text-gray-400 text-xs mt-0.5 font-normal">SKU: КФ-001 | 50 шт × 160.00 TJS</p>
+<div class="flex items-center gap-1 mt-2 text-emerald-400">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<p class="text-[11px] font-medium">+10.00 TJS к старой цене</p>
+</div>
+</div>
+</div>
+<div class="h-[1px] bg-divider-dark mx-4"></div>
+<!-- Item 2 -->
+<div class="p-4 flex gap-4">
+<div class="w-[60px] h-[60px] bg-white/5 rounded-lg bg-cover bg-center shrink-0" data-alt="Pack of black tea leaves 100g" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChDviDjxT5F4sfkcYpJFJofmC0eSOzQeZC3gs3Hck7H4AxPhDbSOnRiKqcXM0G0WpQiuMYi6G3YmNNAhrDN-gjPLqYSSiRxKlQb5j4H_vCp2Hp4xoL9z7Vb9TAbPhsAQIZpU1nOoiM3U-447nMtWBziAqV520vajYQH_ce2Gh6pkJe7SYDL43GKMYoGroyB3qUsGVheZqLawJBGfFIuFDRBhaKlOkTlF_ItcGGWWKvep6FGWkplKMI1-2pp7jaCe72ED9864HpFQhk')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white font-bold text-sm truncate">Чай черный 100г</p>
+<p class="text-primary font-bold text-sm">4,200 TJS</p>
+</div>
+<p class="text-gray-400 text-xs mt-0.5 font-normal">SKU: ЧЙ-005 | 70 шт × 60.00 TJS</p>
+</div>
+</div>
+<div class="h-[1px] bg-divider-dark mx-4"></div>
+<!-- Item 3 -->
+<div class="p-4 flex gap-4">
+<div class="w-[60px] h-[60px] bg-white/5 rounded-lg bg-cover bg-center shrink-0" data-alt="White sugar cubes package 1kg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-npJLuhlLp--S0FUUmAzyaVJJIyvBu2HbjxUbe9BuUzBLwecwPW9wb3E4w8UFM8Obd8hCwEk8nuwbOWX6QLA0TQMRLjL0Xv9wYrg0KPGRrXOZvreOFB6J7pGKEWD0jqM5pZbA_XC5oU7UhQPgUgJTpHbiXgur1lMtaRg3DBhjEPZ2rXOInAj8lO2T4gfiaL6cmCjA1SF1PKe6YH1pOyqR9diStrSx-ZxnBjzTklB30JQMn5l33Qz7iCGfX_OCfFpDcCCCMOo-2YfR')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white font-bold text-sm truncate">Сахар-песок 1кг</p>
+<p class="text-primary font-bold text-sm">1,460 TJS</p>
+</div>
+<p class="text-gray-400 text-xs mt-0.5 font-normal">SKU: СХ-012 | 60 шт × 24.33 TJS</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary Card -->
+<div class="px-4 py-4">
+<div class="bg-card-dark rounded-xl border-l-4 border-emerald-500 p-4 shadow-lg">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<p class="text-gray-400 text-sm">Позиций:</p>
+<p class="text-white text-sm font-medium">3</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-gray-400 text-sm">Общее количество:</p>
+<p class="text-white text-sm font-medium">180 шт</p>
+</div>
+<div class="mt-3 pt-3 border-t border-divider-dark flex justify-between items-end">
+<p class="text-white text-xs font-bold uppercase tracking-wider">Итого сумма:</p>
+<p class="text-primary text-2xl font-bold tracking-tight">13,660 TJS</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] bg-background-dark/95 backdrop-blur-lg border-t border-divider-dark p-4 flex gap-3 z-50">
+<button class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl border border-divider-dark text-white font-semibold text-sm hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                Скачать PDF
+            </button>
+<button class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-primary text-[#102022] font-bold text-sm hover:brightness-110 transition-all shadow-[0_4px_20px_rgba(13,215,242,0.3)]">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                Печать
+            </button>
+</div>
+</div>
+</body></html>

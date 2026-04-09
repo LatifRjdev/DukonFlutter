@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Add New Employee</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .form-input:focus {
+            border-color: #00bdd6 !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] dark:text-white min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (Approx. 393px width) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col shadow-2xl overflow-y-auto pb-10">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md flex items-center px-4 py-4 gap-4 border-b border-gray-100 dark:border-gray-800">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#0c1b1d] dark:text-white">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight">Новый сотрудник</h1>
+</header>
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center pt-6 pb-4">
+<div class="relative group cursor-pointer">
+<div class="size-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 transition-all group-hover:border-primary">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-3xl">photo_camera</span>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-white size-7 rounded-full flex items-center justify-center border-2 border-white dark:border-background-dark">
+<span class="material-symbols-outlined text-sm">add</span>
+</div>
+</div>
+<button class="mt-3 text-primary text-sm font-semibold hover:opacity-80">Добавить фото</button>
+</section>
+<!-- Form Fields -->
+<form class="flex flex-col gap-5 px-4 pb-24">
+<!-- Full Name -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">ФИО *</label>
+<input class="form-input w-full h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-primary text-base transition-all" placeholder="Введите полное имя" type="text"/>
+</div>
+<!-- Phone Number -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Телефон *</label>
+<div class="relative flex items-center">
+<input class="form-input w-full h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-primary text-base transition-all" type="tel" value="+992 "/>
+<span class="material-symbols-outlined absolute right-3 text-gray-400 text-[20px]">info</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 ml-1">Для входа в приложение</p>
+</div>
+<!-- Role Dropdown -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Роль *</label>
+<div class="relative">
+<select class="form-select appearance-none w-full h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-primary text-base transition-all cursor-pointer">
+<option disabled="" selected="" value="">Выберите роль</option>
+<option value="admin">Администратор</option>
+<option value="cashier">Кассир</option>
+<option value="warehouse">Склад</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Stores Chips -->
+<div class="flex flex-col gap-3">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Магазины</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full text-sm font-medium bg-primary text-white shadow-sm border border-primary transition-all" type="button">
+                        Основной магазин
+                    </button>
+<button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-transparent hover:border-gray-300 transition-all" type="button">
+                        Филиал Рудаки
+                    </button>
+<button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-transparent hover:border-gray-300 transition-all" type="button">
+                        Склад
+                    </button>
+</div>
+</div>
+<!-- Financial Fields Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Оклад</label>
+<div class="relative">
+<input class="form-input w-full h-12 px-4 pr-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-primary text-base transition-all" placeholder="0.00" type="number"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 uppercase">TJS/мес</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300">% от продаж</label>
+<div class="relative">
+<input class="form-input w-full h-12 px-4 pr-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-primary text-base transition-all" placeholder="0" type="number"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">%</span>
+</div>
+</div>
+</div>
+<!-- Information Card -->
+<div class="flex gap-3 p-4 rounded-lg bg-sky-50 dark:bg-sky-950/30 border border-sky-100 dark:border-sky-900/50 mt-2">
+<span class="material-symbols-outlined text-sky-500 text-[20px] shrink-0">sms</span>
+<p class="text-sm text-sky-800 dark:text-sky-200 leading-snug">
+                    Сотруднику будет отправлен SMS с паролем для входа
+                </p>
+</div>
+</form>
+<!-- Sticky Bottom Button -->
+<div class="sticky bottom-0 mt-auto p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-t border-gray-100 dark:border-gray-800">
+<button class="w-full h-14 bg-primary hover:bg-[#00a6bd] active:scale-[0.98] text-white font-bold text-base rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center">
+                Добавить сотрудника
+            </button>
+<div class="h-5 w-full"></div> <!-- iOS Home Indicator spacing -->
+</div>
+</div>
+</body></html>

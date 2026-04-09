@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none;
+        }
+        .iphone-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+<!-- iPhone 14 Pro Container -->
+<div class="iphone-container bg-background-light dark:bg-background-dark shadow-2xl relative flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">arrow_back</span>
+</div>
+<h1 class="text-[#0d1a1c] dark:text-white text-lg font-bold flex-1 text-center pr-10">Валюты</h1>
+</header>
+<main class="flex-1 px-4 pb-32">
+<!-- Primary Currency Card -->
+<div class="mt-2 mb-6">
+<div class="bg-[#e0f7fa] dark:bg-primary/20 p-5 rounded-xl flex items-center justify-between border border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white shadow-sm" data-alt="Flag of Tajikistan showing red white and green stripes" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCHjX7T1XGclzwS9OkFhapPzqTkof70xG-8OY-JfM_wWN1hHKCmx9cjEQEZzwwTvQdBZeKF4qCtRhuR8LMUbd95iqfrGljWrB2D4_g8umH6HDdQcUcsdbNBc3QHMoF3DRMY2z4iIqsoyMv87JFlFjS4yUk1MXFbn1a50i2jjmC8_sd6S2hjWpT06bx2er9d-1cZv-Oq61lAzi4gVSvxGGdrPHiY-TPKGu3wDFwU45px93xUob-zkg7w2V9yaANj1BbIY7rHtPlRfg4X');">
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-[#47949e] font-medium uppercase tracking-wider">Валюта магазина</span>
+<span class="text-[#0d1a1c] dark:text-white text-lg font-bold">TJS — Сомони</span>
+</div>
+</div>
+<div class="bg-primary px-3 py-1 rounded-full">
+<span class="text-white text-[10px] font-bold uppercase">Основная</span>
+</div>
+</div>
+</div>
+<!-- Exchange Rates Section -->
+<section>
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold mb-3 px-1">Курсы валют</h3>
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm space-y-4">
+<!-- USD Row -->
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-10 h-10 rounded-lg bg-cover bg-center" data-alt="USA Flag circular icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAr0Sng-9kUTpQ8ZmKwWRs1gB9xn1AXaU8vq7zrVq9_oARydDNOQZgUbmFA2CJdrW-LJitFAa9eWlvhxW8HgDdpijGi43Dg-1kmN36-dguttdpP4Phu9ntQZ7vacSI2Kqr7BgeqnZhfNQyJ6XFkRr9-wB7ezar55JWZV2pWbZ9G7KjusNaVaCgcAbN1_mrNsnJHmYbg0clDiSB2K0r3bd5pw-7z-YYL__juuJb6ky-AFB5TwDHTEzKqidbqUxYeZYyJeqygT55aHvT');"></div>
+<span class="text-[#0d1a1c] dark:text-white font-semibold">USD</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<input class="w-24 h-10 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white text-right font-medium focus:ring-primary focus:border-primary" type="text" value="10.92"/>
+</div>
+<span class="text-gray-400 font-medium w-8 text-sm">TJS</span>
+</div>
+</div>
+<!-- RUB Row -->
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-10 h-10 rounded-lg bg-cover bg-center" data-alt="Russian Flag circular icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMAH00KWpezaC38YeeZb3xCFlM6B_PRGq2Kir9IQQBYJZ1VKXoTMoN-cvVQi59fx1CrFb_YIyf-hXWeKMMB9eW8IGfGVqi1L6Emt_qJ4DGfmD7gjecvxOV8EoqRW0nnI_RmTu--uPHg7LwDqnxva1ZKwDWZYMozB8iX78YrdgpBfWlMvG8pfeuDWJYsuiOvg4mZNsSP1-WsJzbkfLdhMEQszl5q0ou3HPxoErwvOWn6cI3Zm07QMtysMTsGAp4zYvLacpriruOCCUV');"></div>
+<span class="text-[#0d1a1c] dark:text-white font-semibold">RUB</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<input class="w-24 h-10 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white text-right font-medium focus:ring-primary focus:border-primary" type="text" value="0.12"/>
+</div>
+<span class="text-gray-400 font-medium w-8 text-sm">TJS</span>
+</div>
+</div>
+<!-- UZS Row -->
+<div class="flex items-center justify-between gap-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-10 h-10 rounded-lg bg-cover bg-center" data-alt="Uzbekistan Flag circular icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-JgRmGJkS1cGOu3YphbZdj7QAuUPHp6WzO8AhAxuZw1RYJl_c8PwzdNiVQh8JmqioxxS8lZg705zkwPk6sgtql1A48YeIVBx-ef-klJBEgjLiCRsHqyBHnmZTdUhEPuOZmdvimGjNlO7TdW7h2hGCjpxJHlmpgNU9A1_BBnBzM7wNBOUDUfYfBs3Qosni5MOW-vgUCaZrlssX_rl2qO5dC23dirBuWpRCN9FEskvK5XjXCd9F8HixtkJwci9ppjhXPmO-atIOk9up');"></div>
+<span class="text-[#0d1a1c] dark:text-white font-semibold">UZS</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<input class="w-24 h-10 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white text-right font-medium focus:ring-primary focus:border-primary" type="text" value="0.00085"/>
+</div>
+<span class="text-gray-400 font-medium w-8 text-sm">TJS</span>
+</div>
+</div>
+<!-- Update Controls -->
+<div class="pt-2 flex flex-col items-center gap-3">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-lg">refresh</span>
+<span>Обновить с НБТ</span>
+</button>
+<p class="text-[11px] text-gray-400 font-medium">Обновлено: 30.01.2026, 09:00</p>
+</div>
+</div>
+</section>
+<!-- Warning Section -->
+<div class="mt-6">
+<div class="bg-[#fff3e0] dark:bg-orange-900/30 p-4 rounded-xl border border-orange-200/50 flex gap-3">
+<span class="material-symbols-outlined text-orange-500 shrink-0">warning</span>
+<p class="text-orange-800 dark:text-orange-200 text-sm leading-relaxed">
+                        При изменении курса USD с <span class="font-bold">10.50</span> на <span class="font-bold">10.92</span> себестоимость <span class="font-bold">45 товаров</span> изменится.
+                    </p>
+</div>
+</div>
+</main>
+<!-- Bottom Action Button -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[393px] bg-white dark:bg-gray-950 p-6 pb-10 border-t border-gray-100 dark:border-gray-900">
+<button class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all">
+                Пересчитать себестоимость
+            </button>
+</div>
+<!-- iOS Safe Area Indicator Mockup -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-gray-400 rounded-full opacity-30"></div>
+</div>
+</body></html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0bb5cb",
+              "background-light": "#f5f8f8",
+              "background-dark": "#102022",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<title>DokonPro Edit Product Details</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] antialiased">
+<div class="mx-auto min-h-screen max-w-[393px] bg-white dark:bg-background-dark shadow-xl overflow-x-hidden pb-32">
+<div class="sticky top-0 z-50 flex items-center bg-white/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-gray-100 dark:border-gray-800">
+<div class="flex size-10 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">arrow_back_ios</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-semibold leading-tight tracking-tight flex-1 text-center">Редактировать</h2>
+<div class="flex size-10 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-red-500">delete</span>
+</div>
+</div>
+<div class="px-4 py-6 flex flex-col items-center">
+<div class="relative w-full h-[160px] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 group border border-gray-200 dark:border-gray-700">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Fresh roasted coffee beans in a package" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA9BT2uoMmwfZ3xqWsJVLAByk-DeFKMyDf8F1iA_HyHGRR36Lu-66hxLCsdnIVhuiah4Hk7Jg9EJVuwzhXhpKZ3m1CluXU272c0Zk5IDkjTFhLhuScFvXjHk1XOid6DnRwIoOdWnTQuULAa_nMpzvdG_MMAIQ_akkLqI0jt1Jp02X0oGCs-Md1_66KBXZvXIUmqmf5hc1X6L7OnRjIMbEjf4QVFWKP-zc5EpADdZzSBVFuZtnWs-Aa7454510UR04BgZmEpScd2jcVu');"></div>
+<div class="absolute inset-0 bg-black/20 flex flex-col items-center justify-center">
+<div class="bg-primary/90 p-3 rounded-full text-white shadow-lg mb-2">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+<span class="text-white text-sm font-medium drop-shadow-md">Изменить фото</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 px-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium px-1">Название товара</label>
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white focus:border-primary focus:ring-primary h-14 px-4 text-base transition-colors" type="text" value="Кофе растворимый"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium px-1">Артикул/SKU</label>
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white focus:border-primary focus:ring-primary h-14 px-4 text-base" type="text" value="COFFEE-001"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium px-1">Штрих-код</label>
+<div class="relative flex">
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white focus:border-primary focus:ring-primary h-14 px-4 pr-12 text-base" type="text" value="4601234567890"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 text-primary cursor-pointer">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium px-1">Категория</label>
+<div class="relative">
+<select class="w-full appearance-none rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white focus:border-primary focus:ring-primary h-14 px-4 pr-10 text-base">
+<option selected="">Напитки</option>
+<option>Еда</option>
+<option>Другое</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="pt-6">
+<h3 class="text-lg font-bold text-[#0d1a1c] dark:text-white mb-4">Цены</h3>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="flex flex-col gap-1.5 col-span-2">
+<label class="text-xs font-medium text-gray-500 uppercase tracking-wider px-1">Цена продажи</label>
+<div class="relative flex">
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-primary font-semibold h-14 px-4 text-lg" type="text" value="180"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">TJS</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-gray-500 uppercase tracking-wider px-1">Себестоимость</label>
+<div class="relative flex">
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white h-12 px-3 text-base" type="text" value="150"/>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm">TJS</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-gray-500 uppercase tracking-wider px-1">Оптовая цена</label>
+<div class="relative flex">
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white h-12 px-3 text-base" type="text" value="165"/>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm">TJS</span>
+</div>
+</div>
+</div>
+<div class="bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-xl">analytics</span>
+<p class="text-primary text-sm font-semibold">
+                        Маржа: <span class="text-[#0d1a1c] dark:text-white">16.7%</span> | Прибыль: <span class="text-[#0d1a1c] dark:text-white">30 TJS</span>
+</p>
+</div>
+</div>
+<div class="pt-6">
+<h3 class="text-lg font-bold text-[#0d1a1c] dark:text-white mb-4">Склад</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-1.5 opacity-70">
+<label class="text-sm font-medium text-gray-500 px-1">Текущий остаток</label>
+<div class="relative flex">
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 h-14 px-4 pr-12 text-base cursor-not-allowed" disabled="" type="text" value="45 шт"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">lock</span>
+</div>
+<p class="text-[11px] text-gray-400 px-1">Остаток изменяется через документы поступления или продажи</p>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-medium text-gray-300 dark:text-gray-400 px-1">Минимальный остаток</label>
+<input class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white h-14 px-4 text-base" type="text" value="10 шт"/>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-gray-500 uppercase px-1">Ед. изм.</label>
+<div class="relative">
+<select class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white h-12 px-3 text-sm">
+<option>шт</option>
+<option>кг</option>
+<option>упак</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-gray-500 uppercase px-1">Поставщик</label>
+<div class="relative">
+<select class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0d1a1c] dark:text-white h-12 px-3 text-sm">
+<option>Global Coffee</option>
+<option>ООО Импорт</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6 flex items-center justify-between pb-10">
+<div class="flex flex-col">
+<span class="text-base font-semibold text-[#0d1a1c] dark:text-white">Активен</span>
+<span class="text-xs text-gray-500">Показывать товар в каталоге</span>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 size-5 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] bg-white/95 dark:bg-background-dark/95 backdrop-blur-md p-4 border-t border-gray-100 dark:border-gray-800 flex gap-3 z-50">
+<button class="flex-1 h-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 font-bold text-base transition-active active:bg-gray-100">Отмена</button>
+<button class="flex-[1.5] h-14 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/30 transition-active active:scale-95">Сохранить</button>
+</div>
+</div>
+</body></html>

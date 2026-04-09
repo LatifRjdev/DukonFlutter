@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1E1E1E",
+                        "border-dark": "#333333",
+                        "text-secondary": "#B0B0B0",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white font-display flex justify-center items-center min-h-screen">
+<!-- Mobile Container (iPhone 14 Pro aspect ratio) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col shadow-2xl">
+<!-- Top App Bar / Navigation -->
+<div class="flex items-center p-4 pt-8 justify-between">
+<div class="text-white flex size-12 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<div class="flex-1"></div>
+</div>
+<!-- Headline & Header -->
+<div class="px-6 pt-2">
+<h1 class="text-white text-[24px] font-bold leading-tight tracking-tight">Вход в аккаунт</h1>
+<p class="text-text-secondary text-[14px] font-normal leading-normal mt-2">Рады видеть вас снова!</p>
+</div>
+<!-- Login Form -->
+<div class="flex flex-col gap-5 px-6 pt-10">
+<!-- Phone Field -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center rounded-[12px] bg-surface-dark border border-border-dark focus-within:border-primary px-4 h-[56px] transition-colors">
+<span class="material-symbols-outlined text-text-secondary mr-3">call</span>
+<input class="bg-transparent border-none text-white focus:ring-0 w-full p-0 placeholder:text-text-secondary text-base" placeholder="+992 __ ___ __ __" type="tel"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center rounded-[12px] bg-surface-dark border border-border-dark focus-within:border-primary px-4 h-[56px] transition-colors">
+<span class="material-symbols-outlined text-text-secondary mr-3">lock</span>
+<input class="bg-transparent border-none text-white focus:ring-0 w-full p-0 placeholder:text-text-secondary text-base" placeholder="Пароль" type="password"/>
+<span class="material-symbols-outlined text-text-secondary ml-3 cursor-pointer">visibility</span>
+</div>
+</div>
+<!-- Forgot Password -->
+<div class="flex justify-end">
+<a class="text-primary text-sm font-medium" href="#">Забыли пароль?</a>
+</div>
+<!-- Login Button -->
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold h-[56px] rounded-[12px] mt-2 transition-all active:scale-[0.98]">
+                Войти
+            </button>
+</div>
+<!-- Divider -->
+<div class="flex items-center gap-4 px-6 py-8">
+<div class="h-[1px] flex-1 bg-border-dark"></div>
+<span class="text-text-secondary text-sm">или</span>
+<div class="h-[1px] flex-1 bg-border-dark"></div>
+</div>
+<!-- Fingerprint / Biometric Login -->
+<div class="px-6">
+<button class="w-full border border-primary text-primary font-semibold h-[56px] rounded-[12px] flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">fingerprint</span>
+                Войти по отпечатку
+            </button>
+</div>
+<!-- Bottom Link -->
+<div class="mt-auto pb-10 text-center px-6">
+<p class="text-white text-sm">
+                Нет аккаунта? 
+                <a class="text-primary font-bold ml-1" href="#">Зарегистрироваться</a>
+</p>
+</div>
+<!-- Status Bar Mockup Spacer -->
+<div class="h-6 w-full"></div>
+</div>
+</body></html>

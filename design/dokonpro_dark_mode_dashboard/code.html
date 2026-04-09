@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Dark Mode Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "surface": "#1E1E1E",
+                        "danger": "#F44336",
+                        "success": "#4CAF50",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark/95 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2 cursor-pointer">
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Основной магазин</h2>
+<span class="material-symbols-outlined text-white text-[20px]">keyboard_arrow_down</span>
+</div>
+<div class="relative">
+<button class="flex items-center justify-center size-10 rounded-full bg-surface">
+<span class="material-symbols-outlined text-white">notifications</span>
+</button>
+<div class="absolute top-0 right-0 size-4 bg-danger border-2 border-background-dark rounded-full flex items-center justify-center">
+<span class="text-[10px] font-bold">3</span>
+</div>
+</div>
+</header>
+<!-- SegmentedButtons -->
+<div class="px-4 py-2">
+<div class="flex h-11 items-center justify-center rounded-xl bg-surface p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-400 text-sm font-semibold transition-all">
+<span class="truncate">Сегодня</span>
+<input checked="" class="hidden" name="period" type="radio" value="today"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-400 text-sm font-semibold transition-all">
+<span class="truncate">Неделя</span>
+<input class="hidden" name="period" type="radio" value="week"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-400 text-sm font-semibold transition-all">
+<span class="truncate">Месяц</span>
+<input class="hidden" name="period" type="radio" value="month"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-gray-400 text-sm font-semibold transition-all">
+<span class="truncate">Год</span>
+<input class="hidden" name="period" type="radio" value="year"/>
+</label>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 gap-3 p-4">
+<div class="flex flex-col gap-1 rounded-lg p-4 bg-surface shadow-lg">
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Продажи</p>
+<p class="text-white text-xl font-bold leading-tight">15,420 TJS</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+<p class="text-primary text-xs font-bold">+12%</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 rounded-lg p-4 bg-surface shadow-lg">
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Себестоимость</p>
+<p class="text-white text-xl font-bold leading-tight">12,100 TJS</p>
+<div class="mt-4"></div> <!-- Spacer -->
+</div>
+<div class="flex flex-col gap-1 rounded-lg p-4 bg-surface shadow-lg">
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Расходы</p>
+<p class="text-danger text-xl font-bold leading-tight">1,200 TJS</p>
+<div class="mt-4"></div> <!-- Spacer -->
+</div>
+<div class="flex flex-col gap-1 rounded-lg p-4 bg-surface shadow-lg">
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Чистая прибыль</p>
+<p class="text-success text-xl font-bold leading-tight">2,120 TJS</p>
+<div class="mt-4"></div> <!-- Spacer -->
+</div>
+</div>
+<!-- SectionHeader -->
+<div class="px-4 pt-4 pb-2">
+<h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Быстрые действия</h3>
+</div>
+<!-- Carousel (Quick Actions) -->
+<div class="flex overflow-x-auto no-scrollbar pb-4">
+<div class="flex items-stretch px-4 gap-3">
+<!-- Action Item 1 -->
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl min-w-[100px] h-28 bg-surface">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+</div>
+<p class="text-white text-xs font-medium">Остатки</p>
+</div>
+<!-- Action Item 2 -->
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl min-w-[100px] h-28 bg-surface">
+<div class="size-10 rounded-full bg-danger/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-danger">request_quote</span>
+</div>
+<div class="text-center">
+<p class="text-white text-xs font-medium">Долги пост.</p>
+<p class="text-danger text-[10px] font-bold">-5,000</p>
+</div>
+</div>
+<!-- Action Item 3 -->
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl min-w-[100px] h-28 bg-surface">
+<div class="size-10 rounded-full bg-success/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-success">account_balance_wallet</span>
+</div>
+<div class="text-center">
+<p class="text-white text-xs font-medium">Долги кли.</p>
+<p class="text-success text-[10px] font-bold">+12,000</p>
+</div>
+</div>
+<!-- Action Item 4 (Extra) -->
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl min-w-[100px] h-28 bg-surface">
+<div class="size-10 rounded-full bg-gray-500/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-300">history</span>
+</div>
+<p class="text-white text-xs font-medium">История</p>
+</div>
+</div>
+</div>
+<!-- Recent Sales Section -->
+<div class="px-4 pt-4 flex items-center justify-between mb-3">
+<h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Последние продажи</h3>
+<button class="text-primary text-sm font-semibold flex items-center gap-1">
+            Все продажи
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div class="px-4 space-y-2">
+<!-- Sale Item 1 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Чек #1234</p>
+<p class="text-gray-500 text-xs">14:32 • 2 товара</p>
+</div>
+</div>
+<p class="text-white font-bold">1,250 TJS</p>
+</div>
+<!-- Sale Item 2 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Чек #1233</p>
+<p class="text-gray-500 text-xs">13:15 • 5 товаров</p>
+</div>
+</div>
+<p class="text-white font-bold">840 TJS</p>
+</div>
+<!-- Sale Item 3 -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-lg">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Чек #1232</p>
+<p class="text-gray-500 text-xs">12:40 • 1 товар</p>
+</div>
+</div>
+<p class="text-white font-bold">45 TJS</p>
+</div>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-28 size-14 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center z-50 hover:scale-105 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<!-- Bottom Tab Bar -->
+<nav class="fixed bottom-0 inset-x-0 bg-surface border-t border-white/5 px-6 pt-3 pb-8 flex items-center justify-between z-40">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[26px]">grid_view</span>
+<span class="text-[10px] font-bold">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[26px]">inventory</span>
+<span class="text-[10px] font-medium">Склад</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[26px]">groups</span>
+<span class="text-[10px] font-medium">Клиенты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[26px]">bar_chart</span>
+<span class="text-[10px] font-medium">Отчеты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[26px]">settings</span>
+<span class="text-[10px] font-medium">Настройки</span>
+</div>
+</nav>
+</body></html>

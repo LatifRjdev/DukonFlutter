@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13d3ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1E1E1E",
+                        "border-dark": "#333333",
+                        "text-secondary": "#B0B0B0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Inter", sans-serif;
+    -webkit-tap-highlight-color: transparent
+    }
+.custom-select {
+    appearance: none;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD3yM_D5YzBkxd88wf2MFNWZeetriCZHEbI9AK86HSzObv7CGGijLVGGPkhYcJvVYwHQBqOHsFxkZErEVNORBNZ9z8a2ncLMUwCSJg7K44PriH2R09D3f4g2IHMsvv6a0Y8bPzkR1_fUQ7BKYkreH3SsD450nUGagB2bVk_P87MqJTpPQybPkQYX4tMtYcqFqbyXiEmBeqkUnuBepfiORNtBxgXwwrJYuJ70qfYepg5p8z6kek0-Q-956knNQohWAeKjG0VfOqXZ9Iw);
+    background-repeat: no-repeat;
+    background-position: right 1rem center
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white min-h-screen">
+<div class="max-w-[393px] mx-auto min-h-screen flex flex-col relative pb-24">
+<!-- TopAppBar -->
+<header class="flex items-center p-4 justify-between sticky top-0 bg-background-dark z-10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer">arrow_back</span>
+<h2 class="text-xl font-bold leading-tight">Приход товара</h2>
+</div>
+<button class="flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined">history</span>
+</button>
+</header>
+<main class="flex flex-col gap-4 px-4 pb-4">
+<!-- Warning Banner -->
+<div class="bg-[#3E2723] border-l-4 border-orange-500 p-4 rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<p class="text-sm font-medium text-orange-200">Доступно обновление цен</p>
+<p class="text-xs text-orange-300/80">3 товара изменили стоимость</p>
+</div>
+<button class="bg-orange-500 text-white px-4 py-1.5 rounded-full text-xs font-bold">Обновить</button>
+</div>
+<!-- Information Card -->
+<div class="bg-card-dark rounded-2xl p-4 flex flex-col gap-4">
+<label class="flex flex-col">
+<p class="text-text-secondary text-xs font-medium pb-1">Поставщик</p>
+<select class="custom-select w-full rounded-xl text-white border-none bg-[#2C2C2C] h-12 px-4 text-sm font-medium focus:ring-1 focus:ring-primary/50">
+<option value="one">ООО Саховат</option>
+<option value="two">ИП Алиев</option>
+</select>
+</label>
+<div class="flex gap-3">
+<label class="flex flex-col flex-1">
+<p class="text-text-secondary text-xs font-medium pb-1">Дата</p>
+<input class="w-full rounded-xl text-white border-none bg-[#2C2C2C] h-12 px-4 text-sm font-medium focus:ring-1 focus:ring-primary/50" type="text" value="03.02.2026"/>
+</label>
+<label class="flex flex-col flex-[1.5]">
+<p class="text-text-secondary text-xs font-medium pb-1">Накладная</p>
+<input class="w-full rounded-xl text-white border-none bg-[#2C2C2C] h-12 px-4 text-sm font-medium focus:ring-1 focus:ring-primary/50" type="text" value="НКЛ-2024-0156"/>
+</label>
+</div>
+</div>
+<!-- Search & Scan Bar -->
+<div class="flex gap-2">
+<div class="flex-1 relative">
+<div class="absolute inset-y-0 left-3 flex items-center text-text-secondary pointer-events-none">
+<span class="material-symbols-outlined text-lg">search</span>
+</div>
+<input class="w-full rounded-xl border-none bg-card-dark h-12 pl-10 pr-4 text-sm placeholder:text-text-secondary focus:ring-1 focus:ring-primary/50" placeholder="Поиск товаров"/>
+</div>
+<button class="bg-primary text-background-dark w-12 h-12 flex items-center justify-center rounded-xl">
+<span class="material-symbols-outlined font-bold">qr_code_scanner</span>
+</button>
+</div>
+<!-- Items Card -->
+<div class="bg-card-dark rounded-2xl overflow-hidden">
+<div class="p-4 border-b border-border-dark flex justify-between items-start">
+<div class="flex flex-col">
+<p class="font-bold text-base leading-tight">Кофе растворимый</p>
+<p class="text-text-secondary text-xs mt-0.5">SKU: КФ-001</p>
+</div>
+<span class="material-symbols-outlined text-red-500 cursor-pointer">delete</span>
+</div>
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3 bg-[#2C2C2C] rounded-full p-1 pr-4">
+<button class="w-8 h-8 rounded-full bg-border-dark flex items-center justify-center text-lg font-bold">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-6 text-center">50</span>
+<button class="w-8 h-8 rounded-full bg-border-dark flex items-center justify-center text-lg font-bold">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-lg">8,000 TJS</p>
+<p class="text-[10px] text-text-secondary">Цена: 160 TJS/ед.</p>
+</div>
+</div>
+<div class="border-t border-border-dark p-4 border-b border-border-dark flex justify-between items-start opacity-80">
+<div class="flex flex-col">
+<p class="font-bold text-base leading-tight">Чай листовой (черный)</p>
+<p class="text-text-secondary text-xs mt-0.5">SKU: ЧЙ-024</p>
+</div>
+<span class="material-symbols-outlined text-red-500 cursor-pointer">delete</span>
+</div>
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3 bg-[#2C2C2C] rounded-full p-1 pr-4">
+<button class="w-8 h-8 rounded-full bg-border-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-6 text-center">12</span>
+<button class="w-8 h-8 rounded-full bg-border-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-lg">5,660 TJS</p>
+</div>
+</div>
+</div>
+<!-- Total Card -->
+<div class="bg-card-dark rounded-2xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm">
+<p class="text-text-secondary">Количество позиций</p>
+<p class="font-bold">2</p>
+</div>
+<div class="flex justify-between items-center text-sm">
+<p class="text-text-secondary">Общее кол-во товаров</p>
+<p class="font-bold">62</p>
+</div>
+<div class="h-[1px] bg-border-dark my-1"></div>
+<div class="flex justify-between items-center">
+<p class="text-base font-medium">Итого к оплате</p>
+<p class="text-primary text-2xl font-bold">13,660 TJS</p>
+</div>
+</div>
+</main>
+<!-- Fixed Action Button -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto p-4 bg-background-dark/80 backdrop-blur-md">
+<button class="w-full bg-primary text-background-dark py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/10">
+                Оприходовать
+            </button>
+</div>
+</div>
+</body></html>

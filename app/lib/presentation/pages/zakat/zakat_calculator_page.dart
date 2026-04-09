@@ -1,0 +1,376 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../blocs/zakat/zakat_bloc.dart';
+import '../../blocs/zakat/zakat_event.dart';
+import '../../blocs/zakat/zakat_state.dart';
+
+class ZakatCalculatorPage extends StatefulWidget {
+  final String storeId;
+  const ZakatCalculatorPage({super.key, required this.storeId});
+  @override
+  State<ZakatCalculatorPage> createState() => _ZakatCalculatorPageState();
+}
+
+class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
+  String _formatPrice(double value) {
+    final formatter = NumberFormat('#,##0', 'ru');
+    return '${formatter.format(value)} TJS';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ZakatBloc>().add(ZakatCalculateRequested(storeId: widget.storeId));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
+              child: Row(
+                children: [
+                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  const Text('Калькулятор закята',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
+                    onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.list_alt_outlined, color: AppColors.textSecondary),
+                    onPressed: () => context.push('/zakat/history', extra: widget.storeId),
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Expanded(
+              child: BlocConsumer<ZakatBloc, ZakatState>(
+                listener: (context, state) {
+                  if (state is ZakatActionSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
+                    );
+                    context.read<ZakatBloc>().add(ZakatCalculateRequested(storeId: widget.storeId));
+                  }
+                  if (state is ZakatError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is ZakatLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state is ZakatCalculated) {
+                    final calc = state.calculation;
+                    final totalAssets = calc.stockValue + calc.receivables;
+
+                    return ListView(
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        // Info banner
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE0F7FA),
+                            borderRadius: BorderRadius.circular(12),
+                            border: const Border(left: BorderSide(color: Color(0xFF00838F), width: 3)),
+                          ),
+                          child: const Text(
+                            'Закят — 2.5% от имущества, хранящегося 1 лунный год',
+                            style: TextStyle(fontSize: 12, color: Color(0xFF00838F)),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Assets section
+                        Row(
+                          children: [
+                            const Text('АКТИВЫ МАГАЗИНА',
+                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                            const Spacer(),
+                            Text(_formatPrice(totalAssets),
+                              style: const TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Stock value card
+                        _buildAssetCard(
+                          icon: Icons.inventory_2_outlined,
+                          title: 'Товарные остатки',
+                          amount: calc.stockValue,
+                          subtitle: 'Автоматически из каталога',
+                          badge: 'Авто',
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Receivables card
+                        _buildAssetCard(
+                          icon: Icons.people_outlined,
+                          title: 'Дебиторская задолженность',
+                          amount: calc.receivables,
+                          subtitle: 'Долги клиентов',
+                          badge: 'Авто',
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Deductions section
+                        Row(
+                          children: [
+                            const Text('ВЫЧЕТЫ',
+                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                            const Spacer(),
+                            Text('-${_formatPrice(calc.payables)}',
+                              style: const TextStyle(fontSize: 14, color: AppColors.error, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        _buildAssetCard(
+                          icon: Icons.remove_circle_outline,
+                          iconColor: AppColors.error,
+                          title: 'Долги поставщикам',
+                          amount: calc.payables,
+                          amountColor: AppColors.error,
+                          amountPrefix: '-',
+                          subtitle: 'Автоматически из модуля',
+                          badge: 'Авто',
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Dashed divider
+                        CustomPaint(
+                          painter: _DashedLinePainter(),
+                          size: const Size(double.infinity, 1),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Totals card
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Облагаемая сумма:',
+                                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                                  Text(_formatPrice(calc.netAssets),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Нисаб (85г золота):',
+                                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                                  Row(
+                                    children: [
+                                      Text(_formatPrice(calc.nisabAmount),
+                                        style: const TextStyle(fontSize: 14)),
+                                      if (calc.isAboveNisab) ...[
+                                        const SizedBox(width: 6),
+                                        const Icon(Icons.check_circle, size: 14, color: AppColors.success),
+                                        const SizedBox(width: 2),
+                                        const Text('Превышен',
+                                          style: TextStyle(fontSize: 11, color: AppColors.success)),
+                                      ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const Divider(height: 24),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('СУММА ЗАКЯТА (2.5%):',
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                                  Text(_formatPrice(calc.zakatDue),
+                                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.primary)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        if (!calc.isAboveNisab) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFF3E0),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.info_outline, size: 18, color: Color(0xFFFF9800)),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text('Активы ниже нисаба. Закят не обязателен.',
+                                    style: TextStyle(fontSize: 13, color: Color(0xFFFF9800))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 24),
+
+                        // Pay button
+                        if (calc.isAboveNisab && calc.zakatDue > 0)
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.read<ZakatBloc>().add(ZakatPaymentSubmitted(
+                                  storeId: widget.storeId,
+                                  data: {
+                                    'amount': calc.zakatDue,
+                                    'totalAssets': calc.netAssets,
+                                    'zakatDue': calc.zakatDue,
+                                    'paidAt': DateTime.now().toIso8601String(),
+                                  },
+                                ));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              child: const Text('Отметить как оплачено',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                            ),
+                          ),
+                        const SizedBox(height: 12),
+
+                        // Share button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: OutlinedButton.icon(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                              side: const BorderSide(color: AppColors.primary),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            icon: const Icon(Icons.share_outlined, size: 18),
+                            label: const Text('Поделиться расчётом',
+                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAssetCard({
+    required IconData icon,
+    required String title,
+    required double amount,
+    String? subtitle,
+    String? badge,
+    Color? iconColor,
+    Color? amountColor,
+    String amountPrefix = '',
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: iconColor ?? AppColors.primary, size: 18),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    if (badge != null) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(badge,
+                          style: const TextStyle(fontSize: 9, color: AppColors.success, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ],
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 2),
+                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                ],
+              ],
+            ),
+          ),
+          Text('$amountPrefix${_formatPrice(amount)}',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: amountColor)),
+        ],
+      ),
+    );
+  }
+}
+
+class _DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.divider
+      ..strokeWidth = 1;
+    const dashWidth = 6.0;
+    const dashSpace = 4.0;
+    double x = 0;
+    while (x < size.width) {
+      canvas.drawLine(Offset(x, 0), Offset(x + dashWidth, 0), paint);
+      x += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

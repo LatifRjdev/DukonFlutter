@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b1c6",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display">
+<!-- Main Container (iPhone 14 Pro aspect ratio simulation) -->
+<div class="relative mx-auto w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-3 justify-between">
+<div class="flex items-center justify-center w-10 h-10 -ml-2">
+<span class="material-symbols-outlined text-[#0d1a1b] dark:text-white cursor-pointer" style="font-size: 24px;">arrow_back</span>
+</div>
+<h1 class="text-[#0d1a1b] dark:text-white text-[18px] font-semibold leading-tight tracking-tight flex-1 text-center">Мои магазины</h1>
+<div class="flex w-10 h-10 items-center justify-center -mr-2">
+<button class="flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[#0d1a1b] dark:text-white" style="font-size: 24px;">add</span>
+</button>
+</div>
+</header>
+<!-- Store List Container -->
+<main class="flex-1 px-4 pt-4 space-y-3 pb-24">
+<!-- Store Item 1 -->
+<div class="bg-white dark:bg-[#1a2d2f] rounded-lg p-4 ios-shadow flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 text-primary shrink-0 size-12">
+<span class="material-symbols-outlined" style="font-size: 28px;">storefront</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<p class="text-[#0d1a1b] dark:text-white text-base font-bold leading-normal">Основной магазин</p>
+</div>
+<p class="text-[#6b7280] dark:text-gray-400 text-sm font-normal leading-normal">Продукты • 3 сотрудника • 245 товаров</p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Status Badge -->
+<div class="flex">
+<div class="flex h-6 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-green-100 dark:bg-green-900/30 px-3">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+<p class="text-green-700 dark:text-green-400 text-[12px] font-semibold uppercase tracking-wider">Активен</p>
+</div>
+</div>
+</div>
+<!-- Store Item 2 -->
+<div class="bg-white dark:bg-[#1a2d2f] rounded-lg p-4 ios-shadow flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 text-primary shrink-0 size-12">
+<span class="material-symbols-outlined" style="font-size: 28px;">location_on</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1a1b] dark:text-white text-base font-bold leading-normal">Филиал на Рудаки</p>
+<p class="text-[#6b7280] dark:text-gray-400 text-sm font-normal leading-normal">Продукты • 1 сотрудник • 120 товаров</p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Status Badge -->
+<div class="flex">
+<div class="flex h-6 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-green-100 dark:bg-green-900/30 px-3">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+<p class="text-green-700 dark:text-green-400 text-[12px] font-semibold uppercase tracking-wider">Активен</p>
+</div>
+</div>
+</div>
+<!-- Store Item 3 -->
+<div class="bg-white dark:bg-[#1a2d2f] rounded-lg p-4 ios-shadow flex flex-col gap-3 opacity-80">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 shrink-0 size-12">
+<span class="material-symbols-outlined" style="font-size: 28px;">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1a1b] dark:text-white text-base font-bold leading-normal">Склад</p>
+<p class="text-[#6b7280] dark:text-gray-400 text-sm font-normal leading-normal">0 сотрудников • 500 товаров</p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Status Badge -->
+<div class="flex">
+<div class="flex h-6 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-gray-200 dark:bg-gray-700 px-3">
+<span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+<p class="text-gray-600 dark:text-gray-300 text-[12px] font-semibold uppercase tracking-wider">Неактивен</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<div class="fixed bottom-8 right-8 z-20">
+<button class="flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-lg shadow-primary/40 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 32px;">add</span>
+</button>
+</div>
+<!-- Bottom Tab Bar (iOS Style Placeholder) -->
+<nav class="fixed bottom-0 w-full max-w-[393px] bg-white/80 dark:bg-[#102022]/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 h-[84px] flex justify-around items-start pt-3">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-medium text-primary">Магазины</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-40">
+<span class="material-symbols-outlined text-[#0d1a1b] dark:text-white">analytics</span>
+<span class="text-[10px] font-medium text-[#0d1a1b] dark:text-white">Отчеты</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-40">
+<span class="material-symbols-outlined text-[#0d1a1b] dark:text-white">settings</span>
+<span class="text-[10px] font-medium text-[#0d1a1b] dark:text-white">Настройки</span>
+</div>
+</nav>
+<!-- Home Indicator -->
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/10 dark:bg-white/10 rounded-full z-30"></div>
+</div>
+</body></html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Inventory Dark Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1E1E1E",
+                        "chip-dark": "#2C2C2C",
+                        "text-muted": "#B0B0B0",
+                        "warning": "#FF9800",
+                        "danger": "#F44336"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white font-display">
+<div class="mx-auto min-h-screen max-w-[393px] flex flex-col relative pb-[160px]">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-20 bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<h1 class="text-white text-[20px] font-bold leading-tight tracking-tight">Товары</h1>
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white text-[24px]">add</span>
+</button>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white text-[24px]">more_horiz</span>
+</button>
+</div>
+</header>
+<!-- SearchBar -->
+<div class="px-4 py-2">
+<div class="flex items-center gap-2 bg-card-dark rounded-[12px] h-[48px] px-3 shadow-sm border border-white/5">
+<span class="material-symbols-outlined text-text-muted text-[22px]">search</span>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-[15px] placeholder:text-text-muted text-white h-full" placeholder="Поиск товара" type="text"/>
+<div class="flex items-center gap-3 pr-1">
+<button class="text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">barcode_scanner</span>
+</button>
+<div class="w-[1px] h-6 bg-white/10"></div>
+<button class="text-text-muted flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">filter_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Chips -->
+<div class="flex gap-2 p-4 overflow-x-auto hide-scrollbar">
+<div class="flex h-[36px] shrink-0 items-center justify-center rounded-full bg-primary px-5 transition-all">
+<p class="text-white text-[14px] font-semibold leading-none">Все</p>
+</div>
+<div class="flex h-[36px] shrink-0 items-center justify-center rounded-full bg-chip-dark px-5 border border-white/5">
+<p class="text-text-muted text-[14px] font-medium leading-none">В наличии</p>
+</div>
+<div class="flex h-[36px] shrink-0 items-center justify-center rounded-full bg-chip-dark px-5 border border-white/5">
+<p class="text-text-muted text-[14px] font-medium leading-none">Нет на складе</p>
+</div>
+<div class="flex h-[36px] shrink-0 items-center justify-center rounded-full bg-chip-dark px-5 border border-white/5">
+<p class="text-text-muted text-[14px] font-medium leading-none">Мало</p>
+</div>
+</div>
+<!-- Product List -->
+<main class="flex flex-col gap-3 px-4 py-2">
+<!-- Card 1 -->
+<div class="flex gap-4 bg-card-dark p-3 rounded-[16px] border border-white/5 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-[12px] size-[74px] shrink-0 bg-zinc-800" data-alt="Pack of instant coffee jar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBVeDbKg_VRpb97i8d5Sm13xUba2G_zzDUs4NclfE0JkUf61dqhhaUqEBeelperIqYSPLiUuYyDyvZr6J7ZNttDkO9Hnu2nG9DUaOv7ZNLAPlzK4wdD2_e0Bkf0npAwVp6IJjPizJWaXQSHn3bXux1TMjWsV5j7CPIudWMNAqCBBrSUb74cG2U7BMiHwkpmJrtIO2H8KJYZDgzIJCZcQO9sIR7typ0dbDsL8x_BA9hn3y_jHB37SSUNnlwAXly_KeDJlq4IMWdagu4X");'>
+</div>
+<div class="flex flex-1 flex-col justify-between min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white text-[16px] font-semibold leading-tight truncate">Кофе растворимый</p>
+<span class="material-symbols-outlined text-text-muted text-[20px]">chevron_right</span>
+</div>
+<p class="text-text-muted text-[13px] mt-1">SKU: COFFEE-001</p>
+<div class="flex items-center justify-between mt-2">
+<p class="text-white text-[14px] font-medium">45 шт</p>
+<p class="text-primary text-[16px] font-bold">180 TJS</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex gap-4 bg-card-dark p-3 rounded-[16px] border border-white/5 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-[12px] size-[74px] shrink-0 bg-zinc-800" data-alt="Sugar package 1kg white" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbEMXdn2esAl-iWtkQq4U13sDyMTLiWLFN9LWCmMw3-IN2gqE4KtzoJPI1P7L3enGa3hgNyNjtdYPiE25_CAKRy53VB-NMafzCmh2Uj_Cw_7Vi32D0j6A4gw5z5eCA9XSyJfJmc3DJswV-_Wgt7OrCX3J5bxOMd2HmrwmWSiCTedNk-ElZxnHzgQ5cbKUL9b0onC4sbjB-ute8dYrLKuLvLG5DM8cLl5cugwsSTFSLwi6ZKnsMPq60EMZ_up8DTItq4EZUKpT6PmBW");'>
+</div>
+<div class="flex flex-1 flex-col justify-between min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white text-[16px] font-semibold leading-tight truncate">Сахар 1кг</p>
+<span class="material-symbols-outlined text-text-muted text-[20px]">chevron_right</span>
+</div>
+<p class="text-text-muted text-[13px] mt-1">SKU: SUGAR-002</p>
+<div class="flex items-center justify-between mt-2">
+<p class="text-warning text-[14px] font-medium">8 шт</p>
+<p class="text-primary text-[16px] font-bold">55 TJS</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex gap-4 bg-card-dark p-3 rounded-[16px] border border-white/5 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-[12px] size-[74px] shrink-0 bg-zinc-800" data-alt="Green tea leaves loose" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBz41v9FzOSDOJYf6XkXDCyzaSejg6IYIiKGHPvbjxcXzfTJg4_pxuEIyXxdM412u3QoX5xVtarOeGT2VkSZaUmHIXuM3cilODoruOwTWBfGi_hswXJn6S9w5lS4R34ljqPfklEk-BNiTlzOQR-ebmVdD2BmoZiQeE0vrUejFjszYQT-hSclCk9EI7x0A9Cupxm47d4QgANCsdO7qvUSf-cd7RRCHRLZjV7fkAAJLbToPjYiKKbLYjJtn8pVYNAZHpWo7NEoN56AHPN");'>
+</div>
+<div class="flex flex-1 flex-col justify-between min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-white text-[16px] font-semibold leading-tight truncate">Чай зелёный</p>
+<span class="material-symbols-outlined text-text-muted text-[20px]">chevron_right</span>
+</div>
+<p class="text-text-muted text-[13px] mt-1">SKU: TEA-003</p>
+<div class="flex items-center justify-between mt-2">
+<p class="text-danger text-[14px] font-medium">0 шт</p>
+<p class="text-primary text-[16px] font-bold">120 TJS</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer & Tab Bar -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto z-30">
+<!-- Totals Footer -->
+<div class="bg-card-dark border-t border-white/10 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-center text-[13px] font-medium text-white/90">
+<div class="flex items-center gap-1">
+<span class="text-text-muted font-normal">Сумма:</span>
+<span>125,400 TJS</span>
+</div>
+<div class="w-[1px] h-3 bg-white/20"></div>
+<div class="flex items-center gap-1">
+<span class="text-text-muted font-normal">Себест.:</span>
+<span>98,200 TJS</span>
+</div>
+</div>
+</div>
+<!-- Tab Bar -->
+<nav class="bg-card-dark border-t border-white/5 px-6 pb-6 pt-2 flex justify-between items-center">
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[24px] fill-[1]">inventory_2</span>
+<span class="text-[10px] font-semibold">Товары</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+<span class="text-[10px] font-medium">Продажи</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</div>
+</nav>
+</div>
+</div>
+</body></html>

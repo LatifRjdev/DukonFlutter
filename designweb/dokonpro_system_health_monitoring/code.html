@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro System Health Monitoring</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(0, 189, 214, 0.1);
+            color: #00bdd6;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 antialiased">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-[#1E293B] text-white flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">monitoring</span>
+</div>
+<div>
+<h1 class="text-base font-semibold leading-none">DokonPro</h1>
+<p class="text-xs text-slate-400 mt-1">Admin Panel</p>
+</div>
+</div>
+<nav class="flex-1 px-3 mt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Дашборд</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg sidebar-active transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="text-sm font-medium">Система</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Пользователи</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="text-sm font-medium">Логи</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Настройки</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-slate-800/50 rounded-lg p-3">
+<p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-2">Статус сервера</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+<span class="text-xs font-medium text-slate-300">Region: EU-West</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-2xl font-bold text-slate-900">Здоровье системы</h2>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span class="text-xs font-bold">Все системы работают</span>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Обновить
+                </button>
+</header>
+<div class="p-6 space-y-6 max-w-[1400px] mx-auto">
+<!-- Status Cards Row -->
+<div class="grid grid-cols-5 gap-4">
+<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-emerald-500 flex flex-col gap-1">
+<p class="text-xs font-medium text-slate-500">API Gateway</p>
+<div class="flex items-baseline justify-between">
+<p class="text-xl font-bold">24ms</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase">OK</span>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-emerald-500 flex flex-col gap-1">
+<p class="text-xs font-medium text-slate-500">Database</p>
+<div class="flex items-baseline justify-between">
+<p class="text-xl font-bold">12ms</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase">OK</span>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-emerald-500 flex flex-col gap-1">
+<p class="text-xs font-medium text-slate-500">Redis Cache</p>
+<div class="flex items-baseline justify-between">
+<p class="text-xl font-bold">2ms</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase">OK</span>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-emerald-500 flex flex-col gap-1">
+<p class="text-xs font-medium text-slate-500">WebSockets</p>
+<div class="flex items-baseline justify-between">
+<p class="text-xl font-bold">1.5k</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase">OK</span>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-500 flex flex-col gap-1">
+<p class="text-xs font-medium text-slate-500">Sync Queue</p>
+<div class="flex items-baseline justify-between">
+<p class="text-xl font-bold">342</p>
+<span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded uppercase">BUSY</span>
+</div>
+</div>
+</div>
+<!-- Analytics Row -->
+<div class="grid grid-cols-10 gap-6">
+<!-- API Response Time Chart -->
+<div class="col-span-6 bg-white rounded-lg shadow-sm p-5">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-bold text-slate-800">API Response Time (24ч)</h3>
+<p class="text-sm text-slate-500">Среднее время отклика: 145ms</p>
+</div>
+<div class="flex gap-4 text-[11px] font-bold text-slate-400">
+<span>p50: 120ms</span>
+<span>p95: 185ms</span>
+<span>p99: 210ms</span>
+<span class="text-rose-500">MAX: 450ms</span>
+</div>
+</div>
+<div class="relative h-[200px] w-full">
+<!-- SLA Line -->
+<div class="absolute top-[25%] left-0 w-full border-t border-dashed border-rose-300 z-0">
+<span class="absolute -top-5 right-0 text-[10px] text-rose-400 font-bold uppercase tracking-wider">SLA Threshold (200ms)</span>
+</div>
+<!-- Chart SVG -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 40">
+<path d="M0 30 Q 10 28, 20 32 T 40 25 T 60 28 T 80 22 T 100 25" fill="none" stroke="#00bdd6" stroke-width="1.5"></path>
+<path d="M0 30 Q 10 28, 20 32 T 40 25 T 60 28 T 80 22 T 100 25 L 100 40 L 0 40 Z" fill="url(#gradient)" opacity="0.1"></path>
+<defs>
+<lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#00bdd6;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#00bdd6;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="flex justify-between mt-4 text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+<span>00:00</span>
+<span>06:00</span>
+<span>12:00</span>
+<span>18:00</span>
+<span>23:59</span>
+</div>
+</div>
+<!-- Server Resources -->
+<div class="col-span-4 bg-white rounded-lg shadow-sm p-5">
+<div class="flex justify-between items-start mb-6">
+<h3 class="font-bold text-slate-800">Ресурсы сервера</h3>
+<div class="text-right">
+<p class="text-[10px] font-bold text-emerald-600 uppercase">Uptime 99.98%</p>
+<p class="text-[10px] text-slate-400">Restart: 14d ago</p>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1.5">
+<span class="text-xs font-medium text-slate-600">CPU Usage</span>
+<span class="text-xs font-bold text-slate-800">34%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 34%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1.5">
+<span class="text-xs font-medium text-slate-600">RAM Allocation</span>
+<span class="text-xs font-bold text-slate-800">39%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 39%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1.5">
+<span class="text-xs font-medium text-slate-600">Disk Space (NVMe)</span>
+<span class="text-xs font-bold text-slate-800">24%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 24%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1.5">
+<span class="text-xs font-medium text-slate-600">DB Connections</span>
+<span class="text-xs font-bold text-slate-800">45%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-orange-500 h-full rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Operations Row -->
+<div class="grid grid-cols-2 gap-6">
+<!-- Sync Queue -->
+<div class="bg-white rounded-lg shadow-sm p-5">
+<h3 class="font-bold text-slate-800 mb-4">Очередь синхронизации</h3>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Pending</p>
+<p class="text-2xl font-bold text-slate-900">342</p>
+</div>
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Processed Today</p>
+<p class="text-2xl font-bold text-slate-900">45,200</p>
+</div>
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Errors (24h)</p>
+<p class="text-2xl font-bold text-rose-600">12</p>
+</div>
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Avg Process Time</p>
+<p class="text-2xl font-bold text-slate-900">1.2s</p>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-[10px] font-bold text-slate-400 uppercase">Hourly Volume</p>
+<div class="flex items-end gap-1 h-12">
+<div class="flex-1 bg-primary/20 rounded-t h-[40%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t h-[60%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t h-[45%]"></div>
+<div class="flex-1 bg-primary/40 rounded-t h-[80%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t h-[55%]"></div>
+<div class="flex-1 bg-primary/30 rounded-t h-[70%]"></div>
+<div class="flex-1 bg-primary rounded-t h-[95%]"></div>
+<div class="flex-1 bg-primary/60 rounded-t h-[85%]"></div>
+</div>
+</div>
+</div>
+<!-- Errors Sentry -->
+<div class="bg-white rounded-lg shadow-sm p-5">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-bold text-slate-800">Ошибки (Sentry, 24ч)</h3>
+<span class="text-xs font-bold text-rose-500 px-2 py-0.5 bg-rose-50 rounded">87 Events</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-rose-100 flex items-center justify-center text-rose-600">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">SyncEngine: Auth Failure</p>
+<p class="text-[10px] text-slate-400">Occurred 5 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-rose-600 text-white text-[9px] font-bold rounded uppercase">Critical</span>
+<span class="text-sm font-bold text-slate-700">x14</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined text-[18px]">report</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">PaymentService: Timeout</p>
+<p class="text-[10px] text-slate-400">Occurred 42 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-orange-500 text-white text-[9px] font-bold rounded uppercase">Error</span>
+<span class="text-sm font-bold text-slate-700">x42</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-yellow-100 flex items-center justify-center text-yellow-600">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">ImageUpload: Resize Failed</p>
+<p class="text-[10px] text-slate-400">Occurred 2 hours ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-yellow-400 text-slate-800 text-[9px] font-bold rounded uppercase">Warning</span>
+<span class="text-sm font-bold text-slate-700">x31</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

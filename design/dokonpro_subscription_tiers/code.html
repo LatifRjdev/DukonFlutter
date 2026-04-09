@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b1c6",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852 approx) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark shadow-2xl flex flex-col overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 pb-2 justify-between">
+<div class="text-[#0d1a1b] dark:text-white flex size-10 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Тарифы</h2>
+</header>
+<main class="flex-1 overflow-y-auto">
+<!-- Headline & Body Text -->
+<div class="px-4 py-6">
+<h3 class="text-[#0d1a1b] dark:text-white tracking-light text-2xl font-bold leading-tight text-center">Выберите тариф</h3>
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal leading-normal pt-2 text-center">Попробуйте бесплатно 10 дней</p>
+</div>
+<!-- Pricing Cards Vertical List -->
+<div class="flex flex-col gap-4 px-4 pb-8">
+<!-- START Plan -->
+<div class="flex flex-col gap-4 rounded-lg border border-solid border-[#e0e0e0] dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+<div class="flex flex-col gap-1">
+<h1 class="text-[#0d1a1b] dark:text-white text-base font-bold leading-tight uppercase tracking-wider">СТАРТ</h1>
+<p class="flex items-baseline gap-1 text-[#0d1a1b] dark:text-white">
+<span class="text-4xl font-black leading-tight tracking-[-0.033em]">100</span>
+<span class="text-base font-bold leading-tight">сомони/мес</span>
+</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 border-2 border-primary bg-transparent text-primary text-sm font-bold leading-normal transition-colors hover:bg-primary/5">
+<span class="truncate">Выбрать</span>
+</button>
+<div class="flex flex-col gap-3 mt-2">
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            1 магазин
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            1 кассир
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            До 500 товаров
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Базовые отчёты
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Офлайн-режим
+                        </div>
+</div>
+</div>
+<!-- BUSINESS Plan (Highlighted) -->
+<div class="flex flex-col gap-4 rounded-lg border-2 border-solid border-primary bg-white dark:bg-gray-800 p-6 relative">
+<div class="absolute -top-3 right-6">
+<span class="text-white text-[10px] font-bold leading-normal tracking-wider uppercase rounded-full bg-primary px-3 py-1 shadow-sm">
+                            Популярный
+                        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h1 class="text-[#0d1a1b] dark:text-white text-base font-bold leading-tight uppercase tracking-wider">БИЗНЕС</h1>
+<p class="flex items-baseline gap-1 text-[#0d1a1b] dark:text-white">
+<span class="text-4xl font-black leading-tight tracking-[-0.033em]">200</span>
+<span class="text-base font-bold leading-tight">сомони/мес</span>
+</p>
+</div>
+<div class="flex min-w-[84px] items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-primary text-white text-sm font-bold leading-normal">
+<span class="truncate">Ваш тариф</span>
+</div>
+<div class="flex flex-col gap-3 mt-2">
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            3 магазина
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            5 сотрудников
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            5,000 товаров
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Telegram-бот
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Лояльность
+                        </div>
+</div>
+</div>
+<!-- PREMIUM Plan -->
+<div class="flex flex-col gap-4 rounded-lg border border-solid border-[#e0e0e0] dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+<div class="flex flex-col gap-1">
+<h1 class="text-[#0d1a1b] dark:text-white text-base font-bold leading-tight uppercase tracking-wider">ПРЕМИУМ</h1>
+<p class="flex items-baseline gap-1 text-[#0d1a1b] dark:text-white">
+<span class="text-4xl font-black leading-tight tracking-[-0.033em]">300</span>
+<span class="text-base font-bold leading-tight">сомони/мес</span>
+</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 border-2 border-primary bg-transparent text-primary text-sm font-bold leading-normal transition-colors hover:bg-primary/5">
+<span class="truncate">Выбрать</span>
+</button>
+<div class="flex flex-col gap-3 mt-2">
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Безлимит
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Фискализация
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            API доступ
+                        </div>
+<div class="text-[13px] font-normal leading-normal flex items-center gap-3 text-[#0d1a1b] dark:text-gray-300">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Персональный менеджер
+                        </div>
+</div>
+</div>
+</div>
+<!-- MetaText Comparison Link -->
+<div class="pb-10 px-4">
+<p class="text-primary text-sm font-semibold leading-normal text-center underline cursor-pointer hover:opacity-80">
+                    Сравнить все возможности
+                </p>
+</div>
+</main>
+<!-- Bottom Tab Bar Placeholder (iOS Style) -->
+<div class="h-8 bg-background-light dark:bg-background-dark flex justify-center items-center pb-2">
+<div class="w-32 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Home Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                        "success": "#4CAF50",
+                        "danger": "#F44336",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white antialiased">
+<!-- Main Container (iPhone 14 Pro Aspect Ratio emulation for preview) -->
+<div class="relative mx-auto min-h-screen max-w-[393px] bg-background-light dark:bg-background-dark pb-32">
+<!-- Top Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 px-4 py-4 backdrop-blur-md">
+<div class="flex items-center gap-2 cursor-pointer">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">storefront</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<h1 class="text-base font-bold leading-tight">Основной магазин</h1>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</div>
+</div>
+</div>
+<div class="relative">
+<button class="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 shadow-sm">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<span class="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white ring-2 ring-background-light dark:ring-background-dark">
+                    3
+                </span>
+</div>
+</header>
+<!-- Segmented Period Picker -->
+<div class="px-4 py-2">
+<div class="flex h-11 items-center justify-between rounded-xl bg-zinc-200/50 dark:bg-zinc-800 p-1">
+<label class="flex h-full grow cursor-pointer items-center justify-center rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-zinc-500 dark:text-zinc-400 transition-all">
+<span class="text-sm font-semibold">Сегодня</span>
+<input checked="" class="hidden" name="period" type="radio" value="today"/>
+</label>
+<label class="flex h-full grow cursor-pointer items-center justify-center rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-zinc-500 dark:text-zinc-400 transition-all">
+<span class="text-sm font-semibold">Неделя</span>
+<input class="hidden" name="period" type="radio" value="week"/>
+</label>
+<label class="flex h-full grow cursor-pointer items-center justify-center rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:text-white text-zinc-500 dark:text-zinc-400 transition-all">
+<span class="text-sm font-semibold">Месяц</span>
+<input class="hidden" name="period" type="radio" value="month"/>
+</label>
+<label class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg has-[:checked]:bg-primary has-[:checked]:text-white text-zinc-500 dark:text-zinc-400 transition-all">
+<span class="material-symbols-outlined text-xl">calendar_today</span>
+<input class="hidden" name="period" type="radio" value="custom"/>
+</label>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 gap-3 px-4 py-4">
+<!-- Sales -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Продажи</p>
+<div class="flex items-baseline gap-1">
+<h2 class="text-xl font-bold tracking-tight">15,420 <span class="text-sm font-normal">TJS</span></h2>
+</div>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="text-xs font-medium">+12%</span>
+</div>
+</div>
+<!-- Cost -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Себестоимость</p>
+<div class="flex items-baseline gap-1">
+<h2 class="text-xl font-bold tracking-tight">12,100 <span class="text-sm font-normal">TJS</span></h2>
+</div>
+<div class="h-4"></div>
+</div>
+<!-- Expenses -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Расходы</p>
+<div class="flex items-baseline gap-1">
+<h2 class="text-xl font-bold tracking-tight text-danger">1,200 <span class="text-sm font-normal">TJS</span></h2>
+</div>
+<div class="h-4"></div>
+</div>
+<!-- Profit -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm border-2 border-success/10">
+<p class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Чистая прибыль</p>
+<div class="flex items-baseline gap-1">
+<h2 class="text-xl font-bold tracking-tight text-success">2,120 <span class="text-sm font-normal">TJS</span></h2>
+</div>
+<div class="flex items-center gap-1 text-success">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span class="text-xs font-medium">+15%</span>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div>
+<div class="flex items-center justify-between px-4 py-2">
+<h3 class="text-base font-bold">Быстрые действия</h3>
+</div>
+<div class="flex gap-3 overflow-x-auto px-4 pb-4 hide-scrollbar">
+<!-- Action 1 -->
+<div class="flex min-w-[120px] flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+<h4 class="text-sm font-bold leading-tight">Остатки</h4>
+</div>
+<!-- Action 2 -->
+<div class="flex min-w-[120px] flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<span class="material-symbols-outlined text-danger">request_quote</span>
+<div class="flex flex-col">
+<h4 class="text-sm font-bold leading-tight">Долги пост.</h4>
+<p class="text-xs font-medium text-danger">-5,000</p>
+</div>
+</div>
+<!-- Action 3 -->
+<div class="flex min-w-[120px] flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<span class="material-symbols-outlined text-success">group</span>
+<div class="flex flex-col">
+<h4 class="text-sm font-bold leading-tight">Долги кли.</h4>
+<p class="text-xs font-medium text-success">+12,000</p>
+</div>
+</div>
+<!-- Action 4 -->
+<div class="flex min-w-[120px] flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<span class="material-symbols-outlined text-primary">assignment_turned_in</span>
+<h4 class="text-sm font-bold leading-tight">Инвентарь</h4>
+</div>
+</div>
+</div>
+<!-- Recent Sales -->
+<div class="px-4 py-2">
+<div class="flex items-center justify-between py-2">
+<h3 class="text-base font-bold">Последние продажи</h3>
+<button class="text-sm font-medium text-primary flex items-center">
+                    Все продажи <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<div class="space-y-3">
+<!-- Sale Item 1 -->
+<div class="flex items-center justify-between rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-700">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<h5 class="text-sm font-bold">Чек #1234</h5>
+<p class="text-xs text-zinc-500">14:32 • 3 товара</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">1,250 TJS</p>
+</div>
+</div>
+<!-- Sale Item 2 -->
+<div class="flex items-center justify-between rounded-xl bg-white dark:bg-zinc-800 p-4 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-700">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<h5 class="text-sm font-bold">Чек #1233</h5>
+<p class="text-xs text-zinc-500">13:20 • 1 товар</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">180 TJS</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 w-full max-w-[393px] px-6">
+<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 text-white shadow-lg shadow-primary/30 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-base font-bold">Новая продажа</span>
+</button>
+</div>
+<!-- Bottom Tab Bar -->
+<nav class="fixed bottom-0 z-50 w-full max-w-[393px] border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-background-dark/95 backdrop-blur-md pb-6 pt-2">
+<div class="flex items-center justify-around px-2">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Главная</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">package_2</span>
+<span class="text-[10px] font-medium">Товары</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="text-[10px] font-medium">Касса</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Финансы</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="text-[10px] font-medium">Ещё</span>
+</button>
+</div>
+</nav>
+<!-- iPhone Bottom Indicator spacer -->
+<div class="h-6 w-full"></div>
+</div>
+</body></html>

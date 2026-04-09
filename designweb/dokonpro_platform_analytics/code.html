@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Platform Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-fill { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark flex flex-col shrink-0">
+<div class="p-6 flex flex-col gap-8 h-full">
+<div class="flex items-center gap-3">
+<div class="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">storefront</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-bold leading-tight">DokonPro Admin</h1>
+<p class="text-slate-400 text-xs">Super Admin</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">dashboard</span>
+<span class="text-sm font-medium">Дашборд</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-primary bg-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px] material-symbols-fill">analytics</span>
+<span class="text-sm font-medium">Аналитика</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">group</span>
+<span class="text-sm font-medium">Пользователи</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">shopping_bag</span>
+<span class="text-sm font-medium">Заказы</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">inventory_2</span>
+<span class="text-sm font-medium">Товары</span>
+</a>
+<div class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+<span class="text-sm font-medium">Настройки</span>
+</a>
+</div>
+</nav>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Header -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-8 py-4 bg-white dark:bg-background-dark sticky top-0 z-10">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Аналитика</h2>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-colors">
+<span>Последние 90 дней</span>
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 h-10 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-base">download</span>
+<span>Экспорт CSV</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 space-y-8">
+<!-- Tabs -->
+<div class="border-b border-slate-200 dark:border-slate-800">
+<div class="flex gap-8">
+<a class="pb-3 border-b-2 border-primary text-primary font-semibold text-sm" href="#">Обзор</a>
+<a class="pb-3 border-b-2 border-transparent text-slate-500 font-semibold text-sm hover:text-slate-700 transition-colors" href="#">Когорты</a>
+<a class="pb-3 border-b-2 border-transparent text-slate-500 font-semibold text-sm hover:text-slate-700 transition-colors" href="#">Воронки</a>
+<a class="pb-3 border-b-2 border-transparent text-slate-500 font-semibold text-sm hover:text-slate-700 transition-colors" href="#">География</a>
+</div>
+</div>
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">DAU</p>
+<div class="flex items-end justify-between">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">1,842</h3>
+<span class="text-green-600 text-sm font-bold bg-green-50 px-2 py-0.5 rounded flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs">trending_up</span>+5.2%
+                        </span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">MAU</p>
+<div class="flex items-end justify-between">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">4,832</h3>
+<span class="text-green-600 text-sm font-bold bg-green-50 px-2 py-0.5 rounded flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs">trending_up</span>+12.5%
+                        </span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">DAU/MAU</p>
+<div class="flex items-end justify-between">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">38.1%</h3>
+<span class="text-orange-500 text-sm font-bold bg-orange-50 px-2 py-0.5 rounded">Средний</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Retention D30</p>
+<div class="flex items-end justify-between">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">42.3%</h3>
+<span class="text-green-600 text-sm font-bold bg-green-50 px-2 py-0.5 rounded flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs">trending_up</span>+2.1%
+                        </span>
+</div>
+</div>
+</div>
+<!-- Main Chart -->
+<div class="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h4 class="text-lg font-bold text-slate-900 dark:text-white">Активные пользователи</h4>
+<div class="flex items-center gap-4 text-xs font-semibold uppercase tracking-wider">
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-primary"></span>
+<span class="text-slate-500">DAU</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-purple-500"></span>
+<span class="text-slate-500">WAU</span>
+</div>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+<!-- WAU Path (Purple) -->
+<path d="M0,150 C50,140 100,160 150,130 C200,100 250,110 300,90 C350,70 400,100 450,80 C500,60 550,50 600,60 C650,70 700,40 750,50 C800,60 850,30 900,40 C950,50 1000,20 1000,20" fill="none" stroke="#a855f7" stroke-width="2"></path>
+<!-- DAU Path (Turquoise) -->
+<path d="M0,180 C50,170 100,185 150,160 C200,135 250,150 300,130 C350,110 400,125 450,100 C500,90 550,95 600,85 C650,75 700,80 750,65 C800,55 850,60 900,45 C950,40 1000,30 1000,30" fill="none" stroke="#00bdd6" stroke-width="3"></path>
+<!-- Horizontal Grid Lines -->
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="100" y2="100"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+</svg>
+<div class="flex justify-between mt-4 text-xs font-bold text-slate-400 px-1">
+<span>Day 1</span>
+<span>Day 15</span>
+<span>Day 30</span>
+<span>Day 45</span>
+<span>Day 60</span>
+<span>Day 75</span>
+<span>Day 90</span>
+</div>
+</div>
+</div>
+<!-- Split Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Retention Heatmap -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+<h4 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Retention по когортам</h4>
+<div class="overflow-x-auto">
+<table class="w-full text-xs text-center border-collapse">
+<thead>
+<tr class="text-slate-400 font-bold uppercase tracking-wider">
+<th class="py-2 text-left w-20">Cohort</th>
+<th>W0</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th><th>W7</th>
+</tr>
+</thead>
+<tbody class="font-medium text-slate-700 dark:text-slate-300">
+<tr>
+<td class="py-3 text-left">Oct 02</td>
+<td class="bg-primary text-white">100%</td>
+<td class="bg-primary/80 text-white">65%</td>
+<td class="bg-primary/60 text-white">48%</td>
+<td class="bg-primary/50 text-white">42%</td>
+<td class="bg-primary/40">35%</td>
+<td class="bg-primary/30">29%</td>
+<td class="bg-primary/20">21%</td>
+<td class="bg-primary/10">18%</td>
+</tr>
+<tr>
+<td class="py-3 text-left">Oct 09</td>
+<td class="bg-primary text-white">100%</td>
+<td class="bg-primary/80 text-white">61%</td>
+<td class="bg-primary/60 text-white">45%</td>
+<td class="bg-primary/50 text-white">40%</td>
+<td class="bg-primary/40">32%</td>
+<td class="bg-primary/30">25%</td>
+<td class="bg-primary/20">19%</td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+</tr>
+<tr>
+<td class="py-3 text-left">Oct 16</td>
+<td class="bg-primary text-white">100%</td>
+<td class="bg-primary/80 text-white">58%</td>
+<td class="bg-primary/60 text-white">42%</td>
+<td class="bg-primary/50 text-white">38%</td>
+<td class="bg-primary/40">28%</td>
+<td class="bg-primary/30">22%</td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+</tr>
+<tr>
+<td class="py-3 text-left">Oct 23</td>
+<td class="bg-primary text-white">100%</td>
+<td class="bg-primary/80 text-white">63%</td>
+<td class="bg-primary/60 text-white">46%</td>
+<td class="bg-primary/50 text-white">41%</td>
+<td class="bg-primary/40">33%</td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+</tr>
+<tr>
+<td class="py-3 text-left">Oct 30</td>
+<td class="bg-primary text-white">100%</td>
+<td class="bg-primary/80 text-white">59%</td>
+<td class="bg-primary/60 text-white">44%</td>
+<td class="bg-primary/50 text-white">37%</td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+<td class="bg-slate-50 dark:bg-slate-700/30"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Top Regions -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<h4 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Топ регионы</h4>
+<div class="space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-700 dark:text-slate-300">Душанбе</span>
+<span class="text-slate-900 dark:text-white">2,140</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-700 dark:text-slate-300">Худжанд</span>
+<span class="text-slate-900 dark:text-white">890</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-700 dark:text-slate-300">Бохтар</span>
+<span class="text-slate-900 dark:text-white">520</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-700 dark:text-slate-300">Кулоб</span>
+<span class="text-slate-900 dark:text-white">380</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 18%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-700 dark:text-slate-300">Другие</span>
+<span class="text-slate-900 dark:text-white">902</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="bg-primary/40 h-full rounded-full" style="width: 35%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Conversion Funnel -->
+<div class="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<h4 class="text-lg font-bold text-slate-900 dark:text-white mb-8">Воронка конверсии</h4>
+<div class="relative max-w-4xl mx-auto space-y-4">
+<!-- Step 1 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Регистрация</div>
+<div class="flex-1 bg-primary h-12 rounded-lg flex items-center justify-center text-white font-bold relative">
+                            4,832
+                        </div>
+<div class="w-32 pl-6 font-bold text-slate-900 dark:text-white">100%</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Создание магазина</div>
+<div class="flex-1 px-4">
+<div class="bg-primary/85 h-12 rounded-lg flex items-center justify-center text-white font-bold mx-auto" style="width: 85%;">
+                                4,100
+                            </div>
+</div>
+<div class="w-32 pl-6 font-bold text-slate-400">85%</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Первый товар</div>
+<div class="flex-1 px-4">
+<div class="bg-primary/70 h-12 rounded-lg flex items-center justify-center text-white font-bold mx-auto" style="width: 66%;">
+                                3,200
+                            </div>
+</div>
+<div class="w-32 pl-6 font-bold text-slate-400">66%</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Первая продажа</div>
+<div class="flex-1 px-4">
+<div class="bg-primary/55 h-12 rounded-lg flex items-center justify-center text-white font-bold mx-auto" style="width: 50%;">
+                                2,400
+                            </div>
+</div>
+<div class="w-32 pl-6 font-bold text-slate-400">50%</div>
+</div>
+<!-- Step 5 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Активен 30 дней</div>
+<div class="flex-1 px-4">
+<div class="bg-primary/40 h-12 rounded-lg flex items-center justify-center text-slate-800 dark:text-white font-bold mx-auto" style="width: 40%;">
+                                1,920
+                            </div>
+</div>
+<div class="w-32 pl-6 font-bold text-slate-400">40%</div>
+</div>
+<!-- Step 6 -->
+<div class="flex items-center">
+<div class="w-48 text-right pr-6 font-semibold text-slate-500 text-sm">Платная подписка</div>
+<div class="flex-1 px-4">
+<div class="bg-primary/25 h-12 rounded-lg flex items-center justify-center text-slate-800 dark:text-white font-bold mx-auto" style="width: 15%;">
+                                720
+                            </div>
+</div>
+<div class="w-32 pl-6 font-bold text-slate-400 text-primary">15%</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] dark:text-white min-h-screen flex justify-center">
+<!-- Mobile Container (iPhone 14 Pro aspect ratio simulation) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<div class="flex items-center px-4 pt-6 pb-2 justify-between sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md z-10">
+<div class="flex size-10 shrink-0 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Новый товар</h2>
+</div>
+<!-- Custom Stepper Section -->
+<div class="px-4 py-6">
+<div class="flex items-center justify-between relative">
+<!-- Connectors -->
+<div class="absolute top-4 left-0 w-full h-[2px] bg-primary/20 -z-10"></div>
+<div class="absolute top-4 left-0 w-2/3 h-[2px] bg-primary -z-10"></div>
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-white dark:ring-background-dark">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="text-[10px] font-medium text-primary">Основное</span>
+</div>
+<!-- Step 2: Completed -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-white dark:ring-background-dark">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="text-[10px] font-medium text-primary">Цены</span>
+</div>
+<!-- Step 3: Active -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-white dark:ring-background-dark">
+<span class="text-sm font-bold">3</span>
+</div>
+<span class="text-[10px] font-medium text-primary">Склад</span>
+</div>
+</div>
+</div>
+<!-- HeadlineText -->
+<div class="px-4 pt-2">
+<h3 class="text-[#0c1b1d] dark:text-white tracking-tight text-2xl font-bold leading-tight">Склад</h3>
+</div>
+<!-- Form Content -->
+<div class="flex-1 overflow-y-auto px-4 pb-32">
+<!-- TextField: Начальный остаток -->
+<div class="flex flex-col gap-2 py-4">
+<label class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-[15px] font-medium leading-normal pb-2">Начальный остаток</p>
+<input class="form-input flex w-full rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-14 placeholder:text-[#4596a1] p-4 text-base font-normal" placeholder="0" type="number"/>
+</label>
+</div>
+<!-- TextField: Минимальный остаток -->
+<div class="flex flex-col gap-1 py-2">
+<label class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-[15px] font-medium leading-normal pb-2">Минимальный остаток</p>
+<input class="form-input flex w-full rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-14 placeholder:text-[#4596a1] p-4 text-base font-normal" placeholder="0" type="number"/>
+</label>
+<p class="text-[#4596a1] text-xs font-normal mt-1 ml-1">Для уведомлений о низком остатке</p>
+</div>
+<!-- Measurement Unit Section (Chips) -->
+<div class="flex flex-col gap-3 py-4">
+<p class="text-[#0c1b1d] dark:text-white text-[15px] font-medium leading-normal">Единица измерения</p>
+<div class="flex flex-wrap gap-2">
+<div class="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-semibold cursor-pointer border border-primary">
+                        шт
+                    </div>
+<div class="px-5 py-2.5 rounded-full bg-transparent text-[#0c1b1d] dark:text-white text-sm font-medium border border-[#cde6ea] dark:border-gray-700 cursor-pointer">
+                        кг
+                    </div>
+<div class="px-5 py-2.5 rounded-full bg-transparent text-[#0c1b1d] dark:text-white text-sm font-medium border border-[#cde6ea] dark:border-gray-700 cursor-pointer">
+                        л
+                    </div>
+<div class="px-5 py-2.5 rounded-full bg-transparent text-[#0c1b1d] dark:text-white text-sm font-medium border border-[#cde6ea] dark:border-gray-700 cursor-pointer">
+                        м
+                    </div>
+</div>
+</div>
+<!-- Dropdown Section: Поставщик -->
+<div class="flex flex-col gap-2 py-4">
+<label class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-[15px] font-medium leading-normal pb-2">Поставщик</p>
+<div class="relative">
+<select class="form-select appearance-none flex w-full rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-1 focus:ring-primary h-14 p-4 text-base font-normal text-[#0c1b1d] dark:text-white">
+<option disabled="" selected="" value="">Выберите поставщика</option>
+<option value="1">ООО "Глобал Маркет"</option>
+<option value="2">ИП Алексеев</option>
+<option value="3">ПромСнаб</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-[#4596a1]">expand_more</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Bottom Action Button -->
+<div class="absolute bottom-0 left-0 w-full p-4 pb-8 bg-background-light dark:bg-background-dark ios-shadow">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg text-base transition-colors duration-200">
+                Сохранить товар
+            </button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .otp-input:focus { border-color: #00bdd6 !important; ring: 0 !important; outline: none !important; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center items-start">
+<div class="w-full max-w-[393px] min-h-[852px] bg-white dark:bg-[#0c1b1d] flex flex-col shadow-2xl relative overflow-hidden">
+<!-- TopAppBar Component -->
+<div class="flex items-center p-4 justify-between bg-white dark:bg-[#0c1b1d]">
+<div class="text-[#0c1b1d] dark:text-white flex size-12 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Подтверждение</h2>
+</div>
+<div class="flex-1 flex flex-col items-center px-6 pt-8">
+<!-- Icon/Image Section -->
+<div class="w-24 h-24 bg-[#E0F7FA] dark:bg-primary/20 rounded-full flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-primary text-5xl" style="font-variation-settings: 'FILL' 1">verified_user</span>
+</div>
+<!-- HeadlineText Component -->
+<h3 class="text-[#0c1b1d] dark:text-white tracking-tight text-2xl font-bold leading-tight text-center pb-2 font-display">
+                Подтвердите номер
+            </h3>
+<!-- MetaText Component -->
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal leading-normal pb-8 text-center max-w-[280px]">
+                Введите 6-значный код, отправленный на номер <span class="text-[#0c1b1d] dark:text-white font-medium">+992 93 123 45 67</span>
+</p>
+<!-- ConfirmationCode Component (Customized for 6 digits & square style) -->
+<div class="flex justify-center gap-2 mb-8 w-full">
+<input class="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl bg-transparent focus:border-primary focus:ring-0 outline-none" maxlength="1" type="text" value="4"/>
+<input class="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl bg-transparent focus:border-primary focus:ring-0 outline-none" maxlength="1" type="text" value="2"/>
+<input class="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl bg-transparent focus:border-primary focus:ring-0 outline-none" maxlength="1" type="text" value="8"/>
+<input class="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl bg-transparent focus:border-primary focus:ring-0 outline-none" maxlength="1" type="text" value="1"/>
+<input autofocus="" class="w-12 h-14 text-center text-xl font-bold border-2 border-primary dark:border-primary dark:bg-gray-800 dark:text-white rounded-xl bg-transparent ring-0 outline-none" maxlength="1" type="text" value=""/>
+<input class="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl bg-transparent focus:border-primary focus:ring-0 outline-none" maxlength="1" type="text" value=""/>
+</div>
+<!-- Timer and Links -->
+<div class="text-center space-y-4">
+<p class="text-sm text-[#757575] dark:text-gray-400">
+                    Отправить повторно через <span class="text-primary font-medium">0:32</span>
+</p>
+<div class="pt-2">
+<p class="text-sm text-[#757575] dark:text-gray-400">Не получили код?</p>
+<div class="flex gap-4 justify-center mt-2">
+<a class="text-primary font-semibold text-sm hover:underline" href="#">Отправить SMS</a>
+<a class="text-primary font-semibold text-sm hover:underline" href="#">Позвонить</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Area -->
+<div class="p-6 space-y-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-primary/20">
+                Подтвердить
+            </button>
+<p class="text-[10px] text-center text-[#9e9e9e] leading-relaxed px-4">
+                Нажимая кнопку «Подтвердить», вы принимаете условия <br/>
+<a class="underline" href="#">Пользовательского соглашения</a> и <a class="underline" href="#">Политики конфиденциальности</a>
+</p>
+</div>
+<!-- iOS Home Indicator -->
+<div class="flex justify-center pb-2">
+<div class="w-32 h-1 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+</div>
+</div>
+</body></html>

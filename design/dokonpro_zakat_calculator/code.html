@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2beeda",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102220",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852 approx) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-gray-200 dark:border-gray-800">
+<div class="text-[#0d1b1a] dark:text-white flex size-10 shrink-0 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h1 class="text-[#0d1b1a] dark:text-white text-lg font-semibold leading-tight flex-1 text-center pr-10">Калькулятор Закята</h1>
+</header>
+<main class="flex-1 overflow-y-auto pb-40">
+<!-- Nisab Info Card -->
+<div class="p-4 pt-6">
+<div class="bg-primary/10 dark:bg-primary/5 border border-primary/20 p-4 rounded-xl flex items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-[#0d1b1a] dark:text-white text-base font-bold leading-tight">Текущий Нисаб: 65,000 TJS</p>
+<p class="text-[#4c9a92] dark:text-primary/70 text-xs font-normal leading-normal">Обновлено сегодня, 12:00</p>
+</div>
+<button class="bg-primary/20 dark:bg-primary/30 p-2 rounded-full text-[#0d1b1a] dark:text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">refresh</span>
+</button>
+</div>
+</div>
+<!-- Assets Section -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+<h3 class="text-[#0d1b1a] dark:text-white text-base font-bold leading-tight mb-4">Активы</h3>
+<div class="space-y-4">
+<!-- TextField: Cash (Auto) -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Наличные в кассе</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 h-12 px-4 text-base font-medium pr-12" readonly="" value="12,450.00"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+<div class="flex items-center gap-1 text-[10px] text-gray-400">
+<span class="material-symbols-outlined text-[12px]">info</span> Автоматически из приложения
+                            </div>
+</div>
+<!-- TextField: Bank accounts -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Деньги на счетах</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-12 px-4 text-base font-medium pr-12 focus:ring-primary focus:border-primary" placeholder="0.00" type="number"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+</div>
+<!-- TextField: Stock (Auto) -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Товары для продажи</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 h-12 px-4 text-base font-medium pr-12" readonly="" value="145,200.00"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+<div class="flex items-center gap-1 text-[10px] text-gray-400">
+<span class="material-symbols-outlined text-[12px]">info</span> Себестоимость склада
+                            </div>
+</div>
+<!-- TextField: Receivables (Auto) -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Долги клиентов</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 h-12 px-4 text-base font-medium pr-12" readonly="" value="8,350.00"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Liabilities Section -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+<h3 class="text-[#0d1b1a] dark:text-white text-base font-bold leading-tight mb-4">Обязательства</h3>
+<div class="space-y-4">
+<!-- TextField: Payables (Auto) -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Долги поставщикам</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 h-12 px-4 text-base font-medium pr-12" readonly="" value="16,000.00"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+</div>
+<!-- TextField: Other Debts -->
+<div class="flex flex-col gap-1.5">
+<p class="text-[#0d1b1a] dark:text-gray-300 text-sm font-medium">Прочие краткосрочные долги</p>
+<div class="relative flex items-center">
+<input class="form-input flex w-full rounded-xl text-[#0d1b1a] dark:text-white border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-12 px-4 text-base font-medium pr-12 focus:ring-primary focus:border-primary" placeholder="0.00" type="number"/>
+<span class="absolute right-4 text-gray-400 dark:text-gray-500 text-sm">TJS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Result Section & Bottom Action -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 p-4 space-y-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center justify-center py-2">
+<p class="text-[#4c9a92] dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Сумма к выплате (2.5%)</p>
+<div class="flex items-baseline gap-2">
+<span class="text-primary text-3xl font-bold">3,750</span>
+<span class="text-primary text-lg font-semibold">TJS</span>
+</div>
+<p class="text-[#0d1b1a]/60 dark:text-gray-500 text-xs mt-1">Чистые активы: 150,000 TJS</p>
+</div>
+<button class="w-full bg-primary hover:brightness-110 active:scale-[0.98] transition-all text-[#0d1b1a] font-bold text-base py-4 rounded-xl shadow-lg shadow-primary/20">
+                Сохранить расчёт
+            </button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] antialiased">
+<!-- iPhone 14 Pro Container (393x852) -->
+<div class="relative mx-auto min-h-screen w-full max-w-[393px] bg-background-light dark:bg-background-dark flex flex-col pb-[160px]">
+<!-- Header -->
+<header class="sticky top-0 z-30 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-6 pb-2">
+<div class="flex items-center justify-between">
+<h1 class="text-[20px] font-bold leading-tight tracking-tight dark:text-white">Товары</h1>
+<div class="flex items-center gap-1">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#0d1a1c] dark:text-white hover:bg-black/5">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#0d1a1c] dark:text-white hover:bg-black/5">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Search & Filter Bar -->
+<div class="px-4 py-2 space-y-4">
+<div class="flex gap-2">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-[#49929c]">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="block w-full h-12 rounded-xl border-none bg-white dark:bg-gray-800 pl-10 pr-10 text-sm focus:ring-2 focus:ring-primary shadow-sm dark:text-white" placeholder="Поиск товара" type="text"/>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-[#49929c]">
+<span class="material-symbols-outlined text-[20px]">barcode_scanner</span>
+</div>
+</div>
+<button class="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-gray-800 text-[#49929c] shadow-sm">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<!-- Chips Horizontal Scroll -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5 text-white shadow-sm shadow-primary/20">
+<p class="text-[13px] font-semibold">Все</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-4 text-[#0d1a1c] dark:text-gray-300 shadow-sm">
+<p class="text-[13px] font-medium">В наличии</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-4 text-[#0d1a1c] dark:text-gray-300 shadow-sm">
+<p class="text-[13px] font-medium">Заканчивается</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-4 text-[#0d1a1c] dark:text-gray-300 shadow-sm">
+<p class="text-[13px] font-medium">Нет в наличии</p>
+</div>
+</div>
+</div>
+<!-- Product List -->
+<div class="px-4 mt-4 space-y-3">
+<!-- Product 1 -->
+<div class="flex flex-col gap-3 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-black/[0.03] dark:border-white/[0.05]">
+<div class="flex gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0" data-alt="Fresh instant coffee jar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA3KIiZazrn1-NDpMNBD4n_RYvRwdR3TmoPuaqGQw-gneADMeGBbCcZbmU5g7awrnUZ5DabusWLLxsivkBmHu0FgnhWkUIoncf-Qjxg1u2Xv4RWn4_xfZuvz4p3mxZRfRq2h2up450zDSPiR0Ym77CPtByUyAHuQ_fJD_fWE6X6oQfM7GXwSHb7JgiksGAJUpA9oZCgIZ5gIV1wwE7Tm3yGHWeqfOfp_-ZDE6y3NUd_sKJ-SKolhsQFPSqERQjckDhyjfagmPowja7m");'></div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold truncate">Кофе растворимый</p>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold">180 TJS</p>
+</div>
+<p class="text-[#49929c] text-xs font-normal mt-0.5">SKU: COFFEE-001</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[#0bb5cb] text-xs font-semibold">45 шт</span>
+<span class="text-gray-300 dark:text-gray-600">|</span>
+<span class="text-[#49929c] text-xs">Себест.: 150 TJS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="flex flex-col gap-3 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-black/[0.03] dark:border-white/[0.05]">
+<div class="flex gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0" data-alt="White granulated sugar 1kg bag" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbHhHOjYMR6zLBPwd5jwCfvmO7vtSWdTTgxcItF8317TZ0D8w7u4xABnJ6saTMGrMa5z4BvUbjDzVX-pjlWVIhwtuG6ELw-vuWVhBPMVQQ5XT-RGWQpHRUxrjfgFxsY4wSbpvlGGQdKvRvZLHHE5t0gAUy8LpFSk9PUI155YuLy4lC3epXWZ0Z0uZzbBR4ubs9oOQvl5v2HCzfy9pOsybb1iZPJZmVTQxzYh4IkRNZDj78M3zVpL5IzvhDrbErGZCtiJHdQ3sFCUYY");'></div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold truncate">Сахар 1кг</p>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold">55 TJS</p>
+</div>
+<p class="text-[#49929c] text-xs font-normal mt-0.5">SKU: SUGAR-001</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-orange-500 text-xs font-bold">8 шт (Заканчивается)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="flex flex-col gap-3 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-black/[0.03] dark:border-white/[0.05]">
+<div class="flex gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0" data-alt="Green tea leaves in packaging" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAUNvxzNTlqQS8pv8z3RfuqTDM_DkIyVdsMPkS6jeBiTSzA5pxj90m-r-0dMqj6QmX1DxtXaHUaTTfJcc5qyOpfSKLQt7vPCaBPZshEWILxamDUyHrB0N9nBAJs9-XiThB2pga6JkApsfqxwSZwUmL9wx2xmJK6erLurLvbH-UBOx3pcZY1sTOmYCFZipYfL1U8oQW3pS84yecieK3VOY8ZvFA2tGRhzOR7GPnl8fl6PNyq1Ab60qdWUiW1q-yiyylmKzGd2naC0qJl");'></div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold truncate">Чай зелёный</p>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold">120 TJS</p>
+</div>
+<p class="text-[#49929c] text-xs font-normal mt-0.5">SKU: TEA-002</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-red-500 text-xs font-bold">0 шт (Нет в наличии)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product 4 Placeholder -->
+<div class="flex flex-col gap-3 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-black/[0.03] dark:border-white/[0.05]">
+<div class="flex gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0" data-alt="Mineral water bottle multipack" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAMoA3Ph-HI4hP92xT8t0QdnphMGXonyzK014l1j4HnuI1DgnxNyB9U8W2sjl0dTaABb1IMisVhaeq9_HCi2sX8WSpID9ineodOIfoqv9uIsktFT3MEKBMubKmeNVkoYVGZ51SaSJVT-dtUov3ZfhhkEJJbRpnnUfN5e7YROYU82kT7ZrnQ7OirpGxXSjJ68QWIQ9-rBkI8XFbDmTPvSUyMy9cheW-d-tVNx_MsxgLXv1Hp4ActcbenVFqjgfFfCYx9Yk6KWE6ou9SY");'></div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold truncate">Вода 0.5л (уп. 12)</p>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold">48 TJS</p>
+</div>
+<p class="text-[#49929c] text-xs font-normal mt-0.5">SKU: WATER-12</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[#0bb5cb] text-xs font-semibold">24 шт</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Summary -->
+<div class="fixed bottom-[80px] left-0 right-0 mx-auto max-w-[393px] bg-white dark:bg-gray-800 px-4 py-3 border-t border-black/[0.05] shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="text-xs text-[#49929c] uppercase tracking-wider font-semibold">Общая сумма</span>
+<span class="text-base font-bold text-[#0d1a1c] dark:text-white">125,400 TJS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-[#49929c] uppercase tracking-wider font-semibold">Себестоимость</span>
+<span class="text-sm font-medium text-[#49929c]">98,200 TJS</span>
+</div>
+</div>
+</div>
+<!-- Bottom Tab Bar -->
+<nav class="fixed bottom-0 left-0 right-0 mx-auto max-w-[393px] h-[80px] bg-white dark:bg-gray-900 border-t border-black/[0.05] dark:border-white/[0.05] flex justify-around items-start pt-3 z-50">
+<div class="flex flex-col items-center gap-1 w-[70px] opacity-60">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 w-[70px] text-primary">
+<span class="material-symbols-outlined fill-1">inventory_2</span>
+<span class="text-[10px] font-bold">Товары</span>
+</div>
+<div class="flex flex-col items-center gap-1 w-[70px] opacity-60">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="text-[10px] font-medium">Касса</span>
+</div>
+<div class="flex flex-col items-center gap-1 w-[70px] opacity-60">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Финансы</span>
+</div>
+<div class="flex flex-col items-center gap-1 w-[70px] opacity-60">
+<span class="material-symbols-outlined">menu</span>
+<span class="text-[10px] font-medium">Ещё</span>
+</div>
+</nav>
+<!-- Safe Area Spacing -->
+<div class="h-8 w-full bg-white dark:bg-gray-900 fixed bottom-0 left-0 right-0 mx-auto max-w-[393px] z-[60]"></div>
+</div>
+</body></html>

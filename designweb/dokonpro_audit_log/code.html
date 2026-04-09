@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1E293B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] font-display min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark text-white flex flex-col shrink-0">
+<div class="p-6 flex flex-col gap-8 h-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">shield_person</span>
+</div>
+<div>
+<h1 class="text-white text-lg font-bold leading-tight tracking-tight">DokonPro</h1>
+<p class="text-slate-400 text-xs font-normal">Панель управления</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 grow">
+<div class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium">Дашборд</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Пользователи</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">payments</span>
+<p class="text-sm font-medium">Подписки</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Настройки</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary border-r-4 border-primary">
+<span class="material-symbols-outlined">history_edu</span>
+<p class="text-sm font-semibold">Аудит лог</p>
+</div>
+</nav>
+<div class="mt-auto border-t border-slate-700 pt-4 pb-2">
+<div class="flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-full bg-slate-600 overflow-hidden" data-alt="Admin user avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBNeczUb9O9jQdfrvPU8EG8CyXz7-Qq-nBjpgvylWEv2GoN_H0RhLSubf5lxOnvLIfcjTA-0sfBeFKJtvObnenqZcMPHhi1SOGK6nYKjB3AhkzeXRgGKcRDt5XIYuVqWGB0v5PRD6dSddEcvvegUEZGVaLkvpYy9v7VmRIc4eCsG51jCSOZmCWX8qv2I1jC0ynu56EzOIiaXtcAAAAJBNj4EYmjPfV053pZ51KYRQNFzTmBqn57tqPhOoC86BBbE0eG8AyjSPnBb7Y')"></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-xs font-medium truncate">Администратор</p>
+<p class="text-[10px] text-slate-400 truncate">admin@dokonpro.tj</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#F8FAFC]">
+<!-- Header -->
+<header class="h-16 flex items-center justify-between px-8 bg-white border-b border-slate-200 shrink-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">manage_search</span>
+<h2 class="text-[#0c1b1d] text-2xl font-bold">Аудит лог</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg text-sm font-bold hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span>
+                        Экспорт CSV
+                    </button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-6 flex flex-col gap-6">
+<!-- Filter Bar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex flex-wrap items-end gap-4">
+<div class="flex-1 min-w-[300px]">
+<p class="text-slate-500 text-xs font-semibold mb-1.5 uppercase tracking-wider">Поиск</p>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Поиск по действиям или ID" type="text"/>
+</div>
+</div>
+<div class="w-48">
+<p class="text-slate-500 text-xs font-semibold mb-1.5 uppercase tracking-wider">Администратор</p>
+<select class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none cursor-pointer">
+<option>Все пользователи</option>
+<option>Latif Rakhimov</option>
+<option>Dilshod Karimov</option>
+</select>
+</div>
+<div class="w-48">
+<p class="text-slate-500 text-xs font-semibold mb-1.5 uppercase tracking-wider">Тип действия</p>
+<select class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none cursor-pointer">
+<option>Все типы</option>
+<option>Auth</option>
+<option>Users</option>
+<option>Subscriptions</option>
+<option>Settings</option>
+</select>
+</div>
+<div class="w-56">
+<p class="text-slate-500 text-xs font-semibold mb-1.5 uppercase tracking-wider">Период</p>
+<div class="relative">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl pointer-events-none">calendar_today</span>
+<input class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" type="text" value="01.02.2026 — 03.02.2026"/>
+</div>
+</div>
+<button class="px-4 py-2.5 text-slate-500 font-medium text-sm hover:text-slate-800 transition-colors">
+                            Сбросить
+                        </button>
+</div>
+</div>
+<!-- Audit Table -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 border-b border-slate-200">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Дата / Время</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Администратор</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Действие</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Объект</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">IP-Адрес</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Детали</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">03.02 14:32:15</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs" data-alt="Latif Rakhimov avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC6U4ZpOQUgkl2sqsk2x2GGeZrqMnaKbRHskP_CiHMvHh_crcLvlGvfMDcfeoM0FG263DvoUayjuSsUSnwm1V9aLK3qJjwivFwPdOCVZIvamIV31yWeArEejm6zJjQCZ-zpcuQ9P3RgdKnoh2HI4G_BhYt-9bAQXJEXUB84CQLPi9ohfoSQBvGoSOoZ_YOOngOUSIldbWjMk4O6evgRjRbL6BzGIfmKivTObDKBnjvlAo36oX9IfyApE-gYgLc1tqoqM3LUWMI1_Vk')">LR</div>
+<span class="text-sm font-medium text-slate-800">Latif Rakhimov</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-100 text-emerald-700">Авторизация</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 font-medium">Вход в систему</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs text-slate-500">185.34.12.45</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-400">Chrome 120, macOS</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">03.02 14:25:00</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs" data-alt="Latif Rakhimov avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCLu_n5s-_eyQGg67kMQ3ERbfC_NC1J4HdU3LjnRtJtBKbE-pdCj8b9fKofwn398X80SlDnowC3Hrn7xiv3yP4HhZ4PopcEXQ_UqhTuE8r_gIvHwGPHamuElenvQo8UbDJyT0t5stJCJBJgZZfosZCGhbN9yZg1govgnHLzlMGnZM5zwFI5AlDX-XTcWQz0jPBmw5pAejeoLYru4_oUAYo2N8UqLmVacoe7cl7_ge00c2ifYGe4m66nfogi-a0Ce09CPou7vjF2sP8')">LR</div>
+<span class="text-sm font-medium text-slate-800">Latif Rakhimov</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-primary/20 text-primary">Пользователи</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 font-medium">Заблокирован: Зарина Мирзоева (#4521)</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs text-slate-500">185.34.12.45</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-400">Причина: подозрительная активность</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">03.02 12:00:00</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs" data-alt="Dilshod Karimov avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuANoua7Ud3z0oKb_yFY34ZX_AqIokGx4sZBC6WkBjAzWs3AcZRA2OqH13KORQPEt3EJx8FhTwaxfFvSeJfom-zXQuHcghGKF-TXCZmh_6kskOIV5SzmtEyCM1-dwBK1t19IbekFF4nT-UlDTrHyOXv4wblvI21x87nmEX-I5ujzH8P5oiKgEstv1h4eqbXGh3lq6bxPF_K8zKWaS-7E3Q4TnbRiL6jYqioCKcx_M4A8jmHH8MGIcnCOiBxdwP2ykZ_T3O4UP0DsDLc')">DK</div>
+<span class="text-sm font-medium text-slate-800">Dilshod Karimov</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-orange-100 text-orange-700">Настройки</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 font-medium">Курс USD/TJS обновлён</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs text-slate-500">192.168.1.50</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-400">10.85 → 10.92</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">03.02 10:00:00</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">precision_manufacturing</span>
+</div>
+<span class="text-sm font-medium text-slate-800">System</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-100 text-slate-600">Система</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 font-medium">Автообновление курсов валют</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs text-slate-500">127.0.0.1</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-400">API НБТ, 3 курса обновлены</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+<p class="text-sm text-slate-500">
+                            Показано <span class="font-semibold text-slate-700">1-50</span> из <span class="font-semibold text-slate-700">2,340</span>
+</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-slate-400 disabled:opacity-50">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-sm font-bold bg-primary text-white rounded-lg">1</button>
+<button class="w-8 h-8 flex items-center justify-center text-sm font-medium text-slate-600 hover:bg-white rounded-lg">2</button>
+<button class="w-8 h-8 flex items-center justify-center text-sm font-medium text-slate-600 hover:bg-white rounded-lg">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center text-sm font-medium text-slate-600 hover:bg-white rounded-lg">47</button>
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-slate-600">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

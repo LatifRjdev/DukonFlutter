@@ -1,0 +1,314 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../../../domain/entities/shift.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../blocs/shift/shift_bloc.dart';
+import '../../blocs/shift/shift_event.dart';
+import '../../blocs/shift/shift_state.dart';
+
+class ShiftsPage extends StatefulWidget {
+  final String storeId;
+  const ShiftsPage({super.key, required this.storeId});
+  @override
+  State<ShiftsPage> createState() => _ShiftsPageState();
+}
+
+class _ShiftsPageState extends State<ShiftsPage> {
+  String _formatPrice(double value) {
+    final formatter = NumberFormat('#,##0', 'ru');
+    return '${formatter.format(value)} TJS';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() {
+    context.read<ShiftBloc>().add(LoadCurrentShift(storeId: widget.storeId));
+  }
+
+  void _showCloseShiftDialog(ShiftModel currentShift) {
+    final cashController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Закрыть смену'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Введите сумму наличных в кассе:'),
+            const SizedBox(height: 12),
+            TextField(
+              controller: cashController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Сумма наличных',
+                prefixIcon: const Icon(Icons.attach_money),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final cash = double.tryParse(cashController.text);
+              if (cash == null) return;
+              context.read<ShiftBloc>().add(CloseShift(
+                storeId: widget.storeId,
+                shiftId: currentShift.id,
+                closingCash: cash,
+              ));
+              Navigator.pop(ctx);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            child: const Text('Закрыть', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDuration(DateTime start) {
+    final now = DateTime.now();
+    final diff = now.difference(start);
+    final hours = diff.inHours;
+    final minutes = diff.inMinutes % 60;
+    return '$hoursч $minutesм';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
+              child: Row(
+                children: [
+                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  const Text('Смены',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  const Spacer(),
+                  BlocBuilder<ShiftBloc, ShiftState>(
+                    builder: (context, state) {
+                      if (state is ShiftLoaded && state.currentShift == null) {
+                        return OutlinedButton(
+                          onPressed: () => context.push('/shifts/open', extra: widget.storeId),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.primary,
+                            side: const BorderSide(color: AppColors.primary),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Expanded(
+              child: BlocConsumer<ShiftBloc, ShiftState>(
+                listener: (context, state) {
+                  if (state is ShiftOpened) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Смена открыта'), backgroundColor: AppColors.success),
+                    );
+                    _loadData();
+                  }
+                  if (state is ShiftClosed) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Смена закрыта'), backgroundColor: AppColors.success),
+                    );
+                    context.push('/shifts/${state.shift.id}/z-report', extra: widget.storeId);
+                    _loadData();
+                  }
+                  if (state is ShiftError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is ShiftLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state is ShiftLoaded) {
+                    return RefreshIndicator(
+                      onRefresh: () async => _loadData(),
+                      child: ListView(
+                        padding: const EdgeInsets.all(16),
+                        children: [
+                          // Current shift card
+                          if (state.currentShift != null) ...[
+                            _buildCurrentShiftCard(state.currentShift!),
+                            const SizedBox(height: 20),
+                          ],
+                          // History
+                          if (state.shifts.isNotEmpty) ...[
+                            const Text('История смен',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                            const SizedBox(height: 8),
+                            ...state.shifts.map((shift) => _buildShiftHistoryCard(shift)),
+                          ],
+                          if (state.currentShift == null && state.shifts.isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 100),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.access_time, size: 64, color: AppColors.disabled),
+                                    SizedBox(height: 16),
+                                    Text('Нет смен',
+                                      style: TextStyle(color: AppColors.textSecondary, fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  }
+                  if (state is ShiftError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCurrentShiftCard(ShiftModel shift) {
+    final timeFormat = DateFormat('HH:mm');
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: const Border(left: BorderSide(color: AppColors.success, width: 4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('Текущая смена',
+                style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.success.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('Активна',
+                  style: TextStyle(fontSize: 11, color: AppColors.success, fontWeight: FontWeight.w500)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text('Кассир: ${shift.staffName ?? 'Не указан'}',
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
+          Text('Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}',
+            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+          const SizedBox(height: 4),
+          Text('Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}',
+            style: const TextStyle(fontSize: 13)),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () => _showCloseShiftDialog(shift),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFFF9800),
+                side: const BorderSide(color: Color(0xFFFF9800)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Закрыть смену', style: TextStyle(fontWeight: FontWeight.w600)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShiftHistoryCard(ShiftModel shift) {
+    final dateFormat = DateFormat('dd.MM');
+    final timeFormat = DateFormat('HH:mm');
+
+    return GestureDetector(
+      onTap: () => context.push('/shifts/${shift.id}/z-report', extra: widget.storeId),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(dateFormat.format(shift.openedAt),
+                        style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                      const SizedBox(width: 8),
+                      Text(shift.staffName ?? '—',
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${timeFormat.format(shift.openedAt)}–${shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}',
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: shift.closedAt != null
+                    ? AppColors.success.withValues(alpha: 0.12)
+                    : const Color(0xFFFF9800).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                shift.closedAt != null ? 'Сдано' : 'Открыта',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: shift.closedAt != null ? AppColors.success : const Color(0xFFFF9800),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

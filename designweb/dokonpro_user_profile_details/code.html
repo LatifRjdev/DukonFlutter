@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro User Profile Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1E293B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #00bdd6; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark text-white flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">storefront</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">DokonPro</h1>
+</div>
+<nav class="flex-1 px-3 mt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Дашборд</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-sm font-medium">Заказы</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">package</span>
+<span class="text-sm font-medium">Товары</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 active-nav text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">group</span>
+<span class="text-sm font-medium">Пользователи</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Настройки</span>
+</a>
+</nav>
+<div class="p-4 border-t border-gray-700">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">admin_panel_settings</span>
+</div>
+<div>
+<p class="text-sm font-medium">Admin User</p>
+<p class="text-xs text-gray-400">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 flex-1">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-background-dark/50 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-8 sticky top-0 z-10 backdrop-blur-md">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-primary font-medium" href="#">Пользователи</a>
+<span class="text-gray-400">/</span>
+<span class="text-gray-700 dark:text-gray-200 font-medium">Алишер Каримов</span>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-red-500 text-red-500 rounded-lg text-sm font-semibold hover:bg-red-50 transition-colors">
+                        Заблокировать
+                    </button>
+<button class="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-colors">
+                        Изменить тариф
+                    </button>
+</div>
+</header>
+<div class="p-6 space-y-6">
+<!-- Top Profile Card -->
+<div class="bg-white dark:bg-background-dark/30 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+<div class="flex flex-col lg:flex-row gap-8 items-start lg:items-center">
+<div class="flex gap-6 items-center flex-1">
+<div class="w-24 h-24 rounded-full bg-gray-100 border-4 border-white shadow-md overflow-hidden bg-cover bg-center" data-alt="User profile avatar portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3fkDET1YrnORTBg-oVjImTiXZx0yzqJYRx8MK9mnF-E_ZETrjy-SXHFxvz9iAQJsuD1guZe7YKpbxSRjq_9mXDWKjSiIRzDlqN-t9Z1SNz6X55LhBg0H4xmkltHvgzA4o5exefj1srZf76yn1yjx-aP_znNyN7RmJ2cJ-MKlJXtgzb8cC-cDf7ZoobUUa42D119mkVaXvHVFcBqZQmlTsHt-49KTkWKKI5j1nWtzvRr_u8fnn2DxqVdgFXTcZSzhzlePKhJhWLy8')">
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Алишер Каримов</h2>
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-xs font-bold rounded uppercase tracking-wider">Бизнес</span>
+<span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs font-bold rounded uppercase tracking-wider">Активный</span>
+</div>
+<p class="text-gray-500 dark:text-gray-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">phone</span> +992 900 00 0000 
+                                    <span class="mx-1">|</span>
+<span class="material-symbols-outlined text-sm">mail</span> alisher@example.com
+                                </p>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
+<div class="px-4 py-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-gray-800 text-center min-w-[100px]">
+<p class="text-2xl font-bold text-gray-900 dark:text-white">2</p>
+<p class="text-xs text-gray-500 uppercase font-semibold">Магазины</p>
+</div>
+<div class="px-4 py-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-gray-800 text-center min-w-[100px]">
+<p class="text-2xl font-bold text-gray-900 dark:text-white">1,245</p>
+<p class="text-xs text-gray-500 uppercase font-semibold">Товары</p>
+</div>
+<div class="px-4 py-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-gray-800 text-center min-w-[100px]">
+<p class="text-2xl font-bold text-gray-900 dark:text-white">8,432</p>
+<p class="text-xs text-gray-500 uppercase font-semibold">Продажи</p>
+</div>
+<div class="px-4 py-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-gray-800 text-center min-w-[100px]">
+<p class="text-2xl font-bold text-gray-900 dark:text-white">4</p>
+<p class="text-xs text-gray-500 uppercase font-semibold">Сотрудники</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Banner -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-wrap gap-x-12 gap-y-4">
+<div>
+<p class="text-xs text-gray-500 font-medium">Дата регистрации</p>
+<p class="text-sm font-semibold text-gray-800">12.01.2024</p>
+</div>
+<div>
+<p class="text-xs text-gray-500 font-medium">Последний вход</p>
+<p class="text-sm font-semibold text-gray-800">03.02.2026, 14:32</p>
+</div>
+<div>
+<p class="text-xs text-gray-500 font-medium">Устройство</p>
+<p class="text-sm font-semibold text-gray-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-base">smartphone</span> iPhone 14 Pro
+                        </p>
+</div>
+<div>
+<p class="text-xs text-gray-500 font-medium">Версия приложения</p>
+<p class="text-sm font-semibold text-gray-800">v1.2.3</p>
+</div>
+</div>
+<!-- Two-Column Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Stores Table -->
+<div class="bg-white dark:bg-background-dark/30 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col">
+<div class="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+<h3 class="font-bold text-gray-900 dark:text-white">Магазины пользователя</h3>
+<button class="text-primary text-sm font-medium hover:underline">Все магазины</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50 dark:border-gray-800">
+<th class="px-5 py-3">Магазин</th>
+<th class="px-5 py-3">Категория</th>
+<th class="px-5 py-3 text-center">Товары</th>
+<th class="px-5 py-3">Продаж/мес</th>
+<th class="px-5 py-3">Статус</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-50 dark:divide-gray-800 text-sm">
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="px-5 py-4 font-medium text-gray-900 dark:text-white">Основной магазин</td>
+<td class="px-5 py-4 text-gray-500">Одежда</td>
+<td class="px-5 py-4 text-center">850</td>
+<td class="px-5 py-4">120,000 TJS</td>
+<td class="px-5 py-4"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<td class="px-5 py-4 font-medium text-gray-900 dark:text-white">Филиал Рудаки</td>
+<td class="px-5 py-4 text-gray-500">Аксессуары</td>
+<td class="px-5 py-4 text-center">395</td>
+<td class="px-5 py-4">45,000 TJS</td>
+<td class="px-5 py-4"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Subscription Card -->
+<div class="bg-white dark:bg-background-dark/30 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+<h3 class="font-bold text-gray-900 dark:text-white mb-6">Подписка</h3>
+<div class="bg-gradient-to-br from-primary to-primary/80 rounded-xl p-5 text-white mb-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-primary/20 text-xs font-bold uppercase tracking-widest text-white/70">Текущий тариф</p>
+<h4 class="text-2xl font-bold">Бизнес</h4>
+</div>
+<span class="bg-white/20 px-3 py-1 rounded-full text-xs font-medium">Активен</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-white/70">Период</p>
+<p class="text-sm font-medium">15.01.2026 — 15.02.2026</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-white/70">Автопродление</p>
+<p class="text-sm font-medium flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Да
+                                    </p>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 border border-gray-100 dark:border-gray-800 rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-gray-100 rounded flex items-center justify-center">
+<span class="text-[8px] font-bold text-gray-400">VISA</span>
+</div>
+<p class="text-sm font-medium text-gray-700 dark:text-gray-200">•••• 4532</p>
+</div>
+<p class="text-sm font-bold text-gray-900 dark:text-white">200 TJS</p>
+</div>
+<div>
+<h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">История платежей</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-sm py-2 border-b border-gray-50 dark:border-gray-800">
+<span class="text-gray-500">15.01.2026</span>
+<span class="font-medium text-gray-900 dark:text-white">200 TJS</span>
+<span class="text-green-500 text-xs">Успешно</span>
+</div>
+<div class="flex items-center justify-between text-sm py-2 border-b border-gray-50 dark:border-gray-800">
+<span class="text-gray-500">15.12.2025</span>
+<span class="font-medium text-gray-900 dark:text-white">200 TJS</span>
+<span class="text-green-500 text-xs">Успешно</span>
+</div>
+<div class="flex items-center justify-between text-sm py-2">
+<span class="text-gray-500">15.11.2025</span>
+<span class="font-medium text-gray-900 dark:text-white">200 TJS</span>
+<span class="text-green-500 text-xs">Успешно</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Activity Card -->
+<div class="bg-white dark:bg-background-dark/30 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white">Активность пользователя</h3>
+<p class="text-sm text-gray-500">Продажи за последние 30 дней</p>
+</div>
+<div class="flex-1 max-w-xs h-16 relative">
+<!-- Abstract Mini Chart Representation -->
+<div class="absolute inset-0 flex items-end gap-1 px-2">
+<div class="flex-1 bg-primary/20 rounded-t h-[40%]"></div>
+<div class="flex-1 bg-primary/30 rounded-t h-[60%]"></div>
+<div class="flex-1 bg-primary/40 rounded-t h-[30%]"></div>
+<div class="flex-1 bg-primary/50 rounded-t h-[80%]"></div>
+<div class="flex-1 bg-primary/60 rounded-t h-[50%]"></div>
+<div class="flex-1 bg-primary rounded-t h-[90%]"></div>
+<div class="flex-1 bg-primary/70 rounded-t h-[70%]"></div>
+<div class="flex-1 bg-primary/40 rounded-t h-[40%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t h-[20%]"></div>
+<div class="flex-1 bg-primary/50 rounded-t h-[55%]"></div>
+</div>
+</div>
+</div>
+<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Последние действия</h4>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="text-xs font-semibold text-gray-400 uppercase border-b border-gray-50 dark:border-gray-800">
+<tr>
+<th class="px-4 py-3">Время</th>
+<th class="px-4 py-3">Действие</th>
+<th class="px-4 py-3">Детали</th>
+<th class="px-4 py-3">IP-адрес</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-50 dark:divide-gray-800 text-sm">
+<tr>
+<td class="px-4 py-4 text-gray-500">Сегодня, 14:32</td>
+<td class="px-4 py-4"><span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs font-medium">Вход</span></td>
+<td class="px-4 py-4 text-gray-700 dark:text-gray-300">Авторизация через мобильное приложение</td>
+<td class="px-4 py-4 text-gray-400">192.168.1.45</td>
+</tr>
+<tr>
+<td class="px-4 py-4 text-gray-500">Сегодня, 12:15</td>
+<td class="px-4 py-4"><span class="px-2 py-1 bg-green-50 text-green-600 rounded text-xs font-medium">Продажа</span></td>
+<td class="px-4 py-4 text-gray-700 dark:text-gray-300">Новый заказ #ORD-9942 на сумму 1,240 TJS</td>
+<td class="px-4 py-4 text-gray-400">192.168.1.45</td>
+</tr>
+<tr>
+<td class="px-4 py-4 text-gray-500">Вчера, 18:20</td>
+<td class="px-4 py-4"><span class="px-2 py-1 bg-purple-50 text-purple-600 rounded text-xs font-medium">Товар</span></td>
+<td class="px-4 py-4 text-gray-700 dark:text-gray-300">Добавлен новый товар: Смарт-часы X-Pro</td>
+<td class="px-4 py-4 text-gray-400">192.168.1.45</td>
+</tr>
+<tr>
+<td class="px-4 py-4 text-gray-500">Вчера, 10:05</td>
+<td class="px-4 py-4"><span class="px-2 py-1 bg-orange-50 text-orange-600 rounded text-xs font-medium">Синхр.</span></td>
+<td class="px-4 py-4 text-gray-700 dark:text-gray-300">Полная синхронизация остатков склада</td>
+<td class="px-4 py-4 text-gray-400">Системный</td>
+</tr>
+<tr>
+<td class="px-4 py-4 text-gray-500">01.02, 21:45</td>
+<td class="px-4 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">Смена</span></td>
+<td class="px-4 py-4 text-gray-700 dark:text-gray-300">Закрытие смены "Дневная" (Основной магазин)</td>
+<td class="px-4 py-4 text-gray-400">192.168.1.12</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

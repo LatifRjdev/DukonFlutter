@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f172a",
+                        "slate-card": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .grid-pattern {
+            background-image: radial-gradient(#ffffff 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Background Gradient and Pattern -->
+<div class="absolute inset-0 bg-gradient-to-br from-[#0F172A] to-[#1E293B] z-0"></div>
+<div class="absolute inset-0 grid-pattern z-10"></div>
+<div class="relative z-20 flex flex-col items-center w-full max-w-[1440px] px-4">
+<!-- Main Login Card -->
+<div class="bg-white dark:bg-white w-full max-w-[420px] rounded-lg shadow-2xl p-10 flex flex-col gap-6">
+<!-- Top Section -->
+<div class="flex flex-col items-center">
+<h1 class="text-primary tracking-tight text-[32px] font-bold leading-tight">DokonPro</h1>
+<p class="text-[#64748B] text-base font-normal leading-normal">Admin Panel</p>
+</div>
+<!-- Title -->
+<div class="text-center">
+<h2 class="text-[#0F172A] text-[20px] font-semibold leading-tight tracking-tight">Вход в систему</h2>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-4">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[#0F172A] text-sm font-medium">Email *</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-[#64748B] text-[20px]">mail</span>
+<input class="w-full h-12 pl-12 pr-4 bg-transparent border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-[#0F172A] placeholder-[#94A3B8] transition-all" placeholder="example@dokon.pro" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[#0F172A] text-sm font-medium">Пароль *</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-[#64748B] text-[20px]">lock</span>
+<input class="w-full h-12 pl-12 pr-12 bg-transparent border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-[#0F172A] placeholder-[#94A3B8] transition-all" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-4 text-[#64748B] text-[20px] cursor-pointer hover:text-primary transition-colors">visibility</span>
+</div>
+</div>
+<!-- 2FA Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[#0F172A] text-sm font-medium">Код 2FA</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-[#64748B] text-[20px]">shield</span>
+<input class="w-full h-12 pl-12 pr-4 bg-transparent border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-[#0F172A] placeholder-[#94A3B8] transition-all tracking-[0.5em] font-mono" maxlength="6" placeholder="000000" type="text"/>
+</div>
+<p class="text-[#64748B] text-[12px]">Введите код из Google Authenticator</p>
+</div>
+<!-- Utilities -->
+<div class="flex items-center justify-between py-1">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="w-4 h-4 rounded border-[#E2E8F0] text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-[#64748B]">Запомнить меня</span>
+</label>
+<a class="text-sm text-primary font-medium hover:underline" href="#">Забыли пароль?</a>
+</div>
+<!-- Primary Button -->
+<button class="w-full h-12 bg-primary hover:bg-opacity-90 text-white font-bold text-base rounded-lg transition-all shadow-md active:scale-[0.98]" type="submit">
+                    Войти
+                </button>
+</form>
+<!-- Separator -->
+<div class="relative flex items-center py-2">
+<div class="flex-grow border-t border-[#E2E8F0]"></div>
+<span class="flex-shrink mx-4 text-[#94A3B8] text-sm">или</span>
+<div class="flex-grow border-t border-[#E2E8F0]"></div>
+</div>
+<!-- Secondary Button -->
+<button class="w-full h-12 border border-[#E2E8F0] bg-white hover:bg-gray-50 text-[#0F172A] font-semibold text-sm rounded-lg flex items-center justify-center gap-3 transition-all">
+<img alt="Google Logo" class="w-5 h-5" data-alt="Google colorful logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzb_wqPPgFjdNCgM_SxioUMessg9uJngDt7iw3CuSidcCCnF-csPADeVIg1FKoB_75dUh_0LSL4_zpdaiNYVwboTVlf7cETKHNcPQ7xBQj_r5bW46bHp0N-h4IZ6zvdRirDlqnPxrPtPXie-2maLZsqZpnYXtPU7J_qDlevASn6K_0C0e5FIPFN01T3Pp4ze-J6pd642eJcsd6Xv5VnK1lu6sm0yVRAbjhAuhoge8dU7k186uD9uDArb7Gk4HiMfwXR_JtTuryLwo"/>
+                Войти через Google
+            </button>
+</div>
+<!-- Footer Info -->
+<div class="mt-8 flex flex-col items-center gap-1 opacity-50">
+<p class="text-white text-sm font-normal">DokonPro Admin v1.0</p>
+<p class="text-white text-xs font-normal">© 2026 ITL Solutions</p>
+</div>
+</div>
+</body></html>

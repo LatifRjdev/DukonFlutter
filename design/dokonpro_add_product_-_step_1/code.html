@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro - Новый товар</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .ios-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            overflow-y: auto;
+            position: relative;
+        }
+        @media (max-width: 393px) {
+            .ios-container {
+                width: 100%;
+                height: 100vh;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-slate-200 flex items-center justify-center min-h-screen">
+<div class="ios-container bg-background-light dark:bg-background-dark shadow-2xl flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-gray-900 dark:text-white flex size-10 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Новый товар</h2>
+</div>
+</header>
+<!-- Stepper -->
+<div class="px-6 py-4 flex items-start justify-between relative">
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<span class="text-xs font-semibold text-primary">Основное</span>
+</div>
+<div class="absolute top-8 left-[20%] right-[20%] h-[2px] bg-gray-200 dark:bg-gray-700 -z-0"></div>
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500">
+<span class="text-xs font-bold">2</span>
+</div>
+<span class="text-xs font-medium text-gray-400">Цены</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500">
+<span class="text-xs font-bold">3</span>
+</div>
+<span class="text-xs font-medium text-gray-400">Склад</span>
+</div>
+</div>
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- EmptyState / Photo Upload -->
+<div class="px-4 py-3">
+<div class="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 px-6 py-10 transition-colors active:bg-primary/10">
+<div class="bg-primary/20 p-4 rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">add_a_photo</span>
+</div>
+<p class="text-gray-900 dark:text-white text-base font-bold">Добавить фото</p>
+<p class="text-gray-500 text-xs text-center">До 5 изображений, формат JPG или PNG</p>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="px-4 space-y-4">
+<!-- Название товара -->
+<div class="flex flex-col w-full">
+<p class="text-gray-900 dark:text-white text-sm font-semibold pb-1.5">Название товара *</p>
+<input class="form-input flex w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary h-12 px-4 text-sm placeholder:text-gray-400" placeholder="Введите название" type="text" value=""/>
+</div>
+<!-- Артикул/SKU -->
+<div class="flex flex-col w-full">
+<p class="text-gray-900 dark:text-white text-sm font-semibold pb-1.5">Артикул / SKU</p>
+<input class="form-input flex w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary h-12 px-4 text-sm placeholder:text-gray-400" placeholder="Напр. ABC-123" type="text"/>
+</div>
+<!-- Штрих-код -->
+<div class="flex flex-col w-full">
+<p class="text-gray-900 dark:text-white text-sm font-semibold pb-1.5">Штрих-код</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary h-12 px-4 pr-12 text-sm placeholder:text-gray-400" placeholder="Сканировать или ввести" type="text"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 p-2 flex items-center justify-center text-primary cursor-pointer hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">barcode_scanner</span>
+</div>
+</div>
+</div>
+<!-- Категория -->
+<div class="flex flex-col w-full">
+<p class="text-gray-900 dark:text-white text-sm font-semibold pb-1.5">Категория</p>
+<div class="relative">
+<select class="form-select flex w-full appearance-none rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary h-12 px-4 text-sm placeholder:text-gray-400 cursor-pointer">
+<option disabled="" selected="" value="">Выберите категорию</option>
+<option>Электроника</option>
+<option>Одежда и обувь</option>
+<option>Дом и сад</option>
+<option>Красота и здоровье</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Описание -->
+<div class="flex flex-col w-full pb-10">
+<p class="text-gray-900 dark:text-white text-sm font-semibold pb-1.5">Описание</p>
+<textarea class="form-textarea flex w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary min-h-[120px] px-4 py-3 text-sm placeholder:text-gray-400 resize-none" placeholder="Подробно опишите товар..."></textarea>
+</div>
+</div>
+</main>
+<!-- Bottom Action Button -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-background-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                Далее
+            </button>
+</div>
+</div>
+</body></html>

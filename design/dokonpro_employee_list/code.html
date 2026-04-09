@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Employee List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecc8",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .employee-card {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased">
+<!-- Main Container (iPhone 14 Pro Width simulation) -->
+<div class="relative mx-auto min-h-screen w-full max-w-[393px] bg-background-light dark:bg-background-dark flex flex-col pb-24">
+<!-- Header / TopAppBar -->
+<header class="sticky top-0 z-20 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0d1b19] dark:text-white cursor-pointer">chevron_left</span>
+</div>
+<h1 class="text-[#0d1b19] dark:text-white text-[18px] font-semibold leading-tight tracking-tight">Сотрудники</h1>
+<div class="flex items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[#0d1b19] dark:text-white text-[24px]">add</span>
+</button>
+</div>
+</header>
+<!-- Employee List Content -->
+<main class="flex flex-col gap-3 px-4 pt-4">
+<!-- Employee 1: Алишер Каримов -->
+<div class="employee-card flex flex-col gap-3 rounded-lg bg-white dark:bg-white/5 p-4 transition-all active:scale-[0.98]">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="size-[56px] rounded-full bg-cover bg-center border border-gray-100" data-alt="Close-up portrait of Alisher Karimov smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA2-3bpvHVxF5XDFvIomke5sf4foKNE1i-3ma69-xD5m5Xx4g_nqgapzwcVSiue5dTjDy6sD5jd8N9PrSEIya9hwGDTonB0LmBhDeyoYeDJOgUAGPi0T0rmcu4qg4MWErS36wyx0aPdMBXcPb2icPanZLgWMEBCCUepAFGnsf18i6Ec0IpYJfKgwa2o_WXA_oVRDD76wwZTTiuLtJGbyiCllvqvmI4tYuf6VBnvacqqDBag7JMnM9zw1daAYiSnGKHfy28FXUUYWg8U")'>
+</div>
+<div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white dark:border-background-dark bg-[#4ADE80]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h3 class="text-[#0d1b19] dark:text-white text-base font-semibold">Алишер Каримов</h3>
+<span class="rounded-full bg-gray-100 dark:bg-white/10 px-2 py-0.5 text-[11px] font-medium text-gray-500 dark:text-gray-400">Кассир</span>
+</div>
+<p class="text-[#4c9a8d] text-[13px] leading-snug">Основной магазин • Продаж сегодня: 12,450 TJS</p>
+<p class="text-[#4c9a8d] text-[13px] flex items-center gap-1.5">
+<span class="size-1.5 rounded-full bg-[#4ADE80]"></span> На смене
+                            </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+</div>
+<!-- Employee 2: Дилшод Рахмонов -->
+<div class="employee-card flex flex-col gap-3 rounded-lg bg-white dark:bg-white/5 p-4 transition-all active:scale-[0.98]">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="size-[56px] rounded-full bg-cover bg-center border border-gray-100" data-alt="Close-up portrait of Dilshod Rakhmonov" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC38onO0qeUDUbG-tSOHKdbyk54D6HlCratzZme1O6cuZF4PMbh9Q9yZDOaOeyHDJby7MymMmstvQeIJK49EoLDVi5HIAVSzKeNQ7x9ODrufq3gHpob26r8KxBv6YULdsJryH2-B-zug608lTBHrZrN8I9qwZgcLTWciNo262qF5pYMNKe64WMvvwzjUcOjAmHSulGR3XoEcstojco78357GjZ4Jp09lUPNSxZ_HEqD_knX2HOcKpXwyhiVYcX6sqoySK7EhUTeIRuh")'>
+</div>
+<div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white dark:border-background-dark bg-[#4ADE80]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h3 class="text-[#0d1b19] dark:text-white text-base font-semibold">Дилшод Рахмонов</h3>
+<span class="rounded-full bg-gray-100 dark:bg-white/10 px-2 py-0.5 text-[11px] font-medium text-gray-500 dark:text-gray-400">Кассир</span>
+</div>
+<p class="text-[#4c9a8d] text-[13px] leading-snug">Филиал Рудаки • 8,200 TJS</p>
+<p class="text-[#4c9a8d] text-[13px] flex items-center gap-1.5">
+<span class="size-1.5 rounded-full bg-[#4ADE80]"></span> На смене
+                            </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+</div>
+<!-- Employee 3: Фарход Назаров -->
+<div class="employee-card flex flex-col gap-3 rounded-lg bg-white dark:bg-white/5 p-4 transition-all active:scale-[0.98]">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="size-[56px] rounded-full bg-cover bg-center border border-gray-100" data-alt="Close-up portrait of Farhod Nazarov" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBe7bCR15eF1dnRqL46mzPzYQGO_ebjyve1NiHMrm2KL86UDaHBJW7e1ALrOV0dudrt2IHDyJp4Q0gcXkEHLQO400rqXpy5fz05OTDpqJGaFR2tAlxyOwPfDJ4fNr4DNGBTdGnAcqebJN-mNJ2Tth7kpnIozYvWeJfPkXv7kRHZbAAPl3gXRjZVsXHyCUh1xxToAIwWtnnZYRo8plQwomldcjLozY41vB9wuAI7Jcw1XIzFjKfGGh2poEsNNyt_Xv2WVlBgSiKS4HuK")'>
+</div>
+<div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white dark:border-background-dark bg-[#F87171]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h3 class="text-[#0d1b19] dark:text-white text-base font-semibold">Фарход Назаров</h3>
+<span class="rounded-full bg-primary/20 px-2 py-0.5 text-[11px] font-medium text-[#0d7a6a] dark:text-primary">Администратор</span>
+</div>
+<p class="text-[#4c9a8d] text-[13px] leading-snug">Все магазины</p>
+<p class="text-[#F87171] text-[13px] flex items-center gap-1.5">
+<span class="size-1.5 rounded-full bg-[#F87171]"></span> Не на смене
+                            </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+</div>
+<!-- Employee 4: Зарина Каримова -->
+<div class="employee-card flex flex-col gap-3 rounded-lg bg-white dark:bg-white/5 p-4 transition-all active:scale-[0.98]">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="size-[56px] rounded-full bg-cover bg-center border border-gray-100" data-alt="Close-up portrait of Zarina Karimova" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBTO6ARhZDRiB3Y0bRrGy3rVqLwinNQzzc2RWdgnYeU3z1CRx2Bo0Nl_ep95GkuWChhPTCszWWjZ2JQ98AXKjr8CrD6wqr2tdmR4c0I1FIe5W7TEFCbPz4kE7KACzeHbI_45qTo7KNUjIm8lvGB7wzAk71Q_lfkIEUIw8DrFq7garSVKajwrImAmWov930tf9nj7_SSz5htouDy9gsOfvGXQ4vvJxLaIYR5dJNg7utW_6aIUn06soXpKE41dXWDAN8y6zxagw8i9hnt")'>
+</div>
+<div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-white dark:border-background-dark bg-[#4ADE80]"></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h3 class="text-[#0d1b19] dark:text-white text-base font-semibold">Зарина Каримова</h3>
+<span class="rounded-full bg-purple-100 dark:bg-purple-900/30 px-2 py-0.5 text-[11px] font-medium text-purple-600 dark:text-purple-400">Склад</span>
+</div>
+<p class="text-[#4c9a8d] text-[13px] leading-snug">Основной магазин</p>
+<p class="text-[#4c9a8d] text-[13px] flex items-center gap-1.5">
+<span class="size-1.5 rounded-full bg-[#4ADE80]"></span> На смене
+                            </p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-8 right-8 flex size-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition-transform active:scale-90 z-30 ml-[280px]">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<!-- Tab Bar (Simulated iOS Home Indicator area) -->
+<nav class="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[393px] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-white/10 px-8 py-3 flex justify-between items-center z-20">
+<div class="flex flex-col items-center gap-1 text-[#4c9a8d]">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">group</span>
+<span class="text-[10px] font-semibold">Сотрудники</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#4c9a8d]">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="text-[10px] font-medium">Отчеты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#4c9a8d]">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</div>
+</nav>
+<!-- iPhone Home Indicator -->
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 dark:bg-white/20 rounded-full z-30"></div>
+</div>
+</body></html>

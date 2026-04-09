@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecda",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102220",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-toggle {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
+        }
+        .ios-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E9E9EB;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 3px 1px rgba(0,0,0,0.1);
+        }
+        input:checked + .slider {
+            background-color: #13ecda;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-[#0d1b1a] dark:text-white pb-10">
+<!-- Header -->
+<div class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-4 flex items-center justify-between">
+<h1 class="text-xl font-bold">Настройки</h1>
+<div class="text-[#0d1b1a] dark:text-white">
+<span class="material-symbols-outlined">search</span>
+</div>
+</div>
+<div class="px-4 space-y-6">
+<!-- Profile Card -->
+<div class="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm flex items-center justify-between border border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full overflow-hidden bg-zinc-200" data-alt="Portrait photo of Latif Rahimov" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbT75_4cbEX-HYShuN1l8tZdTqVorKeQRN-CXu5JbOpdWGPBy5I5-JxjsDgITRQ1jQpwOAV06BQQB_CMc_Mkt-rhunnoa6oAK9oT6K62egzRK5wRcU92648i0Y8DjWhNWkbqxCnKV8R4zt56T3nMyXoEYNRyhHK9zhW0eKDzWxqfume4ejeE0WD44KxLcZ0V72VDc2Dlm_fQvvAZSkymmw3cMkw1I_uLtzdHDTDkGJrVQTWNkZ43cQFt6wVXl6Hr3FuYPvU3FRPPOv");'></div>
+<div>
+<div class="flex items-center gap-2">
+<p class="font-bold text-base">Латиф Рахимов</p>
+<span class="bg-primary/20 text-[#0d1b1a] dark:text-primary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Владелец</span>
+</div>
+<p class="text-zinc-500 text-sm">ID: 482930</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-400">chevron_right</span>
+</div>
+<!-- Магазин Section -->
+<div>
+<h3 class="text-zinc-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest px-1 pb-2">Магазин</h3>
+<div class="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm border border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">storefront</span>
+<p class="flex-1 text-base">Мои магазины</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">group</span>
+<p class="flex-1 text-base">Продавцы</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">key</span>
+<p class="flex-1 text-base">Роли и доступы</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">sell</span>
+<p class="flex-1 text-base">Скидки</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5">
+<span class="material-symbols-outlined text-zinc-500">receipt_long</span>
+<p class="flex-1 text-base">Шаблоны чеков</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Интеграции Section -->
+<div>
+<h3 class="text-zinc-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest px-1 pb-2">Интеграции</h3>
+<div class="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm border border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">robot_2</span>
+<p class="flex-1 text-base">Telegram-бот</p>
+<div class="flex items-center gap-1 text-[#4CAF50]">
+<span class="text-xs font-medium">Подключён</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">point_of_sale</span>
+<p class="flex-1 text-base">ККМ/Фискализация</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">print</span>
+<p class="flex-1 text-base">Принтер чеков</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5">
+<span class="material-symbols-outlined text-zinc-500">barcode_scanner</span>
+<p class="flex-1 text-base">Сканер</p>
+<span class="material-symbols-outlined text-zinc-300">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Приложение Section -->
+<div>
+<h3 class="text-zinc-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest px-1 pb-2">Приложение</h3>
+<div class="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm border border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-4 px-4 py-2 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">notifications</span>
+<p class="flex-1 text-base">Уведомления</p>
+<label class="ios-toggle">
+<input checked="" type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<div class="flex items-center gap-4 px-4 py-2 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">dark_mode</span>
+<p class="flex-1 text-base">Тёмная тема</p>
+<label class="ios-toggle">
+<input type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5 border-b border-zinc-50 dark:border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500">language</span>
+<p class="flex-1 text-base">Язык</p>
+<div class="flex items-center gap-1 text-zinc-400">
+<span class="text-base text-zinc-900 dark:text-zinc-300">Русский</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 py-3.5">
+<span class="material-symbols-outlined text-zinc-500">cloud_done</span>
+<p class="flex-1 text-base">Офлайн-режим</p>
+<div class="flex items-center gap-1 text-[#4CAF50]">
+<span class="text-sm font-medium">Синхронизировано ✓</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Подписка Section -->
+<div>
+<h3 class="text-zinc-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest px-1 pb-2">Подписка</h3>
+<div class="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm border border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-4 px-4 py-4">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">workspace_premium</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-base uppercase">БИЗНЕС</p>
+<p class="text-xs text-zinc-500">Активна до 30.03.2026</p>
+</div>
+<div class="flex items-center gap-1 text-primary font-medium">
+<span class="text-sm">Сменить</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Logout Button -->
+<div class="pt-4 pb-8 flex justify-center">
+<button class="w-full max-w-[280px] py-3.5 rounded-xl border border-[#F44336] text-[#F44336] font-semibold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                Выйти из аккаунта
+            </button>
+</div>
+</div>
+</body></html>

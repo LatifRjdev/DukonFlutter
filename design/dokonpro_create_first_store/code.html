@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center">
+<!-- Device Container (iPhone 14 Pro aspect ratio simulation) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-white dark:bg-background-dark flex flex-col overflow-hidden">
+<!-- Top App Bar / Status Bar Spacer -->
+<div class="h-12 w-full"></div>
+<!-- Header Icon Section -->
+<div class="flex flex-col items-center pt-8 pb-6">
+<div class="w-24 h-24 rounded-full bg-[#E0F7FA] dark:bg-primary/20 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-[64px]" data-icon="store">storefront</span>
+</div>
+<h1 class="text-[#0c1b1d] dark:text-white text-2xl font-bold leading-tight px-6 text-center">
+                Создайте ваш первый магазин
+            </h1>
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal leading-normal pt-2 px-6 text-center">
+                Это займёт меньше минуты
+            </p>
+</div>
+<!-- Form Section -->
+<div class="flex-1 px-6 space-y-6 pt-4">
+<!-- Store Name Input -->
+<div class="flex flex-col gap-2">
+<label class="text-[#0c1b1d] dark:text-gray-200 text-sm font-medium leading-normal ml-1">
+                    Название магазина
+                </label>
+<input class="w-full h-[56px] rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 px-4 text-[#0c1b1d] dark:text-white placeholder:text-[#757575] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Введите название" type="text"/>
+</div>
+<!-- Category Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="text-[#0c1b1d] dark:text-gray-200 text-sm font-medium leading-normal ml-1">
+                    Категория
+                </label>
+<div class="relative">
+<select class="w-full h-[56px] appearance-none rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 px-4 text-[#0c1b1d] dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+<option disabled="" selected="" value="">Выберите категорию</option>
+<option value="grocery">Продукты</option>
+<option value="clothing">Одежда</option>
+<option value="electronics">Электроника</option>
+<option value="other">Другое</option>
+</select>
+<div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Currency Selection -->
+<div class="flex flex-col gap-3">
+<label class="text-[#0c1b1d] dark:text-gray-200 text-sm font-medium leading-normal ml-1">
+                    Валюта по умолчанию
+                </label>
+<div class="flex gap-3">
+<!-- TJS Option (Selected) -->
+<label class="flex-1 cursor-pointer">
+<input checked="" class="hidden peer" name="currency" type="radio" value="TJS"/>
+<div class="flex items-center justify-center h-12 rounded-lg border border-primary bg-primary/5 text-primary peer-checked:bg-primary peer-checked:text-white transition-all font-semibold">
+                            TJS
+                        </div>
+</label>
+<!-- USD Option -->
+<label class="flex-1 cursor-pointer">
+<input class="hidden peer" name="currency" type="radio" value="USD"/>
+<div class="flex items-center justify-center h-12 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-300 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-semibold">
+                            USD
+                        </div>
+</label>
+<!-- RUB Option -->
+<label class="flex-1 cursor-pointer">
+<input class="hidden peer" name="currency" type="radio" value="RUB"/>
+<div class="flex items-center justify-center h-12 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-300 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all font-semibold">
+                            RUB
+                        </div>
+</label>
+</div>
+</div>
+</div>
+<!-- Footer Action Button -->
+<div class="p-6 pb-10 bg-white dark:bg-background-dark">
+<button class="w-full h-14 bg-primary text-white font-bold text-base rounded-lg shadow-lg active:scale-[0.98] transition-transform">
+                Создать магазин
+            </button>
+<!-- iOS Home Indicator Space -->
+<div class="h-2 mt-4 flex justify-center w-full">
+<div class="w-32 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+</div>
+</div>
+</div>
+</body></html>

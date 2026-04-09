@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#0bb5cb",
+                "background-light": "#f5f8f8",
+                "background-dark": "#121212",
+                "surface": "#1E1E1E",
+                "surface-light": "#2C2C2C",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852 approx logic) -->
+<div class="relative w-full max-w-[393px] h-screen max-h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col border-x border-gray-800">
+<!-- TopAppBar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between">
+<div class="text-white flex size-10 shrink-0 items-center justify-center bg-surface rounded-full">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="flex flex-col flex-1 px-3">
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Касса</h2>
+<p class="text-[#B0B0B0] text-xs font-medium">Основной магазин</p>
+</div>
+<div class="flex w-12 items-center justify-end">
+<span class="material-symbols-outlined text-[#B0B0B0]">notifications</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar pb-32">
+<!-- SearchBar -->
+<div class="px-4 py-3">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-[#90c4cb] flex border-none bg-surface items-center justify-center pl-4 rounded-l-lg" data-icon="MagnifyingGlass">
+<span class="material-symbols-outlined text-gray-400">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-surface focus:border-none h-full placeholder:text-gray-500 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Поиск товаров" value=""/>
+</div>
+</label>
+</div>
+<!-- SingleButton (Scanner) -->
+<div class="flex px-4 py-1">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 flex-1 bg-primary text-[#102123] gap-2 text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined">barcode_scanner</span>
+<span class="truncate">Сканировать штрих-код</span>
+</button>
+</div>
+<!-- SectionHeader: Быстрые товары -->
+<div class="flex items-center justify-between px-4 pt-6 pb-2">
+<h3 class="text-white text-base font-bold leading-tight tracking-[-0.015em]">Быстрые товары</h3>
+<span class="text-primary text-xs font-medium">Все</span>
+</div>
+<!-- Chips (Horizontal Scroll) -->
+<div class="flex gap-3 px-4 py-2 overflow-x-auto hide-scrollbar">
+<div class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-surface-light px-4 border border-white/5">
+<p class="text-white text-sm font-medium leading-normal">Кофе 180</p>
+</div>
+<div class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-surface-light px-4 border border-white/5">
+<p class="text-white text-sm font-medium leading-normal">Хлеб 8</p>
+</div>
+<div class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-surface-light px-4 border border-white/5">
+<p class="text-white text-sm font-medium leading-normal">Сахар 55</p>
+</div>
+<div class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-surface-light px-4 border border-white/5">
+<p class="text-white text-sm font-medium leading-normal">Чай 120</p>
+</div>
+</div>
+<!-- Cart Section -->
+<div class="flex items-center justify-between px-4 pt-6 pb-2">
+<h3 class="text-white text-base font-bold leading-tight tracking-[-0.015em]">Корзина (3 товара)</h3>
+<span class="material-symbols-outlined text-gray-500 text-sm">delete_sweep</span>
+</div>
+<!-- Cart List -->
+<div class="flex flex-col gap-1 px-4">
+<!-- Item 1 -->
+<div class="flex items-center justify-between py-3 border-b border-white/5">
+<div class="flex flex-col">
+<span class="text-white text-sm font-medium">Кофе растворимый</span>
+<span class="text-gray-400 text-xs">180 TJS</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-surface-light rounded-lg h-8">
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">remove</span></button>
+<span class="px-2 text-sm font-bold">2</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">add</span></button>
+</div>
+<div class="flex flex-col items-end min-w-[70px]">
+<span class="text-primary font-bold text-sm">360 TJS</span>
+<span class="material-symbols-outlined text-gray-600 text-xs cursor-pointer">delete</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between py-3 border-b border-white/5">
+<div class="flex flex-col">
+<span class="text-white text-sm font-medium">Сахар 1кг</span>
+<span class="text-gray-400 text-xs">55 TJS</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-surface-light rounded-lg h-8">
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">remove</span></button>
+<span class="px-2 text-sm font-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">add</span></button>
+</div>
+<div class="flex flex-col items-end min-w-[70px]">
+<span class="text-primary font-bold text-sm">55 TJS</span>
+<span class="material-symbols-outlined text-gray-600 text-xs cursor-pointer">delete</span>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between py-3">
+<div class="flex flex-col">
+<span class="text-white text-sm font-medium">Молоко 1л</span>
+<span class="text-gray-400 text-xs">25 TJS</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-surface-light rounded-lg h-8">
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">remove</span></button>
+<span class="px-2 text-sm font-bold">3</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">add</span></button>
+</div>
+<div class="flex flex-col items-end min-w-[70px]">
+<span class="text-primary font-bold text-sm">75 TJS</span>
+<span class="material-symbols-outlined text-gray-600 text-xs cursor-pointer">delete</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Checkout Summary Card -->
+<div class="m-4 p-4 bg-surface rounded-xl flex flex-col gap-2">
+<div class="flex justify-between">
+<span class="text-gray-400 text-xs">Подытог</span>
+<span class="text-white text-xs font-medium">490 TJS</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-400 text-xs">Скидка</span>
+<span class="text-white text-xs font-medium">0 TJS</span>
+</div>
+<div class="h-[1px] bg-white/5 my-1"></div>
+<div class="flex justify-between items-center">
+<span class="text-white text-sm font-bold">ИТОГО:</span>
+<span class="text-primary text-xl font-bold">490 TJS</span>
+</div>
+</div>
+<!-- Payment Methods -->
+<div class="px-4 pb-4">
+<div class="grid grid-cols-4 gap-2">
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-surface-light rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">payments</span>
+<span class="text-[10px] text-white">Наличные</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-surface-light rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-gray-400 text-xl">credit_card</span>
+<span class="text-[10px] text-white">Карта</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-surface-light rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-gray-400 text-xl">handshake</span>
+<span class="text-[10px] text-white">В долг</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-surface-light rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-gray-400 text-xl">account_balance_wallet</span>
+<span class="text-[10px] text-white">Смешанная</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Fixed Bottom Button -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-background-dark/80 backdrop-blur-md border-t border-white/5">
+<button class="flex w-full cursor-pointer items-center justify-center rounded-xl h-14 bg-primary text-[#102123] font-bold text-base shadow-lg shadow-primary/20">
+                Оформить продажу — 490 TJS
+            </button>
+</div>
+<!-- Navigation Simulation Bar -->
+<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full"></div>
+</div>
+</body></html>

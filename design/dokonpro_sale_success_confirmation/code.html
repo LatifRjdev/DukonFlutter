@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Sale Success</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bad6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                        "success-green": "#4CAF50",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#212121] dark:text-gray-100 flex justify-center items-center min-h-screen">
+<!-- iPhone 14 Pro Container (393x852) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark flex flex-col overflow-hidden border-x border-gray-100 dark:border-gray-800 shadow-2xl">
+<!-- Top Bar (Minimalist) -->
+<div class="flex items-center justify-between p-4 pb-2">
+<div class="w-12 flex items-center justify-start">
+<span class="material-symbols-outlined text-[#212121] dark:text-gray-100 cursor-pointer">close</span>
+</div>
+<h2 class="text-sm font-semibold tracking-tight text-[#212121] dark:text-gray-100">Статус продажи</h2>
+<div class="w-12"></div>
+</div>
+<!-- Main Content (Centered Vertically) -->
+<div class="flex-1 flex flex-col items-center justify-center px-6">
+<!-- Success Icon -->
+<div class="w-[64px] h-[64px] bg-success-green rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-[32px] font-bold">check</span>
+</div>
+<!-- Status Header Component -->
+<div class="text-center">
+<h4 class="text-success-green text-[24px] font-bold leading-normal tracking-[-0.01em] mb-2">Продажа оформлена!</h4>
+</div>
+<!-- Headline Amount Component -->
+<div class="text-center">
+<h1 class="text-[#212121] dark:text-white text-[32px] font-bold leading-tight tracking-tight">490 TJS</h1>
+</div>
+<!-- Body Text / Change Component -->
+<div class="text-center">
+<p class="text-[#757575] dark:text-gray-400 text-[16px] font-normal leading-normal mt-1">Сдача: 10 TJS</p>
+</div>
+</div>
+<!-- Action Buttons Container -->
+<div class="p-6 pb-12 flex flex-col gap-3">
+<!-- Print Receipt Button (Outlined/Secondary) -->
+<button class="flex items-center justify-center gap-2 w-full h-12 rounded-lg border-2 border-primary text-primary font-semibold text-[15px] transition-colors active:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>Печатать чек</span>
+</button>
+<!-- Telegram Button (Outlined/Secondary) -->
+<button class="flex items-center justify-center gap-2 w-full h-12 rounded-lg border-2 border-primary text-primary font-semibold text-[15px] transition-colors active:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Отправить в Telegram</span>
+</button>
+<!-- New Sale Button (Primary Action) -->
+<button class="w-full h-[56px] bg-primary rounded-lg text-white font-bold text-[16px] shadow-lg shadow-primary/20 active:opacity-90 transition-opacity mt-2">
+                Новая продажа
+            </button>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-2 w-32 bg-gray-200 dark:bg-gray-700 rounded-full self-center mt-4 opacity-50"></div>
+</div>
+</div>
+</body></html>

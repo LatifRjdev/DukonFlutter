@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "chip-inactive": "#2c2c2c",
+                        "text-secondary": "#b0b0b0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852 approx emulation) -->
+<div class="relative w-full max-w-[393px] min-h-screen bg-background-light dark:bg-background-dark flex flex-col shadow-2xl overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-4 pb-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-white cursor-pointer" style="font-size: 24px;">arrow_back</span>
+<h2 class="text-white text-[20px] font-bold leading-tight tracking-tight">Расчёт зарплаты</h2>
+</div>
+<button class="flex items-center justify-center rounded-full p-2 bg-transparent text-white">
+<span class="material-symbols-outlined" style="font-size: 24px;">ios_share</span>
+</button>
+</div>
+</header>
+<!-- Period Chips -->
+<div class="flex gap-3 p-4 overflow-x-auto custom-scrollbar">
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5">
+<p class="text-white text-sm font-semibold">Январь</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-chip-inactive px-5">
+<p class="text-text-secondary text-sm font-medium">Февраль</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-chip-inactive px-5">
+<p class="text-text-secondary text-sm font-medium">Март</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-chip-inactive px-5">
+<p class="text-text-secondary text-sm font-medium">Апрель</p>
+</div>
+</div>
+<!-- Summary Card -->
+<div class="px-4 pb-4">
+<div class="flex flex-col p-5 rounded-2xl bg-card-dark border border-white/5">
+<p class="text-white text-lg font-bold leading-tight mb-1">Итого за январь 2026: 42,800 TJS</p>
+<p class="text-text-secondary text-sm font-normal">4 сотрудника</p>
+</div>
+</div>
+<h3 class="text-white text-lg font-bold px-4 pt-2 pb-2">Список сотрудников</h3>
+<!-- Employee List -->
+<div class="flex flex-col gap-4 px-4 pb-32">
+<!-- Employee Card 1 -->
+<div class="bg-card-dark rounded-2xl p-4 flex flex-col gap-4 border border-white/5">
+<div class="flex gap-4 items-center">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="text-primary font-bold text-lg">АР</span>
+</div>
+<div>
+<p class="text-white text-base font-bold">Ali Rakhimov</p>
+<p class="text-text-secondary text-xs uppercase tracking-wider">Cashier</p>
+</div>
+</div>
+<div class="space-y-3 pt-2">
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Оклад</span>
+<span class="text-white font-medium">8,000 TJS</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Комиссия</span>
+<span class="text-primary font-bold">3,200 TJS</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px] text-text-secondary">
+<span>Смены (22/22)</span>
+<span class="text-primary font-semibold">100%</span>
+</div>
+<div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-full"></div>
+</div>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Бонусы</span>
+<span class="text-[#4CAF50] font-medium">+1,000 TJS</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Удержания</span>
+<span class="text-[#F44336] font-medium">-500 TJS</span>
+</div>
+<div class="pt-2 border-t border-white/5 flex justify-between items-center">
+<span class="text-xs text-text-secondary font-medium">К ВЫПЛАТЕ:</span>
+<span class="text-primary text-lg font-bold">11,700 TJS</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 h-11 bg-primary text-white text-sm font-bold rounded-full">Выплатить</button>
+<button class="flex-1 h-11 border border-white/20 text-white text-sm font-bold rounded-full">Расчётный лист</button>
+</div>
+</div>
+<!-- Employee Card 4 (Sample for 'Not Paid' badge) -->
+<div class="bg-card-dark rounded-2xl p-4 flex flex-col gap-4 border border-white/5">
+<div class="flex justify-between items-start">
+<div class="flex gap-4 items-center">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="text-primary font-bold text-lg">НТ</span>
+</div>
+<div>
+<p class="text-white text-base font-bold">Nasima T.</p>
+<p class="text-text-secondary text-xs uppercase tracking-wider">Manager</p>
+</div>
+</div>
+<div class="bg-[#FF9800]/20 text-[#FF9800] px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+                        Не выплачено
+                    </div>
+</div>
+<div class="pt-2 border-t border-white/5 flex justify-between items-center">
+<span class="text-xs text-text-secondary font-medium uppercase">Итого к выплате:</span>
+<span class="text-primary text-lg font-bold">12,500 TJS</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 h-11 bg-primary text-white text-sm font-bold rounded-full">Выплатить</button>
+</div>
+</div>
+</div>
+<!-- Bottom Sticky Button -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto p-4 bg-background-dark/80 backdrop-blur-xl border-t border-white/5">
+<button class="w-full h-14 bg-primary text-white text-base font-bold rounded-2xl shadow-[0_8px_24px_rgba(0,189,214,0.3)]">
+                Выплатить всем — 42,800 TJS
+            </button>
+<!-- iPhone Home Indicator -->
+<div class="w-32 h-1 bg-white/20 rounded-full mx-auto mt-4 mb-1"></div>
+</div>
+</div>
+</body></html>

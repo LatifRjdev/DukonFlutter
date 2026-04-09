@@ -1,0 +1,801 @@
+================================================================================
+                    DokonPro — Прогресс разработки
+                    Обновлено: 03.02.2026
+================================================================================
+
+ОБЩАЯ СТАТИСТИКА
+────────────────
+Дизайн:     108/108 экранов готово (100%)  ✅  (+24 доп: 61-84, +14 админка: 85-98, +9 пробелы: 99-107)
+Код (HTML):  60/60 экранов экспортировано  ✅
+PRD:         Готов v1.1  ✅
+Разработка:  Не начата  ⏳
+
+================================================================================
+ТЕХНОЛОГИЧЕСКИЙ СТЕК
+================================================================================
+
+  Frontend (Mobile):
+  ─────────────────
+  • Flutter 3.x (Dart 3.x) — кроссплатформа iOS + Android
+  • flutter_bloc 8.x — управление состоянием (BLoC-паттерн)
+  • Isar 3.x — локальная NoSQL БД (офлайн-режим)
+  • Dio 5.x — HTTP-клиент с интерцепторами и retry
+  • go_router 13.x — декларативная навигация
+  • get_it + injectable — Dependency Injection
+  • mobile_scanner 3.x — сканирование штрих-кодов
+  • esc_pos_printer 4.x — печать чеков на POS-принтерах
+  • Firebase (messaging, analytics, crashlytics) — пуши и мониторинг
+
+  Backend (API):
+  ──────────────
+  • Node.js 20 LTS + NestJS 10.x (TypeScript 5.x)
+  • Prisma 5.x — ORM с миграциями и type-safe queries
+  • PostgreSQL 16 — основная реляционная БД
+  • Redis 7.x — кэширование + очереди (BullMQ 5.x)
+  • Passport + JWT — аутентификация (access + refresh tokens)
+  • Socket.io 4.x — WebSocket для real-time обновлений
+  • Telegraf 4.x — Telegram-бот
+  • Swagger — автодокументация API
+  • class-validator — валидация DTO
+
+  Инфраструктура:
+  ───────────────
+  • Docker + Docker Compose (старт), Kubernetes (масштабирование)
+  • GitHub Actions — CI/CD pipeline
+  • Hetzner Cloud — хостинг серверов
+  • Cloudflare — CDN + DDoS защита
+  • Hetzner Object Storage / Cloudflare R2 — хранение изображений
+  • Sentry — мониторинг ошибок
+  • Grafana + Loki — дашборды и логирование
+
+================================================================================
+АРХИТЕКТУРА
+================================================================================
+
+  Clean Architecture (Flutter):
+  ─────────────────────────────
+  UI (Widgets) → BLoC (State) → Repository → DataSource → Isar / Remote API
+                                                  ↕
+                                            Sync Engine
+
+  Ключевые принципы:
+  • Offline-first: данные сначала в Isar, затем синхронизация с сервером
+  • Sync Engine: очередь операций, conflict resolution (last-write-wins)
+  • Модульный backend: auth, products, sales, finances, staff — отдельные модули
+  • WebSocket: real-time обновления POS, инвентаризации, остатков
+
+  Структура Flutter-проекта:
+  lib/
+  ├── core/          — constants, errors, network, theme, utils
+  ├── data/          — datasources (local/remote), models, repositories, sync/
+  ├── domain/        — entities, repository interfaces, usecases
+  ├── presentation/  — blocs, pages, widgets
+  └── l10n/          — app_ru.arb, app_tg.arb, app_uz.arb
+
+  Структура NestJS-проекта:
+  src/
+  ├── common/        — decorators, guards, filters, interceptors, pipes
+  ├── config/        — database, redis, app config
+  ├── modules/       — auth, users, stores, products, sales, finances,
+  │                    customers, suppliers, inventory, loyalty, staff,
+  │                    sync, notifications, subscriptions
+  ├── jobs/          — BullMQ processors (reports, notifications, sync)
+  └── prisma/        — schema.prisma, migrations/
+
+  База данных (PostgreSQL + Prisma):
+  • 20+ моделей: users, stores, products, categories, sales, sale_items,
+    customers, suppliers, expenses, staff, shifts, inventory, loyalty, sync_logs
+  • Enum-типы: StoreCategory, Currency, PaymentType, StaffRole, SyncStatus
+  • Индексы на часто запрашиваемых полях (store_id + created_at, barcode, sku)
+
+================================================================================
+ФАЗА ДИЗАЙНА — ПОЛНОСТЬЮ ЗАВЕРШЕНА ✅
+================================================================================
+
+Все 60 экранов сгенерированы в Stitch. Каждый содержит:
+  - screen.png (макет)
+  - code.html (HTML-код для разработки)
+
+Расположение: /design/[имя_экрана]/
+
+================================================================================
+PHASE 1: MVP — Онбординг, Авторизация, Товары, Продажи
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (28 экранов)
+Сроки: Месяцы 1-2 (Недели 1-8)
+
+  Цель фазы:
+  ──────────
+  Создать базовое рабочее приложение: пользователь может зарегистрироваться,
+  добавить товары и проводить продажи через POS-кассу. Все данные хранятся
+  локально в Isar. Backend обеспечивает аутентификацию и CRUD API.
+
+  Что разрабатывается:
+  ────────────────────
+  • Настройка Flutter-проекта: структура папок, дизайн-система (tokens, компоненты)
+  • CI/CD pipeline: GitHub Actions → сборка APK/IPA → Fastlane → TestFlight/Firebase
+  • Онбординг: 4 слайда с value proposition, splash screen
+  • Аутентификация: регистрация по телефону, вход, JWT + refresh tokens
+  • Создание магазина: форма с названием, категорией, валютой, адресом
+  • CRUD товаров: добавление (3 шага), редактирование, удаление, поиск
+  • Категории товаров: CRUD с иконками и цветами
+  • Импорт из Excel: парсинг .xlsx, маппинг колонок, валидация
+  • Приход товара (F-PROD-007): оприходование, поставщик, накладная, обновление остатков
+  • POS-касса: сканирование штрих-кодов, корзина, скидки, оплата (нал/карта/долг)
+  • Чеки: превью, печать на POS-принтер, сохранение в историю
+  • История продаж: фильтры, поиск, детали, возвраты
+  • Локальная БД: Isar-коллекции для всех сущностей Phase 1
+  • Empty states: пустые экраны товаров и продаж
+
+  Технические задачи (Backend):
+  • NestJS-модули: auth, users, stores, products, sales
+  • Prisma-модели: User, Store, Product, Category, Sale, SaleItem, StockMovement
+  • JWT + Refresh Token стратегии (Passport)
+  • Rate limiting: 100 req/min
+  • Swagger-документация API
+  • Docker + docker-compose для локальной разработки
+
+  Недели:
+  • 1-2: Настройка проекта, CI/CD, дизайн-система в коде
+  • 3-4: Аутентификация (backend + frontend), онбординг
+  • 5-6: CRUD товаров, категории, импорт, приход товара
+  • 7-8: POS: корзина, продажи, чеки, история
+
+────────────────────────────────────────────────────────────────────────────────
+
+  Экраны дизайна:
+  ───────────────
+
+  Онбординг и Авторизация (7 экранов):
+  ✅ dokonpro_splash_screen                — Splash Screen
+  ✅ onboarding_-_inventory_tracking       — Онбординг: Учёт товаров
+  ✅ onboarding_-_quick_sales              — Онбординг: Быстрые продажи
+  ✅ onboarding_-_business_analytics       — Онбординг: Аналитика
+  ✅ onboarding_-_start_free_trial         — Онбординг: Начните бесплатно
+  ✅ dokonpro_registration_screen          — Регистрация
+  ✅ dokonpro_login_screen                 — Вход
+
+  Создание магазина (2 экрана):
+  ✅ dokonpro_create_first_store           — Создание первого магазина
+  ✅ dokonpro_my_stores_list               — Мои магазины
+
+  Товары (8 экранов):
+  ✅ dokonpro_product_list                 — Список товаров
+  ✅ dokonpro_product_details              — Карточка товара
+  ✅ dokonpro_add_product_-_step_1         — Добавление: Шаг 1 (Основное)
+  ✅ dokonpro_add_product_-_step_2         — Добавление: Шаг 2 (Цены)
+  ✅ dokonpro_add_product_-_step_3         — Добавление: Шаг 3 (Склад)
+  ✅ dokonpro_excel_import                 — Импорт из Excel
+  ✅ dokonpro_categories_list              — Категории товаров
+  ✅ dokonpro_empty_products_state         — Empty state: нет товаров
+
+  Продажи / POS (11 экранов):
+  ✅ dokonpro_pos_checkout                 — Экран кассы (POS)
+  ✅ dokonpro_cash_payment                 — Оплата наличными
+  ✅ dokonpro_credit_sale_screen           — Продажа в долг
+  ✅ dokonpro_receipt_preview              — Чек (превью)
+  ✅ dokonpro_sales_history                — История продаж
+  ✅ dokonpro_transaction_details          — Детали продажи
+  ✅ dokonpro_refund_processing            — Возврат товара
+  ✅ dokonpro_sale_success_confirmation    — Успешная продажа
+  ✅ dokonpro_empty_sales_state            — Empty state: нет продаж
+  ✅ dokonpro_home_dashboard               — Главная (Dashboard)
+  ✅ dokonpro_offline_&_modals             — Офлайн + Модальные окна
+
+  Приход товара (2 экрана):
+  ✅ dokonpro_inventory_intake            — Приход товара (оприходование)  | F-PROD-007
+  ✅ dokonpro_dark_mode_inventory_intake  — Приход товара (Dark Mode)      | F-PROD-007
+
+  Редактирование товара (1 экран):
+  ✅ dokonpro_edit_product_details        — Редактирование товара          | F-PROD-004
+
+  OTP и авторизация (доп. экраны):
+  ✅ dokonpro_otp_verification_1          — OTP код (забыли пароль)
+  ✅ dokonpro_otp_verification_2          — OTP код (регистрация)          | F-AUTH-001
+  ✅ dokonpro_registration_otp_confirmation — Подтверждение регистрации    | F-AUTH-001
+  ✅ dokonpro_forgot_password_phone       — Забыли пароль (ввод телефона)
+  ✅ dokonpro_create_new_password         — Создание нового пароля
+  ✅ dokonpro_password_reset_success      — Пароль успешно сброшен
+
+  Чеки (доп. экраны):
+  ✅ dokonpro_receipt_templates_list      — Список шаблонов чеков          | F-SALE-003
+  ✅ dokonpro_receipt_template_editor     — Редактор шаблона чека          | F-SALE-003
+  ✅ dokonpro_receipt_editor              — Редактор чека                  | F-SALE-003
+
+  Разработка Phase 1:
+  ⬜ Настройка проекта Flutter + NestJS
+  ⬜ CI/CD pipeline (GitHub Actions)
+  ⬜ Дизайн-система в коде (tokens, components)
+  ⬜ Аутентификация (backend: JWT/Passport + frontend: login/register)
+  ⬜ Онбординг (frontend)
+  ⬜ CRUD товаров (backend: Prisma + frontend: BLoC)
+  ⬜ Категории (backend + frontend)
+  ⬜ Импорт из Excel
+  ⬜ Приход товара (F-PROD-007): оприходование, накладные, обновление остатков
+  ⬜ POS: корзина, оплата, чеки, печать
+  ⬜ История продаж, возвраты
+  ⬜ Локальная БД (Isar): все коллекции Phase 1
+  ⬜ Базовый UI для всех экранов Phase 1
+
+================================================================================
+PHASE 2: Синхронизация — Офлайн, Финансы, Клиенты, Долги
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (14 экранов)
+Сроки: Месяцы 3-4 (Недели 9-16)
+
+  Цель фазы:
+  ──────────
+  Полноценный офлайн-режим с облачной синхронизацией. Финансовый учёт:
+  расходы, доходы, отчёты. Управление клиентами, поставщиками и долгами.
+  Калькулятор закята для мусульманских торговцев.
+
+  Что разрабатывается:
+  ────────────────────
+  • Sync Engine: двусторонняя синхронизация Isar ↔ PostgreSQL
+    - Очередь операций (sync_queue) с retry и exponential backoff
+    - Conflict resolution: last-write-wins для полей, merge для количеств
+    - Batch sync: пакетная отправка при восстановлении связи
+    - WebSocket-уведомления об изменениях с других устройств
+  • Финансовый дашборд: доходы, расходы, прибыль за период
+  • CRUD расходов: категории (аренда, ЗП, транспорт и др.), повторяющиеся
+  • Калькулятор доставки: расчёт стоимости доставки клиенту
+  • Мультивалютность: TJS/USD/RUB, ручной курс обмена
+  • Финансовый отчёт: PDF-генерация, отправка на email
+  • Калькулятор закята (F-FIN-006):
+    - Автоматический подсчёт: товарные остатки + наличные + дебиторка
+    - Личное имущество: банковские счета, золото, транспорт, недвижимость
+    - Множественные объекты в каждой категории с редактированием
+    - Вычеты: кредиторка + личные долги
+    - Нисаб (порог 85г золота), хавль (лунный год), ставка 2.5%
+  • CRUD клиентов: контакты, история покупок, баллы лояльности
+  • Управление долгами: клиентские долги, частичные оплаты, напоминания
+  • CRUD поставщиков: контакты, привязка к товарам, долги
+
+  Технические задачи (Backend):
+  • NestJS-модули: sync, finances, customers, suppliers, debts, zakat
+  • Prisma-модели: Expense, ExchangeRate, Customer, Supplier, DebtPayment, SyncLog
+  • BullMQ-процессоры: sync.processor, report.processor
+  • WebSocket gateway для real-time sync
+  • PDF-генерация финансовых отчётов
+  • API закята: расчёт, история, настройки (4 эндпоинта)
+
+  Недели:
+  • 9-10: Sync engine, очередь операций, WebSocket
+  • 11-12: Conflict resolution, retry logic, batch sync
+  • 13-14: Финансовый дашборд, расходы, калькулятор закята
+  • 15-16: Клиенты, долги, поставщики, рассрочка
+
+────────────────────────────────────────────────────────────────────────────────
+
+  Экраны дизайна:
+  ───────────────
+
+  Финансы (6 экранов):
+  ✅ dokonpro_finance_dashboard            — Главный экран финансов
+  ✅ dokonpro_expenses_list                — Список расходов
+  ✅ dokonpro_add_new_expense              — Добавление расхода
+  ✅ dokonpro_shipping_calculator          — Калькулятор доставки
+  ✅ dokonpro_currency_management          — Мультивалютность
+  ✅ dokonpro_detailed_financial_report    — Финансовый отчёт
+
+  Клиенты и долги (5 экранов):
+  ✅ dokonpro_customer_crm_list            — Список клиентов
+  ✅ dokonpro_customer_profile_details     — Карточка клиента
+  ✅ dokonpro_customer_debts_list          — Долги клиентов
+  ✅ dokonpro_suppliers_list               — Список поставщиков
+  ✅ dokonpro_supplier_profile_details     — Карточка поставщика
+
+  Поставщики — долги (1 экран):
+  ✅ dokonpro_supplier_debts_list          — Долги поставщикам
+
+  Настройки (2 экрана, используются в Phase 2+):
+  ✅ dokonpro_settings_and_profile         — Главный экран настроек
+  ✅ dokonpro_user_profile_edit            — Профиль пользователя
+
+  Закят (5 экранов):
+  ✅ dokonpro_zakat_calculator             — Калькулятор закята          | F-FIN-006
+  ✅ dokonpro_detailed_zakat_calculator    — Детальный калькулятор       | F-FIN-006
+  ✅ dokonpro_zakat_history_list           — История расчётов/выплат     | F-FIN-006
+  ✅ dokonpro_zakat_settings_configuration — Настройки закята            | F-FIN-006
+  ✅ dokonpro_dark_zakat_calculator_detail — Калькулятор (Dark Mode)     | F-FIN-006
+  ✅ dokonpro_dark_zakat_history_list      — История (Dark Mode)         | F-FIN-006
+
+  Поставщики (доп. экран):
+  ✅ dokonpro_add_new_supplier            — Добавление поставщика       | F-SUP-001
+
+  Разработка Phase 2:
+  ⬜ Sync Engine: очередь + retry + batch sync
+  ⬜ Conflict resolution (last-write-wins + merge)
+  ⬜ WebSocket gateway для real-time обновлений
+  ⬜ Финансовый дашборд (доходы/расходы/прибыль)
+  ⬜ CRUD расходов (с категориями и повторяющимися)
+  ⬜ Калькулятор доставки
+  ⬜ Мультивалютность (TJS/USD/RUB)
+  ⬜ Финансовый отчёт (PDF + Email)
+  ⬜ Калькулятор закята (F-FIN-006): расчёт, личные активы, история
+  ⬜ CRUD клиентов (контакты, история, баллы)
+  ⬜ Управление долгами (частичные оплаты, напоминания)
+  ⬜ CRUD поставщиков (контакты, привязка к товарам, долги)
+
+================================================================================
+PHASE 3: Расширение — Telegram, Лояльность, Инвентаризация, Персонал
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (12 экранов)
+Сроки: Месяцы 5-6 (Недели 17-24)
+
+  Цель фазы:
+  ──────────
+  Расширенные бизнес-функции: Telegram-бот для удалённого контроля,
+  программа лояльности для удержания клиентов, инвентаризация для
+  контроля остатков, управление персоналом с расчётом зарплат.
+
+  Что разрабатывается:
+  ────────────────────
+  • Telegram-бот (Telegraf 4.x):
+    - Привязка бота к магазину через токен
+    - Ежедневные отчёты: выручка, количество продаж, топ-товары
+    - Алерты: критические остатки, крупные продажи, возвраты
+    - Команды: /report, /stock, /sales, /debts
+  • Программа лояльности:
+    - Накопительные баллы (X баллов за каждые Y сомони)
+    - Скидки ко дню рождения
+    - Уровни клиентов (бронза/серебро/золото)
+    - Промо-акции: процентные скидки, купи X получи Y, happy hours
+  • Инвентаризация:
+    - Создание инвентаризации (по категориям или полная)
+    - Сканирование товаров + ручной ввод
+    - Подсчёт расхождений (системное vs фактическое)
+    - Акт инвентаризации с автоматической корректировкой остатков
+  • Управление персоналом:
+    - CRUD сотрудников с привязкой к User
+    - Роли и права доступа (RBAC): Owner, Admin, Cashier, Warehouse
+    - Управление сменами: открытие/закрытие, подсчёт кассы
+    - Z-отчёт при закрытии смены
+  • Расчёт зарплаты (F-STAFF-004):
+    - Оклад + комиссия (% от продаж) + премии − удержания
+    - Подсчёт отработанных смен с progress bar
+    - Массовая выплата и индивидуальная
+    - Расчётный лист и история выплат
+  • Push-уведомления (Firebase Messaging):
+    - Напоминания о долгах, низких остатках, окончании подписки
+
+  Технические задачи (Backend):
+  • NestJS-модули: telegram, loyalty, inventory, staff, payroll, notifications
+  • Prisma-модели: Inventory, InventoryItem, LoyaltySettings, Promotion, TelegramBot
+  • BullMQ-процессоры: notification.processor (push, SMS, Telegram)
+  • RBAC guard: RolesGuard с @Roles() декоратором
+  • Cron jobs: ежедневный отчёт Telegram, проверка остатков
+
+  Недели:
+  • 17-18: Telegram-бот (backend + привязка + отчёты)
+  • 19-20: Программа лояльности (баллы, уровни, промо)
+  • 21-22: Инвентаризация (сканирование, акты, корректировка)
+  • 23-24: Персонал (CRUD, RBAC, смены, расчёт ЗП)
+
+────────────────────────────────────────────────────────────────────────────────
+
+  Экраны дизайна:
+  ───────────────
+
+  Инвентаризация (3 экрана):
+  ✅ dokonpro_inventory_audit_management   — Создание инвентаризации
+  ✅ dokonpro_active_inventory_audit       — Процесс инвентаризации
+  ✅ dokonpro_inventory_audit_results      — Результат инвентаризации
+
+  Лояльность (2 экрана):
+  ✅ dokonpro_loyalty_program_settings     — Программа лояльности (настройки)
+  ✅ dokonpro_loyalty_points_management    — Баллы лояльности клиентов      | F-LOY-001
+
+  Персонал (4 экрана):
+  ✅ dokonpro_employee_list                — Список сотрудников
+  ✅ dokonpro_add_new_employee             — Добавление сотрудника
+  ✅ dokonpro_roles_and_permissions        — Роли и доступы
+  ✅ dokonpro_shift_management             — Смены
+
+  Зарплата (2 экрана):
+  ✅ dokonpro_payroll_management           — Расчёт зарплаты              | F-STAFF-004
+  ✅ dokonpro_dark_mode_payroll_management — Расчёт зарплаты (Dark Mode)  | F-STAFF-004
+
+  Z-отчёт (1 экран):
+  ✅ dokonpro_z-report_(shift_closing)     — Z-отчёт (закрытие смены)     | F-HR-004
+
+  Инвентаризация Dark Mode (доп. экраны):
+  ✅ dokonpro_dark_mode_inventory          — Инвентаризация (Dark Mode)   | F-INV-001
+  ✅ dokonpro_dark_inventory_audit_setup   — Создание инвент. (Dark)      | F-INV-001
+  ✅ dokonpro_dark_mode_inventory_intake   — Приход товара (Dark)         | F-PROD-007
+  ✅ dokonpro_dark_mode_inventory_intake_detail — Детали прихода (Dark)   | F-PROD-007
+
+  Telegram + Уведомления (2 экрана):
+  ✅ dokonpro_telegram_bot_settings        — Настройки Telegram-бота
+  ✅ dokonpro_notifications_center         — Уведомления
+
+  Настройки магазина (2 экрана):
+  ✅ dokonpro_store_settings_edit          — Настройки магазина
+  ✅ dokonpro_subscription_tiers           — Выбор тарифа
+
+  Разработка Phase 3:
+  ⬜ Telegram-бот (Telegraf: привязка, отчёты, алерты, команды)
+  ⬜ Программа лояльности (баллы, уровни, промо-акции)
+  ⬜ Инвентаризация (сканирование, акты, корректировка остатков)
+  ⬜ CRUD персонала + привязка к User
+  ⬜ Роли и доступы (RBAC: Owner/Admin/Cashier/Warehouse)
+  ⬜ Смены (открытие/закрытие, Z-отчёт, подсчёт кассы)
+  ⬜ Расчёт зарплаты (F-STAFF-004): оклад + комиссия + премии − удержания
+  ⬜ Push-уведомления (Firebase Messaging)
+
+================================================================================
+PHASE 4: Полировка и запуск
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (3 экрана)
+Сроки: Месяц 7 (Недели 25-28)
+
+  Цель фазы:
+  ──────────
+  Стабилизация, тестирование и публикация приложения в App Store и
+  Google Play. Создание маркетинговых материалов и документации.
+
+  Что разрабатывается:
+  ────────────────────
+  • E2E тестирование:
+    - Integration tests (Flutter integration_test)
+    - API тесты (Jest + Supertest)
+    - Тестирование синхронизации (офлайн → онлайн сценарии)
+    - Нагрузочное тестирование API (k6 / Artillery)
+  • Оплата подписки:
+    - Интеграция с платёжными системами Таджикистана
+    - Тарифы: Старт (бесплатный), Бизнес (99 TJS/мес), Премиум (199 TJS/мес)
+    - Trial period: 14 дней
+  • Bug fixes и оптимизация:
+    - Профилирование производительности (DevTools)
+    - Оптимизация размера APK/IPA
+    - Тестирование на реальных устройствах (low-end Android)
+  • Публикация:
+    - App Store: App Store Connect, screenshots, описание
+    - Google Play: Google Play Console, ASO
+    - Подготовка beta-тестирования с реальными магазинами
+  • Маркетинг:
+    - Landing page (Next.js)
+    - Видео-туториалы (3-5 минут)
+    - Документация пользователя (FAQ, инструкции)
+
+  Технические задачи:
+  • Настройка сторов (App Store Connect, Google Play Console)
+  • Fastlane для автоматической публикации
+  • Sentry release tracking
+  • Landing page: Next.js + Tailwind + Vercel
+  • Локализация UI на 4 языка (ru, tg, uz, en)
+
+  Недели:
+  • 25-26: E2E тестирование, bug fixes, оптимизация
+  • 27-28: Публикация в сторы, landing page, документация
+
+────────────────────────────────────────────────────────────────────────────────
+
+  Экраны дизайна:
+  ───────────────
+
+  Подписка и оплата (3 экрана):
+  ✅ dokonpro_subscription_tiers           — Тарифы
+  ✅ dokonpro_plan_comparison_table        — Сравнение тарифов
+  ✅ dokonpro_subscription_payment         — Оплата подписки
+
+  Разработка Phase 4:
+  ⬜ E2E тестирование (Flutter integration + API Jest)
+  ⬜ Нагрузочное тестирование API
+  ⬜ Интеграция оплаты подписки
+  ⬜ Bug fixes и оптимизация производительности
+  ⬜ Публикация в App Store
+  ⬜ Публикация в Google Play
+  ⬜ Landing page (Next.js)
+  ⬜ Документация пользователя
+  ⬜ Видео-туториалы
+  ⬜ Локализация (ru, tg, uz, en)
+
+================================================================================
+PHASE 5: Масштабирование — AI-поиск, Фискализация, API
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (4 экрана)
+Сроки: Месяцы 8-12 (Недели 29-48)
+
+  Цель фазы:
+  ──────────
+  Продвинутые функции для масштабирования бизнеса: AI-поиск товаров
+  по фото, фискализация (ККМ), публичный API для интеграций,
+  мобильная витрина для клиентов и выход на рынки СНГ.
+
+  Что разрабатывается:
+  ────────────────────
+  • AI-поиск по фото (F-PROD-008):
+    - Камера + галерея для съёмки/загрузки фото товара
+    - Backend: image embedding (CLIP / OpenAI Vision API)
+    - Vector store: pgvector или Pinecone для хранения embeddings
+    - Поиск ближайших по вектору товаров (cosine similarity)
+    - Результаты: карточки с % совпадения
+  • Фискализация (ККМ) (F-FISC-001):
+    - Интеграция с контрольно-кассовыми машинами Таджикистана
+    - Фискальные чеки с QR-кодом
+    - Отправка данных в налоговую (API ФНС РТ)
+    - Z-отчёты для налоговой отчётности
+  • Мультивалютность с автокурсами:
+    - Автоматическое обновление курсов (API НБТ / CBR)
+    - Конвертация цен в реальном времени
+  • Public API:
+    - REST API с OAuth 2.0 для сторонних интеграций
+    - Webhooks для событий (продажа, возврат, остатки)
+    - API-документация (Swagger + Redoc)
+    - Rate limiting и API keys
+  • Мобильная витрина:
+    - Публичная страница магазина с каталогом
+    - QR-код для клиентов
+    - Предзаказы через витрину
+  • Расширение на СНГ:
+    - Узбекистан (UZS), Кыргызстан (KGS)
+    - Локализация на узбекский и кыргызский
+    - Адаптация фискализации под законодательство каждой страны
+
+  Технические задачи:
+  • NestJS-модули: image-search, fiscal, public-api, storefront
+  • pgvector extension для PostgreSQL
+  • CLIP model serving (Python microservice или OpenAI API)
+  • OAuth 2.0 server (NestJS + Passport)
+  • Webhook system (BullMQ + retry)
+  • Мобильная витрина: отдельный Flutter-модуль или React Native
+
+  Недели (примерно):
+  • 29-32: AI-поиск по фото (embedding pipeline, vector search)
+  • 33-36: Фискализация (ККМ, интеграция с ФНС)
+  • 37-40: Public API + Webhooks + OAuth 2.0
+  • 41-44: Мобильная витрина + мультивалютность с автокурсами
+  • 45-48: Расширение на СНГ + маркетплейсы
+
+────────────────────────────────────────────────────────────────────────────────
+
+  Экраны дизайна:
+  ───────────────
+
+  Поиск по фото (4 экрана):
+  ✅ dokonpro_visual_search_camera         — Камера (поиск по фото)
+  ✅ dokonpro_visual_search_analysis       — Анализ изображения
+  ✅ dokonpro_visual_search_results        — Результаты поиска
+  ✅ dokonpro_visual_search_no_results     — Не найдено
+
+  Разработка Phase 5:
+  ⬜ AI Image Recognition (CLIP/OpenAI + pgvector)
+  ⬜ Embedding pipeline для существующих товаров
+  ⬜ Камера + галерея (frontend)
+  ⬜ Фискализация (ККМ + API ФНС РТ)
+  ⬜ Мультивалютность с автокурсами (API НБТ)
+  ⬜ Public API (OAuth 2.0 + Webhooks)
+  ⬜ Мобильная витрина (каталог, QR, предзаказы)
+  ⬜ Расширение на Узбекистан и Кыргызстан
+
+================================================================================
+WEB ADMIN PANEL — Веб-панель администратора платформы
+================================================================================
+Статус дизайна: ✅ ЗАВЕРШЁН (14 экранов)
+Стек: Next.js 14 + Tailwind CSS + shadcn/ui (веб, desktop)
+Деплой: Vercel (вместе с landing page)
+
+  Цель:
+  ──────
+  Супер-админ панель для команды DokonPro: управление пользователями,
+  магазинами, подписками, поддержкой, аналитикой и мониторингом платформы.
+
+  Экраны дизайна (промпты 85-98):
+  ────────────────────────────────
+
+  Обзор и аналитика (2 экрана):
+  ✅ dokonpro_admin_dashboard              — Главная с KPI, графиками, последними событиями
+  ✅ dokonpro_platform_analytics           — Детальная аналитика: когорты, retention, воронки
+
+  Управление пользователями (2 экрана):
+  ✅ dokonpro_users_list                   — Таблица пользователей с фильтрами и поиском
+  ✅ dokonpro_user_profile_details         — Профиль пользователя: магазины, подписка, активность
+
+  Управление магазинами (2 экрана):
+  ✅ dokonpro_store_list                   — Все магазины платформы
+  ✅ dokonpro_store_details                — Детали магазина: метрики, сотрудники, синхронизация
+
+  Подписки и финансы (2 экрана):
+  ✅ dokonpro_subscription_management      — Управление подписками: активные/trial/истекшие
+  ✅ dokonpro_revenue_and_payments         — Доходы платформы: MRR, ARR, платежи
+
+  Поддержка и рассылки (2 экрана):
+  ✅ dokonpro_support_tickets              — Тикеты поддержки: приоритеты, назначение
+  ✅ dokonpro_notifications_and_newsletters — Массовые push/in-app рассылки по сегментам
+
+  Конфигурация и аудит (2 экрана):
+  ✅ dokonpro_platform_settings            — Настройки платформы: валюты, лимиты, промокоды
+  ✅ dokonpro_audit_log                    — Журнал действий админов
+
+  Система и вход (2 экрана):
+  ✅ dokonpro_system_health_monitoring     — Мониторинг: серверы, API latency, Sentry, sync queue
+  ✅ dokonpro_admin_login                  — Вход в админку: email + пароль + 2FA
+
+  Разработка Admin Panel:
+  ⬜ Next.js проект + Tailwind + shadcn/ui
+  ⬜ Авторизация админов (email + пароль + 2FA)
+  ⬜ NestJS модуль admin (guards, endpoints)
+  ⬜ Dashboard с KPI метриками
+  ⬜ Аналитика (когорты, retention, воронки)
+  ⬜ CRUD пользователей (просмотр, блокировка)
+  ⬜ CRUD магазинов (просмотр, деактивация)
+  ⬜ Управление подписками (продление, смена тарифа)
+  ⬜ Доходы и платежи (MRR, ARR, экспорт)
+  ⬜ Тикеты поддержки
+  ⬜ Push/In-app рассылки
+  ⬜ Настройки платформы (курсы, лимиты, промокоды)
+  ⬜ Аудит лог
+  ⬜ Мониторинг системы (API, DB, Sync, Sentry)
+
+================================================================================
+МАППИНГ: ДИЗАЙН → ПРОМПТ → PRD
+================================================================================
+
+  # | Папка design/                              | Промпт      | PRD Feature
+ ---|---------------------------------------------|-------------|-------------
+  1 | dokonpro_splash_screen                      | 01-splash   | F-AUTH
+  2 | onboarding_-_inventory_tracking             | 02-onboard1 | F-AUTH
+  3 | onboarding_-_quick_sales                    | 03-onboard2 | F-AUTH
+  4 | onboarding_-_business_analytics             | 04-onboard3 | F-AUTH
+  5 | onboarding_-_start_free_trial               | 05-onboard4 | F-AUTH
+  6 | dokonpro_registration_screen                | 06-register | F-AUTH-001
+  7 | dokonpro_login_screen                       | 07-login    | F-AUTH-002
+  8 | dokonpro_create_first_store                 | 08-store    | F-AUTH-005
+  9 | dokonpro_home_dashboard                     | 09-home     | F-DASH-001
+ 10 | dokonpro_product_list                       | 10-prodlist | F-PROD-001
+ 11 | dokonpro_product_details                    | 11-proddet  | F-PROD-002
+ 12 | dokonpro_add_product_-_step_1               | 12-addprod1 | F-PROD-003
+ 13 | dokonpro_add_product_-_step_2               | 13-addprod2 | F-PROD-003
+ 14 | dokonpro_add_product_-_step_3               | 14-addprod3 | F-PROD-003
+ 15 | dokonpro_excel_import                       | 15-import   | F-PROD-005
+ 16 | dokonpro_categories_list                    | 16-categ    | F-PROD-006
+ 17 | dokonpro_pos_checkout                       | 17-pos      | F-SALE-001
+ 18 | dokonpro_cash_payment                       | 18-cash     | F-SALE-002
+ 19 | dokonpro_credit_sale_screen                 | 19-debt     | F-SALE-002
+ 20 | dokonpro_receipt_preview                    | 20-receipt  | F-SALE-003
+ 21 | dokonpro_sales_history                      | 21-history  | F-SALE-004
+ 22 | dokonpro_transaction_details                | 22-detail   | F-SALE-004
+ 23 | dokonpro_refund_processing                  | 23-return   | F-SALE-005
+ 24 | dokonpro_sale_success_confirmation           | 24-success  | F-SALE-002
+ 25 | dokonpro_finance_dashboard                  | 25-findash  | F-FIN-001
+ 26 | dokonpro_expenses_list                      | 26-expenses | F-FIN-002
+ 27 | dokonpro_add_new_expense                    | 27-addexp   | F-FIN-002
+ 28 | dokonpro_shipping_calculator                | 28-shipcalc | F-FIN-003
+ 29 | dokonpro_currency_management                | 29-currency | F-FIN-004
+ 30 | dokonpro_detailed_financial_report          | 30-finrep   | F-FIN-005
+ 31 | dokonpro_customer_debts_list                | 31-clidebts | F-DEBT-001
+ 32 | dokonpro_supplier_debts_list                | 32-supdebts | F-DEBT-002
+ 33 | dokonpro_settings_and_profile               | 33-settings | F-SET-001
+ 34 | dokonpro_user_profile_edit                  | 34-profile  | F-SET-001
+ 35 | dokonpro_my_stores_list                     | 35-stores   | F-SET-002
+ 36 | dokonpro_store_settings_edit                | 36-storeset | F-SET-002
+ 37 | dokonpro_subscription_tiers                 | 37-pricing  | F-SUB-001
+ 38 | dokonpro_plan_comparison_table              | 38-compare  | F-SUB-001
+ 39 | dokonpro_subscription_payment               | 39-payment  | F-SUB-002
+ 40 | dokonpro_telegram_bot_settings              | 40-telegram | F-TG-001
+ 41 | dokonpro_customer_crm_list                  | 41-clients  | F-CRM-001
+ 42 | dokonpro_customer_profile_details           | 42-clientdt | F-CRM-001
+ 43 | dokonpro_suppliers_list                     | 43-suplist  | F-SUP-001
+ 44 | dokonpro_supplier_profile_details           | 44-supdet   | F-SUP-001
+ 45 | dokonpro_employee_list                      | 45-staff    | F-HR-001
+ 46 | dokonpro_add_new_employee                   | 46-addstaff | F-HR-002
+ 47 | dokonpro_roles_and_permissions              | 47-roles    | F-HR-003
+ 48 | dokonpro_shift_management                   | 48-shifts   | F-HR-004
+ 49 | dokonpro_inventory_audit_management         | 49-invcr    | F-INV-001
+ 50 | dokonpro_active_inventory_audit             | 50-invproc  | F-INV-001
+ 51 | dokonpro_inventory_audit_results            | 51-invres   | F-INV-001
+ 52 | dokonpro_loyalty_program_settings           | 52-loyalty  | F-LOY-001
+ 53 | dokonpro_notifications_center               | 53-notif    | F-NOT-001
+ 54 | dokonpro_empty_products_state               | 54-emptypr  | UI States
+ 55 | dokonpro_empty_sales_state                  | 55-emptysl  | UI States
+ 56 | dokonpro_offline_&_modals                   | 56-offline  | UI States
+ 57 | dokonpro_visual_search_camera               | 57-photocam | F-PROD-008
+ 58 | dokonpro_visual_search_analysis             | 58-photoai  | F-PROD-008
+ 59 | dokonpro_visual_search_results              | 59-photores | F-PROD-008
+ 60 | dokonpro_visual_search_no_results           | 60-photonf  | F-PROD-008
+ 61 | dokonpro_forgot_password_phone              | 61-forgotpw | F-AUTH-002
+ 62 | dokonpro_otp_verification_1                 | 62-otp      | F-AUTH-002
+ 63 | dokonpro_create_new_password                | 63-resetpw  | F-AUTH-002
+ 64 | dokonpro_password_reset_success             | 64-pwsucces | F-AUTH-002
+ 65 | dokonpro_z-report_(shift_closing)           | 65-zreport  | F-HR-004
+ 66 | dokonpro_receipt_templates_list             | 66-receipts | F-SALE-003
+ 67 | dokonpro_receipt_template_editor            | 67-rcptedit | F-SALE-003
+ 68 | dokonpro_dark_mode_dashboard                | 68-darkhome | Dark Mode
+ 69 | — (ожидает генерацию)                       | 69-darkprod | Dark Mode
+ 70 | dokonpro_dark_pos_checkout                  | 70-darkpos  | Dark Mode
+ 71 | dokonpro_dark_finance_dashboard             | 71-darkfin  | Dark Mode
+ 72 | dokonpro_dark_mode_settings                 | 72-darkset  | Dark Mode
+ 73 | dokonpro_dark_mode_sales_history            | 73-darkhist | Dark Mode
+ 74 | dokonpro_dark_mode_login                    | 74-darklog  | Dark Mode
+ 75 | dokonpro_dark_mode_receipt_preview          | 75-darkrcpt | Dark Mode
+ 76 | dokonpro_zakat_calculator                   | 76-zakat    | F-FIN-006
+ 77 | dokonpro_zakat_history_list                 | 77-zakathis | F-FIN-006
+ 78 | dokonpro_zakat_settings_configuration       | 78-zakatset | F-FIN-006
+ 79 | dokonpro_dark_zakat_calculator_detail       | 79-drkzakat | F-FIN-006
+ 80 | dokonpro_dark_zakat_history_list            | 80-drkzhist | F-FIN-006
+ 81 | dokonpro_inventory_intake                   | 81-incoming | F-PROD-007
+ 82 | dokonpro_dark_mode_inventory_intake         | 82-drkincom | F-PROD-007
+ 83 | dokonpro_payroll_management                 | 83-payroll  | F-STAFF-004
+ 84 | dokonpro_dark_mode_payroll_management       | 84-drkpayrl | F-STAFF-004
+
+================================================================================
+ДОПОЛНИТЕЛЬНЫЕ ПРОМПТЫ (61-107) — ВСЕ СГЕНЕРИРОВАНЫ ✅
+================================================================================
+
+  - 61-64: ✅ Забыли пароль (4 экрана: ввод телефона, SMS-код, новый пароль, успех)
+  - 65: ✅ Z-отчёт (закрытие смены)
+  - 66-67: ✅ Шаблоны чеков (список + редактор)
+  - 68-75: ✅ Dark mode варианты (8 ключевых экранов)
+  - 76-80: ✅ Закят (калькулятор, история, настройки + dark mode)
+  - 81-82: ✅ Приход товара (F-PROD-007 + dark mode)
+  - 83-84: ✅ Расчёт зарплаты (F-STAFF-004 + dark mode)
+  - 85-98: ✅ Веб-админка платформы (14 экранов, desktop) — /designweb/
+  - 99-107: ✅ Закрытие пробелов (9 экранов — сверка дизайн/PRD)
+
+================================================================================
+ПРОМПТЫ 99-105 — Закрытие пробелов (сверка дизайн/PRD)
+================================================================================
+
+  99 | 99-edit-product.md          | Редактирование товара           | F-PROD-004
+ 100 | 100-add-supplier.md         | Добавление поставщика           | F-SUPPL-001
+ 101 | 101-receipt-editor.md       | Редактор шаблона чека           | F-SALE-003
+ 102 | 102-otp-verification-2.md   | OTP подтверждение (регистрация) | F-AUTH-001
+ 103 | 103-dark-inventory.md       | Инвентаризация (Dark Mode)      | F-INV-001
+ 104 | 104-dark-inventory-intake.md| Приход товара (Dark Mode)       | F-PROD-007
+ 105 | 105-loyalty-points.md       | Баллы лояльности клиентов       | F-LOYAL-001
+ 106 | 106-dark-inventory-audit-setup.md | Инвентаризация создание (Dark) | F-INV-001
+ 107 | 107-dark-inventory-intake-detail.md | Детали прихода (Dark Mode)  | F-PROD-007
+
+================================================================================
+МАППИНГ АДМИНКИ: ПРОМПТ → ЭКРАН
+================================================================================
+
+  # | Промпт                    | Экран                              | Группа
+ ---|---------------------------|------------------------------------|-----------------
+ 85 | 85-admin-dashboard        | Admin Dashboard (KPI, графики)     | Обзор
+ 86 | 86-admin-analytics        | Platform Analytics (когорты)       | Обзор
+ 87 | 87-admin-users-list       | Users List (таблица)               | Пользователи
+ 88 | 88-admin-user-detail      | User Detail (профиль)              | Пользователи
+ 89 | 89-admin-stores-list      | Stores List (таблица)              | Магазины
+ 90 | 90-admin-store-detail     | Store Detail (метрики)             | Магазины
+ 91 | 91-admin-subscriptions    | Subscriptions (управление)         | Подписки
+ 92 | 92-admin-revenue          | Revenue & Payments (MRR)           | Финансы
+ 93 | 93-admin-support          | Support Tickets (тикеты)           | Поддержка
+ 94 | 94-admin-notifications    | Notifications (рассылки)           | Поддержка
+ 95 | 95-admin-settings         | Platform Settings (конфиг)         | Конфигурация
+ 96 | 96-admin-audit-log        | Audit Log (журнал)                 | Конфигурация
+ 97 | 97-admin-system-health    | System Health (мониторинг)         | Система
+ 98 | 98-admin-login            | Admin Login (вход + 2FA)           | Система
+
+================================================================================
+НЕФУНКЦИОНАЛЬНЫЕ ТРЕБОВАНИЯ (СВОДКА)
+================================================================================
+
+  Производительность:
+  • Запуск приложения < 3 сек
+  • Список товаров (1000 шт) < 1 сек
+  • Оформление продажи < 2 сек
+  • API response (p95) < 200ms
+  • До 100,000 товаров на аккаунт
+
+  Надёжность:
+  • Uptime 99.9%, Crash-free > 99.5%
+  • Sync success rate > 99%
+  • 0 потерь данных, ежедневные бэкапы
+  • RTO < 4ч, RPO < 1ч
+
+  Безопасность:
+  • AES-256 (локальная БД), TLS 1.3 (трафик)
+  • JWT + Refresh Tokens, bcrypt (cost 12)
+  • Rate limiting 100 req/min
+  • Audit log (Премиум), 2FA (Премиум)
+
+  Совместимость:
+  • iOS 13.0+, Android 7.0+ (API 24)
+  • Размер < 50 MB, RAM 2 GB минимум
+
+  Локализация:
+  • Русский (P0), Таджикский (P0), Узбекский (P1), English (P2)
+
+================================================================================

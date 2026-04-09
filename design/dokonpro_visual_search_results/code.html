@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2023",
+                        "success": "#27AE60",
+                        "warning": "#F2994A",
+                        "neutral-gray": "#828282"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display flex justify-center">
+<!-- Mobile Container (iPhone 14 Pro 393x852) -->
+<div class="relative w-[393px] min-h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">arrow_back</span>
+</button>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-tight flex-1">Результаты поиска</h2>
+</header>
+<!-- Search Context / ListItem -->
+<div class="px-4 py-2 mb-2">
+<div class="flex items-center gap-3 bg-white dark:bg-gray-900 p-3 rounded-xl ios-shadow">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-12" data-alt="Original photo of a coffee jar used for search" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBLFi8_OdDzEtrGh9LVLvfu1yf__fZ5KJXNw74GLE61RdT0twe9w3sHupXroMWeaMj0yb0JkIPa0O1VqDaUjCDxa6VS1X3-WNABKhdPlxAXkGLvOi3sg5ufiTO4AvnIsEyCUBHr_lbnPoxoWM5zIwa5coygRViBAMUEVCW-AH7RcCZ-Qeu8x9oj-YqjS1_yUPyIN8bTSzPZGhyK8dmaGd8yi3859JanSpwQVdJNuzNPcdnUbeGyel3_V6MKMLZqCZsRvBkTIWAY09PQ");'>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-semibold leading-normal">Найдено 3 совпадения</p>
+<p class="text-primary text-xs font-normal leading-normal">Поиск по изображению</p>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto px-4 pb-32 space-y-4">
+<!-- Result 1: Best Match -->
+<div class="flex flex-col gap-2">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold px-1">Лучшее совпадение</h3>
+<div class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden border-l-4 border-success ios-shadow p-4">
+<div class="flex gap-4">
+<div class="w-24 h-24 shrink-0 bg-center bg-no-repeat bg-cover rounded-lg" data-alt="Nescafe Instant Coffee 200g jar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZY-4T2WYuz9HwQi1hKGZ_VYEAUWIsiVP5IR0xNqmz-ddf0DBnXCANqTSbBUAO8OjJbcMz6ISQkWTnIicG7Z0CckVDoWjGLJ1__15pbMJhDFx19sn-shQvcYVxx2qDYmDN-TyGwVWuT2d_lExSFqgd0hi7AiPZhmVMz1KyjA6EW3FdeKzyD3nby0mc38nnbRTU5hOe4xuM5MNPIBGpko49FuUcjIDXJIu3YJyeUaB-dwsgAKl6U-7MVjycm8I11Cu4beq8u6avo1s2");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-0.5">
+<div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-success/10 text-success uppercase tracking-wider mb-1">
+                                    98% совпадение
+                                </span>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold leading-tight mb-1">Кофе растворимый Nescafe 200г</p>
+<p class="text-neutral-gray text-xs font-normal">SKU: COFFEE-001 | 45 шт</p>
+</div>
+<p class="text-primary text-lg font-bold">180 TJS</p>
+</div>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 h-10 border border-primary text-primary rounded-lg text-sm font-bold active:bg-primary/10 transition-colors">
+                            Открыть
+                        </button>
+<button class="flex-[1.5] h-10 bg-primary text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                            В корзину
+                        </button>
+</div>
+</div>
+</div>
+<!-- Result 2 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden ios-shadow p-4">
+<div class="flex gap-4">
+<div class="w-24 h-24 shrink-0 bg-center bg-no-repeat bg-cover rounded-lg" data-alt="Jacobs Instant Coffee 150g" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDFPo7s4cvaTgLcrqL4uS4WsxEr2Hdwh6UTEi3fMNIyUFxK7vFtV-pLqd3ufXJD2EEtk6ovJ17HVif10seqLghkOmnKSZ2ckDVNYMvBPOHlNNwe04Blyd2gYeO6Nq3K4xgF8IGE81ttDDFzAbvSM53QGICQhTwe6pPbbp06l9fC3DgJ9Pp-lsr5dX7_3FEQjNdE7O9D8_qyQqM0e-WJxu60UI-D9XULoTIhQWYxasokZbWYuyu6yDbqKkBiZpsooB0HjWT-jVKsfVIX");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-0.5">
+<div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-warning/10 text-warning uppercase tracking-wider mb-1">
+                                72% совпадение
+                            </span>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold leading-tight mb-1">Кофе растворимый Jacobs 150г</p>
+<p class="text-neutral-gray text-xs font-normal">SKU: COFFEE-003 | 12 шт</p>
+</div>
+<p class="text-primary text-lg font-bold">210 TJS</p>
+</div>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 h-10 border border-primary text-primary rounded-lg text-sm font-bold active:bg-primary/10 transition-colors">
+                        Открыть
+                    </button>
+<button class="flex-[1.5] h-10 bg-primary text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                        В корзину
+                    </button>
+</div>
+</div>
+<!-- Result 3 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden ios-shadow p-4">
+<div class="flex gap-4">
+<div class="w-24 h-24 shrink-0 bg-center bg-no-repeat bg-cover rounded-lg" data-alt="Arabica Ground Coffee 250g pack" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuANfcmlLSaco4vLAml4t3CGEJHSh3mAnPe1fh2c7hd6yHzewAxatKv2rXsO-2OQoHUhye8eRFHXF5JBrLBb1u_8tRG418LcRALDrXqB-hnWs_zoLgQ8JvbOqVi5e-BscPNuZvukX04idGK755F0dcm1sUlR5YY0UwN5QW_1oMnzHhTj0iGAg7dMP-WflLmSli0DQYuWfhyUgji5I_jKeEj4SiZqjF1L2A_stHDjhwRqSo4-c_X-2FOEy3z1IEzK6lvm7iTcnwvRhPcj");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-0.5">
+<div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-gray/10 text-neutral-gray uppercase tracking-wider mb-1">
+                                45% совпадение
+                            </span>
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold leading-tight mb-1">Кофе молотый Арабика 250г</p>
+<p class="text-neutral-gray text-xs font-normal">SKU: COFFEE-005 | 8 шт</p>
+</div>
+<p class="text-primary text-lg font-bold">320 TJS</p>
+</div>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 h-10 border border-primary text-primary rounded-lg text-sm font-bold active:bg-primary/10 transition-colors">
+                        Открыть
+                    </button>
+<button class="flex-[1.5] h-10 bg-primary text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                        В корзину
+                    </button>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light via-background-light/95 to-transparent dark:from-background-dark dark:via-background-dark/95">
+<button class="w-full h-14 bg-transparent border-2 border-primary text-primary rounded-xl flex items-center justify-center gap-2 font-bold text-base active:bg-primary/5 transition-all">
+<span class="material-symbols-outlined">photo_camera</span>
+                Сфотографировать заново
+            </button>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-4"></div>
+</div>
+</div>
+</body></html>

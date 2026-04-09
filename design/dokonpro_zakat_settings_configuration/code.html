@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-toggle:checked + .ios-toggle-bg {
+            background-color: #0bb5cb;
+        }
+        .ios-toggle:checked + .ios-toggle-bg::after {
+            transform: translateX(1.25rem);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white min-h-screen flex justify-center">
+<div class="w-[393px] min-h-[852px] bg-background-light dark:bg-background-dark shadow-2xl overflow-y-auto pb-10">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-[#0d1a1c] dark:text-white flex size-10 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Настройки закята</h2>
+</div>
+</div>
+<!-- Section: Calculation Method -->
+<div class="px-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold leading-tight tracking-wider uppercase pb-2 pt-6">Метод расчёта</h3>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl p-1 flex flex-col gap-1 border border-[#cee5e8] dark:border-white/10">
+<label class="flex items-center gap-4 rounded-xl p-[15px] flex-row-reverse cursor-pointer">
+<input checked="" class="h-5 w-5 border-2 border-[#cee5e8] bg-transparent text-[#0bb5cb] focus:ring-0 focus:ring-offset-0 checked:border-[#0bb5cb]" name="nisab" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-semibold">По золоту (85г)</p>
+<p class="text-primary text-xs font-medium">≈ 78,200 TJS</p>
+</div>
+</label>
+<div class="h-px bg-[#cee5e8] dark:bg-white/10 mx-4"></div>
+<label class="flex items-center gap-4 rounded-xl p-[15px] flex-row-reverse cursor-pointer">
+<input class="h-5 w-5 border-2 border-[#cee5e8] bg-transparent text-[#0bb5cb] focus:ring-0 focus:ring-offset-0 checked:border-[#0bb5cb]" name="nisab" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-semibold">По серебру (595г)</p>
+<p class="text-[#49929c] text-xs font-normal">≈ 5,600 TJS</p>
+</div>
+</label>
+</div>
+<div class="mt-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-2xl bg-white dark:bg-[#1a2d2f] border border-[#cee5e8] dark:border-white/10 overflow-hidden">
+<div class="flex flex-col flex-1 p-3 px-4">
+<p class="text-[#49929c] text-[10px] font-bold uppercase">Курс золота (за 1г)</p>
+<input class="w-full bg-transparent border-none p-0 text-[#0d1a1c] dark:text-white text-lg font-bold focus:ring-0" value="920.00 TJS"/>
+</div>
+<div class="bg-primary/10 flex items-center justify-center w-14 cursor-pointer hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary">refresh</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Section: Lunar Year -->
+<div class="px-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold leading-tight tracking-wider uppercase pb-2 pt-8">Лунный год (Хавль)</h3>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl p-4 border border-[#cee5e8] dark:border-white/10 flex items-center justify-between mb-3">
+<div class="flex flex-col">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold">15 Раджаб 1447</p>
+<p class="text-[#49929c] text-xs">≈ 04 Февраля 2026</p>
+</div>
+<span class="material-symbols-outlined text-[#49929c]">calendar_today</span>
+</div>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl p-4 border border-[#cee5e8] dark:border-white/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<p class="text-[#0d1a1c] dark:text-white text-base font-medium">Напоминание</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only ios-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 rounded-full ios-toggle-bg transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+</div>
+<!-- Section: Product Categories -->
+<div class="px-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold leading-tight tracking-wider uppercase pb-2 pt-8">Категории товаров</h3>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl border border-[#cee5e8] dark:border-white/10 overflow-hidden">
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Продукты питания</p>
+<input checked="" class="h-5 w-5 rounded border-2 border-primary text-primary focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Напитки</p>
+<input checked="" class="h-5 w-5 rounded border-2 border-primary text-primary focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Бытовая химия</p>
+<input checked="" class="h-5 w-5 rounded border-2 border-primary text-primary focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-4">
+<div class="flex flex-col">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Оборудование</p>
+<p class="text-[#49929c] text-[10px]">Средства производства не облагаются</p>
+</div>
+<input class="h-5 w-5 rounded border-2 border-[#cee5e8] text-primary focus:ring-0" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- Section: Asset Categories -->
+<div class="px-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold leading-tight tracking-wider uppercase pb-2 pt-8">Категории имущества</h3>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl border border-[#cee5e8] dark:border-white/10 divide-y divide-[#cee5e8] dark:divide-white/5">
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Счёт в банке</p>
+</div>
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">toll</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Золото / Серебро</p>
+</div>
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">payments</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Наличные</p>
+</div>
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Автомобиль</p>
+</div>
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">home</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Недвижимость</p>
+</div>
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-primary">show_chart</span>
+<p class="text-[#0d1a1c] dark:text-white font-medium">Инвестиции / Акции</p>
+</div>
+</div>
+<p class="text-[#49929c] dark:text-[#49929c] text-xs italic mt-3 px-1 text-center">Личное жильё и личный автомобиль НЕ облагаются закятом</p>
+</div>
+<!-- Section: Automated Data -->
+<div class="px-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold leading-tight tracking-wider uppercase pb-2 pt-8">Автоматические данные</h3>
+<div class="bg-white dark:bg-[#1a2d2f] rounded-2xl border border-[#cee5e8] dark:border-white/10 overflow-hidden mb-6">
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Остатки на складе</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only ios-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 rounded-full ios-toggle-bg transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Деньги в кассе</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only ios-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 rounded-full ios-toggle-bg transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-[#cee5e8] dark:border-white/5">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Дебиторская задолженность</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only ios-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 rounded-full ios-toggle-bg transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4">
+<p class="text-[#0d1a1c] dark:text-white font-medium">Кредиторская задолженность</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only ios-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 rounded-full ios-toggle-bg transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="px-4 pt-4 pb-8">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98]">
+                Сохранить
+            </button>
+</div>
+</div>
+</body></html>

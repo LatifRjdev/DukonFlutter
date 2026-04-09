@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Active Inventory Audit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            overflow-y: auto;
+            position: relative;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .iphone-container::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .iphone-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+<div class="iphone-container bg-background-light dark:bg-background-dark shadow-2xl relative flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-start text-gray-800 dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-[#0d1a1c] dark:text-white text-lg font-bold">Инвентаризация</h1>
+<button class="text-primary font-bold text-base hover:opacity-80 transition-opacity">
+                Завершить
+            </button>
+</header>
+<!-- Progress Bar Section -->
+<div class="px-4 py-2">
+<div class="flex justify-between mb-2">
+<p class="text-gray-700 dark:text-gray-300 text-sm font-medium">Проверено: 45 из 245 товаров</p>
+<p class="text-primary text-sm font-bold">18%</p>
+</div>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 18%;"></div>
+</div>
+</div>
+<!-- Search & Scan Bar -->
+<div class="px-4 py-4 flex gap-3">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 text-xl">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 bg-white dark:bg-gray-800 border-none rounded-xl text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary/50" placeholder="Поиск товара..." type="text"/>
+</div>
+<button class="bg-primary text-white w-14 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">barcode_scanner</span>
+</button>
+</div>
+<!-- Active Product Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex gap-4 mb-4">
+<div class="w-20 h-20 rounded-lg bg-cover bg-center bg-gray-100" data-alt="Packaging of instant coffee on a shelf" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVKKl76maOTf_hD358h-W1N8DRE2T5szSDMDoBuqytwVSzbLhmoeXZvhfcAEd9ouJIzYdYJ95ECfiooM8L2XEOuwqVz3Y0pWdrxo9MaxURncHs8-QXg284qxAOAF3WZiNXIuUTxKbfvhWtCD3A5LW1sMhjJAysGw6A0nt5gIHo9mNiJEiP5_fsIxOMEqpkKw9hXaYcFxvM4D1EF1EPyXm7E_HofixfIj0tB3hW_FSzCB5UDUaYoBYPuHcWD_l4YAr7VrId5lRzO9O_')"></div>
+<div class="flex-1">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Текущий товар</p>
+<h3 class="text-[#0d1a1c] dark:text-white text-xl font-bold leading-tight">Кофе растворимый</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm mt-1">По системе: <span class="font-semibold">45 шт</span></p>
+</div>
+</div>
+<div class="space-y-3">
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Фактическое количество</label>
+<div class="relative">
+<input class="w-full text-center text-3xl font-bold py-4 rounded-xl border-2 border-primary bg-primary/5 text-[#0d1a1c] dark:text-white focus:ring-0 focus:border-primary outline-none" type="number" value="45"/>
+</div>
+<div class="flex items-center justify-center gap-2 py-1">
+<span class="material-symbols-outlined text-gray-400 text-sm">info</span>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Расхождение: <span class="text-gray-900 dark:text-white font-bold">0</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- History Section -->
+<div class="flex-1 overflow-hidden flex flex-col mt-4">
+<div class="px-4 py-2 flex items-center justify-between">
+<h4 class="text-gray-900 dark:text-white font-bold text-base">История проверки</h4>
+<button class="text-primary text-sm font-medium">См. все</button>
+</div>
+<div class="flex-1 overflow-y-auto px-4 pb-8 space-y-3">
+<!-- History Item 1 -->
+<div class="bg-white dark:bg-gray-800 p-3 rounded-xl flex items-center gap-3 shadow-sm">
+<div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="Bag of sugar 1kg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRpHHVIqnog_HvZkIclvJ8idBKXNsPaALuIDgUSubdRKESZpLEPwOBSOBkgmQauqoAIAilASnCkmO01nu5r9jlaXG93uBMwjl0IiCjZjbQZQk58bY9v2_5en3wWzMhPik6sNXELPPYD19cWtUBvfF2UoAoLWYBoi30GsSfjge5I-4FPVaw_99TweBaxCLJr4j2IVFkKSG0Ot9GzFWgrJBsIazcZsMuLNvOZhnzCMcp-TFozDNNmYZDtAIuxjC3k3K0KDtDbPchgEPY')"></div>
+</div>
+<div class="flex-1">
+<p class="text-gray-900 dark:text-white font-semibold text-sm">Сахар 1кг</p>
+<p class="text-gray-500 text-xs">Система: 8 • Факт: 8</p>
+</div>
+<div class="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-full text-green-600 dark:text-green-400 font-bold text-xs uppercase">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                        ОК
+                    </div>
+</div>
+<!-- History Item 2 -->
+<div class="bg-white dark:bg-gray-800 p-3 rounded-xl flex items-center gap-3 shadow-sm">
+<div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="Green tea leaves packaging" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBXge1Tz-a8TDCbieQY-G17hPrQNGXZLC8dwJKzNEyfHDIREcN8PEvF-AQCdJqPzB8zc9dwk8Dw6Wga9I8ECZQXy1xVcybF-k7kskTiCdxpvTvWjaOmN7wDhGrmVRuSp8Nm8nGY5OT_80PbBPQflo5sisolcUhf8gTyl1jtKRWQ91-hqpKES-xi3Sa2QQeH78KzSannwuVAA1fuTF1QFo4f3yXRjzi7e8AKXmTwqPyG3tZanuF9sUHEHbPI9IijHzP1jeEJR_CvpvuF')"></div>
+</div>
+<div class="flex-1">
+<p class="text-gray-900 dark:text-white font-semibold text-sm">Чай зелёный</p>
+<p class="text-gray-500 text-xs">Система: 12 • Факт: 10</p>
+</div>
+<div class="flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full text-red-600 dark:text-red-400 font-bold text-xs uppercase">
+<span class="material-symbols-outlined text-sm">warning</span>
+                        -2 шт
+                    </div>
+</div>
+<!-- History Item 3 -->
+<div class="bg-white dark:bg-gray-800 p-3 rounded-xl flex items-center gap-3 shadow-sm border border-transparent">
+<div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="Milk carton 1L" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDbcafDX8ioDCZErZcc9h6jjoQVZ3nMTDbmq_dJJDSuKtP9D5H9S-QoxMdwCsFBjR8WaXLUBwFzI8DbV37c84gHvn-u9kLdmy--ngYHpF7upNMwsQvfrtnCaAK-aa_ykH2injYxUVFj4iTnfzWZ3NWp5SLQ_848dP9ZChJvrfEqD9zOIYsS4DKmuYJW3eUPIn9rIDIZL8CSVYPmfnUoieJoGchYEROsBCidlZygK8ZCqPHeqmsb9coSpKAjrc_KtJfFV9MlXety59yv')"></div>
+</div>
+<div class="flex-1">
+<p class="text-gray-900 dark:text-white font-semibold text-sm">Молоко 1л</p>
+<p class="text-gray-500 text-xs">Система: 20 • Факт: 21</p>
+</div>
+<div class="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-full text-green-600 dark:text-green-400 font-bold text-xs uppercase">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                        +1 шт
+                    </div>
+</div>
+<!-- History Item 4 (Additional for scroll demonstration) -->
+<div class="bg-white dark:bg-gray-800 p-3 rounded-xl flex items-center gap-3 shadow-sm opacity-60">
+<div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="Abstract product thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwzVcBZ2L1LhzU9knhEAMZw6XxA85KJhroLsvqXRK755g2BIX-q6iw5Bgx5i5caumwRbqR55r0-XpAjV6GfA6lYtEevD1_qsNBLWDePs4X9b8KBp9XD3RUPGSirBKtiee1eIGLDlmrsDjSo-Dgnvj4ksJYIN_kh9g_vddXofFlKzQ0zNMo0DfKlGD8tHNZWJA74WyI0Uk2by-Drym1tFtiA1BWn22Epa2FCGlFN73OTdXm0fMAgX9XCyLdDPjYQFQg4JfA9kUSBkIY')"></div>
+</div>
+<div class="flex-1">
+<p class="text-gray-900 dark:text-white font-semibold text-sm">Хлеб ржаной</p>
+<p class="text-gray-500 text-xs">Система: 15 • Факт: 15</p>
+</div>
+<div class="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-full text-green-600 dark:text-green-400 font-bold text-xs uppercase">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                        ОК
+                    </div>
+</div>
+</div>
+</div>
+<!-- Floating Confirmation Button -->
+<div class="absolute bottom-6 left-0 right-0 px-6">
+<button class="w-full h-14 bg-primary text-white font-bold rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">save</span>
+                Сохранить и следующий
+            </button>
+</div>
+</div>
+</body></html>

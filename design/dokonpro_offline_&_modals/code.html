@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Offline &amp; Modals</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                        "warning-orange": "#FF9800",
+                        "danger-red": "#F44336",
+                        "success-green": "#4CAF50",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c1b1d] antialiased">
+<!-- Main Container (Simulating iPhone 14 Pro viewport) -->
+<div class="relative mx-auto min-h-screen w-full max-w-[430px] bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col">
+<!-- TOP APP BAR -->
+<div class="flex items-center bg-white dark:bg-gray-900 p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-[#0c1b1d] dark:text-white flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-2xl">storefront</span>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 px-2">DokonPro Store</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-[#0c1b1d] dark:text-white gap-2 text-base font-bold leading-normal">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</div>
+<!-- OFFLINE STATUS BANNER -->
+<div class="px-4 py-3 bg-warning-orange text-white flex items-center justify-between gap-4 animate-pulse">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl">cloud_off</span>
+<div class="flex flex-col">
+<p class="text-sm font-bold leading-tight">Нет подключения к интернету</p>
+<p class="text-xs font-normal opacity-90">5 операций ожидают синхронизации</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</div>
+<!-- BACKGROUND DASHBOARD (MOCK) -->
+<div class="p-4 space-y-4 opacity-40 select-none">
+<div class="h-32 bg-gray-100 dark:bg-gray-800 rounded-xl p-4 flex flex-col justify-end">
+<div class="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+<div class="h-8 w-40 bg-gray-300 dark:bg-gray-600 rounded"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl"></div>
+<div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl"></div>
+</div>
+<div class="space-y-2">
+<div class="h-16 bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center px-4">
+<div class="size-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+<div class="ml-4 space-y-1">
+<div class="h-3 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+<div class="h-2 w-20 bg-gray-100 dark:bg-gray-800 rounded"></div>
+</div>
+</div>
+<div class="h-16 bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center px-4">
+<div class="size-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+<div class="ml-4 space-y-1">
+<div class="h-3 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+<div class="h-2 w-20 bg-gray-100 dark:bg-gray-800 rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- OVERLAY SCRIM -->
+<div class="absolute inset-0 bg-black/40 z-20"></div>
+<!-- MODAL EXAMPLE: BOTTOM SHEET (DELETION) -->
+<!-- In a real app, only one modal would show at a time. Showing them layered here for demonstration. -->
+<div class="absolute bottom-0 left-0 right-0 z-30 flex flex-col items-stretch bg-white dark:bg-[#1a2b2d] rounded-t-xl shadow-2xl">
+<!-- BottomSheetHandle -->
+<button class="flex h-6 w-full items-center justify-center">
+<div class="h-1.5 w-12 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+</button>
+<!-- Modal Content (Delete Confirmation) -->
+<div class="px-6 pb-8 pt-4 flex flex-col items-center text-center">
+<div class="size-16 rounded-full bg-danger-red/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-danger-red text-[48px] filled-icon">delete_forever</span>
+</div>
+<h3 class="text-[#0c1b1d] dark:text-white text-2xl font-bold leading-tight mb-2">Удалить товар?</h3>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal mb-8">Это действие нельзя отменить</p>
+<div class="flex flex-col w-full gap-3">
+<button class="w-full h-14 bg-danger-red text-white font-bold rounded-xl text-lg hover:bg-danger-red/90 transition-colors">
+                        Удалить
+                    </button>
+<button class="w-full h-14 bg-transparent text-gray-500 dark:text-gray-300 font-bold rounded-xl text-lg border-2 border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        Отмена
+                    </button>
+</div>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-4"></div>
+</div>
+</div>
+<!-- NOTE: The following modals are templates meant to replace the one above depending on the state -->
+<!-- These are hidden in this mockup but provided for implementation reference -->
+<div class="hidden absolute bottom-0 left-0 right-0 z-40 flex flex-col items-stretch bg-white dark:bg-[#1a2b2d] rounded-t-xl shadow-2xl">
+<button class="flex h-6 w-full items-center justify-center">
+<div class="h-1.5 w-12 rounded-full bg-gray-200"></div>
+</button>
+<div class="px-6 pb-8 pt-4 flex flex-col items-center text-center">
+<div class="size-16 rounded-full bg-success-green/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-success-green text-[48px] filled-icon">check_circle</span>
+</div>
+<h3 class="text-[#0c1b1d] dark:text-white text-2xl font-bold leading-tight mb-1">Продажа оформлена!</h3>
+<p class="text-primary text-2xl font-bold leading-normal mb-8">490 TJS</p>
+<button class="w-full h-14 bg-primary text-white font-bold rounded-xl text-lg">Готово</button>
+<div class="h-4"></div>
+</div>
+</div>
+<div class="hidden absolute bottom-0 left-0 right-0 z-40 flex flex-col items-stretch bg-white dark:bg-[#1a2b2d] rounded-t-xl shadow-2xl">
+<button class="flex h-6 w-full items-center justify-center">
+<div class="h-1.5 w-12 rounded-full bg-gray-200"></div>
+</button>
+<div class="px-6 pb-8 pt-4 flex flex-col items-center text-center">
+<div class="size-16 rounded-full bg-warning-orange/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-warning-orange text-[48px] filled-icon">warning</span>
+</div>
+<h3 class="text-[#0c1b1d] dark:text-white text-2xl font-bold leading-tight mb-2">Товар заканчивается</h3>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal mb-8">Кофе растворимый — осталось 5 шт</p>
+<div class="flex flex-col w-full gap-3">
+<button class="w-full h-14 bg-primary text-white font-bold rounded-xl text-lg">Заказать</button>
+<button class="w-full h-14 bg-transparent text-gray-500 dark:text-gray-300 font-bold rounded-xl text-lg border-2 border-gray-100">Позже</button>
+</div>
+<div class="h-4"></div>
+</div>
+</div>
+</div>
+<!-- Gallery View Section (Context for the request description) -->
+<div class="max-w-[1200px] mx-auto p-12 hidden md:grid grid-cols-3 gap-8">
+<!-- MODAL 1 -->
+<div class="bg-white dark:bg-[#1a2b2d] rounded-xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-danger-red text-[48px] mb-4">delete_forever</span>
+<h4 class="font-bold text-xl mb-2">Удалить товар?</h4>
+<p class="text-gray-500 mb-6">Это действие нельзя отменить</p>
+<div class="w-full space-y-2">
+<div class="bg-danger-red text-white py-3 rounded-xl font-bold">Удалить</div>
+<div class="border-2 border-gray-100 py-3 rounded-xl font-bold text-gray-400">Отмена</div>
+</div>
+</div>
+<!-- MODAL 2 -->
+<div class="bg-white dark:bg-[#1a2b2d] rounded-xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-success-green text-[48px] mb-4">check_circle</span>
+<h4 class="font-bold text-xl mb-1">Продажа оформлена!</h4>
+<p class="text-primary font-bold text-2xl mb-6">490 TJS</p>
+<div class="w-full">
+<div class="bg-primary text-white py-3 rounded-xl font-bold">Готово</div>
+</div>
+</div>
+<!-- MODAL 3 -->
+<div class="bg-white dark:bg-[#1a2b2d] rounded-xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-warning-orange text-[48px] mb-4">warning</span>
+<h4 class="font-bold text-xl mb-2">Товар заканчивается</h4>
+<p class="text-gray-500 mb-6 text-sm">Кофе растворимый — осталось 5 шт</p>
+<div class="w-full space-y-2">
+<div class="bg-primary text-white py-3 rounded-xl font-bold">Заказать</div>
+<div class="border-2 border-gray-100 py-3 rounded-xl font-bold text-gray-400">Позже</div>
+</div>
+</div>
+</div>
+</body></html>

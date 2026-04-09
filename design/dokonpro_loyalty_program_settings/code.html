@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Loyalty Program Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white antialiased min-h-screen pb-32">
+<!-- Top Navigation Bar -->
+<nav class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight">Программа лояльности</h1>
+</div>
+<div class="size-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">more_vert</span>
+</div>
+</nav>
+<main class="max-w-[393px] mx-auto space-y-4 px-4 pt-2">
+<!-- Master Toggle Panel -->
+<div class="p-0 @container">
+<div class="flex flex-1 items-center justify-between gap-4 rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-900 p-5 ios-shadow">
+<div class="flex flex-col gap-1">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold leading-tight">Включить программу</p>
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-normal leading-normal">Система накопления баллов активна</p>
+</div>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-sm"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Accrual Section -->
+<section class="bg-white dark:bg-gray-900 rounded-xl border border-[#cee5e8] dark:border-gray-700 overflow-hidden ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold px-5 pt-5">Начисление</h3>
+<div class="flex flex-wrap items-end gap-3 px-5 py-4">
+<label class="flex flex-col min-w-[120px] flex-1">
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-medium pb-1.5">За каждые (сомони)</p>
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 focus:ring-primary h-12 p-3 text-base font-medium" value="100"/>
+</label>
+<label class="flex flex-col min-w-[120px] flex-1">
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-medium pb-1.5">Начислять (баллов)</p>
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 focus:ring-primary h-12 p-3 text-base font-medium" value="10"/>
+</label>
+</div>
+<div class="px-5 pb-5">
+<label class="flex flex-col w-full">
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-medium pb-1.5">Приветственные баллы</p>
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 focus:ring-primary h-12 p-3 text-base font-medium" value="50"/>
+</label>
+</div>
+</section>
+<!-- Redemption Section -->
+<section class="bg-white dark:bg-gray-900 rounded-xl border border-[#cee5e8] dark:border-gray-700 overflow-hidden ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold px-5 pt-5">Списание</h3>
+<div class="flex flex-wrap items-end gap-3 px-5 py-4">
+<label class="flex flex-col min-w-[120px] flex-1">
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-medium pb-1.5">1 балл = (скидка)</p>
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 focus:ring-primary h-12 p-3 text-base font-medium" value="1 сом."/>
+</label>
+<label class="flex flex-col min-w-[120px] flex-1">
+<p class="text-[#49929c] dark:text-gray-400 text-xs font-medium pb-1.5">Макс. скидка (%)</p>
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 focus:ring-primary h-12 p-3 text-base font-medium" value="30%"/>
+</label>
+</div>
+</section>
+<!-- VIP Tiers Section -->
+<section class="bg-white dark:bg-gray-900 rounded-xl border border-[#cee5e8] dark:border-gray-700 overflow-hidden ios-shadow">
+<div class="flex items-center justify-between px-5 pt-5 pb-2">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold">Уровни VIP</h3>
+<button class="text-primary text-sm font-semibold">Изменить</button>
+</div>
+<div class="divide-y divide-gray-100 dark:divide-gray-800">
+<!-- Bronze -->
+<div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-400" style="font-variation-settings: 'FILL' 1">workspace_premium</span>
+</div>
+<div>
+<p class="font-semibold text-sm">Bronze</p>
+<p class="text-xs text-gray-500">0 – 1,000 баллов</p>
+</div>
+</div>
+<span class="text-xs font-medium bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full">0%</span>
+</div>
+<!-- Silver -->
+<div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400" style="font-variation-settings: 'FILL' 1">workspace_premium</span>
+</div>
+<div>
+<p class="font-semibold text-sm">Silver</p>
+<p class="text-xs text-gray-500">1,001 – 5,000 баллов</p>
+</div>
+</div>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-full">3% скидка</span>
+</div>
+<!-- Gold -->
+<div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400" style="font-variation-settings: 'FILL' 1">workspace_premium</span>
+</div>
+<div>
+<p class="font-semibold text-sm">Gold</p>
+<p class="text-xs text-gray-500">5,001+ баллов</p>
+</div>
+</div>
+<span class="text-xs font-medium bg-primary text-white px-2.5 py-1 rounded-full">5% скидка</span>
+</div>
+</div>
+</section>
+<!-- Promotions Section -->
+<section class="bg-white dark:bg-gray-900 rounded-xl border border-[#cee5e8] dark:border-gray-700 overflow-hidden ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold px-5 pt-5 pb-2">Акции</h3>
+<div class="divide-y divide-gray-100 dark:divide-gray-800">
+<!-- Birthday -->
+<div class="p-5 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">cake</span>
+<p class="text-sm font-semibold">День рождения</p>
+</div>
+<label class="relative flex h-[24px] w-[44px] cursor-pointer items-center rounded-full border-none bg-primary p-0.5 justify-end">
+<div class="h-full w-[20px] rounded-full bg-white"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<div class="flex gap-4">
+<label class="flex flex-col flex-1">
+<p class="text-gray-500 text-[10px] uppercase font-bold tracking-wider mb-1">Авто-скидка</p>
+<input class="form-input w-full rounded-lg border-[#cee5e8] dark:border-gray-700 bg-[#f8fbfc] dark:bg-gray-800 h-10 px-3 text-sm font-medium" value="10%"/>
+</label>
+<div class="flex-1"></div>
+</div>
+</div>
+<!-- Happy Hours -->
+<div class="p-5 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400 text-xl">schedule</span>
+<p class="text-sm font-semibold">Счастливые часы</p>
+</div>
+<label class="relative flex h-[24px] w-[44px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[20px] rounded-full bg-white shadow-sm"></div>
+<input class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/95 dark:via-background-dark/95 to-transparent">
+<div class="max-w-[393px] mx-auto">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98]">
+                Сохранить настройки
+            </button>
+</div>
+</div>
+</body></html>

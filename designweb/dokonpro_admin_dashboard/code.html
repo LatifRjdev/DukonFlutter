@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1E293B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav { background-color: rgba(0, 189, 214, 0.1); color: #00bdd6; border-right: 3px solid #00bdd6; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c1b1d]">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark text-white flex flex-col justify-between shrink-0">
+<div class="flex flex-col">
+<div class="px-6 py-8 flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">storefront</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight">DokonPro</h1>
+<span class="text-[10px] uppercase tracking-widest text-primary font-bold">Admin Panel</span>
+</div>
+</div>
+<nav class="flex flex-col gap-1 mt-4">
+<a class="flex items-center gap-3 px-6 py-3 active-nav" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-gray-400 hover:text-white hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-gray-400 hover:text-white hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Users</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-gray-400 hover:text-white hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">store</span>
+<span class="text-sm font-medium">Stores</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-gray-400 hover:text-white hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-gray-400 hover:text-white hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Help</span>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-white/10">
+<div class="flex items-center gap-3 mb-4">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary" data-alt="Profile picture of Latif Rakhimov" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCWrBcVAKFlGRm_lR8vdNKSPGnd33gmMFXStJ8H2O88QTbHT70eD_lq971DiwlSslODEYxtwQVz_0cm6e2JSv2RArs7tOxVqpf8c-NKWPJ6F_UEAb6pUiKbZBnsGN4oWaQMlnHHzMQ-5ulgYECpKoQl2MDyEVU7OUYa9jQzv8U6Bq-Ox4GULpeaEZPdtn2KbyWklBvbWHC3aOk8JBbQavcJKDDYharn_KgB0Jl9K00niINGr7mihj-H7LLEol7ctRUN2YfNSEcQMDM');"></div>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold truncate">Latif Rakhimov</p>
+<p class="text-xs text-gray-400 truncate">Super Admin</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-2 rounded-lg text-sm font-bold transition-colors">
+<span class="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-8">
+<h2 class="text-2xl font-bold text-[#1E293B]">Дашборд</h2>
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-gray-800 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-sm" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<button class="size-10 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300">notifications</span>
+</button>
+<span class="absolute -top-1 -right-1 size-5 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">5</span>
+</div>
+<div class="size-10 rounded-full bg-cover bg-center border border-gray-200" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBoJrflHyhCHO9_tAMa_G9A8tkzH6BtOjwzzq-nw0VlTE3kItsbwgt-Clz-f5WVcAhp7HJw06woz-VkEgX6Imf96CWFnU52Uw_vZvWLD64B7gH6Fo9hO7xyy2qQdjN_l5JeHhkEpbKKug5QGZYWcaeF6fZVTAapXzq3iLFHABQS3deeyY47e8IGr_A23maVJQvIZf0fFyqA4Sn-T5ZBKGKMQdRGK3gvXmnXW126Y5W4QQlcAB30oOI-fLlfB5_0mYOivTcqBGcKa5Q');"></div>
+</div>
+</header>
+<div class="p-6 space-y-6">
+<!-- Top Filter Row -->
+<div class="flex items-center justify-between">
+<p class="text-gray-500 font-medium">Сегодня, 3 февраля 2026</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
+<span class="text-sm font-medium text-gray-700">Period:</span>
+<select class="border-none bg-transparent focus:ring-0 text-sm font-bold text-primary p-0">
+<option>Last 30 Days</option>
+<option>Last 7 Days</option>
+<option>This Quarter</option>
+</select>
+</div>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<p class="text-sm text-gray-500 font-medium mb-1">Total Users</p>
+<div class="flex items-baseline justify-between">
+<h3 class="text-2xl font-bold text-gray-900">4,832</h3>
+<span class="text-sm font-bold text-emerald-500">+12.5%</span>
+</div>
+<div class="mt-4 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[70%]"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<p class="text-sm text-gray-500 font-medium mb-1">Active Stores</p>
+<div class="flex items-baseline justify-between">
+<h3 class="text-2xl font-bold text-gray-900">3,214</h3>
+<span class="text-sm font-bold text-emerald-500">+8.3%</span>
+</div>
+<div class="mt-4 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[55%]"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<p class="text-sm text-gray-500 font-medium mb-1">MRR</p>
+<div class="flex items-baseline justify-between">
+<h3 class="text-2xl font-bold text-gray-900">485,200 TJS</h3>
+<span class="text-sm font-bold text-emerald-500">+15.2%</span>
+</div>
+<div class="mt-4 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-indigo-500 h-full w-[85%]"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<p class="text-sm text-gray-500 font-medium mb-1">New this Month</p>
+<div class="flex items-baseline justify-between">
+<h3 class="text-2xl font-bold text-gray-900">342</h3>
+<span class="text-sm font-bold text-rose-500">-3.1%</span>
+</div>
+<div class="mt-4 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-rose-500 h-full w-[30%]"></div>
+</div>
+</div>
+</div>
+<!-- Middle Charts Row -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<!-- Area Chart Registration Dynamics -->
+<div class="lg:col-span-3 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-bold text-gray-800">Registration Dynamics</h4>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-semibold bg-primary/10 text-primary rounded-lg">Aug</button>
+<button class="px-3 py-1 text-xs font-semibold text-gray-400">Feb</button>
+</div>
+</div>
+<div class="h-64 flex items-end gap-4 px-2">
+<!-- Simple Visual Mockup of Area Chart -->
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 40%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 55%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 45%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 70%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 65%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 85%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg relative group transition-all hover:bg-primary/40" style="height: 95%;">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-2 rounded-t-full"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] text-gray-400 font-bold">
+<span>AUG</span><span>SEP</span><span>OCT</span><span>NOV</span><span>DEC</span><span>JAN</span><span>FEB</span>
+</div>
+</div>
+<!-- Donut Chart Plan Distribution -->
+<div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col">
+<h4 class="font-bold text-gray-800 mb-6">Plan Distribution</h4>
+<div class="flex-1 flex items-center justify-center">
+<div class="relative size-48 flex items-center justify-center">
+<!-- Mock Donut -->
+<svg class="size-full transform -rotate-90">
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#f1f5f9" stroke-width="24"></circle>
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#00bdd6" stroke-dasharray="502" stroke-dashoffset="276" stroke-width="24"></circle>
+<circle cx="96" cy="96" fill="transparent" r="80" stroke="#6366f1" stroke-dasharray="502" stroke-dashoffset="400" stroke-width="24"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-gray-800">1.2k</span>
+<span class="text-xs text-gray-400 font-medium">Subscribers</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium text-gray-600">Start</span>
+</div>
+<span class="text-sm font-bold text-gray-800">45%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-indigo-500"></div>
+<span class="text-sm font-medium text-gray-600">Business</span>
+</div>
+<span class="text-sm font-bold text-gray-800">38%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-gray-200"></div>
+<span class="text-sm font-medium text-gray-600">Premium</span>
+</div>
+<span class="text-sm font-bold text-gray-800">17%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Recent Registrations Table -->
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+<h4 class="font-bold text-gray-800">Recent Registrations</h4>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-gray-50 text-gray-400 text-[11px] uppercase tracking-wider">
+<tr>
+<th class="px-6 py-3">Owner</th>
+<th class="px-6 py-3">Date</th>
+<th class="px-6 py-3">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxq-01H0PR-8pol8z9YZ2L4LxjOVUP-jRknMzaNrdyMjQWTZOcit8GY7RaqE1DdYSw4mX8tV5TZvxszWr0J06fpM1IiXBrWdRe4z1DeaEiKY5eEoyxtvq6gG7ucIH_Ua3vKAa3rzJGms8pYXAx6b8uw-C7KP5s1uLtR_03ZNpCEvRvVng1cosvLrSJwBpml8Fxht8dnqRCym_1dzxWemFxByliY_51vRUW-Iv6MRbCYL68Puq49dugA7cWPtVsDAIvgULnV1bSgDQ');"></div>
+<div>
+<p class="text-sm font-bold text-gray-800">Umed Alizoda</p>
+<p class="text-xs text-gray-500">+992 901 23 45 67</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-gray-600">Feb 03, 14:20</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-full">Active</span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAvoisBNQdpJKqyUfSroYkhfTtN1WcdodlwuHPq103gIkhTMoKpV3A25F4s4kgqWpZKCPFJ62yuhfUqvEcHpcDoO7It5v5jY2SVH5KJeMsgVnAnDmOqn5zpIq5m6BNcCtnU8gA0i7Gy4zCAACPUga8P2MPy6rihhZOq6EGOYUNZGAgcn5jUkIXQJNHfdZsTSOIBESJwyGMkwjShs-vpJZj8eN-v7VTx0ceHK9hiOD-oPJxwsu4hFatp5fsGJR-dD7oqsS0WTh8GRoo');"></div>
+<div>
+<p class="text-sm font-bold text-gray-800">Madina Sharipova</p>
+<p class="text-xs text-gray-500">+992 935 88 11 22</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-gray-600">Feb 03, 11:45</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-amber-100 text-amber-600 text-[10px] font-bold rounded-full">Pending</span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpc9i9s5Hv5bCUgyDiOqg4MyL3YVfcBDCaR-qHv-TvniLNE7jyC5deDRd9D5FzHmTg14xw3acdO9WyaDORA0uY9tCrBFoSo_4ThZV0aGJAXrBs8c0rjut-RQnF3numao9yGiHFBBHSzKH00KQRxfAmVnfZN_MXq4F__p2W3W22HlLn5zpetm7XIE8q6DJuNxpF33gTezGNIRlgpGclDB8ASxSoFhC3CevJB5-uFbNPccRwuK4PpKhMf_lS_LA0w2_PCCwThb3Mi8A');"></div>
+<div>
+<p class="text-sm font-bold text-gray-800">Farhod Nazarov</p>
+<p class="text-xs text-gray-500">+992 918 00 99 00</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-gray-600">Feb 02, 18:30</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-full">Active</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Platform Activity List -->
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-bold text-gray-800">Platform Activity</h4>
+<span class="material-symbols-outlined text-gray-400">more_horiz</span>
+</div>
+<div class="space-y-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<div>
+<p class="text-sm font-bold text-gray-800">Sales today</p>
+<p class="text-xs text-gray-400">Across all 3,214 stores</p>
+</div>
+</div>
+<span class="text-sm font-bold text-gray-800">12,485 TJS</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-500">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<p class="text-sm font-bold text-gray-800">Items added</p>
+<p class="text-xs text-gray-400">Total catalog expansion</p>
+</div>
+</div>
+<span class="text-sm font-bold text-gray-800">+1,204</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500">
+<span class="material-symbols-outlined">sync</span>
+</div>
+<div>
+<p class="text-sm font-bold text-gray-800">Sync operations</p>
+<p class="text-xs text-gray-400">Active ERP/CRM integrations</p>
+</div>
+</div>
+<span class="text-sm font-bold text-gray-800">4,120</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500">
+<span class="material-symbols-outlined">api</span>
+</div>
+<div>
+<p class="text-sm font-bold text-gray-800">API response time</p>
+<p class="text-xs text-gray-400">Average latency (global)</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-gray-800">124ms</span>
+<span class="px-2 py-0.5 bg-emerald-500 text-white text-[9px] font-bold rounded">OK</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

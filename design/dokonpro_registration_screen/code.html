@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #333;
+            border-radius: 55px;
+            background: #ffffff;
+        }
+        @media (max-width: 400px) {
+            .iphone-container {
+                width: 100%;
+                height: 100vh;
+                border: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<!-- Main iPhone Container -->
+<div class="iphone-container bg-background-light dark:bg-background-dark shadow-2xl flex flex-col">
+<!-- Status Bar Space (iPhone 14 Pro Dynamic Island Area) -->
+<div class="h-11 w-full"></div>
+<!-- Top Navigation -->
+<div class="flex items-center px-6 py-2">
+<div class="text-[#0c1b1d] dark:text-white cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios</span>
+</div>
+</div>
+<!-- Header Section -->
+<div class="px-6 pt-6">
+<h3 class="text-[#0c1b1d] dark:text-white text-2xl font-bold leading-tight tracking-tight">Создать аккаунт</h3>
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal pt-2">Заполните данные для начала работы</p>
+</div>
+<!-- Form Section -->
+<div class="flex-1 px-6 pt-8 space-y-4 overflow-y-auto">
+<!-- Owner Name Field -->
+<div class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-background-dark focus-within:border-primary transition-colors">
+<div class="text-[#4596a1] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">person</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent h-14 placeholder:text-[#4596a1]/60 text-[#0c1b1d] dark:text-white text-base font-normal leading-normal focus:ring-0 px-3" placeholder="Имя владельца" type="text"/>
+</div>
+</div>
+<!-- Phone Number Field -->
+<div class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-background-dark focus-within:border-primary transition-colors">
+<div class="text-[#4596a1] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">phone_iphone</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent h-14 placeholder:text-[#4596a1]/60 text-[#0c1b1d] dark:text-white text-base font-normal leading-normal focus:ring-0 px-3" placeholder="+992 __ ___ __ __" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-background-dark focus-within:border-primary transition-colors">
+<div class="text-[#4596a1] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent h-14 placeholder:text-[#4596a1]/60 text-[#0c1b1d] dark:text-white text-base font-normal leading-normal focus:ring-0 px-3" placeholder="Пароль" type="password"/>
+<div class="text-[#4596a1] flex items-center justify-center pr-4 cursor-pointer">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+</div>
+</div>
+<!-- Repeat Password Field -->
+<div class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-background-dark focus-within:border-primary transition-colors">
+<div class="text-[#4596a1] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent h-14 placeholder:text-[#4596a1]/60 text-[#0c1b1d] dark:text-white text-base font-normal leading-normal focus:ring-0 px-3" placeholder="Повторите пароль" type="password"/>
+<div class="text-[#4596a1] flex items-center justify-center pr-4 cursor-pointer">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+</div>
+</div>
+<!-- Terms and Conditions Checkbox -->
+<div class="flex items-start gap-3 pt-2">
+<div class="flex items-center h-5">
+<input class="w-5 h-5 rounded border-[#cde6ea] text-primary focus:ring-primary" id="terms" type="checkbox"/>
+</div>
+<label class="text-sm text-[#757575] dark:text-gray-400 leading-tight" for="terms">
+                    Я согласен с <a class="underline decoration-primary/40 underline-offset-2" href="#">условиями использования</a>
+</label>
+</div>
+</div>
+<!-- Action Section -->
+<div class="px-6 pb-12 pt-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                Создать аккаунт
+            </button>
+<div class="mt-8 text-center">
+<p class="text-sm text-[#757575] dark:text-gray-400">
+                    Уже есть аккаунт? 
+                    <a class="text-primary font-semibold ml-1 hover:underline" href="#">Войти</a>
+</p>
+</div>
+</div>
+<!-- Home Indicator (iPhone 14 Pro style) -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black/20 dark:bg-white/20 rounded-full"></div>
+</div>
+</body></html>

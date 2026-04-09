@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#212121] dark:text-white antialiased">
+<!-- iPhone 14 Pro Layout Container -->
+<div class="relative flex h-screen w-full max-w-[430px] mx-auto flex-col bg-background-light dark:bg-background-dark overflow-hidden">
+<!-- Top 60% Illustration Area -->
+<div class="relative w-full flex-[6] flex flex-col items-center justify-center px-8 pt-10">
+<div class="w-full h-full max-h-[400px] bg-center bg-no-repeat bg-contain flex items-center justify-center rounded-xl" data-alt="Flat line art illustration of store products and barcode scanners in turquoise and grey" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdL4-S6Vubxse0rlzVl-5vKrymAubqPQwSRWrfAAJ7iFsvrcbirZ_88KQMlbm8Ju2wOxN7talSLbJUAiD68Nv1IMvZrw-PnvMwSedqMnDdVDGxJomwi8NpyoNuHWmxxY7XFTJlK4vL0TtocbcmlVzkU7XVAEnTX1t5nXmVmXPTy0Hc1494ifolvygT8jmKhgho5gf8vCszHLNAevdsZ8QfHlJ5jy1JZQRuJdrM_LKtumS6WSXaLfMNudpLtyEwH35Iz3fyJHHVNafq");'>
+<!-- Placeholder for the actual line art graphic -->
+<div class="flex flex-col items-center gap-6">
+<span class="material-symbols-outlined text-[120px] text-primary/80">inventory_2</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-[48px] text-gray-300">barcode_scanner</span>
+<span class="material-symbols-outlined text-[48px] text-gray-300">package_2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex flex-[4] flex-col items-center px-6 pb-10">
+<!-- Page Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-2 py-6">
+<div class="h-2 w-2 rounded-full bg-primary"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+</div>
+<!-- Headline Text -->
+<h3 class="text-[#212121] dark:text-white tracking-tight text-2xl font-bold leading-tight text-center pb-2">
+                Учёт товаров
+            </h3>
+<!-- Body Text -->
+<p class="text-[#757575] dark:text-gray-400 text-base font-normal leading-normal px-4 text-center">
+                Добавляйте товары, отслеживайте остатки, получайте уведомления
+            </p>
+<!-- Bottom Actions -->
+<div class="mt-auto w-full space-y-4">
+<div class="flex w-full">
+<button class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] transition-opacity active:opacity-90">
+<span class="truncate">Далее</span>
+</button>
+</div>
+<div class="flex justify-center pb-2">
+<button class="text-[#757575] dark:text-gray-400 text-base font-medium hover:text-primary transition-colors">
+                        Пропустить
+                    </button>
+</div>
+</div>
+</div>
+<!-- Home Indicator (Visual representation) -->
+<div class="flex justify-center pb-2">
+<div class="h-1.5 w-32 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+</div>
+</div>
+</body></html>

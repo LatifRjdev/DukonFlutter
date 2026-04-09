@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for mobile feel */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white antialiased">
+<div class="flex flex-col min-h-screen max-w-[393px] mx-auto bg-white dark:bg-[#0d1a1c] shadow-2xl relative overflow-hidden">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-[#0d1a1c]/80 backdrop-blur-md">
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="flex size-10 items-center justify-center cursor-pointer text-[#0d1a1c] dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Новый товар</h2>
+</div>
+</header>
+<!-- Stepper / PageIndicators Component -->
+<div class="px-4 py-6">
+<div class="flex items-center justify-between relative">
+<!-- Progress Line Background -->
+<div class="absolute top-5 left-0 w-full h-[2px] bg-[#cee6e9] dark:bg-gray-700 -z-10"></div>
+<!-- Active Progress Line -->
+<div class="absolute top-5 left-0 w-1/2 h-[2px] bg-primary -z-10"></div>
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center gap-2">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-white dark:ring-[#0d1a1c]">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<span class="text-[10px] font-semibold text-primary uppercase tracking-wider">Основное</span>
+</div>
+<!-- Step 2: Active -->
+<div class="flex flex-col items-center gap-2">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-white dark:ring-[#0d1a1c]">
+<span class="text-sm font-bold">2</span>
+</div>
+<span class="text-[10px] font-semibold text-primary uppercase tracking-wider">Цены</span>
+</div>
+<!-- Step 3: Inactive -->
+<div class="flex flex-col items-center gap-2">
+<div class="size-10 rounded-full bg-[#cee6e9] dark:bg-gray-700 flex items-center justify-center text-[#47949e] ring-4 ring-white dark:ring-[#0d1a1c]">
+<span class="text-sm font-bold">3</span>
+</div>
+<span class="text-[10px] font-semibold text-[#47949e] dark:text-gray-500 uppercase tracking-wider">Склад</span>
+</div>
+</div>
+</div>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 overflow-y-auto px-4 space-y-4 pb-32">
+<!-- Pricing Form Section -->
+<div class="space-y-4">
+<!-- TextField Component: Purchase Price -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#0d1a1c] dark:text-gray-200">Закупочная цена *</label>
+<div class="relative flex items-center">
+<input class="w-full h-14 bg-white dark:bg-gray-800 border border-[#cee6e9] dark:border-gray-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-base font-medium transition-all" placeholder="0" type="number" value="150"/>
+<span class="absolute right-4 text-[#47949e] font-medium">TJS</span>
+</div>
+</div>
+<!-- TextField Component: Sale Price -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#0d1a1c] dark:text-gray-200">Цена продажи *</label>
+<div class="relative flex items-center">
+<input class="w-full h-14 bg-white dark:bg-gray-800 border border-[#cee6e9] dark:border-gray-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-base font-medium transition-all" placeholder="0" type="number" value="180"/>
+<span class="absolute right-4 text-[#47949e] font-medium">TJS</span>
+</div>
+</div>
+<!-- Calculation Info Card -->
+<div class="bg-[#E3F2FD] dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-lg p-4 flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-500">info</span>
+<div class="flex gap-2 text-sm font-semibold text-blue-700 dark:text-blue-300">
+<span>Маржа: <span class="text-blue-900 dark:text-blue-100">20%</span></span>
+<span class="opacity-30">|</span>
+<span>Прибыль: <span class="text-blue-900 dark:text-blue-100">30 TJS</span></span>
+</div>
+</div>
+<!-- TextField Component: Wholesale Price -->
+<div class="flex flex-col gap-2 pt-2">
+<label class="text-sm font-semibold text-[#0d1a1c] dark:text-gray-200">Цена оптом</label>
+<div class="relative flex items-center">
+<input class="w-full h-14 bg-white dark:bg-gray-800 border border-[#cee6e9] dark:border-gray-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-base font-medium transition-all" placeholder="0" type="number"/>
+<span class="absolute right-4 text-[#47949e] font-medium">TJS</span>
+</div>
+</div>
+</div>
+<!-- Additional Settings Toggle (Optional UX fluff) -->
+<div class="flex items-center justify-between py-4 border-t border-gray-100 dark:border-gray-800">
+<div class="flex flex-col">
+<span class="font-semibold text-sm">Включая налог</span>
+<span class="text-xs text-gray-500">НДС 18% включен в стоимость</span>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative">
+<div class="absolute right-1 top-1 size-4 bg-white rounded-full"></div>
+</div>
+</div>
+</main>
+<!-- Fixed Footer Navigation -->
+<footer class="absolute bottom-0 left-0 w-full p-4 bg-white dark:bg-[#0d1a1c] border-t border-gray-100 dark:border-gray-800 flex items-center gap-4 pb-8">
+<button class="flex-1 h-14 text-primary font-bold text-base hover:bg-primary/5 rounded-lg transition-colors">
+                Назад
+            </button>
+<button class="flex-[2] h-14 bg-primary text-white font-bold text-base rounded-lg shadow-lg shadow-primary/20 hover:brightness-105 active:scale-95 transition-all">
+                Далее
+            </button>
+</footer>
+<!-- iPhone Notch Area Placeholder -->
+<div class="absolute top-0 w-full h-11 flex justify-between px-8 pt-4 text-[10px] font-bold pointer-events-none">
+<span>9:41</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[12px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[12px]">wifi</span>
+<span class="material-symbols-outlined text-[12px]">battery_full</span>
+</div>
+</div>
+</div>
+</body></html>

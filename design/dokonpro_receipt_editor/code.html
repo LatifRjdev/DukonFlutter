@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Receipt Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-checkbox-tick {
+            --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] dark:text-white">
+<div class="max-w-[393px] mx-auto min-h-screen flex flex-col relative pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-2xl cursor-pointer">arrow_back</span>
+</div>
+<h1 class="text-[18px] font-semibold leading-tight flex-1 text-center">Редактировать шаблон</h1>
+<div class="flex items-center justify-end">
+<button class="text-primary text-base font-semibold leading-normal hover:opacity-80 transition-opacity">Превью</button>
+</div>
+</header>
+<main class="px-4 space-y-4 pt-2">
+<!-- Шапка чека Card -->
+<section class="bg-white dark:bg-[#1a2e31] rounded-lg shadow-sm overflow-hidden">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold uppercase tracking-wider px-4 pt-4 pb-2">Шапка чека</h3>
+<div class="flex flex-col">
+<!-- Store Name (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Название магазина</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Address (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Адрес</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Phone (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Телефон</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Logo (OFF) -->
+<div class="flex items-center justify-between px-4 py-3">
+<span class="text-base font-normal">Логотип</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+</section>
+<!-- Тело чека Card -->
+<section class="bg-white dark:bg-[#1a2e31] rounded-lg shadow-sm overflow-hidden">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold uppercase tracking-wider px-4 pt-4 pb-2">Тело чека</h3>
+<div class="flex flex-col">
+<!-- Receipt Number (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Номер чека</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Date & Time (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Дата и время</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Cashier (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Имя кассира</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Client Name (OFF) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Имя клиента</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- SKU (OFF) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Артикул товара</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Discount (ON) -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<span class="text-base font-normal">Скидка</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<!-- Points (OFF) -->
+<div class="flex items-center justify-between px-4 py-3">
+<span class="text-base font-normal">Баллы лояльности</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+</section>
+<!-- Подвал чека Card -->
+<section class="bg-white dark:bg-[#1a2e31] rounded-lg shadow-sm p-4 space-y-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold uppercase tracking-wider mb-2">Подвал чека</h3>
+<div class="space-y-2">
+<label class="text-sm font-medium text-gray-500 dark:text-gray-400">Текст благодарности</label>
+<input class="w-full h-12 px-4 rounded border-gray-300 dark:border-gray-700 bg-transparent focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="text" value="Спасибо за покупку!"/>
+</div>
+<div class="flex items-center justify-between py-1">
+<span class="text-base font-normal">QR-код</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-base font-normal">Wi-Fi пароль</span>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5 justify-start">
+<div class="h-full w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+<input class="w-full h-12 px-4 rounded border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 text-gray-400 cursor-not-allowed outline-none" disabled="" placeholder="Введите пароль" type="text"/>
+</div>
+</section>
+<!-- Размер шрифта Card -->
+<section class="bg-white dark:bg-[#1a2e31] rounded-lg shadow-sm p-4 space-y-4">
+<h3 class="text-[#0d1a1c] dark:text-white/70 text-sm font-bold uppercase tracking-wider mb-2">Размер шрифта</h3>
+<div class="flex gap-2">
+<button class="flex-1 py-2.5 px-4 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-medium text-center border border-transparent">Мелкий</button>
+<button class="flex-1 py-2.5 px-4 rounded-lg bg-primary text-white text-sm font-medium text-center shadow-sm">Средний</button>
+<button class="flex-1 py-2.5 px-4 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-medium text-center border border-transparent">Крупный</button>
+</div>
+</section>
+</main>
+<!-- Bottom Action Button -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] p-4 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg text-lg transition-all active:scale-[0.98]">
+                Сохранить шаблон
+            </button>
+</div>
+</div>
+</body></html>

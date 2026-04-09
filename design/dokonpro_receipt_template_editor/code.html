@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Receipt Template Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .ios-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        input[type="checkbox"]:checked + div { transform: translateX(20px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] dark:text-white">
+<div class="mx-auto min-h-screen max-w-[393px] bg-background-light dark:bg-background-dark pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined cursor-pointer text-[#0d1a1c] dark:text-white">arrow_back</span>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-tight">Редактор чека</h2>
+</div>
+<button class="text-primary text-base font-semibold">Предпросмотр</button>
+</header>
+<main class="px-4 space-y-4 pt-2">
+<!-- Section: Header -->
+<section class="bg-white dark:bg-[#1a2e30] rounded-xl p-4 ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold mb-4">Шапка чека</h3>
+<div class="space-y-4">
+<!-- ListItem: Logo -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">image</span>
+</div>
+<span class="text-sm font-medium">Логотип</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<!-- ListItem: Store Name -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">storefront</span>
+</div>
+<span class="text-sm font-medium">Название магазина</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<!-- ListItem: Address -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<span class="text-sm font-medium">Адрес</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<!-- ListItem: Phone -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">call</span>
+</div>
+<span class="text-sm font-medium">Телефон</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<textarea class="w-full mt-2 rounded-lg border-none bg-background-light dark:bg-background-dark p-3 text-sm focus:ring-1 focus:ring-primary" placeholder="Дополнительная информация (например, режим работы)" rows="2">ул. Абая 42, Алматы. Тел: +7 700 000 00 00</textarea>
+</div>
+</section>
+<!-- Section: Body -->
+<section class="bg-white dark:bg-[#1a2e30] rounded-xl p-4 ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold mb-4">Тело чека</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 size-10">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<span class="text-sm font-medium">Артикул (SKU)</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">barcode</span>
+</div>
+<span class="text-sm font-medium">Штрих-код товара</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">sell</span>
+</div>
+<span class="text-sm font-medium">Скидка на позицию</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 size-10">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-sm font-medium">Себестоимость</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md"></div>
+</label>
+</div>
+<div class="pt-2">
+<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Размер шрифта позиций</p>
+<div class="flex bg-background-light dark:bg-background-dark p-1 rounded-lg">
+<button class="flex-1 py-1.5 text-xs font-medium rounded-md">Мелкий</button>
+<button class="flex-1 py-1.5 text-xs font-medium rounded-md bg-white dark:bg-[#1a2e30] shadow-sm text-primary">Средний</button>
+<button class="flex-1 py-1.5 text-xs font-medium rounded-md">Крупный</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Footer -->
+<section class="bg-white dark:bg-[#1a2e30] rounded-xl p-4 ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold mb-4">Подвал чека</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between opacity-50">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+<span class="text-sm font-medium">Итоговая сумма</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-not-allowed items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<span class="text-sm font-medium">Способ оплаты</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">paid</span>
+</div>
+<span class="text-sm font-medium">Сдача</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 size-10">
+<span class="material-symbols-outlined">loyalty</span>
+</div>
+<span class="text-sm font-medium">Бонусы лояльности</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+<span class="material-symbols-outlined">qr_code_2</span>
+</div>
+<span class="text-sm font-medium">QR код (Фискальный)</span>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full bg-primary p-0.5">
+<div class="h-full w-[24px] rounded-full bg-white shadow-md translate-x-[20px]"></div>
+</label>
+</div>
+<textarea class="w-full mt-2 rounded-lg border-none bg-background-light dark:bg-background-dark p-3 text-sm focus:ring-1 focus:ring-primary" placeholder="Текст благодарности" rows="2">Спасибо за покупку! Ждем вас снова в нашем магазине.</textarea>
+</div>
+</section>
+<!-- Section: Receipt Width -->
+<section class="bg-white dark:bg-[#1a2e30] rounded-xl p-4 ios-shadow">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-bold mb-3">Ширина чека</h3>
+<div class="flex bg-background-light dark:bg-background-dark p-1 rounded-lg">
+<button class="flex-1 py-2 text-sm font-semibold rounded-md bg-white dark:bg-[#1a2e30] shadow-sm text-primary">58мм</button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-md text-gray-500">80мм</button>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Buttons -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-lg flex gap-3 max-w-[393px] mx-auto border-t border-gray-100 dark:border-gray-800">
+<button class="flex-1 h-12 rounded-xl border-2 border-primary text-primary font-bold text-sm">Тест-печать</button>
+<button class="flex-1 h-12 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20">Сохранить</button>
+</div>
+</div>
+</body></html>

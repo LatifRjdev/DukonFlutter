@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<!-- Screen Container: iPhone 14 Pro Dimensions (approx) -->
+<div class="relative mx-auto min-h-screen w-full max-w-[393px] flex flex-col pb-24">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between">
+<div class="text-[#0d1a1c] dark:text-white flex size-10 items-center justify-center rounded-full hover:bg-black/5" data-icon="arrow_back">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Калькулятор доставки</h2>
+</div>
+<div class="px-4 space-y-4">
+<!-- Headline -->
+<h3 class="text-[#0d1a1c] dark:text-white tracking-tight text-2xl font-bold pt-4">Batch Expenses</h3>
+<!-- Batch Expenses Card -->
+<div class="bg-white dark:bg-[#1a2e32] rounded-xl p-4 ios-shadow space-y-4">
+<!-- TextField: Shipping Cost -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-1.5">Стоимость доставки</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-[#cee6e9] dark:border-[#2a454a] bg-transparent h-12 pr-12 p-3 text-base font-normal leading-normal placeholder:text-gray-400" value="4,500"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">TJS</span>
+</div>
+</div>
+<!-- TextField: Customs -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-1.5">Таможенные расходы</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-[#cee6e9] dark:border-[#2a454a] bg-transparent h-12 pr-12 p-3 text-base font-normal leading-normal placeholder:text-gray-400" value="800"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">TJS</span>
+</div>
+</div>
+<!-- TextField: Others -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-1.5">Прочие расходы</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-[#0d1a1c] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-[#cee6e9] dark:border-[#2a454a] bg-transparent h-12 pr-12 p-3 text-base font-normal leading-normal placeholder:text-gray-400" value="100"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">TJS</span>
+</div>
+</div>
+<!-- Summary -->
+<div class="pt-2 border-t border-gray-100 dark:border-[#2a454a]">
+<p class="text-primary text-lg font-bold">Итого расходов: 5,400 TJS</p>
+</div>
+</div>
+<!-- Distribution Section -->
+<div class="space-y-3 pt-2">
+<h4 class="text-[#0d1a1c] dark:text-white text-base font-semibold px-1">Distribution</h4>
+<div class="grid grid-cols-2 gap-2">
+<!-- Radio Item: By Weight -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1a2e32] p-3 rounded-lg border border-transparent">
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center"></div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">По весу</span>
+</div>
+<!-- Radio Item: By Qty (Selected) -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1a2e32] p-3 rounded-lg border-2 border-primary">
+<div class="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+</div>
+<span class="text-sm font-medium text-primary">По кол-ву</span>
+</div>
+<!-- Radio Item: By Value -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1a2e32] p-3 rounded-lg border border-transparent">
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center"></div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">По стоимости</span>
+</div>
+<!-- Radio Item: Manual -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#1a2e32] p-3 rounded-lg border border-transparent">
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center"></div>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Вручную</span>
+</div>
+</div>
+</div>
+<!-- Items Card -->
+<div class="bg-white dark:bg-[#1a2e32] rounded-xl overflow-hidden ios-shadow">
+<div class="p-4 border-b border-gray-50 dark:border-[#2a454a]">
+<h4 class="text-[#0d1a1c] dark:text-white text-base font-semibold">Items</h4>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 dark:bg-[#142629] text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+<th class="px-4 py-2">Товар</th>
+<th class="px-2 py-2 text-center">Кол-во</th>
+<th class="px-2 py-2 text-right">Доля</th>
+<th class="px-4 py-2 text-right">Себест.</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-gray-50 dark:divide-[#2a454a]">
+<!-- Row 1 -->
+<tr class="dark:text-gray-200">
+<td class="px-4 py-3 font-medium">Кофе</td>
+<td class="px-2 py-3 text-center text-gray-500">100 шт</td>
+<td class="px-2 py-3 text-right text-emerald-500 font-medium">+1,800</td>
+<td class="px-4 py-3 text-right font-semibold">151.80 TJS</td>
+</tr>
+<!-- Row 2 -->
+<tr class="dark:text-gray-200">
+<td class="px-4 py-3 font-medium">Сахар</td>
+<td class="px-2 py-3 text-center text-gray-500">200 шт</td>
+<td class="px-2 py-3 text-right text-emerald-500 font-medium">+2,400</td>
+<td class="px-4 py-3 text-right font-semibold">67.00 TJS</td>
+</tr>
+<!-- Row 3 -->
+<tr class="dark:text-gray-200">
+<td class="px-4 py-3 font-medium">Чай</td>
+<td class="px-2 py-3 text-center text-gray-500">50 шт</td>
+<td class="px-2 py-3 text-right text-emerald-500 font-medium">+1,200</td>
+<td class="px-4 py-3 text-right font-semibold">144.00 TJS</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Bottom Action Button -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-t border-gray-100 dark:border-[#2a454a]">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98]">
+                Применить к товарам
+            </button>
+</div>
+</div>
+</body></html>

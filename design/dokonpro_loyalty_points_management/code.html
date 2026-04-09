@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Loyalty Points Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dd7f2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852px) -->
+<div class="w-[393px] h-[852px] bg-background-light dark:bg-background-dark relative flex flex-col overflow-hidden shadow-2xl">
+<!-- TopAppBar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between z-10">
+<div class="text-[#0d1a1c] dark:text-white flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined cursor-pointer">arrow_back_ios_new</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-[18px] font-semibold leading-tight tracking-[-0.015em] flex-1 text-center">Баллы лояльности</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex cursor-pointer items-center justify-center rounded-xl h-12 bg-transparent text-[#0d1a1c] dark:text-white">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto pb-24">
+<!-- General Stats Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-[#1a2e31] rounded-xl border-t-4 border-primary ios-shadow p-4 flex justify-between items-center">
+<div class="flex flex-col items-center gap-1 flex-1">
+<span class="material-symbols-outlined text-primary text-[20px]">group</span>
+<p class="text-[#49929c] text-[11px] font-medium uppercase">Участников</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold">156</p>
+</div>
+<div class="w-[1px] h-10 bg-gray-100 dark:bg-gray-700"></div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<span class="material-symbols-outlined text-green-500 text-[20px]">add_circle</span>
+<p class="text-[#49929c] text-[11px] font-medium uppercase text-center">Начислено</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold">45,200</p>
+</div>
+<div class="w-[1px] h-10 bg-gray-100 dark:bg-gray-700"></div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<span class="material-symbols-outlined text-orange-500 text-[20px]">remove_circle</span>
+<p class="text-[#49929c] text-[11px] font-medium uppercase text-center">Списано</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold">12,800</p>
+</div>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="mt-2">
+<div class="flex border-b border-[#cee5e8] dark:border-gray-800 px-4">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[10px] pt-4 flex-1" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Участники</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#49929c] pb-[10px] pt-4 flex-1" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Начисления</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#49929c] pb-[10px] pt-4 flex-1" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Списания</p>
+</a>
+</div>
+</div>
+<!-- Content for 'Участники' tab -->
+<div class="px-4 py-4">
+<!-- SearchBar -->
+<div class="mb-4">
+<label class="flex flex-col h-11 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl bg-white dark:bg-[#1a2e31] border border-[#cee5e8] dark:border-gray-700">
+<div class="text-[#49929c] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent focus:ring-0 text-[#0d1a1c] dark:text-white placeholder:text-[#49929c] px-3 text-base font-normal" placeholder="Поиск участников" value=""/>
+</div>
+</label>
+</div>
+<!-- Chips -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
+<div class="flex h-8 shrink-0 items-center justify-center px-5 rounded-full bg-primary text-white">
+<p class="text-sm font-semibold">Все</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-[#1a2e31] border border-[#cee5e8] dark:border-gray-700 text-[#0d1a1c] dark:text-white">
+<p class="text-sm font-medium">Золото</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-[#1a2e31] border border-[#cee5e8] dark:border-gray-700 text-[#0d1a1c] dark:text-white">
+<p class="text-sm font-medium">Серебро</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-[#1a2e31] border border-[#cee5e8] dark:border-gray-700 text-[#0d1a1c] dark:text-white">
+<p class="text-sm font-medium">Бронза</p>
+</div>
+</div>
+<!-- Customer List -->
+<div class="flex flex-col gap-3">
+<!-- Customer 1: Gold -->
+<div class="bg-white dark:bg-[#1a2e31] p-4 rounded-xl ios-shadow">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold text-lg">АК</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h3 class="text-[#0d1a1c] dark:text-white font-bold">Ahmad Karimov</h3>
+<span class="material-symbols-outlined text-[#49929c] text-xl">chevron_right</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-wider">Золото</span>
+<span class="text-primary font-bold text-sm">2,540 баллов</span>
+</div>
+</div>
+</div>
+<div class="mt-4">
+<div class="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
+<div class="bg-yellow-400 h-full w-full"></div>
+</div>
+<div class="flex justify-between mt-1">
+<p class="text-[10px] text-[#49929c]">Максимальный уровень</p>
+<p class="text-[10px] text-[#49929c]">100%</p>
+</div>
+</div>
+</div>
+<!-- Customer 2: Silver -->
+<div class="bg-white dark:bg-[#1a2e31] p-4 rounded-xl ios-shadow">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-slate-400 flex items-center justify-center text-white font-bold text-lg">МР</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h3 class="text-[#0d1a1c] dark:text-white font-bold">Malika Rakhimova</h3>
+<span class="material-symbols-outlined text-[#49929c] text-xl">chevron_right</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">Серебро</span>
+<span class="text-primary font-bold text-sm">1,820 баллов</span>
+</div>
+</div>
+</div>
+<div class="mt-4">
+<div class="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
+<div class="bg-slate-400 h-full w-[82%]"></div>
+</div>
+<div class="flex justify-between mt-1">
+<p class="text-[10px] text-[#49929c]">до Золота: 3,180</p>
+<p class="text-[10px] text-[#49929c]">82%</p>
+</div>
+</div>
+</div>
+<!-- Customer 3: Bronze -->
+<div class="bg-white dark:bg-[#1a2e31] p-4 rounded-xl ios-shadow">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-orange-400 flex items-center justify-center text-white font-bold text-lg">ФН</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h3 class="text-[#0d1a1c] dark:text-white font-bold">Farrukh Nazarov</h3>
+<span class="material-symbols-outlined text-[#49929c] text-xl">chevron_right</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-[10px] font-bold uppercase tracking-wider">Бронза</span>
+<span class="text-primary font-bold text-sm">450 баллов</span>
+</div>
+</div>
+</div>
+<div class="mt-4">
+<div class="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
+<div class="bg-orange-400 h-full w-[45%]"></div>
+</div>
+<div class="flex justify-between mt-1">
+<p class="text-[10px] text-[#49929c]">до Серебра: 1,550</p>
+<p class="text-[10px] text-[#49929c]">45%</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAB -->
+<div class="absolute bottom-10 right-6">
+<button class="w-14 h-14 bg-primary rounded-full shadow-lg flex items-center justify-center text-white active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[28px]">card_giftcard</span>
+</button>
+</div>
+<!-- iOS Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+</div>
+</body></html>

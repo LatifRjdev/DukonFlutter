@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] dark:text-white antialiased">
+<div class="relative mx-auto flex h-screen max-w-[393px] flex-col overflow-hidden shadow-2xl">
+<!-- TopAppBar -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 justify-between sticky top-0 z-10">
+<div class="flex size-10 shrink-0 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-lg font-semibold leading-tight flex-1 text-center pr-10">Подтверждение</h2>
+</header>
+<main class="flex-1 flex flex-col px-6 pt-8 overflow-y-auto">
+<!-- Icon Section -->
+<div class="flex justify-center mb-8">
+<div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[40px] font-light">sms</span>
+</div>
+</div>
+<!-- Headline & Body Text -->
+<div class="text-center mb-10">
+<h1 class="text-2xl font-bold tracking-tight mb-2">Введите код</h1>
+<p class="text-[#757575] dark:text-gray-400 text-[14px] leading-relaxed max-w-[280px] mx-auto">
+                    Мы отправили 4-значный код на номер <span class="whitespace-nowrap font-medium text-[#0d1a1c] dark:text-white">+992 93 *** ** 67</span>
+</p>
+</div>
+<!-- ConfirmationCode (Modified for 4 digits & style) -->
+<div class="flex justify-center mb-8">
+<fieldset class="flex gap-4">
+<!-- Focused State -->
+<input autofocus="" class="w-14 h-14 text-center text-3xl font-bold border-2 border-primary rounded-xl focus:ring-0 focus:outline-none bg-transparent" maxlength="1" type="number" value="4"/>
+<input class="w-14 h-14 text-center text-3xl font-bold border border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-0 focus:outline-none bg-transparent" maxlength="1" placeholder="" type="number"/>
+<input class="w-14 h-14 text-center text-3xl font-bold border border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-0 focus:outline-none bg-transparent" maxlength="1" placeholder="" type="number"/>
+<input class="w-14 h-14 text-center text-3xl font-bold border border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-0 focus:outline-none bg-transparent" maxlength="1" placeholder="" type="number"/>
+</fieldset>
+</div>
+<!-- Timer / Resend -->
+<div class="text-center">
+<p class="text-[14px] text-[#757575] dark:text-gray-400">
+                    Отправить повторно через <span class="font-medium text-primary">0:45</span>
+</p>
+</div>
+</main>
+<!-- Fixed Footer with Primary Button -->
+<footer class="p-6 bg-background-light dark:bg-background-dark border-t border-transparent">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-xl transition-colors active:scale-[0.98] duration-100">
+                Подтвердить
+            </button>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-6"></div>
+</footer>
+</div>
+<!-- Hidden Background Image for Structure requirements -->
+<div class="hidden">
+<div data-alt="Abstract soft turquoise gradient background pattern"></div>
+</div>
+</body></html>

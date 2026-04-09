@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Customer Profile Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecc8",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
+<div class="max-w-[393px] mx-auto min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center p-4 justify-between">
+<div class="text-slate-900 dark:text-white flex size-10 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Ахмад Каримов</h2>
+<div class="flex size-10 items-center justify-end">
+<button class="flex items-center justify-center p-0 bg-transparent text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ProfileHeader -->
+<section class="flex flex-col items-center px-4 py-6">
+<div class="relative mb-4">
+<div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl font-bold border-4 border-white dark:border-slate-800 shadow-sm">
+                    АК
+                </div>
+<!-- Optional online status or badge indicator -->
+</div>
+<div class="flex flex-col items-center">
+<h1 class="text-slate-900 dark:text-white text-2xl font-bold tracking-tight">Ахмад Каримов</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base mt-1">+992 93 123 45 67</p>
+<div class="mt-3 px-3 py-1 bg-[#FFD700]/20 text-[#B8860B] dark:text-[#FFD700] rounded-full text-xs font-bold tracking-wide uppercase">
+                    VIP Золото
+                </div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="px-4 mb-6">
+<div class="grid grid-cols-3 gap-3">
+<div class="flex flex-col gap-1 rounded-xl p-3 bg-primary/10 border border-primary/20">
+<p class="text-slate-600 dark:text-slate-400 text-[11px] font-medium uppercase tracking-wider">Покупки</p>
+<p class="text-slate-900 dark:text-white text-sm font-bold truncate">25,400 TJS</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-3 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
+<p class="text-red-600 dark:text-red-400 text-[11px] font-medium uppercase tracking-wider">Долг</p>
+<p class="text-red-600 dark:text-red-400 text-sm font-bold truncate">12,500 TJS</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-3 bg-green-50 dark:bg-green-950/30 border border-green-100 dark:border-green-900/30">
+<p class="text-green-600 dark:text-green-400 text-[11px] font-medium uppercase tracking-wider">Баллы</p>
+<p class="text-green-600 dark:text-green-400 text-sm font-bold truncate">2,540</p>
+</div>
+</div>
+</section>
+<!-- Quick Action Buttons -->
+<section class="px-4 mb-6">
+<div class="flex gap-2">
+<button class="flex-1 flex items-center justify-center gap-2 h-11 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold ios-shadow">
+<span class="material-symbols-outlined text-lg">call</span>
+                    Позвонить
+                </button>
+<button class="flex-1 flex items-center justify-center gap-2 h-11 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold ios-shadow">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                    Написать
+                </button>
+<button class="flex-1 flex items-center justify-center gap-2 h-11 rounded-lg bg-primary text-slate-900 text-sm font-bold ios-shadow">
+<span class="material-symbols-outlined text-lg">shopping_cart</span>
+                    Продажа
+                </button>
+</div>
+</section>
+<!-- Current Debt Card -->
+<section class="px-4 mb-6">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-4 ios-shadow">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-slate-900 dark:text-white font-bold">Текущий долг</h3>
+<span class="text-xs text-slate-400 font-medium">3 позиции</span>
+</div>
+<div class="space-y-4">
+<!-- Debt Row 1 -->
+<div class="flex items-center justify-between py-2 border-b border-slate-50 dark:border-slate-700/50">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200">Чек #1232</span>
+<span class="text-xs text-slate-500">до 15.02</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-bold text-slate-900 dark:text-white">3,200 TJS</span>
+<button class="px-3 py-1.5 bg-primary/10 text-primary-dark text-xs font-bold rounded-lg border border-primary/20">Принять</button>
+</div>
+</div>
+<!-- Debt Row 2 -->
+<div class="flex items-center justify-between py-2 border-b border-slate-50 dark:border-slate-700/50">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200">Чек #1228</span>
+<span class="text-xs text-slate-500">до 20.02</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-bold text-slate-900 dark:text-white">5,000 TJS</span>
+<button class="px-3 py-1.5 bg-primary/10 text-primary-dark text-xs font-bold rounded-lg border border-primary/20">Принять</button>
+</div>
+</div>
+<!-- Debt Row 3 (Overdue) -->
+<div class="flex items-center justify-between py-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200">Чек #1220</span>
+<span class="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-bold uppercase">Просрочен</span>
+</div>
+<span class="text-xs text-slate-500">Был до 05.02</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-bold text-red-500">4,300 TJS</span>
+<button class="px-3 py-1.5 bg-primary/10 text-primary-dark text-xs font-bold rounded-lg border border-primary/20">Принять</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- History Card -->
+<section class="px-4 pb-10">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-4 ios-shadow">
+<h3 class="text-slate-900 dark:text-white font-bold mb-4">История покупок</h3>
+<div class="space-y-4">
+<!-- Transaction 1 -->
+<div class="flex flex-col gap-1 py-2 border-b border-slate-50 dark:border-slate-700/50">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium text-slate-900 dark:text-white">30.01 | 3 товара</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">1,250 TJS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500">Наличные</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">chevron_right</span>
+</div>
+</div>
+<!-- Transaction 2 -->
+<div class="flex flex-col gap-1 py-2 border-b border-slate-50 dark:border-slate-700/50">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium text-slate-900 dark:text-white">25.01 | 1 товар</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">450 TJS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500">Карта</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">chevron_right</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-2 text-primary font-bold text-sm flex items-center justify-center gap-1">
+                    Все покупки
+                    <span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Safe Area Spacer -->
+<div class="h-8"></div>
+</div>
+</body></html>

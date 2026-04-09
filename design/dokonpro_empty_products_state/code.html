@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 3rem;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+<!-- iPhone 14 Pro Container -->
+<div class="iphone-frame bg-background-light dark:bg-background-dark shadow-2xl flex flex-col">
+<!-- Header (TopAppBar) -->
+<header class="flex items-center bg-background-light dark:bg-background-dark px-5 pt-12 pb-2 justify-between sticky top-0 z-10">
+<h2 class="text-[#0c1b1d] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em]">Товары</h2>
+<div class="flex items-center justify-end">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-transparent text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined !text-[28px]">add</span>
+</button>
+</div>
+</header>
+<!-- Main Content Scrollable Area -->
+<main class="flex-1 flex flex-col px-5">
+<!-- Inactive Search Bar -->
+<div class="py-3 opacity-60">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-[#e6f3f4] dark:bg-primary/10">
+<div class="text-primary flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-primary/60 px-4 pl-2 text-base font-normal" disabled="" placeholder="Поиск" value=""/>
+</div>
+</label>
+</div>
+<!-- Empty State Central Group -->
+<div class="flex-1 flex flex-col items-center justify-center gap-8 -mt-10">
+<!-- Minimalist Illustration (Empty Box) -->
+<div class="relative w-40 h-32 flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-2xl"></div>
+<svg fill="none" height="120" viewbox="0 0 120 120" width="120" xmlns="http://www.w3.org/2000/svg">
+<path class="dark:fill-gray-700" d="M60 20L100 40V80L60 100L20 80V40L60 20Z" fill="#E0E0E0"></path>
+<path class="dark:fill-gray-600" d="M60 20L100 40L60 60L20 40L60 20Z" fill="#F5F5F5"></path>
+<path class="dark:fill-gray-800" d="M20 40L60 60V100L20 80V40Z" fill="#D0D0D0"></path>
+<path class="dark:fill-gray-900" d="M100 40L60 60V100L100 80V40Z" fill="#BDBDBD"></path>
+<path d="M60 60L100 40M60 60L20 40M60 60V100" stroke="#00bdd6" stroke-linecap="round" stroke-width="2"></path>
+<circle cx="60" cy="40" fill="#00bdd6" r="4"></circle>
+</svg>
+<div class="absolute -z-10 bg-primary/5 w-32 h-32 rounded-full"></div>
+</div>
+<!-- Text Group -->
+<div class="flex flex-col items-center gap-3 max-w-[300px]">
+<h3 class="text-[#0c1b1d] dark:text-white text-[20px] font-bold leading-tight text-center">Пока нет товаров</h3>
+<p class="text-[#757575] dark:text-gray-400 text-[14px] font-normal leading-relaxed text-center">
+                        Добавьте первый товар вручную или импортируйте из Excel
+                    </p>
+</div>
+<!-- Action Buttons Stack -->
+<div class="w-full flex flex-col gap-3 px-2">
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
+<span>Добавить товар</span>
+</button>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-transparent border-2 border-primary text-primary text-base font-bold leading-normal tracking-[0.015em] active:scale-[0.98] transition-transform">
+<span>Импорт из Excel</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Bottom Tab Bar -->
+<nav class="flex gap-2 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark px-4 pb-8 pt-2 h-24">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-gray-400" href="#">
+<span class="material-symbols-outlined !text-[26px]">home</span>
+<p class="text-[11px] font-medium leading-normal tracking-[0.015em]">Главная</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined filled !text-[26px]">inventory_2</span>
+<p class="text-[11px] font-medium leading-normal tracking-[0.015em]">Товары</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-gray-400" href="#">
+<span class="material-symbols-outlined !text-[26px]">calculate</span>
+<p class="text-[11px] font-medium leading-normal tracking-[0.015em]">Касса</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-gray-400" href="#">
+<span class="material-symbols-outlined !text-[26px]">account_balance_wallet</span>
+<p class="text-[11px] font-medium leading-normal tracking-[0.015em]">Финансы</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-gray-400" href="#">
+<span class="material-symbols-outlined !text-[26px]">more_horiz</span>
+<p class="text-[11px] font-medium leading-normal tracking-[0.015em]">Ещё</p>
+</a>
+</nav>
+<!-- iPhone Notch Mockup -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[35px] bg-black rounded-b-[1.5rem] z-50"></div>
+</div>
+</body></html>

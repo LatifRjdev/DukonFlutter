@@ -1,0 +1,175 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../domain/entities/sale.dart';
+import '../../../core/services/thermal_printer_service.dart';
+import '../../../injection.dart';
+import '../../blocs/store/store_bloc.dart';
+import '../../blocs/store/store_state.dart';
+
+class SaleSuccessPage extends StatefulWidget {
+  final Sale sale;
+
+  const SaleSuccessPage({super.key, required this.sale});
+
+  @override
+  State<SaleSuccessPage> createState() => _SaleSuccessPageState();
+}
+
+class _SaleSuccessPageState extends State<SaleSuccessPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _scaleAnimation;
+
+  String _formatPrice(double value) {
+    final formatter = NumberFormat('#,##0', 'ru');
+    return '${formatter.format(value)} TJS';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.elasticOut,
+    );
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _printReceipt() async {
+    final storeState = context.read<StoreBloc>().state;
+    final storeName = storeState is StoreLoaded && storeState.selectedStore != null
+        ? storeState.selectedStore!.name
+        : 'DokonPro';
+
+    final printerService = sl<ThermalPrinterService>();
+    if (!printerService.isConnected) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Принтер не подключён. Настройте в Настройки → Принтер.')),
+      );
+      return;
+    }
+
+    final success = await printerService.printReceipt(
+      sale: widget.sale,
+      storeName: storeName,
+    );
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(success ? 'Чек напечатан' : 'Ошибка печати'),
+        backgroundColor: success ? AppColors.success : AppColors.error,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sale = widget.sale;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              const Spacer(),
+              // Green checkmark circle
+              ScaleTransition(
+                scale: _scaleAnimation,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    color: AppColors.success,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check, size: 48, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text('Продажа оформлена!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 8),
+              Text(_formatPrice(sale.total),
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
+              if (sale.change > 0) ...[
+                const SizedBox(height: 8),
+                Text('Сдача: ${_formatPrice(sale.change)}',
+                  style: const TextStyle(fontSize: 16, color: AppColors.textSecondary)),
+              ],
+              const Spacer(),
+
+              // 3 buttons at bottom
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  onPressed: _printReceipt,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  icon: const Icon(Icons.print_outlined, size: 20),
+                  label: const Text('Печатать чек',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Отправка в Telegram скоро будет доступна')),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  icon: const Icon(Icons.send_outlined, size: 20),
+                  label: const Text('Отправить в Telegram',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('Новая продажа',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

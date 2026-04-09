@@ -1,0 +1,101 @@
+<h2>Какое визуальное направление вам ближе?</h2>
+<p class="subtitle">Текущий дизайн DokonPro — стандартный Material 3 с Cyan/Teal палитрой. Выберите направление для редизайна.</p>
+
+<div class="cards">
+  <!-- Option A: Modern Minimal -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 24px; min-height: 280px;">
+      <div style="background: #0f3460; border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span style="color: #e0e0e0; font-size: 14px; font-weight: 600; letter-spacing: 1px;">ДОХОД СЕГОДНЯ</span>
+          <span style="color: #00e676; font-size: 12px;">↑ 12%</span>
+        </div>
+        <div style="color: #fff; font-size: 32px; font-weight: 700; letter-spacing: -1px;">24,500 TJS</div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <div style="flex:1; background: rgba(0,230,118,0.1); border-radius: 14px; padding: 14px; border: 1px solid rgba(0,230,118,0.15);">
+          <div style="color: #00e676; font-size: 22px; font-weight: 700;">47</div>
+          <div style="color: #9e9e9e; font-size: 11px; margin-top: 4px;">Продажи</div>
+        </div>
+        <div style="flex:1; background: rgba(83,109,254,0.1); border-radius: 14px; padding: 14px; border: 1px solid rgba(83,109,254,0.15);">
+          <div style="color: #536dfe; font-size: 22px; font-weight: 700;">128</div>
+          <div style="color: #9e9e9e; font-size: 11px; margin-top: 4px;">Товаров</div>
+        </div>
+        <div style="flex:1; background: rgba(255,171,0,0.1); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,171,0,0.15);">
+          <div style="color: #ffab00; font-size: 22px; font-weight: 700;">8</div>
+          <div style="color: #9e9e9e; font-size: 11px; margin-top: 4px;">Долги</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dark Premium</h3>
+      <p>Тёмная тема по умолчанию. Глубокие синие тона, неоновые акценты. Премиальный, современный вид. Подходит для долгой работы — глаза меньше устают.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Clean & Bright -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8f9fc; padding: 24px; min-height: 280px;">
+      <div style="background: #fff; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span style="color: #64748b; font-size: 14px; font-weight: 500;">Доход сегодня</span>
+          <span style="background: #ecfdf5; color: #059669; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600;">+12%</span>
+        </div>
+        <div style="color: #0f172a; font-size: 32px; font-weight: 800;">24,500 TJS</div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <div style="flex:1; background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+          <div style="color: #0f172a; font-size: 22px; font-weight: 800;">47</div>
+          <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Продажи</div>
+        </div>
+        <div style="flex:1; background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+          <div style="color: #0f172a; font-size: 22px; font-weight: 800;">128</div>
+          <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Товаров</div>
+        </div>
+        <div style="flex:1; background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+          <div style="color: #0f172a; font-size: 22px; font-weight: 700;">8</div>
+          <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Долги</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Clean & Bright</h3>
+      <p>Светлая, чистая эстетика. Мягкие тени, нейтральная палитра с цветными акцентами. Профессиональный SaaS-стиль. Легко читается при ярком свете магазина.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Vibrant Gradient -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; min-height: 280px;">
+      <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500;">Доход сегодня</span>
+          <span style="background: rgba(255,255,255,0.2); color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600;">+12%</span>
+        </div>
+        <div style="color: #fff; font-size: 32px; font-weight: 800;">24,500 TJS</div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <div style="flex:1; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.15);">
+          <div style="color: #fff; font-size: 22px; font-weight: 700;">47</div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 4px;">Продажи</div>
+        </div>
+        <div style="flex:1; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.15);">
+          <div style="color: #fff; font-size: 22px; font-weight: 700;">128</div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 4px;">Товаров</div>
+        </div>
+        <div style="flex:1; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.15);">
+          <div style="color: #fff; font-size: 22px; font-weight: 700;">8</div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 4px;">Долги</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Vibrant Gradient</h3>
+      <p>Яркие градиенты, стеклянные эффекты (glassmorphism). Выделяется среди конкурентов. Запоминающийся бренд. Но может выглядеть "модно" и устареть быстрее.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+  <p class="subtitle" style="margin: 0;">💡 Все варианты будут включать светлую + тёмную тему. Вопрос в основном визуальном стиле и настроении дизайна.</p>
+</div>

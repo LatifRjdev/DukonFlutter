@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Add New Supplier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white">
+<!-- Main Container (iPhone 14 Pro aspect) -->
+<div class="relative mx-auto flex min-h-screen w-full max-w-[393px] flex-col bg-white dark:bg-background-dark shadow-xl overflow-x-hidden">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-10 flex items-center bg-white/90 dark:bg-background-dark/90 backdrop-blur-md p-4 pb-2 justify-between">
+<div class="text-[#0d1a1c] dark:text-white flex size-10 shrink-0 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-[18px] font-semibold leading-tight flex-1 text-center pr-10">Новый поставщик</h2>
+</div>
+<div class="flex-1 overflow-y-auto pb-24">
+<!-- ProfileHeader / Logo Upload -->
+<div class="flex p-6">
+<div class="flex w-full flex-col gap-3 items-center">
+<div class="flex gap-2 flex-col items-center">
+<div class="flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full w-20 h-20 border-2 border-dashed border-gray-300 dark:border-gray-600">
+<span class="material-symbols-outlined text-gray-400 text-4xl">domain</span>
+</div>
+<button class="text-primary text-sm font-medium leading-normal mt-1">Добавить логотип</button>
+</div>
+</div>
+</div>
+<!-- Main Form -->
+<div class="px-4 space-y-4">
+<!-- Company Name -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Название компании *</p>
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal" placeholder="Введите название" type="text"/>
+</div>
+<!-- Contact Person -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Контактное лицо</p>
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal" placeholder="ФИО" type="text"/>
+</div>
+<!-- Phone -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Телефон *</p>
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal" type="tel" value="+992 "/>
+</div>
+<!-- Secondary Phone -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Дополнительный телефон</p>
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal" placeholder="+992" type="tel"/>
+</div>
+<!-- Email -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Email</p>
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal" placeholder="example@mail.com" type="email"/>
+</div>
+<!-- Address -->
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Адрес</p>
+<textarea class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary p-4 text-sm font-normal resize-none" placeholder="Улица, дом, офис" rows="2"></textarea>
+</div>
+<!-- Finance Section -->
+<div class="pt-4">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-semibold mb-4">Финансы</h3>
+<div class="space-y-4">
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Текущий долг</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 pr-12 text-sm font-normal" placeholder="0.00" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">TJS</span>
+</div>
+<p class="text-gray-400 text-[11px] mt-1.5 ml-1">Начальное сальдо на момент создания</p>
+</div>
+<div class="flex flex-col w-full">
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-2">Условия оплаты</p>
+<div class="relative">
+<select class="form-select flex w-full rounded-xl border border-[#cee5e8] dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 focus:border-primary h-12 px-4 text-sm font-normal appearance-none">
+<option>По факту поставки</option>
+<option>Отсрочка платежа</option>
+<option>Предоплата</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Products Section -->
+<div class="pt-4">
+<h3 class="text-[#0d1a1c] dark:text-white text-base font-semibold mb-3">Товары</h3>
+<p class="text-[#0d1a1c] dark:text-gray-300 text-sm font-medium pb-3">Категории товаров</p>
+<div class="flex flex-wrap gap-2">
+<!-- Selected Chip -->
+<div class="flex items-center gap-1.5 bg-primary px-3 py-1.5 rounded-full text-white text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Напитки</span>
+</div>
+<!-- Other Chips -->
+<div class="flex items-center px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                            Продукты
+                        </div>
+<div class="flex items-center px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                            Химия
+                        </div>
+<!-- Add Chip -->
+<div class="flex items-center px-4 py-1.5 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-700 text-gray-500 text-sm font-medium">
+                            + Добавить
+                        </div>
+</div>
+</div>
+<!-- Info Card -->
+<div class="mt-4 p-4 rounded-xl bg-primary/10 border border-primary/20 flex gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="text-sm text-primary leading-tight font-medium">
+                        Поставщика можно привязать к товарам в карточке товара
+                    </p>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Button -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg transition-colors flex items-center justify-center">
+                Добавить поставщика
+            </button>
+</div>
+</div>
+</body></html>

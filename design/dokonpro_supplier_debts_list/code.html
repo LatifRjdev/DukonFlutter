@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecda",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#102220",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            border: 8px solid #1a1a1a;
+            border-radius: 3rem;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none;
+        }
+        .iphone-frame::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-200 py-10">
+<div class="iphone-frame bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center px-4 pt-12 pb-4 justify-between">
+<div class="text-[#0d1b1a] dark:text-white flex size-10 shrink-0 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</div>
+<h2 class="text-[#0d1b1a] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Долги поставщикам</h2>
+</div>
+</div>
+<div class="px-4 space-y-4 pb-10">
+<!-- Summary Card -->
+<div class="bg-[#FFF3E0] dark:bg-orange-950/30 p-5 rounded-xl border border-orange-100 dark:border-orange-900/50">
+<div class="flex flex-col gap-1">
+<p class="text-orange-600 dark:text-orange-400 text-2xl font-bold tracking-tight">Наш долг: 78,400 TJS</p>
+<p class="text-orange-800/70 dark:text-orange-200/60 text-sm font-medium">Общая сумма задолженности перед всеми поставщиками</p>
+</div>
+</div>
+<!-- List Section Header -->
+<div class="pt-2">
+<h3 class="text-[#0d1b1a] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Список поставщиков</h3>
+</div>
+<!-- Supplier List -->
+<div class="space-y-3">
+<!-- Supplier 1 -->
+<div class="bg-white dark:bg-[#1a2e2c] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="text-[#0d1b1a] dark:text-primary flex items-center justify-center rounded-lg bg-[#e7f3f2] dark:bg-[#1a2e2c] shrink-0 size-12 border border-primary/20">
+<span class="material-symbols-outlined">factory</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">ООО Оптовик</p>
+<p class="text-[#0d1b1a] dark:text-white text-base font-bold">35,000 TJS</p>
+</div>
+<p class="text-[#4c9a93] text-sm font-normal">Срок: 10.02.2026</p>
+</div>
+</div>
+<div class="flex gap-3 mt-4">
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 bg-primary text-[#0d1b1a] text-sm font-bold">
+                            Оплатить
+                        </button>
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 border-2 border-primary/30 text-[#0d1b1a] dark:text-primary text-sm font-bold">
+                            Частично
+                        </button>
+</div>
+</div>
+<!-- Supplier 2 -->
+<div class="bg-white dark:bg-[#1a2e2c] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="text-[#0d1b1a] dark:text-primary flex items-center justify-center rounded-lg bg-[#e7f3f2] dark:bg-[#1a2e2c] shrink-0 size-12 border border-primary/20">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">ИП Саидов</p>
+<span class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 text-[10px] font-bold uppercase tracking-wider">Скоро</span>
+</div>
+<p class="text-[#0d1b1a] dark:text-white text-base font-bold">18,400 TJS</p>
+</div>
+<p class="text-[#4c9a93] text-sm font-normal">Срок: 05.02.2026</p>
+</div>
+</div>
+<div class="flex gap-3 mt-4">
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 bg-primary text-[#0d1b1a] text-sm font-bold">
+                            Оплатить
+                        </button>
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 border-2 border-primary/30 text-[#0d1b1a] dark:text-primary text-sm font-bold">
+                            Частично
+                        </button>
+</div>
+</div>
+<!-- Supplier 3 -->
+<div class="bg-white dark:bg-[#1a2e2c] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="text-[#0d1b1a] dark:text-primary flex items-center justify-center rounded-lg bg-[#e7f3f2] dark:bg-[#1a2e2c] shrink-0 size-12 border border-primary/20">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Китай-Торг</p>
+<p class="text-[#0d1b1a] dark:text-white text-base font-bold">25,000 TJS</p>
+</div>
+<p class="text-[#4c9a93] text-sm font-normal">Срок: 28.02.2026</p>
+</div>
+</div>
+<div class="flex gap-3 mt-4">
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 bg-primary text-[#0d1b1a] text-sm font-bold">
+                            Оплатить
+                        </button>
+<button class="flex-1 cursor-pointer items-center justify-center rounded-xl h-10 px-4 border-2 border-primary/30 text-[#0d1b1a] dark:text-primary text-sm font-bold">
+                            Частично
+                        </button>
+</div>
+</div>
+</div>
+<!-- Timeline Section -->
+<div class="pt-6">
+<h3 class="text-[#0d1b1a] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Ближайшие платежи</h3>
+<div class="relative ml-2 space-y-6">
+<!-- Vertical Line -->
+<div class="absolute left-[7px] top-2 bottom-2 w-0.5 bg-primary/20"></div>
+<!-- Item 1 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 size-4 rounded-full bg-primary border-4 border-background-light dark:border-background-dark shadow-sm"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-orange-600 dark:text-orange-400">05.02</span>
+<div class="flex justify-between items-center">
+<span class="text-sm text-[#0d1b1a] dark:text-white font-medium">ИП Саидов</span>
+<span class="text-sm text-[#0d1b1a] dark:text-white font-bold">18,400 TJS</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 size-4 rounded-full bg-primary/40 border-4 border-background-light dark:border-background-dark shadow-sm"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-[#4c9a93]">10.02</span>
+<div class="flex justify-between items-center">
+<span class="text-sm text-[#0d1b1a] dark:text-white font-medium">ООО Оптовик</span>
+<span class="text-sm text-[#0d1b1a] dark:text-white font-bold">35,000 TJS</span>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 size-4 rounded-full bg-primary/40 border-4 border-background-light dark:border-background-dark shadow-sm"></div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-[#4c9a93]">28.02</span>
+<div class="flex justify-between items-center">
+<span class="text-sm text-[#0d1b1a] dark:text-white font-medium">Китай-Торг</span>
+<span class="text-sm text-[#0d1b1a] dark:text-white font-bold">25,000 TJS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Safe Area Spacer -->
+<div class="h-10 bg-background-light dark:bg-background-dark"></div>
+</div>
+</body></html>

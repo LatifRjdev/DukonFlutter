@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1E1E1E",
+                        "border-dark": "#333333",
+                        "text-muted": "#B0B0B0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .dashed-line {
+            background-image: linear-gradient(to right, #333333 50%, rgba(255, 255, 255, 0) 0%);
+            background-position: bottom;
+            background-size: 8px 1px;
+            background-repeat: repeat-x;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-white min-h-screen flex flex-col items-center">
+<!-- Status Bar Spacer (iPhone 14 Pro) -->
+<div class="h-12 w-full"></div>
+<!-- Top App Bar -->
+<div class="w-full max-w-[393px] flex items-center p-4 justify-between">
+<div class="flex items-center justify-center size-10 rounded-full hover:bg-white/10 cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold">Чек</h2>
+<div class="size-10 flex items-center justify-center">
+<span class="material-symbols-outlined">share</span>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="w-full max-w-[393px] px-4 flex-1 overflow-y-auto pb-32">
+<!-- Receipt Card -->
+<div class="bg-card-dark border border-border-dark rounded-xl p-6 shadow-2xl">
+<!-- Header Section -->
+<div class="flex flex-col items-center text-center gap-1 mb-6">
+<div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-4xl">storefront</span>
+</div>
+<h3 class="text-xl font-bold uppercase tracking-wide">ОСНОВНОЙ МАГАЗИН</h3>
+<p class="text-text-muted text-sm">ул. Ленина, 45</p>
+<p class="text-text-muted text-sm">+992 900 00 00 00</p>
+</div>
+<!-- Dashed Separator -->
+<div class="dashed-line h-px w-full my-6"></div>
+<!-- Receipt Info -->
+<div class="flex justify-between items-center mb-6">
+<span class="font-medium">Чек #1234</span>
+<span class="text-text-muted text-sm">30.01.2026</span>
+</div>
+<!-- Items List -->
+<div class="flex flex-col gap-4 mb-6">
+<!-- Item 1 -->
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<p class="font-medium">Кофе растворимый</p>
+<p class="text-text-muted text-xs">2 x 180.00</p>
+</div>
+<p class="text-primary font-semibold">360.00 TJS</p>
+</div>
+<!-- Item 2 -->
+<div class="flex justify-between items-center">
+<p class="font-medium">Сахар 1кг</p>
+<p class="font-medium">55.00 TJS</p>
+</div>
+<!-- Item 3 -->
+<div class="flex justify-between items-center">
+<p class="font-medium">Молоко 1л</p>
+<p class="font-medium">75.00 TJS</p>
+</div>
+</div>
+<!-- Dashed Separator -->
+<div class="dashed-line h-px w-full my-6"></div>
+<!-- Summary -->
+<div class="flex justify-between items-center mb-2">
+<span class="text-lg font-bold">ИТОГО:</span>
+<span class="text-xl font-bold text-primary">490.00 TJS</span>
+</div>
+<div class="flex justify-between items-center text-sm text-text-muted">
+<span>Наличные:</span>
+<span>500.00 TJS</span>
+</div>
+<div class="flex justify-between items-center text-sm text-text-muted">
+<span>Сдача:</span>
+<span>10.00 TJS</span>
+</div>
+<!-- Footer Message -->
+<div class="mt-8 flex flex-col items-center gap-4">
+<p class="text-sm font-medium">Спасибо за покупку!</p>
+<!-- QR Code Placeholder -->
+<div class="bg-white p-2 rounded-lg">
+<div class="w-24 h-24 bg-cover bg-center" data-alt="QR code for receipt verification" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCouEJS4wm4Y5mPhr9TTZmdnmVzrDo9LI1ajlCMpRjvM2DAUEe3uhu4lD_zd5k9g9UNOQa-8pso9BRNwC6Fq4WXuxHfl2SyY1CiPmYEG69y_TGUcUtvWRoXNt-h9dlu31GOW6ptqKA1a9c7Gn7rt8GDOlmSZDyP1Hy4BtkCaGTwch-N2w44x6fX4NUbZzioq2MQbA4AKcGBoOG3UybsSSltF8_JwJOtEOD9V0P2Uzrbc3koIbnu0l6uovdudXBQuFrRrIaibI4ZNRfj');"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 right-0 flex justify-center pb-8 pt-4 px-4 bg-background-dark/80 backdrop-blur-md">
+<div class="w-full max-w-[393px] grid grid-cols-4 gap-2">
+<!-- Action Button 1 -->
+<button class="flex flex-col items-center justify-center gap-1 bg-[#2C2C2C] p-3 rounded-lg active:bg-[#3d3d3d]">
+<span class="material-symbols-outlined text-white">print</span>
+<span class="text-[10px] text-white">Печать</span>
+</button>
+<!-- Action Button 2 -->
+<button class="flex flex-col items-center justify-center gap-1 bg-[#2C2C2C] p-3 rounded-lg active:bg-[#3d3d3d]">
+<span class="material-symbols-outlined text-white">send</span>
+<span class="text-[10px] text-white">Telegram</span>
+</button>
+<!-- Action Button 3 -->
+<button class="flex flex-col items-center justify-center gap-1 bg-[#2C2C2C] p-3 rounded-lg active:bg-[#3d3d3d]">
+<span class="material-symbols-outlined text-white">sms</span>
+<span class="text-[10px] text-white">SMS</span>
+</button>
+<!-- Action Button 4 -->
+<button class="flex flex-col items-center justify-center gap-1 bg-primary p-3 rounded-lg active:opacity-90">
+<span class="material-symbols-outlined text-white">add_shopping_cart</span>
+<span class="text-[10px] text-white whitespace-nowrap">Новая продажа</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "success": "#0bda54",
+                        "error": "#fa5c38",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white font-display">
+<div class="mx-auto min-h-screen max-w-[393px] flex flex-col pb-24 shadow-2xl relative overflow-x-hidden">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-white/5">
+<div class="text-white flex size-10 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios</span>
+</div>
+<h2 class="text-white text-[20px] font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Финансы</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-transparent text-white">
+<span class="material-symbols-outlined text-2xl">ios_share</span>
+</button>
+</div>
+</div>
+<!-- Section Grid (Quick Actions) -->
+<div class="grid grid-cols-3 gap-3 p-4">
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">account_balance_wallet</span>
+<span class="text-white text-xs font-medium">Баланс</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">credit_card</span>
+<span class="text-white text-xs font-medium">Кредиты</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">savings</span>
+<span class="text-white text-xs font-medium">Вложения</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">volunteer_activism</span>
+<span class="text-white text-xs font-medium">Закят</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">currency_exchange</span>
+<span class="text-white text-xs font-medium">Валюты</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">local_shipping</span>
+<span class="text-white text-xs font-medium">Доставка</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">description</span>
+<span class="text-white text-xs font-medium">Отчёт</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">factory</span>
+<span class="text-white text-xs font-medium">Поставщики</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl bg-card-dark p-3 aspect-square border border-white/5 opacity-50">
+<span class="material-symbols-outlined text-primary text-2xl">add_circle</span>
+<span class="text-white text-xs font-medium">Еще</span>
+</div>
+</div>
+<!-- SegmentedButtons (Period Tabs) -->
+<div class="flex px-4 py-2">
+<div class="flex h-11 flex-1 items-center justify-center rounded-xl bg-card-dark p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#B0B0B0] text-sm font-medium">
+<span class="truncate">День</span>
+<input class="hidden" name="period" type="radio" value="День"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#B0B0B0] text-sm font-medium">
+<span class="truncate">Неделя</span>
+<input class="hidden" name="period" type="radio" value="Неделя"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 bg-primary text-white shadow-lg text-sm font-medium">
+<span class="truncate">Месяц</span>
+<input checked="" class="hidden" name="period" type="radio" value="Месяц"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#B0B0B0] text-sm font-medium">
+<span class="truncate">Год</span>
+<input class="hidden" name="period" type="radio" value="Год"/>
+</label>
+</div>
+</div>
+<!-- Metrics Grid (Stats) -->
+<div class="grid grid-cols-2 gap-3 p-4">
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-card-dark border border-white/5">
+<p class="text-[#B0B0B0] text-xs font-medium">Общий доход</p>
+<p class="text-white text-lg font-bold">245,000 TJS</p>
+<p class="text-success text-xs font-bold mt-1">+12%</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-card-dark border border-white/5">
+<p class="text-[#B0B0B0] text-xs font-medium">Общие расходы</p>
+<p class="text-white text-lg font-bold">198,000 TJS</p>
+<p class="text-error text-xs font-bold mt-1">-5%</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-card-dark border border-white/5">
+<p class="text-[#B0B0B0] text-xs font-medium">Валовая прибыль</p>
+<p class="text-white text-lg font-bold">47,000 TJS</p>
+<p class="text-success text-xs font-bold mt-1">+8%</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-card-dark border border-white/5">
+<p class="text-[#B0B0B0] text-xs font-medium">Чистая прибыль</p>
+<p class="text-success text-lg font-bold">32,500 TJS</p>
+<p class="text-success text-xs font-bold mt-1">+10%</p>
+</div>
+</div>
+<!-- Dynamics Bar Chart -->
+<div class="px-4 py-2">
+<div class="bg-card-dark rounded-xl p-4 border border-white/5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-white text-base font-bold">Динамика</h3>
+<div class="flex gap-3 text-[10px] text-[#B0B0B0]">
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span>Доход</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span>Расход</div>
+</div>
+</div>
+<div class="flex items-end justify-between h-32 gap-2">
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 60%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 40%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 20%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Пн</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 80%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 30%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 50%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Вт</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 45%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 55%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 10%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Ср</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 90%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 40%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 50%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Чт</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 70%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 20%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 50%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Пт</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 40%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 10%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 30%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Сб</span>
+</div>
+<div class="flex-1 flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full flex justify-center items-end gap-0.5 h-full">
+<div class="bg-primary w-2 rounded-t-sm" style="height: 30%"></div>
+<div class="bg-error w-2 rounded-t-sm" style="height: 5%"></div>
+<div class="bg-success w-2 rounded-t-sm" style="height: 25%"></div>
+</div>
+<span class="text-[#B0B0B0] text-[10px]">Вс</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Tab Bar -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] bg-card-dark border-t border-white/10 px-6 py-3 flex justify-between items-center z-50">
+<div class="flex flex-col items-center gap-1 text-[#B0B0B0]">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="text-[10px]">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#B0B0B0]">
+<span class="material-symbols-outlined text-2xl">inventory_2</span>
+<span class="text-[10px]">Товары</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-[10px] font-bold">Финансы</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#B0B0B0]">
+<span class="material-symbols-outlined text-2xl">group</span>
+<span class="text-[10px]">Клиенты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#B0B0B0]">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-[10px]">Настройки</span>
+</div>
+</div>
+</div>
+</body></html>

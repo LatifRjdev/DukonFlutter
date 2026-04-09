@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecda",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102220",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<title>DokonPro Sales History</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1b1a] dark:text-white">
+<!-- iPhone 14 Pro Container Mockup -->
+<div class="relative mx-auto h-[852px] w-[393px] overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl border-[8px] border-black rounded-[55px] flex flex-col">
+<!-- Status Bar Area (Mock) -->
+<div class="h-11 w-full flex justify-between items-center px-8 pt-4">
+<span class="text-sm font-semibold">9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-symbols-outlined text-sm">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-sm">wifi</span>
+<span class="material-symbols-outlined text-sm">battery_full</span>
+</div>
+</div>
+<!-- Header -->
+<div class="flex items-center p-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="flex size-10 items-center justify-center rounded-full bg-white dark:bg-zinc-800 shadow-sm">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">История продаж</h2>
+</div>
+<div class="flex gap-2">
+<div class="flex size-10 items-center justify-center rounded-full bg-white dark:bg-zinc-800 shadow-sm">
+<span class="material-symbols-outlined text-xl">tune</span>
+</div>
+<div class="flex size-10 items-center justify-center rounded-full bg-white dark:bg-zinc-800 shadow-sm">
+<span class="material-symbols-outlined text-xl">ios_share</span>
+</div>
+</div>
+</div>
+<!-- Chips / Filters -->
+<div class="flex gap-2.5 px-4 py-2 overflow-x-auto hide-scrollbar">
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5 shadow-sm">
+<p class="text-white text-sm font-semibold">Сегодня</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-zinc-800 px-5 shadow-sm">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">Неделя</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-zinc-800 px-5 shadow-sm">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">Месяц</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-zinc-800 px-5 shadow-sm gap-1">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">Выбрать</p>
+<span class="material-symbols-outlined text-sm text-zinc-400">calendar_today</span>
+</div>
+</div>
+<!-- Summary Banner -->
+<div class="px-4 py-4">
+<div class="flex items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 dark:bg-primary/5 p-4">
+<div class="flex flex-col gap-0.5">
+<p class="text-zinc-900 dark:text-primary text-lg font-bold">32 продажи | 48,750 TJS</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-medium">Итог за сегодня</p>
+</div>
+<div class="flex size-8 items-center justify-center rounded-full bg-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">trending_up</span>
+</div>
+</div>
+</div>
+<!-- Transaction List -->
+<div class="flex-1 overflow-y-auto px-4 pb-24 flex flex-col gap-3 hide-scrollbar">
+<!-- Item 1: Cash Sale -->
+<div class="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 size-12 shrink-0">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Чек #1234</p>
+<p class="text-zinc-500 text-xs font-medium uppercase tracking-wider">Розница • 3 товара</p>
+<p class="text-zinc-400 text-xs">30.01 14:35</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-zinc-900 dark:text-white text-base font-bold">490 TJS</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full dark:bg-emerald-900/20">НАЛИЧНЫЕ</span>
+</div>
+</div>
+<!-- Item 2: Card Sale -->
+<div class="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 size-12 shrink-0">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Чек #1233</p>
+<p class="text-zinc-500 text-xs font-medium uppercase tracking-wider">Мария К. • 1 товар</p>
+<p class="text-zinc-400 text-xs">30.01 13:20</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-zinc-900 dark:text-white text-base font-bold">180 TJS</p>
+<span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full dark:bg-blue-900/20">КАРТА</span>
+</div>
+</div>
+<!-- Item 3: Debt Sale -->
+<div class="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-sm border-l-4 border-orange-400">
+<div class="flex items-start gap-4">
+<div class="flex items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 size-12 shrink-0">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Чек #1232</p>
+<p class="text-zinc-500 text-xs font-medium uppercase tracking-wider">Ахмад • 5 товаров</p>
+<div class="flex items-center gap-1 text-orange-600">
+<span class="material-symbols-outlined text-[14px]">event_busy</span>
+<p class="text-xs font-semibold">До 15.02</p>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-zinc-900 dark:text-white text-base font-bold">3,200 TJS</p>
+<span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full dark:bg-orange-900/20 uppercase tracking-tighter">В долг</span>
+</div>
+</div>
+<!-- Item 4: Refund -->
+<div class="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex items-center justify-center rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 size-12 shrink-0">
+<span class="material-symbols-outlined">assignment_return</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Чек #1231</p>
+<p class="text-zinc-500 text-xs font-medium uppercase tracking-wider">Розница • 1 товар</p>
+<p class="text-zinc-400 text-xs">30.01 11:40</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-red-600 text-base font-bold">-120 TJS</p>
+<span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full dark:bg-red-900/20">ВОЗВРАТ</span>
+</div>
+</div>
+<!-- Item 5: Cash Sale (Extra for scroll visualization) -->
+<div class="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 size-12 shrink-0">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1b1a] dark:text-white text-base font-semibold">Чек #1230</p>
+<p class="text-zinc-500 text-xs font-medium uppercase tracking-wider">Розница • 2 товара</p>
+<p class="text-zinc-400 text-xs">30.01 10:15</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-zinc-900 dark:text-white text-base font-bold">1,150 TJS</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full dark:bg-emerald-900/20 uppercase tracking-tighter">Наличные</span>
+</div>
+</div>
+</div>
+<!-- Bottom Tab Bar -->
+<div class="absolute bottom-0 w-full bg-white dark:bg-zinc-900 border-t dark:border-zinc-800 pb-8 pt-2 flex justify-around items-center px-4">
+<div class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-[10px] font-medium">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="text-[10px] font-bold">Продажи</span>
+</div>
+<div class="relative -top-4">
+<div class="size-14 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/30 text-white">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Склад</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-zinc-400">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Настройки</span>
+</div>
+</div>
+<!-- Home Indicator (iOS) -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 dark:bg-white/20 rounded-full"></div>
+</div>
+</body></html>

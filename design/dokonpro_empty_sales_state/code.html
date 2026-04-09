@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Empty Sales State</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2123",
+                        "text-main": "#212121",
+                        "text-secondary": "#757575",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .ios-status-bar {
+            height: 47px;
+            display: flex;
+            align-items: center;
+            padding: 0 21px;
+            justify-content: space-between;
+        }
+        .main-content {
+            height: calc(852px - 47px - 56px - 83px); /* Screen - Status - Header - Nav */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white flex justify-center items-center min-h-screen">
+<!-- iPhone 14 Pro Container -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-hidden shadow-2xl flex flex-col">
+<!-- Status Bar -->
+<div class="ios-status-bar w-full flex justify-between items-center bg-background-light dark:bg-background-dark">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-symbols-outlined text-[18px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[18px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- Header -->
+<div class="flex items-center bg-background-light dark:bg-background-dark px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+<div class="flex-1 flex items-center">
+<span class="material-symbols-outlined text-text-main dark:text-white cursor-pointer">arrow_back_ios</span>
+</div>
+<h1 class="text-[18px] font-semibold leading-tight tracking-tight flex-none">История продаж</h1>
+<div class="flex-1"></div>
+</div>
+<!-- Empty State Content -->
+<div class="main-content flex flex-col items-center justify-center px-6 text-center">
+<!-- Illustration Area -->
+<div class="mb-8 flex items-center justify-center w-full">
+<div class="relative w-[120px] h-[120px] bg-primary/10 rounded-full flex items-center justify-center">
+<!-- Minimalist Cash Register Icon using gradients and shapes -->
+<div class="w-20 h-20 bg-primary/20 rounded-lg flex flex-col items-center justify-center relative overflow-hidden">
+<div class="w-12 h-2 bg-primary rounded-full mb-2 opacity-80"></div>
+<div class="w-10 h-10 bg-white dark:bg-gray-700 rounded-md shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1">point_of_sale</span>
+</div>
+<div class="absolute bottom-0 right-0 w-8 h-8 bg-primary/30 rounded-tl-full"></div>
+</div>
+</div>
+</div>
+<!-- Typography -->
+<h2 class="text-[20px] font-bold text-text-main dark:text-white mb-2 leading-tight">
+                Здесь появятся ваши продажи
+            </h2>
+<p class="text-[14px] font-normal text-text-secondary dark:text-gray-400 mb-8 max-w-[280px]">
+                Оформите первую продажу через кассу
+            </p>
+<!-- CTA Button -->
+<button class="w-full h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg text-[16px] transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                Новая продажа
+            </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="mt-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pb-[34px] pt-2">
+<div class="flex justify-around items-center h-14">
+<a class="flex flex-col items-center gap-1 min-w-[64px]" href="#">
+<span class="material-symbols-outlined text-[24px] text-text-secondary dark:text-gray-400">home</span>
+<span class="text-[11px] font-medium text-text-secondary dark:text-gray-400">Главная</span>
+</a>
+<a class="flex flex-col items-center gap-1 min-w-[64px]" href="#">
+<span class="material-symbols-outlined text-[24px] text-text-secondary dark:text-gray-400">package_2</span>
+<span class="text-[11px] font-medium text-text-secondary dark:text-gray-400">Товары</span>
+</a>
+<a class="flex flex-col items-center gap-1 min-w-[64px]" href="#">
+<span class="material-symbols-outlined text-[24px] text-primary" style="font-variation-settings: 'FILL' 1">calculate</span>
+<span class="text-[11px] font-medium text-primary">Касса</span>
+</a>
+<a class="flex flex-col items-center gap-1 min-w-[64px]" href="#">
+<span class="material-symbols-outlined text-[24px] text-text-secondary dark:text-gray-400">account_balance_wallet</span>
+<span class="text-[11px] font-medium text-text-secondary dark:text-gray-400">Финансы</span>
+</a>
+<a class="flex flex-col items-center gap-1 min-w-[64px]" href="#">
+<span class="material-symbols-outlined text-[24px] text-text-secondary dark:text-gray-400">more_horiz</span>
+<span class="text-[11px] font-medium text-text-secondary dark:text-gray-400">Ещё</span>
+</a>
+</div>
+</div>
+<!-- Dynamic Island / Home Indicator Mockup -->
+<div class="absolute top-2 left-1/2 -translate-x-1/2 w-32 h-8 bg-black rounded-full hidden md:block"></div>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black/20 dark:bg-white/20 rounded-full"></div>
+</div>
+</body></html>

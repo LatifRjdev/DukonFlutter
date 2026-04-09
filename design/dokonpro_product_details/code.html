@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852px) -->
+<div class="relative w-full max-w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-y-auto hide-scrollbar flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer text-slate-700 dark:text-slate-300">arrow_back</span>
+<h1 class="text-lg font-bold">Товар</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined cursor-pointer text-slate-700 dark:text-slate-300">edit</span>
+<span class="material-symbols-outlined cursor-pointer text-slate-700 dark:text-slate-300">more_horiz</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 pb-32">
+<!-- Product Image -->
+<div class="mt-4 @container">
+<div class="w-full bg-white dark:bg-slate-800 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center ios-shadow">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain" data-alt="Pack of instant coffee on a clean white background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_OR4folXHPzS8crzRY4YhGfDPCTR1VGyJH0qUZRz1_Fb9d5GW2c7LqeTb4E8U4WGa-lgLUp9HHSqRdVeqdNAXRmOGOCV39YkIPsJ4e-fKKCyGbkpitrU3MCCi5J5X3YZbnnnNWfBtKfJUtuy9jY6swLjOPZgUprCCuE-gHefEsZ-4v-mvhGYZrYLwHWQu_iLY7gnFkqz4qSE2_Y_hvTIJbUU68F5HPJw9fUnHkCgFg8Sp8sJ49Gjx-abyWCTM1CvtkI_q4yzHL5WZ");'>
+</div>
+</div>
+</div>
+<!-- Title & Status -->
+<div class="mt-6 flex items-start justify-between gap-2">
+<h2 class="text-[22px] font-bold leading-tight">Кофе растворимый</h2>
+<div class="flex h-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3">
+<p class="text-emerald-700 dark:text-emerald-400 text-xs font-bold">Активен</p>
+</div>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-2 gap-3 mt-6">
+<!-- Sales Price -->
+<div class="flex flex-col gap-1 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 p-4 border border-emerald-100 dark:border-emerald-800/30">
+<span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">payments</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">180 TJS</h3>
+<p class="text-emerald-700 dark:text-emerald-400 text-[11px] font-medium uppercase tracking-wider">Цена продажи</p>
+</div>
+<!-- Cost -->
+<div class="flex flex-col gap-1 rounded-xl bg-purple-50 dark:bg-purple-900/20 p-4 border border-purple-100 dark:border-purple-800/30">
+<span class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-xl">shopping_bag</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">150 TJS</h3>
+<p class="text-purple-700 dark:text-purple-400 text-[11px] font-medium uppercase tracking-wider">Себестоимость</p>
+</div>
+<!-- Profit -->
+<div class="flex flex-col gap-1 rounded-xl bg-orange-50 dark:bg-orange-900/20 p-4 border border-orange-100 dark:border-orange-800/30">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-400 text-xl">trending_up</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">30 TJS</h3>
+<p class="text-orange-700 dark:text-orange-400 text-[11px] font-medium uppercase tracking-wider">Прибыль</p>
+</div>
+<!-- Margin -->
+<div class="flex flex-col gap-1 rounded-xl bg-blue-50 dark:bg-blue-900/20 p-4 border border-blue-100 dark:border-blue-800/30">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">percent</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">20%</h3>
+<p class="text-blue-700 dark:text-blue-400 text-[11px] font-medium uppercase tracking-wider">Маржа</p>
+</div>
+</div>
+<!-- Stock Section -->
+<div class="mt-8 bg-white dark:bg-slate-800 rounded-xl p-4 ios-shadow">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-bold text-slate-800 dark:text-white">Наличие на складе</h3>
+<span class="material-symbols-outlined text-slate-400 text-lg">inventory_2</span>
+</div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-slate-500 dark:text-slate-400">Текущий остаток</span>
+<span class="font-bold text-slate-900 dark:text-white">45 шт</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[80%] rounded-full"></div>
+</div>
+<div class="flex justify-between text-[11px] mt-2 text-slate-500 dark:text-slate-400 uppercase tracking-wide font-medium">
+<span>Минимальный: 10 шт</span>
+<span>Максимальный: 100 шт</span>
+</div>
+</div>
+<!-- Info Section -->
+<div class="mt-8">
+<h3 class="font-bold text-slate-800 dark:text-white mb-3 px-1">Информация</h3>
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden ios-shadow">
+<div class="flex justify-between items-center p-4 border-b border-slate-50 dark:border-slate-700/50">
+<span class="text-sm text-slate-500 dark:text-slate-400">Артикул (SKU)</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">COFFEE-001</span>
+</div>
+<div class="flex justify-between items-center p-4 border-b border-slate-50 dark:border-slate-700/50">
+<span class="text-sm text-slate-500 dark:text-slate-400">Штрихкод</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">4601234567890</span>
+</div>
+<div class="flex justify-between items-center p-4 border-b border-slate-50 dark:border-slate-700/50">
+<span class="text-sm text-slate-500 dark:text-slate-400">Категория</span>
+<span class="text-sm font-medium text-primary">Напитки</span>
+</div>
+<div class="flex justify-between items-center p-4 border-b border-slate-50 dark:border-slate-700/50">
+<span class="text-sm text-slate-500 dark:text-slate-400">Поставщик</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">ООО Оптовик</span>
+</div>
+<div class="flex justify-between items-center p-4">
+<span class="text-sm text-slate-500 dark:text-slate-400">Ед. измерения</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">шт.</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Actions -->
+<footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[393px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 p-4 pb-8 flex gap-3">
+<button class="flex-1 h-12 rounded-xl border-2 border-primary text-primary font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">add_box</span>
+                Приход
+            </button>
+<button class="flex-[1.5] h-12 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl">point_of_sale</span>
+                Продать
+            </button>
+</footer>
+</div>
+</body></html>

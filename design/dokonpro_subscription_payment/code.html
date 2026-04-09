@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Subscription Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .radio-dot-svg {
+            --radio-dot-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(0,189,214)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] dark:text-white antialiased">
+<div class="mx-auto min-h-screen max-w-[393px] bg-background-light dark:bg-background-dark flex flex-col pb-10">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md flex items-center p-4 justify-between border-b border-gray-100 dark:border-gray-800">
+<div class="text-[#0c1b1d] dark:text-white flex size-10 shrink-0 items-center justify-start cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Оплата</h2>
+</header>
+<main class="flex-1 overflow-y-auto">
+<!-- Selected Plan Card -->
+<div class="px-4 py-4">
+<div class="bg-[#E0F7FA] dark:bg-[#00bdd6]/10 rounded-xl p-4 flex items-center gap-4">
+<div class="size-12 bg-[#00bdd6] rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">stars</span>
+</div>
+<div>
+<p class="text-[#4596a1] dark:text-[#00bdd6] text-xs font-semibold uppercase tracking-wider">Выбранный тариф</p>
+<p class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight">БИЗНЕС — 200 сомони/мес</p>
+</div>
+</div>
+</div>
+<!-- SectionHeader -->
+<h3 class="text-[#0c1b1d] dark:text-white text-base font-bold leading-tight px-4 pt-4 pb-2">Способ оплаты</h3>
+<!-- Payment Methods RadioList -->
+<div class="flex flex-col gap-3 px-4 radio-dot-svg">
+<!-- Method 1: Card (Selected) -->
+<label class="flex items-center gap-4 rounded-lg border-2 border-primary bg-background-light dark:bg-background-dark p-4 flex-row-reverse transition-all">
+<input checked="" class="h-5 w-5 border-2 border-[#cde6ea] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0" name="payment_method" type="radio"/>
+<div class="flex size-10 items-center justify-center bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-semibold">Карта</p>
+<p class="text-[#4596a1] text-xs font-normal">Корти Милли, Visa, MasterCard</p>
+</div>
+</label>
+<!-- Method 2: Mobile -->
+<label class="flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark p-4 flex-row-reverse transition-all">
+<input class="h-5 w-5 border-2 border-[#cde6ea] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0" name="payment_method" type="radio"/>
+<div class="flex size-10 items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-500">
+<span class="material-symbols-outlined">phone_iphone</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-semibold">Мобильный перевод</p>
+<p class="text-[#4596a1] text-xs font-normal">Перевод по номеру телефона</p>
+</div>
+</label>
+<!-- Method 3: Office -->
+<label class="flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark p-4 flex-row-reverse transition-all">
+<input class="h-5 w-5 border-2 border-[#cde6ea] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0" name="payment_method" type="radio"/>
+<div class="flex size-10 items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-500">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-semibold">В офисе (наличными)</p>
+<p class="text-[#4596a1] text-xs font-normal">Оплата наличными в филиале</p>
+</div>
+</label>
+</div>
+<!-- Card Details Section -->
+<div class="mt-6 px-4 space-y-4">
+<!-- TextField: Card Number -->
+<div class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-medium leading-normal pb-2">Номер карты</p>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark h-14 placeholder:text-[#4596a1] px-4 text-base font-normal" placeholder="0000 0000 0000 0000" value=""/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+<div class="w-8 h-5 bg-gray-100 dark:bg-gray-800 rounded-sm" data-alt="visa card logo placeholder"></div>
+<div class="w-8 h-5 bg-gray-100 dark:bg-gray-800 rounded-sm" data-alt="mastercard logo placeholder"></div>
+</div>
+</div>
+</div>
+<!-- Two columns: Expiry and CVV -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-medium leading-normal pb-2">Срок (MM/YY)</p>
+<input class="form-input flex w-full rounded-lg text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark h-14 placeholder:text-[#4596a1] px-4 text-base font-normal" placeholder="MM/YY" value=""/>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-medium leading-normal pb-2">CVV</p>
+<input class="form-input flex w-full rounded-lg text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark h-14 placeholder:text-[#4596a1] px-4 text-base font-normal" maxlength="3" placeholder="***" type="password" value=""/>
+</div>
+</div>
+<!-- Promo Code -->
+<div class="flex flex-col">
+<p class="text-[#0c1b1d] dark:text-white text-sm font-medium leading-normal pb-2">Промокод</p>
+<div class="flex gap-2">
+<input class="form-input flex-1 rounded-lg text-[#0c1b1d] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark h-14 placeholder:text-[#4596a1] px-4 text-base font-normal" placeholder="Введите код" value=""/>
+<button class="px-4 h-14 border border-primary text-primary font-semibold rounded-lg hover:bg-primary/5 transition-colors">Применить</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Summary and Bottom Action -->
+<footer class="p-4 bg-background-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 space-y-4">
+<div class="flex flex-col items-center justify-center pt-2">
+<p class="text-[#4596a1] text-sm">Итого к оплате</p>
+<p class="text-[#0c1b1d] dark:text-white text-2xl font-bold">200 сомони / месяц</p>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-lg text-lg transition-transform active:scale-[0.98]">
+                Оплатить 200 сомони
+            </button>
+<p class="text-center text-[10px] text-gray-400 px-6">
+                Нажимая на кнопку, вы соглашаетесь с условиями публичной оферты и политикой конфиденциальности.
+            </p>
+</footer>
+</div>
+</body></html>

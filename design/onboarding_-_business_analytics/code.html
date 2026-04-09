@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                        "text-grey": "#757575",
+                        "text-dark": "#212121"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark flex justify-center items-center min-h-screen">
+<!-- iPhone 14 Pro Container (393x852) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col shadow-2xl border border-gray-100 dark:border-gray-800">
+<!-- Top Illustration Section (60%) -->
+<div class="h-[60%] w-full flex flex-col items-center justify-center px-8">
+<div class="w-full aspect-square relative flex items-center justify-center">
+<!-- Abstract Illustration Placeholder -->
+<div class="w-full h-full bg-contain bg-center bg-no-repeat" data-alt="Modern turquoise and grey flat line art illustration showing business growth charts and data dashboards" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJhizLvaY-GhOYpU7zKLMZmN7Efv8oDP-E_zLFn-gU_aMOcS9wYOy3k1fntL69XWqrcUVs9t-AgysA9I5Wp4crhJ4Y0rFi8veGMksPbAgxWqhXgP5oJWcvYsd0DxwzW9V5GSAGNU3lxmdFenJtemZyZG7BvWkXCsnF9yZs7JvPjdcVD85ycdcSU24VB-eUfgm1fmdRmuxa4D8GNoNOo5_HV52AKroBNgWtzGmuAdmwLOJ57hjNFtvdatjz2A6mnHB_DOJnqHB5IPsJ');">
+</div>
+<!-- Decorative Elements to simulate the "modern flat art" requested -->
+<div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[200px] text-primary">bar_chart</span>
+</div>
+</div>
+</div>
+<!-- Content Section (40%) -->
+<div class="h-[40%] flex flex-col justify-between pb-10">
+<!-- Pagination, Title, and Description Group -->
+<div class="flex flex-col items-center w-full">
+<!-- Pagination Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-2 py-6">
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2.5 w-2.5 rounded-full bg-primary"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+</div>
+<!-- Headline -->
+<h3 class="text-text-dark dark:text-white tracking-tight text-2xl font-bold leading-tight px-8 text-center pb-2">
+                    Аналитика
+                </h3>
+<!-- Body Text -->
+<p class="text-text-grey dark:text-gray-400 text-base font-normal leading-relaxed px-10 text-center">
+                    Следите за прибылью и принимайте верные решения
+                </p>
+</div>
+<!-- Controls Group -->
+<div class="flex flex-col gap-3 px-6">
+<!-- Primary Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-[52px] bg-primary text-white text-base font-bold leading-normal tracking-wide shadow-sm hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="truncate">Далее</span>
+</button>
+<!-- Secondary Link -->
+<button class="flex w-full cursor-pointer items-center justify-center h-10 text-text-grey dark:text-gray-400 text-base font-medium hover:text-primary transition-colors">
+<span class="truncate">Пропустить</span>
+</button>
+</div>
+</div>
+<!-- Home Indicator (iOS Style) -->
+<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+</div>
+</body></html>

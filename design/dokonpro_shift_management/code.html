@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>DokonPro Shift Management</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1a1c] antialiased">
+<!-- iPhone 14 Pro Container (393px width simulated) -->
+<div class="mx-auto min-h-screen max-w-[393px] bg-background-light dark:bg-background-dark pb-10">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 px-4 py-4 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white cursor-pointer">arrow_back_ios</span>
+<h2 class="text-xl font-bold leading-tight tracking-tight dark:text-white">Смены</h2>
+</div>
+<button class="border border-primary text-primary px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-primary/10 transition-colors">
+                Открыть смену
+            </button>
+</header>
+<!-- Current Shift Section -->
+<section class="px-4 pt-4">
+<h3 class="text-lg font-bold leading-tight tracking-tight mb-3 dark:text-white">Текущая смена</h3>
+<!-- Current Shift Card -->
+<div class="bg-white dark:bg-[#1a2e31] rounded-xl shadow-sm border-l-[4px] border-[#22C55E] overflow-hidden">
+<div class="p-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[#22C55E] text-[12px] font-bold uppercase tracking-wider">Текущая смена</span>
+<span class="bg-[#22C55E]/10 text-[#22C55E] text-[11px] font-bold px-2 py-0.5 rounded-full">Активна</span>
+</div>
+<div class="space-y-1 mb-4">
+<p class="text-lg font-bold dark:text-white">Алишер Каримов</p>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-sm">Открыта: <span class="text-[#0d1a1c] dark:text-white font-medium">09:00</span></p>
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-sm text-right">Время: <span class="text-[#0d1a1c] dark:text-white font-medium">5ч 35м</span></p>
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-sm">Продаж: <span class="text-[#0d1a1c] dark:text-white font-medium">18</span></p>
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-sm text-right">Сумма: <span class="text-[#0d1a1c] dark:text-white font-medium">24,500 TJS</span></p>
+</div>
+</div>
+<button class="w-full border border-[#F97316] text-[#F97316] py-2.5 rounded-xl text-sm font-bold hover:bg-[#F97316]/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">lock_clock</span>
+                        Закрыть смену
+                    </button>
+</div>
+</div>
+</section>
+<!-- Shift History Section -->
+<section class="px-4 mt-8">
+<h3 class="text-lg font-bold leading-tight tracking-tight mb-4 dark:text-white">История смен</h3>
+<div class="space-y-3">
+<!-- History Item 1 -->
+<div class="bg-white dark:bg-[#1a2e31] rounded-xl p-4 shadow-sm flex items-start gap-4">
+<div class="h-12 w-12 rounded-full flex-shrink-0 bg-cover bg-center" data-alt="Portrait of Alisher for shift history" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBR7ZB_YutYEtiOZJut1UCGRB-lxQnwTEOLAQyFc1e1-0nNjOyfuZSc0NVzkWLC3dkIlYiQuBjGfYMh2Yx7H47dJRZnqKAmEMKcR4xBbXWg5pSg4b1ZwSiNk6HSA203BapYK_lDZZH13weqoJOqW_6D2syCT86krb_5tPE32i1aB8StAZs721GXV3D_IKEPtdHpXsHzmE4pzWxHK74YQjEQ9uev5p9806pnnItSqShKIZ6JFLprY36QqrSnfpjL1ItDHzUGbjDf0VhZ')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold dark:text-white">29.01 • Алишер</p>
+<p class="text-primary font-bold text-sm">48,750 TJS</p>
+</div>
+<span class="bg-[#22C55E]/10 text-[#22C55E] text-[11px] font-bold px-2 py-0.5 rounded-full">Сдано</span>
+</div>
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-xs mt-1">09:00–18:00 | 32 продажи</p>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="bg-white dark:bg-[#1a2e31] rounded-xl p-4 shadow-sm flex items-start gap-4">
+<div class="h-12 w-12 rounded-full flex-shrink-0 bg-cover bg-center" data-alt="Portrait of Dilshod for shift history" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMfad2gm0xjJqo6Qi-Ctykb4uBd-jYIge9xYi_OXKTVVOpo4I84Z1_abJNpNI3r5CJ4X8xn3Ovf7xq_NGuSMXnagSmr8SCivGeGJmXV1KwOjxtj0vkd8C16BVwy-6gP4Zc4SzqR5bqjlmVsV4x5vtNVKg1xJj6LW9H2Mn_7yhonp966GdgJNhwNuCXcTI1PxlUA7NQTg6l0wOv4wz4Y6UkLndVgDfXVnipyQ21TB8HZEO1SidmaPD5uj44LcnHlSGSwCRVTAt-7Ufd')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold dark:text-white">29.01 • Дилшод</p>
+<p class="text-primary font-bold text-sm">35,200 TJS</p>
+</div>
+<span class="bg-[#22C55E]/10 text-[#22C55E] text-[11px] font-bold px-2 py-0.5 rounded-full">Сдано</span>
+</div>
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-xs mt-1">09:00–18:00 | 25 продаж</p>
+</div>
+</div>
+<!-- History Item 3 (With Warning) -->
+<div class="bg-white dark:bg-[#1a2e31] rounded-xl p-4 shadow-sm flex items-start gap-4 border border-[#F97316]/20">
+<div class="h-12 w-12 rounded-full flex-shrink-0 bg-cover bg-center" data-alt="Portrait of Alisher for shift history Jan 28" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgkWYe_XPyXW9Oms06TwYAkXfomvGjoebYndIqa6GrdpSFgmvx6EgRWtPOMCV4A7oWRT7rFAhlcI5NuFGdpXi1UrOw5BwMsyttSe-JNFnToNG-pShlVYH9EvkdKXjqFcDCWS3Ctl6ZZJuR47eNHsFxUeRas7c4GVO-NG7llq6_91IwRUPg15JLWjRA27w0FN0S4fJ2t_BxybsodiOan3uhtFnOpOxPDriO9QbngJNW7d9lJjAc2hRJrvick9DK0s376VRvvr57TrJe')"></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-base font-bold dark:text-white">28.01 • Алишер</p>
+<p class="text-primary font-bold text-sm">41,300 TJS</p>
+</div>
+</div>
+<div class="flex justify-between items-end mt-1">
+<p class="text-[#49929c] dark:text-[#a0c4c9] text-xs">09:00–18:00 | 28 продаж</p>
+<span class="bg-[#F97316]/10 text-[#F97316] text-[10px] font-bold px-2 py-0.5 rounded-full">Расхождение -500 TJS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Navigation Spacer (iOS Home Indicator) -->
+<div class="h-10"></div>
+</div>
+</body></html>

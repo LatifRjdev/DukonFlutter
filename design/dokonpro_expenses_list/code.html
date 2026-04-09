@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Expenses List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb2cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="max-w-[393px] mx-auto min-h-[852px] relative flex flex-col bg-background-light dark:bg-background-dark overflow-hidden shadow-2xl">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-2">
+<div class="flex items-center justify-between h-12">
+<h2 class="text-slate-900 dark:text-white text-[18px] font-semibold leading-tight tracking-tight">Расходы</h2>
+<div class="flex w-10 h-10 items-center justify-end">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-transparent text-slate-900 dark:text-white hover:bg-black/5 transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar pb-24">
+<!-- SegmentedButtons (Period Tabs) -->
+<div class="px-4 py-3">
+<div class="flex h-[42px] w-full items-center justify-center rounded-full bg-slate-200/50 dark:bg-slate-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm text-slate-500 dark:text-slate-400 has-[:checked]:text-slate-900 dark:has-[:checked]:text-white text-sm font-medium transition-all">
+<span class="truncate">Сегодня</span>
+<input class="invisible w-0" name="period" type="radio" value="Сегодня"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm text-slate-500 dark:text-slate-400 has-[:checked]:text-slate-900 dark:has-[:checked]:text-white text-sm font-medium transition-all">
+<span class="truncate">Неделя</span>
+<input class="invisible w-0" name="period" type="radio" value="Неделя"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-primary has-[:checked]:shadow-sm text-slate-500 dark:text-slate-400 has-[:checked]:text-white text-sm font-medium transition-all">
+<span class="truncate">Месяц</span>
+<input checked="" class="invisible w-0" name="period" type="radio" value="Месяц"/>
+</label>
+</div>
+</div>
+<!-- Summary Card -->
+<div class="px-4 py-2">
+<div class="bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 p-4 rounded-xl flex items-center gap-3">
+<div class="bg-red-500/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-red-500 text-xl">trending_down</span>
+</div>
+<p class="text-red-600 dark:text-red-400 text-[15px] font-semibold">Расходы за январь: 45,200 TJS</p>
+</div>
+</div>
+<!-- Chips (Category Filters) -->
+<div class="flex gap-2 px-4 py-4 overflow-x-auto hide-scrollbar">
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5 shadow-sm">
+<p class="text-white text-sm font-medium">Все</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 px-5 border border-slate-100 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Аренда</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 px-5 border border-slate-100 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Зарплата</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 px-5 border border-slate-100 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Закупки</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 px-5 border border-slate-100 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium">Транспорт</p>
+</div>
+</div>
+<!-- Section 1: 30 January -->
+<div class="px-4 pt-2">
+<h3 class="text-slate-500 dark:text-slate-400 text-[13px] font-medium uppercase tracking-wider mb-2 ml-1">30 января</h3>
+<div class="bg-white dark:bg-slate-900 rounded-[16px] overflow-hidden ios-shadow divide-y divide-slate-50 dark:divide-slate-800">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 p-4">
+<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">home</span>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<p class="text-slate-900 dark:text-white text-[15px] font-medium truncate">Аренда помещения</p>
+<p class="text-slate-400 text-[12px]">Офис Центр</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-slate-900 dark:text-white text-[15px] font-bold">5,000 TJS</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 p-4">
+<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<p class="text-slate-900 dark:text-white text-[15px] font-medium truncate">Закупка кофе у ООО Оптовик</p>
+<p class="text-slate-400 text-[12px]">Товары</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-slate-900 dark:text-white text-[15px] font-bold">12,400 TJS</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: 29 January -->
+<div class="px-4 pt-6">
+<h3 class="text-slate-500 dark:text-slate-400 text-[13px] font-medium uppercase tracking-wider mb-2 ml-1">29 января</h3>
+<div class="bg-white dark:bg-slate-900 rounded-[16px] overflow-hidden ios-shadow divide-y divide-slate-50 dark:divide-slate-800">
+<!-- Item 3 -->
+<div class="flex items-center gap-4 p-4">
+<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<p class="text-slate-900 dark:text-white text-[15px] font-medium truncate">Зарплата Алишер</p>
+<p class="text-slate-400 text-[12px]">Персонал</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-slate-900 dark:text-white text-[15px] font-bold">3,000 TJS</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex items-center gap-4 p-4">
+<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<p class="text-slate-900 dark:text-white text-[15px] font-medium truncate">Транспорт</p>
+<p class="text-slate-400 text-[12px]">Доставка</p>
+</div>
+<div class="shrink-0 text-right">
+<p class="text-slate-900 dark:text-white text-[15px] font-bold">800 TJS</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAB -->
+<div class="absolute bottom-8 right-6">
+<button class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<!-- Bottom Safe Area Indicator (iOS Style) -->
+<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+</div>
+</body></html>

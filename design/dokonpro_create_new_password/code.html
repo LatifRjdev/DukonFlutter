@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Create New Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2023",
+                        "secondary-text": "#757575",
+                        "border-color": "#cee6e9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .form-input:focus {
+            border-color: #05b9d1 !important;
+            box-shadow: 0 0 0 1px #05b9d1 !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col min-h-screen w-full max-w-[393px] mx-auto bg-white dark:bg-background-dark shadow-2xl relative">
+<!-- TopAppBar -->
+<header class="flex items-center p-4 justify-between bg-white dark:bg-background-dark sticky top-0 z-10">
+<button class="text-[#0d1a1c] dark:text-white flex size-12 shrink-0 items-center justify-start hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Новый пароль</h2>
+</header>
+<main class="flex-1 flex flex-col items-center px-6 pt-8 pb-10">
+<!-- Shield Icon Container -->
+<div class="mb-8 flex items-center justify-center">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white text-3xl font-bold">verified_user</span>
+</div>
+</div>
+</div>
+<!-- HeadlineText & BodyText -->
+<div class="text-center mb-10">
+<h1 class="text-[#0d1a1c] dark:text-white text-2xl font-bold leading-tight mb-2">Создайте новый пароль</h1>
+<p class="text-secondary-text dark:text-secondary-text/80 text-sm font-normal px-4">
+                    Придумайте надёжный пароль для вашего аккаунта
+                </p>
+</div>
+<!-- Form Section -->
+<div class="w-full space-y-4">
+<!-- TextField 1: New Password -->
+<div class="flex flex-col w-full">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-secondary-text">lock</span>
+<input class="form-input w-full pl-12 pr-12 py-4 bg-white dark:bg-background-dark border border-border-color dark:border-gray-700 rounded-lg text-base outline-none transition-all placeholder:text-secondary-text/60" placeholder="Новый пароль" type="password"/>
+<button class="absolute right-4 text-secondary-text flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<!-- Password Strength Indicator -->
+<div class="mt-3 flex flex-col gap-1.5 px-1">
+<div class="flex gap-1 h-1 w-full">
+<div class="h-full flex-1 bg-green-500 rounded-full"></div>
+<div class="h-full flex-1 bg-green-500 rounded-full"></div>
+<div class="h-full flex-1 bg-green-500 rounded-full"></div>
+<div class="h-full flex-1 bg-green-500 rounded-full"></div>
+</div>
+<span class="text-green-500 text-xs font-medium">Надёжный</span>
+</div>
+</div>
+<!-- TextField 2: Repeat Password -->
+<div class="flex flex-col w-full">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-secondary-text">lock</span>
+<input class="form-input w-full pl-12 pr-12 py-4 bg-white dark:bg-background-dark border border-border-color dark:border-gray-700 rounded-lg text-base outline-none transition-all placeholder:text-secondary-text/60" placeholder="Повторите пароль" type="password"/>
+<button class="absolute right-4 text-secondary-text flex items-center justify-center hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Requirement Text -->
+<p class="text-secondary-text text-xs leading-relaxed px-1">
+                    Минимум 6 символов, буквы и цифры
+                </p>
+</div>
+</main>
+<!-- Fixed Bottom Button -->
+<footer class="p-6 pt-0 bg-white dark:bg-background-dark">
+<button class="w-full bg-primary hover:bg-[#049fb4] active:scale-[0.98] text-white py-4 px-6 rounded-lg font-semibold text-base transition-all shadow-md shadow-primary/20">
+                Сохранить пароль
+            </button>
+<!-- iOS Home Indicator Space -->
+<div class="h-6"></div>
+</footer>
+</div>
+</body></html>

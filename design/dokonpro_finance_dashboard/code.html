@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb2cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white min-h-screen flex justify-center">
+<!-- Device Container (iPhone 14 Pro aspect ratio simulation) -->
+<div class="relative w-full max-w-[393px] min-h-[852px] bg-background-light dark:bg-background-dark overflow-y-auto pb-24 shadow-2xl">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-2">
+<div class="flex items-center justify-between">
+<h1 class="text-[#0d1a1c] dark:text-white text-[20px] font-bold leading-tight tracking-tight">Финансы</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white">ios_share</span>
+</button>
+</div>
+</header>
+<!-- Sections Grid (3x3 Layout) -->
+<div class="grid grid-cols-3 gap-3 p-4">
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">account_balance_wallet</span>
+<span class="text-[11px] font-medium text-center">Баланс</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">credit_card</span>
+<span class="text-[11px] font-medium text-center">Кредиты</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">trending_up</span>
+<span class="text-[11px] font-medium text-center">Вложения</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">volunteer_activism</span>
+<span class="text-[11px] font-medium text-center">Закят</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">currency_exchange</span>
+<span class="text-[11px] font-medium text-center">Валюты</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">local_shipping</span>
+<span class="text-[11px] font-medium text-center">Доставка</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">description</span>
+<span class="text-[11px] font-medium text-center">Отчёт</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[28px]">group</span>
+<span class="text-[11px] font-medium text-center">Поставщики</span>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700 opacity-40">
+<span class="material-symbols-outlined text-primary text-[28px]">more_horiz</span>
+<span class="text-[11px] font-medium text-center">Больше</span>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="px-4 py-2">
+<div class="flex h-11 items-center justify-center rounded-xl bg-gray-200/50 dark:bg-gray-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#49919c] dark:text-gray-400 text-sm font-medium transition-all">
+<span>День</span>
+<input class="hidden" name="period" type="radio" value="День"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#49919c] dark:text-gray-400 text-sm font-medium transition-all">
+<span>Неделя</span>
+<input class="hidden" name="period" type="radio" value="Неделя"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 bg-primary text-white shadow-sm text-sm font-bold transition-all">
+<span>Месяц</span>
+<input checked="" class="hidden" name="period" type="radio" value="Месяц"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#49919c] dark:text-gray-400 text-sm font-medium transition-all">
+<span>6 мес</span>
+<input class="hidden" name="period" type="radio" value="6 мес"/>
+</label>
+</div>
+</div>
+<!-- Metrics Grid (2x2) -->
+<div class="grid grid-cols-2 gap-4 p-4">
+<!-- Total Income -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Общий доход</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight">245,000 TJS</p>
+<div class="flex items-center gap-1 text-green-600 text-[13px] font-bold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12%</span>
+</div>
+</div>
+<!-- Total Expense -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Общие расходы</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight">198,000 TJS</p>
+<p class="text-red-500 text-[13px] font-medium">-5%</p>
+</div>
+<!-- Gross Profit -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Валовая прибыль</p>
+<p class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight">47,000 TJS</p>
+</div>
+<!-- Net Profit -->
+<div class="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Чистая прибыль</p>
+<p class="text-green-600 text-lg font-bold leading-tight">32,500 TJS</p>
+</div>
+</div>
+<!-- SectionHeader Dynamics -->
+<div class="px-4 pt-2">
+<h3 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight">Динамика</h3>
+</div>
+<!-- Dynamics Bar Chart Container -->
+<div class="mx-4 mt-4 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-end justify-between h-40 gap-1">
+<!-- Data Columns for 6 Months -->
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 60%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 40%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 25%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium">Янв</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 75%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 50%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 35%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium">Фев</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 45%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 40%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 15%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium">Мар</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 85%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 65%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 45%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium">Апр</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 65%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 45%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 30%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium">Май</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-1">
+<div class="flex items-end gap-[2px] h-full w-full">
+<div class="w-full bg-primary rounded-t-sm" style="height: 100%"></div>
+<div class="w-full bg-red-400 rounded-t-sm" style="height: 80%"></div>
+<div class="w-full bg-green-500 rounded-t-sm" style="height: 55%"></div>
+</div>
+<span class="text-[10px] text-gray-500 font-medium font-bold text-primary">Июн</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+<span class="text-[11px] text-gray-500 font-medium">Доход</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+<span class="text-[11px] text-gray-500 font-medium">Расход</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+<span class="text-[11px] text-gray-500 font-medium">Прибыль</span>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full max-w-[393px] h-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 px-2 flex justify-around items-center">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-gray-400">home</span>
+<span class="text-[10px] text-gray-400 font-medium">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-gray-400">inventory_2</span>
+<span class="text-[10px] text-gray-400 font-medium">Товары</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-gray-400">point_of_sale</span>
+<span class="text-[10px] text-gray-400 font-medium">Касса</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary fill-1">account_balance_wallet</span>
+<span class="text-[10px] text-primary font-bold">Финансы</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-gray-400">menu</span>
+<span class="text-[10px] text-gray-400 font-medium">Ещё</span>
+</div>
+</nav>
+<!-- Home Indicator Area -->
+<div class="fixed bottom-1 w-[393px] flex justify-center pointer-events-none">
+<div class="w-32 h-1 bg-gray-300 dark:bg-gray-700 rounded-full opacity-50"></div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+        }
+        .focus-frame {
+            border: 2px dashed rgba(255, 255, 255, 0.6);
+        }
+        .camera-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.6) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black text-white antialiased overflow-hidden">
+<!-- Main Viewport Container (iPhone 14 Pro aspect ratio simulation) -->
+<div class="relative mx-auto h-[852px] w-[393px] bg-black flex flex-col overflow-hidden shadow-2xl border-x border-gray-800">
+<!-- Live Camera Feed Simulation Background -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-slate-900 flex items-center justify-center opacity-80">
+<img alt="Product sample in camera viewfinder" class="w-full h-full object-cover" data-alt="A clean product shot of a minimalist watch on a surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu8_DRxyGOD7VaCp3idJX9Xwos9hvEV-Zb8H9TptrJCL390a3-OT9gfWga9q-J4_YcPQoLsn0pMDGMcKJqdiQT9cR8AROnF6SIJ_LUBdzvjj6gitl3qBXZqAKqt8JX9bfDatL9_gI4pWlatUkNowHb6dPqp1Y0Sgy0JsVAhYBg-2Vvf47jckDrF9dWhhI5_wGi6wWiIHfl43MviDPxg1b_m_dfCZ_GND0w7Nsnq0SfnU0jFVYgWvNu09JXFIN-xV79leXIctLIfOUI"/>
+</div>
+<!-- Vignette/Overlay -->
+<div class="absolute inset-0 camera-overlay"></div>
+</div>
+<!-- Top Navigation Bar -->
+<header class="relative z-10 pt-12 px-4 pb-4 bg-black/30 backdrop-blur-sm flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-start text-white">
+<span class="material-symbols-outlined text-[28px]">close</span>
+</button>
+<h1 class="text-[18px] font-semibold tracking-tight">Поиск по фото</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Viewfinder Area -->
+<main class="relative flex-1 flex flex-col items-center justify-center z-10">
+<!-- Focus Frame -->
+<div class="relative w-[280px] h-[280px] focus-frame rounded-xl flex flex-col items-center justify-center gap-4">
+<!-- Corners (Solid accents) -->
+<div class="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-white rounded-tl-xl -m-[2px]"></div>
+<div class="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-white rounded-tr-xl -m-[2px]"></div>
+<div class="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-white rounded-bl-xl -m-[2px]"></div>
+<div class="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-white rounded-br-xl -m-[2px]"></div>
+<span class="text-[14px] text-white/90 font-medium px-4 text-center">Наведите камеру на товар</span>
+</div>
+<!-- Flash Toggle Button -->
+<button class="mt-8 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white border border-white/10">
+<span class="material-symbols-outlined text-[24px]">flash_on</span>
+</button>
+</main>
+<!-- Bottom Control Bar -->
+<footer class="relative z-10 bg-black/50 backdrop-blur-xl px-6 pt-6 pb-12 flex flex-col items-center gap-8">
+<div class="w-full flex items-center justify-between">
+<!-- Gallery Button -->
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/30 bg-white/5 backdrop-blur-sm text-sm font-semibold">
+<span class="material-symbols-outlined text-[20px]">image</span>
+<span>Из галереи</span>
+</button>
+<!-- Shutter Button (Centered relative to parent) -->
+<div class="absolute left-1/2 -translate-x-1/2 top-4">
+<button class="group flex items-center justify-center p-1 rounded-full border-[4px] border-primary">
+<div class="w-[64px] h-[64px] bg-white rounded-full transition-transform active:scale-90 shadow-lg"></div>
+</button>
+</div>
+<!-- Empty space for layout balance -->
+<div class="w-[120px]"></div>
+</div>
+<!-- Hint Text -->
+<p class="text-[12px] text-white/70 font-medium tracking-wide">Сделайте фото товара</p>
+</footer>
+<!-- iPhone Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/30 rounded-full z-20"></div>
+</div>
+</body></html>

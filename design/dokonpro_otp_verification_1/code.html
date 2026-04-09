@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro OTP Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .otp-input:focus {
+            border-color: #05b9d1 !important;
+            box-shadow: 0 0 0 1px #05b9d1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] dark:text-white min-h-screen flex flex-col items-center">
+<!-- Main Container (iPhone 14 Pro width simulation) -->
+<div class="relative flex h-full min-h-screen w-full max-w-[393px] flex-col bg-background-light dark:bg-background-dark overflow-x-hidden shadow-2xl">
+<!-- TopAppBar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-[#0d1a1c] dark:text-white flex size-12 shrink-0 items-center cursor-pointer" data-icon="arrow_back">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Подтверждение</h2>
+</div>
+<!-- Visual Anchor: SMS Icon -->
+<div class="flex justify-center pt-8 pb-4">
+<div class="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined !text-[40px]">sms</span>
+</div>
+</div>
+<!-- HeadlineText -->
+<h3 class="text-[#0d1a1c] dark:text-white tracking-tight text-2xl font-bold leading-tight px-4 text-center pt-2">Введите код</h3>
+<!-- MetaText -->
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal leading-normal pb-8 pt-2 px-8 text-center">
+            Мы отправили 4-значный код на номер <br/> <span class="text-[#0d1a1c] dark:text-white font-medium">+992 93 *** ** 67</span>
+</p>
+<!-- ConfirmationCode (Modified for 4 slots as requested) -->
+<div class="flex justify-center px-4 py-3">
+<fieldset class="relative flex gap-3">
+<!-- First input with focus state style -->
+<input autofocus="" class="otp-input flex h-[56px] w-[56px] text-center [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border border-primary rounded-lg text-2xl font-bold leading-normal bg-transparent" max="9" maxlength="1" min="0" placeholder="" type="number" value=""/>
+<input class="otp-input flex h-[56px] w-[56px] text-center [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border border-gray-200 dark:border-gray-700 rounded-lg text-2xl font-bold leading-normal bg-transparent" max="9" maxlength="1" min="0" type="number"/>
+<input class="otp-input flex h-[56px] w-[56px] text-center [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border border-gray-200 dark:border-gray-700 rounded-lg text-2xl font-bold leading-normal bg-transparent" max="9" maxlength="1" min="0" type="number"/>
+<input class="otp-input flex h-[56px] w-[56px] text-center [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border border-gray-200 dark:border-gray-700 rounded-lg text-2xl font-bold leading-normal bg-transparent" max="9" maxlength="1" min="0" type="number"/>
+</fieldset>
+</div>
+<!-- Timer -->
+<div class="flex flex-col items-center justify-center pt-6 px-4">
+<p class="text-[#757575] dark:text-gray-400 text-sm font-normal">Отправить повторно через <span class="font-medium">0:45</span></p>
+</div>
+<!-- Spacer to push button to bottom -->
+<div class="flex-grow"></div>
+<!-- Bottom Action Button -->
+<div class="p-6 pb-10 w-full">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg transition-colors text-base">
+                Подтвердить
+            </button>
+</div>
+<!-- Safe Area Indicator for iOS simulation -->
+<div class="h-1 w-32 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-2"></div>
+</div>
+</body></html>

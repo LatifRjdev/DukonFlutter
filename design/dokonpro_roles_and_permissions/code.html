@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Roles and Permissions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        /* Custom styles for toggles and checkboxes based on the component list logic */
+        .toggle-checked:checked + div {
+            background-color: #00bdd6;
+            justify-content: flex-end;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] dark:text-white min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container (393x852px) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col shadow-2xl border-[8px] border-black rounded-[55px]">
+<!-- Status Bar Area (Mock) -->
+<div class="h-11 w-full flex items-center justify-between px-8 pt-4">
+<span class="text-xs font-semibold">9:41</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[16px]">battery_full</span>
+</div>
+</div>
+<!-- TopAppBar -->
+<header class="flex items-center px-4 py-2 justify-between">
+<div class="flex items-center gap-1">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#0c1b1d] dark:text-white">arrow_back</span>
+</button>
+</div>
+<h2 class="text-[#0c1b1d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Роли и доступы</h2>
+</header>
+<!-- SegmentedButtons -->
+<div class="px-4 py-3">
+<div class="flex h-12 items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#4596a1] text-sm font-medium transition-all has-[:checked]:bg-white dark:has-[:checked]:bg-[#1a2f31] has-[:checked]:shadow-sm has-[:checked]:text-[#0c1b1d] dark:has-[:checked]:text-white">
+<span class="truncate">Владелец</span>
+<input class="hidden" name="role-selection" type="radio" value="Owner"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-[#4596a1] text-sm font-medium transition-all has-[:checked]:bg-white dark:has-[:checked]:bg-[#1a2f31] has-[:checked]:shadow-sm has-[:checked]:text-[#0c1b1d] dark:has-[:checked]:text-white">
+<span class="truncate">Администратор</span>
+<input class="hidden" name="role-selection" type="radio" value="Admin"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-white bg-primary text-sm font-medium shadow-sm">
+<span class="truncate">Кассир</span>
+<input checked="" class="hidden" name="role-selection" type="radio" value="Cashier"/>
+</label>
+</div>
+</div>
+<!-- Main Content Area (Scrollable) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-4 pb-32">
+<div class="bg-white dark:bg-[#1a2f31] rounded-lg overflow-hidden shadow-sm">
+<!-- Permission Rows -->
+<!-- Просмотр продаж (ON) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Просмотр продаж</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Создание продаж (ON) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Создание продаж</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Отмена продаж (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Отмена продаж</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Просмотр прибыли (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Просмотр прибыли</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Изменение цен (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Изменение цен</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Управление товарами (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Управление товарами</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Добавление расходов (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Добавление расходов</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Управление клиентами (ON) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Управление клиентами</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-primary p-0.5 justify-end">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Управление персоналом (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between border-b border-gray-100 dark:border-gray-700">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Управление персоналом</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Просмотр отчётов (OFF) -->
+<div class="flex items-center gap-4 px-4 min-h-[56px] justify-between">
+<p class="text-[#0c1b1d] dark:text-white text-base font-normal leading-normal flex-1 truncate">Просмотр отчётов</p>
+<div class="shrink-0">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-gray-200 dark:bg-gray-600 p-0.5 justify-start">
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md"></div>
+<input class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Fixed Bottom Action Button -->
+<div class="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent">
+<button class="w-full bg-primary text-white font-bold text-base py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">
+                Сохранить
+            </button>
+<!-- Home Indicator Mock -->
+<div class="w-32 h-1 bg-black/20 dark:bg-white/20 mx-auto mt-6 rounded-full"></div>
+</div>
+</div>
+</body></html>

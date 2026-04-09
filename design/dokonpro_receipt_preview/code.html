@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Receipt Preview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0bb5cb",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .receipt-paper {
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, #ffffff 5px, transparent 0), linear-gradient(45deg, #ffffff 5px, transparent 0);
+            background-size: 10px 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center">
+<!-- TopAppBar -->
+<div class="w-full max-w-[393px] flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-[#0d1a1c] dark:text-white flex size-12 shrink-0 items-center cursor-pointer" data-icon="ArrowLeft">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Чек</h2>
+</div>
+<!-- Main Content Container (iPhone 14 Pro Width) -->
+<main class="w-full max-w-[393px] px-6 py-4 flex-1 flex flex-col gap-6 overflow-y-auto">
+<!-- Receipt Card -->
+<div class="receipt-paper rounded-t-xl p-6 flex flex-col gap-4">
+<!-- Header Section -->
+<div class="text-center flex flex-col gap-1">
+<p class="text-[#0d1a1c] text-xl font-bold uppercase tracking-wide">ОСНОВНОЙ МАГАЗИН</p>
+<p class="text-gray-500 text-xs font-normal">ул. Рудаки 12, Душанбе</p>
+<p class="text-gray-500 text-xs font-normal">+992 900 00 00 00</p>
+</div>
+<div class="border-b border-dashed border-gray-300 my-2"></div>
+<!-- Transaction Metadata -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 font-medium">Чек #1234</span>
+<span class="text-gray-800 font-medium">30.01.2026</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-500">Кассир: Али</span>
+<span class="text-gray-800">14:35</span>
+</div>
+</div>
+<div class="border-b border-dashed border-gray-300 my-2"></div>
+<!-- Itemized List -->
+<div class="flex flex-col gap-3">
+<div class="flex flex-col">
+<div class="flex justify-between text-sm">
+<span class="text-[#0d1a1c] font-medium">Кофе растворимый</span>
+<span class="text-[#0d1a1c] font-semibold">360.00 TJS</span>
+</div>
+<span class="text-xs text-gray-500">2 x 180.00</span>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between text-sm">
+<span class="text-[#0d1a1c] font-medium">Сахар 1кг</span>
+<span class="text-[#0d1a1c] font-semibold">55.00 TJS</span>
+</div>
+<span class="text-xs text-gray-500">1 x 55.00</span>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between text-sm">
+<span class="text-[#0d1a1c] font-medium">Молоко 1л</span>
+<span class="text-[#0d1a1c] font-semibold">75.00 TJS</span>
+</div>
+<span class="text-xs text-gray-500">3 x 25.00</span>
+</div>
+</div>
+<div class="border-b-2 border-gray-900 my-2"></div>
+<!-- Totals Section -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-lg font-bold text-[#0d1a1c]">ИТОГО:</span>
+<span class="text-2xl font-bold text-primary">490.00 TJS</span>
+</div>
+<div class="flex justify-between text-sm pt-2">
+<span class="text-gray-500">Наличные:</span>
+<span class="text-gray-800">500.00 TJS</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-500">Сдача:</span>
+<span class="text-gray-800">10.00 TJS</span>
+</div>
+</div>
+<!-- Footer Message & QR -->
+<div class="mt-4 flex flex-col items-center gap-4">
+<p class="text-sm font-medium text-gray-500 italic">Спасибо за покупку!</p>
+<div class="w-24 h-24 bg-white p-1 border border-gray-100 shadow-sm rounded-lg flex items-center justify-center">
+<img alt="QR code for receipt verification" class="w-full h-full" data-alt="Small QR code for transaction verification" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc5bQ_riC5z26I_Qikg0tC0XmxTc9-0hjXmCfyCmeAvXW_yt4kXrbPKmtzhnMGaaZCmPHiAY0T5GcpmINJLheFWKvx_mcHtW8Z4upinow_kFOnsSHHYZepzq8V3mKX2VgwOamkEUKabv2Z_zBf7SxSRVFT-8xM6yfNA1W5Jw9sK1NsBzkNexzjVePgv1m0f3n2lXVdSGvsiHtL3ExBWYQjbs1OSVvXo5g-imx7JRtMJvsOM5gmdXleY__xczPGy-X7mSfEg3MddG5A"/>
+</div>
+</div>
+</div>
+<!-- Action Buttons Row -->
+<div class="mt-4 grid grid-cols-4 gap-4">
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark flex items-center justify-center text-gray-600 dark:text-gray-300 group-active:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined">print</span>
+</div>
+<span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-tighter">Печать</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark flex items-center justify-center text-gray-600 dark:text-gray-300 group-active:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined">send</span>
+</div>
+<span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-tighter">Telegram</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark flex items-center justify-center text-gray-600 dark:text-gray-300 group-active:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined">sms</span>
+</div>
+<span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-tighter">SMS</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center text-primary group-active:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</div>
+<span class="text-[10px] font-semibold text-primary uppercase tracking-tighter">Новая</span>
+</button>
+</div>
+</main>
+<!-- Bottom Indicator (iOS style) -->
+<div class="w-32 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mb-2 mt-4"></div>
+</body></html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Categories List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center items-start">
+<!-- iPhone 14 Pro Container (393x852) -->
+<div class="relative w-[393px] min-h-[852px] bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden flex flex-col">
+<!-- Status Bar Area (Simulator spacer) -->
+<div class="h-11 w-full bg-background-light dark:bg-background-dark"></div>
+<!-- Sticky Header / TopAppBar -->
+<div class="sticky top-0 z-20 flex items-center bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md px-4 py-3 justify-between">
+<div class="flex items-center justify-start w-10">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white cursor-pointer" style="font-size: 24px;">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-[18px] font-semibold leading-tight flex-1 text-center">Категории</h2>
+<div class="flex items-center justify-end w-10">
+<button class="flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-size: 24px;">add</span>
+</button>
+</div>
+</div>
+<!-- Main Content: Scrollable List -->
+<div class="flex-1 overflow-y-auto px-4 pt-4 pb-24 space-y-3">
+<!-- Category 1: Drinks -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-green-100 dark:bg-green-900/30 text-green-600">
+<span class="material-symbols-outlined">local_bar</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Напитки</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">24 товара</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Category 2: Grocery -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+<span class="material-symbols-outlined">bakery_dining</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Бакалея</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">18 товаров</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Category 3: Dairy -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Молочные</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">12 товаров</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Category 4: Confectionery -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-orange-100 dark:bg-orange-900/30 text-orange-600">
+<span class="material-symbols-outlined">cake</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Кондитерские</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">8 товаров</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Category 5: Household Chemicals -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-red-100 dark:bg-red-900/30 text-red-600">
+<span class="material-symbols-outlined">sanitizer</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Бытовая химия</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">15 товаров</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+<!-- Category 6: Other -->
+<div class="flex items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl ios-shadow justify-between active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-full h-12 w-12 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">category</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d1a1c] dark:text-white text-base font-semibold leading-tight">Прочее</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-0.5">6 товаров</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (FAB) -->
+<button class="absolute bottom-8 right-6 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl active:scale-90 transition-all z-30">
+<span class="material-symbols-outlined" style="font-size: 32px;">add</span>
+</button>
+<!-- Bottom Navigation Indicator (iOS) -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+</div>
+</body></html>

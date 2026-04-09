@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Dark Zakat History List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13d3ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .ios-status-bar {
+            height: 44px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen flex justify-center">
+<!-- iPhone 14 Pro Container -->
+<div class="w-[393px] h-[852px] bg-background-light dark:bg-background-dark relative overflow-y-auto overflow-x-hidden border-x border-gray-800 shadow-2xl">
+<!-- Status Bar Spacer (iOS) -->
+<div class="ios-status-bar w-full"></div>
+<!-- TopAppBar Component -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between">
+<div class="text-white flex size-12 shrink-0 items-center cursor-pointer" data-icon="arrow_back">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</div>
+<h2 class="text-white text-[20px] font-bold leading-tight tracking-[-0.015em] flex-1">История закята</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+</div>
+</div>
+<!-- Summary Card Component -->
+<div class="px-4 py-4">
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-lg bg-card-dark p-5">
+<div class="flex flex-col gap-1">
+<p class="text-white text-base font-normal leading-normal">Всего выплачено:</p>
+<div class="flex items-baseline gap-2">
+<p class="text-primary text-[24px] font-bold leading-tight tracking-[-0.015em]">24,850 TJS</p>
+</div>
+<p class="text-[#B0B0B0] text-sm font-normal leading-normal">за 3 года</p>
+</div>
+</div>
+</div>
+<!-- Section Header Component -->
+<div class="px-4 pb-2 pt-4">
+<h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">История платежей</h3>
+</div>
+<!-- History List Items -->
+<div class="flex flex-col gap-3 px-4">
+<!-- Card 1: Paid -->
+<div class="flex flex-col gap-4 bg-card-dark p-4 rounded-xl">
+<div class="flex justify-between items-start">
+<div class="flex items-start gap-3">
+<div class="text-[#4CAF50] flex items-center justify-center rounded-lg bg-[#4CAF50]/10 shrink-0 size-10">
+<span class="material-symbols-outlined text-[24px]">check_circle</span>
+</div>
+<div class="flex flex-1 flex-col">
+<p class="text-white text-base font-bold leading-normal">Закят 1447 г.х.</p>
+<p class="text-[#B0B0B0] text-sm font-normal leading-normal">Оплачен 10.01.2026</p>
+</div>
+</div>
+<div class="text-right flex flex-col items-end">
+<p class="text-primary text-base font-bold leading-normal">8,607.50 TJS</p>
+<p class="text-[#B0B0B0] text-xs font-normal leading-normal">Облагаемая: 344,300 TJS</p>
+</div>
+</div>
+</div>
+<!-- Card 2: Paid -->
+<div class="flex flex-col gap-4 bg-card-dark p-4 rounded-xl">
+<div class="flex justify-between items-start">
+<div class="flex items-start gap-3">
+<div class="text-[#4CAF50] flex items-center justify-center rounded-lg bg-[#4CAF50]/10 shrink-0 size-10">
+<span class="material-symbols-outlined text-[24px]">check_circle</span>
+</div>
+<div class="flex flex-1 flex-col">
+<p class="text-white text-base font-bold leading-normal">Закят 1446 г.х.</p>
+<p class="text-[#B0B0B0] text-sm font-normal leading-normal">Оплачен 22.01.2025</p>
+</div>
+</div>
+<div class="text-right flex flex-col items-end">
+<p class="text-primary text-base font-bold leading-normal">7,920.00 TJS</p>
+<p class="text-[#B0B0B0] text-xs font-normal leading-normal">Облагаемая: 316,800 TJS</p>
+</div>
+</div>
+</div>
+<!-- Card 3: Pending -->
+<div class="flex flex-col gap-4 bg-card-dark p-4 rounded-xl border border-[#FF9800]/20">
+<div class="flex justify-between items-start">
+<div class="flex items-start gap-3">
+<div class="text-[#FF9800] flex items-center justify-center rounded-lg bg-[#FF9800]/10 shrink-0 size-10">
+<span class="material-symbols-outlined text-[24px]">pending</span>
+</div>
+<div class="flex flex-1 flex-col">
+<p class="text-white text-base font-bold leading-normal">Закят 1445 г.х.</p>
+<p class="text-[#FF9800] text-sm font-medium leading-normal">Не оплачен</p>
+</div>
+</div>
+<div class="text-right flex flex-col items-end">
+<p class="text-white text-base font-bold leading-normal">8,322.50 TJS</p>
+<p class="text-[#B0B0B0] text-xs font-normal leading-normal">Облагаемая: 332,900 TJS</p>
+</div>
+</div>
+<div class="flex justify-end pt-1">
+<button class="bg-primary text-background-dark text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1">
+                        Оплатить
+                    </button>
+</div>
+</div>
+</div>
+<!-- Decorative Bottom Bar (iPhone Indicator) -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-gray-600 rounded-full"></div>
+</div>
+</body></html>

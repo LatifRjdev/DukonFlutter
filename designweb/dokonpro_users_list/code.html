@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Users List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1E293B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .active-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 bg-sidebar-dark text-white flex flex-col fixed inset-y-0 left-0 z-50">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">storefront</span>
+</div>
+<div>
+<h1 class="text-base font-bold leading-tight">DokonPro Admin</h1>
+<p class="text-slate-400 text-xs">Super Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 mt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Дашборд</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Пользователи</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">store</span>
+<span class="text-sm font-medium">Магазины</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Тарифы</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-300 hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Настройки</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-700">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="w-8 h-8 rounded-full bg-slate-600 overflow-hidden" data-alt="Admin user avatar portrait">
+<img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRwyx3asT2AdjAPVkEnOErKWr5VQ9IhlCuUiVz9UOd1ZsrC7pAYwqL73smqpHoRVsmaMllM6gX0sp7DgkP7_2yLNf6g3NE7Jca_u2xJs8tHGmboqixS0vINQcTDoOjrHdn31Md7Zhhay0RHT_afcrcYrXExBekLsTGgM481iqRmwack0xZG-uEfJpzbMSwl1wlExzGMiY29jw1E4kCK-ialUOzqNyZAyKDFf4UrOYRoioLbFz7BxY8uFRDrCmnqz5MyN2W3adfz8A"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-medium truncate">Администратор</p>
+<p class="text-[10px] text-slate-400 truncate">admin@dokonpro.uz</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 p-8">
+<!-- Header -->
+<header class="flex flex-wrap justify-between items-center mb-8 gap-4">
+<div class="flex items-center gap-3">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Пользователи</h2>
+<span class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2.5 py-0.5 rounded-full text-xs font-semibold">4,832</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Экспорт
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Добавить
+                </button>
+</div>
+</header>
+<!-- Filters & Tabs -->
+<div class="space-y-6">
+<!-- Filter Bar Card -->
+<div class="bg-white dark:bg-background-dark p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[300px]">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary" placeholder="Поиск пользователей..." type="text"/>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<select class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm px-3 py-2 pr-8 focus:ring-primary">
+<option>Тариф: Все</option>
+<option>Start</option>
+<option>Business</option>
+<option>Premium</option>
+<option>Trial</option>
+</select>
+<select class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm px-3 py-2 pr-8 focus:ring-primary">
+<option>Статус: Все</option>
+<option>Active</option>
+<option>Blocked</option>
+<option>Inactive</option>
+</select>
+<select class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm px-3 py-2 pr-8 focus:ring-primary">
+<option>Регион: Все</option>
+<option>Ташкент</option>
+<option>Самарканд</option>
+<option>Бухара</option>
+</select>
+<button class="text-slate-400 hover:text-slate-600 text-sm font-medium px-2 py-2">Сбросить</button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex gap-8 border-b border-slate-200 dark:border-slate-800">
+<button class="pb-3 text-sm font-semibold text-primary border-b-2 border-primary">Все (4,832)</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Активные (3,214)</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Trial (342)</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Заблокированные (18)</button>
+</div>
+<!-- Table Card -->
+<div class="bg-white dark:bg-background-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<th class="p-4 w-12"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Пользователь</th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Телефон</th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Магазины</th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Тариф</th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Статус</th>
+<th class="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Регистрация</th>
+<th class="p-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="p-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden" data-alt="Portrait of Alisher Karimov">
+<img alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkhdYuUV95wpFf64SRr4lyUgBgnswz7FAGyD39YyM056a7U3xvslDlvMJLMY5ozdlntWYILTPHCKsIG7sQ0qx5Dohii-hkCFpQvv22sWy3O8mOsg2LcMrSt3eae5TcLhaVFKhSVPcYHkwunqf2UOh8xpfUu11kcpl5Y3ExJHFQX8zy3bJ0-qIOHtqJqZEKT-gnlF8APsPPxuiaGYziuzKBH8LS8NmQspnI1C5_4HtlDwnhdvITP6aX50xd1sz8iAYUnsL3upQHYzQ"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Alisher Karimov</p>
+<p class="text-xs text-slate-500">alisher@example.com</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-400">+998 90 123 45 67</td>
+<td class="p-4 text-sm text-center font-medium">12</td>
+<td class="p-4">
+<span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase">Business</span>
+</td>
+<td class="p-4 text-sm">
+<span class="active-dot bg-green-500"></span>
+<span class="text-slate-700 dark:text-slate-300">Active</span>
+</td>
+<td class="p-4 text-sm text-slate-500">15.01.2026</td>
+<td class="p-4">
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="p-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden" data-alt="Portrait of Malika Rakhimova">
+<img alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjWCbk_VLlCsVR-f8Z7UJWTe0lJhaTiYLH9wjMzvIUj21aQzxafIVQNmXvnHAjmCpZUg21o434yiE9NmDRgkfgtwDnAI3rU7GnID-5oWGQXQKMcW04zkJBPB-7ZU1iDrjvAjq6s7lNsWmSFEoZHK3CFQMurM3N8mtEwbhda7tw-mfGuZvufFPh2AF0v539tccWFIFIrCQTLLjD3j8D1pdsGfDAOnAQW8jz6L8BHiP20-tL9txGDtQ95-RukZGxOM0SUr7SieiO2J0"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Malika Rakhimova</p>
+<p class="text-xs text-slate-500">malika@example.com</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-400">+998 93 456 78 90</td>
+<td class="p-4 text-sm text-center font-medium">5</td>
+<td class="p-4">
+<span class="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase">Premium</span>
+</td>
+<td class="p-4 text-sm">
+<span class="active-dot bg-green-500"></span>
+<span class="text-slate-700 dark:text-slate-300">Active</span>
+</td>
+<td class="p-4 text-sm text-slate-500">20.12.2025</td>
+<td class="p-4">
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="p-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden" data-alt="Portrait of Dilshod Safarov">
+<img alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLVFN1qFDp3pN2c9VVlIRqs9BkKvH25d_alveEKVQyUWECyDjo7nb_1-n0uPYdXh1fnYgTpNIKO1X_Btx4grkYxGeNofxWT9VYxgP8ZEQb0VBeD8TgLNJnAuwaUB70AQIeeA3okXDDhezxQrYUhJO26DcyuEW0TtqazVHrwWEpwdyebrb664OpUv87fEmm5chA0W_YFvHxYHge6XjExv8cc4HUz3nsEquQFu0VM5Va45S6o1YI57tiHC84aRdJECQURO0RwUF7n3U"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Dilshod Safarov</p>
+<p class="text-xs text-slate-500">dilshod@example.com</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-400">+998 99 999 00 11</td>
+<td class="p-4 text-sm text-center font-medium">1</td>
+<td class="p-4">
+<span class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase">Trial</span>
+</td>
+<td class="p-4 text-sm">
+<span class="text-orange-600 font-medium">Trial (3 days)</span>
+</td>
+<td class="p-4 text-sm text-slate-500">31.01.2026</td>
+<td class="p-4">
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="p-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden" data-alt="Portrait of Zarina Mirzoeva">
+<img alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq_6d2zCIlhyJnLij0PNHbSvKAe_DLBfarwPgchieiZ65iLUwcivRCwehstFVyHuoUdd28v0O5dFCkzE4fBbymIW-gVBc0bRh58QjZUtCZlO-RXzDmmlg2CKLN96D30-XbOo4XEukQ9ZBTi97673GfAtNSVY1zuLhohh3SVQ7XYen2uNMRvNVGPkhhmStRUf7T9FtCAO5nTulSmfLHTGG6SUE0F9vAfGQAF1dOu-hZ6qZs1YYxBWtaA5YeuFl3YW7BS6vlWb13l5A"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Zarina Mirzoeva</p>
+<p class="text-xs text-slate-500">zarina@example.com</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-400">+998 97 111 22 33</td>
+<td class="p-4 text-sm text-center font-medium">8</td>
+<td class="p-4">
+<span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase">Business</span>
+</td>
+<td class="p-4 text-sm">
+<span class="active-dot bg-red-500"></span>
+<span class="text-slate-700 dark:text-slate-300">Blocked</span>
+</td>
+<td class="p-4 text-sm text-slate-500">10.11.2025</td>
+<td class="p-4">
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 bg-slate-50 dark:bg-slate-900 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+<p class="text-sm text-slate-500">Показано 1-20 из 4,832</p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-medium">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700">242</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

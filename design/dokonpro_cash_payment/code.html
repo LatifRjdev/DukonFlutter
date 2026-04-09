@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Cash Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] antialiased">
+<div class="flex flex-col min-h-screen max-w-[393px] mx-auto relative bg-white dark:bg-background-dark overflow-hidden">
+<!-- Header -->
+<header class="flex items-center px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined text-[#0c1b1d] dark:text-white">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-semibold leading-tight pr-10 dark:text-white">Оплата наличными</h1>
+</header>
+<main class="flex-1 px-4 py-6 space-y-6">
+<!-- Amount to Pay Card -->
+<div class="bg-[#E0F7FA] dark:bg-primary/20 p-6 rounded-lg text-center ios-shadow">
+<p class="text-[#4596a1] dark:text-primary/80 text-sm font-medium uppercase tracking-wider mb-2">К оплате</p>
+<h2 class="text-[#0c1b1d] dark:text-white text-[32px] font-bold leading-none">490 TJS</h2>
+</div>
+<!-- Received Input -->
+<div class="space-y-2">
+<label class="block text-sm font-medium text-[#4596a1] dark:text-gray-400 px-1">Получено от клиента</label>
+<div class="relative">
+<input class="w-full h-[72px] bg-white dark:bg-gray-900 border-2 border-[#cde6ea] dark:border-gray-700 focus:border-primary dark:focus:border-primary rounded-lg px-4 text-2xl font-bold text-[#0c1b1d] dark:text-white focus:ring-0 transition-colors" placeholder="0.00" type="text" value="500"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">TJS</div>
+</div>
+</div>
+<!-- Quick Amount Chips -->
+<div class="flex flex-wrap gap-2">
+<button class="h-10 px-4 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-200 text-sm font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">500</button>
+<button class="h-10 px-4 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-200 text-sm font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">1000</button>
+<button class="h-10 px-4 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-200 text-sm font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">2000</button>
+<button class="h-10 px-4 rounded-lg border border-[#cde6ea] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#0c1b1d] dark:text-gray-200 text-sm font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">5000</button>
+<button class="h-10 px-4 rounded-lg border-2 border-primary/30 dark:border-primary/50 bg-primary/5 dark:bg-primary/10 text-primary text-sm font-bold hover:bg-primary/10 transition-all active:scale-95">Без сдачи</button>
+</div>
+<!-- Change Card -->
+<div class="bg-[#E8F5E9] dark:bg-green-900/20 p-6 rounded-lg text-center ios-shadow border border-[#C8E6C9] dark:border-green-800/30">
+<p class="text-[#4CAF50] text-sm font-medium uppercase tracking-wider mb-2">Сдача</p>
+<h2 class="text-[#4CAF50] text-[32px] font-bold leading-none">10 TJS</h2>
+</div>
+</main>
+<!-- Fixed Footer Action -->
+<footer class="p-4 pb-10 bg-white dark:bg-background-dark border-t border-gray-50 dark:border-gray-800">
+<button class="w-full h-14 bg-primary hover:bg-[#00aac2] text-white rounded-lg text-base font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white">print</span>
+                Завершить и печатать чек
+            </button>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-2"></div>
+</footer>
+</div>
+</body></html>

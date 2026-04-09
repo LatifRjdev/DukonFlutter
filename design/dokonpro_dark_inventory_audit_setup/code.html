@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Dark Inventory Audit Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dd7f2",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "card-dark": "#1e1e1e",
+                        "input-dark": "#2c2c2c",
+                        "border-dark": "#333333",
+                        "danger": "#F44336",
+                        "success": "#4CAF50"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Inter", sans-serif;
+    -webkit-tap-highlight-color: transparent
+    }
+.custom-select {
+    appearance: none;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDhQCIlBYVcGzcg488uzZHMcdBeG3bBW9asMJNIZPsTTiPv7Epot7ZCfr7ga-pKMrXSIeYpZFpFi0j-wsw2fpaMbHjSOhxuy73DCuCG624cc38-xIAtRLLGMkv7t8QqBn3PM9P7qZ9wlWd1xcM0lGzr4_cbq2VgLrKKTjOLAWOoFjRxrnN0SI2FHtbtrTEK0-kHWFRHg_pHjqtfBNZQ49hgPlOdu7DER2BtI5xXe74kzHy_uf1Y8gROpkKyU8ccC6czhGvTDaJ09vtS);
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white min-h-screen font-display">
+<!-- iOS Status Bar Spacer (Simulated) -->
+<div class="h-12 w-full"></div>
+<!-- TopAppBar -->
+<header class="flex items-center px-4 py-2 justify-between sticky top-0 bg-background-dark z-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white cursor-pointer">arrow_back_ios</span>
+<h2 class="text-white text-[18px] font-semibold leading-tight tracking-tight">Инвентаризация</h2>
+</div>
+<div class="flex items-center">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-transparent text-primary transition-colors active:bg-primary/10">
+<span class="material-symbols-outlined text-[28px]">add_circle</span>
+</button>
+</div>
+</header>
+<main class="px-4 pb-20">
+<!-- New Audit Card -->
+<section class="mt-4 bg-card-dark rounded-xl p-5 shadow-lg border border-border-dark">
+<h3 class="text-white text-xl font-bold mb-5">Новая инвентаризация</h3>
+<div class="space-y-4">
+<!-- Shop Dropdown -->
+<div class="flex flex-col">
+<p class="text-gray-400 text-sm font-medium pb-2">Магазин</p>
+<select class="custom-select w-full rounded-xl text-white border border-border-dark bg-input-dark h-14 px-4 text-base focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all">
+<option value="">Выберите магазин</option>
+<option value="1">DokonPro Center</option>
+<option value="2">DokonPro North</option>
+</select>
+</div>
+<!-- Category Dropdown -->
+<div class="flex flex-col">
+<p class="text-gray-400 text-sm font-medium pb-2">Категория</p>
+<select class="custom-select w-full rounded-xl text-white border border-border-dark bg-input-dark h-14 px-4 text-base focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all">
+<option value="">Выберите категорию</option>
+<option value="all">Все товары</option>
+<option value="drinks">Напитки</option>
+<option value="food">Продукты питания</option>
+</select>
+</div>
+<!-- Date Picker Input -->
+<div class="flex flex-col">
+<p class="text-gray-400 text-sm font-medium pb-2">Дата</p>
+<div class="relative">
+<input class="w-full rounded-xl text-white border border-border-dark bg-input-dark h-14 px-4 pr-12 text-base focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="ДД.ММ.ГГГГ" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">calendar_today</span>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-background-dark font-bold text-base h-14 rounded-xl mt-4 active:scale-[0.98] transition-transform">
+                    Начать инвентаризацию
+                </button>
+</div>
+</section>
+<!-- Previous Audits Section -->
+<section class="mt-8">
+<h4 class="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-4 px-1">Предыдущие проверки</h4>
+<div class="space-y-3">
+<!-- Audit Item 1 -->
+<div class="bg-card-dark rounded-xl p-4 border border-border-dark flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="text-white font-bold text-lg">15.01.2026</div>
+<div class="text-gray-400 text-sm">Все товары • 245 позиций</div>
+</div>
+<span class="bg-success/20 text-success text-[12px] font-bold px-2.5 py-1 rounded-full border border-success/30 uppercase">Завершена</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-border-dark/50">
+<span class="text-gray-400 text-sm">Результат:</span>
+<span class="text-danger font-bold">Недостача: -3,200 TJS</span>
+</div>
+</div>
+<!-- Audit Item 2 -->
+<div class="bg-card-dark rounded-xl p-4 border border-border-dark flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="text-white font-bold text-lg">01.01.2026</div>
+<div class="text-gray-400 text-sm">Напитки • 24 позиции</div>
+</div>
+<span class="bg-success/20 text-success text-[12px] font-bold px-2.5 py-1 rounded-full border border-success/30 uppercase">Завершена</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-border-dark/50">
+<span class="text-gray-400 text-sm">Результат:</span>
+<span class="text-success font-bold">Излишки: +800 TJS</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Visual Placeholder) -->
+<nav class="fixed bottom-0 left-0 right-0 h-20 bg-card-dark border-t border-border-dark flex justify-around items-center px-6">
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px]">Склад</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px]">Отчеты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Настройки</span>
+</div>
+</nav>
+<!-- Home Indicator for iOS -->
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full"></div>
+</body></html>

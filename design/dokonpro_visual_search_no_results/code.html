@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Visual Search No Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#05b9d1",
+              "background-light": "#ffffff",
+              "background-dark": "#0f2023",
+              "tip-orange": "#FFF3E0",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased">
+<!-- Main Container for iPhone 14 Pro aspect ratio simulation -->
+<div class="relative mx-auto flex h-full min-h-screen w-full max-w-[393px] flex-col overflow-x-hidden border-x border-gray-100 dark:border-gray-800 shadow-sm">
+<!-- Header / TopAppBar -->
+<header class="flex items-center px-4 py-3 bg-background-light dark:bg-background-dark sticky top-0 z-10">
+<button class="flex items-center justify-center size-10 -ml-2 text-gray-900 dark:text-gray-100">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center pr-8 text-[17px] font-semibold leading-tight text-gray-900 dark:text-gray-100">Результаты поиска</h1>
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col items-center px-6 pt-6 pb-8">
+<!-- Search Preview Thumbnail -->
+<div class="mb-12">
+<div class="size-20 rounded-[12px] bg-center bg-cover bg-no-repeat shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-white dark:border-gray-700" data-alt="Small thumbnail of the item being searched" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEUvDdsXwsOAsF1hmnPQ2hpi3zfY1QnlA7oCwAfHbG5wRfRm0IbusQF9ssHoDfR1WyDYAVpxg0nee6Yhcnea4f_JNEzBrs7YLpmW0EmnWZeEL0IF6_m2-1h0FQvG1FAQWy_9eUHWMzXrFkVj8QnLAm6PNItoImzBQURZSj3LfjOTPUqrAawVVlEinzt_t1FE8oWOowsxHntZPylkt7nWok-08Ks8AuXeiC_1BDNUob6L7AHnimT8r8tZgoLvHFYnsWr5LLzrUJVFZL");'>
+</div>
+</div>
+<!-- Empty State / Illustration -->
+<div class="flex flex-col items-center text-center">
+<div class="mb-6 flex size-16 items-center justify-center rounded-full border-2 border-primary text-primary">
+<span class="material-symbols-outlined !text-[32px]">manage_search</span>
+</div>
+<h2 class="mb-2 text-[20px] font-bold tracking-[-0.01em] text-gray-900 dark:text-gray-50">Товар не найден</h2>
+<p class="max-w-[280px] text-[14px] leading-relaxed text-gray-500 dark:text-gray-400">
+                    Среди ваших товаров не нашлось совпадений с этим изображением
+                </p>
+</div>
+<!-- ActionPanel / Tip Card -->
+<div class="mt-10 w-full">
+<div class="flex items-start gap-3 rounded-xl bg-tip-orange p-4 dark:bg-tip-orange/10">
+<span class="material-symbols-outlined text-orange-400 text-[20px]">lightbulb</span>
+<p class="text-[14px] leading-snug text-gray-800 dark:text-gray-200">
+<span class="font-semibold">Совет:</span> убедитесь, что товар добавлен в каталог и фото чёткое
+                    </p>
+</div>
+</div>
+<!-- Spacer to push buttons to bottom -->
+<div class="flex-grow"></div>
+<!-- ButtonGroup / Action Stack -->
+<div class="mt-8 flex w-full flex-col gap-3">
+<!-- Primary Action -->
+<button class="flex h-[54px] w-full items-center justify-center gap-2 rounded-xl bg-primary text-white font-semibold transition-opacity active:opacity-90">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+<span>Сфотографировать заново</span>
+</button>
+<!-- Secondary Action (Outlined) -->
+<button class="flex h-[54px] w-full items-center justify-center gap-2 rounded-xl border-2 border-primary text-primary font-semibold transition-colors active:bg-primary/5">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Добавить как новый товар</span>
+</button>
+<!-- Tertiary Action (Ghost) -->
+<button class="flex h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-transparent text-primary font-semibold transition-colors active:bg-primary/5">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span>Поиск вручную</span>
+</button>
+</div>
+</main>
+<!-- Bottom Indicator (iOS style) -->
+<div class="flex h-5 w-full items-center justify-center bg-background-light dark:bg-background-dark pb-2">
+<div class="h-1.5 w-32 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+</div>
+</div>
+</body></html>

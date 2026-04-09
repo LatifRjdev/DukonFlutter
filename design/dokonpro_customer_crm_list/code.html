@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Customer CRM List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecc8",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#10221f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.05);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1b19] dark:text-white flex justify-center items-start min-h-screen">
+<!-- Mobile Container (iPhone 14 Pro Dimensions) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark overflow-hidden flex flex-col border-[8px] border-gray-900 rounded-[3rem] shadow-2xl">
+<!-- Status Bar Space (Safe Area) -->
+<div class="h-11 w-full flex justify-center items-end pb-1">
+<div class="w-28 h-7 bg-black rounded-full"></div> <!-- Dynamic Island Sim -->
+</div>
+<!-- Header -->
+<header class="flex items-center justify-between px-6 pt-4 pb-2">
+<h1 class="text-[18px] font-semibold leading-tight tracking-tight">Клиенты</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+</header>
+<!-- Search Bar -->
+<div class="px-5 py-3">
+<div class="relative flex items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+<span class="material-symbols-outlined ml-4 text-gray-400">search</span>
+<input class="w-full h-12 bg-transparent border-none focus:ring-0 text-sm font-normal px-3 placeholder:text-gray-400" placeholder="Поиск клиента" type="text"/>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2.5 px-5 py-2 overflow-x-auto hide-scrollbar">
+<button class="flex h-10 shrink-0 items-center justify-center rounded-full bg-primary px-5 shadow-sm">
+<span class="text-white text-sm font-semibold">Все</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-5 border border-gray-100 dark:border-gray-700">
+<span class="text-gray-600 dark:text-gray-300 text-sm font-medium">С долгом</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-5 border border-gray-100 dark:border-gray-700">
+<span class="text-gray-600 dark:text-gray-300 text-sm font-medium">VIP</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 px-5 border border-gray-100 dark:border-gray-700">
+<span class="text-gray-600 dark:text-gray-300 text-sm font-medium">Новые</span>
+</button>
+</div>
+<!-- Summary Card -->
+<div class="px-5 mt-4">
+<div class="bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-white">groups</span>
+</div>
+<div>
+<p class="text-[15px] font-bold text-[#0d1b19] dark:text-white">45 клиентов | Долг: 45,200 TJS</p>
+</div>
+</div>
+</div>
+<!-- Customer List -->
+<div class="flex-1 overflow-y-auto px-5 pt-5 pb-24 space-y-3">
+<!-- Customer 1: Ahmad Karimov -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl ios-shadow flex items-center justify-between border border-gray-50 dark:border-gray-700">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-lg">АК</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-[16px] font-bold">Ахмад Каримов</p>
+<span class="bg-[#FFD700]/20 text-[#B8860B] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">VIP</span>
+</div>
+<p class="text-gray-400 text-xs mt-0.5">+992 93 123 45 67</p>
+<p class="text-gray-600 dark:text-gray-300 text-xs mt-1">Покупок: 25,400 TJS</p>
+<p class="text-red-500 font-semibold text-xs mt-0.5">Долг: 12,500 TJS</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+<!-- Customer 2: Firuz Makhmadov -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl ios-shadow flex items-center justify-between border border-gray-50 dark:border-gray-700">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+<span class="text-blue-500 font-bold text-lg">ФМ</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-[16px] font-bold">Фируз Махмадов</p>
+<span class="bg-gray-100 dark:bg-gray-700 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">Серебро</span>
+</div>
+<p class="text-gray-400 text-xs mt-0.5">+992 90 444 55 66</p>
+<p class="text-gray-600 dark:text-gray-300 text-xs mt-1">Покупок: 18,200 TJS</p>
+<p class="text-red-500 font-semibold text-xs mt-0.5">Долг: 8,300 TJS</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+<!-- Customer 3: Mariya Kim -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl ios-shadow flex items-center justify-between border border-gray-50 dark:border-gray-700">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+<span class="text-purple-500 font-bold text-lg">МК</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-[16px] font-bold">Мария Ким</p>
+</div>
+<p class="text-gray-400 text-xs mt-0.5">+992 91 888 77 00</p>
+<p class="text-gray-600 dark:text-gray-300 text-xs mt-1">Покупок: 5,600 TJS</p>
+<p class="text-emerald-500 font-semibold text-xs mt-0.5">Нет долга</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+<!-- Customer 4: Placeholder for Scroll -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl ios-shadow flex items-center justify-between border border-gray-50 dark:border-gray-700">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
+<span class="text-orange-500 font-bold text-lg">СД</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-[16px] font-bold">Саид Давлатов</p>
+</div>
+<p class="text-gray-400 text-xs mt-0.5">+992 93 456 12 34</p>
+<p class="text-gray-600 dark:text-gray-300 text-xs mt-1">Покупок: 12,000 TJS</p>
+<p class="text-red-500 font-semibold text-xs mt-0.5">Долг: 2,100 TJS</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-300">chevron_right</span>
+</div>
+</div>
+<!-- Floating Action Button -->
+<button class="absolute bottom-10 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg shadow-primary/40 flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<!-- Bottom Tab Bar Sim (iOS Navigation) -->
+<nav class="absolute bottom-0 w-full h-[84px] bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 flex justify-around items-start pt-3 px-6">
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Главная</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined fill-1">group</span>
+<span class="text-[10px] font-semibold">Клиенты</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px]">Товары</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Настройки</span>
+</div>
+</nav>
+<!-- Home Indicator -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-[134px] h-[5px] bg-black dark:bg-white rounded-full"></div>
+</div>
+</body></html>

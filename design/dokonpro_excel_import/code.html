@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Excel Import</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#05b9d1",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0f2023",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Inter", sans-serif;
+    -webkit-tap-highlight-color: transparent
+    }
+.custom-scrollbar::-webkit-scrollbar {
+    display: none
+    }
+.form-select {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAxcpukCppFtMU6TDEHdn-18wezTqusaxjGza8fGGxodZ07aZXPi02azH7VKb0eV_NRjuaPuE6tJ1gmxpP5el2pJw9IbOaU0SParoFAfscrimwldXbO50FnNSGlW4WCXoK2-IDLscuGC9SwQuWEsH4Q4ArUdsKcJgkhP25iFRBaIjj_BQiZWH3YQrQDbAvui2u05vfhntKauDzLiI2RIpqgJjtzGgUBEkV_7ATqGxg3yuR4FE5IrSIKCpGAwr7ywcrT1_yrBgoDGycz);
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1a1c] flex justify-center items-start min-h-screen">
+<!-- iPhone 14 Pro Frame Simulation (393x852px) -->
+<div class="relative w-[393px] h-[852px] bg-background-light dark:bg-background-dark flex flex-col overflow-hidden shadow-2xl border-x border-gray-200 dark:border-gray-800">
+<!-- Header -->
+<div class="flex items-center bg-white dark:bg-background-dark px-4 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0 sticky top-0 z-10">
+<div class="flex size-10 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-[#0d1a1c] dark:text-white" data-icon="arrow_back">arrow_back</span>
+</div>
+<h2 class="text-[#0d1a1c] dark:text-white text-lg font-bold leading-tight flex-1 text-center pr-10">Импорт товаров</h2>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto custom-scrollbar pb-32">
+<!-- Store Selection -->
+<div class="px-4 py-4">
+<label class="flex flex-col gap-2">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-medium">Выберите магазин</p>
+<select class="form-select flex w-full rounded-lg border border-[#cee6e9] dark:border-gray-700 bg-white dark:bg-gray-900 h-12 px-4 text-[#0d1a1c] dark:text-white text-base focus:ring-1 focus:ring-primary focus:outline-none">
+<option value="main">Основной склад</option>
+<option value="branch1">Филиал на Мира</option>
+<option value="branch2">ТЦ "Авиатор"</option>
+</select>
+</label>
+</div>
+<!-- File Upload Zone -->
+<div class="px-4 py-2">
+<div class="flex flex-col items-center gap-4 rounded-lg border-2 border-dashed border-[#05b9d1]/50 bg-white dark:bg-gray-900 px-6 py-10 transition-colors hover:bg-white/80">
+<div class="flex size-16 items-center justify-center rounded-full bg-[#05b9d1]/10">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="description">description</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<p class="text-[#0d1a1c] dark:text-white text-base font-bold text-center">Загрузите файл Excel</p>
+<button class="text-primary text-sm font-medium underline underline-offset-4">выберите файл</button>
+</div>
+</div>
+</div>
+<!-- Status Card -->
+<div class="px-4 py-4">
+<div class="flex items-center gap-3 rounded-lg bg-[#e8f7f9] dark:bg-[#0d2e33] border border-[#05b9d1]/20 p-4">
+<div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-xl" data-icon="check">check</span>
+</div>
+<div class="flex flex-col">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-bold">Найдено 150 строк</p>
+<p class="text-[#47949e] dark:text-[#a0c8ce] text-xs">Файл успешно проанализирован</p>
+</div>
+</div>
+</div>
+<!-- Mapping Section Header -->
+<div class="px-4 pt-4 pb-2">
+<h3 class="text-[#0d1a1c] dark:text-white text-lg font-bold">Сопоставление столбцов</h3>
+</div>
+<!-- Mapping Table Card -->
+<div class="px-4 py-2">
+<div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Mapping Rows -->
+<div class="divide-y divide-gray-50 dark:divide-gray-800">
+<!-- Row 1 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Наименование <span class="text-red-500">*</span></span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец A</option>
+</select>
+</div>
+<!-- Row 2 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Артикул</span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец B</option>
+</select>
+</div>
+<!-- Row 3 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Штрих-код</span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец C</option>
+</select>
+</div>
+<!-- Row 4 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Количество</span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец D</option>
+</select>
+</div>
+<!-- Row 5 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Цена закупки</span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец E</option>
+</select>
+</div>
+<!-- Row 6 -->
+<div class="flex items-center justify-between p-4">
+<span class="text-sm font-medium text-[#0d1a1c] dark:text-white">Цена продажи <span class="text-red-500">*</span></span>
+<select class="form-select bg-background-light dark:bg-background-dark border-none rounded px-3 py-1.5 text-sm text-[#47949e] focus:ring-1 focus:ring-primary w-28">
+<option>Столбец F</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Radio Group -->
+<div class="px-4 py-6">
+<p class="text-[#0d1a1c] dark:text-white text-sm font-medium mb-3">При совпадении:</p>
+<div class="flex items-center gap-2">
+<label class="flex-1">
+<input checked="" class="hidden peer" name="duplicate_action" type="radio" value="update"/>
+<div class="flex items-center justify-center h-10 px-2 rounded-lg border border-[#cee6e9] dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-medium text-[#47949e] peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary cursor-pointer text-center">
+                            Обновить
+                        </div>
+</label>
+<label class="flex-1">
+<input class="hidden peer" name="duplicate_action" type="radio" value="skip"/>
+<div class="flex items-center justify-center h-10 px-2 rounded-lg border border-[#cee6e9] dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-medium text-[#47949e] peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary cursor-pointer text-center">
+                            Пропустить
+                        </div>
+</label>
+<label class="flex-1">
+<input class="hidden peer" name="duplicate_action" type="radio" value="new"/>
+<div class="flex items-center justify-center h-10 px-2 rounded-lg border border-[#cee6e9] dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-medium text-[#47949e] peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary cursor-pointer text-center">
+                            Создать новый
+                        </div>
+</label>
+</div>
+</div>
+</div>
+<!-- Bottom Action Button -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
+<button class="w-full h-14 bg-primary hover:bg-primary/90 text-white text-base font-bold rounded-lg shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]">
+                Импортировать (150 товаров)
+            </button>
+<!-- iOS Home Indicator -->
+<div class="mt-4 flex justify-center">
+<div class="w-32 h-1 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+</div>
+</div>
+</div>
+</body></html>

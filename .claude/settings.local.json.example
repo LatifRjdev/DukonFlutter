@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(cd api && npm run:*)",
+      "Bash(cd api && npx prisma:*)",
+      "Bash(docker compose:*)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(adb:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

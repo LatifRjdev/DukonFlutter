@@ -1,0 +1,97 @@
+name: dokonpro
+description: "DokonPro — управление розничным магазином"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^9.0.0
+  equatable: ^2.0.7
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # Network
+  dio: ^5.7.0
+  connectivity_plus: ^6.1.0
+
+  # Local Storage
+  path_provider: ^2.1.4
+  sqflite: ^2.4.1
+
+  # DI
+  get_it: ^8.0.2
+  injectable: ^2.5.0
+
+  # UI
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.16
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  cupertino_icons: ^1.0.8
+  fl_chart: ^0.69.0
+
+  # Barcode Scanner
+  mobile_scanner: ^6.0.0
+
+  # PDF & Printing
+  pdf: ^3.11.1
+  printing: ^5.13.3
+
+  # Bluetooth Thermal Printer
+  thermal_printer: ^1.0.5
+
+  # Share
+  share_plus: ^10.1.4
+
+  # Local Notifications
+  flutter_local_notifications: ^18.0.1
+
+  # Utils
+  intl: ^0.20.0
+  uuid: ^4.5.1
+  shared_preferences: ^2.3.4
+  flutter_secure_storage: ^9.2.3
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  image_picker: ^1.1.2
+  permission_handler: ^11.3.1
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  freezed: ^2.5.7
+  injectable_generator: ^2.7.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700

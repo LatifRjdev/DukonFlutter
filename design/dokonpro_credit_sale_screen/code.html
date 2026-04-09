@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Credit Sale Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                        "border-light": "#e0e0e0",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c1b1d] antialiased">
+<div class="mx-auto min-h-screen max-w-[393px] bg-white dark:bg-background-dark shadow-2xl relative flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 border-b border-border-light dark:border-white/10">
+<button class="text-[#0c1b1d] dark:text-white mr-4">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1">Продажа в долг</h1>
+</header>
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- Customer Search Section -->
+<div class="px-4 py-4">
+<label class="flex flex-col gap-2">
+<p class="text-sm font-medium text-[#4596a1] dark:text-[#a0bfc3]">Клиент</p>
+<div class="flex items-stretch gap-0">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#4596a1]">search</span>
+<input class="w-full h-14 pl-11 pr-4 rounded-l-xl border border-border-light dark:border-white/10 bg-white dark:bg-[#1a2f31] focus:ring-1 focus:ring-primary focus:border-primary outline-none text-base" placeholder="Поиск клиента" type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 rounded-r-xl flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</label>
+</div>
+<!-- Customer Card -->
+<div class="px-4 pb-4">
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a2f31] p-4 rounded-xl border border-border-light dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+<div class="size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg border border-primary/20 shrink-0">
+                        АК
+                    </div>
+<div class="flex-1">
+<p class="text-base font-bold dark:text-white">Ахмад Каримов</p>
+<p class="text-sm text-[#4596a1]">+992 93 123 45 67</p>
+<p class="text-sm font-medium text-red-500 mt-1">Текущий долг: 3,200 TJS</p>
+</div>
+<span class="material-symbols-outlined text-[#4596a1]">chevron_right</span>
+</div>
+</div>
+<!-- Debt Information Card -->
+<div class="px-4 py-2">
+<div class="flex flex-col gap-1 rounded-xl bg-[#e0f7fa] dark:bg-primary/10 border border-primary/20 p-5">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-base font-bold text-[#0c1b1d] dark:text-white">Сумма долга: 490 TJS</p>
+<p class="text-sm text-[#4596a1]">Информация о текущей продаже</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px]">info</span>
+</div>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="px-4 py-4 space-y-5">
+<!-- Date Picker -->
+<label class="flex flex-col gap-2">
+<p class="text-sm font-medium text-[#4596a1] dark:text-[#a0bfc3]">Срок погашения</p>
+<div class="relative">
+<input class="w-full h-14 px-4 rounded-xl border border-border-light dark:border-white/10 bg-white dark:bg-[#1a2f31] focus:ring-1 focus:ring-primary focus:border-primary outline-none text-base" type="text" value="13.02.2026"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary">calendar_today</span>
+</div>
+</label>
+<!-- Partial Payment Toggle -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<p class="text-base font-medium">Частичная оплата сейчас</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="relative opacity-40 pointer-events-none">
+<input class="w-full h-14 px-4 rounded-xl border border-border-light dark:border-white/10 bg-gray-50 dark:bg-gray-900 outline-none text-base" placeholder="0 TJS" type="number" value="0"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4596a1] text-sm font-medium">TJS</span>
+</div>
+</div>
+<!-- Note Textarea -->
+<label class="flex flex-col gap-2">
+<p class="text-sm font-medium text-[#4596a1] dark:text-[#a0bfc3]">Примечание</p>
+<textarea class="w-full h-32 p-4 rounded-xl border border-border-light dark:border-white/10 bg-white dark:bg-[#1a2f31] focus:ring-1 focus:ring-primary focus:border-primary outline-none text-base resize-none" placeholder="Введите примечание..."></textarea>
+</label>
+</div>
+</main>
+<!-- Bottom Action Button -->
+<div class="fixed bottom-0 w-[393px] p-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-t border-border-light dark:border-white/10">
+<button class="w-full bg-primary hover:bg-[#00a6bc] text-white h-14 rounded-xl font-bold text-base transition-all active:scale-[0.98] shadow-lg shadow-primary/20">
+                Оформить в долг
+            </button>
+<!-- iOS Safe Area Spacer -->
+<div class="h-4"></div>
+</div>
+</div>
+</body></html>

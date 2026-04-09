@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Detailed Financial Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-[#0d1b12] dark:text-white">
+<div class="mx-auto max-w-[393px] min-h-screen flex flex-col pb-10">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-12 pb-4">
+<div class="flex items-center justify-between">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight">Финансовый отчёт</h1>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-4 space-y-4">
+<!-- Filters / Dropdowns -->
+<div class="flex gap-3 pt-2">
+<div class="flex-1 relative">
+<button class="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-[#cfe7d7] dark:border-gray-700 rounded-xl text-sm font-medium">
+<span class="truncate">Основной магазин</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">expand_more</span>
+</button>
+</div>
+<div class="flex-1 relative">
+<button class="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-[#cfe7d7] dark:border-gray-700 rounded-xl text-sm font-medium">
+<span class="truncate">Январь 2026</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">calendar_month</span>
+</button>
+</div>
+</div>
+<!-- Card: Основные показатели -->
+<section class="bg-white dark:bg-gray-900 rounded-xl ios-shadow overflow-hidden">
+<h3 class="text-base font-bold px-4 pt-4 pb-2">Основные показатели</h3>
+<div class="px-4 pb-4 space-y-3">
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Выручка</p>
+<p class="font-semibold text-sm">245,000 TJS</p>
+</div>
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Себестоимость</p>
+<p class="font-semibold text-sm">178,000 TJS</p>
+</div>
+<div class="pt-2 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Валовая прибыль</p>
+<p class="font-bold text-primary text-sm">+67,000 TJS</p>
+</div>
+</div>
+</section>
+<!-- Card: Операционные расходы -->
+<section class="bg-white dark:bg-gray-900 rounded-xl ios-shadow overflow-hidden">
+<h3 class="text-base font-bold px-4 pt-4 pb-2">Операционные расходы</h3>
+<div class="px-4 pb-4 space-y-3">
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Аренда</p>
+<p class="text-sm">5,000 TJS</p>
+</div>
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Зарплаты</p>
+<p class="text-sm">12,000 TJS</p>
+</div>
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Транспорт</p>
+<p class="text-sm">3,400 TJS</p>
+</div>
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Коммунальные</p>
+<p class="text-sm">1,200 TJS</p>
+</div>
+<div class="flex justify-between items-center py-1">
+<p class="text-gray-500 dark:text-gray-400 text-sm">Прочее</p>
+<p class="text-sm">2,900 TJS</p>
+</div>
+<div class="pt-3 mt-2 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
+<p class="font-bold text-sm">Итого расходы</p>
+<p class="font-bold text-sm text-red-500">24,500 TJS</p>
+</div>
+</div>
+</section>
+<!-- Card: Итоги -->
+<section class="bg-white dark:bg-gray-900 rounded-xl ios-shadow overflow-hidden border-l-4 border-primary">
+<div class="p-4">
+<p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Чистая прибыль</p>
+<div class="flex items-baseline gap-2 mb-4">
+<span class="text-3xl font-bold text-primary">42,500</span>
+<span class="text-lg font-semibold text-primary/80">TJS</span>
+</div>
+<div class="grid grid-cols-3 gap-2 py-3 border-t border-gray-100 dark:border-gray-800">
+<div class="text-center border-r border-gray-100 dark:border-gray-800">
+<p class="text-[10px] text-gray-400 uppercase mb-1">Сред. чек</p>
+<p class="text-xs font-bold">1,250</p>
+</div>
+<div class="text-center border-r border-gray-100 dark:border-gray-800">
+<p class="text-[10px] text-gray-400 uppercase mb-1">Продаж</p>
+<p class="text-xs font-bold">196</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-gray-400 uppercase mb-1">Маржа</p>
+<p class="text-xs font-bold">27.3%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Actions -->
+<div class="flex flex-col gap-3 pt-4">
+<button class="w-full flex items-center justify-center gap-2 py-4 border-2 border-[#cfe7d7] dark:border-gray-700 rounded-xl text-[#0d1b12] dark:text-white font-bold transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+                    Скачать PDF
+                </button>
+<button class="w-full flex items-center justify-center gap-2 py-4 border-2 border-[#cfe7d7] dark:border-gray-700 rounded-xl text-[#0d1b12] dark:text-white font-bold transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">mail</span>
+                    Отправить на email
+                </button>
+</div>
+</main>
+<!-- Home Indicator Area (Safe Area Spacer) -->
+<div class="h-8"></div>
+</div>
+</body></html>

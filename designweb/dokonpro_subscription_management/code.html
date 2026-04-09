@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Subscription Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                        "sidebar-dark": "#1E293B"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-item {
+            background-color: rgba(0, 189, 214, 0.1);
+            color: #00bdd6;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#1E293B] dark:text-gray-100 min-h-screen flex">
+<!-- Sidebar -->
+<aside class="w-[256px] bg-[#1E293B] text-white flex flex-col h-screen sticky top-0">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">storefront</span>
+</div>
+<span class="text-xl font-bold tracking-tight">DokonPro</span>
+</div>
+<nav class="flex-1 px-4 mt-4 space-y-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 cursor-pointer text-gray-400">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Дашборд</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 cursor-pointer text-gray-400">
+<span class="material-symbols-outlined">store</span>
+<span class="text-sm font-medium">Магазины</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">credit_card</span>
+<span class="text-sm font-medium">Подписки</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 cursor-pointer text-gray-400">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Пользователи</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 cursor-pointer text-gray-400">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Отчеты</span>
+</div>
+</nav>
+<div class="p-4 border-t border-white/10">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 cursor-pointer text-gray-400">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Настройки</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-500/10 cursor-pointer text-red-400">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Выход</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFC] dark:bg-background-dark">
+<!-- Header -->
+<header class="h-16 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-8 bg-white dark:bg-[#0f2123]">
+<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Подписки</h1>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl font-medium text-sm hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                    Экспорт
+                </button>
+<div class="w-8 h-8 rounded-full bg-gray-200" data-alt="Admin profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmiQMVhabJfWq3WCKlydk5uBtaqgp4XU543dPCt789zst6I5e9oIzHKtOwcf_DEdjTIxpNynHb8S-mv5o0FZlH692JntWLkcqsm39jRIAb0EKz3fbdCxfvxzFIgCAonamBdpFYSVajP_1R0Xhi6ePD4kqqf6MSVIj14DrTwK99d64MHYjK46hFpEmtqSCYwVJj5O28xYocwvNJbOw6Hl84-fTRi9ch20KoY3OmiUhzE6SCFdd0eF3-QvU6Ej5ELvsVeCmsNxscPSk"); background-size: cover;'></div>
+</div>
+</header>
+<div class="p-6 space-y-6">
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Всего подписок</p>
+<h3 class="text-2xl font-bold mt-1">4,832</h3>
+</div>
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Активные</p>
+<h3 class="text-2xl font-bold mt-1 text-green-600">3,490</h3>
+</div>
+<div class="w-10 h-10 bg-green-50 dark:bg-green-500/10 rounded-lg flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Trial</p>
+<h3 class="text-2xl font-bold mt-1 text-orange-500">342</h3>
+</div>
+<div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined">hourglass_empty</span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Истекшие</p>
+<h3 class="text-2xl font-bold mt-1 text-red-500">1,000</h3>
+</div>
+<div class="w-10 h-10 bg-red-50 dark:bg-red-500/10 rounded-lg flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined">error</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-wrap items-end gap-4">
+<div class="flex flex-col gap-1.5 w-[300px]">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase ml-1">Поиск</span>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50" placeholder="Имя, ID или магазин" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[140px]">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase ml-1">Тариф</span>
+<select class="py-2 px-3 bg-gray-50 dark:bg-gray-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50">
+<option>Все</option>
+<option>Start</option>
+<option>Business</option>
+<option>Premium</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[140px]">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase ml-1">Статус</span>
+<select class="py-2 px-3 bg-gray-50 dark:bg-gray-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50">
+<option>Все</option>
+<option>Активные</option>
+<option>Trial</option>
+<option>Истекшие</option>
+<option>Отмененные</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[200px]">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase ml-1">Период</span>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50" type="text" value="01.01.2026 — 03.02.2026"/>
+</div>
+</div>
+<button class="px-4 py-2 text-gray-500 hover:text-primary font-medium text-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+                    Сбросить
+                </button>
+</div>
+<!-- Tabs -->
+<div class="flex items-center gap-8 border-b border-gray-200 dark:border-gray-800 px-2">
+<button class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent">Все (4,832)</button>
+<button class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent">Активные (3,490)</button>
+<button class="pb-3 text-sm font-bold text-primary border-b-2 border-primary">Trial (342)</button>
+<button class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent">Истекающие 7д (86)</button>
+<button class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent">Отменённые (215)</button>
+</div>
+<!-- Subscription Table -->
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-gray-50 dark:bg-gray-900/50">
+<tr>
+<th class="py-4 px-4 w-10"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Пользователь</th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Тариф</th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Статус</th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Период</th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Автопродл.</th>
+<th class="py-4 px-4 text-xs font-bold text-gray-500 uppercase">Оплата</th>
+<th class="py-4 px-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+<!-- Row 1 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="py-4 px-4"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">AK</div>
+<div>
+<p class="text-sm font-semibold">Алишер Каримов</p>
+<p class="text-xs text-gray-500">alisher@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300 rounded-full text-xs font-bold uppercase">Business</span></td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300 rounded-full text-xs font-bold uppercase">Active</span></td>
+<td class="py-4 px-4">
+<p class="text-sm">15.01.26 — 15.02.26</p>
+</td>
+<td class="py-4 px-4">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</td>
+<td class="py-4 px-4 text-sm font-medium">200 TJS</td>
+<td class="py-4 px-4 text-right">
+<button class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="py-4 px-4"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">MR</div>
+<div>
+<p class="text-sm font-semibold">Малика Рахимова</p>
+<p class="text-xs text-gray-500">malika@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 rounded-full text-xs font-bold uppercase">Premium</span></td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300 rounded-full text-xs font-bold uppercase">Active</span></td>
+<td class="py-4 px-4">
+<p class="text-sm">20.12.25 — 20.03.26</p>
+</td>
+<td class="py-4 px-4">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</td>
+<td class="py-4 px-4 text-sm font-medium">900 TJS</td>
+<td class="py-4 px-4 text-right">
+<button class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="py-4 px-4"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs">DS</div>
+<div>
+<p class="text-sm font-semibold">Дилшод Сафаров</p>
+<p class="text-xs text-gray-500">dilshod@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 rounded-full text-xs font-bold uppercase">Premium</span></td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300 rounded-full text-xs font-bold uppercase">Trial</span></td>
+<td class="py-4 px-4">
+<p class="text-sm">31.01.26 — 10.02.26</p>
+</td>
+<td class="py-4 px-4">
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</td>
+<td class="py-4 px-4 text-sm font-medium">—</td>
+<td class="py-4 px-4 text-right">
+<button class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="py-4 px-4"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">SA</div>
+<div>
+<p class="text-sm font-semibold">Сорбон Ахмедов</p>
+<p class="text-xs text-gray-500">sorbon@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300 rounded-full text-xs font-bold uppercase">Business</span></td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 rounded-full text-xs font-bold uppercase">Expiring 05.02</span></td>
+<td class="py-4 px-4">
+<p class="text-sm">05.01.26 — 05.02.26</p>
+</td>
+<td class="py-4 px-4">
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</td>
+<td class="py-4 px-4 text-sm font-medium">200 TJS</td>
+<td class="py-4 px-4 text-right">
+<button class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="py-4 px-4"><input class="rounded border-gray-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs">NS</div>
+<div>
+<p class="text-sm font-semibold">Нозим Шарипов</p>
+<p class="text-xs text-gray-500">nozim@example.com</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-full text-xs font-bold uppercase">Start</span></td>
+<td class="py-4 px-4"><span class="px-2.5 py-1 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-full text-xs font-bold uppercase">Canceled</span></td>
+<td class="py-4 px-4">
+<p class="text-sm">01.12.25 — 01.01.26</p>
+</td>
+<td class="py-4 px-4 text-sm font-medium text-gray-400">—</td>
+<td class="py-4 px-4 text-sm font-medium">100 TJS</td>
+<td class="py-4 px-4 text-right">
+<button class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between">
+<p class="text-sm text-gray-500">Показано 5 из 342 trial подписок</p>
+<div class="flex gap-2">
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white font-medium">1</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">2</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">3</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

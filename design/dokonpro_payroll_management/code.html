@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13d3ec",
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen">
+<div class="mx-auto max-w-[393px] bg-background-light dark:bg-background-dark min-h-screen pb-24 relative overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow-sm">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-200">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold text-gray-900 dark:text-white">Расчёт зарплаты</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow-sm">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-200">picture_as_pdf</span>
+</button>
+</header>
+<!-- Month Picker -->
+<div class="px-4 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar">
+<button class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
+<span class="material-symbols-outlined text-xs">chevron_left</span>
+</button>
+<div class="flex gap-2">
+<div class="px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold">Январь</div>
+<div class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-medium">Февраль</div>
+<div class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-medium">Март</div>
+</div>
+<button class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+</button>
+</div>
+<!-- Summary Card -->
+<div class="p-4">
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex flex-col gap-1">
+<p class="text-sm text-gray-500 dark:text-gray-400">Итого за январь 2026</p>
+<div class="flex items-end justify-between">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">42,800 TJS</h2>
+<span class="text-primary font-medium text-sm px-3 py-1 bg-primary/10 rounded-full">4 сотрудника</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Staff List -->
+<div class="px-4 flex flex-col gap-4">
+<!-- Card 1: Али Рахимов -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">АР</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white">Али Рахимов</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Кассир</p>
+</div>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Оклад</span>
+<span class="font-medium text-gray-900 dark:text-white">8,000 TJS</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Бонус за продажи (2%)</span>
+<span class="font-medium text-gray-900 dark:text-white">3,200 TJS</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-gray-500 dark:text-gray-400">Смены</span>
+<span class="text-gray-900 dark:text-white font-medium">22 из 26</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 84%"></div>
+</div>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Премия</span>
+<span class="font-medium text-green-500">+1,000 TJS</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Удержания</span>
+<span class="font-medium text-red-500">-500 TJS</span>
+</div>
+</div>
+<div class="pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-400">К выплате</span>
+<span class="text-lg font-bold text-primary">11,700 TJS</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary text-white py-2.5 rounded-full font-bold text-sm">Выплатить</button>
+<button class="border border-primary text-primary py-2.5 rounded-full font-bold text-sm">Расчётный лист</button>
+</div>
+</div>
+</div>
+<!-- Card 2: Мария Каримова -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-lg">МК</div>
+<div class="flex-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Мария Каримова</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Администратор</p>
+</div>
+<span class="bg-green-100 text-green-600 text-[10px] font-bold px-2 py-1 rounded uppercase">Выплачено</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-400">К выплате</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">12,500 TJS</span>
+</div>
+</div>
+<!-- Card 3: Фируз Назаров -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold text-lg">ФН</div>
+<div class="flex-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Фируз Назаров</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Продавец</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-400">К выплате</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">9,200 TJS</span>
+</div>
+</div>
+<!-- Card 4: Зарина Алиева -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 font-bold text-lg">ЗА</div>
+<div class="flex-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Зарина Алиева</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Клининг</p>
+</div>
+<span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded uppercase">Не выплачено</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-400">К выплате</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">9,400 TJS</span>
+</div>
+</div>
+</div>
+<!-- Bottom Fixed Action -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[393px] mx-auto p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm">
+<button class="w-full bg-primary text-white py-4 rounded-2xl font-bold text-base shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                Выплатить всем — 42,800 TJS
+            </button>
+</div>
+</div>
+</body></html>

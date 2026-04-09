@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokonPro Splash Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00bdd6",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f2123",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom spinner animation for the splash screen */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin 1.5s linear infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0c1b1d] antialiased">
+<!-- iPhone 14 Pro Container (Simulated viewport) -->
+<div class="relative mx-auto flex h-screen w-full max-w-[393px] flex-col items-center justify-between overflow-hidden bg-background-light dark:bg-background-dark transition-colors duration-300">
+<!-- Top Spacer (Status Bar Area) -->
+<div class="h-12 w-full"></div>
+<!-- Main Branding Block -->
+<div class="flex flex-col items-center justify-center space-y-6">
+<!-- Logo Icon -->
+<div class="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-primary/10">
+<span class="material-symbols-outlined text-[64px] text-primary" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;">
+                    storefront
+                </span>
+<!-- Subtle decorative element to make it "Shopping Bag" like -->
+<div class="absolute -top-1 h-8 w-12 rounded-t-full border-4 border-primary opacity-20"></div>
+</div>
+<!-- Typography -->
+<div class="text-center">
+<h1 class="font-display text-[28px] font-bold tracking-tight text-[#0c1b1d] dark:text-white">
+                    DokonPro
+                </h1>
+<p class="mt-2 font-display text-sm font-normal leading-normal text-[#757575] dark:text-gray-400">
+                    Управляй бизнесом легко
+                </p>
+</div>
+</div>
+<!-- Bottom Loading/Activity Area -->
+<div class="mb-20 flex flex-col items-center space-y-8">
+<!-- Circular Loading Indicator -->
+<div class="relative h-8 w-8">
+<div class="h-8 w-8 rounded-full border-4 border-primary/20"></div>
+<div class="absolute top-0 h-8 w-8 animate-spin-slow rounded-full border-4 border-transparent border-t-primary"></div>
+</div>
+<!-- Optional: Progress bar style from components list (Subtle version) -->
+<div class="w-32 opacity-0">
+<div class="h-1 w-full rounded-full bg-primary/10">
+<div class="h-1 w-1/3 rounded-full bg-primary"></div>
+</div>
+</div>
+</div>
+<!-- iOS Home Indicator Spacer -->
+<div class="h-8 w-full"></div>
+</div>
+<!-- Hidden visual context for data-alt requirements -->
+<div class="hidden">
+<img alt="splash" data-alt="Minimalist turquoise store logo with bold text and slogan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs0MnyYSVAwRakE4WIO5_gdGUqLCNmRw0dYR63wXyK0c0Gk9JlhdjNMikR19L-_6wsuLIdgs5zTlYolj_-orp2LqB7RzCXLho5iXrPBF-RuFwR1figtSXTVnpkU9_lxuhk8YWGUVfYGdNeXN8fDG077eyvlSkjxaNyduCTbV9JRieX-o_nWs1vHQFqPKuBdrxQa2pHG2gKSI415dAIiAJb9lTYoZ5RAiEEQwK3W16mMKOKcrASxU30yT9AkgkUbvwu01Y5K1j7grHA"/>
+</div>
+</body></html>
