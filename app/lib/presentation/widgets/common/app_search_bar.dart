@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_shadows.dart';
 
 class AppSearchBar extends StatelessWidget {
   final TextEditingController? controller;
@@ -17,24 +18,33 @@ class AppSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        hintText: hint,
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: onScanTap != null
-            ? IconButton(
-                icon: const Icon(Icons.qr_code_scanner),
-                onPressed: onScanTap,
-              )
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          borderSide: BorderSide.none,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        boxShadow: isDark ? null : AppShadows.sm,
+        border: isDark ? Border.all(color: theme.colorScheme.outline) : null,
+      ),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hint,
+          prefixIcon: Icon(Icons.search, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+          suffixIcon: onScanTap != null
+              ? IconButton(
+                  icon: Icon(Icons.qr_code_scanner, color: theme.colorScheme.primary),
+                  onPressed: onScanTap,
+                )
+              : null,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
-        filled: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }

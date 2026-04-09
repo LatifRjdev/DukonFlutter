@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../common/glass_card.dart';
 
 class StatCard extends StatelessWidget {
   final IconData icon;
@@ -22,76 +23,64 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final effectiveIconColor = iconColor ?? AppColors.primary;
 
-    return Material(
-      color: AppColors.card,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-      elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.shadow,
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingMd),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: effectiveIconColor.withValues(alpha:0.1),
-                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: effectiveIconColor,
-                    size: 22,
-                  ),
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: effectiveIconColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
-                if (trendPercentage != null) _buildTrendIndicator(),
-              ],
-            ),
-            const SizedBox(height: AppConstants.spacingSm + 4),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-                fontFamily: 'Inter',
+                child: Icon(icon, color: effectiveIconColor, size: 22),
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              if (trendPercentage != null) _buildTrendIndicator(theme),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                fontFamily: 'Inter',
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildTrendIndicator() {
-    final color = trendUp ? AppColors.success : AppColors.error;
+  Widget _buildTrendIndicator(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    final color = trendUp
+        ? (isDark ? AppColors.successDark : AppColors.success)
+        : (isDark ? AppColors.errorDark : AppColors.error);
+    final bgColor = trendUp
+        ? (isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successBg)
+        : (isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorBg);
     final iconData = trendUp ? Icons.trending_up_rounded : Icons.trending_down_rounded;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha:0.1),
+        color: bgColor,
         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       ),
       child: Row(
@@ -101,12 +90,7 @@ class StatCard extends StatelessWidget {
           const SizedBox(width: 2),
           Text(
             '${trendPercentage!.toStringAsFixed(1)}%',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: color,
-              fontFamily: 'Inter',
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color),
           ),
         ],
       ),
