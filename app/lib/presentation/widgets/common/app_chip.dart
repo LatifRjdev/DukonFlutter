@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_gradients.dart';
 
 class AppChip extends StatelessWidget {
   final String label;
@@ -24,25 +25,23 @@ class AppChip extends StatelessWidget {
         duration: AppConstants.animationFast,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.background,
+          gradient: isSelected ? AppGradients.primary : null,
+          color: isSelected ? null : AppColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(AppConstants.radiusRound),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.divider,
-          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16, color: isSelected ? Colors.white : AppColors.textSecondary),
+              Icon(icon, size: 16, color: isSelected ? Colors.white : AppColors.primary),
               const SizedBox(width: 4),
             ],
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : AppColors.textPrimary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                fontSize: 14,
+                color: isSelected ? Colors.white : AppColors.primary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                fontSize: 13,
               ),
             ),
           ],
