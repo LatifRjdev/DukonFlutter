@@ -28,6 +28,8 @@ import 'presentation/blocs/shift/shift_bloc.dart';
 import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
+import 'presentation/blocs/settings/settings_state.dart';
+
 class DokonProApp extends StatelessWidget {
   const DokonProApp({super.key});
 
@@ -60,16 +62,23 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<StaffFormBloc>()),
         BlocProvider(create: (_) => sl<PrinterBloc>()),
       ],
-      child: MaterialApp.router(
-        title: 'DokonPro',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
-        routerConfig: AppRouter.router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('ru'),
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final themeMode = settingsState is SettingsLoaded
+              ? settingsState.themeMode
+              : ThemeMode.system;
+          return MaterialApp.router(
+            title: 'DokonPro',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeMode,
+            routerConfig: AppRouter.router,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('ru'),
+          );
+        },
       ),
     );
   }

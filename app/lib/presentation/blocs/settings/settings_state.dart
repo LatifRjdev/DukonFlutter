@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import '../../../domain/entities/user.dart';
 
 abstract class SettingsState extends Equatable {
@@ -12,9 +13,17 @@ class SettingsLoading extends SettingsState {}
 
 class SettingsLoaded extends SettingsState {
   final User user;
-  const SettingsLoaded(this.user);
+  final ThemeMode themeMode;
+  const SettingsLoaded(this.user, {this.themeMode = ThemeMode.system});
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, themeMode];
+
+  SettingsLoaded copyWith({User? user, ThemeMode? themeMode}) {
+    return SettingsLoaded(
+      user ?? this.user,
+      themeMode: themeMode ?? this.themeMode,
+    );
+  }
 }
 
 class SettingsActionSuccess extends SettingsState {

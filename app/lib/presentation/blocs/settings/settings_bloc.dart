@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/user.dart';
@@ -14,6 +16,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsProfileRequested>(_onProfileRequested);
     on<SettingsProfileUpdated>(_onProfileUpdated);
     on<SettingsPasswordChanged>(_onPasswordChanged);
+    on<SettingsThemeChanged>((event, emit) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('theme_mode', event.themeMode.index);
+      if (state is SettingsLoaded) {
+        emit((state as SettingsLoaded).copyWith(themeMode: event.themeMode));
+      }
+    });
   }
 
   Future<void> _onProfileRequested(SettingsProfileRequested event, Emitter<SettingsState> emit) async {
@@ -21,7 +30,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     try {
       final response = await _dioClient.get(ApiEndpoints.userMe);
       final data = response.data as Map<String, dynamic>;
-      emit(SettingsLoaded(_mapUser(data)));
+      final prefs = await SharedPreferences.getInstance();
+      final themeModeIndex = prefs.getInt('theme_mode') ?? ThemeMode.system.index;
+      final themeMode = ThemeMode.values[themeModeIndex];
+      emit(SettingsLoaded(_mapUser(data), themeMode: themeMode));
     } catch (e) {
       emit(SettingsError(e.toString()));
     }
