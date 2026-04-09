@@ -13,6 +13,9 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_card.dart';
+import '../../widgets/common/gradient_header.dart';
+import '../../widgets/common/glass_card.dart';
+import '../../widgets/common/app_chip.dart';
 
 class DashboardPage extends StatefulWidget {
   final ValueChanged<int>? onTabChange;
@@ -82,78 +85,153 @@ class _DashboardPageState extends State<DashboardPage> {
       },
       child: Scaffold(
         backgroundColor: AppColors.lightBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-              // Period tabs
-              _buildPeriodTabs(),
-              // Content
-              Expanded(
-                child: BlocBuilder<DashboardBloc, DashboardState>(
-                  builder: (context, state) {
-                    if (state is DashboardLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: AppColors.primary),
-                      );
-                    }
+        body: Column(
+          children: [
+            // Gradient Header
+            _buildHeader(),
+            // Period tabs
+            _buildPeriodTabs(),
+            // Content
+            Expanded(
+              child: BlocBuilder<DashboardBloc, DashboardState>(
+                builder: (context, state) {
+                  if (state is DashboardLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.primary),
+                    );
+                  }
 
-                    if (state is DashboardError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-                            const SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32),
-                              child: Text(state.message, textAlign: TextAlign.center),
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: _loadDashboard,
-                              child: const Text('Повторить'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    final stats = state is DashboardLoaded
-                        ? state.stats
-                        : const DashboardStats();
-
-                    return RefreshIndicator(
-                      color: AppColors.primary,
-                      onRefresh: () async {
-                        final storeId = _getStoreId();
-                        if (storeId != null) {
-                          context.read<DashboardBloc>().add(
-                            DashboardRefreshRequested(storeId, period: _selectedPeriod),
-                          );
-                        }
-                      },
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        padding: const EdgeInsets.all(AppConstants.spacingMd),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildKpiCards(stats),
-                            const SizedBox(height: 20),
-                            _buildQuickActionsSection(stats),
-                            const SizedBox(height: 20),
-                            _buildRecentSalesSection(stats),
-                          ],
-                        ),
+                  if (state is DashboardError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: Text(state.message, textAlign: TextAlign.center),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _loadDashboard,
+                            child: const Text('Повторить'),
+                          ),
+                        ],
                       ),
                     );
-                  },
-                ),
+                  }
+
+                  final stats = state is DashboardLoaded
+                      ? state.stats
+                      : const DashboardStats();
+
+                  return RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: () async {
+                      final storeId = _getStoreId();
+                      if (storeId != null) {
+                        context.read<DashboardBloc>().add(
+                          DashboardRefreshRequested(storeId, period: _selectedPeriod),
+                        );
+                      }
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Overlapping stat cards
+                          Transform.translate(
+                            offset: const Offset(0, -36),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: GlassCard(
+                                      onTap: () => context.push('/sales/history', extra: _getStoreId()),
+                                      padding: const EdgeInsets.all(14),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(Icons.trending_up, size: 18, color: AppColors.lightTextPrimary),
+                                              const Spacer(),
+                                              const Icon(Icons.chevron_right, size: 18, color: AppColors.lightTextSecondary),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            _formatPrice(stats.todayRevenue),
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.lightTextPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          const Text('Продажи',
+                                            style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: GlassCard(
+                                      padding: const EdgeInsets.all(14),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.account_balance_wallet_outlined, size: 18, color: AppColors.success),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            _formatPrice(stats.todayProfit),
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.success,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          const Text('Чистая прибыль',
+                                            style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Main content with negative top margin to account for overlap
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: AppConstants.spacingMd,
+                              right: AppConstants.spacingMd,
+                              bottom: AppConstants.spacingMd,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildKpiCards(stats),
+                                const SizedBox(height: 20),
+                                _buildQuickActionsSection(stats),
+                                const SizedBox(height: 20),
+                                _buildRecentSalesSection(stats),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => widget.onTabChange?.call(2),
@@ -168,92 +246,33 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: Row(
-        children: [
-          // Store selector dropdown
-          BlocBuilder<StoreBloc, StoreState>(
-            builder: (context, state) {
-              if (state is StoreLoaded) {
-                final stores = state.stores;
-                final selected = state.selectedStore;
-                return GestureDetector(
-                  onTap: stores.length > 1
-                      ? () => _showStoreSelector(stores, selected?.id)
-                      : null,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(Icons.store_outlined,
-                          size: 18, color: AppColors.primary),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        selected?.name ?? 'Магазин',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      if (stores.length > 1)
-                        const Icon(Icons.keyboard_arrow_down,
-                          color: AppColors.lightTextSecondary),
-                    ],
-                  ),
-                );
-              }
-              return const Text('DokonPro',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
-            },
-          ),
-          const Spacer(),
-          // Notification bell with badge
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined,
-                  color: AppColors.lightTextPrimary),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Уведомления скоро появятся')),
-                  );
-                },
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: AppColors.error,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
-                  ),
-                  child: const Center(
-                    child: Text('3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return BlocBuilder<StoreBloc, StoreState>(
+      builder: (context, state) {
+        String storeName = 'DokonPro';
+        List stores = [];
+        String? selectedStoreId;
+
+        if (state is StoreLoaded) {
+          stores = state.stores;
+          storeName = state.selectedStore?.name ?? 'Магазин';
+          selectedStoreId = state.selectedStore?.id;
+        }
+
+        return GradientHeader(
+          greeting: 'Салом 👋',
+          userName: storeName,
+          storeName: storeName,
+          onNotificationTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Уведомления скоро появятся')),
+            );
+          },
+          onProfileTap: () {},
+          onStoreTap: stores.length > 1
+              ? () => _showStoreSelector(stores, selectedStoreId)
+              : null,
+        );
+      },
     );
   }
 
@@ -300,29 +319,12 @@ class _DashboardPageState extends State<DashboardPage> {
       child: Row(
         children: [
           ..._periods.map((p) {
-            final isActive = _selectedPeriod == p['key'];
             return Padding(
               padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
+              child: AppChip(
+                label: p['label']!,
+                isSelected: _selectedPeriod == p['key'],
                 onTap: () => _onPeriodChanged(p['key']!),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isActive ? AppColors.primary : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: isActive
-                        ? null
-                        : Border.all(color: AppColors.lightBorder),
-                  ),
-                  child: Text(
-                    p['label']!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
-                    ),
-                  ),
-                ),
               ),
             );
           }),
@@ -589,22 +591,11 @@ class _QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return GlassCard(
       onTap: onTap,
-      child: Container(
-        width: 120,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: AppColors.overlay,
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.all(14),
+      child: SizedBox(
+        width: 96,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -661,8 +652,10 @@ class _SaleCard extends StatelessWidget {
       _ => sale.paymentType,
     };
 
-    return AppCard(
+    return GlassCard(
+      elevated: true,
       onTap: () => context.push('/sales/${sale.id}'),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
           Container(
