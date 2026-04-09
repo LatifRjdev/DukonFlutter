@@ -20,7 +20,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = true;
-  bool _darkThemeEnabled = false;
 
   @override
   void initState() {
@@ -96,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Container(
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
@@ -184,9 +183,23 @@ class _SettingsPageState extends State<SettingsPage> {
                             value: _notificationsEnabled,
                             onChanged: (v) => setState(() => _notificationsEnabled = v)),
                           _buildDivider(),
-                          _buildToggleTile(Icons.dark_mode_outlined, 'Тёмная тема',
-                            value: _darkThemeEnabled,
-                            onChanged: (v) => setState(() => _darkThemeEnabled = v)),
+                          BlocBuilder<SettingsBloc, SettingsState>(
+                            builder: (context, state) {
+                              final isDark = state is SettingsLoaded &&
+                                  state.themeMode == ThemeMode.dark;
+                              return _buildToggleTile(
+                                Icons.dark_mode_outlined,
+                                'Тёмная тема',
+                                value: isDark,
+                                onChanged: (value) {
+                                  context.read<SettingsBloc>().add(
+                                    SettingsThemeChanged(
+                                        value ? ThemeMode.dark : ThemeMode.light),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           _buildDivider(),
                           _buildTile(Icons.language_outlined, 'Язык',
                             trailing: const Text('Русский',
@@ -255,7 +268,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildSectionCard(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(children: children),
