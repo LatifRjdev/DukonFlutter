@@ -312,5 +312,11 @@
   "noEmployees": "Корманд нест",
   "noShifts": "Навбат нест",
   "selectMonth": "Моҳро интихоб кунед",
-  "duration": "Давомнокӣ"
+  "duration": "Давомнокӣ",
+
+  "navHome": "Асосӣ",
+  "navProducts": "Молҳо",
+  "navPOS": "Касса",
+  "navFinance": "Молия",
+  "navMore": "Бештар"
 }

@@ -461,5 +461,11 @@
   "noEmployees": "Нет сотрудников",
   "noShifts": "Нет смен",
   "selectMonth": "Выберите месяц",
-  "duration": "Длительность"
+  "duration": "Длительность",
+
+  "navHome": "Главная",
+  "navProducts": "Товары",
+  "navPOS": "Касса",
+  "navFinance": "Финансы",
+  "navMore": "Ещё"
 }

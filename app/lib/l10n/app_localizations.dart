@@ -1869,6 +1869,21 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Длительность'**
   String get duration;
+
+  /// No description provided for @navHome.
+  String get navHome;
+
+  /// No description provided for @navProducts.
+  String get navProducts;
+
+  /// No description provided for @navPOS.
+  String get navPOS;
+
+  /// No description provided for @navFinance.
+  String get navFinance;
+
+  /// No description provided for @navMore.
+  String get navMore;
 }
 
 class _AppLocalizationsDelegate

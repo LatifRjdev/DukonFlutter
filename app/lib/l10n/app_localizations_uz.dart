@@ -896,4 +896,19 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get duration => 'Davomiylik';
+
+  @override
+  String get navHome => 'Asosiy';
+
+  @override
+  String get navProducts => 'Mahsulotlar';
+
+  @override
+  String get navPOS => 'Kassa';
+
+  @override
+  String get navFinance => 'Moliya';
+
+  @override
+  String get navMore => 'Ko\'proq';
 }

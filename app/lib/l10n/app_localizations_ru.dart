@@ -895,4 +895,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get duration => 'Длительность';
+
+  @override
+  String get navHome => 'Главная';
+
+  @override
+  String get navProducts => 'Товары';
+
+  @override
+  String get navPOS => 'Касса';
+
+  @override
+  String get navFinance => 'Финансы';
+
+  @override
+  String get navMore => 'Ещё';
 }

@@ -896,4 +896,19 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get duration => 'Давомнокӣ';
+
+  @override
+  String get navHome => 'Асосӣ';
+
+  @override
+  String get navProducts => 'Молҳо';
+
+  @override
+  String get navPOS => 'Касса';
+
+  @override
+  String get navFinance => 'Молия';
+
+  @override
+  String get navMore => 'Бештар';
 }

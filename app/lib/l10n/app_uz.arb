@@ -312,5 +312,11 @@
   "noEmployees": "Xodimlar yo'q",
   "noShifts": "Smenalar yo'q",
   "selectMonth": "Oyni tanlang",
-  "duration": "Davomiylik"
+  "duration": "Davomiylik",
+
+  "navHome": "Asosiy",
+  "navProducts": "Mahsulotlar",
+  "navPOS": "Kassa",
+  "navFinance": "Moliya",
+  "navMore": "Ko'proq"
 }
