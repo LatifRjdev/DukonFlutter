@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/enums.dart';
+import '../../../core/theme/app_shadows.dart';
+import '../../widgets/common/app_chip.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
@@ -163,13 +165,29 @@ class _ProductListPageState extends State<ProductListPage> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    _buildFilterChip('Все', _StockFilter.all),
+                    AppChip(
+                      label: 'Все',
+                      isSelected: _stockFilter == _StockFilter.all,
+                      onTap: () => setState(() => _stockFilter = _StockFilter.all),
+                    ),
                     const SizedBox(width: 8),
-                    _buildFilterChip('В наличии', _StockFilter.inStock),
+                    AppChip(
+                      label: 'В наличии',
+                      isSelected: _stockFilter == _StockFilter.inStock,
+                      onTap: () => setState(() => _stockFilter = _StockFilter.inStock),
+                    ),
                     const SizedBox(width: 8),
-                    _buildFilterChip('Заканчивается', _StockFilter.lowStock),
+                    AppChip(
+                      label: 'Заканчивается',
+                      isSelected: _stockFilter == _StockFilter.lowStock,
+                      onTap: () => setState(() => _stockFilter = _StockFilter.lowStock),
+                    ),
                     const SizedBox(width: 8),
-                    _buildFilterChip('Нет в наличии', _StockFilter.outOfStock),
+                    AppChip(
+                      label: 'Нет в наличии',
+                      isSelected: _stockFilter == _StockFilter.outOfStock,
+                      onTap: () => setState(() => _stockFilter = _StockFilter.outOfStock),
+                    ),
                   ],
                 ),
               ),
@@ -311,28 +329,6 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  Widget _buildFilterChip(String label, _StockFilter filter) {
-    final isSelected = _stockFilter == filter;
-    return GestureDetector(
-      onTap: () => setState(() => _stockFilter = filter),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class _ProductCard extends StatelessWidget {
@@ -358,7 +354,7 @@ class _ProductCard extends StatelessWidget {
     if (product.isOutOfStock) {
       stockColor = AppColors.error;
     } else if (product.isLowStock) {
-      stockColor = const Color(0xFFFF9800);
+      stockColor = AppColors.warning;
     } else {
       stockColor = AppColors.success;
     }
@@ -370,9 +366,7 @@ class _ProductCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(color: AppColors.overlay, blurRadius: 6, offset: Offset(0, 2)),
-          ],
+          boxShadow: Theme.of(context).brightness == Brightness.light ? AppShadows.sm : null,
         ),
         child: Row(
           children: [
