@@ -14,7 +14,21 @@
       "Read(//Users/latifrjdev/.claude/plugins/cache/superpowers-dev/superpowers/5.0.7/skills/subagent-driven-development/**)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(xargs sed:*)",
+      "Read(//tmp/**)",
+      "Bash(docker exec:*)",
+      "Bash(docker volume:*)",
+      "Bash(PGPASSWORD=dokonpro_secret psql -h localhost -p 5435 -U dokonpro -d dokonpro -c \"SELECT 1;\")",
+      "Bash(gh repo:*)",
+      "Bash(git remote:*)",
+      "Bash(brew list:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/latifrjdev/Downloads/Dukon/.git",
+      "/tmp"
     ]
   }
 }

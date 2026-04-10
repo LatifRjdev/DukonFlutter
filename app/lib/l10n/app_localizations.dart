@@ -1871,18 +1871,33 @@ abstract class AppLocalizations {
   String get duration;
 
   /// No description provided for @navHome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Главная'**
   String get navHome;
 
   /// No description provided for @navProducts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товары'**
   String get navProducts;
 
   /// No description provided for @navPOS.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса'**
   String get navPOS;
 
   /// No description provided for @navFinance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Финансы'**
   String get navFinance;
 
   /// No description provided for @navMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё'**
   String get navMore;
 }
 
