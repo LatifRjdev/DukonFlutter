@@ -9,6 +9,8 @@ import '../../blocs/finance/finance_event.dart';
 import '../../blocs/finance/finance_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/glass_card.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;
@@ -113,13 +115,29 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
-                                    _periodChip('День', 'day'),
+                                    AppChip(
+                                      label: 'День',
+                                      isSelected: _period == 'day',
+                                      onTap: () => _setPeriod('day'),
+                                    ),
                                     const SizedBox(width: 8),
-                                    _periodChip('Неделя', 'week'),
+                                    AppChip(
+                                      label: 'Неделя',
+                                      isSelected: _period == 'week',
+                                      onTap: () => _setPeriod('week'),
+                                    ),
                                     const SizedBox(width: 8),
-                                    _periodChip('Месяц', 'month'),
+                                    AppChip(
+                                      label: 'Месяц',
+                                      isSelected: _period == 'month',
+                                      onTap: () => _setPeriod('month'),
+                                    ),
                                     const SizedBox(width: 8),
-                                    _periodChip('6 мес', 'half_year'),
+                                    AppChip(
+                                      label: '6 мес',
+                                      isSelected: _period == 'half_year',
+                                      onTap: () => _setPeriod('half_year'),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -129,20 +147,24 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: _KpiCard(
-                                      label: 'Общий доход',
-                                      value: _formatPrice(s.totalIncome),
-                                      bgColor: const Color(0xFFE0F7FA),
-                                      textColor: AppColors.primary,
+                                    child: GlassCard(
+                                      padding: const EdgeInsets.all(16),
+                                      child: _KpiCardContent(
+                                        label: 'Общий доход',
+                                        value: _formatPrice(s.totalIncome),
+                                        textColor: AppColors.primary,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: _KpiCard(
-                                      label: 'Общие расходы',
-                                      value: _formatPrice(s.totalExpenses),
-                                      bgColor: const Color(0xFFFCE4EC),
-                                      textColor: AppColors.error,
+                                    child: GlassCard(
+                                      padding: const EdgeInsets.all(16),
+                                      child: _KpiCardContent(
+                                        label: 'Общие расходы',
+                                        value: _formatPrice(s.totalExpenses),
+                                        textColor: AppColors.error,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -151,20 +173,24 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: _KpiCard(
-                                      label: 'Валовая прибыль',
-                                      value: _formatPrice(s.profit),
-                                      bgColor: const Color(0xFFFFF3E0),
-                                      textColor: const Color(0xFFFF9800),
+                                    child: GlassCard(
+                                      padding: const EdgeInsets.all(16),
+                                      child: _KpiCardContent(
+                                        label: 'Валовая прибыль',
+                                        value: _formatPrice(s.profit),
+                                        textColor: AppColors.warning,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: _KpiCard(
-                                      label: 'Чистая прибыль',
-                                      value: _formatPrice(s.profit - s.totalExpenses),
-                                      bgColor: const Color(0xFFE8F5E9),
-                                      textColor: AppColors.success,
+                                    child: GlassCard(
+                                      padding: const EdgeInsets.all(16),
+                                      child: _KpiCardContent(
+                                        label: 'Чистая прибыль',
+                                        value: _formatPrice(s.profit - s.totalExpenses),
+                                        textColor: AppColors.success,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -175,68 +201,66 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                               const Text('Динамика',
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                               const SizedBox(height: 12),
-                              Container(
-                                height: 200,
+                              GlassCard(
                                 padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: BarChart(
-                                  BarChartData(
-                                    alignment: BarChartAlignment.spaceAround,
-                                    maxY: (s.totalIncome > s.totalExpenses ? s.totalIncome : s.totalExpenses) * 1.2,
-                                    barTouchData: BarTouchData(enabled: true),
-                                    titlesData: FlTitlesData(
-                                      show: true,
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          getTitlesWidget: (value, meta) {
-                                            const labels = ['Доход', 'Расход', 'Прибыль'];
-                                            if (value.toInt() >= 0 && value.toInt() < labels.length) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(top: 8),
-                                                child: Text(labels[value.toInt()],
-                                                  style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
-                                              );
-                                            }
-                                            return const Text('');
-                                          },
+                                child: SizedBox(
+                                  height: 200,
+                                  child: BarChart(
+                                    BarChartData(
+                                      alignment: BarChartAlignment.spaceAround,
+                                      maxY: (s.totalIncome > s.totalExpenses ? s.totalIncome : s.totalExpenses) * 1.2,
+                                      barTouchData: BarTouchData(enabled: true),
+                                      titlesData: FlTitlesData(
+                                        show: true,
+                                        bottomTitles: AxisTitles(
+                                          sideTitles: SideTitles(
+                                            showTitles: true,
+                                            getTitlesWidget: (value, meta) {
+                                              const labels = ['Доход', 'Расход', 'Прибыль'];
+                                              if (value.toInt() >= 0 && value.toInt() < labels.length) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.only(top: 8),
+                                                  child: Text(labels[value.toInt()],
+                                                    style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                                );
+                                              }
+                                              return const Text('');
+                                            },
+                                          ),
                                         ),
+                                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                       ),
-                                      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                      borderData: FlBorderData(show: false),
+                                      gridData: const FlGridData(show: false),
+                                      barGroups: [
+                                        BarChartGroupData(x: 0, barRods: [
+                                          BarChartRodData(
+                                            toY: s.totalIncome,
+                                            color: AppColors.primary,
+                                            width: 32,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                        ]),
+                                        BarChartGroupData(x: 1, barRods: [
+                                          BarChartRodData(
+                                            toY: s.totalExpenses,
+                                            color: AppColors.error,
+                                            width: 32,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                        ]),
+                                        BarChartGroupData(x: 2, barRods: [
+                                          BarChartRodData(
+                                            toY: s.profit > 0 ? s.profit : 0,
+                                            color: AppColors.success,
+                                            width: 32,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                        ]),
+                                      ],
                                     ),
-                                    borderData: FlBorderData(show: false),
-                                    gridData: const FlGridData(show: false),
-                                    barGroups: [
-                                      BarChartGroupData(x: 0, barRods: [
-                                        BarChartRodData(
-                                          toY: s.totalIncome,
-                                          color: AppColors.primary,
-                                          width: 32,
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                      ]),
-                                      BarChartGroupData(x: 1, barRods: [
-                                        BarChartRodData(
-                                          toY: s.totalExpenses,
-                                          color: AppColors.error,
-                                          width: 32,
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                      ]),
-                                      BarChartGroupData(x: 2, barRods: [
-                                        BarChartRodData(
-                                          toY: s.profit > 0 ? s.profit : 0,
-                                          color: AppColors.success,
-                                          width: 32,
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                      ]),
-                                    ],
                                   ),
                                 ),
                               ),
@@ -301,6 +325,14 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
     );
   }
 
+  void _setPeriod(String period) {
+    setState(() => _period = period);
+    final id = _storeId;
+    if (id != null) {
+      context.read<FinanceBloc>().add(FinancePeriodChanged(storeId: id, period: period));
+    }
+  }
+
   Widget _buildSectionsGrid() {
     final storeId = _storeId ?? '';
     final sections = [
@@ -342,33 +374,6 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
       )).toList(),
     );
   }
-
-  Widget _periodChip(String label, String period) {
-    final isSelected = _period == period;
-    return GestureDetector(
-      onTap: () {
-        setState(() => _period = period);
-        final id = _storeId;
-        if (id != null) {
-          context.read<FinanceBloc>().add(FinancePeriodChanged(storeId: id, period: period));
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
-        ),
-        child: Text(label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
-          )),
-      ),
-    );
-  }
 }
 
 class _SectionItem {
@@ -378,41 +383,32 @@ class _SectionItem {
   _SectionItem(this.label, this.icon, this.onTap);
 }
 
-class _KpiCard extends StatelessWidget {
+class _KpiCardContent extends StatelessWidget {
   final String label;
   final String value;
-  final Color bgColor;
   final Color textColor;
 
-  const _KpiCard({
+  const _KpiCardContent({
     required this.label,
     required this.value,
-    required this.bgColor,
     required this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-            style: TextStyle(fontSize: 12, color: textColor.withValues(alpha: 0.7))),
-          const SizedBox(height: 4),
-          Text(value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: textColor,
-            )),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+          style: TextStyle(fontSize: 12, color: textColor.withValues(alpha: 0.7))),
+        const SizedBox(height: 4),
+        Text(value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: textColor,
+          )),
+      ],
     );
   }
 }
