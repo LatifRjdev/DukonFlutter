@@ -3,6 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_shadows.dart';
+import '../../widgets/common/glass_card.dart';
+import '../../widgets/common/app_button.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
@@ -246,17 +251,15 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 ),
               ),
 
-              // Search bar with big scanner icon
+              // Search bar wrapped in GlassCard
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                      child: GlassCard(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        radius: AppConstants.buttonRadius,
                         child: TextField(
                           controller: _searchController,
                           decoration: const InputDecoration(
@@ -274,8 +277,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(12),
+                        gradient: AppGradients.primary,
+                        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                        boxShadow: AppShadows.md,
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
@@ -325,8 +329,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                                 width: 80,
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
+                                  color: AppColors.lightSurface,
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                                  boxShadow: AppShadows.sm,
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -400,11 +405,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       constraints: const BoxConstraints(maxHeight: 200),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
-          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, 4)),
-        ],
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+        boxShadow: AppShadows.md,
       ),
       child: ListView.separated(
         shrinkWrap: true,
@@ -420,11 +423,11 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               height: 40,
               decoration: BoxDecoration(
                 color: AppColors.lightBackground,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppConstants.radiusSm),
               ),
               child: product.imageUrl != null
                   ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       child: Image.network(product.imageUrl!, fit: BoxFit.cover,
                         errorBuilder: (_, _, _) => const Icon(Icons.inventory_2_outlined, size: 20, color: AppColors.disabled)),
                     )
@@ -453,14 +456,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           // Cart items
           ...cartState.items.map((item) => _buildCartItem(item)),
           const SizedBox(height: 12),
-          // Totals block
-          Container(
-            width: double.infinity,
+          // Totals block wrapped in GlassCard
+          GlassCard(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
             child: Column(
               children: [
                 Row(
@@ -485,7 +483,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               border: Border.all(color: AppColors.lightBorder),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusSm / 2),
                             ),
                             child: const Text('%', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
                           ),
@@ -527,8 +525,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+        boxShadow: AppShadows.sm,
       ),
       child: Row(
         children: [
@@ -548,7 +547,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           Container(
             decoration: BoxDecoration(
               color: AppColors.lightBackground,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppConstants.radiusSm),
             ),
             child: Row(
               children: [
@@ -615,11 +614,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   Widget _buildBottomSection(CartState cartState) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
-        ],
+      decoration: BoxDecoration(
+        color: AppColors.lightSurface,
+        boxShadow: AppShadows.md,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -637,20 +634,11 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             ],
           ),
           const SizedBox(height: 12),
-          // CTA button
-          SizedBox(
-            width: double.infinity,
+          // CTA button using AppButton for gradient rendering
+          AppButton(
+            text: 'Оформить продажу — ${_formatPrice(cartState.total)}',
+            onPressed: () => _initCheckoutAndProceed(cartState),
             height: 50,
-            child: ElevatedButton(
-              onPressed: () => _initCheckoutAndProceed(cartState),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              child: Text('Оформить продажу — ${_formatPrice(cartState.total)}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            ),
           ),
         ],
       ),
@@ -665,21 +653,22 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
-            border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.lightBorder,
-            ),
-            borderRadius: BorderRadius.circular(8),
+            gradient: isSelected ? AppGradients.primary : null,
+            color: isSelected ? null : Colors.transparent,
+            border: isSelected ? null : Border.all(color: AppColors.lightBorder),
+            borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+            boxShadow: isSelected ? AppShadows.sm : null,
           ),
           child: Column(
             children: [
-              Icon(icon, size: 18, color: isSelected ? AppColors.primary : AppColors.lightTextSecondary),
+              Icon(icon, size: 18,
+                color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary),
               const SizedBox(height: 2),
               Text(label,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w500,
-                  color: isSelected ? AppColors.primary : AppColors.lightTextSecondary,
+                  color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
                 ),
                 textAlign: TextAlign.center),
             ],
@@ -717,7 +706,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           border: Border.all(
                             color: discountType == 'FIXED' ? AppColors.primary : AppColors.lightBorder,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                         child: Center(child: Text('TJS',
                           style: TextStyle(
@@ -740,7 +729,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           border: Border.all(
                             color: discountType == 'PERCENTAGE' ? AppColors.primary : AppColors.lightBorder,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                         child: Center(child: Text('%',
                           style: TextStyle(
@@ -758,7 +747,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
                   hintText: discountType == 'PERCENTAGE' ? 'Процент' : 'Сумма',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                 ),
               ),
             ],
