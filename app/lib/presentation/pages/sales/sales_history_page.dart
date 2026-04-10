@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
 import '../../blocs/sales/sales_history_bloc.dart';
 import '../../blocs/sales/sales_history_event.dart';
 import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_chip.dart';
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -91,13 +93,29 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    _periodChip('Сегодня', 'today'),
+                    AppChip(
+                      label: 'Сегодня',
+                      isSelected: _selectedPeriod == 'today',
+                      onTap: () => _onPeriodSelected('today'),
+                    ),
                     const SizedBox(width: 8),
-                    _periodChip('Неделя', 'week'),
+                    AppChip(
+                      label: 'Неделя',
+                      isSelected: _selectedPeriod == 'week',
+                      onTap: () => _onPeriodSelected('week'),
+                    ),
                     const SizedBox(width: 8),
-                    _periodChip('Месяц', 'month'),
+                    AppChip(
+                      label: 'Месяц',
+                      isSelected: _selectedPeriod == 'month',
+                      onTap: () => _onPeriodSelected('month'),
+                    ),
                     const SizedBox(width: 8),
-                    _periodChip('Выбрать', 'custom'),
+                    AppChip(
+                      label: 'Выбрать',
+                      isSelected: _selectedPeriod == 'custom',
+                      onTap: _showDatePicker,
+                    ),
                   ],
                 ),
               ),
@@ -194,33 +212,6 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     );
   }
 
-  Widget _periodChip(String label, String period) {
-    final isSelected = _selectedPeriod == period;
-    return GestureDetector(
-      onTap: () {
-        if (period == 'custom') {
-          _showDatePicker();
-        } else {
-          _onPeriodSelected(period);
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
-        ),
-        child: Text(label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
-          )),
-      ),
-    );
-  }
-
   Future<void> _showDatePicker() async {
     final range = await showDateRangePicker(
       context: context,
@@ -252,8 +243,14 @@ class _SaleCard extends StatelessWidget {
 
   Color _statusColor() {
     if (sale.status == 'REFUNDED') return AppColors.error;
-    if (sale.paymentType == 'DEBT') return const Color(0xFFFF9800);
+    if (sale.paymentType == 'DEBT') return AppColors.warning;
     return AppColors.success;
+  }
+
+  Color _statusBgColor() {
+    if (sale.status == 'REFUNDED') return AppColors.errorBg;
+    if (sale.paymentType == 'DEBT') return AppColors.warningBg;
+    return AppColors.successBg;
   }
 
   String _paymentLabel() {
@@ -288,9 +285,7 @@ class _SaleCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
-          ],
+          boxShadow: AppShadows.sm,
         ),
         child: Row(
           children: [
@@ -299,7 +294,7 @@ class _SaleCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: _statusColor().withValues(alpha: 0.12),
+                color: _statusBgColor(),
                 shape: BoxShape.circle,
               ),
               child: Icon(_statusIcon(), size: 18, color: _statusColor()),
