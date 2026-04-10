@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/shift.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
@@ -48,7 +49,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               decoration: InputDecoration(
                 labelText: 'Сумма наличных',
                 prefixIcon: const Icon(Icons.attach_money),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
             ),
           ],
@@ -70,7 +71,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text('Закрыть', style: TextStyle(color: Colors.white)),
+            child: const Text('Закрыть', style: TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),
@@ -203,8 +204,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         border: const Border(left: BorderSide(color: AppColors.success, width: 4)),
       ),
       child: Column(
@@ -241,9 +242,9 @@ class _ShiftsPageState extends State<ShiftsPage> {
             child: OutlinedButton(
               onPressed: () => _showCloseShiftDialog(shift),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFFFF9800),
-                side: const BorderSide(color: Color(0xFFFF9800)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                foregroundColor: AppColors.warning,
+                side: const BorderSide(color: AppColors.warning),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               child: const Text('Закрыть смену', style: TextStyle(fontWeight: FontWeight.w600)),
             ),
@@ -263,8 +264,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         ),
         child: Row(
           children: [
@@ -294,7 +295,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               decoration: BoxDecoration(
                 color: shift.closedAt != null
                     ? AppColors.success.withValues(alpha: 0.12)
-                    : const Color(0xFFFF9800).withValues(alpha: 0.12),
+                    : AppColors.warning.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -302,7 +303,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
-                  color: shift.closedAt != null ? AppColors.success : const Color(0xFFFF9800),
+                  color: shift.closedAt != null ? AppColors.success : AppColors.warning,
                 ),
               ),
             ),

@@ -81,7 +81,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                         child: Container(
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
+                            color: AppColors.warning.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           ),
                           child: Column(
@@ -90,7 +90,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                               const SizedBox(height: 4),
                               Text(
                                 '${totalSupplierDebt.toStringAsFixed(2)} TJS',
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.orange),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.warning),
                               ),
                             ],
                           ),

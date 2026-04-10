@@ -76,7 +76,7 @@ class _PayrollPageState extends State<PayrollPage> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text('Выплатить', style: TextStyle(color: Colors.white)),
+            child: const Text('Выплатить', style: TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),

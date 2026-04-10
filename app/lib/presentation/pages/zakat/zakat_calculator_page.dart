@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
@@ -85,13 +86,13 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE0F7FA),
-                            borderRadius: BorderRadius.circular(12),
-                            border: const Border(left: BorderSide(color: Color(0xFF00838F), width: 3)),
+                            color: AppColors.infoBg,
+                            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                            border: Border(left: BorderSide(color: AppColors.info, width: 3)),
                           ),
                           child: const Text(
                             'Закят — 2.5% от имущества, хранящегося 1 лунный год',
-                            style: TextStyle(fontSize: 12, color: Color(0xFF00838F)),
+                            style: TextStyle(fontSize: 12, color: AppColors.info),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -163,8 +164,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.lightSurface,
+                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           ),
                           child: Column(
                             children: [
@@ -217,16 +218,16 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF3E0),
-                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.warningBg,
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: const Row(
                               children: [
-                                Icon(Icons.info_outline, size: 18, color: Color(0xFFFF9800)),
+                                Icon(Icons.info_outline, size: 18, color: AppColors.warning),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text('Активы ниже нисаба. Закят не обязателен.',
-                                    style: TextStyle(fontSize: 13, color: Color(0xFFFF9800))),
+                                    style: TextStyle(fontSize: 13, color: AppColors.warning)),
                                 ),
                               ],
                             ),
@@ -253,8 +254,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                foregroundColor: AppColors.onPrimary,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                               ),
                               child: const Text('Отметить как оплачено',
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -271,7 +272,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primary,
                               side: const BorderSide(color: AppColors.primary),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                             ),
                             icon: const Icon(Icons.share_outlined, size: 18),
                             label: const Text('Поделиться расчётом',
@@ -305,8 +306,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       child: Row(
         children: [

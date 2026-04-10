@@ -92,7 +92,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                 Container(
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
+                    color: AppColors.warning.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                   ),
                   child: Column(
@@ -101,7 +101,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                       const SizedBox(height: 4),
                       Text(
                         '${state.debt.toStringAsFixed(2)} TJS',
-                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.orange),
+                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: AppColors.warning),
                       ),
                     ],
                   ),
@@ -116,7 +116,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                       label: const Text('Записать оплату'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
                       ),

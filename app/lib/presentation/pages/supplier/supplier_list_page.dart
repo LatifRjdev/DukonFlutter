@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../domain/repositories/supplier_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
@@ -69,7 +70,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
               decoration: InputDecoration(
                 labelText: 'Название',
                 hintText: 'Введите название поставщика',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -79,7 +80,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
               decoration: InputDecoration(
                 labelText: 'Телефон',
                 hintText: '+992 XX XXX XXXX',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               keyboardType: TextInputType.phone,
             ),
@@ -125,7 +126,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddSupplierDialog,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppColors.onPrimary),
       ),
       body: SafeArea(
         child: Column(
@@ -152,8 +153,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.lightSurface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: TextField(
                   controller: _searchController,
@@ -207,19 +208,19 @@ class _SupplierListPageState extends State<SupplierListPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF3E0),
-                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.warningBg,
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Column(
                               children: [
                                 const Text('Наш долг',
-                                  style: TextStyle(fontSize: 13, color: Color(0xFFFF9800))),
+                                  style: TextStyle(fontSize: 13, color: AppColors.warning)),
                                 const SizedBox(height: 4),
                                 Text(_formatPrice(totalDebt),
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFFFF9800),
+                                    color: AppColors.warning,
                                   )),
                               ],
                             ),
@@ -232,8 +233,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
+                                color: AppColors.lightSurface,
+                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Row(
                                 children: [
@@ -269,7 +270,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: supplier.debt > 0 ? const Color(0xFFFF9800) : AppColors.success,
+                                          color: supplier.debt > 0 ? AppColors.warning : AppColors.success,
                                         ),
                                       ),
                                       if (supplier.debt <= 0)

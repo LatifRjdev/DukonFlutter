@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
@@ -162,7 +163,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         suffixText: 'TJS',
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                       ),
                                     ),
@@ -194,7 +195,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       _buildCard([
                         InkWell(
                           onTap: _pickDate,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           child: Padding(
                             padding: const EdgeInsets.all(14),
                             child: Row(
@@ -297,8 +298,8 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                           onPressed: state is ZakatLoading ? null : _save,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            foregroundColor: AppColors.onPrimary,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                           ),
                           child: Text(
                             state is ZakatLoading ? 'Сохранение...' : 'Сохранить',
@@ -326,8 +327,8 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   Widget _buildCard(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       child: Column(children: children),
     );

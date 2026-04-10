@@ -177,7 +177,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: const Text('Просрочено',
-                                          style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500)),
+                                          style: TextStyle(fontSize: 10, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
                                       ),
                                     ],
                                   ],

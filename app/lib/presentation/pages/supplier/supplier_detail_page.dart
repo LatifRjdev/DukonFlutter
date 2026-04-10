@@ -72,10 +72,10 @@ class _SupplierDetailView extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 36,
-                          backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                          backgroundColor: AppColors.warning.withValues(alpha: 0.1),
                           child: Text(
                             supplier.name.isNotEmpty ? supplier.name[0].toUpperCase() : '?',
-                            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.orange),
+                            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: AppColors.warning),
                           ),
                         ),
                         const SizedBox(height: AppConstants.spacingSm),
@@ -123,14 +123,14 @@ class _SupplierDetailView extends StatelessWidget {
                         _ActionButton(
                           icon: Icons.message_outlined,
                           label: 'СМС',
-                          color: const Color(0xFF2196F3),
+                          color: AppColors.info,
                           onTap: () => _launchSms(supplier.phone!),
                         ),
                       if (supplier.debt > 0)
                         _ActionButton(
                           icon: Icons.payment_outlined,
                           label: 'Оплата',
-                          color: const Color(0xFFFF9800),
+                          color: AppColors.warning,
                           onTap: () => context.push('/debts/supplier', extra: {
                             'storeId': storeId,
                             'supplierId': supplierId,

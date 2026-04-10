@@ -104,7 +104,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         _ActionButton(
                           icon: Icons.message_outlined,
                           label: 'СМС',
-                          color: const Color(0xFF2196F3),
+                          color: AppColors.info,
                           onTap: () => _launchSms(customer.phone!),
                         ),
                       _ActionButton(

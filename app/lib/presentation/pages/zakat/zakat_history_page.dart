@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
@@ -83,8 +84,8 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.lightSurface,
+                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           ),
                           child: Column(
                             children: [
@@ -108,8 +109,8 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                              color: AppColors.lightSurface,
+                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             ),
                             child: Row(
                               children: [

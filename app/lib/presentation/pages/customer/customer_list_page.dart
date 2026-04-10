@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../domain/repositories/customer_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
@@ -70,7 +71,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
               decoration: InputDecoration(
                 labelText: 'Имя',
                 hintText: 'Введите имя клиента',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -80,7 +81,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
               decoration: InputDecoration(
                 labelText: 'Телефон',
                 hintText: '+992 XX XXX XXXX',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               keyboardType: TextInputType.phone,
             ),
@@ -126,7 +127,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddCustomerDialog,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppColors.onPrimary),
       ),
       body: SafeArea(
         child: Column(
@@ -153,8 +154,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.lightSurface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: TextField(
                   controller: _searchController,
@@ -229,7 +230,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Text(
                               '${customers.length} клиентов  |  Долг: ${_formatPrice(totalDebt)}',
@@ -245,8 +246,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
+                                color: AppColors.lightSurface,
+                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Row(
                                 children: [
@@ -274,15 +275,15 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                               Container(
                                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFFFFD700).withValues(alpha: 0.2),
+                                                  color: AppColors.warning.withValues(alpha: 0.2),
                                                   borderRadius: BorderRadius.circular(8),
                                                 ),
                                                 child: const Row(
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
-                                                    Icon(Icons.star, size: 10, color: Color(0xFFFFD700)),
+                                                    Icon(Icons.star, size: 10, color: AppColors.warning),
                                                     SizedBox(width: 2),
-                                                    Text('VIP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFE5A800))),
+                                                    Text('VIP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.warning)),
                                                   ],
                                                 ),
                                               ),
@@ -342,7 +343,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? AppColors.primary : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(20),
           border: isSelected ? null : Border.all(color: AppColors.lightBorder),
         ),
@@ -350,7 +351,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+            color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
           )),
       ),
     );

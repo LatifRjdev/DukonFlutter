@@ -77,7 +77,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppColors.onPrimary),
       ),
       body: Column(
         children: [
@@ -100,7 +100,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     label: Text(cat.$2),
                     backgroundColor: isSelected ? AppColors.primary : AppColors.lightSurface,
                     labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+                      color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
                       fontSize: 13,
                     ),
                     side: BorderSide.none,
@@ -151,7 +151,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: AppColors.error.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

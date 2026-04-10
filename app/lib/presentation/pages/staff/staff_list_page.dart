@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff/staff_state.dart';
@@ -34,7 +35,7 @@ class _StaffListPageState extends State<StaffListPage> {
     switch (role.toUpperCase()) {
       case 'ADMIN': return AppColors.primary;
       case 'CASHIER': return AppColors.lightTextSecondary;
-      case 'WAREHOUSE': return const Color(0xFF9C27B0);
+      case 'WAREHOUSE': return AppColors.info;
       default: return AppColors.lightTextSecondary;
     }
   }
@@ -56,7 +57,7 @@ class _StaffListPageState extends State<StaffListPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/staff/add', extra: widget.storeId),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppColors.onPrimary),
       ),
       body: SafeArea(
         child: Column(
@@ -118,8 +119,8 @@ class _StaffListPageState extends State<StaffListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
+                                color: AppColors.lightSurface,
+                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Row(
                                 children: [

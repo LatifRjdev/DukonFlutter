@@ -208,7 +208,7 @@ class _ZReportPageState extends State<ZReportPage> {
                     side: const BorderSide(color: AppColors.primary),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                   ),
                   icon: const Icon(Icons.print_outlined, size: 20),
@@ -222,10 +222,10 @@ class _ZReportPageState extends State<ZReportPage> {
                   onPressed: () => context.pop(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.success,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                   ),
                   icon: const Icon(Icons.check_circle_outline, size: 20),
