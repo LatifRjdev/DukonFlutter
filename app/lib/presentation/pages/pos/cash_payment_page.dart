@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/pos/checkout_bloc.dart';
 import '../../blocs/pos/checkout_event.dart';
 import '../../blocs/pos/checkout_state.dart';
@@ -72,7 +73,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.lightSurface,
         body: SafeArea(
           child: BlocBuilder<CartBloc, CartState>(
             builder: (context, cart) {
@@ -107,8 +108,8 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 24),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFB2EBF5),
-                              borderRadius: BorderRadius.circular(16),
+                              color: AppColors.infoBg,
+                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             ),
                             child: Column(
                               children: [
@@ -141,11 +142,11 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               hintText: '0',
                               hintStyle: const TextStyle(fontSize: 24, color: AppColors.disabled),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 borderSide: const BorderSide(color: AppColors.lightBorder),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 borderSide: const BorderSide(color: AppColors.primary, width: 2),
                               ),
                               contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -194,7 +195,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                 color: change >= 0
                                     ? AppColors.success.withValues(alpha: 0.1)
                                     : AppColors.error.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Column(
                                 children: [
@@ -232,7 +233,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
                           disabledBackgroundColor: AppColors.disabled.withValues(alpha: 0.3),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                         ),
                         child: Text(
                           isProcessing ? 'Обработка...' : 'Завершить и печатать чек',

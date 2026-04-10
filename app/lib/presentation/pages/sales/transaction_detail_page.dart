@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
 
 class TransactionDetailPage extends StatelessWidget {
@@ -37,7 +39,7 @@ class TransactionDetailPage extends StatelessWidget {
     switch (status.toUpperCase()) {
       case 'COMPLETED': return AppColors.success;
       case 'REFUNDED': return AppColors.error;
-      case 'PARTIALLY_REFUNDED': return const Color(0xFFFF9800);
+      case 'PARTIALLY_REFUNDED': return AppColors.warning;
       default: return AppColors.lightTextSecondary;
     }
   }
@@ -95,8 +97,8 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,8 +123,8 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,8 +182,8 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,10 +216,8 @@ class TransactionDetailPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
-                ],
+                color: AppColors.lightSurface,
+                boxShadow: AppShadows.md,
               ),
               child: Row(
                 children: [
@@ -229,7 +229,7 @@ class TransactionDetailPage extends StatelessWidget {
                         side: const BorderSide(color: AppColors.primary),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                         ),
                       ),
                       icon: const Icon(Icons.print_outlined, size: 20),
@@ -246,7 +246,7 @@ class TransactionDetailPage extends StatelessWidget {
                         side: const BorderSide(color: AppColors.error),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                         ),
                       ),
                       icon: const Icon(Icons.undo, size: 20),

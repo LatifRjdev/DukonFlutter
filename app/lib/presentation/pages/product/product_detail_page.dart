@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/constants/enums.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/product/product_list_bloc.dart';
@@ -103,8 +105,8 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.28,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: product.imageUrl != null
@@ -156,7 +158,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Цена продажи',
                             value: _formatPrice(product.sellPrice),
-                            bgColor: const Color(0xFFE8F5E9),
+                            bgColor: AppColors.successBg,
                             textColor: AppColors.success,
                           ),
                         ),
@@ -167,8 +169,8 @@ class ProductDetailPage extends StatelessWidget {
                             value: product.costPrice != null
                                 ? _formatPrice(product.costPrice!)
                                 : '—',
-                            bgColor: const Color(0xFFF3E5F5),
-                            textColor: const Color(0xFF9C27B0),
+                            bgColor: AppColors.lightSurfaceElevated,
+                            textColor: AppColors.gradientMid,
                           ),
                         ),
                       ],
@@ -180,8 +182,8 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Прибыль',
                             value: profit != null ? _formatPrice(profit) : '—',
-                            bgColor: const Color(0xFFFFF3E0),
-                            textColor: const Color(0xFFFF9800),
+                            bgColor: AppColors.warningBg,
+                            textColor: AppColors.warning,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -189,8 +191,8 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Маржа',
                             value: margin != null ? '${margin.toStringAsFixed(0)}%' : '—',
-                            bgColor: const Color(0xFFE3F2FD),
-                            textColor: const Color(0xFF2196F3),
+                            bgColor: AppColors.infoBg,
+                            textColor: AppColors.info,
                           ),
                         ),
                       ],
@@ -202,11 +204,9 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, 2)),
-                        ],
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        boxShadow: AppShadows.md,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,7 +234,7 @@ class ProductDetailPage extends StatelessWidget {
                                 product.isOutOfStock
                                     ? AppColors.error
                                     : product.isLowStock
-                                        ? const Color(0xFFFF9800)
+                                        ? AppColors.warning
                                         : AppColors.success,
                               ),
                             ),
@@ -249,11 +249,9 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, 2)),
-                        ],
+                        color: AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        boxShadow: AppShadows.md,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,10 +278,8 @@ class ProductDetailPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
-                ],
+                color: AppColors.lightSurface,
+                boxShadow: AppShadows.md,
               ),
               child: Row(
                 children: [
@@ -295,7 +291,7 @@ class ProductDetailPage extends StatelessWidget {
                         side: const BorderSide(color: AppColors.primary),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                         ),
                       ),
                       icon: const Icon(Icons.add_circle_outline, size: 20),
@@ -327,7 +323,7 @@ class ProductDetailPage extends StatelessWidget {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                         ),
                       ),
                       icon: const Icon(Icons.shopping_cart_outlined, size: 20),
@@ -396,7 +392,7 @@ class _MiniMetricCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

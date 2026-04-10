@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
@@ -40,8 +41,8 @@ class _SplashPageState extends State<SplashPage> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  color: AppColors.lightSurface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                 ),
                 child: const Icon(Icons.store, size: 60, color: AppColors.primary),
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/sale.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../injection.dart';
@@ -82,7 +83,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final sale = widget.sale;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.lightSurface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -124,7 +125,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   icon: const Icon(Icons.print_outlined, size: 20),
                   label: const Text('Печатать чек',
@@ -144,7 +145,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   icon: const Icon(Icons.send_outlined, size: 20),
                   label: const Text('Отправить в Telegram',
@@ -160,7 +161,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   child: const Text('Новая продажа',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
