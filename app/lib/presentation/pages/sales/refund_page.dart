@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/sale.dart';
 import '../../blocs/sales/sales_history_bloc.dart';
@@ -248,8 +249,7 @@ class _RefundPageState extends State<RefundPage> {
                                         '${item.quantity} x ${Formatters.price(item.unitPrice)}',
                                         style: const TextStyle(
                                             fontSize: 13,
-                                            color: AppColors
-                                                .textSecondary),
+                                            color: AppColors.lightTextSecondary),
                                       ),
                                     ],
                                   ),
@@ -285,15 +285,9 @@ class _RefundPageState extends State<RefundPage> {
               // Bottom bar with total and confirm
               Container(
                 padding: const EdgeInsets.all(AppConstants.spacingMd),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.overlay,
-                      blurRadius: 8,
-                      offset: Offset(0, -2),
-                    ),
-                  ],
+                decoration: BoxDecoration(
+                  color: AppColors.lightSurface,
+                  boxShadow: AppShadows.sm,
                 ),
                 child: Column(
                   children: [
