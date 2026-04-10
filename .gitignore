@@ -1,0 +1,94 @@
+# Dependencies
+node_modules/
+**/node_modules/
+jspm_packages/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build outputs
+dist/
+build/
+out/
+*.log
+logs/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
+
+# Android
+app/android/**/gradle-wrapper.jar
+app/android/.gradle
+app/android/captures/
+app/android/gradlew
+app/android/gradlew.bat
+app/android/local.properties
+**/key.properties
+*.jks
+*.keystore
+
+# iOS / macOS
+**/Pods/
+**/.symlinks/
+**/Flutter/Flutter.framework
+**/Flutter/Flutter.podspec
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+*.swp
+
+# Prisma
+api/prisma/migrations/dev.db*
+
+# Testing
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.build.tsbuildinfo
+
+# Temp
+tmp/
+temp/
+*.pid
+*.seed
+*.pid.lock
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Secrets
+*.pem
+*.key
+!public*.key
+.secrets/
