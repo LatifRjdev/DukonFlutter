@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/exceptions.dart';
+import '../../../core/network/api_list_response.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/customer.dart';
 
@@ -45,15 +46,12 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
         },
       );
 
-      final responseData = response.data['data'] as Map<String, dynamic>;
-      final list = responseData['items'] as List;
-
+      final decoded =
+          ApiListResponse.decode<Customer>(response.data, _mapCustomer);
       return (
-        data: list
-            .map((json) => _mapCustomer(json as Map<String, dynamic>))
-            .toList(),
-        total: responseData['total'] as int? ?? 0,
-        totalPages: responseData['totalPages'] as int? ?? 1,
+        data: decoded.items,
+        total: decoded.total,
+        totalPages: decoded.totalPages,
       );
     } on DioException catch (e) {
       throw _handleDioError(e);
@@ -66,7 +64,11 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
       final response = await _dioClient.get(
         ApiEndpoints.customer(storeId, id),
       );
-      return _mapCustomer(response.data['data'] as Map<String, dynamic>);
+      final json = decodeApiObject(response.data);
+      if (json == null) {
+        throw ServerException('Unexpected empty customer response');
+      }
+      return _mapCustomer(json);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
@@ -82,7 +84,11 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
         ApiEndpoints.customers(storeId),
         data: data,
       );
-      return _mapCustomer(response.data['data'] as Map<String, dynamic>);
+      final json = decodeApiObject(response.data);
+      if (json == null) {
+        throw ServerException('Unexpected empty customer response');
+      }
+      return _mapCustomer(json);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
@@ -99,7 +105,11 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
         ApiEndpoints.customer(storeId, id),
         data: data,
       );
-      return _mapCustomer(response.data['data'] as Map<String, dynamic>);
+      final json = decodeApiObject(response.data);
+      if (json == null) {
+        throw ServerException('Unexpected empty customer response');
+      }
+      return _mapCustomer(json);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

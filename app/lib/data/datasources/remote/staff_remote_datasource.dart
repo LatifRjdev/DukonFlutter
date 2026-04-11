@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/exceptions.dart';
+import '../../../core/network/api_list_response.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/staff_member.dart';
 import '../../../domain/entities/role_permission.dart';
@@ -44,15 +45,14 @@ class StaffRemoteDatasourceImpl implements StaffRemoteDatasource {
         },
       );
 
-      final responseData = response.data as Map<String, dynamic>;
-      final list = responseData['data'] as List;
-
+      final decoded = ApiListResponse.decode<StaffMember>(
+        response.data,
+        StaffMember.fromJson,
+      );
       return (
-        data: list
-            .map((json) => StaffMember.fromJson(json as Map<String, dynamic>))
-            .toList(),
-        total: responseData['total'] as int? ?? 0,
-        totalPages: responseData['totalPages'] as int? ?? 1,
+        data: decoded.items,
+        total: decoded.total,
+        totalPages: decoded.totalPages,
       );
     } on DioException catch (e) {
       throw _handleDioError(e);
