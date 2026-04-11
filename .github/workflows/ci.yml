@@ -83,17 +83,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure ADR + audit docs dirs exist with content
+      - name: Ensure ADR + full audit docs exist
         run: |
           set -e
           test -d docs/adr
           test -d docs/audit
-          # The 2026-04-10 full report lives on audit/2026-04-10 branch /
-          # PR #1 until merged; just make sure the directory has at least
-          # one audit markdown on main so we know the directory was not
-          # accidentally wiped.
-          if [ -z "$(ls -A docs/audit/*.md 2>/dev/null)" ]; then
-            echo "docs/audit/ has no markdown files" >&2
-            exit 1
-          fi
-          echo "Audit docs present."
+          # Individual audit artifacts that must never be silently deleted
+          # from main. PR #1 merged the 2026-04-10 audit history — if any
+          # of these files go missing CI fails so someone has to explain
+          # in a commit message why.
+          test -f docs/audit/2026-04-10-full-audit-plan.md
+          test -f docs/audit/2026-04-10-full-audit-report.md
+          test -f docs/audit/backend-routes-matrix.md
+          test -f docs/audit/backend-static-findings.md
+          test -f docs/audit/flutter-screens-matrix.md
+          test -f docs/audit/flutter-static-findings.md
+          test -f docs/audit/2026-04-11-cold-start-perf-baseline.md
+          # ADRs: each must be a real file, and the directory must have
+          # at least the three we've written so far.
+          test -f docs/adr/0001-phone-otp-verification.md
+          test -f docs/adr/0002-i18n-rollout-plan.md
+          test -f docs/adr/0003-staff-invite-flow.md
+          echo "Audit docs + ADRs present."
