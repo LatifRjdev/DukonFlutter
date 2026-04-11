@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/shift_repository.dart';
 import 'shift_event.dart';
 import 'shift_state.dart';
@@ -22,7 +23,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       final currentShift = await _shiftRepository.getCurrentShift(event.storeId);
       emit(ShiftLoaded(currentShift: currentShift));
     } catch (e) {
-      emit(ShiftError(e.toString()));
+      emit(ShiftError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -35,7 +36,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       );
       emit(ShiftOpened(shift));
     } catch (e) {
-      emit(ShiftError(e.toString()));
+      emit(ShiftError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -49,7 +50,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       );
       emit(ShiftClosed(shift));
     } catch (e) {
-      emit(ShiftError(e.toString()));
+      emit(ShiftError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -69,7 +70,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
         totalPages: result.totalPages,
       ));
     } catch (e) {
-      emit(ShiftError(e.toString()));
+      emit(ShiftError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -79,7 +80,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       final report = await _shiftRepository.getZReport(event.storeId, event.shiftId);
       emit(ZReportLoaded(report: report));
     } catch (e) {
-      emit(ShiftError(e.toString()));
+      emit(ShiftError(mapErrorToUserMessage(e)));
     }
   }
 }

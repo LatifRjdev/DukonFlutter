@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/expense_repository.dart';
 import 'expense_event.dart';
 import 'expense_state.dart';
@@ -33,7 +34,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         selectedCategory: event.category,
       ));
     } catch (e) {
-      emit(ExpenseError(e.toString()));
+      emit(ExpenseError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -44,7 +45,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       emit(const ExpenseActionSuccess('Расход добавлен'));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(e.toString()));
+      emit(ExpenseError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -55,7 +56,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       emit(const ExpenseActionSuccess('Расход обновлён'));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(e.toString()));
+      emit(ExpenseError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -66,7 +67,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       emit(const ExpenseActionSuccess('Расход удалён'));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(e.toString()));
+      emit(ExpenseError(mapErrorToUserMessage(e)));
     }
   }
 }

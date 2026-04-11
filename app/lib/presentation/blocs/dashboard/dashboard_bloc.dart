@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/dashboard_repository.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
@@ -20,7 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
-      emit(DashboardError(e.toString()));
+      emit(DashboardError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -30,7 +31,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
       if (state is DashboardLoaded) return;
-      emit(DashboardError(e.toString()));
+      emit(DashboardError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -40,7 +41,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
-      emit(DashboardError(e.toString()));
+      emit(DashboardError(mapErrorToUserMessage(e)));
     }
   }
 }

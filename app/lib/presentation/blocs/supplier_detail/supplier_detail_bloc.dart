@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/supplier.dart';
@@ -33,7 +34,7 @@ class SupplierDetailBloc extends Bloc<SupplierDetailEvent, SupplierDetailState> 
       );
       emit(SupplierDetailLoaded(supplier));
     } catch (e) {
-      emit(SupplierDetailError(e.toString()));
+      emit(SupplierDetailError(mapErrorToUserMessage(e)));
     }
   }
 }

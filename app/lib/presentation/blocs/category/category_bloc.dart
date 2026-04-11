@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/category_repository.dart';
 import 'category_event.dart';
 import 'category_state.dart';
@@ -21,7 +22,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       final categories = await _categoryRepository.getCategories(event.storeId);
       emit(CategoryLoaded(categories));
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -35,7 +36,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       });
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -46,7 +47,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       });
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -55,7 +56,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       await _categoryRepository.deleteCategory(event.storeId, event.id);
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError(mapErrorToUserMessage(e)));
     }
   }
 }

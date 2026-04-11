@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/payroll_repository.dart';
 import 'payroll_event.dart';
 import 'payroll_state.dart';
@@ -24,7 +25,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       final periods = await _payrollRepository.getPayrollPeriods(event.storeId);
       emit(PayrollPeriodsLoaded(periods: periods));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -34,7 +35,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       final period = await _payrollRepository.getPayrollPeriod(event.storeId, event.periodId);
       emit(PayrollPeriodDetailLoaded(period: period));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -44,7 +45,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       await _payrollRepository.calculatePayroll(event.storeId, event.month, event.year);
       add(LoadPayrollPeriods(storeId: event.storeId));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -54,7 +55,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       await _payrollRepository.addAdjustment(event.storeId, event.periodId, event.data);
       add(LoadPayrollPeriod(storeId: event.storeId, periodId: event.periodId));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -64,7 +65,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       await _payrollRepository.removeAdjustment(event.storeId, event.periodId, event.adjustmentId);
       add(LoadPayrollPeriod(storeId: event.storeId, periodId: event.periodId));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -74,7 +75,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       await _payrollRepository.payIndividual(event.storeId, event.periodId, event.payrollId);
       add(LoadPayrollPeriod(storeId: event.storeId, periodId: event.periodId));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -84,7 +85,7 @@ class PayrollBloc extends Bloc<PayrollEvent, PayrollState> {
       await _payrollRepository.payAll(event.storeId, event.periodId);
       add(LoadPayrollPeriod(storeId: event.storeId, periodId: event.periodId));
     } catch (e) {
-      emit(PayrollError(e.toString()));
+      emit(PayrollError(mapErrorToUserMessage(e)));
     }
   }
 }

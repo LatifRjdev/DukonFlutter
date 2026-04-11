@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/customer.dart';
@@ -37,7 +38,7 @@ class CustomerDetailBloc extends Bloc<CustomerDetailEvent, CustomerDetailState> 
 
       emit(CustomerDetailLoaded(customer: customer, recentSales: salesList));
     } catch (e) {
-      emit(CustomerDetailError(e.toString()));
+      emit(CustomerDetailError(mapErrorToUserMessage(e)));
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/product_repository.dart';
 import 'product_form_event.dart';
 import 'product_form_state.dart';
@@ -44,7 +45,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
       }
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: e.toString()));
+      emit(state.copyWith(isSubmitting: false, error: mapErrorToUserMessage(e)));
     }
   }
 
@@ -73,7 +74,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
         editingProductId: product.id,
       ));
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(state.copyWith(isLoading: false, error: mapErrorToUserMessage(e)));
     }
   }
 

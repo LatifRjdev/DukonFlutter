@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/sale_repository.dart';
 import 'sales_history_event.dart';
 import 'sales_history_state.dart';
@@ -50,7 +51,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         paymentType: paymentType,
       ));
     } catch (e) {
-      emit(SalesHistoryError(e.toString()));
+      emit(SalesHistoryError(mapErrorToUserMessage(e)));
     }
   }
 

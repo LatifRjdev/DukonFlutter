@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/staff_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
@@ -29,7 +30,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
         totalPages: result.totalPages,
       ));
     } catch (e) {
-      emit(StaffError(e.toString()));
+      emit(StaffError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -39,7 +40,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       final staffMember = await _staffRepository.getStaffMember(event.storeId, event.id);
       emit(StaffDetailLoaded(staffMember));
     } catch (e) {
-      emit(StaffError(e.toString()));
+      emit(StaffError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -49,7 +50,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       await _staffRepository.deleteStaff(event.storeId, event.id);
       add(LoadStaff(storeId: event.storeId));
     } catch (e) {
-      emit(StaffError(e.toString()));
+      emit(StaffError(mapErrorToUserMessage(e)));
     }
   }
 }
