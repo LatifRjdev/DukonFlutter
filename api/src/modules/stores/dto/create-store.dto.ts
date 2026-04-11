@@ -1,15 +1,41 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEnum, IsOptional, Matches } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEnum,
+  IsOptional,
+  Matches,
+  MaxLength,
+} from 'class-validator';
+import { IsSafeText } from '../../../common/validators/safe-text.validator';
 
 export class CreateStoreDto {
   @ApiProperty({ example: 'Мой магазин' })
   @IsNotEmpty()
   @IsString()
+  @MaxLength(100)
+  @IsSafeText()
   name: string;
 
-  @ApiProperty({ enum: ['GROCERY', 'CLOTHING', 'ELECTRONICS', 'HARDWARE', 'PHARMACY', 'OTHER'] })
+  @ApiProperty({
+    enum: [
+      'GROCERY',
+      'CLOTHING',
+      'ELECTRONICS',
+      'HARDWARE',
+      'PHARMACY',
+      'OTHER',
+    ],
+  })
   @IsNotEmpty()
-  @IsEnum(['GROCERY', 'CLOTHING', 'ELECTRONICS', 'HARDWARE', 'PHARMACY', 'OTHER'])
+  @IsEnum([
+    'GROCERY',
+    'CLOTHING',
+    'ELECTRONICS',
+    'HARDWARE',
+    'PHARMACY',
+    'OTHER',
+  ])
   category: string;
 
   @ApiPropertyOptional({ enum: ['TJS', 'USD', 'RUB'], default: 'TJS' })
@@ -20,6 +46,8 @@ export class CreateStoreDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @MaxLength(200)
+  @IsSafeText()
   address?: string;
 
   @ApiPropertyOptional()
