@@ -7,6 +7,8 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/product/product_form_bloc.dart';
 import '../../blocs/product/product_form_event.dart';
 import '../../blocs/product/product_form_state.dart';
+import '../../blocs/product/product_list_bloc.dart';
+import '../../blocs/product/product_list_event.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
@@ -82,11 +84,23 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
           if (state.isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Товар успешно добавлен'),
+                content: Text('Товар сохранён. Синхронизация в фоне.'),
                 backgroundColor: AppColors.success,
               ),
             );
             context.read<ProductFormBloc>().add(ProductFormReset());
+            // Trigger an explicit reload of the product list so the new
+            // item appears immediately instead of leaving the user staring
+            // at a stale cache with "1 операция в очереди" (FD-P1-003).
+            final storeState = context.read<StoreBloc>().state;
+            if (storeState is StoreLoaded &&
+                storeState.selectedStore != null) {
+              context.read<ProductListBloc>().add(
+                    ProductListLoadRequested(
+                      storeId: storeState.selectedStore!.id,
+                    ),
+                  );
+            }
             context.go('/home');
           }
           if (state.error != null) {
