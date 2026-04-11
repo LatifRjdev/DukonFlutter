@@ -135,7 +135,11 @@ class _CreditSalePageState extends State<CreditSalePage> {
           ),
         ],
       ),
-    );
+    ).whenComplete(() {
+      // Dispose both dialog-scoped controllers together (FE-P1-004).
+      nameController.dispose();
+      phoneController.dispose();
+    });
   }
 
   void _confirm(double total) {

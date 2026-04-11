@@ -773,6 +773,6 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           ],
         ),
       ),
-    );
+    ).whenComplete(controller.dispose);
   }
 }

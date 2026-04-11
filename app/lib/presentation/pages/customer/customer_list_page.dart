@@ -97,18 +97,21 @@ class _CustomerListPageState extends State<CustomerListPage> {
               final name = _nameController.text.trim();
               if (name.isEmpty) return;
               final phone = _phoneController.text.trim();
+              // Capture refs before the await so we do not touch BuildContext
+              // across the async gap (FE-P1-003).
+              final navigator = Navigator.of(dialogContext);
+              final messenger = ScaffoldMessenger.of(context);
               try {
                 await sl<CustomerRepository>().createCustomer(
                   _getStoreId(),
                   {'name': name, if (phone.isNotEmpty) 'phone': phone},
                 );
+                navigator.pop();
                 if (!mounted) return;
-                Navigator.of(dialogContext).pop();
                 _loadCustomers();
               } catch (e) {
-                if (!mounted) return;
-                Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                navigator.pop();
+                messenger.showSnackBar(
                   SnackBar(content: Text('Ошибка: $e')),
                 );
               }

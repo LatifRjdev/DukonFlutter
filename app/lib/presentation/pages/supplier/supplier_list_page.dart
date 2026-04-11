@@ -96,18 +96,21 @@ class _SupplierListPageState extends State<SupplierListPage> {
               final name = _nameController.text.trim();
               if (name.isEmpty) return;
               final phone = _phoneController.text.trim();
+              // Capture refs before the await so we do not touch BuildContext
+              // across the async gap (FE-P1-003).
+              final navigator = Navigator.of(dialogContext);
+              final messenger = ScaffoldMessenger.of(context);
               try {
                 await sl<SupplierRepository>().createSupplier(
                   _getStoreId(),
                   {'name': name, if (phone.isNotEmpty) 'phone': phone},
                 );
+                navigator.pop();
                 if (!mounted) return;
-                Navigator.of(dialogContext).pop();
                 _loadSuppliers();
               } catch (e) {
-                if (!mounted) return;
-                Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                navigator.pop();
+                messenger.showSnackBar(
                   SnackBar(content: Text('Ошибка: $e')),
                 );
               }

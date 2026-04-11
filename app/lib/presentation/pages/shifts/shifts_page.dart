@@ -34,6 +34,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
 
   void _showCloseShiftDialog(ShiftModel currentShift) {
     final cashController = TextEditingController();
+    // Dispose controller once the dialog route is gone (FE-P1-004).
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -75,7 +76,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
           ),
         ],
       ),
-    );
+    ).whenComplete(cashController.dispose);
   }
 
   String _formatDuration(DateTime start) {
