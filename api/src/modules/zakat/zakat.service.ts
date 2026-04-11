@@ -66,9 +66,26 @@ export class ZakatService {
   }
 
   async getSettings(storeId: string) {
-    return this.prisma.zakatSettings.findUnique({
+    const settings = await this.prisma.zakatSettings.findUnique({
       where: { storeId },
     });
+    if (settings) return settings;
+    // No row yet — return schema defaults so clients always get a stable JSON
+    // body. Previously null from Prisma serialized to an empty response body,
+    // which crashed the Flutter DTO parser (FD-P0-001).
+    return {
+      id: '',
+      storeId,
+      nisabGold: 85,
+      nisabSilver: 595,
+      nisabCurrency: 'TJS',
+      nisabAmount: 0,
+      haulStartDate: null as Date | null,
+      zakatRate: 2.5,
+      includeStock: true,
+      includeCash: true,
+      includeDebts: true,
+    };
   }
 
   async upsertSettings(storeId: string, dto: UpsertZakatSettingsDto) {

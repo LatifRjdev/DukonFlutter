@@ -101,8 +101,8 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
 
   ZakatSettings _mapSettings(Map<String, dynamic> json) {
     return ZakatSettings(
-      id: json['id'] as String,
-      storeId: json['storeId'] as String,
+      id: (json['id'] as String?) ?? '',
+      storeId: (json['storeId'] as String?) ?? '',
       nisabGold: (json['nisabGold'] as num?)?.toDouble() ?? 85,
       nisabSilver: (json['nisabSilver'] as num?)?.toDouble() ?? 595,
       nisabCurrency: json['nisabCurrency'] as String? ?? 'TJS',
