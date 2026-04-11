@@ -9,16 +9,25 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { validateBootConfig } from './common/bootstrap/validate-config';
+import {
+  validateBootConfig,
+  validateEnvBeforeBoot,
+} from './common/bootstrap/validate-config';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
+
+  // Fail-fast BEFORE Nest instantiates modules. Otherwise JwtAccessStrategy
+  // runs first and crashes with a less-informative passport-jwt error if
+  // the secret is missing (BE-P1-007).
+  validateEnvBeforeBoot();
+
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
 
-  // Fail-fast on misconfigured secrets / missing CORS in production
-  // (BE-P1-005 / BE-P1-007).
+  // Belt-and-braces re-validation using ConfigService in case bootstrap()
+  // is invoked from a path that skipped validateEnvBeforeBoot (E2E harness).
   validateBootConfig(configService);
 
   // Global prefix
