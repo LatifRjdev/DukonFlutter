@@ -32,19 +32,26 @@ class StaffMember extends Equatable {
   });
 
   factory StaffMember.fromJson(Map<String, dynamic> json) {
+    // Backend returns the raw Prisma Staff shape, where user identity lives
+    // under `user.*` rather than flat top-level keys. Tolerate either shape
+    // so the list renders regardless of whether the server flattens, falling
+    // back to empty string for the required fields instead of crashing with
+    // 'Null is not a subtype of String' (FD-P0-002 post-list-decoder).
+    final user = json['user'] as Map<String, dynamic>?;
     return StaffMember(
       id: json['id'] as String,
       storeId: json['storeId'] as String,
-      userId: json['userId'] as String?,
-      name: json['name'] as String,
-      phone: json['phone'] as String?,
-      avatar: json['avatar'] as String?,
-      role: json['role'] as String,
+      userId: (json['userId'] as String?) ?? (user?['id'] as String?),
+      name: (json['name'] as String?) ?? (user?['name'] as String?) ?? '',
+      phone: (json['phone'] as String?) ?? (user?['phone'] as String?),
+      avatar: (json['avatar'] as String?) ?? (user?['avatar'] as String?),
+      role: (json['role'] as String?) ?? '',
       salary: (json['salary'] as num?)?.toDouble(),
       commission: (json['commission'] as num?)?.toDouble(),
       isActive: json['isActive'] as bool? ?? true,
       isOnShift: json['isOnShift'] as bool? ?? false,
-      todaySales: (json['todaySales'] as num?)?.toDouble(),
+      todaySales: (json['todaySales'] as num?)?.toDouble() ??
+          (json['todaySalesTotal'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
