@@ -70,13 +70,27 @@ export class AuthService {
   }
 
   async refresh(userId: string, phone: string, oldTokenId: string) {
-    // Delete old refresh token (rotation)
-    await this.prisma.refreshToken.deleteMany({
-      where: { token: oldTokenId },
+    // Rotate in a single transaction so a partial failure can never leave
+    // the user with zero valid refresh tokens OR leave the old row alive
+    // after a new one was issued (BE-P1-001).
+    //
+    // Replay detection: if the deleted row count is zero the presented jti
+    // did not exist — either already used or revoked via logout. Either
+    // way we refuse the refresh AND burn every remaining token for this
+    // user as a safety net so an attacker cannot keep rotating in parallel
+    // with the real user.
+    return this.prisma.$transaction(async (tx) => {
+      const deleted = await tx.refreshToken.deleteMany({
+        where: { token: oldTokenId, userId },
+      });
+      if (deleted.count === 0) {
+        await tx.refreshToken.deleteMany({ where: { userId } });
+        throw new UnauthorizedException(
+          'Refresh token replay detected — all sessions revoked',
+        );
+      }
+      return this.issueTokens(tx, userId, phone);
     });
-
-    const tokens = await this.generateTokens(userId, phone);
-    return tokens;
   }
 
   async logout(userId: string, refreshTokenJti?: string) {
@@ -91,7 +105,33 @@ export class AuthService {
     }
   }
 
+  /**
+   * Nuke every refresh token for the given user, kicking every active
+   * session at once. Used by the logout-all endpoint — e.g. after the
+   * user notices suspicious activity or changes their password
+   * (BE-P1-002).
+   */
+  async logoutAll(userId: string) {
+    await this.prisma.refreshToken.deleteMany({ where: { userId } });
+  }
+
   private async generateTokens(userId: string, phone: string) {
+    return this.issueTokens(this.prisma, userId, phone);
+  }
+
+  /**
+   * Issue a new access+refresh pair and persist the refresh jti.
+   *
+   * Accepts any Prisma transaction client so the refresh rotation path can
+   * delete the old row + insert the new row atomically — see refresh().
+   *
+   * Refresh expiry shrunk from 30d to 7d (BE-P1-002). Access is 15m.
+   */
+  private async issueTokens(
+    tx: Pick<PrismaService, 'refreshToken'>,
+    userId: string,
+    phone: string,
+  ) {
     const jti = uuidv4();
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -106,16 +146,15 @@ export class AuthService {
         { sub: userId, phone, jti },
         {
           secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '30d',
+          expiresIn: '7d',
         },
       ),
     ]);
 
-    // Store refresh token in DB
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30);
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
-    await this.prisma.refreshToken.create({
+    await tx.refreshToken.create({
       data: {
         token: jti,
         userId,

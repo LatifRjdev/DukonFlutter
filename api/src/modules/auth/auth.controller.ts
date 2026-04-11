@@ -50,4 +50,16 @@ export class AuthController {
     await this.authService.logout(user.id);
     return { message: 'Logged out successfully' };
   }
+
+  @Post('logout-all')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Revoke every refresh token for the current user (all devices)',
+  })
+  async logoutAll(@CurrentUser() user: { id: string }) {
+    await this.authService.logoutAll(user.id);
+    return { message: 'All sessions revoked' };
+  }
 }
