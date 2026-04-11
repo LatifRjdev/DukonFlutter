@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/co
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleQueryDto } from './dto/sale-query.dto';
@@ -9,12 +11,13 @@ import { RefundSaleDto } from './dto/refund-sale.dto';
 
 @ApiTags('Sales')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
 @Controller('stores/:storeId/sales')
 export class SalesController {
   constructor(private salesService: SalesService) {}
 
   @Post()
+  @Permissions('sales.manage')
   @ApiOperation({ summary: 'Create a sale' })
   create(@Param('storeId') storeId: string, @Body() dto: CreateSaleDto) {
     return this.salesService.create(storeId, dto);
@@ -33,6 +36,7 @@ export class SalesController {
   }
 
   @Post(':id/refund')
+  @Permissions('sales.refund')
   @ApiOperation({ summary: 'Refund a sale (full or partial)' })
   refund(
     @Param('storeId') storeId: string,

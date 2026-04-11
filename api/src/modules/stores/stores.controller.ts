@@ -6,6 +6,8 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 import { StoreResponseDto } from './dto/store-response.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('stores')
@@ -41,7 +43,8 @@ export class StoresController {
   }
 
   @Put(':storeId')
-  @UseGuards(StoreAccessGuard)
+  @UseGuards(StoreAccessGuard, PermissionsGuard)
+  @Permissions('store.manage')
   @ApiOperation({ summary: 'Update store' })
   @ApiResponse({ status: 200, type: StoreResponseDto })
   async update(

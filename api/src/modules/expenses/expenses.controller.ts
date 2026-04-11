@@ -4,6 +4,8 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
@@ -11,12 +13,13 @@ import { ExpenseQueryDto } from './dto/expense-query.dto';
 
 @ApiTags('Expenses')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
 @Controller('stores/:storeId/expenses')
 export class ExpensesController {
   constructor(private expensesService: ExpensesService) {}
 
   @Post()
+  @Permissions('expenses.write')
   @ApiOperation({ summary: 'Create expense' })
   create(@Param('storeId') storeId: string, @Body() dto: CreateExpenseDto) {
     return this.expensesService.create(storeId, dto);
@@ -35,6 +38,7 @@ export class ExpensesController {
   }
 
   @Put(':id')
+  @Permissions('expenses.write')
   @ApiOperation({ summary: 'Update expense' })
   update(
     @Param('storeId') storeId: string,
@@ -45,6 +49,7 @@ export class ExpensesController {
   }
 
   @Delete(':id')
+  @Permissions('expenses.write')
   @ApiOperation({ summary: 'Delete expense' })
   remove(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.expensesService.remove(storeId, id);

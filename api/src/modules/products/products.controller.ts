@@ -4,6 +4,8 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ProductsService } from './products.service';
 import { StockMovementsService } from './stock-movements.service';
@@ -14,7 +16,7 @@ import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 
 @ApiTags('Products')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
 @Controller('stores/:storeId/products')
 export class ProductsController {
   constructor(
@@ -23,6 +25,7 @@ export class ProductsController {
   ) {}
 
   @Post()
+  @Permissions('products.manage')
   @ApiOperation({ summary: 'Create product' })
   create(@Param('storeId') storeId: string, @Body() dto: CreateProductDto) {
     return this.productsService.create(storeId, dto);
@@ -47,6 +50,7 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @Permissions('products.manage')
   @ApiOperation({ summary: 'Update product' })
   update(
     @Param('storeId') storeId: string,
@@ -57,12 +61,14 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @Permissions('products.delete')
   @ApiOperation({ summary: 'Deactivate product' })
   remove(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.productsService.remove(storeId, id);
   }
 
   @Post(':productId/stock-movements')
+  @Permissions('stock.manage')
   @ApiOperation({ summary: 'Create stock movement' })
   createStockMovement(
     @Param('storeId') storeId: string,

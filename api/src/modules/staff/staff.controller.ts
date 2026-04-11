@@ -2,18 +2,21 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } fro
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 
 @ApiTags('staff')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
 @Controller('stores/:storeId/staff')
 export class StaffController {
   constructor(private staffService: StaffService) {}
 
   @Post()
+  @Permissions('staff.manage')
   @ApiOperation({ summary: 'Create staff member' })
   @ApiResponse({ status: 201, description: 'Staff member created successfully' })
   @ApiResponse({ status: 409, description: 'Staff member already exists in this store' })
@@ -41,6 +44,7 @@ export class StaffController {
   }
 
   @Put(':id')
+  @Permissions('staff.manage')
   @ApiOperation({ summary: 'Update staff member' })
   @ApiResponse({ status: 200, description: 'Staff member updated successfully' })
   @ApiResponse({ status: 404, description: 'Staff member not found' })
@@ -53,6 +57,7 @@ export class StaffController {
   }
 
   @Delete(':id')
+  @Permissions('staff.manage')
   @ApiOperation({ summary: 'Deactivate staff member' })
   @ApiResponse({ status: 200, description: 'Staff member deactivated' })
   @ApiResponse({ status: 404, description: 'Staff member not found' })

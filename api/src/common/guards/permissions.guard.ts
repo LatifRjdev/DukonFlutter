@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
+import { hasDefaultPermission } from './permissions-matrix';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -53,7 +54,9 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    // Check role permissions in the database
+    // Check role permissions in the database — DB overrides the default
+    // matrix, so a store owner can grant or revoke specific actions per
+    // role without touching source.
     const rolePermissions = await this.prisma.rolePermission.findMany({
       where: {
         storeId,
@@ -63,17 +66,24 @@ export class PermissionsGuard implements CanActivate {
       select: { permission: true, isGranted: true },
     });
 
-    // If no permissions are configured for this role, allow by default
-    if (rolePermissions.length === 0) {
-      return true;
-    }
-
-    // Check that all required permissions are granted
-    const granted = new Set(
+    // Build an allow/deny set from DB rows, then fall back to the default
+    // matrix for any permission the DB did not mention. Previously this
+    // path returned `true` when the DB was empty — that was "default open"
+    // and let any non-owner staff hit every decorated endpoint
+    // (BE-P1-004).
+    const dbAllow = new Set(
       rolePermissions.filter((rp) => rp.isGranted).map((rp) => rp.permission),
     );
+    const dbDeny = new Set(
+      rolePermissions.filter((rp) => !rp.isGranted).map((rp) => rp.permission),
+    );
 
-    const hasAll = requiredPermissions.every((p) => granted.has(p));
+    const hasAll = requiredPermissions.every((perm) => {
+      if (dbDeny.has(perm)) return false;
+      if (dbAllow.has(perm)) return true;
+      // Not mentioned in DB → consult the hardcoded default matrix.
+      return hasDefaultPermission(staffRecord.role, perm);
+    });
 
     if (!hasAll) {
       throw new ForbiddenException('You do not have the required permissions');
