@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { validateBootConfig } from './common/bootstrap/validate-config';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -16,17 +17,70 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  // Fail-fast on misconfigured secrets / missing CORS in production
+  // (BE-P1-005 / BE-P1-007).
+  validateBootConfig(configService);
+
   // Global prefix
   app.setGlobalPrefix('api');
 
-  // Security
-  app.use(helmet());
+  // Security — explicit CSP / HSTS rather than helmet defaults (BE-P1-006).
+  // The API is headless so a strict default-src 'none' is safe; Swagger UI
+  // is the one exception that loads its own JS/CSS from /api/docs.
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        useDefaults: false,
+        directives: {
+          defaultSrc: ["'none'"],
+          baseUri: ["'none'"],
+          frameAncestors: ["'none'"],
+          // Swagger UI served from this origin — allow self.
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:'],
+          connectSrc: ["'self'"],
+          fontSrc: ["'self'"],
+        },
+      },
+      hsts: {
+        maxAge: 15552000, // 180 days
+        includeSubDomains: true,
+        preload: true,
+      },
+      referrerPolicy: { policy: 'no-referrer' },
+      crossOriginOpenerPolicy: { policy: 'same-origin' },
+      crossOriginResourcePolicy: { policy: 'same-origin' },
+    }),
+  );
   app.use(compression());
   app.use(cookieParser());
 
-  // CORS
+  // CORS — whitelist parsed from CORS_ORIGIN (comma-separated). In
+  // development, fall back to any localhost origin. In production,
+  // validateBootConfig already guarantees CORS_ORIGIN is explicit.
+  const rawCorsOrigin = configService.get<string>('CORS_ORIGIN');
+  const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+  const allowedOrigins = rawCorsOrigin
+    ? rawCorsOrigin.split(',').map((s) => s.trim()).filter(Boolean)
+    : [];
+  type CorsOriginCallback = (
+    err: Error | null,
+    allow?: boolean,
+  ) => void;
   app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN', '*'),
+    origin: (origin: string | undefined, callback: CorsOriginCallback) => {
+      // Allow server-to-server / curl (no Origin header)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (
+        nodeEnv !== 'production' &&
+        /^https?:\/\/localhost(:\d+)?$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: true,
   });
 
