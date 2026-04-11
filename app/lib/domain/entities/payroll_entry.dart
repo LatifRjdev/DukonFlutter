@@ -38,12 +38,23 @@ class PayrollEntry extends Equatable {
   });
 
   factory PayrollEntry.fromJson(Map<String, dynamic> json) {
+    // The backend returns the raw Prisma Payroll shape, where staff identity
+    // lives under `staff.user.*` rather than flat `staffName`/`staffRole`/
+    // `staffAvatar` keys. Tolerate either shape so the list renders whatever
+    // the server returns instead of hitting a 'Null is not a subtype of
+    // String' cast when the flat keys are absent (FD-P0-003).
+    final staff = json['staff'] as Map<String, dynamic>?;
+    final staffUser = staff?['user'] as Map<String, dynamic>?;
     return PayrollEntry(
       id: json['id'] as String,
-      staffId: json['staffId'] as String,
-      staffName: json['staffName'] as String,
-      staffRole: json['staffRole'] as String?,
-      staffAvatar: json['staffAvatar'] as String?,
+      staffId: (json['staffId'] as String?) ?? (staff?['id'] as String?) ?? '',
+      staffName: (json['staffName'] as String?) ??
+          (staffUser?['name'] as String?) ??
+          '',
+      staffRole:
+          (json['staffRole'] as String?) ?? (staff?['role'] as String?),
+      staffAvatar: (json['staffAvatar'] as String?) ??
+          (staffUser?['avatar'] as String?),
       baseSalary: (json['baseSalary'] as num?)?.toDouble() ?? 0,
       commission: (json['commission'] as num?)?.toDouble() ?? 0,
       commissionRate: (json['commissionRate'] as num?)?.toDouble(),
