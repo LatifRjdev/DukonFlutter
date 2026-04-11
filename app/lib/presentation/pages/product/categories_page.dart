@@ -31,6 +31,8 @@ class CategoriesPage extends StatelessWidget {
     final controller = TextEditingController(text: currentName);
     final isEditing = id != null;
 
+    // Dispose the controller once the dialog route is actually gone so the
+    // widget tree never holds a detached controller (FE-P1-004).
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -74,7 +76,7 @@ class CategoriesPage extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ).whenComplete(controller.dispose);
   }
 
   void _confirmDelete(BuildContext context, String categoryId, String name) {
