@@ -1,7 +1,16 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://10.0.2.2:4455/api';
+  /// API base URL. Override with `--dart-define=API_BASE_URL=https://...`
+  /// for staging / production builds. The default value is the Android
+  /// emulator loopback and must NEVER be used for a real deploy.
+  ///
+  /// A release-mode assertion in `main.dart` enforces HTTPS so shipping a
+  /// build without overriding this constant will fail loudly.
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://10.0.2.2:4455/api',
+  );
 
   // Auth
   static const String register = '/auth/register';

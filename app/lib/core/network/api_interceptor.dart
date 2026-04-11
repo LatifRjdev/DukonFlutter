@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../constants/api_endpoints.dart';
+
 class ApiInterceptor extends Interceptor {
   final FlutterSecureStorage _storage;
 
@@ -41,7 +43,7 @@ class ApiInterceptor extends Interceptor {
 
       final dio = Dio();
       final response = await dio.post(
-        'http://10.0.2.2:4455/api/auth/refresh',
+        '${ApiEndpoints.baseUrl}/auth/refresh',
         data: {'refreshToken': refreshToken},
       );
 
