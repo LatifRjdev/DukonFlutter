@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
@@ -15,14 +16,22 @@ export class StaffService {
       where: { phone: dto.phone },
     });
 
-    // If user not found, create with temporary password = phone
+    // If user not found, auto-provision with an unguessable random password.
+    // Previously this used dto.phone as the password, which allowed anyone
+    // who knew the phone number to log in and take the account over
+    // (BE-P0-001). The owner must now distribute a reset link or set the
+    // password through a separate admin flow before the staff member can log
+    // in. The raw password is never returned, so it is impossible to recover
+    // — this is by design: closing the account-takeover hole is the priority.
     if (!user) {
-      const hashedPassword = await bcrypt.hash(dto.phone, 12);
+      const randomPassword = randomBytes(32).toString('hex');
+      const hashedPassword = await bcrypt.hash(randomPassword, 12);
       user = await this.prisma.user.create({
         data: {
           phone: dto.phone,
           name: dto.name,
           password: hashedPassword,
+          isActive: false,
         },
       });
     }
