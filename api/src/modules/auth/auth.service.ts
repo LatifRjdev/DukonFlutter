@@ -98,14 +98,14 @@ export class AuthService {
       this.jwtService.signAsync(
         { sub: userId, phone },
         {
-          secret: this.configService.get<string>('JWT_ACCESS_SECRET', 'access-secret-dev'),
+          secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
           expiresIn: '15m',
         },
       ),
       this.jwtService.signAsync(
         { sub: userId, phone, jti },
         {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET', 'refresh-secret-dev'),
+          secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
           expiresIn: '30d',
         },
       ),
