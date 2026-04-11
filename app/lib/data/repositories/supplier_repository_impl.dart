@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../core/constants/api_endpoints.dart';
 import '../../core/errors/exceptions.dart';
+import '../../core/network/api_list_response.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/supplier.dart';
@@ -37,15 +38,12 @@ class SupplierRepositoryImpl implements SupplierRepository {
         },
       );
 
-      final responseData = response.data['data'] as Map<String, dynamic>;
-      final list = responseData['items'] as List;
-
+      final decoded =
+          ApiListResponse.decode<Supplier>(response.data, _mapSupplier);
       return (
-        data: list
-            .map((json) => _mapSupplier(json as Map<String, dynamic>))
-            .toList(),
-        total: responseData['total'] as int? ?? 0,
-        totalPages: responseData['totalPages'] as int? ?? 1,
+        data: decoded.items,
+        total: decoded.total,
+        totalPages: decoded.totalPages,
       );
     } on DioException catch (e) {
       throw _handleDioError(e);
@@ -58,7 +56,11 @@ class SupplierRepositoryImpl implements SupplierRepository {
       final response = await _dioClient.get(
         ApiEndpoints.supplier(storeId, id),
       );
-      return _mapSupplier(response.data['data'] as Map<String, dynamic>);
+      final json = decodeApiObject(response.data);
+      if (json == null) {
+        throw ServerException('Unexpected empty supplier response');
+      }
+      return _mapSupplier(json);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
@@ -75,7 +77,11 @@ class SupplierRepositoryImpl implements SupplierRepository {
           ApiEndpoints.suppliers(storeId),
           data: data,
         );
-        return _mapSupplier(response.data['data'] as Map<String, dynamic>);
+        final json = decodeApiObject(response.data);
+        if (json == null) {
+          throw ServerException('Unexpected empty supplier response');
+        }
+        return _mapSupplier(json);
       } else {
         final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
         await _syncQueue.enqueue(
@@ -111,7 +117,11 @@ class SupplierRepositoryImpl implements SupplierRepository {
           ApiEndpoints.supplier(storeId, id),
           data: data,
         );
-        return _mapSupplier(response.data['data'] as Map<String, dynamic>);
+        final json = decodeApiObject(response.data);
+        if (json == null) {
+          throw ServerException('Unexpected empty supplier response');
+        }
+        return _mapSupplier(json);
       } else {
         await _syncQueue.enqueue(
           entityType: 'supplier',
