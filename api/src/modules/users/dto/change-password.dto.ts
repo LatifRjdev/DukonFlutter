@@ -1,14 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsString } from 'class-validator';
+import { IsStrongPassword } from '../../../common/validators/strong-password.validator';
 
 export class ChangePasswordDto {
-  @ApiProperty({ minLength: 6 })
+  // currentPassword intentionally not length-checked — we don't want to
+  // reject an old 6-char password at the validation layer; bcrypt.compare
+  // in the service will reject it anyway if it is wrong.
+  @ApiProperty()
   @IsString()
-  @MinLength(6)
   currentPassword: string;
 
-  @ApiProperty({ minLength: 6 })
+  @ApiProperty({ minLength: 8 })
   @IsString()
-  @MinLength(6)
+  @IsStrongPassword(['currentPassword'])
   newPassword: string;
 }
