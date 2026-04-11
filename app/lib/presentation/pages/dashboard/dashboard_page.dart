@@ -357,7 +357,9 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  /// 4 KPI cards 2x2 per mockup: Продажи, Себестоимость, Расходы (red), Чистая прибыль (green)
+  /// 4 KPI cards 2x2 per mockup: Продажи, Себестоимость, Расходы (red), Средний чек.
+  /// "Чистая прибыль" intentionally lives only in the hero header above this
+  /// grid — previously it was rendered twice (FD-P1-002).
   Widget _buildKpiCards(DashboardStats stats) {
     return Column(
       children: [
@@ -398,10 +400,14 @@ class _DashboardPageState extends State<DashboardPage> {
             const SizedBox(width: 12),
             Expanded(
               child: _KpiCard(
-                title: 'Чистая прибыль',
-                value: _formatPrice(stats.todayProfit),
-                icon: Icons.account_balance_wallet_outlined,
-                valueColor: AppColors.success,
+                title: 'Средний чек',
+                value: _formatPrice(
+                  stats.todaySalesCount > 0
+                      ? stats.todayRevenue / stats.todaySalesCount
+                      : 0,
+                ),
+                icon: Icons.receipt_long_outlined,
+                valueColor: AppColors.lightTextPrimary,
               ),
             ),
           ],
