@@ -56,6 +56,10 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          # Pin to the exact version used locally so the dep solver in CI
+          # matches dev machines and we don't chase pubspec.lock drift.
+          # Bump this alongside a `flutter upgrade` on the local repo.
+          flutter-version: "3.38.5"
           channel: stable
           cache: true
 
@@ -79,9 +83,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure ADR + audit docs exist
+      - name: Ensure ADR + audit docs dirs exist with content
         run: |
+          set -e
           test -d docs/adr
           test -d docs/audit
-          test -f docs/audit/2026-04-10-full-audit-report.md
+          # The 2026-04-10 full report lives on audit/2026-04-10 branch /
+          # PR #1 until merged; just make sure the directory has at least
+          # one audit markdown on main so we know the directory was not
+          # accidentally wiped.
+          if [ -z "$(ls -A docs/audit/*.md 2>/dev/null)" ]; then
+            echo "docs/audit/ has no markdown files" >&2
+            exit 1
+          fi
           echo "Audit docs present."
