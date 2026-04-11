@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/supplier_repository.dart';
 import 'supplier_list_event.dart';
 import 'supplier_list_state.dart';
@@ -35,7 +36,7 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
         search: event.search,
       ));
     } catch (e) {
-      emit(SupplierListError(e.toString()));
+      emit(SupplierListError(mapErrorToUserMessage(e)));
     }
   }
 

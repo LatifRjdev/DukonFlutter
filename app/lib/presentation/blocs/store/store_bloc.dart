@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/store_repository.dart';
 import 'store_event.dart';
 import 'store_state.dart';
@@ -21,7 +22,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final stores = await _storeRepository.getStores();
       emit(StoreLoaded(stores: stores, selectedStore: stores.isNotEmpty ? stores.first : null));
     } catch (e) {
-      emit(StoreError(e.toString()));
+      emit(StoreError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -38,7 +39,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final stores = await _storeRepository.getStores();
       emit(StoreLoaded(stores: stores, selectedStore: store));
     } catch (e) {
-      emit(StoreError(e.toString()));
+      emit(StoreError(mapErrorToUserMessage(e)));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/product_repository.dart';
 import 'product_list_event.dart';
 import 'product_list_state.dart';
@@ -35,7 +36,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
         categoryId: event.categoryId,
       ));
     } catch (e) {
-      emit(ProductListError(e.toString()));
+      emit(ProductListError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -52,7 +53,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       await _productRepository.deleteProduct(event.storeId, event.productId);
       add(ProductListLoadRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ProductListError(e.toString()));
+      emit(ProductListError(mapErrorToUserMessage(e)));
     }
   }
 }

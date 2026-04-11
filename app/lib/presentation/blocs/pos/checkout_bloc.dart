@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/sale_repository.dart';
 import 'checkout_event.dart';
 import 'checkout_state.dart';
@@ -76,7 +77,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       final sale = await _saleRepository.createSale(event.storeId, saleData);
       emit(state.copyWith(isProcessing: false, saleResult: sale));
     } catch (e) {
-      emit(state.copyWith(isProcessing: false, error: e.toString()));
+      emit(state.copyWith(isProcessing: false, error: mapErrorToUserMessage(e)));
     }
   }
 }

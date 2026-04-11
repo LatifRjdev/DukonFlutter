@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/finance_repository.dart';
 import 'finance_event.dart';
 import 'finance_state.dart';
@@ -23,7 +24,7 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
       );
       emit(FinanceLoaded(summary: summary));
     } catch (e) {
-      emit(FinanceError(e.toString()));
+      emit(FinanceError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -33,7 +34,7 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
       final summary = await _financeRepository.getSummary(event.storeId, period: event.period);
       emit(FinanceLoaded(summary: summary, period: event.period));
     } catch (e) {
-      emit(FinanceError(e.toString()));
+      emit(FinanceError(mapErrorToUserMessage(e)));
     }
   }
 }

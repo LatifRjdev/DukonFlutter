@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/zakat_repository.dart';
 import 'zakat_event.dart';
 import 'zakat_state.dart';
@@ -23,7 +24,7 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
       final settings = await _zakatRepository.getSettings(event.storeId);
       emit(ZakatCalculated(calculation: calculation, settings: settings));
     } catch (e) {
-      emit(ZakatError(e.toString()));
+      emit(ZakatError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -37,7 +38,7 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
         emit(ZakatInitial());
       }
     } catch (e) {
-      emit(ZakatError(e.toString()));
+      emit(ZakatError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -47,7 +48,7 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
       await _zakatRepository.upsertSettings(event.storeId, event.data);
       emit(const ZakatActionSuccess('Настройки закята сохранены'));
     } catch (e) {
-      emit(ZakatError(e.toString()));
+      emit(ZakatError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -57,7 +58,7 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
       await _zakatRepository.createPayment(event.storeId, event.data);
       emit(const ZakatActionSuccess('Выплата закята записана'));
     } catch (e) {
-      emit(ZakatError(e.toString()));
+      emit(ZakatError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -67,7 +68,7 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
       final payments = await _zakatRepository.getPayments(event.storeId);
       emit(ZakatPaymentsLoaded(payments));
     } catch (e) {
-      emit(ZakatError(e.toString()));
+      emit(ZakatError(mapErrorToUserMessage(e)));
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/staff_repository.dart';
 import 'staff_form_event.dart';
 import 'staff_form_state.dart';
@@ -77,7 +78,7 @@ class StaffFormBloc extends Bloc<StaffFormEvent, StaffFormState> {
       ));
     } catch (e) {
       emit(StaffFormError(
-        message: e.toString(),
+        message: mapErrorToUserMessage(e),
         name: state.name,
         phone: state.phone,
         role: state.role,

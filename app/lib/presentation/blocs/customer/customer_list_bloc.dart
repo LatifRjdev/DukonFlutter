@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/customer_repository.dart';
 import 'customer_list_event.dart';
 import 'customer_list_state.dart';
@@ -35,7 +36,7 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
         search: event.search,
       ));
     } catch (e) {
-      emit(CustomerListError(e.toString()));
+      emit(CustomerListError(mapErrorToUserMessage(e)));
     }
   }
 

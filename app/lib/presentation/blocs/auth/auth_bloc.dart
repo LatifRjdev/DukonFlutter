@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -35,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final result = await _authRepository.login(phone: event.phone, password: event.password);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure(mapErrorToUserMessage(e)));
     }
   }
 
@@ -50,7 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(AuthAuthenticated(result.user));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure(mapErrorToUserMessage(e)));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/entities/role_permission.dart';
 import '../../../domain/repositories/staff_repository.dart';
 import 'roles_event.dart';
@@ -21,7 +22,7 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       final roles = await _staffRepository.getRoles(event.storeId);
       emit(RolesLoaded(roles: roles));
     } catch (e) {
-      emit(RolesError(e.toString()));
+      emit(RolesError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -46,7 +47,7 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       await _staffRepository.updateRolePermissions(event.storeId, event.role, event.permissions);
       add(LoadRoles(storeId: event.storeId));
     } catch (e) {
-      emit(RolesError(e.toString()));
+      emit(RolesError(mapErrorToUserMessage(e)));
     }
   }
 }

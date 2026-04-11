@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import 'debt_event.dart';
@@ -26,7 +27,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
       final totalDebt = (data['totalDebt'] as num).toDouble();
       emit(CustomerDebtsLoaded(sales: sales, totalDebt: totalDebt));
     } catch (e) {
-      emit(DebtError(e.toString()));
+      emit(DebtError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -39,7 +40,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
       final payments = (data['payments'] as List?)?.map((p) => p as Map<String, dynamic>).toList() ?? [];
       emit(SupplierDebtsLoaded(debt: debt, payments: payments));
     } catch (e) {
-      emit(DebtError(e.toString()));
+      emit(DebtError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -58,7 +59,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
       emit(const DebtPaymentSuccess('Оплата принята'));
       add(CustomerDebtsRequested(storeId: event.storeId, customerId: event.customerId));
     } catch (e) {
-      emit(DebtError(e.toString()));
+      emit(DebtError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -93,7 +94,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
         totalSupplierDebt: totalSupplierDebt,
       ));
     } catch (e) {
-      emit(DebtError(e.toString()));
+      emit(DebtError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -111,7 +112,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
       emit(const DebtPaymentSuccess('Оплата записана'));
       add(SupplierDebtsRequested(storeId: event.storeId, supplierId: event.supplierId));
     } catch (e) {
-      emit(DebtError(e.toString()));
+      emit(DebtError(mapErrorToUserMessage(e)));
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/product_repository.dart';
 import '../../../domain/repositories/stock_repository.dart';
 import 'stock_intake_event.dart';
@@ -36,7 +37,7 @@ class StockIntakeBloc extends Bloc<StockIntakeEvent, StockIntakeState> {
         isSearching: false,
       ));
     } catch (e) {
-      emit(state.copyWith(isSearching: false, error: e.toString()));
+      emit(state.copyWith(isSearching: false, error: mapErrorToUserMessage(e)));
     }
   }
 
@@ -90,7 +91,7 @@ class StockIntakeBloc extends Bloc<StockIntakeEvent, StockIntakeState> {
       );
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: e.toString()));
+      emit(state.copyWith(isSubmitting: false, error: mapErrorToUserMessage(e)));
     }
   }
 
