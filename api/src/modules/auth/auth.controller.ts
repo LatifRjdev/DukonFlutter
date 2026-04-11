@@ -15,6 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @ApiOperation({ summary: 'Register new user' })
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
@@ -30,6 +31,7 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(AuthGuard('jwt-refresh'))
   @ApiOperation({ summary: 'Refresh access token' })
   async refresh(
