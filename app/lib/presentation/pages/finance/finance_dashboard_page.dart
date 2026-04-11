@@ -335,15 +335,35 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
   Widget _buildSectionsGrid() {
     final storeId = _storeId ?? '';
+    // Empty onTap callbacks were a FD-P1-001 finding: tapping a stub tile
+    // did nothing at all. Until the corresponding pages exist they now show
+    // a "coming soon" snackbar so the UI acknowledges the tap.
+    void comingSoon(String label) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$label — скоро будет доступно'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+
     final sections = [
-      _SectionItem('Баланс', Icons.account_balance_wallet_outlined, () {}),
-      _SectionItem('Кредиты', Icons.credit_card_outlined, () {}),
-      _SectionItem('Вложения', Icons.trending_up_outlined, () {}),
-      _SectionItem('Закят', Icons.volunteer_activism_outlined, () => context.push('/zakat', extra: storeId)),
-      _SectionItem('Валюты', Icons.currency_exchange_outlined, () {}),
-      _SectionItem('Доставка', Icons.local_shipping_outlined, () {}),
-      _SectionItem('Отчёт', Icons.bar_chart_outlined, () {}),
-      _SectionItem('Расходы', Icons.money_off_outlined, () => context.push('/expenses', extra: storeId)),
+      _SectionItem('Баланс', Icons.account_balance_wallet_outlined,
+          () => comingSoon('Баланс'), stub: true),
+      _SectionItem('Кредиты', Icons.credit_card_outlined,
+          () => comingSoon('Кредиты'), stub: true),
+      _SectionItem('Вложения', Icons.trending_up_outlined,
+          () => comingSoon('Вложения'), stub: true),
+      _SectionItem('Закят', Icons.volunteer_activism_outlined,
+          () => context.push('/zakat', extra: storeId)),
+      _SectionItem('Валюты', Icons.currency_exchange_outlined,
+          () => comingSoon('Валюты'), stub: true),
+      _SectionItem('Доставка', Icons.local_shipping_outlined,
+          () => comingSoon('Доставка'), stub: true),
+      _SectionItem('Отчёт', Icons.bar_chart_outlined,
+          () => comingSoon('Отчёт'), stub: true),
+      _SectionItem('Расходы', Icons.money_off_outlined,
+          () => context.push('/expenses', extra: storeId)),
     ];
 
     return GridView.count(
@@ -380,7 +400,10 @@ class _SectionItem {
   final String label;
   final IconData icon;
   final VoidCallback onTap;
-  _SectionItem(this.label, this.icon, this.onTap);
+  /// True when the tile is a placeholder — used by _buildSectionsGrid to
+  /// render the icon/label in a dimmed style.
+  final bool stub;
+  _SectionItem(this.label, this.icon, this.onTap, {this.stub = false});
 }
 
 class _KpiCardContent extends StatelessWidget {
