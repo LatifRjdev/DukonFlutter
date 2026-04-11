@@ -2,13 +2,15 @@ import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { ZakatService } from './zakat.service';
 import { UpsertZakatSettingsDto } from './dto/upsert-zakat-settings.dto';
 import { CreateZakatPaymentDto } from './dto/create-zakat-payment.dto';
 
 @ApiTags('Zakat')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
 @Controller('stores/:storeId/zakat')
 export class ZakatController {
   constructor(private zakatService: ZakatService) {}
@@ -26,6 +28,7 @@ export class ZakatController {
   }
 
   @Post('settings')
+  @Permissions('zakat.manage')
   @ApiOperation({ summary: 'Create or update zakat settings' })
   upsertSettings(
     @Param('storeId') storeId: string,
@@ -41,6 +44,7 @@ export class ZakatController {
   }
 
   @Post('payments')
+  @Permissions('zakat.manage')
   @ApiOperation({ summary: 'Record zakat payment' })
   createPayment(
     @Param('storeId') storeId: string,
