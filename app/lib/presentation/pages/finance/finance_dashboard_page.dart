@@ -359,9 +359,9 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
       _SectionItem('Валюты', Icons.currency_exchange_outlined,
           () => comingSoon('Валюты'), stub: true),
       _SectionItem('Доставка', Icons.local_shipping_outlined,
-          () => comingSoon('Доставка'), stub: true),
+          () => context.push('/deliveries', extra: storeId)),
       _SectionItem('Отчёт', Icons.bar_chart_outlined,
-          () => comingSoon('Отчёт'), stub: true),
+          () => context.push('/finance/reports', extra: storeId)),
       _SectionItem('Расходы', Icons.money_off_outlined,
           () => context.push('/expenses', extra: storeId)),
     ];
