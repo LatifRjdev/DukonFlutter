@@ -9,13 +9,17 @@ export class CurrenciesController {
   constructor(private currenciesService: CurrenciesService) {}
 
   @Get('rates')
-  @ApiOperation({ summary: 'Get latest NBT exchange rates (USD, RUB, EUR, CNY)' })
+  @ApiOperation({
+    summary: 'Get latest NBT exchange rates (USD, RUB, EUR, CNY)',
+  })
   getLatestRates() {
     return this.currenciesService.getLatestRates();
   }
 
   @Get('rates/history')
-  @ApiOperation({ summary: 'Get rate history for a currency (default: USD, 30 days)' })
+  @ApiOperation({
+    summary: 'Get rate history for a currency (default: USD, 30 days)',
+  })
   getRateHistory(@Query() query: RateHistoryQueryDto) {
     return this.currenciesService.getRateHistory(
       query.currency ?? 'USD',

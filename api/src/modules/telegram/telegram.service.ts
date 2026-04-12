@@ -14,7 +14,9 @@ export class TelegramService {
   ) {
     const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
     if (!token) {
-      this.logger.warn('TELEGRAM_BOT_TOKEN not set — Telegram integration disabled');
+      this.logger.warn(
+        'TELEGRAM_BOT_TOKEN not set — Telegram integration disabled',
+      );
       return;
     }
 
@@ -43,7 +45,9 @@ export class TelegramService {
         'Добро пожаловать в DokonPro! 📲\nПожалуйста, отправьте ваш номер телефона для привязки аккаунта.',
         {
           reply_markup: {
-            keyboard: [[{ text: '📱 Поделиться номером', request_contact: true }]],
+            keyboard: [
+              [{ text: '📱 Поделиться номером', request_contact: true }],
+            ],
             one_time_keyboard: true,
             resize_keyboard: true,
           },
@@ -56,7 +60,9 @@ export class TelegramService {
     if (message.contact?.phone_number) {
       const rawPhone = message.contact.phone_number.replace(/\D/g, '');
       // Normalize to +992XXXXXXXXX format
-      const phone = rawPhone.startsWith('992') ? `+${rawPhone}` : `+${rawPhone}`;
+      const phone = rawPhone.startsWith('992')
+        ? `+${rawPhone}`
+        : `+${rawPhone}`;
 
       const customer = await this.prisma.customer.findFirst({
         where: { phone },
@@ -103,7 +109,9 @@ export class TelegramService {
 
     const customer = sale.customer;
     if (!customer?.telegramChatId) {
-      this.logger.debug(`Customer for sale ${saleId} has no telegramChatId — skipping`);
+      this.logger.debug(
+        `Customer for sale ${saleId} has no telegramChatId — skipping`,
+      );
       return;
     }
 
@@ -151,9 +159,14 @@ export class TelegramService {
 
     try {
       await this.bot.sendMessage(customer.telegramChatId, receipt);
-      this.logger.log(`Receipt sent to chatId ${customer.telegramChatId} for sale ${saleId}`);
+      this.logger.log(
+        `Receipt sent to chatId ${customer.telegramChatId} for sale ${saleId}`,
+      );
     } catch (err) {
-      this.logger.error(`Failed to send receipt to Telegram for sale ${saleId}`, err);
+      this.logger.error(
+        `Failed to send receipt to Telegram for sale ${saleId}`,
+        err,
+      );
     }
   }
 }

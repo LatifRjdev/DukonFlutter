@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../prisma/prisma.service';
-import * as cheerio from 'cheerio';
+import { load } from 'cheerio';
 import * as https from 'https';
 
 const SUPPORTED_CURRENCIES = ['USD', 'RUB', 'EUR', 'CNY'];
@@ -45,7 +45,7 @@ export class CurrenciesService {
 
     try {
       const html = await this.fetchHtml('https://nbt.tj/en/');
-      const $ = cheerio.load(html);
+      const $ = load(html);
       const today = new Date();
       today.setUTCHours(0, 0, 0, 0);
 
@@ -61,19 +61,23 @@ export class CurrenciesService {
         const code = $(cells[0]).text().trim().toUpperCase();
         if (!SUPPORTED_CURRENCIES.includes(code)) return;
 
-        const parseNum = (el: cheerio.Element) =>
-          parseFloat($(el).text().replace(/\s/g, '').replace(',', '.')) || 0;
+        const parseNum = (el: ReturnType<typeof $>) =>
+          parseFloat(el.text().replace(/\s/g, '').replace(',', '.')) || 0;
 
-        const nbtRate = parseNum(cells[1]);
+        const nbtRate = parseNum($(cells[1]));
         // Some NBT pages show only nbt rate; buy/sell may differ slightly
-        const buyRate = cells.length >= 3 ? parseNum(cells[2]) : nbtRate * 0.998;
-        const sellRate = cells.length >= 4 ? parseNum(cells[3]) : nbtRate * 1.002;
+        const buyRate =
+          cells.length >= 3 ? parseNum($(cells[2])) : nbtRate * 0.998;
+        const sellRate =
+          cells.length >= 4 ? parseNum($(cells[3])) : nbtRate * 1.002;
 
         rates.push({ currency: code, buyRate, sellRate, nbtRate });
       });
 
       if (rates.length === 0) {
-        this.logger.warn('No currency rates parsed from nbt.tj — page structure may have changed');
+        this.logger.warn(
+          'No currency rates parsed from nbt.tj — page structure may have changed',
+        );
         return [];
       }
 
@@ -82,7 +86,11 @@ export class CurrenciesService {
         rates.map((r) =>
           this.prisma.currencyRate.upsert({
             where: { currency_date: { currency: r.currency, date: today } },
-            update: { buyRate: r.buyRate, sellRate: r.sellRate, nbtRate: r.nbtRate },
+            update: {
+              buyRate: r.buyRate,
+              sellRate: r.sellRate,
+              nbtRate: r.nbtRate,
+            },
             create: {
               currency: r.currency,
               buyRate: r.buyRate,
@@ -94,7 +102,9 @@ export class CurrenciesService {
         ),
       );
 
-      this.logger.log(`Saved ${rates.length} currency rates for ${today.toISOString().slice(0, 10)}`);
+      this.logger.log(
+        `Saved ${rates.length} currency rates for ${today.toISOString().slice(0, 10)}`,
+      );
       return rates;
     } catch (err) {
       this.logger.error('Failed to fetch rates from nbt.tj', err);

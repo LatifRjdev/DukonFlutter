@@ -24,7 +24,9 @@ export class TelegramController {
    */
   @Post('telegram/webhook')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Telegram bot webhook (called by Telegram, not by clients)' })
+  @ApiOperation({
+    summary: 'Telegram bot webhook (called by Telegram, not by clients)',
+  })
   handleWebhook(@Body() update: any) {
     return this.telegramService.handleWebhook(update);
   }
@@ -37,10 +39,7 @@ export class TelegramController {
   @UseGuards(JwtAuthGuard, StoreAccessGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Send sale receipt to customer via Telegram' })
-  sendReceipt(
-    @Param('storeId') storeId: string,
-    @Body() dto: SendReceiptDto,
-  ) {
+  sendReceipt(@Param('storeId') storeId: string, @Body() dto: SendReceiptDto) {
     return this.telegramService.sendReceipt(dto.saleId, storeId);
   }
 }
