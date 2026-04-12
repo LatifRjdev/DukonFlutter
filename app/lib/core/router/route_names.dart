@@ -56,6 +56,7 @@ class RouteNames {
   // Customer/Supplier
   static const String customerList = '/customers';
   static const String customerDetail = '/customers/:id';
+  static const String customerForm = '/customers/form';
   static const String supplierList = '/suppliers';
   static const String supplierDetail = '/suppliers/:id';
 
