@@ -78,6 +78,14 @@ class RouteNames {
   static const String payroll = '/payroll';
   static const String addAdjustment = '/payroll/:periodId/adjustment';
 
+  // Delivery
+  static const String deliveryList = '/deliveries';
+  static const String deliveryDetail = '/deliveries/:id';
+  static const String deliveryCreate = '/deliveries/create';
+
+  // Inventory
+  static const String inventoryCount = '/inventory/count';
+
   // Settings
   static const String settings = '/settings';
   static const String editProfile = '/settings/profile';

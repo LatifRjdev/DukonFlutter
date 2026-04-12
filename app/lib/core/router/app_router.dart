@@ -60,6 +60,10 @@ import '../../presentation/pages/shifts/open_shift_page.dart';
 import '../../presentation/pages/shifts/z_report_page.dart';
 import '../../presentation/pages/payroll/payroll_page.dart';
 import '../../presentation/pages/payroll/add_adjustment_page.dart';
+import '../../presentation/pages/delivery/delivery_list_page.dart';
+import '../../presentation/pages/delivery/delivery_detail_page.dart';
+import '../../presentation/pages/delivery/create_delivery_page.dart';
+import '../../presentation/pages/inventory/inventory_count_page.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -446,6 +450,40 @@ class AppRouter {
           final periodId = state.pathParameters['periodId']!;
           final storeId = state.extra as String? ?? '';
           return AddAdjustmentPage(storeId: storeId, periodId: periodId);
+        },
+      ),
+
+      // Delivery — static routes before dynamic :id
+      GoRoute(
+        path: RouteNames.deliveryCreate,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return CreateDeliveryPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.deliveryList,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return DeliveryListPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: '/deliveries/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final storeId = extra['storeId'] as String? ?? '';
+          return DeliveryDetailPage(storeId: storeId, deliveryId: id);
+        },
+      ),
+
+      // Inventory
+      GoRoute(
+        path: RouteNames.inventoryCount,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return InventoryCountPage(storeId: storeId);
         },
       ),
 
