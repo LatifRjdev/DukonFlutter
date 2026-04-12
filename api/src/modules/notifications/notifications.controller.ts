@@ -37,7 +37,11 @@ export class NotificationsController {
     @CurrentUser('id') userId: string,
     @Body() dto: SaveFcmTokenDto,
   ): Promise<void> {
-    await this.notificationsService.saveFcmToken(userId, dto.token, dto.platform);
+    await this.notificationsService.saveFcmToken(
+      userId,
+      dto.token,
+      dto.platform,
+    );
   }
 
   /**
@@ -46,7 +50,9 @@ export class NotificationsController {
    */
   @Get('stores/:storeId/notifications')
   @UseGuards(StoreAccessGuard)
-  @ApiOperation({ summary: 'Get paginated notification history for store+user' })
+  @ApiOperation({
+    summary: 'Get paginated notification history for store+user',
+  })
   getNotifications(
     @Param('storeId') storeId: string,
     @CurrentUser('id') userId: string,
