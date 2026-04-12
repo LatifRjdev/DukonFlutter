@@ -1,5 +1,12 @@
 import {
-  Controller, Get, Post, Put, Body, Param, Query, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -21,34 +28,32 @@ export class DeliveriesController {
   @Post()
   @Permissions('deliveries.write')
   @ApiOperation({ summary: 'Create a new delivery for a sale' })
-  create(
-    @Param('storeId') storeId: string,
-    @Body() dto: CreateDeliveryDto,
-  ) {
+  create(@Param('storeId') storeId: string, @Body() dto: CreateDeliveryDto) {
     return this.deliveriesService.create(storeId, dto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'List deliveries with optional filters (status, date range) and pagination' })
-  findAll(
-    @Param('storeId') storeId: string,
-    @Query() query: DeliveryQueryDto,
-  ) {
+  @ApiOperation({
+    summary:
+      'List deliveries with optional filters (status, date range) and pagination',
+  })
+  findAll(@Param('storeId') storeId: string, @Query() query: DeliveryQueryDto) {
     return this.deliveriesService.findAll(storeId, query);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get delivery details including sale items and courier' })
-  findOne(
-    @Param('storeId') storeId: string,
-    @Param('id') id: string,
-  ) {
+  @ApiOperation({
+    summary: 'Get delivery details including sale items and courier',
+  })
+  findOne(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.deliveriesService.findOne(storeId, id);
   }
 
   @Put(':id/status')
   @Permissions('deliveries.write')
-  @ApiOperation({ summary: 'Update delivery status (NEW→IN_TRANSIT→DELIVERED)' })
+  @ApiOperation({
+    summary: 'Update delivery status (NEW→IN_TRANSIT→DELIVERED)',
+  })
   updateStatus(
     @Param('storeId') storeId: string,
     @Param('id') id: string,

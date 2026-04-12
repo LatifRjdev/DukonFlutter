@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryStatusDto } from './dto/update-delivery-status.dto';
@@ -136,7 +140,11 @@ export class DeliveriesService {
           },
         },
         courier: {
-          select: { id: true, role: true, user: { select: { name: true, phone: true } } },
+          select: {
+            id: true,
+            role: true,
+            user: { select: { name: true, phone: true } },
+          },
         },
       },
     });
@@ -148,7 +156,11 @@ export class DeliveriesService {
     return delivery;
   }
 
-  async updateStatus(storeId: string, id: string, dto: UpdateDeliveryStatusDto) {
+  async updateStatus(
+    storeId: string,
+    id: string,
+    dto: UpdateDeliveryStatusDto,
+  ) {
     const delivery = await this.findOne(storeId, id);
 
     const allowedTransitions = STATUS_TRANSITIONS[delivery.status];

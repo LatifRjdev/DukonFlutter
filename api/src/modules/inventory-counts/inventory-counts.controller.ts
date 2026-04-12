@@ -1,5 +1,11 @@
 import {
-  Controller, Get, Post, Put, Body, Param, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -18,23 +24,28 @@ export class InventoryCountsController {
 
   @Post()
   @Permissions('inventory.write')
-  @ApiOperation({ summary: 'Create a new inventory count session (loads all products with current stock)' })
+  @ApiOperation({
+    summary:
+      'Create a new inventory count session (loads all products with current stock)',
+  })
   create(@Param('storeId') storeId: string) {
     return this.inventoryCountsService.create(storeId);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get inventory count session with items (includes product name, barcode)' })
-  findOne(
-    @Param('storeId') storeId: string,
-    @Param('id') id: string,
-  ) {
+  @ApiOperation({
+    summary:
+      'Get inventory count session with items (includes product name, barcode)',
+  })
+  findOne(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.inventoryCountsService.findOne(storeId, id);
   }
 
   @Put(':id')
   @Permissions('inventory.write')
-  @ApiOperation({ summary: 'Update actual quantities for items in a count session (batch)' })
+  @ApiOperation({
+    summary: 'Update actual quantities for items in a count session (batch)',
+  })
   updateItems(
     @Param('storeId') storeId: string,
     @Param('id') id: string,
@@ -45,11 +56,11 @@ export class InventoryCountsController {
 
   @Post(':id/apply')
   @Permissions('inventory.write')
-  @ApiOperation({ summary: 'Finalize count: update product stock quantities and set status=COMPLETED' })
-  apply(
-    @Param('storeId') storeId: string,
-    @Param('id') id: string,
-  ) {
+  @ApiOperation({
+    summary:
+      'Finalize count: update product stock quantities and set status=COMPLETED',
+  })
+  apply(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.inventoryCountsService.apply(storeId, id);
   }
 }

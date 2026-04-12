@@ -13,7 +13,9 @@ export class ReportsController {
   constructor(private reportsService: ReportsService) {}
 
   @Get('sales')
-  @ApiOperation({ summary: 'Sales report: aggregated by date, top 5 products by revenue' })
+  @ApiOperation({
+    summary: 'Sales report: aggregated by date, top 5 products by revenue',
+  })
   getSalesReport(
     @Param('storeId') storeId: string,
     @Query() query: ReportQueryDto,
@@ -22,7 +24,9 @@ export class ReportsController {
   }
 
   @Get('profit')
-  @ApiOperation({ summary: 'Profit report: income, expenses, profit, margin %' })
+  @ApiOperation({
+    summary: 'Profit report: income, expenses, profit, margin %',
+  })
   getProfitReport(
     @Param('storeId') storeId: string,
     @Query() query: ReportQueryDto,
@@ -31,7 +35,10 @@ export class ReportsController {
   }
 
   @Get('products')
-  @ApiOperation({ summary: 'Products report: top sellers by qty/revenue, dead stock, total stock value' })
+  @ApiOperation({
+    summary:
+      'Products report: top sellers by qty/revenue, dead stock, total stock value',
+  })
   getProductsReport(
     @Param('storeId') storeId: string,
     @Query() query: ReportQueryDto,
@@ -40,7 +47,9 @@ export class ReportsController {
   }
 
   @Get('staff')
-  @ApiOperation({ summary: 'Staff report: sales per cashier, avg check per cashier' })
+  @ApiOperation({
+    summary: 'Staff report: sales per cashier, avg check per cashier',
+  })
   getStaffReport(
     @Param('storeId') storeId: string,
     @Query() query: ReportQueryDto,

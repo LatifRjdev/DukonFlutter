@@ -11,7 +11,13 @@ export class FinancesService {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
-    const [salesAggregate, expensesAggregate, totalProducts, lowStockProducts, recentSales] = await Promise.all([
+    const [
+      salesAggregate,
+      expensesAggregate,
+      totalProducts,
+      lowStockProducts,
+      recentSales,
+    ] = await Promise.all([
       this.prisma.sale.aggregate({
         where: {
           storeId,
@@ -79,7 +85,13 @@ export class FinancesService {
   async getDashboard(storeId: string, query: FinanceQueryDto) {
     const { startDate, endDate } = this.getDateRange(query);
 
-    const [salesAggregate, expensesAggregate, salesCount, topProducts, recentSales] = await Promise.all([
+    const [
+      salesAggregate,
+      expensesAggregate,
+      salesCount,
+      topProducts,
+      recentSales,
+    ] = await Promise.all([
       // Total revenue from sales
       this.prisma.sale.aggregate({
         where: {
@@ -150,7 +162,7 @@ export class FinancesService {
       profit,
       salesCount,
       averageCheck,
-      topProducts: topProducts.map(p => ({
+      topProducts: topProducts.map((p) => ({
         productId: p.productId,
         productName: p.productName,
         totalQuantity: p._sum.quantity,
@@ -209,7 +221,7 @@ export class FinancesService {
     return {
       salesByDay,
       expensesByDay,
-      expensesByCategory: expensesByCategory.map(e => ({
+      expensesByCategory: expensesByCategory.map((e) => ({
         category: e.category,
         total: Number(e._sum.amount || 0),
         count: e._count,
@@ -238,51 +250,52 @@ export class FinancesService {
     }
     startDate.setHours(0, 0, 0, 0);
 
-    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData] = await Promise.all([
-      this.prisma.sale.aggregate({
-        where: {
-          storeId,
-          status: 'COMPLETED',
-          createdAt: { gte: startDate, lte: endDate },
-        },
-        _sum: { total: true },
-      }),
-      this.prisma.expense.aggregate({
-        where: {
-          storeId,
-          date: { gte: startDate, lte: endDate },
-        },
-        _sum: { amount: true },
-      }),
-      this.prisma.sale.findMany({
-        where: { storeId, createdAt: { gte: startDate, lte: endDate } },
-        orderBy: { createdAt: 'desc' },
-        take: 10,
-        select: {
-          id: true,
-          receiptNo: true,
-          total: true,
-          paymentType: true,
-          status: true,
-          createdAt: true,
-          customer: { select: { name: true } },
-        },
-      }),
-      this.prisma.expense.findMany({
-        where: { storeId, date: { gte: startDate, lte: endDate } },
-        orderBy: { date: 'desc' },
-        take: 10,
-        select: {
-          id: true,
-          category: true,
-          amount: true,
-          description: true,
-          date: true,
-        },
-      }),
-      this.prisma.$queryRaw<
-        { date: Date; income: number; expenses: number }[]
-      >`
+    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData] =
+      await Promise.all([
+        this.prisma.sale.aggregate({
+          where: {
+            storeId,
+            status: 'COMPLETED',
+            createdAt: { gte: startDate, lte: endDate },
+          },
+          _sum: { total: true },
+        }),
+        this.prisma.expense.aggregate({
+          where: {
+            storeId,
+            date: { gte: startDate, lte: endDate },
+          },
+          _sum: { amount: true },
+        }),
+        this.prisma.sale.findMany({
+          where: { storeId, createdAt: { gte: startDate, lte: endDate } },
+          orderBy: { createdAt: 'desc' },
+          take: 10,
+          select: {
+            id: true,
+            receiptNo: true,
+            total: true,
+            paymentType: true,
+            status: true,
+            createdAt: true,
+            customer: { select: { name: true } },
+          },
+        }),
+        this.prisma.expense.findMany({
+          where: { storeId, date: { gte: startDate, lte: endDate } },
+          orderBy: { date: 'desc' },
+          take: 10,
+          select: {
+            id: true,
+            category: true,
+            amount: true,
+            description: true,
+            date: true,
+          },
+        }),
+        this.prisma.$queryRaw<
+          { date: Date; income: number; expenses: number }[]
+        >`
         SELECT
           day.date,
           COALESCE(s.income, 0) as income,
@@ -313,7 +326,7 @@ export class FinancesService {
         ) e ON e.date = day.date
         ORDER BY day.date ASC
       `,
-    ]);
+      ]);
 
     const income = Number(salesAgg._sum.total ?? 0);
     const expenses = Number(expensesAgg._sum.amount ?? 0);
@@ -427,7 +440,10 @@ export class FinancesService {
     };
   }
 
-  private getDateRange(query: FinanceQueryDto): { startDate: Date; endDate: Date } {
+  private getDateRange(query: FinanceQueryDto): {
+    startDate: Date;
+    endDate: Date;
+  } {
     if (query.startDate && query.endDate) {
       return {
         startDate: new Date(query.startDate),

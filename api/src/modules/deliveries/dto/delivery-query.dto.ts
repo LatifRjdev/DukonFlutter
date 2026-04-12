@@ -4,7 +4,10 @@ import { Type } from 'class-transformer';
 import { DeliveryStatus } from '@prisma/client';
 
 export class DeliveryQueryDto {
-  @ApiPropertyOptional({ enum: DeliveryStatus, description: 'Filter by status' })
+  @ApiPropertyOptional({
+    enum: DeliveryStatus,
+    description: 'Filter by status',
+  })
   @IsOptional()
   @IsEnum(DeliveryStatus)
   status?: DeliveryStatus;

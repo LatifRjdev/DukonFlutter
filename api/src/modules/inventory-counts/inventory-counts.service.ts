@@ -139,9 +139,7 @@ export class InventoryCountsService {
     );
 
     if (itemsWithActual.length === 0) {
-      throw new BadRequestException(
-        'No items with actual quantities to apply',
-      );
+      throw new BadRequestException('No items with actual quantities to apply');
     }
 
     await this.prisma.$transaction([

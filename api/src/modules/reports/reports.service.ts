@@ -6,8 +6,13 @@ import { ReportQueryDto } from './dto/report-query.dto';
 export class ReportsService {
   constructor(private prisma: PrismaService) {}
 
-  private getDateRange(query: ReportQueryDto): { startDate: Date; endDate: Date } {
-    const startDate = query.from ? new Date(query.from) : new Date(new Date().setDate(1));
+  private getDateRange(query: ReportQueryDto): {
+    startDate: Date;
+    endDate: Date;
+  } {
+    const startDate = query.from
+      ? new Date(query.from)
+      : new Date(new Date().setDate(1));
     const endDate = query.to ? new Date(query.to) : new Date();
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);

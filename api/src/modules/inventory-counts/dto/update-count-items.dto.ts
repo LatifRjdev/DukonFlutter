@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString, IsNumber, IsOptional, Min, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsString,
+  IsNumber,
+  IsOptional,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CountItemUpdateDto {
@@ -14,7 +21,10 @@ export class CountItemUpdateDto {
 }
 
 export class UpdateCountItemsDto {
-  @ApiProperty({ type: [CountItemUpdateDto], description: 'Array of product count updates' })
+  @ApiProperty({
+    type: [CountItemUpdateDto],
+    description: 'Array of product count updates',
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CountItemUpdateDto)
