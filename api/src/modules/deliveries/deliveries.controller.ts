@@ -12,7 +12,9 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { DeliveriesService } from './deliveries.service';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryStatusDto } from './dto/update-delivery-status.dto';
@@ -20,13 +22,14 @@ import { DeliveryQueryDto } from './dto/delivery-query.dto';
 
 @ApiTags('Deliveries')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
 @Controller('stores/:storeId/deliveries')
 export class DeliveriesController {
   constructor(private deliveriesService: DeliveriesService) {}
 
   @Post()
   @Permissions('deliveries.write')
+  @RequiresFeature('hasDelivery')
   @ApiOperation({ summary: 'Create a new delivery for a sale' })
   create(@Param('storeId') storeId: string, @Body() dto: CreateDeliveryDto) {
     return this.deliveriesService.create(storeId, dto);

@@ -280,25 +280,26 @@ export class SubscriptionsService implements OnModuleInit {
     const newPeriodEnd = new Date(base);
     newPeriodEnd.setDate(newPeriodEnd.getDate() + 30);
 
-    const [updatedPayment, updatedSubscription] = await this.prisma.$transaction([
-      this.prisma.payment.update({
-        where: { id: paymentId },
-        data: {
-          status: 'APPROVED',
-          reviewedAt: now,
-          reviewedBy,
-        },
-      }),
-      this.prisma.subscription.update({
-        where: { id: subscriptionId },
-        data: {
-          status: 'ACTIVE',
-          plan: newPlan,
-          currentPeriodEnd: newPeriodEnd,
-          currentPeriodStart: now,
-        },
-      }),
-    ]);
+    const [updatedPayment, updatedSubscription] =
+      await this.prisma.$transaction([
+        this.prisma.payment.update({
+          where: { id: paymentId },
+          data: {
+            status: 'APPROVED',
+            reviewedAt: now,
+            reviewedBy,
+          },
+        }),
+        this.prisma.subscription.update({
+          where: { id: subscriptionId },
+          data: {
+            status: 'ACTIVE',
+            plan: newPlan,
+            currentPeriodEnd: newPeriodEnd,
+            currentPeriodStart: now,
+          },
+        }),
+      ]);
 
     // Notify store owner
     const store = await this.prisma.store.findUnique({
@@ -369,10 +370,7 @@ export class SubscriptionsService implements OnModuleInit {
     return updatedPayment;
   }
 
-  async adminExtend(
-    subscriptionId: string,
-    dto: ExtendSubscriptionDto,
-  ) {
+  async adminExtend(subscriptionId: string, dto: ExtendSubscriptionDto) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
     });
@@ -510,6 +508,4 @@ export class SubscriptionsService implements OnModuleInit {
       );
     }
   }
-
 }
-

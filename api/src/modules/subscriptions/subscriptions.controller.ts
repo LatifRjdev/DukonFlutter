@@ -41,7 +41,9 @@ export class SubscriptionPlansController {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
   @Get('plans')
-  @ApiOperation({ summary: 'Get all subscription plan configs (public, no auth)' })
+  @ApiOperation({
+    summary: 'Get all subscription plan configs (public, no auth)',
+  })
   getPlans() {
     return this.subscriptionsService.getPlans();
   }
@@ -55,13 +57,17 @@ export class SubscriptionsController {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get subscription with plan config and calculated price' })
+  @ApiOperation({
+    summary: 'Get subscription with plan config and calculated price',
+  })
   getSubscription(@Param('storeId') storeId: string) {
     return this.subscriptionsService.getSubscription(storeId);
   }
 
   @Post('request-change')
-  @ApiOperation({ summary: 'Request a plan change — creates a pending payment' })
+  @ApiOperation({
+    summary: 'Request a plan change — creates a pending payment',
+  })
   requestChange(
     @Param('storeId') storeId: string,
     @Body() dto: RequestChangeDto,
@@ -89,7 +95,10 @@ export class SubscriptionsController {
       }),
       fileFilter: (_req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|pdf)$/)) {
-          return cb(new BadRequestException('Only image/pdf files allowed'), false);
+          return cb(
+            new BadRequestException('Only image/pdf files allowed'),
+            false,
+          );
         }
         cb(null, true);
       },
@@ -105,7 +114,11 @@ export class SubscriptionsController {
       throw new BadRequestException('No file uploaded');
     }
     const filePath = `uploads/receipts/${file.filename}`;
-    return this.subscriptionsService.uploadReceipt(storeId, paymentId, filePath);
+    return this.subscriptionsService.uploadReceipt(
+      storeId,
+      paymentId,
+      filePath,
+    );
   }
 
   @Get('payments')
@@ -158,7 +171,12 @@ export class AdminSubscriptionsController {
     @Body() dto: RejectPaymentDto,
     @CurrentUser('id') userId: string,
   ) {
-    return this.subscriptionsService.adminRejectPayment(id, paymentId, dto, userId);
+    return this.subscriptionsService.adminRejectPayment(
+      id,
+      paymentId,
+      dto,
+      userId,
+    );
   }
 
   @Put(':id/extend')

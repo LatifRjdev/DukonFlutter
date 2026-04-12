@@ -11,19 +11,22 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { InventoryCountsService } from './inventory-counts.service';
 import { UpdateCountItemsDto } from './dto/update-count-items.dto';
 
 @ApiTags('Inventory Counts')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
 @Controller('stores/:storeId/inventory-counts')
 export class InventoryCountsController {
   constructor(private inventoryCountsService: InventoryCountsService) {}
 
   @Post()
   @Permissions('inventory.write')
+  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Create a new inventory count session (loads all products with current stock)',

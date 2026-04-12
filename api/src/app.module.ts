@@ -27,6 +27,7 @@ import { CurrenciesModule } from './modules/currencies/currencies.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { DiscountsModule } from './modules/discounts/discounts.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { DiscountsModule } from './modules/discounts/discounts.module';
     TelegramModule,
     NotificationsModule,
     DiscountsModule,
+    SubscriptionsModule,
   ],
   providers: [
     {

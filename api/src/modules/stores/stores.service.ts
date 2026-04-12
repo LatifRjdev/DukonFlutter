@@ -10,8 +10,7 @@ export class StoresService {
 
   async create(ownerId: string, dto: CreateStoreDto) {
     const now = new Date();
-    const trialEnd = new Date(now);
-    trialEnd.setDate(trialEnd.getDate() + 14);
+    const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     return this.prisma.store.create({
       data: {
@@ -23,7 +22,7 @@ export class StoresService {
         phone: dto.phone,
         subscription: {
           create: {
-            plan: 'START',
+            plan: 'PREMIUM',
             status: 'TRIAL',
             trialEndsAt: trialEnd,
             currentPeriodStart: now,
