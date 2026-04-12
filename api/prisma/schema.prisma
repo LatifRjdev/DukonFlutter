@@ -852,6 +852,37 @@ model InventoryCountItem {
   @@map("inventory_count_items")
 }
 
+// ============ ADMIN ============
+
+model Announcement {
+  id             String              @id @default(uuid())
+  title          String
+  body           String
+  targetPlan     SubscriptionPlan?
+  targetStatus   SubscriptionStatus?
+  sentBy         String
+  recipientCount Int
+  createdAt      DateTime            @default(now())
+
+  @@map("announcements")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String
+  action     String
+  entityType String
+  entityId   String?
+  details    Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
 // ============ CURRENCY RATES ============
 
 model CurrencyRate {
