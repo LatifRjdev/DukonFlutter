@@ -53,6 +53,15 @@ import '../../presentation/pages/supplier/supplier_detail_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/settings/edit_profile_page.dart';
 import '../../presentation/pages/settings/change_password_page.dart';
+import '../../presentation/pages/settings/my_stores_page.dart';
+import '../../presentation/pages/settings/discounts_page.dart';
+import '../../presentation/pages/settings/receipt_template_page.dart';
+import '../../presentation/pages/settings/kkm_settings_page.dart';
+import '../../presentation/pages/settings/scanner_settings_page.dart';
+import '../../presentation/pages/settings/telegram_bot_settings_page.dart';
+import '../../presentation/pages/settings/language_settings_page.dart';
+import '../../presentation/pages/settings/offline_mode_page.dart';
+import '../../presentation/pages/settings/subscription_page.dart';
 import '../../presentation/pages/staff/staff_list_page.dart';
 import '../../presentation/pages/staff/add_staff_page.dart';
 import '../../presentation/pages/staff/staff_detail_page.dart';
@@ -516,6 +525,51 @@ class AppRouter {
       GoRoute(
         path: RouteNames.printerSettings,
         builder: (context, state) => const PrinterSettingsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.myStores,
+        builder: (context, state) => const MyStoresPage(),
+      ),
+      GoRoute(
+        path: RouteNames.discounts,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return DiscountsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.receiptTemplate,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return ReceiptTemplatePage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.kkmSettings,
+        builder: (context, state) => const KkmSettingsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.scannerSettings,
+        builder: (context, state) => const ScannerSettingsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.telegramBot,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return TelegramBotSettingsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.languageSettings,
+        builder: (context, state) => const LanguageSettingsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.offlineMode,
+        builder: (context, state) => const OfflineModePage(),
+      ),
+      GoRoute(
+        path: RouteNames.subscription,
+        builder: (context, state) => const SubscriptionPage(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

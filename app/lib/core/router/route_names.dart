@@ -93,4 +93,13 @@ class RouteNames {
   static const String editProfile = '/settings/profile';
   static const String changePassword = '/settings/password';
   static const String printerSettings = '/settings/printer';
+  static const String myStores = '/settings/stores';
+  static const String discounts = '/settings/discounts';
+  static const String receiptTemplate = '/settings/receipt-template';
+  static const String kkmSettings = '/settings/kkm';
+  static const String scannerSettings = '/settings/scanner';
+  static const String telegramBot = '/settings/telegram-bot';
+  static const String languageSettings = '/settings/language';
+  static const String offlineMode = '/settings/offline';
+  static const String subscription = '/settings/subscription';
 }
