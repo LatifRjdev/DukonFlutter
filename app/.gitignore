@@ -3,6 +3,16 @@
 *.log
 *.pyc
 *.swp
+
+# Release signing
+key.properties
+*.jks
+*.keystore
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
 .DS_Store
 .atom/
 .build/

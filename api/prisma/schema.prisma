@@ -23,6 +23,8 @@ model User {
   ownedStores   Store[]        @relation("StoreOwner")
   staffRoles    Staff[]
   refreshTokens RefreshToken[]
+  fcmTokens     FcmToken[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -72,6 +74,10 @@ model Store {
   supplierPayments SupplierPayment[]
   rolePermissions  RolePermission[]
   payrollPeriods   PayrollPeriod[]
+  deliveries       Delivery[]
+  inventoryCounts  InventoryCount[]
+  notifications    Notification[]
+  discounts        Discount[]
 
   @@map("stores")
 }
@@ -195,9 +201,10 @@ model Product {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
-  saleItems      SaleItem[]
-  stockMovements StockMovement[]
-  inventoryItems InventoryItem[]
+  saleItems           SaleItem[]
+  stockMovements      StockMovement[]
+  inventoryItems      InventoryItem[]
+  inventoryCountItems InventoryCountItem[]
 
   @@unique([storeId, sku])
   @@unique([storeId, barcode])
@@ -271,6 +278,7 @@ model Sale {
 
   items        SaleItem[]
   debtPayments DebtPayment[]
+  delivery     Delivery?
 
   @@unique([storeId, receiptNo])
   @@index([storeId, createdAt])
@@ -329,20 +337,21 @@ model DebtPayment {
 // ============ CUSTOMERS ============
 
 model Customer {
-  id            String   @id @default(uuid())
-  storeId       String
-  store         Store    @relation(fields: [storeId], references: [id])
-  name          String
-  phone         String?
-  email         String?
-  birthday      DateTime?
-  notes         String?
-  loyaltyPoints Int      @default(0)
-  totalSpent    Decimal  @default(0) @db.Decimal(12, 2)
-  debt          Decimal  @default(0) @db.Decimal(12, 2)
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(uuid())
+  storeId        String
+  store          Store    @relation(fields: [storeId], references: [id])
+  name           String
+  phone          String?
+  email          String?
+  birthday       DateTime?
+  notes          String?
+  loyaltyPoints  Int      @default(0)
+  totalSpent     Decimal  @default(0) @db.Decimal(12, 2)
+  debt           Decimal  @default(0) @db.Decimal(12, 2)
+  isActive       Boolean  @default(true)
+  telegramChatId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   sales Sale[]
 
@@ -385,9 +394,10 @@ model Staff {
   isActive   Boolean   @default(true)
   createdAt  DateTime  @default(now())
 
-  sales    Sale[]
-  shifts   Shift[]
-  payrolls Payroll[]
+  sales      Sale[]
+  shifts     Shift[]
+  payrolls   Payroll[]
+  deliveries Delivery[]
 
   @@unique([storeId, userId])
   @@map("staff")
@@ -606,6 +616,28 @@ enum PromotionType {
   HAPPY_HOURS
 }
 
+// ============ DISCOUNTS ============
+
+model Discount {
+  id         String    @id @default(uuid())
+  storeId    String
+  store      Store     @relation(fields: [storeId], references: [id])
+  name       String
+  type       String    // FIXED, PERCENTAGE
+  value      Float
+  condition  String    // CART, CATEGORY, PRODUCT
+  categoryId String?
+  productId  String?
+  minTotal   Float?
+  startDate  DateTime
+  endDate    DateTime?
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+
+  @@index([storeId])
+  @@map("discounts")
+}
+
 // ============ NOTIFICATIONS ============
 
 model TelegramBot {
@@ -731,4 +763,115 @@ enum SyncStatus {
   COMPLETED
   FAILED
   CONFLICT
+}
+
+// ============ DELIVERIES ============
+
+model Delivery {
+  id        String         @id @default(uuid())
+  storeId   String
+  store     Store          @relation(fields: [storeId], references: [id])
+  saleId    String         @unique
+  sale      Sale           @relation(fields: [saleId], references: [id])
+  address   String
+  courierId String?
+  courier   Staff?         @relation(fields: [courierId], references: [id])
+  status    DeliveryStatus @default(NEW)
+  notes     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([storeId])
+  @@index([status])
+  @@map("deliveries")
+}
+
+enum DeliveryStatus {
+  NEW
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+// ============ INVENTORY COUNTS ============
+
+model InventoryCount {
+  id          String               @id @default(uuid())
+  storeId     String
+  store       Store                @relation(fields: [storeId], references: [id])
+  status      InventoryCountStatus @default(IN_PROGRESS)
+  createdAt   DateTime             @default(now())
+  completedAt DateTime?
+  items       InventoryCountItem[]
+
+  @@index([storeId])
+  @@map("inventory_counts")
+}
+
+enum InventoryCountStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model InventoryCountItem {
+  id               String         @id @default(uuid())
+  inventoryCountId String
+  inventoryCount   InventoryCount @relation(fields: [inventoryCountId], references: [id], onDelete: Cascade)
+  productId        String
+  product          Product        @relation(fields: [productId], references: [id])
+  expectedQty      Float
+  actualQty        Float?
+
+  @@index([inventoryCountId])
+  @@map("inventory_count_items")
+}
+
+// ============ CURRENCY RATES ============
+
+model CurrencyRate {
+  id        String   @id @default(uuid())
+  currency  String   // USD, RUB, EUR, CNY
+  buyRate   Float
+  sellRate  Float
+  nbtRate   Float
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@unique([currency, date])
+  @@index([date])
+  @@map("currency_rates")
+}
+
+// ============ FCM TOKENS ============
+
+model FcmToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  platform  String   // ANDROID, IOS
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("fcm_tokens")
+}
+
+// ============ NOTIFICATIONS ============
+
+model Notification {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // LOW_STOCK, NEW_SALE, SHIFT_CLOSED, DELIVERY_COMPLETED, DEBT_REMINDER
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([storeId, userId])
+  @@index([createdAt])
+  @@map("notifications")
 }

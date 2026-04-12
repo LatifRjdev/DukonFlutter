@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/enums.dart';
@@ -138,8 +139,12 @@ class _ProductListPageState extends State<ProductListPage> {
                         IconButton(
                           icon: const Icon(Icons.qr_code_scanner, color: AppColors.lightTextSecondary),
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+                            BarcodeScannerSheet.show(
+                              context,
+                              onScanned: (barcode) {
+                                _searchController.text = barcode;
+                                context.read<ProductListBloc>().add(ProductListSearchChanged(barcode));
+                              },
                             );
                           },
                         ),

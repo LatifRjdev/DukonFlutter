@@ -263,9 +263,7 @@ class _DashboardPageState extends State<DashboardPage> {
           userName: storeName,
           storeName: storeName,
           onNotificationTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Уведомления скоро появятся')),
-            );
+            context.push('/notifications', extra: _getStoreId());
           },
           onProfileTap: () {},
           onStoreTap: stores.length > 1
@@ -464,9 +462,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 subtitle: '',
                 color: AppColors.info,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Инвентаризация скоро появится')),
-                  );
+                  context.push(RouteNames.inventoryCount, extra: _getStoreId());
                 },
               ),
             ],

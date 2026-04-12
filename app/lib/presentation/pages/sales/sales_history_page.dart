@@ -11,6 +11,7 @@ import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/pos/sales_filter_sheet.dart';
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -21,6 +22,7 @@ class SalesHistoryPage extends StatefulWidget {
 
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   String _selectedPeriod = 'today';
+  SalesFilter _activeFilter = const SalesFilter();
 
   String get _storeId {
     final storeState = context.read<StoreBloc>().state;
@@ -74,7 +76,27 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.filter_list_outlined),
-                    onPressed: () {},
+                    onPressed: () => SalesFilterSheet.show(
+                      context,
+                      initial: _activeFilter,
+                      onApply: (filter) {
+                        setState(() => _activeFilter = filter);
+                        context.read<SalesHistoryBloc>().add(
+                          SalesHistoryFilterByDate(
+                            dateFrom: filter.from,
+                            dateTo: filter.to,
+                          ),
+                        );
+                        if (filter.paymentTypeValue != null ||
+                            filter.payment == SalesFilterPayment.all) {
+                          context.read<SalesHistoryBloc>().add(
+                            SalesHistoryFilterByPaymentMethod(
+                              filter.paymentTypeValue,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.file_download_outlined),

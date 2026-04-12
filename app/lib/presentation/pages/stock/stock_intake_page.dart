@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -112,8 +113,11 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   context.read<ProductListBloc>().add(ProductListSearchChanged(query));
                 },
                 onScanTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+                  BarcodeScannerSheet.show(
+                    context,
+                    onScanned: (barcode) {
+                      context.read<ProductListBloc>().add(ProductListSearchChanged(barcode));
+                    },
                   );
                 },
               ),
