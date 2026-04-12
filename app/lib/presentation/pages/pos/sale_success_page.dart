@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../../core/network/dio_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -138,9 +140,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Отправка в Telegram скоро будет доступна')),
-                    );
+                    _showShareOptions(context);
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -172,5 +172,61 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
         ),
       ),
     );
+  }
+
+  void _showShareOptions(BuildContext context) {
+    final sale = widget.sale;
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.telegram, color: Colors.blue),
+              title: const Text('Telegram'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendTelegram(sale);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.chat, color: Colors.green),
+              title: const Text('WhatsApp'),
+              onTap: () {
+                Navigator.pop(context);
+                Share.share('Чек #${sale.receiptNo}\nИтого: ${sale.total.toStringAsFixed(2)} сом.');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.sms_outlined),
+              title: const Text('SMS'),
+              onTap: () {
+                Navigator.pop(context);
+                Share.share('Чек #${sale.receiptNo}, Итого: ${sale.total.toStringAsFixed(2)} сом.');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendTelegram(Sale sale) async {
+    try {
+      final dio = sl<DioClient>();
+      await dio.post('/stores/${sale.storeId}/telegram/send-receipt', data: {'saleId': sale.id});
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Чек отправлен в Telegram'), backgroundColor: AppColors.success),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Не удалось отправить. Клиент не привязан к боту?'), backgroundColor: AppColors.error),
+        );
+      }
+    }
   }
 }
