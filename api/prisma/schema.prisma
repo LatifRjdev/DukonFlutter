@@ -77,6 +77,7 @@ model Store {
   deliveries       Delivery[]
   inventoryCounts  InventoryCount[]
   notifications    Notification[]
+  discounts        Discount[]
 
   @@map("stores")
 }
@@ -613,6 +614,28 @@ enum PromotionType {
   FIXED_DISCOUNT
   BUY_X_GET_Y
   HAPPY_HOURS
+}
+
+// ============ DISCOUNTS ============
+
+model Discount {
+  id         String    @id @default(uuid())
+  storeId    String
+  store      Store     @relation(fields: [storeId], references: [id])
+  name       String
+  type       String    // FIXED, PERCENTAGE
+  value      Float
+  condition  String    // CART, CATEGORY, PRODUCT
+  categoryId String?
+  productId  String?
+  minTotal   Float?
+  startDate  DateTime
+  endDate    DateTime?
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+
+  @@index([storeId])
+  @@map("discounts")
 }
 
 // ============ NOTIFICATIONS ============

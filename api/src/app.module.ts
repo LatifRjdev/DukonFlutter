@@ -26,6 +26,7 @@ import { InventoryCountsModule } from './modules/inventory-counts/inventory-coun
 import { CurrenciesModule } from './modules/currencies/currencies.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { DiscountsModule } from './modules/discounts/discounts.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     CurrenciesModule,
     TelegramModule,
     NotificationsModule,
+    DiscountsModule,
   ],
   providers: [
     {

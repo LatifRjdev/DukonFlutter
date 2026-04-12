@@ -4,6 +4,7 @@ import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { StoreResponseDto } from './dto/store-response.dto';
+import { ReceiptTemplateDto } from './dto/receipt-template.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
@@ -52,5 +53,23 @@ export class StoresController {
     @Body() dto: UpdateStoreDto,
   ) {
     return this.storesService.update(storeId, dto);
+  }
+
+  @Get(':storeId/receipt-template')
+  @UseGuards(StoreAccessGuard)
+  @ApiOperation({ summary: 'Get receipt template for store' })
+  async getReceiptTemplate(@Param('storeId') storeId: string) {
+    return this.storesService.getReceiptTemplate(storeId);
+  }
+
+  @Put(':storeId/receipt-template')
+  @UseGuards(StoreAccessGuard, PermissionsGuard)
+  @Permissions('store.manage')
+  @ApiOperation({ summary: 'Update receipt template for store' })
+  async updateReceiptTemplate(
+    @Param('storeId') storeId: string,
+    @Body() dto: ReceiptTemplateDto,
+  ) {
+    return this.storesService.updateReceiptTemplate(storeId, dto);
   }
 }
