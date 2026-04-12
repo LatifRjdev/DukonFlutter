@@ -21,3 +21,24 @@ class CustomerListSearchChanged extends CustomerListEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class CustomerCreateRequested extends CustomerListEvent {
+  final String storeId;
+  final Map<String, dynamic> data;
+  const CustomerCreateRequested({required this.storeId, required this.data});
+  @override
+  List<Object?> get props => [storeId, data];
+}
+
+class CustomerUpdateRequested extends CustomerListEvent {
+  final String storeId;
+  final String customerId;
+  final Map<String, dynamic> data;
+  const CustomerUpdateRequested({
+    required this.storeId,
+    required this.customerId,
+    required this.data,
+  });
+  @override
+  List<Object?> get props => [storeId, customerId, data];
+}

@@ -42,6 +42,7 @@ import '../../presentation/pages/zakat/zakat_settings_page.dart';
 import '../../presentation/pages/zakat/zakat_history_page.dart';
 import '../../presentation/pages/customer/customer_list_page.dart';
 import '../../presentation/pages/customer/customer_detail_page.dart';
+import '../../presentation/pages/customer/customer_form_page.dart';
 import '../../presentation/pages/supplier/supplier_list_page.dart';
 import '../../presentation/pages/supplier/supplier_detail_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
@@ -318,6 +319,18 @@ class AppRouter {
       GoRoute(
         path: RouteNames.customerList,
         builder: (context, state) => const CustomerListPage(),
+      ),
+      // Static customer form route MUST come before dynamic :id route
+      GoRoute(
+        path: RouteNames.customerForm,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return CustomerFormPage(
+            storeId: extra['storeId'] as String? ?? '',
+            customerId: extra['customerId'] as String?,
+            existingCustomer: extra['customer'] as dynamic,
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.supplierList,
