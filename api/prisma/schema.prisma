@@ -23,6 +23,8 @@ model User {
   ownedStores   Store[]        @relation("StoreOwner")
   staffRoles    Staff[]
   refreshTokens RefreshToken[]
+  fcmTokens     FcmToken[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -74,6 +76,7 @@ model Store {
   payrollPeriods   PayrollPeriod[]
   deliveries       Delivery[]
   inventoryCounts  InventoryCount[]
+  notifications    Notification[]
 
   @@map("stores")
 }
@@ -333,20 +336,21 @@ model DebtPayment {
 // ============ CUSTOMERS ============
 
 model Customer {
-  id            String   @id @default(uuid())
-  storeId       String
-  store         Store    @relation(fields: [storeId], references: [id])
-  name          String
-  phone         String?
-  email         String?
-  birthday      DateTime?
-  notes         String?
-  loyaltyPoints Int      @default(0)
-  totalSpent    Decimal  @default(0) @db.Decimal(12, 2)
-  debt          Decimal  @default(0) @db.Decimal(12, 2)
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(uuid())
+  storeId        String
+  store          Store    @relation(fields: [storeId], references: [id])
+  name           String
+  phone          String?
+  email          String?
+  birthday       DateTime?
+  notes          String?
+  loyaltyPoints  Int      @default(0)
+  totalSpent     Decimal  @default(0) @db.Decimal(12, 2)
+  debt           Decimal  @default(0) @db.Decimal(12, 2)
+  isActive       Boolean  @default(true)
+  telegramChatId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   sales Sale[]
 
@@ -798,4 +802,53 @@ model InventoryCountItem {
 
   @@index([inventoryCountId])
   @@map("inventory_count_items")
+}
+
+// ============ CURRENCY RATES ============
+
+model CurrencyRate {
+  id        String   @id @default(uuid())
+  currency  String   // USD, RUB, EUR, CNY
+  buyRate   Float
+  sellRate  Float
+  nbtRate   Float
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@unique([currency, date])
+  @@index([date])
+  @@map("currency_rates")
+}
+
+// ============ FCM TOKENS ============
+
+model FcmToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  platform  String   // ANDROID, IOS
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("fcm_tokens")
+}
+
+// ============ NOTIFICATIONS ============
+
+model Notification {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // LOW_STOCK, NEW_SALE, SHIFT_CLOSED, DELIVERY_COMPLETED, DEBT_REMINDER
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([storeId, userId])
+  @@index([createdAt])
+  @@map("notifications")
 }
