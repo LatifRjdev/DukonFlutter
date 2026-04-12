@@ -72,6 +72,8 @@ model Store {
   supplierPayments SupplierPayment[]
   rolePermissions  RolePermission[]
   payrollPeriods   PayrollPeriod[]
+  deliveries       Delivery[]
+  inventoryCounts  InventoryCount[]
 
   @@map("stores")
 }
@@ -195,9 +197,10 @@ model Product {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
-  saleItems      SaleItem[]
-  stockMovements StockMovement[]
-  inventoryItems InventoryItem[]
+  saleItems           SaleItem[]
+  stockMovements      StockMovement[]
+  inventoryItems      InventoryItem[]
+  inventoryCountItems InventoryCountItem[]
 
   @@unique([storeId, sku])
   @@unique([storeId, barcode])
@@ -271,6 +274,7 @@ model Sale {
 
   items        SaleItem[]
   debtPayments DebtPayment[]
+  delivery     Delivery?
 
   @@unique([storeId, receiptNo])
   @@index([storeId, createdAt])
@@ -385,9 +389,10 @@ model Staff {
   isActive   Boolean   @default(true)
   createdAt  DateTime  @default(now())
 
-  sales    Sale[]
-  shifts   Shift[]
-  payrolls Payroll[]
+  sales      Sale[]
+  shifts     Shift[]
+  payrolls   Payroll[]
+  deliveries Delivery[]
 
   @@unique([storeId, userId])
   @@map("staff")
@@ -731,4 +736,66 @@ enum SyncStatus {
   COMPLETED
   FAILED
   CONFLICT
+}
+
+// ============ DELIVERIES ============
+
+model Delivery {
+  id        String         @id @default(uuid())
+  storeId   String
+  store     Store          @relation(fields: [storeId], references: [id])
+  saleId    String         @unique
+  sale      Sale           @relation(fields: [saleId], references: [id])
+  address   String
+  courierId String?
+  courier   Staff?         @relation(fields: [courierId], references: [id])
+  status    DeliveryStatus @default(NEW)
+  notes     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([storeId])
+  @@index([status])
+  @@map("deliveries")
+}
+
+enum DeliveryStatus {
+  NEW
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+// ============ INVENTORY COUNTS ============
+
+model InventoryCount {
+  id          String               @id @default(uuid())
+  storeId     String
+  store       Store                @relation(fields: [storeId], references: [id])
+  status      InventoryCountStatus @default(IN_PROGRESS)
+  createdAt   DateTime             @default(now())
+  completedAt DateTime?
+  items       InventoryCountItem[]
+
+  @@index([storeId])
+  @@map("inventory_counts")
+}
+
+enum InventoryCountStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model InventoryCountItem {
+  id               String         @id @default(uuid())
+  inventoryCountId String
+  inventoryCount   InventoryCount @relation(fields: [inventoryCountId], references: [id], onDelete: Cascade)
+  productId        String
+  product          Product        @relation(fields: [productId], references: [id])
+  expectedQty      Float
+  actualQty        Float?
+
+  @@index([inventoryCountId])
+  @@map("inventory_count_items")
 }
