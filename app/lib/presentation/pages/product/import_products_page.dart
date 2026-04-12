@@ -34,12 +34,12 @@ class ImportProductsPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                'Скоро',
+                'Импорт товаров',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 12),
               const Text(
-                'Импорт товаров из Excel и CSV файлов будет доступен в следующем обновлении.',
+                'Загрузите список товаров из Excel или CSV файла.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: AppColors.lightTextSecondary, height: 1.5),
               ),

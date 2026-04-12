@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -268,7 +269,19 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                           width: double.infinity,
                           height: 48,
                           child: OutlinedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              final state = context.read<ZakatBloc>().state;
+                              if (state is ZakatCalculated) {
+                                final c = state.calculation;
+                                final text = 'Закят: ${c.zakatDue.toStringAsFixed(2)} сом.\n'
+                                    'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
+                                    'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.';
+                                Clipboard.setData(ClipboardData(text: text));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Расчёт скопирован')),
+                                );
+                              }
+                            },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primary,
                               side: const BorderSide(color: AppColors.primary),

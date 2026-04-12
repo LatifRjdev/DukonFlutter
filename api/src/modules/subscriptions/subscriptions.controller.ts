@@ -1,0 +1,205 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { AdminGuard } from '../../common/guards/admin.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { SubscriptionsService } from './subscriptions.service';
+import { RequestChangeDto } from './dto/request-change.dto';
+import { AdminSubscriptionQueryDto } from './dto/admin-subscription-query.dto';
+import { RejectPaymentDto } from './dto/reject-payment.dto';
+import { ChangePlanDto } from './dto/change-plan.dto';
+import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
+import { SetDiscountDto } from './dto/set-discount.dto';
+
+// ─── User endpoints ────────────────────────────────────────────────────────────
+
+@ApiTags('Subscriptions')
+@Controller('subscription')
+export class SubscriptionPlansController {
+  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+
+  @Get('plans')
+  @ApiOperation({
+    summary: 'Get all subscription plan configs (public, no auth)',
+  })
+  getPlans() {
+    return this.subscriptionsService.getPlans();
+  }
+}
+
+@ApiTags('Subscriptions')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, StoreAccessGuard)
+@Controller('stores/:storeId/subscription')
+export class SubscriptionsController {
+  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get subscription with plan config and calculated price',
+  })
+  getSubscription(@Param('storeId') storeId: string) {
+    return this.subscriptionsService.getSubscription(storeId);
+  }
+
+  @Post('request-change')
+  @ApiOperation({
+    summary: 'Request a plan change — creates a pending payment',
+  })
+  requestChange(
+    @Param('storeId') storeId: string,
+    @Body() dto: RequestChangeDto,
+  ) {
+    return this.subscriptionsService.requestChange(storeId, dto);
+  }
+
+  @Post('upload-receipt/:paymentId')
+  @ApiOperation({ summary: 'Upload receipt image for a pending payment' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { file: { type: 'string', format: 'binary' } },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: join(process.cwd(), 'uploads', 'receipts'),
+        filename: (_req, file, cb) => {
+          const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+          cb(null, `${unique}${extname(file.originalname)}`);
+        },
+      }),
+      fileFilter: (_req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|pdf)$/)) {
+          return cb(
+            new BadRequestException('Only image/pdf files allowed'),
+            false,
+          );
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+    }),
+  )
+  uploadReceipt(
+    @Param('storeId') storeId: string,
+    @Param('paymentId') paymentId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+    const filePath = `uploads/receipts/${file.filename}`;
+    return this.subscriptionsService.uploadReceipt(
+      storeId,
+      paymentId,
+      filePath,
+    );
+  }
+
+  @Get('payments')
+  @ApiOperation({ summary: 'Get payment history for store' })
+  getPaymentHistory(@Param('storeId') storeId: string) {
+    return this.subscriptionsService.getPaymentHistory(storeId);
+  }
+}
+
+// ─── Admin endpoints ───────────────────────────────────────────────────────────
+
+@ApiTags('Admin - Subscriptions')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, AdminGuard)
+@Controller('admin/subscriptions')
+export class AdminSubscriptionsController {
+  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Admin: list all subscriptions with optional filters',
+  })
+  getAll(@Query() query: AdminSubscriptionQueryDto) {
+    return this.subscriptionsService.adminGetAll(query);
+  }
+
+  @Get('pending-payments')
+  @ApiOperation({
+    summary: 'Admin: list pending payments with store name and receipt',
+  })
+  getPendingPayments() {
+    return this.subscriptionsService.adminGetPendingPayments();
+  }
+
+  @Put(':id/approve-payment/:paymentId')
+  @ApiOperation({ summary: 'Admin: approve payment — activates subscription' })
+  approvePayment(
+    @Param('id') id: string,
+    @Param('paymentId') paymentId: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.subscriptionsService.adminApprovePayment(id, paymentId, userId);
+  }
+
+  @Put(':id/reject-payment/:paymentId')
+  @ApiOperation({ summary: 'Admin: reject payment with reason' })
+  rejectPayment(
+    @Param('id') id: string,
+    @Param('paymentId') paymentId: string,
+    @Body() dto: RejectPaymentDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.subscriptionsService.adminRejectPayment(
+      id,
+      paymentId,
+      dto,
+      userId,
+    );
+  }
+
+  @Put(':id/extend')
+  @ApiOperation({ summary: 'Admin: extend subscription by N days' })
+  extend(@Param('id') id: string, @Body() dto: ExtendSubscriptionDto) {
+    return this.subscriptionsService.adminExtend(id, dto);
+  }
+
+  @Put(':id/change-plan')
+  @ApiOperation({ summary: 'Admin: change subscription plan' })
+  changePlan(@Param('id') id: string, @Body() dto: ChangePlanDto) {
+    return this.subscriptionsService.adminChangePlan(id, dto);
+  }
+
+  @Put(':id/set-discount')
+  @ApiOperation({ summary: 'Admin: set admin discount percentage (0 removes)' })
+  setDiscount(@Param('id') id: string, @Body() dto: SetDiscountDto) {
+    return this.subscriptionsService.adminSetDiscount(id, dto);
+  }
+
+  @Put(':id/cancel')
+  @ApiOperation({ summary: 'Admin: cancel subscription' })
+  cancel(@Param('id') id: string) {
+    return this.subscriptionsService.adminCancel(id);
+  }
+}

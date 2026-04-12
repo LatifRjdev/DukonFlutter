@@ -42,6 +42,11 @@ class RouteNames {
   static const String financeDashboard = '/finance';
   static const String expenses = '/finance/expenses';
   static const String addExpense = '/finance/expenses/add';
+  static const String financeBalance = '/finance/balance';
+  static const String financeCredits = '/finance/credits';
+  static const String financeReports = '/finance/reports';
+  static const String financeCurrencies = '/finance/currencies';
+  static const String notifications = '/notifications';
 
   // Debts
   static const String debtsOverview = '/debts';
@@ -56,6 +61,7 @@ class RouteNames {
   // Customer/Supplier
   static const String customerList = '/customers';
   static const String customerDetail = '/customers/:id';
+  static const String customerForm = '/customers/form';
   static const String supplierList = '/suppliers';
   static const String supplierDetail = '/suppliers/:id';
 
@@ -74,9 +80,26 @@ class RouteNames {
   static const String payroll = '/payroll';
   static const String addAdjustment = '/payroll/:periodId/adjustment';
 
+  // Delivery
+  static const String deliveryList = '/deliveries';
+  static const String deliveryDetail = '/deliveries/:id';
+  static const String deliveryCreate = '/deliveries/create';
+
+  // Inventory
+  static const String inventoryCount = '/inventory/count';
+
   // Settings
   static const String settings = '/settings';
   static const String editProfile = '/settings/profile';
   static const String changePassword = '/settings/password';
   static const String printerSettings = '/settings/printer';
+  static const String myStores = '/settings/stores';
+  static const String discounts = '/settings/discounts';
+  static const String receiptTemplate = '/settings/receipt-template';
+  static const String kkmSettings = '/settings/kkm';
+  static const String scannerSettings = '/settings/scanner';
+  static const String telegramBot = '/settings/telegram-bot';
+  static const String languageSettings = '/settings/language';
+  static const String offlineMode = '/settings/offline';
+  static const String subscription = '/settings/subscription';
 }

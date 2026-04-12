@@ -71,12 +71,12 @@ async function bootstrap() {
   const rawCorsOrigin = configService.get<string>('CORS_ORIGIN');
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
   const allowedOrigins = rawCorsOrigin
-    ? rawCorsOrigin.split(',').map((s) => s.trim()).filter(Boolean)
+    ? rawCorsOrigin
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
-  type CorsOriginCallback = (
-    err: Error | null,
-    allow?: boolean,
-  ) => void;
+  type CorsOriginCallback = (err: Error | null, allow?: boolean) => void;
   app.enableCors({
     origin: (origin: string | undefined, callback: CorsOriginCallback) => {
       // Allow server-to-server / curl (no Origin header)
@@ -103,7 +103,10 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+  );
 
   // Swagger
   const swaggerConfig = new DocumentBuilder()
