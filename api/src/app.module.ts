@@ -19,6 +19,9 @@ import { StaffModule } from './modules/staff/staff.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { PayrollModule } from './modules/payroll/payroll.module';
 import { ShiftsModule } from './modules/shifts/shifts.module';
+import { ReportsModule } from './modules/reports/reports.module';
+import { DeliveriesModule } from './modules/deliveries/deliveries.module';
+import { InventoryCountsModule } from './modules/inventory-counts/inventory-counts.module';
 
 @Module({
   imports: [
@@ -41,6 +44,9 @@ import { ShiftsModule } from './modules/shifts/shifts.module';
     RolesModule,
     PayrollModule,
     ShiftsModule,
+    ReportsModule,
+    DeliveriesModule,
+    InventoryCountsModule,
   ],
   providers: [
     {

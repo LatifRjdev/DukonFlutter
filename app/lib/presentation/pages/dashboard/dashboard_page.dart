@@ -464,9 +464,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 subtitle: '',
                 color: AppColors.info,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Инвентаризация скоро появится')),
-                  );
+                  context.push(RouteNames.inventoryCount, extra: _getStoreId());
                 },
               ),
             ],

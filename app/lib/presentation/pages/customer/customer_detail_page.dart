@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/router/route_names.dart';
+import '../../../domain/entities/customer.dart';
 import '../../blocs/customer_detail/customer_detail_bloc.dart';
 import '../../blocs/customer_detail/customer_detail_event.dart';
 import '../../blocs/customer_detail/customer_detail_state.dart';
@@ -265,10 +267,14 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     }
   }
 
-  void _showEditCustomerDialog(dynamic customer) {
-    // TODO: Implement edit customer dialog or navigate to edit page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование клиента скоро будет доступно')),
+  void _showEditCustomerDialog(Customer customer) {
+    context.push(
+      RouteNames.customerForm,
+      extra: {
+        'customerId': customer.id,
+        'storeId': widget.storeId,
+        'customer': customer,
+      },
     );
   }
 }

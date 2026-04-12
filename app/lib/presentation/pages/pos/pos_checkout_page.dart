@@ -23,6 +23,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 
 class PosCheckoutPage extends StatefulWidget {
   const PosCheckoutPage({super.key});
@@ -284,8 +285,12 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       child: IconButton(
                         icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+                          BarcodeScannerSheet.show(
+                            context,
+                            onScanned: (barcode) {
+                              _searchController.text = barcode;
+                              _onSearchChanged();
+                            },
                           );
                         },
                       ),

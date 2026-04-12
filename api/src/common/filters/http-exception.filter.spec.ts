@@ -145,10 +145,7 @@ describe('AllExceptionsFilter', () => {
   describe('response envelope', () => {
     it('always includes statusCode, message[], timestamp, path', () => {
       const { host, response } = makeHost();
-      filter.catch(
-        new HttpException('boom', HttpStatus.BAD_REQUEST),
-        host,
-      );
+      filter.catch(new HttpException('boom', HttpStatus.BAD_REQUEST), host);
       const body = response.body as Record<string, unknown>;
       expect(body.statusCode).toBe(400);
       expect(Array.isArray(body.message)).toBe(true);

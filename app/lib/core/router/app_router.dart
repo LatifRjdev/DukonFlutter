@@ -34,6 +34,9 @@ import '../../presentation/pages/stock/stock_intake_page.dart';
 import '../../presentation/pages/finance/finance_dashboard_page.dart';
 import '../../presentation/pages/finance/expense_list_page.dart';
 import '../../presentation/pages/finance/add_expense_page.dart';
+import '../../presentation/pages/finance/balance_page.dart';
+import '../../presentation/pages/finance/credits_page.dart';
+import '../../presentation/pages/finance/reports_page.dart';
 import '../../presentation/pages/debt/debts_overview_page.dart';
 import '../../presentation/pages/debt/customer_debts_page.dart';
 import '../../presentation/pages/debt/supplier_debts_page.dart';
@@ -42,6 +45,7 @@ import '../../presentation/pages/zakat/zakat_settings_page.dart';
 import '../../presentation/pages/zakat/zakat_history_page.dart';
 import '../../presentation/pages/customer/customer_list_page.dart';
 import '../../presentation/pages/customer/customer_detail_page.dart';
+import '../../presentation/pages/customer/customer_form_page.dart';
 import '../../presentation/pages/supplier/supplier_list_page.dart';
 import '../../presentation/pages/supplier/supplier_detail_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
@@ -56,6 +60,10 @@ import '../../presentation/pages/shifts/open_shift_page.dart';
 import '../../presentation/pages/shifts/z_report_page.dart';
 import '../../presentation/pages/payroll/payroll_page.dart';
 import '../../presentation/pages/payroll/add_adjustment_page.dart';
+import '../../presentation/pages/delivery/delivery_list_page.dart';
+import '../../presentation/pages/delivery/delivery_detail_page.dart';
+import '../../presentation/pages/delivery/create_delivery_page.dart';
+import '../../presentation/pages/inventory/inventory_count_page.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -258,6 +266,27 @@ class AppRouter {
           return AddExpensePage(storeId: storeId);
         },
       ),
+      GoRoute(
+        path: RouteNames.financeBalance,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return BalancePage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.financeCredits,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return CreditsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.financeReports,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return ReportsPage(storeId: storeId.isEmpty ? null : storeId);
+        },
+      ),
 
       // Debts
       GoRoute(
@@ -318,6 +347,18 @@ class AppRouter {
       GoRoute(
         path: RouteNames.customerList,
         builder: (context, state) => const CustomerListPage(),
+      ),
+      // Static customer form route MUST come before dynamic :id route
+      GoRoute(
+        path: RouteNames.customerForm,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return CustomerFormPage(
+            storeId: extra['storeId'] as String? ?? '',
+            customerId: extra['customerId'] as String?,
+            existingCustomer: extra['customer'] as dynamic,
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.supplierList,
@@ -409,6 +450,40 @@ class AppRouter {
           final periodId = state.pathParameters['periodId']!;
           final storeId = state.extra as String? ?? '';
           return AddAdjustmentPage(storeId: storeId, periodId: periodId);
+        },
+      ),
+
+      // Delivery — static routes before dynamic :id
+      GoRoute(
+        path: RouteNames.deliveryCreate,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return CreateDeliveryPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.deliveryList,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return DeliveryListPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: '/deliveries/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final storeId = extra['storeId'] as String? ?? '';
+          return DeliveryDetailPage(storeId: storeId, deliveryId: id);
+        },
+      ),
+
+      // Inventory
+      GoRoute(
+        path: RouteNames.inventoryCount,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return InventoryCountPage(storeId: storeId);
         },
       ),
 

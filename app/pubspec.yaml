@@ -44,6 +44,7 @@ dependencies:
 
   # PDF & Printing
   pdf: ^3.11.1
+  excel: ^4.0.6
   printing: ^5.13.3
 
   # Bluetooth Thermal Printer
