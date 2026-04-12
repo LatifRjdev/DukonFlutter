@@ -34,3 +34,20 @@ class CustomerListError extends CustomerListState {
   @override
   List<Object?> get props => [message];
 }
+
+class CustomerFormLoading extends CustomerListState {}
+
+class CustomerFormSuccess extends CustomerListState {
+  final Customer customer;
+  final bool isEditing;
+  const CustomerFormSuccess({required this.customer, required this.isEditing});
+  @override
+  List<Object?> get props => [customer, isEditing];
+}
+
+class CustomerFormError extends CustomerListState {
+  final String message;
+  const CustomerFormError(this.message);
+  @override
+  List<Object?> get props => [message];
+}

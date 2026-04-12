@@ -1,6 +1,10 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/z_report.dart';
@@ -218,6 +222,23 @@ class _ZReportPageState extends State<ZReportPage> {
               ),
               const SizedBox(width: 12),
               Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _shareReport(report),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.lightTextPrimary,
+                    side: const BorderSide(color: AppColors.lightBorder),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                    ),
+                  ),
+                  icon: const Icon(Icons.share_outlined, size: 20),
+                  label: const Text('Поделиться',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => context.pop(),
                   style: ElevatedButton.styleFrom(
@@ -242,9 +263,38 @@ class _ZReportPageState extends State<ZReportPage> {
   }
 
   void _printReport(ZReport report) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Печать Z-отчёта скоро будет доступна')),
-    );
+    Printing.layoutPdf(onLayout: (format) async {
+      return _buildZReportPdf(report);
+    });
+  }
+
+  void _shareReport(ZReport report) async {
+    final bytes = await _buildZReportPdf(report);
+    await Printing.sharePdf(bytes: bytes, filename: 'z-report.pdf');
+  }
+
+  Future<Uint8List> _buildZReportPdf(ZReport report) {
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.roll80,
+      build: (ctx) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Z-ОТЧЁТ',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          pw.Text('Кассир: ${report.staffName}'),
+          pw.SizedBox(height: 8),
+          pw.Text('Продаж: ${report.salesCount}  Возвратов: ${report.returnsCount}'),
+          pw.Text('Наличные: ${report.cashTotal.toStringAsFixed(2)}'),
+          pw.Text('Карта: ${report.cardTotal.toStringAsFixed(2)}'),
+          pw.Text('Долг: ${report.debtTotal.toStringAsFixed(2)}'),
+          pw.Divider(),
+          pw.Text('ИТОГО: ${report.salesTotal.toStringAsFixed(2)} сом.',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+        ],
+      ),
+    ));
+    return doc.save();
   }
 }
 

@@ -49,7 +49,9 @@ export function validateEnvBeforeBoot(): void {
   // dotenv is pulled in transitively by @nestjs/config so it is always
   // present at runtime.
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const dotenv = require('dotenv') as { config: (opts: { path: string }) => void };
+  const dotenv = require('dotenv') as {
+    config: (opts: { path: string }) => void;
+  };
   // .env lives in the api/ dir relative to dist/main
   dotenv.config({ path: `${process.cwd()}/.env` });
 

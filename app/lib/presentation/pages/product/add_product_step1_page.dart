@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/constants/app_colors.dart';
@@ -86,8 +87,11 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
   }
 
   void _scanBarcode() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+    BarcodeScannerSheet.show(
+      context,
+      onScanned: (barcode) {
+        _barcodeController.text = barcode;
+      },
     );
   }
 

@@ -180,7 +180,9 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
+                                  },
                                 ),
                               ),
                             ],
