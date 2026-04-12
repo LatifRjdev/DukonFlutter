@@ -37,6 +37,8 @@ import '../../presentation/pages/finance/add_expense_page.dart';
 import '../../presentation/pages/finance/balance_page.dart';
 import '../../presentation/pages/finance/credits_page.dart';
 import '../../presentation/pages/finance/reports_page.dart';
+import '../../presentation/pages/finance/currencies_page.dart';
+import '../../presentation/pages/notifications/notifications_page.dart';
 import '../../presentation/pages/debt/debts_overview_page.dart';
 import '../../presentation/pages/debt/customer_debts_page.dart';
 import '../../presentation/pages/debt/supplier_debts_page.dart';
@@ -285,6 +287,17 @@ class AppRouter {
         builder: (context, state) {
           final storeId = state.extra as String? ?? '';
           return ReportsPage(storeId: storeId.isEmpty ? null : storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.financeCurrencies,
+        builder: (context, state) => const CurrenciesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.notifications,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return NotificationsPage(storeId: storeId);
         },
       ),
 

@@ -357,7 +357,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
       _SectionItem('Закят', Icons.volunteer_activism_outlined,
           () => context.push('/zakat', extra: storeId)),
       _SectionItem('Валюты', Icons.currency_exchange_outlined,
-          () => comingSoon('Валюты'), stub: true),
+          () => context.push('/finance/currencies')),
       _SectionItem('Доставка', Icons.local_shipping_outlined,
           () => context.push('/deliveries', extra: storeId)),
       _SectionItem('Отчёт', Icons.bar_chart_outlined,

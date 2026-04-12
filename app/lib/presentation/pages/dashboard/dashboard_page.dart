@@ -263,9 +263,7 @@ class _DashboardPageState extends State<DashboardPage> {
           userName: storeName,
           storeName: storeName,
           onNotificationTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Уведомления скоро появятся')),
-            );
+            context.push('/notifications', extra: _getStoreId());
           },
           onProfileTap: () {},
           onStoreTap: stores.length > 1

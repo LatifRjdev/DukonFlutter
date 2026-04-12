@@ -45,6 +45,8 @@ class RouteNames {
   static const String financeBalance = '/finance/balance';
   static const String financeCredits = '/finance/credits';
   static const String financeReports = '/finance/reports';
+  static const String financeCurrencies = '/finance/currencies';
+  static const String notifications = '/notifications';
 
   // Debts
   static const String debtsOverview = '/debts';
