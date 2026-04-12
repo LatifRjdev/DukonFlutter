@@ -1,5 +1,18 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -21,10 +34,7 @@ export class StoresController {
   @Post()
   @ApiOperation({ summary: 'Create a new store' })
   @ApiResponse({ status: 201, type: StoreResponseDto })
-  async create(
-    @CurrentUser('id') userId: string,
-    @Body() dto: CreateStoreDto,
-  ) {
+  async create(@CurrentUser('id') userId: string, @Body() dto: CreateStoreDto) {
     return this.storesService.create(userId, dto);
   }
 
@@ -48,10 +58,7 @@ export class StoresController {
   @Permissions('store.manage')
   @ApiOperation({ summary: 'Update store' })
   @ApiResponse({ status: 200, type: StoreResponseDto })
-  async update(
-    @Param('storeId') storeId: string,
-    @Body() dto: UpdateStoreDto,
-  ) {
+  async update(@Param('storeId') storeId: string, @Body() dto: UpdateStoreDto) {
     return this.storesService.update(storeId, dto);
   }
 

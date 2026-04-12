@@ -37,11 +37,17 @@ export class DiscountsService {
     const now = new Date();
 
     const categoryIds = query.categoryIds
-      ? query.categoryIds.split(',').map((id) => id.trim()).filter(Boolean)
+      ? query.categoryIds
+          .split(',')
+          .map((id) => id.trim())
+          .filter(Boolean)
       : [];
 
     const productIds = query.productIds
-      ? query.productIds.split(',').map((id) => id.trim()).filter(Boolean)
+      ? query.productIds
+          .split(',')
+          .map((id) => id.trim())
+          .filter(Boolean)
       : [];
 
     const discounts = await this.prisma.discount.findMany({

@@ -29,10 +29,7 @@ export class DiscountsController {
   @Post()
   @Permissions('discounts.write')
   @ApiOperation({ summary: 'Create discount' })
-  create(
-    @Param('storeId') storeId: string,
-    @Body() dto: CreateDiscountDto,
-  ) {
+  create(@Param('storeId') storeId: string, @Body() dto: CreateDiscountDto) {
     return this.discountsService.create(storeId, dto);
   }
 

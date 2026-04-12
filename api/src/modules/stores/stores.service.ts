@@ -82,7 +82,8 @@ export class StoresService {
     if (!store) throw new NotFoundException('Store not found');
 
     const settings = (store.settings as Record<string, any>) ?? {};
-    const template = settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
+    const template =
+      settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
     return { receiptTemplate: template };
   }
 
@@ -94,7 +95,8 @@ export class StoresService {
     if (!store) throw new NotFoundException('Store not found');
 
     const settings = (store.settings as Record<string, any>) ?? {};
-    const existing = settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
+    const existing =
+      settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
     const updated = this.prisma.store.update({
       where: { id: storeId },
       data: {
