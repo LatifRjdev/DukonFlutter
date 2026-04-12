@@ -34,6 +34,8 @@ import '../../presentation/pages/stock/stock_intake_page.dart';
 import '../../presentation/pages/finance/finance_dashboard_page.dart';
 import '../../presentation/pages/finance/expense_list_page.dart';
 import '../../presentation/pages/finance/add_expense_page.dart';
+import '../../presentation/pages/finance/balance_page.dart';
+import '../../presentation/pages/finance/credits_page.dart';
 import '../../presentation/pages/debt/debts_overview_page.dart';
 import '../../presentation/pages/debt/customer_debts_page.dart';
 import '../../presentation/pages/debt/supplier_debts_page.dart';
@@ -257,6 +259,20 @@ class AppRouter {
         builder: (context, state) {
           final storeId = state.extra as String? ?? '';
           return AddExpensePage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.financeBalance,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return BalancePage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.financeCredits,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return CreditsPage(storeId: storeId);
         },
       ),
 

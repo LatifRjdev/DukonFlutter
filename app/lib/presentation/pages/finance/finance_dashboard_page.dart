@@ -349,9 +349,9 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
     final sections = [
       _SectionItem('Баланс', Icons.account_balance_wallet_outlined,
-          () => comingSoon('Баланс'), stub: true),
+          () => context.push('/finance/balance', extra: storeId)),
       _SectionItem('Кредиты', Icons.credit_card_outlined,
-          () => comingSoon('Кредиты'), stub: true),
+          () => context.push('/finance/credits', extra: storeId)),
       _SectionItem('Вложения', Icons.trending_up_outlined,
           () => comingSoon('Вложения'), stub: true),
       _SectionItem('Закят', Icons.volunteer_activism_outlined,
