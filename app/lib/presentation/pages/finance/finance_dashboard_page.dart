@@ -11,6 +11,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/glass_card.dart';
+import '../../../core/router/route_names.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;
@@ -71,7 +72,13 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.file_download_outlined),
-                      onPressed: () {},
+                      onPressed: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        final storeId = storeState is StoreLoaded
+                            ? (storeState.selectedStore?.id ?? '')
+                            : '';
+                        context.push(RouteNames.financeReports, extra: storeId);
+                      },
                     ),
                   ],
                 ),

@@ -29,6 +29,7 @@ class _ProductListPageState extends State<ProductListPage> {
   final _searchController = TextEditingController();
   _StockFilter _stockFilter = _StockFilter.all;
   bool _loaded = false;
+  bool _showFilters = false;
 
   @override
   void initState() {
@@ -149,8 +150,10 @@ class _ProductListPageState extends State<ProductListPage> {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.tune, color: AppColors.lightTextSecondary),
-                          onPressed: () {},
+                          icon: Icon(Icons.tune, color: _showFilters ? AppColors.primary : AppColors.lightTextSecondary),
+                          onPressed: () {
+                            setState(() => _showFilters = !_showFilters);
+                          },
                         ),
                       ],
                     ),

@@ -32,6 +32,7 @@ class RouteNames {
   static const String receiptPreview = '/pos/receipt';
 
   // Sales
+  static const String salesHistory = '/sales/history';
   static const String transactionDetail = '/sales/:id';
   static const String refund = '/sales/:id/refund';
 
@@ -47,6 +48,7 @@ class RouteNames {
   static const String financeReports = '/finance/reports';
   static const String financeCurrencies = '/finance/currencies';
   static const String notifications = '/notifications';
+  static const String notificationSettings = '/notifications/settings';
 
   // Debts
   static const String debtsOverview = '/debts';
