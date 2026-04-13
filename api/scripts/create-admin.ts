@@ -21,7 +21,9 @@ async function main() {
     },
   });
 
-  console.log(`Admin user created/updated: ${user.name} (${user.phone}), isAdmin=${user.isAdmin}`);
+  console.log(
+    `Admin user created/updated: ${user.name} (${user.phone}), isAdmin=${user.isAdmin}`,
+  );
 }
 
 main()

@@ -24,7 +24,11 @@
       "Bash(git remote:*)",
       "Bash(brew list:*)",
       "Bash(brew install:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(gh pr:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)"
     ],
     "additionalDirectories": [
       "/Users/latifrjdev/Downloads/Dukon/.git",
