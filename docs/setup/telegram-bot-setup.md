@@ -1,11 +1,11 @@
-# Telegram Bot Setup for DokonPro
+# Telegram Bot Setup for DuckonPro
 
 ## Step 1: Create Bot
 
 1. Open Telegram, search for `@BotFather`
 2. Send `/newbot`
-3. Bot name: `DokonPro Чеки`
-4. Bot username: `dokonpro_receipts_bot` (must end with `_bot`)
+3. Bot name: `DuckonPro Чеки`
+4. Bot username: `duckonpro_receipts_bot` (must end with `_bot`)
 5. BotFather gives you a token like: `7123456789:AAH...`
 
 ## Step 2: Configure Bot
@@ -17,14 +17,14 @@ Send these commands to BotFather:
 ```
 Select your bot, then type:
 ```
-Бот для отправки чеков из DokonPro. Привяжите свой номер телефона для получения чеков автоматически.
+Бот для отправки чеков из DuckonPro. Привяжите свой номер телефона для получения чеков автоматически.
 ```
 
 ```
 /setabouttext
 ```
 ```
-Официальный бот DokonPro для получения электронных чеков
+Официальный бот DuckonPro для получения электронных чеков
 ```
 
 ```
@@ -44,14 +44,14 @@ TELEGRAM_BOT_TOKEN=7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```bash
 curl -X POST "https://api.telegram.org/bot<TOKEN>/setWebhook" \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://api.dokonpro.tj/telegram/webhook"}'
+  -d '{"url": "https://api.duckonpro.tj/telegram/webhook"}'
 ```
 
 Replace `<TOKEN>` with your actual bot token and the URL with your actual backend URL.
 
 ## Step 5: Test
 
-1. Find your bot in Telegram: @dokonpro_receipts_bot
+1. Find your bot in Telegram: @duckonpro_receipts_bot
 2. Send `/start`
 3. Bot should reply asking for phone number
 4. Share your contact
@@ -59,8 +59,8 @@ Replace `<TOKEN>` with your actual bot token and the URL with your actual backen
 
 ## How Customers Use It
 
-1. Customer opens Telegram, finds @dokonpro_receipts_bot
+1. Customer opens Telegram, finds @duckonpro_receipts_bot
 2. Presses "Start"
 3. Shares their phone number (Telegram button)
-4. Bot links their phone to the customer record in DokonPro
+4. Bot links their phone to the customer record in DuckonPro
 5. After each sale, cashier can tap "Send to Telegram" on the receipt

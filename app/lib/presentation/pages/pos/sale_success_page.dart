@@ -55,7 +55,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DuckonPro';
 
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {

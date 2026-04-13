@@ -1,4 +1,4 @@
-Создай веб-страницу (Desktop, 1440x900px) для админ-панели платформы "DokonPro Admin". Стиль: современный, чистый, профессиональный. Sidebar навигация слева.
+Создай веб-страницу (Desktop, 1440x900px) для админ-панели платформы "DuckonPro Admin". Стиль: современный, чистый, профессиональный. Sidebar навигация слева.
 
 Дизайн-система: Primary #00BCD4, Success #4CAF50, Danger #F44336, Warning #FF9800, Background #F8FAFC, Cards #FFFFFF, Text #1E293B, Text Secondary #64748B. Шрифт Inter. Радиус карточек 12px. Тени: 0 1px 3px rgba(0,0,0,0.1). Иконки Outlined (Lucide).
 
@@ -12,7 +12,7 @@
 
   - Tab "Общие" (показан, справа от вертикальных табов):
     - Карточка "Основные настройки":
-      - "Название платформы" — input: "DokonPro"
+      - "Название платформы" — input: "DuckonPro"
       - "Email поддержки" — input: "support@dokonpro.com"
       - "Телефон поддержки" — input: "+992 44 600 00 00"
       - "Telegram поддержки" — input: "@dokonpro_support"

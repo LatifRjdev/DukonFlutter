@@ -79,7 +79,7 @@ class ThermalPrinterService {
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
       var bytes = <int>[];
-      bytes += generator.text('DokonPro - Test Print',
+      bytes += generator.text('DuckonPro - Test Print',
           styles: const PosStyles(align: PosAlign.center, bold: true));
       bytes += generator.text('Printer is working!',
           styles: const PosStyles(align: PosAlign.center));

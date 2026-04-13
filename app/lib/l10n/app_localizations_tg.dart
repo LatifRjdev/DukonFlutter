@@ -9,7 +9,7 @@ class AppLocalizationsTg extends AppLocalizations {
   AppLocalizationsTg([String locale = 'tg']) : super(locale);
 
   @override
-  String get appTitle => 'DokonPro';
+  String get appTitle => 'DuckonPro';
 
   @override
   String get save => 'Нигоҳ доштан';

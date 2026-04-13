@@ -34,7 +34,7 @@ services:
     build: ./admin
     depends_on: [api]
     environment:
-      NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.dokonpro.tj}
+      NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.duckonpro.tj}
     restart: always
 
   nginx:

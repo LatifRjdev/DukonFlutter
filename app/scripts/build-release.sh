@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-# DokonPro Release Build Script
-# Usage: ./scripts/build-release.sh https://api.dokonpro.tj
+# DuckonPro Release Build Script
+# Usage: ./scripts/build-release.sh https://api.duckonpro.tj
 
-API_URL="${1:-https://api.dokonpro.tj}"
+API_URL="${1:-https://api.duckonpro.tj}"
 
-echo "=== DokonPro Release Build ==="
+echo "=== DuckonPro Release Build ==="
 echo "API URL: $API_URL"
 echo ""
 
@@ -85,7 +85,7 @@ echo "=== Build Complete ==="
 echo ""
 echo "Upload to Play Console:"
 echo "  1. Go to https://play.google.com/console"
-echo "  2. Select 'DokonPro' app (or create new)"
+echo "  2. Select 'DuckonPro' app (or create new)"
 echo "  3. Go to: Release > Production > Create new release"
 echo "  4. Upload: $AAB_PATH"
 echo "  5. Add release notes"

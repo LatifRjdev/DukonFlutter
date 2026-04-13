@@ -499,7 +499,7 @@ class _ReportsPageState extends State<ReportsPage>
         return pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text('DokonPro — $tabName',
+            pw.Text('DuckonPro — $tabName',
                 style: pw.TextStyle(
                     fontSize: 20, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 8),

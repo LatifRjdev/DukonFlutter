@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: const Column(
                     children: [
-                      Text('DokonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
+                      Text('DuckonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
                       SizedBox(height: 8),
                       Text('Управление магазином', style: TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
                     ],

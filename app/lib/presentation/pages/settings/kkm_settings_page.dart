@@ -94,7 +94,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
     bytes.addAll([0x1B, 0x61, 0x01]);
     // Bold on
     bytes.addAll([0x1B, 0x45, 0x01]);
-    bytes.addAll('DokonPro\n'.codeUnits);
+    bytes.addAll('DuckonPro\n'.codeUnits);
     // Bold off
     bytes.addAll([0x1B, 0x45, 0x00]);
     bytes.addAll('Тестовая печать\n'.codeUnits);

@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// Application title
   ///
   /// In ru, this message translates to:
-  /// **'DokonPro'**
+  /// **'DuckonPro'**
   String get appTitle;
 
   /// Save button

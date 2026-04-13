@@ -10,8 +10,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'DokonPro Admin',
-  description: 'Панель администратора DokonPro',
+  title: 'DuckonPro Admin',
+  description: 'Панель администратора DuckonPro',
 };
 
 export default function RootLayout({

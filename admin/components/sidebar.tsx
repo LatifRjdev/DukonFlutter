@@ -43,7 +43,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5 border-b border-slate-700">
         <Store className="h-6 w-6 text-blue-400" />
-        <span className="font-bold text-lg tracking-tight">DokonPro Admin</span>
+        <span className="font-bold text-lg tracking-tight">DuckonPro Admin</span>
       </div>
 
       {/* Navigation */}

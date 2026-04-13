@@ -1,4 +1,4 @@
-Создай мобильный экран (iPhone 14 Pro, 393x852px) для приложения управления магазином "DokonPro". Стиль: современный, чистый, минималистичный.
+Создай мобильный экран (iPhone 14 Pro, 393x852px) для приложения управления магазином "DuckonPro". Стиль: современный, чистый, минималистичный.
 
 Дизайн-система: Primary #00BCD4, Success #4CAF50, Background #F5F5F5, Cards #FFFFFF, Text #212121, Text Secondary #757575, Divider #E0E0E0. Шрифт Inter/SF Pro. Радиус карточек 16px. Иконки Outlined (Lucide/Phosphor).
 

@@ -21,7 +21,7 @@ class ReceiptPreviewPage extends StatelessWidget {
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DuckonPro';
     try {
       await sl<ReceiptShareService>().shareReceipt(
         sale: sale,
@@ -42,7 +42,7 @@ class ReceiptPreviewPage extends StatelessWidget {
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DuckonPro';
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +72,7 @@ class ReceiptPreviewPage extends StatelessWidget {
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DuckonPro';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чек'),

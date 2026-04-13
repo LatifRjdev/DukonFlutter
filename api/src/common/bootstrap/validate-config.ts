@@ -7,8 +7,8 @@ const PLACEHOLDER_SECRETS = new Set<string>([
   '__REPLACE_WITH_RANDOM_64_BYTE_HEX__',
   'access-secret-dev',
   'refresh-secret-dev',
-  'dokonpro-access-secret-change-in-production-32chars',
-  'dokonpro-refresh-secret-change-in-production-32chars',
+  'duckonpro-access-secret-change-in-production-32chars',
+  'duckonpro-refresh-secret-change-in-production-32chars',
 ]);
 
 function checkSecret(name: string, value: string | undefined): void {

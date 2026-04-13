@@ -1,4 +1,4 @@
-# DokonPro Full-Stack Audit Report — 2026-04-10
+# DuckonPro Full-Stack Audit Report — 2026-04-10
 
 **Branch:** `audit/2026-04-10`
 **Auditor:** Claude (Opus 4.6) with operator @Latif Rajabov

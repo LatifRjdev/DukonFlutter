@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== DokonPro Server Setup ==="
+echo "=== DuckonPro Server Setup ==="
 
 # Update system
 echo "[1/6] Updating system..."
@@ -36,7 +36,7 @@ chown -R dokonpro:dokonpro /data
 echo ""
 echo "=== Setup Complete ==="
 echo "Next steps:"
-echo "1. Setup SSL: certbot certonly --standalone -d api.dokonpro.tj -d admin.dokonpro.tj"
+echo "1. Setup SSL: certbot certonly --standalone -d api.duckonpro.tj -d admin.duckonpro.tj"
 echo "2. Clone repo: su - dokonpro && git clone ... && cd dokonpro"
 echo "3. Create .env: cp .env.example .env && nano .env"
 echo "4. Start: docker compose up -d"

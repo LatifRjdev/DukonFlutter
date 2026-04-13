@@ -248,7 +248,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildHeader() {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
-        String storeName = 'DokonPro';
+        String storeName = 'DuckonPro';
         List stores = [];
         String? selectedStoreId;
 

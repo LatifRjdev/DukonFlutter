@@ -68,7 +68,7 @@ class DokonProApp extends StatelessWidget {
               ? settingsState.themeMode
               : ThemeMode.system;
           return MaterialApp.router(
-            title: 'DokonPro',
+            title: 'DuckonPro',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,

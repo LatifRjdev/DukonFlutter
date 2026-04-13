@@ -61,8 +61,8 @@ class NotificationService {
   }) async {
     const androidDetails = AndroidNotificationDetails(
       'dokonpro_channel',
-      'DokonPro',
-      channelDescription: 'DokonPro notifications',
+      'DuckonPro',
+      channelDescription: 'DuckonPro notifications',
       importance: Importance.high,
       priority: Priority.high,
     );

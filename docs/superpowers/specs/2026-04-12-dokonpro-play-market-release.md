@@ -1,4 +1,4 @@
-# DokonPro Play Market Release — Full Spec
+# DuckonPro Play Market Release — Full Spec
 
 **Date**: 2026-04-12
 **Goal**: Eliminate all 28 "coming soon" stubs, fix release blockers, ship to Google Play Store.
@@ -314,7 +314,7 @@ Each returns aggregated data tailored to the tab's needs.
 - Bot flow:
   1. User sends `/start` → bot replies "Enter your phone number"
   2. User sends phone → bot saves `{phone, chatId}` mapping in Customer record
-  3. Confirmation: "Your number +992XXXXXXXXX is linked to DokonPro"
+  3. Confirmation: "Your number +992XXXXXXXXX is linked to DuckonPro"
 
 **API endpoints:**
 - `POST /stores/:storeId/telegram/send-receipt` — body: `{saleId}`. Looks up customer's chatId, formats receipt, sends via bot.
@@ -323,7 +323,7 @@ Each returns aggregated data tailored to the tab's needs.
 
 **Receipt format in Telegram:**
 ```
-Receipt #1234 | DokonPro
+Receipt #1234 | DuckonPro
 Date: 12.04.2026 14:30
 ---
 Product x qty     total
@@ -340,7 +340,7 @@ Thank you!
 ### 3.3 Firebase Push Notifications
 
 **Firebase setup:**
-- Create Firebase project "DokonPro"
+- Create Firebase project "DuckonPro"
 - Download `google-services.json` → `android/app/` (in `.gitignore`)
 - `flutterfire configure` for Flutter config generation
 
@@ -378,7 +378,7 @@ Replace stub at `z_report_page.dart:246`.
 **PDF generation**: `pdf` package formats Z-report:
 ```
 Z-REPORT | Shift #45
-Store: DokonPro
+Store: DuckonPro
 Cashier: Name
 Date: 12.04.2026
 Open: 09:00 | Close: 21:00
@@ -586,7 +586,7 @@ Note: For v1, this can be a read-only info page showing current plan status. Pay
 1. Generate keystore (user does this locally)
 2. Configure `key.properties` and `build.gradle.kts`
 3. Enable ProGuard with `proguard-rules.pro`
-4. Build: `flutter build appbundle --dart-define=API_BASE_URL=https://api.dokonpro.tj`
+4. Build: `flutter build appbundle --dart-define=API_BASE_URL=https://api.duckonpro.tj`
 5. Test on Internal Testing track
 6. Play Console listing: description (ru), screenshots (phone + tablet), feature graphic, category "Business"
 7. Content rating questionnaire
