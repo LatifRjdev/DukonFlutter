@@ -1,11 +1,11 @@
-Создай веб-страницу (Desktop, 1440x900px) для админ-панели платформы "DuckonPro Admin". Стиль: современный, чистый, профессиональный. Sidebar навигация слева.
+Создай веб-страницу (Desktop, 1440x900px) для админ-панели платформы "DukonPro Admin". Стиль: современный, чистый, профессиональный. Sidebar навигация слева.
 
 Дизайн-система: Primary #00BCD4, Success #4CAF50, Danger #F44336, Warning #FF9800, Background #F8FAFC, Cards #FFFFFF, Text #1E293B, Text Secondary #64748B. Шрифт Inter. Радиус карточек 12px. Тени: 0 1px 3px rgba(0,0,0,0.1). Иконки Outlined (Lucide).
 
 ## Главная (Admin Dashboard)
 
 - Sidebar (слева, 256px, тёмный #1E293B):
-  - Логотип "DuckonPro" (бирюзовый) + badge "Admin" (маленький, серый pill)
+  - Логотип "DukonPro" (бирюзовый) + badge "Admin" (маленький, серый pill)
   - Навигация (иконка + текст, активный пункт — бирюзовый фон с opacity 10%):
     - Дашборд (активный)
     - Аналитика

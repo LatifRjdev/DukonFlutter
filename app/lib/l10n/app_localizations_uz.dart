@@ -9,7 +9,7 @@ class AppLocalizationsUz extends AppLocalizations {
   AppLocalizationsUz([String locale = 'uz']) : super(locale);
 
   @override
-  String get appTitle => 'DuckonPro';
+  String get appTitle => 'DukonPro';
 
   @override
   String get save => 'Saqlash';

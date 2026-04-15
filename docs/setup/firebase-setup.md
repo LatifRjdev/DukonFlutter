@@ -1,10 +1,10 @@
-# Firebase Setup for DuckonPro
+# Firebase Setup for DukonPro
 
 ## Step 1: Create Firebase Project
 
 1. Go to https://console.firebase.google.com/
 2. Click "Add project"
-3. Name: `DuckonPro`
+3. Name: `DukonPro`
 4. Disable Google Analytics (not needed for now)
 5. Click "Create project"
 
@@ -12,7 +12,7 @@
 
 1. In Firebase console, click "Add app" → Android
 2. Package name: `com.itlsolutions.dokonpro`
-3. App nickname: `DuckonPro`
+3. App nickname: `DukonPro`
 4. SHA-1 (get it by running): 
    ```bash
    cd /Users/latifrjdev/Downloads/Dukon/app/android

@@ -17,7 +17,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
   bool _loading = true;
   bool _connected = false;
   int _linkedCustomers = 0;
-  String _botUsername = '@duckonpro_bot';
+  String _botUsername = '@dukonpro_bot';
   bool _sendingTest = false;
 
   @override
@@ -35,7 +35,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
       setState(() {
         _connected = data['connected'] as bool? ?? false;
         _linkedCustomers = data['linkedCustomers'] as int? ?? 0;
-        _botUsername = data['botUsername'] as String? ?? '@duckonpro_bot';
+        _botUsername = data['botUsername'] as String? ?? '@dukonpro_bot';
       });
     } catch (_) {
       // fallback to defaults

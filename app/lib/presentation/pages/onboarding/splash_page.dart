@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
               ),
               const SizedBox(height: 24),
               const Text(
-                'DuckonPro',
+                'DukonPro',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,

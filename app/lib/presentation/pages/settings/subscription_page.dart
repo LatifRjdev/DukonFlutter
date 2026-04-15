@@ -826,7 +826,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
                   SizedBox(height: 10),
                   _CardDetailRow(label: 'Карта', value: '4276 3800 1234 5678'),
                   SizedBox(height: 6),
-                  _CardDetailRow(label: 'Получатель', value: 'DuckonPro LLC'),
+                  _CardDetailRow(label: 'Получатель', value: 'DukonPro LLC'),
                   SizedBox(height: 6),
                   _CardDetailRow(label: 'Банк', value: 'Эсхата'),
                 ],

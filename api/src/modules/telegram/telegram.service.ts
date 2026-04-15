@@ -42,7 +42,7 @@ export class TelegramService {
     if (message.text?.startsWith('/start')) {
       await this.bot.sendMessage(
         chatId,
-        'Добро пожаловать в DuckonPro! 📲\nПожалуйста, отправьте ваш номер телефона для привязки аккаунта.',
+        'Добро пожаловать в DukonPro! 📲\nПожалуйста, отправьте ваш номер телефона для привязки аккаунта.',
         {
           reply_markup: {
             keyboard: [

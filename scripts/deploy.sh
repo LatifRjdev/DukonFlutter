@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== DuckonPro Deploy ==="
+echo "=== DukonPro Deploy ==="
 
 # Pull latest
 echo "[1/5] Pulling latest code..."
@@ -30,5 +30,5 @@ fi
 
 echo ""
 echo "=== Deploy Complete ==="
-echo "API: https://api.duckonpro.tj"
-echo "Admin: https://admin.duckonpro.tj"
+echo "API: https://api.dukonpro.tj"
+echo "Admin: https://admin.dukonpro.tj"

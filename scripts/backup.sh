@@ -1,7 +1,7 @@
 #!/bin/bash
 BACKUP_DIR="/data/backups"
 mkdir -p $BACKUP_DIR
-FILENAME="duckonpro-$(date +%Y%m%d-%H%M%S).sql.gz"
+FILENAME="dukonpro-$(date +%Y%m%d-%H%M%S).sql.gz"
 docker compose exec -T postgres pg_dump -U dokonpro dokonpro | gzip > "$BACKUP_DIR/$FILENAME"
 echo "Backup saved: $BACKUP_DIR/$FILENAME ($(du -h "$BACKUP_DIR/$FILENAME" | cut -f1))"
 

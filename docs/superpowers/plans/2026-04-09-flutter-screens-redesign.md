@@ -472,7 +472,7 @@ Container(
   ),
   child: Column(
     children: [
-      Text('DuckonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
+      Text('DukonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
       const SizedBox(height: 8),
       Text('Управление магазином', style: TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
     ],

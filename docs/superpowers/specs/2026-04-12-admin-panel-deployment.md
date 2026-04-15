@@ -224,8 +224,8 @@ admin/
 Hetzner VPS CX22 (2 vCPU, 4GB RAM, 40GB SSD) — ~€4.5/month
 ├── Docker Compose
 │   ├── nginx (reverse proxy + SSL via Certbot)
-│   │   ├── api.duckonpro.tj → api:4455
-│   │   └── admin.duckonpro.tj → admin:3000
+│   │   ├── api.dukonpro.tj → api:4455
+│   │   └── admin.dukonpro.tj → admin:3000
 │   ├── api (NestJS backend) — port 4455
 │   ├── admin (Next.js panel) — port 3000
 │   ├── postgres:16-alpine — port 5432 (internal)
@@ -238,9 +238,9 @@ Hetzner VPS CX22 (2 vCPU, 4GB RAM, 40GB SSD) — ~€4.5/month
 
 | Domain | Purpose |
 |--------|---------|
-| `api.duckonpro.tj` | NestJS API (Flutter app connects here) |
-| `admin.duckonpro.tj` | Admin Panel (Next.js) |
-| `duckonpro.tj` | Landing page (future) |
+| `api.dukonpro.tj` | NestJS API (Flutter app connects here) |
+| `admin.dukonpro.tj` | Admin Panel (Next.js) |
+| `dukonpro.tj` | Landing page (future) |
 
 ### Docker Compose
 
@@ -273,7 +273,7 @@ services:
     build: ./admin
     depends_on: [api]
     environment:
-      NEXT_PUBLIC_API_URL: https://api.duckonpro.tj
+      NEXT_PUBLIC_API_URL: https://api.dukonpro.tj
     restart: always
 
   nginx:
@@ -296,9 +296,9 @@ volumes:
 ### Deployment Steps
 
 **Prerequisites:**
-1. Register domain `duckonpro.tj` at nic.tj (~$15/year)
+1. Register domain `dukonpro.tj` at nic.tj (~$15/year)
 2. Create Hetzner account, provision CX22 server (~€4.5/month)
-3. Point DNS A records: `api.duckonpro.tj` → server IP, `admin.duckonpro.tj` → server IP
+3. Point DNS A records: `api.dukonpro.tj` → server IP, `admin.dukonpro.tj` → server IP
 
 **Server Setup (one-time):**
 ```bash
@@ -318,7 +318,7 @@ usermod -aG docker dokonpro
 ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw enable
 
 # SSL
-certbot certonly --standalone -d api.duckonpro.tj -d admin.duckonpro.tj
+certbot certonly --standalone -d api.dukonpro.tj -d admin.dukonpro.tj
 ```
 
 **First Deploy:**
@@ -364,7 +364,7 @@ Daily PostgreSQL backup via cron:
 | Item | Cost |
 |------|------|
 | Hetzner VPS CX22 | ~$5/month |
-| Domain duckonpro.tj | ~$1.25/month ($15/year) |
+| Domain dukonpro.tj | ~$1.25/month ($15/year) |
 | Hetzner snapshots | ~$1/month |
 | SSL (Let's Encrypt) | $0 |
 | **Total** | **~$7.25/month** |

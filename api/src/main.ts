@@ -110,7 +110,7 @@ async function bootstrap() {
 
   // Swagger
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('DuckonPro API')
+    .setTitle('DukonPro API')
     .setDescription('API для управления розничными магазинами')
     .setVersion('1.0')
     .addBearerAuth()

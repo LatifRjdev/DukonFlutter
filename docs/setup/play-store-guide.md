@@ -1,4 +1,4 @@
-# Google Play Store Publication Guide — DuckonPro
+# Google Play Store Publication Guide — DukonPro
 
 ## Prerequisites
 - [x] Google Play Developer account ($25 one-time fee): https://play.google.com/console/signup
@@ -11,7 +11,7 @@
 1. Go to https://play.google.com/console
 2. Click "Create app"
 3. Fill in:
-   - **App name**: DuckonPro
+   - **App name**: DukonPro
    - **Default language**: Russian (ru-RU)
    - **App or game**: App
    - **Free or paid**: Free
@@ -28,7 +28,7 @@ Go to: Grow users > Store listing > Main store listing
 
 ### Full description
 ```
-DuckonPro — профессиональная система учёта для розничных магазинов.
+DukonPro — профессиональная система учёта для розничных магазинов.
 
 Возможности:
 • POS-касса с быстрым поиском и сканером штрихкодов
@@ -109,7 +109,7 @@ How to host on GitHub Pages:
 3. Upload AAB file
 4. Add release notes:
 ```
-Первый релиз DuckonPro v1.0.0
+Первый релиз DukonPro v1.0.0
 • POS-касса и сканер штрихкодов
 • Управление товарами и складом
 • Финансовые отчёты

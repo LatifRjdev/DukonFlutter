@@ -1,4 +1,4 @@
-# DuckonPro — Native Rebuild
+# DukonPro — Native Rebuild
 
 ## Overview
 Retail management SaaS (POS, inventory, CRM, finance, zakat) for small/medium stores in Tajikistan/CIS. Offline-first mobile app with cloud sync. Rebuilt natively using Kotlin Multiplatform + SwiftUI + Jetpack Compose.
