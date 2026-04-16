@@ -97,12 +97,22 @@ class _ProductListPageState extends State<ProductListPage> {
                     onSelected: (value) {
                       if (value == 'categories') {
                         context.push('/categories');
+                      } else if (value == 'import') {
+                        final storeState = context.read<StoreBloc>().state;
+                        final storeId = storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                        context.push('/products/import', extra: storeId);
                       }
                     },
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: 'categories',
                         child: Text('Категории'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'import',
+                        child: Text('Импорт из Excel'),
                       ),
                     ],
                   ),

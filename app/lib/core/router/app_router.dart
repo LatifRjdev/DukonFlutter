@@ -187,7 +187,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.importProducts,
-        builder: (context, state) => const ImportProductsPage(),
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return ImportProductsPage(storeId: storeId);
+        },
       ),
       GoRoute(
         path: '/products/empty',
