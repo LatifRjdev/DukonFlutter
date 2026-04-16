@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/network/dio_client.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/constants/enums.dart';
 import '../../../domain/entities/product.dart';
+import '../../../injection.dart';
 import '../../blocs/product/product_list_bloc.dart';
 import '../../blocs/product/product_list_event.dart';
 import '../../blocs/pos/cart_bloc.dart';
@@ -269,6 +271,18 @@ class ProductDetailPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+
+                    // Stock movements history
+                    _StockMovementsSection(
+                      storeId: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        return storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                      }(),
+                      productId: product.id,
+                    ),
                     const SizedBox(height: 80),
                   ],
                 ),
@@ -426,6 +440,219 @@ class _InfoRow extends StatelessWidget {
         Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Stock Movements History
+// ---------------------------------------------------------------------------
+
+class _StockMovementsSection extends StatefulWidget {
+  final String storeId;
+  final String productId;
+
+  const _StockMovementsSection({
+    required this.storeId,
+    required this.productId,
+  });
+
+  @override
+  State<_StockMovementsSection> createState() => _StockMovementsSectionState();
+}
+
+class _StockMovementsSectionState extends State<_StockMovementsSection> {
+  List<Map<String, dynamic>> _movements = [];
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMovements();
+  }
+
+  Future<void> _loadMovements() async {
+    if (widget.storeId.isEmpty) {
+      setState(() {
+        _loading = false;
+        _error = 'Магазин не выбран';
+      });
+      return;
+    }
+
+    try {
+      final resp = await sl<DioClient>().get<Map<String, dynamic>>(
+        '/stores/${widget.storeId}/products/${widget.productId}/stock-movements',
+        queryParameters: {'limit': 20},
+      );
+      final data = resp.data ?? {};
+      final items = (data['data'] as List? ?? data['items'] as List? ?? [])
+          .cast<Map<String, dynamic>>();
+      setState(() {
+        _movements = items;
+        _loading = false;
+      });
+    } catch (_) {
+      setState(() {
+        _loading = false;
+        _error = 'Не удалось загрузить историю движений';
+      });
+    }
+  }
+
+  IconData _typeIcon(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return Icons.arrow_downward_rounded;
+      case 'OUT':
+        return Icons.arrow_upward_rounded;
+      case 'ADJUSTMENT':
+        return Icons.tune_rounded;
+      default:
+        return Icons.swap_vert_rounded;
+    }
+  }
+
+  Color _typeColor(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return AppColors.success;
+      case 'OUT':
+        return AppColors.error;
+      case 'ADJUSTMENT':
+        return AppColors.warning;
+      default:
+        return AppColors.lightTextSecondary;
+    }
+  }
+
+  String _typeLabel(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return 'Приход';
+      case 'OUT':
+        return 'Расход';
+      case 'ADJUSTMENT':
+        return 'Корректировка';
+      default:
+        return type;
+    }
+  }
+
+  String _formatDate(String? dateStr) {
+    if (dateStr == null) return '';
+    final dt = DateTime.tryParse(dateStr);
+    if (dt == null) return dateStr;
+    return DateFormat('dd.MM.yyyy HH:mm').format(dt);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        boxShadow: AppShadows.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('История движений',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 12),
+          if (_loading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: AppColors.primary),
+              ),
+            )
+          else if (_error != null)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(_error!,
+                    style: const TextStyle(
+                        color: AppColors.lightTextSecondary, fontSize: 13)),
+              ),
+            )
+          else if (_movements.isEmpty)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: Text('Нет движений',
+                    style: TextStyle(
+                        color: AppColors.lightTextSecondary, fontSize: 13)),
+              ),
+            )
+          else
+            ...List.generate(_movements.length, (i) {
+              final m = _movements[i];
+              final type = m['type'] as String? ?? '';
+              final quantity = m['quantity'] as num? ?? 0;
+              final note = m['note'] as String? ?? m['reason'] as String? ?? '';
+              final date = m['createdAt'] as String? ?? m['date'] as String?;
+              return Column(
+                children: [
+                  if (i > 0) const Divider(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: _typeColor(type).withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(_typeIcon(type),
+                              size: 16, color: _typeColor(type)),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_typeLabel(type),
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600)),
+                              if (note.isNotEmpty)
+                                Text(note,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.lightTextSecondary),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
+                              if (date != null)
+                                Text(_formatDate(date),
+                                    style: const TextStyle(
+                                        fontSize: 11,
+                                        color: AppColors.lightTextHint)),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          '${type.toUpperCase() == 'OUT' ? '-' : '+'}$quantity',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: _typeColor(type),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+        ],
+      ),
     );
   }
 }
