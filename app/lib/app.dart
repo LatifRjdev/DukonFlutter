@@ -63,6 +63,12 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<PrinterBloc>()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
+        buildWhen: (prev, curr) {
+          // Only rebuild MaterialApp when theme actually changes
+          final prevTheme = prev is SettingsLoaded ? prev.themeMode : ThemeMode.system;
+          final currTheme = curr is SettingsLoaded ? curr.themeMode : ThemeMode.system;
+          return prevTheme != currTheme;
+        },
         builder: (context, settingsState) {
           final themeMode = settingsState is SettingsLoaded
               ? settingsState.themeMode
