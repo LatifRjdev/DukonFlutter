@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app.dart';
 import 'core/constants/api_endpoints.dart';
+import 'core/network/dio_client.dart';
 import 'injection.dart';
 import 'data/sync/sync_engine.dart';
 import 'core/services/notification_service.dart';
@@ -43,6 +45,20 @@ void main() async {
   // Initialize local notifications
   await sl<NotificationService>().init();
   await sl<NotificationService>().requestPermission();
+
+  // Register FCM token with backend (non-blocking)
+  try {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      try {
+        await sl<DioClient>().post('/users/me/fcm-token', data: {'token': fcmToken});
+      } catch (_) {
+        // Non-blocking — token registration can fail silently
+      }
+    }
+  } catch (_) {
+    // Firebase may not be initialized — skip FCM token registration
+  }
 
   runApp(const DokonProApp());
 }
