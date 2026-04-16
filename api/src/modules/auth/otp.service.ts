@@ -1,7 +1,8 @@
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OtpType } from '@prisma/client';
-import { SmsProvider, SMS_PROVIDER } from './sms-provider.interface';
+import type { SmsProvider } from './sms-provider.interface';
+import { SMS_PROVIDER } from './sms-provider.interface';
 
 @Injectable()
 export class OtpService {

@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException, Logger } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { OtpService } from './otp.service';
+import { OtpType } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +17,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private otpService: OtpService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -113,6 +116,43 @@ export class AuthService {
    */
   async logoutAll(userId: string) {
     await this.prisma.refreshToken.deleteMany({ where: { userId } });
+  }
+
+  async sendOtp(phone: string) {
+    const user = await this.prisma.user.findUnique({ where: { phone } });
+    if (!user) {
+      throw new BadRequestException('Пользователь с таким номером не найден');
+    }
+    await this.otpService.sendOtp(phone, OtpType.VERIFY);
+    return { message: 'Код отправлен' };
+  }
+
+  async verifyOtp(phone: string, code: string) {
+    await this.otpService.verifyOtp(phone, code, OtpType.VERIFY);
+    const user = await this.prisma.user.findUnique({ where: { phone } });
+    if (!user) {
+      throw new BadRequestException('Пользователь с таким номером не найден');
+    }
+    return this.generateTokens(user.id, user.phone);
+  }
+
+  async forgotPassword(phone: string) {
+    const user = await this.prisma.user.findUnique({ where: { phone } });
+    if (!user) {
+      throw new BadRequestException('Пользователь с таким номером не найден');
+    }
+    await this.otpService.sendOtp(phone, OtpType.RESET);
+    return { message: 'Код для сброса пароля отправлен' };
+  }
+
+  async resetPassword(phone: string, code: string, newPassword: string) {
+    await this.otpService.verifyOtp(phone, code, OtpType.RESET);
+    const hashed = await bcrypt.hash(newPassword, 12);
+    await this.prisma.user.update({
+      where: { phone },
+      data: { password: hashed },
+    });
+    return { message: 'Пароль успешно изменён' };
   }
 
   private async generateTokens(userId: string, phone: string) {
