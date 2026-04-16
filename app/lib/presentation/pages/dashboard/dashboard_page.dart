@@ -29,6 +29,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   bool _loaded = false;
   String _selectedPeriod = 'today';
+  DateTimeRange? _customDateRange;
 
   static const _periods = [
     {'key': 'today', 'label': 'Сегодня'},
@@ -332,22 +333,34 @@ class _DashboardPageState extends State<DashboardPage> {
                 context: context,
                 firstDate: DateTime(2024),
                 lastDate: DateTime.now(),
+                initialDateRange: _customDateRange,
                 locale: const Locale('ru'),
               );
-              if (picked != null) {
-                // Custom date range — for now reload with 'month'
-                _onPeriodChanged('month');
+              if (picked != null && mounted) {
+                setState(() {
+                  _selectedPeriod = 'custom';
+                  _customDateRange = picked;
+                });
+                final storeId = _getStoreId();
+                if (storeId != null) {
+                  context.read<DashboardBloc>().add(
+                    DashboardPeriodChanged(storeId, 'custom'),
+                  );
+                }
               }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: _selectedPeriod == 'custom' ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.lightBorder),
+                border: Border.all(
+                  color: _selectedPeriod == 'custom' ? AppColors.primary : AppColors.lightBorder,
+                ),
               ),
-              child: const Icon(Icons.calendar_today,
-                size: 16, color: AppColors.lightTextSecondary),
+              child: Icon(Icons.calendar_today,
+                size: 16,
+                color: _selectedPeriod == 'custom' ? Colors.white : AppColors.lightTextSecondary),
             ),
           ),
         ],
