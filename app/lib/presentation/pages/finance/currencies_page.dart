@@ -53,7 +53,7 @@ class _HistoryPoint {
 
   factory _HistoryPoint.fromJson(Map<String, dynamic> j) => _HistoryPoint(
         date: j['date'] as String? ?? '',
-        rate: (j['rate'] as num?)?.toDouble() ?? 0,
+        rate: (j['nbtRate'] as num?)?.toDouble() ?? (j['rate'] as num?)?.toDouble() ?? 0,
       );
 }
 
@@ -103,10 +103,21 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
     try {
       final dio = sl<DioClient>();
       final response = await dio.get('/currencies/rates');
-      final json = response.data as Map<String, dynamic>;
+      final data = response.data;
       final rates = <String, _CurrencyRate>{};
-      for (final code in _codes) {
-        rates[code] = _CurrencyRate.fromJson(json, code);
+      // API returns array of {currency, buyRate, sellRate, nbtRate, date}
+      if (data is List) {
+        for (final item in data) {
+          final m = item as Map<String, dynamic>;
+          final code = m['currency'] as String;
+          if (_codes.contains(code)) {
+            rates[code] = _CurrencyRate.fromJson({code: (m['nbtRate'] as num).toDouble()}, code);
+          }
+        }
+      } else if (data is Map<String, dynamic>) {
+        for (final code in _codes) {
+          rates[code] = _CurrencyRate.fromJson(data, code);
+        }
       }
       setState(() {
         _rates = rates;

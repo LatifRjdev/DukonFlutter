@@ -358,7 +358,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
       _SectionItem('Отчёт', Icons.bar_chart_outlined,
           () => context.push('/finance/reports', extra: storeId)),
       _SectionItem('Расходы', Icons.money_off_outlined,
-          () => context.push('/expenses', extra: storeId)),
+          () => context.push(RouteNames.expenses, extra: storeId)),
     ];
 
     return GridView.count(
