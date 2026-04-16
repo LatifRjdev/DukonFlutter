@@ -67,6 +67,7 @@ import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
 import 'presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'presentation/blocs/supplier_detail/supplier_detail_bloc.dart';
+import 'data/datasources/remote/currency_remote_datasource.dart';
 import 'data/datasources/remote/staff_remote_datasource.dart';
 import 'data/datasources/remote/shift_remote_datasource.dart';
 import 'data/datasources/remote/payroll_remote_datasource.dart';
@@ -227,6 +228,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<PayrollRemoteDatasource>(
     () => PayrollRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<CurrencyRemoteDatasource>(
+    () => CurrencyRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
 
   // ---------------------------------------------------------------------------
