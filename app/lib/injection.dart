@@ -49,6 +49,7 @@ import 'data/datasources/remote/dashboard_remote_datasource.dart';
 import 'data/datasources/remote/finance_remote_datasource.dart';
 import 'data/datasources/remote/expense_remote_datasource.dart';
 import 'data/datasources/remote/investment_remote_datasource.dart';
+import 'data/datasources/remote/notification_remote_datasource.dart';
 import 'data/datasources/remote/zakat_remote_datasource.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
 import 'data/repositories/finance_repository_impl.dart';
@@ -240,6 +241,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<CurrencyRemoteDatasource>(
     () => CurrencyRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<NotificationRemoteDatasource>(
+    () => NotificationRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
 
   // ---------------------------------------------------------------------------
