@@ -98,6 +98,14 @@ class MorePage extends StatelessWidget {
             onTap: () => context.push(RouteNames.supplierList, extra: _getStoreId(context)),
           ),
           const Divider(height: 24),
+          _SectionHeader(title: 'Магазин'),
+          _MenuItem(
+            icon: Icons.store_outlined,
+            label: 'Мои магазины',
+            color: AppColors.primary,
+            onTap: () => context.push(RouteNames.myStores),
+          ),
+          const Divider(height: 24),
           _SectionHeader(title: 'Настройки'),
           _MenuItem(
             icon: Icons.settings_outlined,
