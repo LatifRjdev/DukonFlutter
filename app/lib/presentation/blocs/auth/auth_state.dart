@@ -25,3 +25,12 @@ class AuthFailure extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthOtpSent extends AuthState {
+  final String phone;
+  const AuthOtpSent({required this.phone});
+  @override
+  List<Object?> get props => [phone];
+}
+
+class AuthPasswordResetSuccess extends AuthState {}
