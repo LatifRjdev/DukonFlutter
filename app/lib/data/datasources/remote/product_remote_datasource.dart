@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../core/network/dio_client.dart';
@@ -26,6 +28,9 @@ abstract class ProductRemoteDatasource {
     Map<String, dynamic> data,
   );
   Future<void> deleteProduct(String storeId, String id);
+  Future<String> downloadTemplatePath(String storeId);
+  Future<Map<String, dynamic>> importPreview(String storeId, String filePath);
+  Future<Map<String, dynamic>> importProducts(String storeId, String filePath);
 }
 
 class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
@@ -137,6 +142,61 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
   Future<void> deleteProduct(String storeId, String id) async {
     try {
       await _dioClient.delete(ApiEndpoints.product(storeId, id));
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<String> downloadTemplatePath(String storeId) async {
+    try {
+      final dir = await getTemporaryDirectory();
+      final filePath = '${dir.path}/dukon-import-template.xlsx';
+      await _dioClient.dio.download(
+        '${ApiEndpoints.baseUrl}${ApiEndpoints.productImportTemplate(storeId)}',
+        filePath,
+      );
+      return filePath;
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> importPreview(
+    String storeId,
+    String filePath,
+  ) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(filePath),
+      });
+      final response = await _dioClient.post(
+        ApiEndpoints.productImportPreview(storeId),
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> importProducts(
+    String storeId,
+    String filePath,
+  ) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(filePath),
+      });
+      final response = await _dioClient.post(
+        ApiEndpoints.productImport(storeId),
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

@@ -89,6 +89,7 @@ import 'presentation/blocs/pos/checkout_bloc.dart';
 import 'presentation/blocs/sales/sales_history_bloc.dart';
 import 'presentation/blocs/stock/stock_intake_bloc.dart';
 import 'presentation/blocs/product/product_form_bloc.dart';
+import 'presentation/blocs/import/import_bloc.dart';
 import 'core/services/receipt_pdf_service.dart';
 import 'core/services/thermal_printer_service.dart';
 import 'core/services/receipt_share_service.dart';
@@ -433,6 +434,10 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<ProductFormBloc>(
     () => ProductFormBloc(productRepository: sl<ProductRepository>()),
+  );
+
+  sl.registerFactory<ImportBloc>(
+    () => ImportBloc(productDatasource: sl<ProductRemoteDatasource>()),
   );
 
   // ---------------------------------------------------------------------------

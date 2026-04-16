@@ -39,6 +39,8 @@ class ApiEndpoints {
   static String productByBarcode(String storeId, String barcode) =>
       '/stores/$storeId/products/barcode/$barcode';
   static String productImport(String storeId) => '/stores/$storeId/products/import';
+  static String productImportPreview(String storeId) => '/stores/$storeId/products/import/preview';
+  static String productImportTemplate(String storeId) => '/stores/$storeId/products/import/template';
 
   // Stock Movements
   static String stockMovements(String storeId, String productId) =>
