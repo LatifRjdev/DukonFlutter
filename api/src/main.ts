@@ -68,6 +68,14 @@ async function bootstrap() {
   // CORS — whitelist parsed from CORS_ORIGIN (comma-separated). In
   // development, fall back to any localhost origin. In production,
   // validateBootConfig already guarantees CORS_ORIGIN is explicit.
+  const corsOrigin = configService.get<string>('CORS_ORIGIN');
+  if (process.env.NODE_ENV === 'production' && !corsOrigin) {
+    logger.warn(
+      'WARNING: CORS_ORIGIN is not set in production. ' +
+      'Set CORS_ORIGIN to your frontend domain (e.g., https://app.dukonpro.com)',
+    );
+  }
+
   const rawCorsOrigin = configService.get<string>('CORS_ORIGIN');
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
   const allowedOrigins = rawCorsOrigin
