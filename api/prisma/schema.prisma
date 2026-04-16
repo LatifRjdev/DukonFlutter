@@ -79,6 +79,7 @@ model Store {
   inventoryCounts  InventoryCount[]
   notifications    Notification[]
   discounts        Discount[]
+  investments      Investment[]
 
   @@map("stores")
 }
@@ -950,4 +951,33 @@ model OtpCode {
 
   @@index([phone, type])
   @@map("otp_codes")
+}
+
+// ============ INVESTMENTS ============
+
+enum InvestmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Investment {
+  id            String           @id @default(uuid())
+  storeId       String
+  store         Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  amount        Decimal          @db.Decimal(12, 2)
+  returnAmount  Decimal?         @db.Decimal(12, 2)
+  investorName  String
+  investorPhone String?
+  status        InvestmentStatus @default(ACTIVE)
+  startDate     DateTime
+  endDate       DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([storeId])
+  @@index([status])
+  @@map("investments")
 }
