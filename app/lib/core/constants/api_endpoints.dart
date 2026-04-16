@@ -66,6 +66,10 @@ class ApiEndpoints {
   static String expenses(String storeId) => '/stores/$storeId/expenses';
   static String expense(String storeId, String id) => '/stores/$storeId/expenses/$id';
 
+  // Investments
+  static String investments(String storeId) => '/stores/$storeId/investments';
+  static String investment(String storeId, String id) => '/stores/$storeId/investments/$id';
+
   // Customer Debts & Payments
   static String customerDebts(String storeId, String customerId) => '/stores/$storeId/customers/$customerId/debts';
   static String customerPayments(String storeId, String customerId) => '/stores/$storeId/customers/$customerId/payments';
