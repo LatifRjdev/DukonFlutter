@@ -931,3 +931,23 @@ model Notification {
   @@index([createdAt])
   @@map("notifications")
 }
+
+// ============ OTP CODES ============
+
+enum OtpType {
+  VERIFY
+  RESET
+}
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String
+  type      OtpType
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone, type])
+  @@map("otp_codes")
+}
