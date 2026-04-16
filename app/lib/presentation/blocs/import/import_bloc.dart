@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../data/datasources/remote/product_remote_datasource.dart';
 import 'import_event.dart';
 import 'import_state.dart';
@@ -39,7 +40,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
         filePath: event.filePath,
       ));
     } catch (e) {
-      emit(ImportError(message: e.toString()));
+      emit(ImportError(message: mapErrorToUserMessage(e)));
     }
   }
 
@@ -63,7 +64,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
         errors: errors,
       ));
     } catch (e) {
-      emit(ImportError(message: e.toString()));
+      emit(ImportError(message: mapErrorToUserMessage(e)));
     }
   }
 
@@ -78,7 +79,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
       );
       emit(ImportTemplateDownloaded(filePath: filePath));
     } catch (e) {
-      emit(ImportError(message: e.toString()));
+      emit(ImportError(message: mapErrorToUserMessage(e)));
     }
   }
 }
