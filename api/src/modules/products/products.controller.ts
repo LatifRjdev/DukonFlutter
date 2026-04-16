@@ -1,7 +1,10 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards,
+  UseInterceptors, UploadedFile, Res, BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import type { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
@@ -9,10 +12,12 @@ import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ProductsService } from './products.service';
 import { StockMovementsService } from './stock-movements.service';
+import { ImportProductsService } from './import-products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
+import { generateImportTemplate } from './templates/product-import-template';
 
 @ApiTags('Products')
 @ApiBearerAuth()
@@ -22,6 +27,7 @@ export class ProductsController {
   constructor(
     private productsService: ProductsService,
     private stockMovementsService: StockMovementsService,
+    private importService: ImportProductsService,
   ) {}
 
   @Post()
@@ -35,6 +41,38 @@ export class ProductsController {
   @ApiOperation({ summary: 'List products' })
   findAll(@Param('storeId') storeId: string, @Query() query: ProductQueryDto) {
     return this.productsService.findAll(storeId, query);
+  }
+
+  @Get('import/template')
+  @ApiOperation({ summary: 'Download import template' })
+  async downloadTemplate(@Res() res: Response) {
+    const buffer = await generateImportTemplate();
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="dukon-import-template.xlsx"',
+    });
+    res.send(buffer);
+  }
+
+  @Post('import/preview')
+  @Permissions('products.manage')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Preview import file' })
+  async previewImport(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Файл не загружен');
+    return this.importService.preview(file.buffer);
+  }
+
+  @Post('import')
+  @Permissions('products.manage')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Import products from file' })
+  async importProducts(
+    @Param('storeId') storeId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Файл не загружен');
+    return this.importService.importProducts(storeId, file.buffer);
   }
 
   @Get('barcode/:barcode')
