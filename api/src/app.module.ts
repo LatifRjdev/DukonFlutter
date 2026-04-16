@@ -28,6 +28,7 @@ import { TelegramModule } from './modules/telegram/telegram.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { DiscountsModule } from './modules/discounts/discounts.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { InvestmentsModule } from './modules/investments/investments.module';
 import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
@@ -60,6 +61,7 @@ import { AdminModule } from './modules/admin/admin.module';
     NotificationsModule,
     DiscountsModule,
     SubscriptionsModule,
+    InvestmentsModule,
     AdminModule,
   ],
   providers: [
