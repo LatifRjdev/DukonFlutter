@@ -50,6 +50,10 @@ class RouteNames {
   static const String notifications = '/notifications';
   static const String notificationSettings = '/notifications/settings';
 
+  // Investments
+  static const String investments = '/investments';
+  static const String addInvestment = '/investments/add';
+
   // Debts
   static const String debtsOverview = '/debts';
   static const String customerDebts = '/debts/customer';

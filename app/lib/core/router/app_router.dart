@@ -38,6 +38,8 @@ import '../../presentation/pages/finance/balance_page.dart';
 import '../../presentation/pages/finance/credits_page.dart';
 import '../../presentation/pages/finance/reports_page.dart';
 import '../../presentation/pages/finance/currencies_page.dart';
+import '../../presentation/pages/finance/investment_list_page.dart';
+import '../../presentation/pages/finance/add_investment_page.dart';
 import '../../presentation/pages/notifications/notifications_page.dart';
 import '../../presentation/pages/notifications/notification_settings_page.dart';
 import '../../presentation/pages/debt/debts_overview_page.dart';
@@ -303,6 +305,22 @@ class AppRouter {
         path: RouteNames.financeCurrencies,
         builder: (context, state) => const CurrenciesPage(),
       ),
+      // Investments
+      GoRoute(
+        path: RouteNames.investments,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return InvestmentListPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.addInvestment,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return AddInvestmentPage(storeId: storeId);
+        },
+      ),
+
       GoRoute(
         path: RouteNames.notifications,
         builder: (context, state) {

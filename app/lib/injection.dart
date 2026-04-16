@@ -47,17 +47,21 @@ import 'presentation/blocs/dashboard/dashboard_bloc.dart';
 import 'data/datasources/remote/dashboard_remote_datasource.dart';
 import 'data/datasources/remote/finance_remote_datasource.dart';
 import 'data/datasources/remote/expense_remote_datasource.dart';
+import 'data/datasources/remote/investment_remote_datasource.dart';
 import 'data/datasources/remote/zakat_remote_datasource.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
 import 'data/repositories/finance_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
+import 'data/repositories/investment_repository_impl.dart';
 import 'data/repositories/zakat_repository_impl.dart';
 import 'domain/repositories/dashboard_repository.dart';
 import 'domain/repositories/finance_repository.dart';
 import 'domain/repositories/expense_repository.dart';
+import 'domain/repositories/investment_repository.dart';
 import 'domain/repositories/zakat_repository.dart';
 import 'presentation/blocs/finance/finance_bloc.dart';
 import 'presentation/blocs/expense/expense_bloc.dart';
+import 'presentation/blocs/investment/investment_bloc.dart';
 import 'presentation/blocs/debt/debt_bloc.dart';
 import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
@@ -205,6 +209,10 @@ Future<void> initDependencies() async {
     () => ExpenseRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
 
+  sl.registerLazySingleton<InvestmentRemoteDatasource>(
+    () => InvestmentRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
   sl.registerLazySingleton<ZakatRemoteDatasource>(
     () => ZakatRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
@@ -297,6 +305,10 @@ Future<void> initDependencies() async {
     () => ExpenseRepositoryImpl(remoteDatasource: sl<ExpenseRemoteDatasource>()),
   );
 
+  sl.registerLazySingleton<InvestmentRepository>(
+    () => InvestmentRepositoryImpl(remoteDatasource: sl<InvestmentRemoteDatasource>()),
+  );
+
   sl.registerLazySingleton<ZakatRepository>(
     () => ZakatRepositoryImpl(remoteDatasource: sl<ZakatRemoteDatasource>()),
   );
@@ -345,6 +357,10 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<ExpenseBloc>(
     () => ExpenseBloc(expenseRepository: sl<ExpenseRepository>()),
+  );
+
+  sl.registerFactory<InvestmentBloc>(
+    () => InvestmentBloc(investmentRepository: sl<InvestmentRepository>()),
   );
 
   sl.registerFactory<DebtBloc>(

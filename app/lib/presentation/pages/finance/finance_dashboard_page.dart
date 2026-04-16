@@ -360,7 +360,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
       _SectionItem('Кредиты', Icons.credit_card_outlined,
           () => context.push('/finance/credits', extra: storeId)),
       _SectionItem('Вложения', Icons.trending_up_outlined,
-          () => comingSoon('Вложения'), stub: true),
+          () => context.push(RouteNames.investments, extra: storeId)),
       _SectionItem('Закят', Icons.volunteer_activism_outlined,
           () => context.push('/zakat', extra: storeId)),
       _SectionItem('Валюты', Icons.currency_exchange_outlined,
