@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrenciesService } from './currencies.service';
 import { RateHistoryQueryDto } from './dto/rate-history-query.dto';
@@ -14,6 +14,14 @@ export class CurrenciesController {
   })
   getLatestRates() {
     return this.currenciesService.getLatestRates();
+  }
+
+  @Post('rates/fetch')
+  @ApiOperation({
+    summary: 'Manually trigger rate fetch from NBT',
+  })
+  async fetchRates(): Promise<any[]> {
+    return this.currenciesService.fetchRatesFromNbt();
   }
 
   @Get('rates/history')
