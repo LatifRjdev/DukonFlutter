@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/phone_input_field.dart';
@@ -28,8 +29,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       final phone = '+992${_phoneController.text}';
-      // Forgot password — backend endpoint not yet available
-      context.push('/otp', extra: phone);
+      context.read<AuthBloc>().add(AuthForgotPasswordRequested(phone: phone));
     }
   }
 
@@ -44,7 +44,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is AuthOtpSent) {
+            context.push('/otp', extra: state.phone);
+          } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
             );

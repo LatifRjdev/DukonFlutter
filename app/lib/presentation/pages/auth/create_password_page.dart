@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
@@ -36,8 +37,11 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Reset password — backend endpoint not yet available
-      context.go('/login');
+      context.read<AuthBloc>().add(AuthResetPasswordRequested(
+        phone: widget.phone,
+        code: widget.otp,
+        newPassword: _passwordController.text,
+      ));
     }
   }
 
@@ -52,8 +56,8 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthAuthenticated) {
-            context.go('/home');
+          if (state is AuthPasswordResetSuccess) {
+            context.go('/login');
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: AppColors.error),

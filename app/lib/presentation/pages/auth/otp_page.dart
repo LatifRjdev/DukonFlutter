@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
 
@@ -65,14 +66,13 @@ class _OtpPageState extends State<OtpPage> {
 
   void _verify() {
     if (_otp.length == 6) {
-      // OTP verification — backend endpoint not yet available
-      context.go('/create-password', extra: {'phone': widget.phone, 'otp': _otp});
+      context.read<AuthBloc>().add(AuthVerifyOtpRequested(phone: widget.phone, code: _otp));
     }
   }
 
   void _resend() {
     if (_canResend) {
-      // Resend OTP — backend endpoint not yet available
+      context.read<AuthBloc>().add(AuthSendOtpRequested(phone: widget.phone));
       _startTimer();
     }
   }
@@ -100,7 +100,9 @@ class _OtpPageState extends State<OtpPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is AuthAuthenticated) {
+            context.go('/home');
+          } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
             );
