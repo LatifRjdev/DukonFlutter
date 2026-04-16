@@ -265,7 +265,7 @@ class _DashboardPageState extends State<DashboardPage> {
           onNotificationTap: () {
             context.push('/notifications', extra: _getStoreId());
           },
-          onProfileTap: () {},
+          onProfileTap: () => context.push(RouteNames.settings),
           onStoreTap: stores.length > 1
               ? () => _showStoreSelector(stores, selectedStoreId)
               : null,
