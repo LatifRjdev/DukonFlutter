@@ -49,10 +49,20 @@ class _MyStoresPageState extends State<MyStoresPage> {
     return storeState is StoreLoaded ? storeState.selectedStore?.id : null;
   }
 
+  static const _categories = {
+    'GROCERY': 'Продукты',
+    'CLOTHING': 'Одежда',
+    'ELECTRONICS': 'Электроника',
+    'HARDWARE': 'Стройматериалы',
+    'PHARMACY': 'Аптека',
+    'OTHER': 'Другое',
+  };
+
   void _showStoreForm({Map<String, dynamic>? existing}) {
     final nameCtrl = TextEditingController(text: existing?['name'] ?? '');
     final addressCtrl = TextEditingController(text: existing?['address'] ?? '');
     final phoneCtrl = TextEditingController(text: existing?['phone'] ?? '');
+    String selectedCategory = existing?['category'] as String? ?? 'OTHER';
     final isEdit = existing != null;
 
     showModalBottomSheet(
@@ -62,7 +72,8 @@ class _MyStoresPageState extends State<MyStoresPage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => Padding(
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Padding(
         padding: EdgeInsets.fromLTRB(
             16, 16, 16, MediaQuery.of(ctx).viewInsets.bottom + 24),
         child: Column(
@@ -84,7 +95,18 @@ class _MyStoresPageState extends State<MyStoresPage> {
             const SizedBox(height: 16),
             TextField(
               controller: nameCtrl,
-              decoration: const InputDecoration(labelText: 'Название', border: OutlineInputBorder()),
+              decoration: const InputDecoration(labelText: 'Название *', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              value: selectedCategory,
+              decoration: const InputDecoration(labelText: 'Категория *', border: OutlineInputBorder()),
+              items: _categories.entries
+                  .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                  .toList(),
+              onChanged: (v) {
+                if (v != null) setSheetState(() => selectedCategory = v);
+              },
             ),
             const SizedBox(height: 12),
             TextField(
@@ -113,6 +135,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                   await _saveStore(
                     id: existing?['id'] as String?,
                     name: nameCtrl.text.trim(),
+                    category: selectedCategory,
                     address: addressCtrl.text.trim(),
                     phone: phoneCtrl.text.trim(),
                   );
@@ -123,18 +146,19 @@ class _MyStoresPageState extends State<MyStoresPage> {
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 
   Future<void> _saveStore({
     String? id,
     required String name,
+    required String category,
     required String address,
     required String phone,
   }) async {
     try {
-      final payload = {'name': name, 'address': address, 'phone': phone};
+      final payload = {'name': name, 'category': category, 'address': address, 'phone': phone};
       if (id != null) {
         await _dioClient.put('/stores/$id', data: payload);
       } else {
