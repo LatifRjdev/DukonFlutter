@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'core/network/api_interceptor.dart';
 import 'core/network/dio_client.dart';
 import 'core/network/network_info.dart';
+import 'core/router/app_router.dart';
 
 import 'data/datasources/local/auth_local_datasource.dart';
 import 'data/datasources/local/category_local_datasource.dart';
@@ -123,7 +124,13 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<ApiInterceptor>(
-    () => ApiInterceptor(storage: sl<FlutterSecureStorage>()),
+    () => ApiInterceptor(
+      storage: sl<FlutterSecureStorage>(),
+      onSessionExpired: () {
+        sl<FlutterSecureStorage>().deleteAll();
+        AppRouter.router.go('/login');
+      },
+    ),
   );
 
   sl.registerLazySingleton<DioClient>(

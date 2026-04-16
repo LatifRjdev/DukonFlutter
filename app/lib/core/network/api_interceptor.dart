@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -5,8 +7,12 @@ import '../constants/api_endpoints.dart';
 
 class ApiInterceptor extends Interceptor {
   final FlutterSecureStorage _storage;
+  final VoidCallback? onSessionExpired;
 
-  ApiInterceptor({required FlutterSecureStorage storage}) : _storage = storage;
+  ApiInterceptor({
+    required FlutterSecureStorage storage,
+    this.onSessionExpired,
+  }) : _storage = storage;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -31,6 +37,8 @@ class ApiInterceptor extends Interceptor {
         } catch (e) {
           return handler.next(err);
         }
+      } else {
+        onSessionExpired?.call();
       }
     }
     handler.next(err);
