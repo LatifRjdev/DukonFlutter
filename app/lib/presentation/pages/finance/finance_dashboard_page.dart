@@ -342,18 +342,6 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
   Widget _buildSectionsGrid() {
     final storeId = _storeId ?? '';
-    // Empty onTap callbacks were a FD-P1-001 finding: tapping a stub tile
-    // did nothing at all. Until the corresponding pages exist they now show
-    // a "coming soon" snackbar so the UI acknowledges the tap.
-    void comingSoon(String label) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$label — скоро будет доступно'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-
     final sections = [
       _SectionItem('Баланс', Icons.account_balance_wallet_outlined,
           () => context.push('/finance/balance', extra: storeId)),
