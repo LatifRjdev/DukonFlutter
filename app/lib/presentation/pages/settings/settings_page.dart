@@ -11,6 +11,8 @@ import '../../blocs/settings/settings_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../../core/network/dio_client.dart';
+import '../../../injection.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -187,7 +189,22 @@ class _SettingsPageState extends State<SettingsPage> {
                         _buildSectionCard([
                           _buildToggleTile(Icons.notifications_outlined, 'Уведомления',
                             value: _notificationsEnabled,
-                            onChanged: (v) => setState(() => _notificationsEnabled = v)),
+                            onChanged: (v) async {
+                              setState(() => _notificationsEnabled = v);
+                              try {
+                                await sl<DioClient>().put(
+                                  '/stores/${_getStoreId()}/notification-settings',
+                                  data: {'enabled': v},
+                                );
+                              } catch (e) {
+                                if (mounted) {
+                                  setState(() => _notificationsEnabled = !v);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Не удалось сохранить настройку')),
+                                  );
+                                }
+                              }
+                            }),
                           _buildDivider(),
                           BlocBuilder<SettingsBloc, SettingsState>(
                             builder: (context, state) {
