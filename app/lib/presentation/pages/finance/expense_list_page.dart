@@ -8,6 +8,8 @@ import '../../../domain/entities/expense.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/finance/expense_card.dart';
 
 
@@ -116,19 +118,19 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state is ExpenseError) {
-                  return Center(child: Text(state.message));
+                  return AppErrorWidget(
+                    message: state.message,
+                    onRetry: _loadExpenses,
+                  );
                 }
                 if (state is ExpenseLoaded) {
                   if (state.expenses.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.receipt_long, size: 64, color: AppColors.disabled),
-                          const SizedBox(height: AppConstants.spacingMd),
-                          const Text('Расходов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                        ],
-                      ),
+                    return AppEmptyState(
+                      icon: Icons.receipt_long_outlined,
+                      title: 'Расходов пока нет',
+                      subtitle: 'Добавьте первый расход, чтобы видеть финансовую картину',
+                      buttonText: 'Добавить расход',
+                      onButtonPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
                     );
                   }
                   final expenses = state.expenses;

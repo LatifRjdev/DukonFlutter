@@ -7,6 +7,7 @@ import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
 import '../../widgets/debt/debt_card.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class DebtsOverviewPage extends StatefulWidget {
   final String storeId;
@@ -37,7 +38,10 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
         if (state is DebtError) {
           return Scaffold(
             appBar: AppBar(title: const Text('Долги')),
-            body: Center(child: Text(state.message)),
+            body: AppErrorWidget(
+              message: state.message,
+              onRetry: () => context.read<DebtBloc>().add(DebtsOverviewRequested(storeId: widget.storeId)),
+            ),
           );
         }
         if (state is DebtsOverviewLoaded) {

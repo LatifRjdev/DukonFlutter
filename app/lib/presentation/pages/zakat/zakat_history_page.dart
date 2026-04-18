@@ -7,6 +7,8 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class ZakatHistoryPage extends StatefulWidget {
   final String storeId;
@@ -54,23 +56,17 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ZakatError) {
-                    return Center(child: Text(state.message));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: () => context.read<ZakatBloc>().add(ZakatPaymentsRequested(storeId: widget.storeId)),
+                    );
                   }
                   if (state is ZakatPaymentsLoaded) {
                     if (state.payments.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.nightlight_round, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Нет расчётов закята',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                            SizedBox(height: 4),
-                            Text('Рассчитайте закят в калькуляторе',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
-                          ],
-                        ),
+                      return const AppEmptyState(
+                        icon: Icons.nightlight_round,
+                        title: 'Нет расчётов закята',
+                        subtitle: 'Рассчитайте закят в калькуляторе, чтобы история появилась здесь',
                       );
                     }
 

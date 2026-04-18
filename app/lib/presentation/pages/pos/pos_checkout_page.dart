@@ -8,6 +8,7 @@ import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_empty_state.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
@@ -177,8 +178,8 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                                   style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              title: Text(customer.name),
-                              subtitle: customer.phone != null ? Text(customer.phone!) : null,
+                              title: Text(customer.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              subtitle: customer.phone != null ? Text(customer.phone!, maxLines: 1, overflow: TextOverflow.ellipsis) : null,
                               onTap: () {
                                 this.context.read<CartBloc>().add(CartCustomerSelected(
                                   customerId: customer.id,
@@ -371,19 +372,10 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 child: BlocBuilder<CartBloc, CartState>(
                   builder: (context, cartState) {
                     if (cartState.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.shopping_cart_outlined, size: 64, color: AppColors.disabled),
-                            const SizedBox(height: 16),
-                            const Text('Корзина пуста',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 8),
-                            const Text('Найдите товар или сканируйте штрихкод',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
-                          ],
-                        ),
+                      return const AppEmptyState(
+                        icon: Icons.shopping_cart_outlined,
+                        title: 'Корзина пуста',
+                        subtitle: 'Найдите товар через поиск или выберите из списка выше',
                       );
                     }
                     return _buildCartContent(cartState);
@@ -438,8 +430,8 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     )
                   : const Icon(Icons.inventory_2_outlined, size: 20, color: AppColors.disabled),
             ),
-            title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-            subtitle: Text('${product.quantity} шт', style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+            title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Text('${product.quantity} шт', style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
             trailing: Text(_formatPrice(product.sellPrice),
               style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary, fontSize: 14)),
           );

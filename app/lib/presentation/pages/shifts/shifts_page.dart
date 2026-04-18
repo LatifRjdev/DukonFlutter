@@ -8,6 +8,8 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class ShiftsPage extends StatefulWidget {
   final String storeId;
@@ -171,16 +173,11 @@ class _ShiftsPageState extends State<ShiftsPage> {
                           ],
                           if (state.currentShift == null && state.shifts.isEmpty)
                             const Padding(
-                              padding: EdgeInsets.only(top: 100),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.access_time, size: 64, color: AppColors.disabled),
-                                    SizedBox(height: 16),
-                                    Text('Нет смен',
-                                      style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                                  ],
-                                ),
+                              padding: EdgeInsets.only(top: 60),
+                              child: AppEmptyState(
+                                icon: Icons.access_time,
+                                title: 'Нет смен',
+                                subtitle: 'Откройте смену, чтобы начать приём платежей',
                               ),
                             ),
                         ],
@@ -188,7 +185,10 @@ class _ShiftsPageState extends State<ShiftsPage> {
                     );
                   }
                   if (state is ShiftError) {
-                    return Center(child: Text(state.message));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadData,
+                    );
                   }
                   return const SizedBox.shrink();
                 },

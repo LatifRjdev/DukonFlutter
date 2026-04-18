@@ -12,6 +12,8 @@ import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/pos/sales_filter_sheet.dart';
 
 class SalesHistoryPage extends StatefulWidget {
@@ -158,33 +160,17 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is SalesHistoryError) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.message,
-                            style: const TextStyle(color: AppColors.error),
-                            textAlign: TextAlign.center),
-                          const SizedBox(height: 16),
-                          TextButton(onPressed: _onRefresh, child: const Text('Повторить')),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _onRefresh,
                     );
                   }
                   if (state is SalesHistoryLoaded) {
                     if (state.sales.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Нет продаж', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                            SizedBox(height: 8),
-                            Text('История продаж появится здесь',
-                              style: TextStyle(color: AppColors.lightTextSecondary)),
-                          ],
-                        ),
+                      return const AppEmptyState(
+                        icon: Icons.receipt_long_outlined,
+                        title: 'Нет продаж',
+                        subtitle: 'История продаж появится здесь после первой транзакции',
                       );
                     }
 

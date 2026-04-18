@@ -5,8 +5,11 @@ import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/enums.dart';
+import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
@@ -219,54 +222,35 @@ class _ProductListPageState extends State<ProductListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ProductListError) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.error_outline, size: 64, color: AppColors.error),
-                          const SizedBox(height: 16),
-                          const Text('Ошибка загрузки',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 8),
-                          Text(state.message,
-                            style: const TextStyle(color: AppColors.lightTextSecondary),
-                            textAlign: TextAlign.center),
-                          const SizedBox(height: 24),
-                          ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadData,
                     );
                   }
                   if (state is ProductListLoaded) {
                     final filtered = _filterByStock(state.products);
                     if (filtered.isEmpty) {
+                      final isEmptyOverall = state.products.isEmpty;
                       return RefreshIndicator(
                         onRefresh: () async => _loadData(),
-                        child: SingleChildScrollView(
+                        child: ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.inventory_2_outlined, size: 64, color: AppColors.disabled),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    state.products.isEmpty ? 'Нет товаров' : 'Нет товаров по фильтру',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    state.products.isEmpty
-                                        ? 'Добавьте первый товар'
-                                        : 'Попробуйте изменить фильтр',
-                                    style: const TextStyle(color: AppColors.lightTextSecondary),
-                                  ),
-                                ],
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.6,
+                              child: AppEmptyState(
+                                icon: Icons.inventory_2_outlined,
+                                title: isEmptyOverall ? 'Нет товаров' : 'Нет товаров по фильтру',
+                                subtitle: isEmptyOverall
+                                    ? 'Добавьте первый товар в каталог'
+                                    : 'Попробуйте изменить фильтр или поисковый запрос',
+                                buttonText: isEmptyOverall ? 'Добавить товар' : null,
+                                onButtonPressed: isEmptyOverall
+                                    ? () => context.push(RouteNames.addProduct)
+                                    : null,
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       );
                     }

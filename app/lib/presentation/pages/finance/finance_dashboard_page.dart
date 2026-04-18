@@ -10,6 +10,7 @@ import '../../blocs/finance/finance_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../core/router/route_names.dart';
 
@@ -91,15 +92,9 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (state is FinanceError) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(state.message, style: const TextStyle(color: AppColors.error)),
-                            const SizedBox(height: 16),
-                            TextButton(onPressed: _loadFinance, child: const Text('Повторить')),
-                          ],
-                        ),
+                      return AppErrorWidget(
+                        message: state.message,
+                        onRetry: _loadFinance,
                       );
                     }
                     if (state is FinanceLoaded) {

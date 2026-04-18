@@ -9,6 +9,8 @@ import '../../blocs/payroll/payroll_state.dart';
 import '../../widgets/payroll/month_selector.dart';
 import '../../widgets/payroll/payroll_staff_card.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class PayrollPage extends StatefulWidget {
   final String storeId;
@@ -146,24 +148,16 @@ class _PayrollPageState extends State<PayrollPage> {
     }
 
     if (state is PayrollError) {
-      return Center(child: Text(state.message));
+      return AppErrorWidget(
+        message: state.message,
+        onRetry: _loadData,
+      );
     }
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: AppConstants.spacingXxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.account_balance_wallet_outlined, size: 64, color: AppColors.disabled),
-            const SizedBox(height: AppConstants.spacingMd),
-            const Text(
-              'Выберите месяц и нажмите "Рассчитать"',
-              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
-            ),
-          ],
-        ),
-      ),
+    return const AppEmptyState(
+      icon: Icons.account_balance_wallet_outlined,
+      title: 'Расчёт зарплаты',
+      subtitle: 'Выберите месяц и нажмите "Рассчитать" для расчёта зарплаты сотрудников',
     );
   }
 

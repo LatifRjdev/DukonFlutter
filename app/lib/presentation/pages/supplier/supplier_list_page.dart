@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/repositories/supplier_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
@@ -182,20 +184,20 @@ class _SupplierListPageState extends State<SupplierListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is SupplierListError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadSuppliers,
+                    );
                   }
                   if (state is SupplierListLoaded) {
                     final suppliers = state.suppliers;
                     if (suppliers.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.local_shipping_outlined, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Поставщиков пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.local_shipping_outlined,
+                        title: 'Поставщиков пока нет',
+                        subtitle: 'Добавьте первого поставщика, чтобы отслеживать поставки и долги',
+                        buttonText: 'Добавить поставщика',
+                        onButtonPressed: _showAddSupplierDialog,
                       );
                     }
 
@@ -256,11 +258,15 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(supplier.name,
-                                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis),
                                         if (supplier.phone != null && supplier.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(supplier.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
                                         ],
                                       ],
                                     ),

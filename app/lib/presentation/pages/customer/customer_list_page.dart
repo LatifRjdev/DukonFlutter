@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/repositories/customer_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
@@ -203,20 +205,20 @@ class _CustomerListPageState extends State<CustomerListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is CustomerListError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadCustomers,
+                    );
                   }
                   if (state is CustomerListLoaded) {
                     final customers = state.customers;
                     if (customers.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Клиентов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.people_outline,
+                        title: 'Клиентов пока нет',
+                        subtitle: 'Добавьте первого клиента, чтобы отслеживать продажи и долги',
+                        buttonText: 'Добавить клиента',
+                        onButtonPressed: _showAddCustomerDialog,
                       );
                     }
 

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff/staff_state.dart';
@@ -87,20 +89,19 @@ class _StaffListPageState extends State<StaffListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is StaffError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadStaff,
+                    );
                   }
                   if (state is StaffLoaded) {
                     if (state.staff.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Сотрудников пока нет',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.people_outline,
+                        title: 'Сотрудников пока нет',
+                        subtitle: 'Добавьте сотрудников для учёта смен и зарплаты',
+                        buttonText: 'Добавить сотрудника',
+                        onButtonPressed: () => context.push('/staff/add', extra: widget.storeId),
                       );
                     }
                     return RefreshIndicator(
@@ -138,8 +139,12 @@ class _StaffListPageState extends State<StaffListPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(staff.name,
-                                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                            Flexible(
+                                              child: Text(staff.name,
+                                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis),
+                                            ),
                                             const SizedBox(width: 8),
                                             Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

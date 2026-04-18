@@ -16,6 +16,7 @@ import '../../widgets/common/app_card.dart';
 import '../../widgets/common/gradient_header.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   final ValueChanged<int>? onTabChange;
@@ -103,23 +104,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   }
 
                   if (state is DashboardError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-                          const SizedBox(height: 16),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(state.message, textAlign: TextAlign.center),
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _loadDashboard,
-                            child: const Text('Повторить'),
-                          ),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadDashboard,
                     );
                   }
 
