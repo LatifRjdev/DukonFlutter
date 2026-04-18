@@ -24,8 +24,9 @@ class GradientHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     return Container(
-      decoration: const BoxDecoration(gradient: AppGradients.primary),
+      decoration: BoxDecoration(gradient: AppGradients.primaryFor(brightness)),
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 16,
         left: 20,

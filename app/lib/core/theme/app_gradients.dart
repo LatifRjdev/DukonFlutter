@@ -19,4 +19,13 @@ class AppGradients {
   static const LinearGradient horizontal = LinearGradient(
     colors: [AppColors.gradientStart, AppColors.gradientEnd],
   );
+
+  static const LinearGradient primaryDark = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF3D4FA8), Color(0xFF4A2D8A)],
+  );
+
+  static LinearGradient primaryFor(Brightness brightness) =>
+      brightness == Brightness.dark ? primaryDark : primary;
 }
