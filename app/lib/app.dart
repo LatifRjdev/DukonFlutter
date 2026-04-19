@@ -19,6 +19,7 @@ import 'presentation/blocs/expense/expense_bloc.dart';
 import 'presentation/blocs/debt/debt_bloc.dart';
 import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
+import 'presentation/blocs/settings/settings_event.dart';
 import 'presentation/blocs/settings/settings_state.dart';
 import 'presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'presentation/blocs/customer/customer_list_bloc.dart';
@@ -51,7 +52,9 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<ExpenseBloc>()),
         BlocProvider(create: (_) => sl<DebtBloc>()),
         BlocProvider(create: (_) => sl<ZakatBloc>()),
-        BlocProvider(create: (_) => sl<SettingsBloc>()),
+        BlocProvider(
+          create: (_) => sl<SettingsBloc>()..add(SettingsProfileRequested()),
+        ),
         BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
         BlocProvider(create: (_) => sl<CustomerListBloc>()),
         BlocProvider(create: (_) => sl<SupplierListBloc>()),
