@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
@@ -128,7 +129,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddCustomerDialog,
@@ -159,18 +160,18 @@ class _CustomerListPageState extends State<CustomerListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.lightSurface,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) => _loadCustomers(),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Поиск клиента',
-                    hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
+                    hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
                 ),
               ),
@@ -251,7 +252,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.lightSurface,
+                                color: context.surface,
                                 borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Row(
@@ -298,12 +299,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         if (customer.phone != null && customer.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(customer.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                            style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                         ],
                                         if (customer.totalSpent > 0) ...[
                                           const SizedBox(height: 2),
                                           Text('Покупок: ${_formatPrice(customer.totalSpent)}',
-                                            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                            style: TextStyle(fontSize: 11, color: context.textSecondary)),
                                         ],
                                       ],
                                     ),
@@ -322,7 +323,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     ],
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                 ],
                               ),
                             ),
@@ -348,15 +349,15 @@ class _CustomerListPageState extends State<CustomerListPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.lightSurface,
+          color: isSelected ? AppColors.primary : context.surface,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
+          border: isSelected ? null : Border.all(color: context.border),
         ),
         child: Text(label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
+            color: isSelected ? AppColors.onPrimary : context.textSecondary,
           )),
       ),
     );

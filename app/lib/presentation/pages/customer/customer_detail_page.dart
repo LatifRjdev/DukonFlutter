@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/router/route_names.dart';
 import '../../../domain/entities/customer.dart';
@@ -76,15 +77,15 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         Text(customer.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                         if (customer.phone != null) ...[
                           const SizedBox(height: 4),
-                          Text(customer.phone!, style: const TextStyle(color: AppColors.lightTextSecondary)),
+                          Text(customer.phone!, style: TextStyle(color: context.textSecondary)),
                         ],
                         if (customer.email != null) ...[
                           const SizedBox(height: 2),
-                          Text(customer.email!, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
+                          Text(customer.email!, style: TextStyle(color: context.textSecondary, fontSize: 13)),
                         ],
                         if (customer.notes != null && customer.notes!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
-                          Text(customer.notes!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
+                          Text(customer.notes!, style: TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
                         ],
                       ],
                     ),
@@ -127,7 +128,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       _ActionButton(
                         icon: Icons.edit_outlined,
                         label: 'Изменить',
-                        color: AppColors.lightTextSecondary,
+                        color: context.textSecondary,
                         onTap: () => _showEditCustomerDialog(customer),
                       ),
                     ],
@@ -140,7 +141,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Потрачено', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                              Text('Потрачено', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.totalSpent.toStringAsFixed(0)} TJS', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.success)),
                             ],
@@ -152,9 +153,9 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Долг', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                              Text('Долг', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
-                              Text('${customer.debt.toStringAsFixed(0)} TJS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: customer.debt > 0 ? AppColors.error : AppColors.lightTextPrimary)),
+                              Text('${customer.debt.toStringAsFixed(0)} TJS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: customer.debt > 0 ? AppColors.error : context.textPrimary)),
                             ],
                           ),
                         ),
@@ -164,7 +165,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              const Text('Баллы', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                              Text('Баллы', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.loyaltyPoints}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.primary)),
                             ],
@@ -191,10 +192,10 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                   const Text('Последние покупки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: AppConstants.spacingSm),
                   if (recentSales.isEmpty)
-                    const Center(
+                    Center(
                       child: Padding(
-                        padding: EdgeInsets.all(AppConstants.spacingXl),
-                        child: Text('Нет покупок', style: TextStyle(color: AppColors.lightTextSecondary)),
+                        padding: const EdgeInsets.all(AppConstants.spacingXl),
+                        child: Text('Нет покупок', style: TextStyle(color: context.textSecondary)),
                       ),
                     )
                   else
@@ -210,7 +211,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                                 Text('Чек #${sale['receiptNo'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
                                   _formatDate(sale['createdAt'] as String? ?? ''),
-                                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                                 ),
                               ],
                             ),
@@ -220,7 +221,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                                 Text('${((sale['total'] as num?) ?? 0).toStringAsFixed(2)} TJS', style: const TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
                                   _paymentLabel(sale['paymentType'] as String? ?? ''),
-                                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                                 ),
                               ],
                             ),
