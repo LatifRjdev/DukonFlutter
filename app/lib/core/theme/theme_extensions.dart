@@ -48,4 +48,47 @@ extension ThemeColors on BuildContext {
 
   /// Semantic info.
   Color get info => _isDark ? AppColors.infoDark : AppColors.info;
+
+  /// Shadow color for elevation. Soft black in light, higher-opacity black in dark.
+  Color get shadowColor => _isDark
+      ? Colors.black.withValues(alpha: 0.4)
+      : Colors.black.withValues(alpha: 0.08);
+
+  /// Foreground on primary-colored surfaces (buttons, filled chips).
+  /// White in both themes — brand primary is saturated enough.
+  Color get onPrimary => _theme.colorScheme.onPrimary;
+
+  /// Foreground on success-colored surfaces (small check icons, filled success chips).
+  Color get onSuccess => Colors.white;
+
+  /// Foreground on danger/error-colored surfaces.
+  Color get onDanger => Colors.white;
+
+  /// Foreground on warning-colored surfaces.
+  /// Dark text on amber/yellow is the accessibility default (WCAG AA).
+  Color get onWarning => Colors.black;
+
+  /// Foreground on info-colored surfaces.
+  Color get onInfo => Colors.white;
+
+  /// Tinted success background (for status cards, pills).
+  /// Light pastel in light, low-alpha dark green in dark.
+  Color get successBg => _isDark
+      ? AppColors.successDark.withValues(alpha: 0.15)
+      : AppColors.successBg;
+
+  /// Tinted danger/error background.
+  Color get dangerBg => _isDark
+      ? AppColors.errorDark.withValues(alpha: 0.15)
+      : AppColors.errorBg;
+
+  /// Tinted warning background.
+  Color get warningBg => _isDark
+      ? AppColors.warningDark.withValues(alpha: 0.15)
+      : AppColors.warningBg;
+
+  /// Tinted info background.
+  Color get infoBg => _isDark
+      ? AppColors.infoDark.withValues(alpha: 0.15)
+      : AppColors.infoBg;
 }

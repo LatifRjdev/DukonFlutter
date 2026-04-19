@@ -56,4 +56,274 @@ void main() {
       expect(t, AppColors.lightTextPrimary);
     });
   });
+
+  group('shadowColor', () {
+    testWidgets('should have low alpha in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.shadowColor; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.08, 0.01));
+    });
+
+    testWidgets('should have higher alpha in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.shadowColor; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.4, 0.01));
+    });
+
+    testWidgets('should differ between light and dark', (tester) async {
+      late Color light;
+      late Color dark;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { light = ctx.shadowColor; return const SizedBox(); }),
+      ));
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { dark = ctx.shadowColor; return const SizedBox(); }),
+      ));
+      expect(light, isNot(dark));
+    });
+  });
+
+  group('onPrimary', () {
+    testWidgets('should equal Colors.white in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.onPrimary; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+
+    testWidgets('should equal Colors.white in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.onPrimary; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+  });
+
+  group('onSuccess', () {
+    testWidgets('should equal Colors.white in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.onSuccess; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+
+    testWidgets('should equal Colors.white in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.onSuccess; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+  });
+
+  group('onDanger', () {
+    testWidgets('should equal Colors.white in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.onDanger; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+
+    testWidgets('should equal Colors.white in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.onDanger; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+  });
+
+  group('onWarning', () {
+    testWidgets('should equal Colors.black in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.onWarning; return const SizedBox(); }),
+      ));
+      expect(c, Colors.black);
+    });
+
+    testWidgets('should equal Colors.black in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.onWarning; return const SizedBox(); }),
+      ));
+      expect(c, Colors.black);
+    });
+  });
+
+  group('onInfo', () {
+    testWidgets('should equal Colors.white in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.onInfo; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+
+    testWidgets('should equal Colors.white in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.onInfo; return const SizedBox(); }),
+      ));
+      expect(c, Colors.white);
+    });
+  });
+
+  group('successBg', () {
+    testWidgets('should return AppColors.successBg in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.successBg; return const SizedBox(); }),
+      ));
+      expect(c, AppColors.successBg);
+    });
+
+    testWidgets('should return low-alpha dark variant in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.successBg; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.15, 0.01));
+    });
+
+    testWidgets('should differ between light and dark', (tester) async {
+      late Color light;
+      late Color dark;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { light = ctx.successBg; return const SizedBox(); }),
+      ));
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { dark = ctx.successBg; return const SizedBox(); }),
+      ));
+      expect(light, isNot(dark));
+    });
+  });
+
+  group('dangerBg', () {
+    testWidgets('should return AppColors.errorBg in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.dangerBg; return const SizedBox(); }),
+      ));
+      expect(c, AppColors.errorBg);
+    });
+
+    testWidgets('should return low-alpha dark variant in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.dangerBg; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.15, 0.01));
+    });
+
+    testWidgets('should differ between light and dark', (tester) async {
+      late Color light;
+      late Color dark;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { light = ctx.dangerBg; return const SizedBox(); }),
+      ));
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { dark = ctx.dangerBg; return const SizedBox(); }),
+      ));
+      expect(light, isNot(dark));
+    });
+  });
+
+  group('warningBg', () {
+    testWidgets('should return AppColors.warningBg in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.warningBg; return const SizedBox(); }),
+      ));
+      expect(c, AppColors.warningBg);
+    });
+
+    testWidgets('should return low-alpha dark variant in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.warningBg; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.15, 0.01));
+    });
+
+    testWidgets('should differ between light and dark', (tester) async {
+      late Color light;
+      late Color dark;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { light = ctx.warningBg; return const SizedBox(); }),
+      ));
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { dark = ctx.warningBg; return const SizedBox(); }),
+      ));
+      expect(light, isNot(dark));
+    });
+  });
+
+  group('infoBg', () {
+    testWidgets('should return AppColors.infoBg in light theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { c = ctx.infoBg; return const SizedBox(); }),
+      ));
+      expect(c, AppColors.infoBg);
+    });
+
+    testWidgets('should return low-alpha dark variant in dark theme', (tester) async {
+      late Color c;
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { c = ctx.infoBg; return const SizedBox(); }),
+      ));
+      expect(c.a, closeTo(0.15, 0.01));
+    });
+
+    testWidgets('should differ between light and dark', (tester) async {
+      late Color light;
+      late Color dark;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { light = ctx.infoBg; return const SizedBox(); }),
+      ));
+      await tester.pumpWidget(_wrap(
+        AppTheme.dark,
+        Builder(builder: (ctx) { dark = ctx.infoBg; return const SizedBox(); }),
+      ));
+      expect(light, isNot(dark));
+    });
+  });
 }
