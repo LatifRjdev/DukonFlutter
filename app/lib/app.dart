@@ -19,6 +19,7 @@ import 'presentation/blocs/expense/expense_bloc.dart';
 import 'presentation/blocs/debt/debt_bloc.dart';
 import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
+import 'presentation/blocs/settings/settings_state.dart';
 import 'presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'presentation/blocs/customer/customer_list_bloc.dart';
 import 'presentation/blocs/supplier/supplier_list_bloc.dart';
@@ -28,7 +29,6 @@ import 'presentation/blocs/shift/shift_bloc.dart';
 import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
-import 'presentation/blocs/settings/settings_state.dart';
 
 class DokonProApp extends StatelessWidget {
   const DokonProApp({super.key});
@@ -64,15 +64,15 @@ class DokonProApp extends StatelessWidget {
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         buildWhen: (prev, curr) {
-          // Only rebuild MaterialApp when theme actually changes
-          final prevTheme = prev is SettingsLoaded ? prev.themeMode : ThemeMode.system;
-          final currTheme = curr is SettingsLoaded ? curr.themeMode : ThemeMode.system;
+          final prevTheme =
+              prev is SettingsLoaded ? prev.themeMode : ThemeMode.system;
+          final currTheme =
+              curr is SettingsLoaded ? curr.themeMode : ThemeMode.system;
           return prevTheme != currTheme;
         },
-        builder: (context, settingsState) {
-          final themeMode = settingsState is SettingsLoaded
-              ? settingsState.themeMode
-              : ThemeMode.system;
+        builder: (context, state) {
+          final themeMode =
+              state is SettingsLoaded ? state.themeMode : ThemeMode.system;
           return MaterialApp.router(
             title: 'DukonPro',
             debugShowCheckedModeBanner: false,
