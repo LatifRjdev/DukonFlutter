@@ -92,7 +92,9 @@ class AppRouter {
     RouteNames.createPassword,
   };
 
-  static GoRouter get router => GoRouter(
+  static final GoRouter router = _buildRouter();
+
+  static GoRouter _buildRouter() => GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: RouteNames.splash,
     debugLogDiagnostics: true,
