@@ -67,11 +67,13 @@ class DokonProApp extends StatelessWidget {
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         buildWhen: (prev, curr) {
-          final prevTheme =
-              prev is SettingsLoaded ? prev.themeMode : ThemeMode.system;
-          final currTheme =
-              curr is SettingsLoaded ? curr.themeMode : ThemeMode.system;
-          return prevTheme != currTheme;
+          // Only react to SettingsLoaded state transitions with a real
+          // themeMode change. Transient states (Loading, ActionSuccess,
+          // Error) must not trigger a rebuild — that was causing the
+          // MaterialApp.router to reset navigation back to splash.
+          if (curr is! SettingsLoaded) return false;
+          final prevTheme = prev is SettingsLoaded ? prev.themeMode : null;
+          return prevTheme != curr.themeMode;
         },
         builder: (context, state) {
           final themeMode =

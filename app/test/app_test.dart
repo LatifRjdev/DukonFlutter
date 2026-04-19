@@ -20,11 +20,9 @@ Widget _underTest(SettingsBloc bloc) {
     value: bloc,
     child: BlocBuilder<SettingsBloc, SettingsState>(
       buildWhen: (prev, curr) {
-        final prevTheme =
-            prev is SettingsLoaded ? prev.themeMode : ThemeMode.system;
-        final currTheme =
-            curr is SettingsLoaded ? curr.themeMode : ThemeMode.system;
-        return prevTheme != currTheme;
+        if (curr is! SettingsLoaded) return false;
+        final prevTheme = prev is SettingsLoaded ? prev.themeMode : null;
+        return prevTheme != curr.themeMode;
       },
       builder: (context, state) {
         final themeMode =
@@ -94,6 +92,30 @@ void main() {
       await tester.pumpWidget(_underTest(bloc));
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.themeMode, ThemeMode.light);
+    });
+
+    // Regression: transient states (Loading, ActionSuccess) between two
+    // SettingsLoaded values must not rebuild MaterialApp. Previously this
+    // caused navigation to reset to splash on every theme toggle.
+    testWidgets('keeps previous theme across transient SettingsActionSuccess',
+        (tester) async {
+      final loaded = SettingsLoaded(_dummyUser(), themeMode: ThemeMode.dark);
+      when(() => bloc.state).thenReturn(loaded);
+      whenListen(
+        bloc,
+        Stream<SettingsState>.fromIterable([
+          loaded,
+          const SettingsActionSuccess('Профиль обновлён'),
+          loaded,
+        ]),
+        initialState: loaded,
+      );
+
+      await tester.pumpWidget(_underTest(bloc));
+      await tester.pump();
+      await tester.pump();
+      final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+      expect(app.themeMode, ThemeMode.dark);
     });
   });
 }
