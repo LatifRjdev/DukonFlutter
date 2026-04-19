@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
@@ -79,13 +79,13 @@ class _AddExpensePageState extends State<AddExpensePage> {
         listener: (context, state) {
           if (state is ExpenseActionSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
+              SnackBar(content: Text(state.message), backgroundColor: context.success),
             );
             context.pop();
           }
           if (state is ExpenseError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+              SnackBar(content: Text(state.message), backgroundColor: context.danger),
             );
           }
         },
@@ -101,7 +101,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.lightBorder),
+                    border: Border.all(color: context.border),
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -148,12 +148,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   child: Container(
                     padding: const EdgeInsets.all(AppConstants.spacingMd),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.lightBorder),
+                      border: Border.all(color: context.border),
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.lightTextSecondary, size: 20),
+                        Icon(Icons.calendar_today, color: context.textSecondary, size: 20),
                         const SizedBox(width: AppConstants.spacingSm),
                         Text(
                           '${_date.day.toString().padLeft(2, '0')}.${_date.month.toString().padLeft(2, '0')}.${_date.year}',

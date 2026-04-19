@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../domain/entities/expense.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
@@ -100,9 +101,9 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   },
                   child: Chip(
                     label: Text(cat.$2),
-                    backgroundColor: isSelected ? AppColors.primary : AppColors.lightSurface,
+                    backgroundColor: isSelected ? AppColors.primary : context.surface,
                     labelStyle: TextStyle(
-                      color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
+                      color: isSelected ? AppColors.onPrimary : context.textSecondary,
                       fontSize: 13,
                     ),
                     side: BorderSide.none,
@@ -152,7 +153,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.error.withValues(alpha: 0.1),
+                            color: context.danger.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: Row(
@@ -160,19 +161,19 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                             children: [
                               Column(
                                 children: [
-                                  const Text('Сегодня', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                  Text('Сегодня', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(todayAmount)}',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
                                 ],
                               ),
-                              Container(width: 1, height: 40, color: AppColors.lightBorder),
+                              Container(width: 1, height: 40, color: context.border),
                               Column(
                                 children: [
-                                  const Text('За период', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                  Text('За период', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(totalAmount)}',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
                                 ],
                               ),
                             ],
@@ -184,7 +185,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8, top: 8),
                             child: Text(dateKey,
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary)),
                           ),
                           for (final expense in grouped[dateKey]!) ...[
                             ExpenseCard(

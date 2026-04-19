@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
@@ -175,11 +176,11 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Курсы валют'),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: context.surface,
+        foregroundColor: context.textPrimary,
         elevation: 0,
       ),
       body: _loading
@@ -198,10 +199,10 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          Icon(Icons.error_outline, size: 48, color: context.danger),
           const SizedBox(height: AppConstants.spacingMd),
           Text(_error!,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: context.textSecondary),
               textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
           TextButton(onPressed: _loadRates, child: const Text('Повторить')),
@@ -217,9 +218,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'НБТ — Национальный банк Таджикистана',
-            style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+            style: TextStyle(fontSize: 12, color: context.textSecondary),
           ),
           const SizedBox(height: AppConstants.spacingMd),
           ..._codes.map((code) => _buildCurrencyCard(code)),
@@ -257,17 +258,17 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                         children: [
                           Text(
                             rate.code,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.lightTextPrimary,
+                              color: context.textPrimary,
                             ),
                           ),
                           Text(
                             rate.label,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.lightTextSecondary,
+                              color: context.textSecondary,
                             ),
                           ),
                         ],
@@ -286,9 +287,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                         ),
                         Text(
                           '1 ${rate.code}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: context.textSecondary,
                           ),
                         ),
                       ],
@@ -297,9 +298,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                     AnimatedRotation(
                       turns: isExpanded ? 0.5 : 0,
                       duration: const Duration(milliseconds: 200),
-                      child: const Icon(
+                      child: Icon(
                         Icons.keyboard_arrow_down,
-                        color: AppColors.lightTextSecondary,
+                        color: context.textSecondary,
                       ),
                     ),
                   ],
@@ -307,7 +308,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
               ),
             ),
             if (isExpanded) ...[
-              const Divider(height: 1, color: AppColors.lightBorder),
+              Divider(height: 1, color: context.border),
               _buildHistoryChart(code),
             ],
           ],
@@ -327,12 +328,12 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
     }
 
     if (points == null || points.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(24),
+      return Padding(
+        padding: const EdgeInsets.all(24),
         child: Center(
           child: Text(
             'Нет данных за 30 дней',
-            style: TextStyle(color: AppColors.lightTextSecondary),
+            style: TextStyle(color: context.textSecondary),
           ),
         ),
       );
@@ -369,10 +370,10 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         children: [
           Text(
             'Динамика за 30 дней',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.lightTextPrimary,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 10),
@@ -384,7 +385,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                 maxY: maxY,
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (_) => AppColors.lightTextPrimary,
+                    getTooltipColor: (_) => context.textPrimary,
                     getTooltipItems: (spots) => spots
                         .map((s) => LineTooltipItem(
                               _formatRate(s.y),
@@ -410,9 +411,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                           padding: const EdgeInsets.only(top: 6),
                           child: Text(
                             fmtDate(points[idx].date),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 9,
-                              color: AppColors.lightTextSecondary,
+                              color: context.textSecondary,
                             ),
                           ),
                         );
@@ -430,8 +431,8 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: (maxY - minY) / 4,
-                  getDrawingHorizontalLine: (_) => const FlLine(
-                      color: AppColors.lightBorder, strokeWidth: 1),
+                  getDrawingHorizontalLine: (_) => FlLine(
+                      color: context.border, strokeWidth: 1),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -461,12 +462,12 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Конвертер',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -509,10 +510,10 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Результат (в TJS):',
             style: TextStyle(
-                fontSize: 13, color: AppColors.lightTextSecondary),
+                fontSize: 13, color: context.textSecondary),
           ),
           const SizedBox(height: 8),
           Container(
@@ -534,7 +535,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
           ),
           if (_rates.isNotEmpty) ...[
             const SizedBox(height: 12),
-            const Divider(color: AppColors.lightBorder),
+            Divider(color: context.border),
             const SizedBox(height: 8),
             ...(_codes
                 .where((c) => c != _selectedCode)
@@ -558,10 +559,10 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                     ),
                     Text(
                       _formatRate(converted),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextPrimary,
+                        color: context.textPrimary,
                       ),
                     ),
                   ],

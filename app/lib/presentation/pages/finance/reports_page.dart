@@ -9,6 +9,7 @@ import 'package:excel/excel.dart' as xl;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
@@ -454,7 +455,7 @@ class _ReportsPageState extends State<ReportsPage>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: context.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -730,17 +731,17 @@ class _ReportsPageState extends State<ReportsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Отчёты',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             fontFamily: 'Inter',
-            color: AppColors.lightTextPrimary,
+            color: context.textPrimary,
           ),
         ),
         bottom: TabBar(
@@ -748,7 +749,7 @@ class _ReportsPageState extends State<ReportsPage>
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.lightTextSecondary,
+          unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
           labelStyle: const TextStyle(
             fontWeight: FontWeight.w600,
@@ -823,15 +824,15 @@ class _ReportsPageState extends State<ReportsPage>
 
   Widget _buildPeriodBar() {
     return Container(
-      color: AppColors.lightSurface,
+      color: context.surfaceMuted,
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingMd,
         vertical: AppConstants.spacingSm,
       ),
       child: Row(
         children: [
-          const Icon(Icons.calendar_today_outlined,
-              size: 16, color: AppColors.lightTextSecondary),
+          Icon(Icons.calendar_today_outlined,
+              size: 16, color: context.textSecondary),
           const SizedBox(width: 8),
           GestureDetector(
             onTap: _pickFrom,
@@ -845,10 +846,10 @@ class _ReportsPageState extends State<ReportsPage>
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Text('—',
-                style: TextStyle(color: AppColors.lightTextSecondary)),
+                style: TextStyle(color: context.textSecondary)),
           ),
           GestureDetector(
             onTap: _pickTo,
@@ -864,8 +865,8 @@ class _ReportsPageState extends State<ReportsPage>
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(Icons.refresh_outlined,
-                size: 18, color: AppColors.lightTextSecondary),
+            icon: Icon(Icons.refresh_outlined,
+                size: 18, color: context.textSecondary),
             onPressed: _loadCurrentTab,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
@@ -898,11 +899,11 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, color: AppColors.error, size: 40),
+          Icon(Icons.error_outline, color: context.danger, size: 40),
           const SizedBox(height: 12),
           Text(message,
-              style: const TextStyle(
-                  color: AppColors.lightTextSecondary,
+              style: TextStyle(
+                  color: context.textSecondary,
                   fontFamily: 'Inter'),
               textAlign: TextAlign.center),
           const SizedBox(height: 16),
@@ -917,16 +918,16 @@ class _EmptyView extends StatelessWidget {
   const _EmptyView();
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.bar_chart_outlined,
-              size: 48, color: AppColors.lightTextHint),
-          SizedBox(height: 12),
+              size: 48, color: context.textMuted),
+          const SizedBox(height: 12),
           Text('Нет данных',
               style: TextStyle(
-                  color: AppColors.lightTextSecondary,
+                  color: context.textSecondary,
                   fontFamily: 'Inter',
                   fontSize: 16)),
         ],
@@ -944,7 +945,7 @@ class _SectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -952,11 +953,11 @@ class _SectionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Inter',
-                  color: AppColors.lightTextPrimary)),
+                  color: context.textPrimary)),
           const SizedBox(height: AppConstants.spacingMd),
           child,
         ],
@@ -1025,11 +1026,11 @@ class _ExportTile extends StatelessWidget {
       title: Text(label,
           style: const TextStyle(
               fontFamily: 'Inter', fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.chevron_right_outlined,
-          color: AppColors.lightTextSecondary),
+      trailing: Icon(Icons.chevron_right_outlined,
+          color: context.textSecondary),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          side: const BorderSide(color: AppColors.lightBorder)),
+          side: BorderSide(color: context.border)),
     );
   }
 }
@@ -1069,16 +1070,16 @@ class _SalesTab extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              headingTextStyle: const TextStyle(
+              headingTextStyle: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextSecondary,
+                color: context.textSecondary,
               ),
-              dataTextStyle: const TextStyle(
+              dataTextStyle: TextStyle(
                 fontSize: 13,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextPrimary,
+                color: context.textPrimary,
               ),
               columnSpacing: 20,
               columns: const [
@@ -1118,8 +1119,8 @@ class _SalesTab extends StatelessWidget {
                       getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                           BarTooltipItem(
                         fmtPrice(rod.toY),
-                        const TextStyle(
-                            color: Colors.white,
+                        TextStyle(
+                            color: context.onPrimary,
                             fontFamily: 'Inter',
                             fontSize: 12),
                       ),
@@ -1142,10 +1143,10 @@ class _SalesTab extends StatelessWidget {
                               name.length > 8
                                   ? '${name.substring(0, 7)}…'
                                   : name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 10,
                                   fontFamily: 'Inter',
-                                  color: AppColors.lightTextSecondary),
+                                  color: context.textSecondary),
                             ),
                           );
                         },
@@ -1290,10 +1291,10 @@ class _ExpensesTab extends StatelessWidget {
                           child: Text(
                             '${pct.toStringAsFixed(1)}%',
                             textAlign: TextAlign.right,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 12,
-                                color: AppColors.lightTextSecondary),
+                                color: context.textSecondary),
                           ),
                         ),
                       ],
@@ -1354,7 +1355,7 @@ class _ProfitTab extends StatelessWidget {
               child: _KpiCard(
                 label: 'Расходы',
                 value: fmtPrice(d.totalExpenses),
-                color: AppColors.error,
+                color: context.danger,
               ),
             ),
           ],
@@ -1366,7 +1367,7 @@ class _ProfitTab extends StatelessWidget {
               child: _KpiCard(
                 label: 'Чистая прибыль',
                 value: fmtPrice(d.netProfit),
-                color: AppColors.success,
+                color: context.success,
               ),
             ),
             const SizedBox(width: AppConstants.spacingSm),
@@ -1374,7 +1375,7 @@ class _ProfitTab extends StatelessWidget {
               child: _KpiCard(
                 label: 'Маржа',
                 value: '${d.margin.toStringAsFixed(1)}%',
-                color: AppColors.warning,
+                color: context.warning,
               ),
             ),
           ],
@@ -1408,10 +1409,10 @@ class _ProfitTab extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               d.monthly[idx].month,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 10,
                                   fontFamily: 'Inter',
-                                  color: AppColors.lightTextSecondary),
+                                  color: context.textSecondary),
                             ),
                           );
                         },
@@ -1440,7 +1441,7 @@ class _ProfitTab extends StatelessWidget {
                         ),
                         BarChartRodData(
                           toY: d.monthly[i].expenses,
-                          color: AppColors.error,
+                          color: context.danger,
                           width: 14,
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -1456,7 +1457,7 @@ class _ProfitTab extends StatelessWidget {
             children: [
               _LegendDot(color: AppColors.primary, label: 'Доход'),
               const SizedBox(width: AppConstants.spacingMd),
-              _LegendDot(color: AppColors.error, label: 'Расходы'),
+              _LegendDot(color: context.danger, label: 'Расходы'),
             ],
           ),
         ],
@@ -1482,10 +1483,10 @@ class _LegendDot extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 4),
         Text(label,
-            style: const TextStyle(
+            style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 12,
-                color: AppColors.lightTextSecondary)),
+                color: context.textSecondary)),
       ],
     );
   }
@@ -1593,10 +1594,10 @@ class _ProductsTab extends StatelessWidget {
                                     fontWeight: FontWeight.w500)),
                           ),
                           Text('${p.qty} шт',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 12,
-                                  color: AppColors.lightTextSecondary)),
+                                  color: context.textSecondary)),
                           const SizedBox(width: 8),
                           Text(fmtPrice(p.revenue),
                               style: const TextStyle(
@@ -1633,10 +1634,10 @@ class _ProductsTab extends StatelessWidget {
                                   style: const TextStyle(
                                       fontFamily: 'Inter'))),
                           Text('${p.qty} шт',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 12,
-                                  color: AppColors.lightTextSecondary)),
+                                  color: context.textSecondary)),
                         ],
                       ),
                     ),
@@ -1696,8 +1697,8 @@ class _StaffTab extends StatelessWidget {
                     getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                         BarTooltipItem(
                       '${rod.toY.toInt()} продаж',
-                      const TextStyle(
-                          color: Colors.white,
+                      TextStyle(
+                          color: context.onPrimary,
                           fontFamily: 'Inter',
                           fontSize: 12),
                     ),
@@ -1720,10 +1721,10 @@ class _StaffTab extends StatelessWidget {
                             name.length > 8
                                 ? '${name.substring(0, 7)}…'
                                 : name,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 10,
                                 fontFamily: 'Inter',
-                                color: AppColors.lightTextSecondary),
+                                color: context.textSecondary),
                           ),
                         );
                       },
@@ -1764,16 +1765,16 @@ class _StaffTab extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              headingTextStyle: const TextStyle(
+              headingTextStyle: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextSecondary,
+                color: context.textSecondary,
               ),
-              dataTextStyle: const TextStyle(
+              dataTextStyle: TextStyle(
                 fontSize: 13,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextPrimary,
+                color: context.textPrimary,
               ),
               columnSpacing: 20,
               columns: const [

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
 import '../../blocs/investment/investment_event.dart';
@@ -107,7 +107,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(state.message),
-                        backgroundColor: AppColors.success),
+                        backgroundColor: context.success),
                   );
                   context.pop(true);
                 }
@@ -115,7 +115,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(state.message),
-                        backgroundColor: AppColors.error),
+                        backgroundColor: context.danger),
                   );
                 }
               },
@@ -191,14 +191,14 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                         child: Container(
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.lightBorder),
+                            border: Border.all(color: context.border),
                             borderRadius:
                                 BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.calendar_today,
-                                  color: AppColors.lightTextSecondary,
+                              Icon(Icons.calendar_today,
+                                  color: context.textSecondary,
                                   size: 20),
                               const SizedBox(width: AppConstants.spacingSm),
                               Text(_formatDate(_startDate),
@@ -217,14 +217,14 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                         child: Container(
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.lightBorder),
+                            border: Border.all(color: context.border),
                             borderRadius:
                                 BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.calendar_today,
-                                  color: AppColors.lightTextSecondary,
+                              Icon(Icons.calendar_today,
+                                  color: context.textSecondary,
                                   size: 20),
                               const SizedBox(width: AppConstants.spacingSm),
                               Text(
@@ -235,7 +235,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                                     fontSize: 16,
                                     color: _endDate != null
                                         ? null
-                                        : AppColors.lightTextSecondary),
+                                        : context.textSecondary),
                               ),
                             ],
                           ),

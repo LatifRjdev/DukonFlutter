@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
@@ -166,11 +167,11 @@ class _BalancePageState extends State<BalancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Баланс'),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: context.surface,
+        foregroundColor: context.textPrimary,
         elevation: 0,
       ),
       body: _loading
@@ -191,9 +192,9 @@ class _BalancePageState extends State<BalancePage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          Icon(Icons.error_outline, size: 48, color: context.danger),
           const SizedBox(height: AppConstants.spacingMd),
-          Text(_error!, style: const TextStyle(color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
+          Text(_error!, style: TextStyle(color: context.textSecondary), textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
           TextButton(onPressed: _load, child: const Text('Повторить')),
         ],
@@ -248,9 +249,9 @@ class _BalancePageState extends State<BalancePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Динамика',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                   ),
                   const SizedBox(height: 12),
                   _buildLegend(),
@@ -268,17 +269,17 @@ class _BalancePageState extends State<BalancePage> {
 
           // Transactions
           if (d.transactions.isNotEmpty) ...[
-            const Text(
+            Text(
               'Транзакции',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary),
             ),
             const SizedBox(height: 8),
             _buildTransactionList(d.transactions),
           ] else
-            const Center(
+            Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 32),
-                child: Text('Транзакций нет', style: TextStyle(color: AppColors.lightTextSecondary)),
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Text('Транзакций нет', style: TextStyle(color: context.textSecondary)),
               ),
             ),
           const SizedBox(height: 80),
@@ -301,7 +302,7 @@ class _BalancePageState extends State<BalancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Текущий баланс', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+          Text('Текущий баланс', style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 8),
           Text(
             _formatPrice(d.balance),
@@ -344,7 +345,7 @@ class _BalancePageState extends State<BalancePage> {
         maxY: maxY,
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => AppColors.lightTextPrimary,
+            getTooltipColor: (_) => context.textPrimary,
           ),
         ),
         titlesData: FlTitlesData(
@@ -359,7 +360,7 @@ class _BalancePageState extends State<BalancePage> {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
                     _formatDate(points[idx].date),
-                    style: const TextStyle(fontSize: 10, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 10, color: context.textSecondary),
                   ),
                 );
               },
@@ -373,7 +374,7 @@ class _BalancePageState extends State<BalancePage> {
           show: true,
           drawVerticalLine: false,
           horizontalInterval: maxY / 4,
-          getDrawingHorizontalLine: (_) => const FlLine(color: AppColors.lightBorder, strokeWidth: 1),
+          getDrawingHorizontalLine: (_) => FlLine(color: context.border, strokeWidth: 1),
         ),
         borderData: FlBorderData(show: false),
         lineBarsData: [
@@ -416,7 +417,7 @@ class _BalancePageState extends State<BalancePage> {
               color: AppColors.success,
             ),
           ),
-          Container(width: 1, height: 40, color: AppColors.lightBorder),
+          Container(width: 1, height: 40, color: context.border),
           Expanded(
             child: _SummaryCell(
               label: 'Расходы',
@@ -424,7 +425,7 @@ class _BalancePageState extends State<BalancePage> {
               color: AppColors.error,
             ),
           ),
-          Container(width: 1, height: 40, color: AppColors.lightBorder),
+          Container(width: 1, height: 40, color: context.border),
           Expanded(
             child: _SummaryCell(
               label: 'Прибыль',
@@ -440,7 +441,7 @@ class _BalancePageState extends State<BalancePage> {
   Widget _buildTransactionList(List<_Transaction> txs) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       child: Column(
@@ -487,7 +488,7 @@ class _BalancePageState extends State<BalancePage> {
                 const SizedBox(height: 2),
                 Text(
                   _formatDateFull(tx.date),
-                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),
@@ -527,7 +528,7 @@ class _LegendDot extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+        Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
       ],
     );
   }
@@ -543,7 +544,7 @@ class _SummaryCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+        Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         const SizedBox(height: 4),
         Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color)),
       ],

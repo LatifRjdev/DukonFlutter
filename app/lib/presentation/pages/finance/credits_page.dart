@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
@@ -140,16 +141,16 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Кредиты'),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: context.surface,
+        foregroundColor: context.textPrimary,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.lightTextSecondary,
+          unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
           tabs: const [
             Tab(text: 'Нам должны'),
@@ -178,9 +179,9 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          Icon(Icons.error_outline, size: 48, color: context.danger),
           const SizedBox(height: AppConstants.spacingMd),
-          Text(_error!, style: const TextStyle(color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
+          Text(_error!, style: TextStyle(color: context.textSecondary), textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
           TextButton(onPressed: _load, child: const Text('Повторить')),
         ],
@@ -194,14 +195,14 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
       child: group.items.isEmpty
           ? ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 120),
+              children: [
+                const SizedBox(height: 120),
                 Center(
                   child: Column(
                     children: [
-                      Icon(Icons.credit_card_off_outlined, size: 56, color: AppColors.disabled),
-                      SizedBox(height: AppConstants.spacingMd),
-                      Text('Записей нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
+                      const Icon(Icons.credit_card_off_outlined, size: 56, color: AppColors.disabled),
+                      const SizedBox(height: AppConstants.spacingMd),
+                      Text('Записей нет', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                     ],
                   ),
                 ),
@@ -249,7 +250,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
             children: [
               Text(
                 isReceivable ? 'Общий долг нам' : 'Общий долг поставщикам',
-                style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                style: TextStyle(fontSize: 13, color: context.textSecondary),
               ),
               const SizedBox(height: 4),
               Text(
@@ -340,7 +341,7 @@ class _CreditCardState extends State<_CreditCard> {
                       const SizedBox(height: 2),
                       Text(
                         item.phone,
-                        style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 13, color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -355,14 +356,14 @@ class _CreditCardState extends State<_CreditCard> {
                     const SizedBox(height: 2),
                     Text(
                       'посл. ${widget.formatDate(item.lastPayment)}',
-                      style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 11, color: context.textSecondary),
                     ),
                   ],
                 ),
                 const SizedBox(width: 8),
                 Icon(
                   _expanded ? Icons.expand_less : Icons.expand_more,
-                  color: AppColors.lightTextSecondary,
+                  color: context.textSecondary,
                   size: 20,
                 ),
               ],
@@ -422,7 +423,7 @@ class _CreditCardState extends State<_CreditCard> {
               children: [
                 Text(
                   widget.item.name,
-                  style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                  style: TextStyle(color: context.textSecondary, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -456,7 +457,7 @@ class _CreditCardState extends State<_CreditCard> {
                 ),
                 if (dialogError != null) ...[
                   const SizedBox(height: 8),
-                  Text(dialogError!, style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                  Text(dialogError!, style: TextStyle(color: context.danger, fontSize: 13)),
                 ],
               ],
             ),

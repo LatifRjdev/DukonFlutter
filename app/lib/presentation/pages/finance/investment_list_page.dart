@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
@@ -39,16 +40,16 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
     ));
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(String status, BuildContext context) {
     switch (status) {
       case 'ACTIVE':
-        return AppColors.success;
+        return context.success;
       case 'COMPLETED':
         return Colors.blue;
       case 'CANCELLED':
-        return AppColors.error;
+        return context.danger;
       default:
-        return AppColors.lightTextSecondary;
+        return context.textSecondary;
     }
   }
 
@@ -98,7 +99,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                       vertical: AppConstants.spacingSm,
                     ),
                     itemCount: _statuses.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final s = _statuses[index];
                       final isSelected = s.$1 == _selectedStatus;
@@ -111,11 +112,11 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                           label: Text(s.$2),
                           backgroundColor: isSelected
                               ? AppColors.primary
-                              : AppColors.lightSurface,
+                              : context.surface,
                           labelStyle: TextStyle(
                             color: isSelected
                                 ? AppColors.onPrimary
-                                : AppColors.lightTextSecondary,
+                                : context.textSecondary,
                             fontSize: 13,
                           ),
                           side: BorderSide.none,
@@ -131,7 +132,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(state.message),
-                            backgroundColor: AppColors.success,
+                            backgroundColor: context.success,
                           ),
                         );
                         _loadInvestments(context);
@@ -140,7 +141,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(state.message),
-                            backgroundColor: AppColors.error,
+                            backgroundColor: context.danger,
                           ),
                         );
                       }
@@ -158,9 +159,9 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                 Icon(Icons.trending_up,
                                     size: 64, color: AppColors.disabled),
                                 const SizedBox(height: AppConstants.spacingMd),
-                                const Text('Вложений пока нет',
+                                Text('Вложений пока нет',
                                     style: TextStyle(
-                                        color: AppColors.lightTextSecondary,
+                                        color: context.textSecondary,
                                         fontSize: 16)),
                               ],
                             ),
@@ -178,7 +179,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                               return Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: context.surface,
                                   borderRadius: BorderRadius.circular(
                                       AppConstants.radiusMd),
                                 ),
@@ -217,7 +218,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8, vertical: 2),
                                           decoration: BoxDecoration(
-                                            color: _statusColor(inv.status)
+                                            color: _statusColor(inv.status, context)
                                                 .withValues(alpha: 0.15),
                                             borderRadius:
                                                 BorderRadius.circular(12),
@@ -228,7 +229,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                               fontSize: 11,
                                               fontWeight: FontWeight.w600,
                                               color:
-                                                  _statusColor(inv.status),
+                                                  _statusColor(inv.status, context),
                                             ),
                                           ),
                                         ),
