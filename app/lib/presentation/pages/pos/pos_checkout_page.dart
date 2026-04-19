@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -160,8 +161,8 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       }
                       if (state is CustomerListLoaded) {
                         if (state.customers.isEmpty) {
-                          return const Center(
-                            child: Text('Нет клиентов', style: TextStyle(color: AppColors.lightTextSecondary)),
+                          return Center(
+                            child: Text('Нет клиентов', style: TextStyle(color: context.textSecondary)),
                           );
                         }
                         return ListView.separated(
@@ -226,7 +227,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -241,7 +242,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         const Text('Касса',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         Text(storeName,
-                          style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                          style: TextStyle(fontSize: 13, color: context.textSecondary)),
                       ],
                     ),
                     const Spacer(),
@@ -264,10 +265,10 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         radius: AppConstants.buttonRadius,
                         child: TextField(
                           controller: _searchController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Поиск по названию',
-                            hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                            prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
+                            hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                            prefixIcon: Icon(Icons.search, color: context.textSecondary),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           ),
@@ -284,7 +285,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         boxShadow: AppShadows.md,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
+                        icon: Icon(Icons.qr_code_scanner, color: context.onPrimary),
                         onPressed: () {
                           BarcodeScannerSheet.show(
                             context,
@@ -335,7 +336,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                                 width: 80,
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: AppColors.lightSurface,
+                                  color: context.surface,
                                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                   boxShadow: AppShadows.sm,
                                 ),
@@ -402,7 +403,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       constraints: const BoxConstraints(maxHeight: 200),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         boxShadow: AppShadows.md,
       ),
@@ -419,7 +420,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.lightBackground,
+                color: context.bg,
                 borderRadius: BorderRadius.circular(AppConstants.radiusSm),
               ),
               child: product.imageUrl != null
@@ -431,7 +432,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   : const Icon(Icons.inventory_2_outlined, size: 20, color: AppColors.disabled),
             ),
             title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
-            subtitle: Text('${product.quantity} шт', style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Text('${product.quantity} шт', style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
             trailing: Text(_formatPrice(product.sellPrice),
               style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary, fontSize: 14)),
           );
@@ -461,7 +462,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Подытог', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                    Text('Подытог', style: TextStyle(fontSize: 14, color: context.textSecondary)),
                     Text(_formatPrice(cartState.subtotal),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                   ],
@@ -472,17 +473,17 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   children: [
                     Row(
                       children: [
-                        const Text('Скидка', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                        Text('Скидка', style: TextStyle(fontSize: 14, color: context.textSecondary)),
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () => _showDiscountDialog(cartState),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.lightBorder),
+                              border: Border.all(color: context.border),
                               borderRadius: BorderRadius.circular(AppConstants.radiusSm / 2),
                             ),
-                            child: const Text('%', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                            child: Text('%', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                           ),
                         ),
                       ],
@@ -493,7 +494,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: cartState.discountAmount > 0 ? AppColors.error : AppColors.lightTextSecondary,
+                        color: cartState.discountAmount > 0 ? AppColors.error : context.textSecondary,
                       )),
                   ],
                 ),
@@ -522,7 +523,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         boxShadow: AppShadows.sm,
       ),
@@ -537,13 +538,13 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 2),
                 Text(_formatPrice(item.unitPrice),
-                  style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),
           Container(
             decoration: BoxDecoration(
-              color: AppColors.lightBackground,
+              color: context.bg,
               borderRadius: BorderRadius.circular(AppConstants.radiusSm),
             ),
             child: Row(
@@ -612,7 +613,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         boxShadow: AppShadows.md,
       ),
       child: Column(
@@ -652,20 +653,20 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           decoration: BoxDecoration(
             gradient: isSelected ? AppGradients.primary : null,
             color: isSelected ? null : Colors.transparent,
-            border: isSelected ? null : Border.all(color: AppColors.lightBorder),
+            border: isSelected ? null : Border.all(color: context.border),
             borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
             boxShadow: isSelected ? AppShadows.sm : null,
           ),
           child: Column(
             children: [
               Icon(icon, size: 18,
-                color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary),
+                color: isSelected ? context.onPrimary : context.textSecondary),
               const SizedBox(height: 2),
               Text(label,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w500,
-                  color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
+                  color: isSelected ? context.onPrimary : context.textSecondary,
                 ),
                 textAlign: TextAlign.center),
             ],
@@ -701,14 +702,14 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                               ? AppColors.primary.withValues(alpha: 0.1)
                               : Colors.transparent,
                           border: Border.all(
-                            color: discountType == 'FIXED' ? AppColors.primary : AppColors.lightBorder,
+                            color: discountType == 'FIXED' ? AppColors.primary : context.border,
                           ),
                           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                         child: Center(child: Text('TJS',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: discountType == 'FIXED' ? AppColors.primary : AppColors.lightTextSecondary,
+                            color: discountType == 'FIXED' ? AppColors.primary : context.textSecondary,
                           ))),
                       ),
                     ),
@@ -724,14 +725,14 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                               ? AppColors.primary.withValues(alpha: 0.1)
                               : Colors.transparent,
                           border: Border.all(
-                            color: discountType == 'PERCENTAGE' ? AppColors.primary : AppColors.lightBorder,
+                            color: discountType == 'PERCENTAGE' ? AppColors.primary : context.border,
                           ),
                           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                         child: Center(child: Text('%',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: discountType == 'PERCENTAGE' ? AppColors.primary : AppColors.lightTextSecondary,
+                            color: discountType == 'PERCENTAGE' ? AppColors.primary : context.textSecondary,
                           ))),
                       ),
                     ),

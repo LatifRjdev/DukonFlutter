@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/pos/checkout_bloc.dart';
 import '../../blocs/pos/checkout_event.dart';
 import '../../blocs/pos/checkout_state.dart';
@@ -73,7 +74,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: context.surface,
         body: SafeArea(
           child: BlocBuilder<CartBloc, CartState>(
             builder: (context, cart) {
@@ -108,13 +109,13 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 24),
                             decoration: BoxDecoration(
-                              color: AppColors.infoBg,
+                              color: context.infoBg,
                               borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             ),
                             child: Column(
                               children: [
-                                const Text('Сумма к оплате',
-                                  style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                                Text('Сумма к оплате',
+                                  style: TextStyle(fontSize: 14, color: context.textSecondary),),
                                 const SizedBox(height: 8),
                                 Text(_formatPrice(total),
                                   style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
@@ -124,10 +125,10 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           const SizedBox(height: 24),
 
                           // Received amount input
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Получено от клиента',
-                              style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(fontSize: 14, color: context.textSecondary)),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -143,7 +144,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               hintStyle: const TextStyle(fontSize: 24, color: AppColors.disabled),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                                borderSide: const BorderSide(color: AppColors.lightBorder),
+                                borderSide: BorderSide(color: context.border),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -172,7 +173,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.lightBorder),
+                                      border: Border.all(color: context.border),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: const Center(
@@ -258,7 +259,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lightBorder),
+            border: Border.all(color: context.border),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(

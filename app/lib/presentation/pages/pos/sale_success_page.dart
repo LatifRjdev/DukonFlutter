@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/sale.dart';
 import '../../../core/services/thermal_printer_service.dart';
@@ -85,7 +86,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final sale = widget.sale;
 
     return Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: context.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -98,11 +99,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                 child: Container(
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    color: AppColors.success,
+                  decoration: BoxDecoration(
+                    color: context.success,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check, size: 48, color: Colors.white),
+                  child: Icon(Icons.check, size: 48, color: context.onSuccess),
                 ),
               ),
               const SizedBox(height: 24),
@@ -114,7 +115,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
               if (sale.change > 0) ...[
                 const SizedBox(height: 8),
                 Text('Сдача: ${_formatPrice(sale.change)}',
-                  style: const TextStyle(fontSize: 16, color: AppColors.lightTextSecondary)),
+                  style: TextStyle(fontSize: 16, color: context.textSecondary)),
               ],
               const Spacer(),
 
@@ -160,7 +161,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                   onPressed: () => context.go('/home'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.onPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   child: const Text('Новая продажа',

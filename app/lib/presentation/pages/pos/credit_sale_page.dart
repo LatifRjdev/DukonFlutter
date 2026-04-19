@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_state.dart';
@@ -70,9 +71,9 @@ class _CreditSalePageState extends State<CreditSalePage> {
             const Text('Выберите клиента',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 16),
-            const Center(
+            Center(
               child: Text('Список клиентов пуст',
-                  style: TextStyle(color: AppColors.lightTextSecondary)),
+                  style: TextStyle(color: ctx.textSecondary)),
             ),
             const SizedBox(height: 16),
             AppButton(
@@ -206,10 +207,10 @@ class _CreditSalePageState extends State<CreditSalePage> {
                             color: AppColors.warning.withValues(alpha: 0.08),
                             child: Column(
                               children: [
-                                const Text('Сумма долга',
+                                Text('Сумма долга',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: AppColors.lightTextSecondary)),
+                                        color: context.textSecondary)),
                                 const SizedBox(height: 8),
                                 Text(
                                   '${total.toStringAsFixed(2)} сом.',
@@ -256,13 +257,13 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                           ? FontWeight.w600
                                           : FontWeight.normal,
                                       color: _selectedCustomerId != null
-                                          ? AppColors.lightTextPrimary
-                                          : AppColors.lightTextHint,
+                                          ? context.textPrimary
+                                          : context.textMuted,
                                     ),
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right,
-                                    color: AppColors.lightTextSecondary),
+                                Icon(Icons.chevron_right,
+                                    color: context.textSecondary),
                               ],
                             ),
                           ),
@@ -284,8 +285,8 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                       fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 const Spacer(),
-                                const Icon(Icons.edit_outlined,
-                                    size: 20, color: AppColors.lightTextSecondary),
+                                Icon(Icons.edit_outlined,
+                                    size: 20, color: context.textSecondary),
                               ],
                             ),
                           ),
