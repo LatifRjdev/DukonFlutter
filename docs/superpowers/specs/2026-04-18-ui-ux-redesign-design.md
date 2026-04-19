@@ -14,7 +14,7 @@ Real-device screenshots revealed a broken visual state: partially applied dark m
 2. 102 files reference light-only color tokens (`AppColors.lightBackground`, `lightTextSecondary`) — won't adapt to dark mode
 3. `GlassCard` renders dark glassmorphism even in light mode → dark cards on light scaffold = unreadable
 
-This spec defines a complete visual overhaul: fix theme infrastructure, establish a unified design system, apply the new language to all screens.
+This spec defines a complete visual overhaul: fix theme infrastructure, establish a unified design system, apply the new language to all screens. A follow-up routing audit also uncovered critical navigation bugs (dashboard sale tap crashes, broken back stack in 4 pages, 73 hardcoded paths, missing `extra` payloads) — these are bundled into the same spec as Sprint 4 to guarantee the redesigned app also behaves correctly end-to-end.
 
 ## Design Decisions (approved via visual companion)
 
@@ -407,6 +407,90 @@ This is a large refactor (102 files touched). Split into 3 implementation plans,
 - Run full app in both light + dark on real device for visual QA
 - Outcome: entire app is consistent, dark mode is readable everywhere
 
+### Sprint 4: Routing & Connectivity Fixes
+
+Fix all broken navigation, route inconsistencies, and missing parameters identified in the full audit. Guarantees: every tap goes to the right screen, every screen gets its required data, back button always works as expected.
+
+**Critical bugs (must fix):**
+
+1. **Dashboard sale tap crashes** — `app/lib/presentation/pages/dashboard/dashboard_page.dart:778`
+   - Current: `context.push('/sales/${sale.id}')` — no `extra`
+   - Target page `TransactionDetailPage` requires `Sale` object
+   - Fix: `context.push(RouteNames.transactionDetail, extra: sale)` where the route builder reads `state.extra as Sale`
+   - Ensure route constant matches the registered path
+
+2. **Back button breaks stack** — 4 locations use `context.go('/home')` instead of `context.pop()`:
+   - `app/lib/presentation/pages/product/product_detail_page.dart:328, 333`
+   - `app/lib/presentation/pages/pos/sale_success_page.dart:160`
+   - `app/lib/presentation/pages/sales/empty_sales_page.dart:50`
+   - Fix: replace with `context.pop()` (for back button), or `context.go(RouteNames.home)` only if explicitly "go to home" action
+
+**Connectivity contract (enforce across app):**
+
+Define the contract for route-to-page data passing. Every detail/form page must:
+- Receive its primary entity (or ID + loader) via `state.extra` or `state.pathParameters`
+- Never assume a global StoreBloc state — always accept `storeId` explicitly if store-scoped
+- Validate parameters in `builder` and show `ErrorPage` if missing, not crash
+
+Document the contract in `app/lib/core/router/README.md`:
+```
+For every GoRoute builder:
+  1. Read pathParameters and extra
+  2. Validate required fields — if missing, return ErrorPage with "Invalid navigation"
+  3. Pass to page constructor
+For every context.push/go call:
+  1. MUST use RouteNames.* constant (no hardcoded strings)
+  2. MUST pass extra when target page requires it
+  3. MUST pass storeId when target page is store-scoped
+```
+
+**Hardcoded path migration (73 instances):**
+
+Replace every `context.push('/xxx')` and `context.go('/xxx')` with `RouteNames.xxx` constant.
+Prioritize in this order:
+1. POS flows (`pos_checkout_page.dart`, cash_payment, credit_sale, sale_success) — most clicked
+2. Settings flows (edit_profile, change_password, my_stores, etc.)
+3. Product flows (product_list, add_product, categories, import)
+4. Sales flows (sales_history, transaction_detail, refund)
+5. Finance flows (balance, credits, currencies, reports, investments, expenses)
+6. Everything else
+
+For each migration:
+- If RouteNames constant exists → use it
+- If missing → add to route_names.dart
+- If route isn't registered in app_router.dart → register it
+
+**storeId propagation audit:**
+
+For every page that accepts `storeId` as widget parameter:
+1. Verify all navigation calls pass it via `extra:`
+2. Verify the GoRoute builder extracts it correctly
+3. Document any page that reads storeId from StoreBloc as fallback (should be rare — prefer explicit passing)
+
+Pages to audit (store-scoped):
+- All finance/* pages, all product/* pages, all sales/* pages, all debt/* pages, all zakat/* pages, all staff/* pages, all delivery/* pages, all inventory/* pages, all supplier/* pages, all customer/* pages, POS pages
+
+**API endpoint sanity check:**
+
+Verify backend paths match frontend datasource calls. Audit these modules end-to-end:
+- `sales` — datasource → `/api/stores/:storeId/sales` (backend confirmed)
+- `finances` — datasource → `/api/stores/:storeId/finances/*` (backend confirmed)
+- `reports` — datasource → `/api/stores/:storeId/reports/*`
+- `investments`, `expenses`, `deliveries`, `suppliers`, `discounts`, `inventory-counts` — all store-scoped
+- `currencies`, `zakat` — verify scope
+- `auth` — global (no storeId)
+
+For each mismatch found, fix the frontend URL to match backend.
+
+**Dead route cleanup:**
+
+After hardcoded-path migration, identify route constants in `route_names.dart` that are still unused:
+- If the route has a registered GoRoute but no caller → remove both
+- If the route is called via hardcoded path → verify migration happened
+- Outcome: `grep -r "context.push\|context.go" | grep -v "RouteNames\."` returns 0 hits
+
+**Outcome:** 0 navigation crashes, 0 hardcoded paths, every page gets its required data, back button always works correctly.
+
 ## Acceptance Criteria
 
 ### Sprint 1
@@ -430,13 +514,25 @@ This is a large refactor (102 files touched). Split into 3 implementation plans,
 - [ ] No "coming soon" placeholders or unreadable grey-on-grey text
 - [ ] Visual QA pass on real Android device in both light + dark
 
+### Sprint 4
+- [ ] Tap on any sale card from dashboard opens `TransactionDetailPage` without crash
+- [ ] Back button works correctly on every screen (no forced redirects to /home unless it's a terminal flow like logout)
+- [ ] `grep -rE "context\.(push|go|pushReplacement)\('/" app/lib` returns 0 hits outside RouteNames definition
+- [ ] Every `GoRoute.builder` validates `extra` / `pathParameters` and handles missing data gracefully
+- [ ] Every store-scoped page receives `storeId` explicitly — not via StoreBloc fallback (exceptions documented)
+- [ ] No route constant in `route_names.dart` is dead (every constant either has a `GoRoute` registration AND at least one caller)
+- [ ] API endpoint paths in all datasources match backend `@Controller` paths (verified via smoke test: POS, sales, finance, reports, investments, expenses, deliveries, suppliers, discounts, inventory-counts)
+- [ ] Manual QA pass: navigate through every tab and every "Ещё" entry on device in both themes — no crashes, no 404s
+
 ## Out of Scope
 
-- New features (only visual refresh + theme fix)
-- Changes to navigation structure (5 tabs stay)
+- New features (only visual refresh + theme fix + routing hardening — no new screens)
+- Changes to the 5-tab navigation structure (tabs stay, only FAB visuals change)
 - Icon library swap (continue with current icons; can revisit later)
 - Animation overhaul (micro-interactions stay as-is, can polish in a later sprint)
 - Tablet-specific layouts (app is phone-only for now)
+- Backend API changes (if mismatch found, frontend is adjusted to match backend, not vice versa)
+- Deep link (URL from outside app) support — internal navigation only
 
 ## Dependencies & Risks
 
@@ -447,3 +543,6 @@ This is a large refactor (102 files touched). Split into 3 implementation plans,
 | `context.textPrimary` throws if used above MaterialApp | Use only inside widget `build` method with valid theme in context |
 | Glass backdrop-blur performance on low-end Android | Test on 2020-era device; fall back to solid `color-surface` if FPS drops |
 | User preference lost between session restarts | Confirm `SettingsBloc` persists `theme_mode` to SharedPreferences on every change |
+| Route migration breaks in-flight flows | Do Sprint 4 after Sprint 3 so visual QA already caught broken screens; migrate by feature area (POS → Settings → Products...) and smoke-test each area before moving on |
+| Renaming a route constant silently breaks callers | Before renaming any `RouteNames.xxx`, `grep -r "RouteNames.xxx"` and update all callers in the same commit |
+| Backend URL change goes unnoticed by frontend | Sprint 4 includes a one-time URL audit table cross-referencing every datasource method to a backend controller path; keep this table updated when adding new endpoints |
