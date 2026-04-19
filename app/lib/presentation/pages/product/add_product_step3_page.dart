@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/product/product_form_bloc.dart';
 import '../../blocs/product/product_form_event.dart';
 import '../../blocs/product/product_form_state.dart';
@@ -83,9 +84,9 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
         listener: (context, state) {
           if (state.isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Товар сохранён. Синхронизация в фоне.'),
-                backgroundColor: AppColors.success,
+              SnackBar(
+                content: const Text('Товар сохранён. Синхронизация в фоне.'),
+                backgroundColor: context.success,
               ),
             );
             context.read<ProductFormBloc>().add(ProductFormReset());
@@ -107,7 +108,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error!),
-                backgroundColor: AppColors.error,
+                backgroundColor: context.danger,
               ),
             );
           }
@@ -199,11 +200,11 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           width: double.infinity,
                           height: 160,
                           decoration: BoxDecoration(
-                            color: AppColors.lightBackground,
+                            color: context.bg,
                             borderRadius:
                                 BorderRadius.circular(AppConstants.cardRadius),
                             border: Border.all(
-                              color: AppColors.lightBorder,
+                              color: context.border,
                               style: BorderStyle.solid,
                             ),
                           ),
@@ -213,13 +214,13 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                                       size: 64, color: AppColors.primary))
                               : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(Icons.add_a_photo_outlined,
+                                  children: [
+                                    const Icon(Icons.add_a_photo_outlined,
                                         size: 40, color: AppColors.disabled),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text('Нажмите для загрузки',
                                         style: TextStyle(
-                                            color: AppColors.lightTextSecondary)),
+                                            color: context.textSecondary)),
                                   ],
                                 ),
                         ),
@@ -281,10 +282,10 @@ class _StepDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive
-        ? AppColors.primary
+        ? context.primary
         : isCompleted
-            ? AppColors.success
-            : AppColors.lightBorder;
+            ? context.success
+            : context.border;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -301,7 +302,7 @@ class _StepDot extends StatelessWidget {
                 : Text(
                     '$index',
                     style: TextStyle(
-                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
+                      color: isActive ? Colors.white : context.textSecondary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -313,7 +314,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
+            color: isActive ? context.primary : context.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

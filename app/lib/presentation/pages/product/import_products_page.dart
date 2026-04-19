@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../injection.dart';
 import '../../blocs/import/import_bloc.dart';
 import '../../blocs/import/import_event.dart';
@@ -129,18 +130,18 @@ class _ImportProductsView extends StatelessWidget {
               ...state.errors.take(5).map(
                     (e) => Text(
                       'Строка ${e['row']}: ${e['message']}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.lightTextSecondary,
+                        color: context.textSecondary,
                       ),
                     ),
                   ),
               if (state.errors.length > 5)
                 Text(
                   '...и ещё ${state.errors.length - 5}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                   ),
                 ),
             ],
@@ -217,13 +218,13 @@ class _InitialView extends StatelessWidget {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Загрузите список товаров из Excel или CSV файла.\n'
             'Скачайте шаблон для правильного формата.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
-              color: AppColors.lightTextSecondary,
+              color: context.textSecondary,
               height: 1.5,
             ),
           ),
@@ -373,9 +374,9 @@ class _PreviewView extends StatelessWidget {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
+          decoration: BoxDecoration(
+            color: context.surface,
+            boxShadow: const [
               BoxShadow(
                 color: AppColors.overlay,
                 blurRadius: 8,

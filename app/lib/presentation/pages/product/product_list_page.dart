@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/enums.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -83,7 +84,7 @@ class _ProductListPageState extends State<ProductListPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -132,7 +133,7 @@ class _ProductListPageState extends State<ProductListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
@@ -145,13 +146,13 @@ class _ProductListPageState extends State<ProductListPage> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Поиск товара',
-                    hintStyle: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.lightTextSecondary),
+                    hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     suffixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.qr_code_scanner, color: AppColors.lightTextSecondary),
+                          icon: Icon(Icons.qr_code_scanner, color: context.textSecondary),
                           onPressed: () {
                             BarcodeScannerSheet.show(
                               context,
@@ -163,7 +164,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.tune, color: _showFilters ? AppColors.primary : AppColors.lightTextSecondary),
+                          icon: Icon(Icons.tune, color: _showFilters ? context.primary : context.textSecondary),
                           onPressed: () {
                             setState(() => _showFilters = !_showFilters);
                           },
@@ -282,9 +283,9 @@ class _ProductListPageState extends State<ProductListPage> {
                         // Sticky footer
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
+                          decoration: BoxDecoration(
+                            color: context.surface,
+                            boxShadow: const [
                               BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
                             ],
                           ),
@@ -294,21 +295,21 @@ class _ProductListPageState extends State<ProductListPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Общая сумма',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                    Text('Общая сумма',
+                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
                                     Text(_formatPrice(totalValue),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                               ),
-                              Container(width: 1, height: 32, color: AppColors.lightBorder),
+                              Container(width: 1, height: 32, color: context.border),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Себестоимость',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                    Text('Себестоимость',
+                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
@@ -366,7 +367,7 @@ class _ProductCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: Theme.of(context).brightness == Brightness.light ? AppShadows.sm : null,
         ),
@@ -377,7 +378,7 @@ class _ProductCard extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppColors.lightBackground,
+                color: context.bg,
                 borderRadius: BorderRadius.circular(10),
               ),
               clipBehavior: Clip.antiAlias,
@@ -403,13 +404,13 @@ class _ProductCard extends StatelessWidget {
                   if (product.sku != null && product.sku!.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text('Арт: ${product.sku}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                   ],
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text('На складе: ',
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                       Text('${product.quantity} $unitName',
                         style: TextStyle(
                           fontSize: 12,
@@ -427,15 +428,15 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(formatPrice(product.sellPrice),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextPrimary,
+                    color: context.textPrimary,
                   )),
                 if (product.costPrice != null) ...[
                   const SizedBox(height: 2),
                   Text(formatPrice(product.costPrice!),
-                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 ],
               ],
             ),

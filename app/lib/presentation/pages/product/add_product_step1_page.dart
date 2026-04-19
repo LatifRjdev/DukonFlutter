@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
@@ -163,10 +164,10 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                           width: double.infinity,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: AppColors.lightSurface,
+                            color: context.surface,
                             borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             border: Border.all(
-                              color: _selectedImage != null ? AppColors.primary : AppColors.lightBorder,
+                              color: _selectedImage != null ? context.primary : context.border,
                               width: _selectedImage != null ? 2 : 1,
                             ),
                           ),
@@ -189,15 +190,15 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                                         color: AppColors.primary, size: 28),
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text('Добавить фото',
+                                    Text('Добавить фото',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
-                                        color: AppColors.lightTextSecondary,
+                                        color: context.textSecondary,
                                       )),
                                     const SizedBox(height: 4),
-                                    const Text('JPG, PNG до 5MB',
-                                      style: TextStyle(fontSize: 12, color: AppColors.lightTextHint)),
+                                    Text('JPG, PNG до 5MB',
+                                      style: TextStyle(fontSize: 12, color: context.textMuted)),
                                   ],
                                 ),
                         ),
@@ -302,14 +303,14 @@ class _StepDot extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : AppColors.lightBorder,
+            color: isActive ? context.primary : context.border,
             shape: BoxShape.circle,
           ),
           child: Center(
             child: Text(
               '$index',
               style: TextStyle(
-                color: isActive ? Colors.white : AppColors.lightTextSecondary,
+                color: isActive ? Colors.white : context.textSecondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),
@@ -321,7 +322,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
+            color: isActive ? context.primary : context.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

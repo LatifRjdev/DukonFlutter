@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/product/product_form_bloc.dart';
 import '../../blocs/product/product_form_event.dart';
 import '../../widgets/common/app_button.dart';
@@ -146,7 +147,7 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                             selected: isSelected,
                             selectedColor: AppColors.primary.withValues(alpha: 0.2),
                             labelStyle: TextStyle(
-                              color: isSelected ? AppColors.primary : AppColors.lightTextPrimary,
+                              color: isSelected ? context.primary : context.textPrimary,
                               fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                             ),
                             onSelected: (_) =>
@@ -204,10 +205,10 @@ class _StepDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive
-        ? AppColors.primary
+        ? context.primary
         : isCompleted
-            ? AppColors.success
-            : AppColors.lightBorder;
+            ? context.success
+            : context.border;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -224,7 +225,7 @@ class _StepDot extends StatelessWidget {
                 : Text(
                     '$index',
                     style: TextStyle(
-                      color: isActive ? Colors.white : AppColors.lightTextSecondary,
+                      color: isActive ? Colors.white : context.textSecondary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -236,7 +237,7 @@ class _StepDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
+            color: isActive ? context.primary : context.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

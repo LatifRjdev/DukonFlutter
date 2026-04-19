@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/constants/enums.dart';
@@ -58,7 +59,7 @@ class ProductDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -107,7 +108,7 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.28,
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       clipBehavior: Clip.antiAlias,
@@ -171,7 +172,7 @@ class ProductDetailPage extends StatelessWidget {
                             value: product.costPrice != null
                                 ? _formatPrice(product.costPrice!)
                                 : '—',
-                            bgColor: AppColors.lightSurfaceElevated,
+                            bgColor: context.surfaceMuted,
                             textColor: AppColors.gradientMid,
                           ),
                         ),
@@ -206,7 +207,7 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                         boxShadow: AppShadows.md,
                       ),
@@ -222,7 +223,7 @@ class ProductDetailPage extends StatelessWidget {
                               Text('Текущий остаток: ${product.quantity} $unitName',
                                 style: const TextStyle(fontSize: 14)),
                               Text('Минимальный: ${product.minQuantity} $unitName',
-                                style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                                style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -231,7 +232,7 @@ class ProductDetailPage extends StatelessWidget {
                             child: LinearProgressIndicator(
                               value: stockPercent,
                               minHeight: 8,
-                              backgroundColor: AppColors.lightBorder,
+                              backgroundColor: context.border,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 product.isOutOfStock
                                     ? AppColors.error
@@ -251,7 +252,7 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                         boxShadow: AppShadows.md,
                       ),
@@ -291,8 +292,8 @@ class ProductDetailPage extends StatelessWidget {
             // 2 fixed bottom buttons: "Приход" + "Продать"
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              decoration: const BoxDecoration(
-                color: AppColors.lightSurface,
+              decoration: BoxDecoration(
+                color: context.surface,
                 boxShadow: AppShadows.md,
               ),
               child: Row(
@@ -437,7 +438,7 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
+        Text(label, style: TextStyle(color: context.textSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
     );
@@ -523,7 +524,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
       case 'ADJUSTMENT':
         return AppColors.warning;
       default:
-        return AppColors.lightTextSecondary;
+        return context.textSecondary;
     }
   }
 
@@ -553,7 +554,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         boxShadow: AppShadows.md,
       ),
@@ -576,17 +577,17 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(_error!,
-                    style: const TextStyle(
-                        color: AppColors.lightTextSecondary, fontSize: 13)),
+                    style: TextStyle(
+                        color: context.textSecondary, fontSize: 13)),
               ),
             )
           else if (_movements.isEmpty)
-            const Center(
+            Center(
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Text('Нет движений',
                     style: TextStyle(
-                        color: AppColors.lightTextSecondary, fontSize: 13)),
+                        color: context.textSecondary, fontSize: 13)),
               ),
             )
           else
@@ -624,16 +625,16 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
                                       fontWeight: FontWeight.w600)),
                               if (note.isNotEmpty)
                                 Text(note,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.lightTextSecondary),
+                                        color: context.textSecondary),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis),
                               if (date != null)
                                 Text(_formatDate(date),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 11,
-                                        color: AppColors.lightTextHint)),
+                                        color: context.textMuted)),
                             ],
                           ),
                         ),
