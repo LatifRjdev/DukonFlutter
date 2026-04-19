@@ -205,7 +205,7 @@ class CategoriesPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => _showCategoryDialog(context),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: context.onPrimary),
       ),
     );
   }

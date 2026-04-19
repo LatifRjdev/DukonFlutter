@@ -161,7 +161,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Цена продажи',
                             value: _formatPrice(product.sellPrice),
-                            bgColor: AppColors.successBg,
+                            bgColor: context.successBg,
                             textColor: AppColors.success,
                           ),
                         ),
@@ -185,7 +185,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Прибыль',
                             value: profit != null ? _formatPrice(profit) : '—',
-                            bgColor: AppColors.warningBg,
+                            bgColor: context.warningBg,
                             textColor: AppColors.warning,
                           ),
                         ),
@@ -194,7 +194,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Маржа',
                             value: margin != null ? '${margin.toStringAsFixed(0)}%' : '—',
-                            bgColor: AppColors.infoBg,
+                            bgColor: context.infoBg,
                             textColor: AppColors.info,
                           ),
                         ),
@@ -335,7 +335,7 @@ class ProductDetailPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: context.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),

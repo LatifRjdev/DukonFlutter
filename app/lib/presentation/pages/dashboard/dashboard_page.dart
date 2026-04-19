@@ -177,7 +177,7 @@ class _DashboardPageState extends State<DashboardPage> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => widget.onTabChange?.call(2),
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: context.onPrimary,
           icon: const Icon(Icons.add),
           label: const Text('Новая продажа',
             style: TextStyle(fontWeight: FontWeight.w600)),
@@ -300,7 +300,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               child: Icon(Icons.calendar_today,
                 size: 16,
-                color: _selectedPeriod == 'custom' ? Colors.white : context.textSecondary),
+                color: _selectedPeriod == 'custom' ? context.onPrimary : context.textSecondary),
             ),
           ),
         ],
@@ -527,13 +527,13 @@ class _HeroRevenueCard extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   formatPrice(stats.todayRevenue),
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.onPrimary,
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
                     height: 1.0,
-                    fontFeatures: [FontFeature.tabularFigures()],
+                    fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),
               ),

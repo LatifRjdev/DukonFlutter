@@ -298,11 +298,11 @@ class _StepDot extends StatelessWidget {
           ),
           child: Center(
             child: isCompleted
-                ? const Icon(Icons.check, size: 18, color: Colors.white)
+                ? Icon(Icons.check, size: 18, color: context.onSuccess)
                 : Text(
                     '$index',
                     style: TextStyle(
-                      color: isActive ? Colors.white : context.textSecondary,
+                      color: isActive ? context.onPrimary : context.textSecondary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),

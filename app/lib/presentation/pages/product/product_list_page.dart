@@ -135,8 +135,8 @@ class _ProductListPageState extends State<ProductListPage> {
                 decoration: BoxDecoration(
                   color: context.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
+                  boxShadow: [
+                    BoxShadow(color: context.shadowColor, blurRadius: 4, offset: const Offset(0, 1)),
                   ],
                 ),
                 child: TextField(
@@ -285,8 +285,8 @@ class _ProductListPageState extends State<ProductListPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             color: context.surface,
-                            boxShadow: const [
-                              BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
+                            boxShadow: [
+                              BoxShadow(color: context.shadowColor, blurRadius: 8, offset: const Offset(0, -2)),
                             ],
                           ),
                           child: Row(

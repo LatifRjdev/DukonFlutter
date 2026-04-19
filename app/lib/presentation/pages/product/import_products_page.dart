@@ -237,7 +237,7 @@ class _InitialView extends StatelessWidget {
               label: const Text('Выбрать файл'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: context.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -376,11 +376,11 @@ class _PreviewView extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: context.surface,
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: AppColors.overlay,
+                color: context.shadowColor,
                 blurRadius: 8,
-                offset: Offset(0, -2),
+                offset: const Offset(0, -2),
               ),
             ],
           ),
@@ -397,7 +397,7 @@ class _PreviewView extends StatelessWidget {
                 : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: context.onPrimary,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
