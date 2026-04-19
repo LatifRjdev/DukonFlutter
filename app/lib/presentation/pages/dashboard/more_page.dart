@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
@@ -110,7 +111,7 @@ class MorePage extends StatelessWidget {
           _MenuItem(
             icon: Icons.settings_outlined,
             label: 'Настройки',
-            color: AppColors.lightTextSecondary,
+            color: context.textSecondary,
             onTap: () => context.push(RouteNames.settings),
           ),
         ],
@@ -133,7 +134,7 @@ class _SectionHeader extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: AppColors.lightTextSecondary,
+          color: context.textSecondary,
           letterSpacing: 0.5,
         ),
       ),
@@ -167,7 +168,7 @@ class _MenuItem extends StatelessWidget {
         child: Icon(icon, color: color, size: 22),
       ),
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary),
+      trailing: Icon(Icons.chevron_right, color: context.textSecondary),
       onTap: onTap,
     );
   }
