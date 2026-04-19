@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -74,7 +75,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Telegram-бот'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -94,7 +95,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                     decoration: BoxDecoration(
                       color: _connected
                           ? AppColors.success.withValues(alpha: 0.08)
-                          : AppColors.errorBg,
+                          : context.dangerBg,
                       borderRadius:
                           BorderRadius.circular(AppConstants.cardRadius),
                       border: Border.all(
@@ -150,9 +151,9 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                               ),
                               const SizedBox(height: 4),
                               Text(_botUsername,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 13,
-                                      color: AppColors.lightTextSecondary)),
+                                      color: context.textSecondary)),
                             ],
                           ),
                         ),
@@ -201,11 +202,11 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                   const SizedBox(height: 20),
 
                   // How to connect instructions
-                  const Text('Как подключить клиентов',
+                  Text('Как подключить клиентов',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -232,19 +233,19 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                           child: Container(
                             width: 120, height: 120,
                             decoration: BoxDecoration(
-                              color: AppColors.lightBackground,
+                              color: context.bg,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.lightBorder),
+                              border: Border.all(color: context.border),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.qr_code_2,
-                                    size: 64, color: AppColors.lightTextPrimary),
+                                Icon(Icons.qr_code_2,
+                                    size: 64, color: context.textPrimary),
                                 Text(_botUsername,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 10,
-                                        color: AppColors.lightTextSecondary)),
+                                        color: context.textSecondary)),
                               ],
                             ),
                           ),
@@ -309,8 +310,8 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(text,
-              style: const TextStyle(
-                  fontSize: 14, color: AppColors.lightTextPrimary)),
+              style: TextStyle(
+                  fontSize: 14, color: context.textPrimary)),
         ),
       ],
     );

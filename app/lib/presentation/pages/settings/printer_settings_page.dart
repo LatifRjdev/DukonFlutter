@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thermal_printer/thermal_printer.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/printer/printer_bloc.dart';
 import '../../blocs/printer/printer_event.dart';
@@ -52,17 +53,17 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                   decoration: BoxDecoration(
                     color: state.connectedDevice != null
                         ? AppColors.success.withValues(alpha: 0.1)
-                        : AppColors.lightBackground,
+                        : context.bg,
                     borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                     border: Border.all(
-                      color: state.connectedDevice != null ? AppColors.success : AppColors.lightBorder,
+                      color: state.connectedDevice != null ? AppColors.success : context.border,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         state.connectedDevice != null ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
-                        color: state.connectedDevice != null ? AppColors.success : AppColors.lightTextSecondary,
+                        color: state.connectedDevice != null ? AppColors.success : context.textSecondary,
                         size: 28,
                       ),
                       const SizedBox(width: 12),
@@ -75,13 +76,13 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: state.connectedDevice != null ? AppColors.success : AppColors.lightTextSecondary,
+                                color: state.connectedDevice != null ? AppColors.success : context.textSecondary,
                               ),
                             ),
                             if (state.connectedDevice != null)
                               Text(
                                 state.connectedDevice!.name,
-                                style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
+                                style: TextStyle(fontSize: 14, color: context.textSecondary),
                               ),
                           ],
                         ),
@@ -98,14 +99,14 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 
                 // Default printer
                 if (state.defaultPrinterName != null) ...[
-                  const Text('Принтер по умолчанию',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
+                  Text('Принтер по умолчанию',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(AppConstants.spacingSm),
                     decoration: BoxDecoration(
-                      color: AppColors.lightBackground,
+                      color: context.bg,
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                     child: Text(state.defaultPrinterName!, style: const TextStyle(fontSize: 14)),
@@ -185,9 +186,9 @@ class _DeviceTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(AppConstants.spacingSm),
       decoration: BoxDecoration(
-        color: isConnected ? AppColors.success.withValues(alpha: 0.05) : AppColors.lightSurface,
+        color: isConnected ? AppColors.success.withValues(alpha: 0.05) : context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: isConnected ? AppColors.success : AppColors.lightBorder),
+        border: Border.all(color: isConnected ? AppColors.success : context.border),
       ),
       child: Row(
         children: [
@@ -219,7 +220,7 @@ class _DeviceTile extends StatelessWidget {
                   ],
                 ),
                 if (device.address != null)
-                  Text(device.address!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                  Text(device.address!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),

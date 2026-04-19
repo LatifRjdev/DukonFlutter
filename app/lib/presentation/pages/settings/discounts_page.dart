@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 
@@ -95,7 +96,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                 child: Container(
                   width: 40, height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.lightBorder,
+                    color: context.border,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -205,7 +206,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Скидки'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -231,9 +232,9 @@ class _DiscountsPageState extends State<DiscountsPage> {
                   ),
                 )
               : _discounts.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text('Нет скидок. Нажмите + для создания.',
-                          style: TextStyle(color: AppColors.lightTextSecondary)),
+                          style: TextStyle(color: context.textSecondary)),
                     )
                   : ListView.separated(
                       padding: const EdgeInsets.all(16),
@@ -291,8 +292,8 @@ class _DiscountsPageState extends State<DiscountsPage> {
                                 activeThumbColor: AppColors.primary,
                               ),
                               IconButton(
-                                icon: const Icon(Icons.edit_outlined,
-                                    size: 18, color: AppColors.lightTextSecondary),
+                                icon: Icon(Icons.edit_outlined,
+                                    size: 18, color: context.textSecondary),
                                 onPressed: () => _showForm(existing: d),
                               ),
                               IconButton(

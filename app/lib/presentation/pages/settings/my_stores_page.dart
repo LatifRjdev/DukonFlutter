@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -84,7 +85,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
               child: Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: context.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -193,7 +194,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
     final selectedId = _selectedStoreId();
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Мои магазины'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -224,10 +225,10 @@ class _MyStoresPageState extends State<MyStoresPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.storefront_outlined, size: 64,
-                              color: AppColors.lightTextSecondary.withValues(alpha: 0.5)),
+                              color: context.textSecondary.withValues(alpha: 0.5)),
                           const SizedBox(height: 12),
-                          const Text('Нет магазинов',
-                              style: TextStyle(fontSize: 16, color: AppColors.lightTextSecondary)),
+                          Text('Нет магазинов',
+                              style: TextStyle(fontSize: 16, color: context.textSecondary)),
                           const SizedBox(height: 8),
                           ElevatedButton.icon(
                             onPressed: () => _showStoreForm(),
@@ -259,7 +260,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                               borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               border: isActive
                                   ? Border.all(color: AppColors.primary, width: 2)
-                                  : Border.all(color: AppColors.lightBorder),
+                                  : Border.all(color: context.border),
                             ),
                             child: Row(
                               children: [
@@ -269,11 +270,11 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                   decoration: BoxDecoration(
                                     color: isActive
                                         ? AppColors.primary.withValues(alpha: 0.12)
-                                        : AppColors.lightBackground,
+                                        : context.bg,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(Icons.storefront_outlined,
-                                      color: isActive ? AppColors.primary : AppColors.lightTextSecondary),
+                                      color: isActive ? AppColors.primary : context.textSecondary),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -305,15 +306,15 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                       ),
                                       if (address.isNotEmpty)
                                         Text(address,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: 12,
-                                                color: AppColors.lightTextSecondary)),
+                                                color: context.textSecondary)),
                                     ],
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.edit_outlined,
-                                      color: AppColors.lightTextSecondary, size: 18),
+                                  icon: Icon(Icons.edit_outlined,
+                                      color: context.textSecondary, size: 18),
                                   onPressed: () => _showStoreForm(existing: store),
                                 ),
                               ],

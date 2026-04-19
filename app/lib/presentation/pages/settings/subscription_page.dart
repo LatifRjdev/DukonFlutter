@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/subscription/subscription_bloc.dart';
 import '../../blocs/subscription/subscription_event.dart';
@@ -105,9 +106,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       case 'EXPIRED':
         return AppColors.error;
       case 'CANCELLED':
-        return AppColors.lightTextHint;
+        return context.textMuted;
       default:
-        return AppColors.lightTextHint;
+        return context.textMuted;
     }
   }
 
@@ -271,7 +272,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.warningBg,
+        color: context.warningBg,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
       ),
@@ -330,9 +331,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       const SizedBox(height: 2),
                       Text(
                         plan.price,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.lightTextSecondary,
+                          color: context.textSecondary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -386,9 +387,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(f,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.lightTextSecondary)),
+                                color: context.textSecondary)),
                       ),
                     ],
                   ),
@@ -404,12 +405,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'История оплат',
           style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.lightTextSecondary),
+              color: context.textSecondary),
         ),
         const SizedBox(height: 8),
         ...payments.map((p) => _buildPaymentTile(p)),
@@ -457,8 +458,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   const SizedBox(height: 2),
                   Text(
                     DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.lightTextHint),
+                    style: TextStyle(
+                        fontSize: 12, color: context.textMuted),
                   ),
                 ],
               ),
@@ -478,14 +479,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppColors.lightBackground,
+                        color: context.bg,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         payment.method == 'CARD' ? 'Карта' : 'Наличные',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11,
-                            color: AppColors.lightTextSecondary),
+                            color: context.textSecondary),
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -547,9 +548,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (ctx2, err, st) => const Text(
+                  errorBuilder: (ctx2, err, st) => Text(
                     'Изображение недоступно',
-                    style: TextStyle(color: AppColors.lightTextHint),
+                    style: TextStyle(color: context.textMuted),
                   ),
                 ),
               ),
@@ -590,7 +591,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         appBar: AppBar(
           title: const Text('Подписка'),
           backgroundColor: Theme.of(context).colorScheme.surface,
@@ -652,12 +653,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     ],
 
                     // ── Plan selection ─────────────────────────────────
-                    const Text(
+                    Text(
                       'Тарифные планы',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary),
+                          color: context.textSecondary),
                     ),
                     const SizedBox(height: 8),
                     ..._plans.map((plan) => _buildPlanCard(
@@ -778,7 +779,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.lightBorder,
+                color: context.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -791,8 +792,8 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
           const SizedBox(height: 4),
           Text(
             planInfo.price,
-            style: const TextStyle(
-                fontSize: 14, color: AppColors.lightTextSecondary),
+            style: TextStyle(
+                fontSize: 14, color: context.textSecondary),
           ),
           const SizedBox(height: 20),
 
@@ -814,7 +815,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.lightBackground,
+                color: context.bg,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Column(
@@ -905,8 +906,8 @@ class _MethodTile extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 15, fontWeight: FontWeight.w500)),
             ),
-            const Icon(Icons.chevron_right_rounded,
-                color: AppColors.lightTextHint),
+            Icon(Icons.chevron_right_rounded,
+                color: context.textMuted),
           ],
         ),
       ),
@@ -927,8 +928,8 @@ class _CardDetailRow extends StatelessWidget {
         SizedBox(
           width: 90,
           child: Text(label,
-              style: const TextStyle(
-                  fontSize: 12, color: AppColors.lightTextSecondary)),
+              style: TextStyle(
+                  fontSize: 12, color: context.textSecondary)),
         ),
         Expanded(
           child: Text(value,

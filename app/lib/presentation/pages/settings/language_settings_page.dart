@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Язык интерфейса'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -69,11 +70,11 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Выберите язык',
+                  Text('Выберите язык',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -118,13 +119,13 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                                                 fontWeight: FontWeight.w600,
                                                 color: isSelected
                                                     ? AppColors.primary
-                                                    : AppColors.lightTextPrimary,
+                                                    : context.textPrimary,
                                               )),
                                           Text(lang.nativeName,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   fontSize: 12,
                                                   color:
-                                                      AppColors.lightTextSecondary)),
+                                                      context.textSecondary)),
                                         ],
                                       ),
                                     ),
@@ -143,7 +144,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                                         width: 24, height: 24,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: AppColors.lightBorder,
+                                              color: context.border,
                                               width: 2),
                                           shape: BoxShape.circle,
                                         ),
@@ -163,10 +164,10 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.infoBg,
+                      color: context.infoBg,
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.info_outline, color: AppColors.info, size: 16),
                         SizedBox(width: 8),
@@ -174,7 +175,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                           child: Text(
                             'Для применения языка перезапустите приложение.',
                             style: TextStyle(
-                                fontSize: 12, color: AppColors.lightTextSecondary),
+                                fontSize: 12, color: context.textSecondary),
                           ),
                         ),
                       ],

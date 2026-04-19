@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
@@ -42,7 +43,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: context.surface,
       body: SafeArea(
         child: BlocConsumer<SettingsBloc, SettingsState>(
           listener: (context, state) {
@@ -149,15 +150,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           const SizedBox(height: 24),
 
                           // Security section
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Безопасность',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textSecondary)),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             decoration: BoxDecoration(
-                              color: AppColors.lightBackground,
+                              color: context.bg,
                               borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             ),
                             child: Column(
@@ -165,7 +166,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ListTile(
                                   title: const Text('Сменить пароль',
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                                  trailing: const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  trailing: Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                   onTap: () => context.push('/settings/password'),
                                 ),
                               ],
@@ -215,11 +216,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       enabled: enabled,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
+        labelStyle: TextStyle(fontSize: 14, color: context.textSecondary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          borderSide: const BorderSide(color: AppColors.lightBorder),
+          borderSide: BorderSide(color: context.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),

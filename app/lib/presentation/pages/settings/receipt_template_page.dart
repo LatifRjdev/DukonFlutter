@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -163,7 +164,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Шаблон чека'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -192,16 +193,16 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.lightSurfaceElevated,
+                      color: context.surfaceMuted,
                       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                     ),
                     child: Column(
                       children: [
-                        const Text('Предпросмотр',
+                        Text('Предпросмотр',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.lightTextSecondary)),
+                                color: context.textSecondary)),
                         const SizedBox(height: 12),
                         _buildReceiptPreview(),
                       ],
@@ -210,11 +211,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Header/Footer
-                  const Text('Текст',
+                  Text('Текст',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -249,11 +250,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Font size
-                  const Text('Размер шрифта',
+                  Text('Размер шрифта',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -281,11 +282,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 16),
 
                   // Paper width
-                  const Text('Ширина бумаги',
+                  Text('Ширина бумаги',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -312,11 +313,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Toggles
-                  const Text('Показывать на чеке',
+                  Text('Показывать на чеке',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(

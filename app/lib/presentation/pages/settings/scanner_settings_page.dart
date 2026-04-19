@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class ScannerSettingsPage extends StatefulWidget {
@@ -71,7 +72,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Сканер штрихкодов'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -97,11 +98,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Camera selection
-                  const Text('Камера',
+                  Text('Камера',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -157,11 +158,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   const SizedBox(height: 20),
 
                   // Behavior toggles
-                  const Text('Поведение',
+                  Text('Поведение',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -196,11 +197,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   const SizedBox(height: 20),
 
                   // Barcode formats
-                  const Text('Форматы штрихкодов',
+                  Text('Форматы штрихкодов',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(

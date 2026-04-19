@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -145,7 +146,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Офлайн-режим'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -165,7 +166,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                     decoration: BoxDecoration(
                       color: _pendingOps == 0
                           ? AppColors.success.withValues(alpha: 0.08)
-                          : AppColors.warningBg,
+                          : context.warningBg,
                       borderRadius:
                           BorderRadius.circular(AppConstants.cardRadius),
                       border: Border.all(
@@ -207,17 +208,17 @@ class _OfflineModePageState extends State<OfflineModePage> {
                           const SizedBox(height: 8),
                           Text(
                             'Последняя синхронизация: ${_formatDate(_lastSync!)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.lightTextSecondary),
+                                color: context.textSecondary),
                           ),
                         ] else ...[
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Синхронизация ещё не выполнялась',
                             style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.lightTextSecondary),
+                                color: context.textSecondary),
                           ),
                         ],
                       ],
@@ -254,11 +255,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
                   const SizedBox(height: 20),
 
                   // Settings
-                  const Text('Настройки',
+                  Text('Настройки',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -281,7 +282,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                                 color: AppColors.primary, size: 18),
                           ),
                           const SizedBox(width: 12),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -292,7 +293,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                                 Text('Синхронизировать при подключении к сети',
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.lightTextSecondary)),
+                                        color: context.textSecondary)),
                               ],
                             ),
                           ),
@@ -311,11 +312,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: AppColors.infoBg,
+                      color: context.infoBg,
                       borderRadius:
                           BorderRadius.circular(AppConstants.cardRadius),
                     ),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.info_outline, color: AppColors.info, size: 18),
@@ -327,7 +328,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                             'подключения к интернету.',
                             style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.lightTextSecondary),
+                                color: context.textSecondary),
                           ),
                         ),
                       ],
@@ -336,11 +337,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
                   const SizedBox(height: 24),
 
                   // Clear cache
-                  const Text('Данные',
+                  Text('Данные',
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary)),
+                          color: context.textSecondary)),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,

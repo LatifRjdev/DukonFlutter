@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thermal_printer/thermal_printer.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class KkmSettingsPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('ККМ / Фискализация'),
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -124,7 +125,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.infoBg,
+                color: context.infoBg,
                 borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
               ),
@@ -145,11 +146,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
             const SizedBox(height: 20),
 
             // Connection status
-            const Text('Bluetooth принтер',
+            Text('Bluetooth принтер',
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary)),
+                    color: context.textSecondary)),
             const SizedBox(height: 8),
             Container(
               width: double.infinity,
@@ -160,7 +161,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                 border: Border.all(
                   color: _connectedDevice != null
                       ? AppColors.success
-                      : AppColors.lightBorder,
+                      : context.border,
                 ),
               ),
               child: Row(
@@ -171,7 +172,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                         : Icons.bluetooth_disabled,
                     color: _connectedDevice != null
                         ? AppColors.success
-                        : AppColors.lightTextSecondary,
+                        : context.textSecondary,
                     size: 28,
                   ),
                   const SizedBox(width: 12),
@@ -186,13 +187,13 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                             fontWeight: FontWeight.w600,
                             color: _connectedDevice != null
                                 ? AppColors.success
-                                : AppColors.lightTextSecondary,
+                                : context.textSecondary,
                           ),
                         ),
                         if (_connectedDevice != null)
                           Text(_connectedDevice!.name,
-                              style: const TextStyle(
-                                  fontSize: 13, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(
+                                  fontSize: 13, color: context.textSecondary)),
                       ],
                     ),
                   ),
@@ -232,11 +233,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
 
             // Found devices
             if (_devices.isNotEmpty) ...[
-              const Text('Найденные устройства',
+              Text('Найденные устройства',
                   style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextSecondary)),
+                      color: context.textSecondary)),
               const SizedBox(height: 8),
               ..._devices.map((device) {
                 final isConnected = _connectedDevice?.address == device.address;
@@ -249,7 +250,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                         : Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     border: Border.all(
-                        color: isConnected ? AppColors.success : AppColors.lightBorder),
+                        color: isConnected ? AppColors.success : context.border),
                   ),
                   child: Row(
                     children: [
@@ -267,9 +268,9 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                                     fontSize: 14, fontWeight: FontWeight.w600)),
                             if (device.address != null)
                               Text(device.address!,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.lightTextSecondary)),
+                                      color: context.textSecondary)),
                           ],
                         ),
                       ),
@@ -286,11 +287,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
             ],
 
             // Auto-print toggle
-            const Text('Настройки',
+            Text('Настройки',
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary)),
+                    color: context.textSecondary)),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(

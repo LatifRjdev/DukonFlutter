@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
@@ -62,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -136,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                               ],
                             ),
                           ),
@@ -225,8 +226,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           _buildDivider(),
                           _buildTile(Icons.language_outlined, 'Язык',
-                            trailing: const Text('Русский',
-                              style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                            trailing: Text('Русский',
+                              style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             onTap: () => context.push(RouteNames.languageSettings)),
                           _buildDivider(),
                           _buildTile(Icons.cloud_done_outlined, 'Офлайн-режим',
@@ -285,7 +286,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildSectionLabel(String title) {
     return Text(title,
-      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary));
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textSecondary));
   }
 
   Widget _buildSectionCard(List<Widget> children) {
@@ -347,7 +348,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (trailing != null)
               trailing
             else
-              const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 18),
+              Icon(Icons.chevron_right, color: context.textSecondary, size: 18),
           ],
         ),
       ),
