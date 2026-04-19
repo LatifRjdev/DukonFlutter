@@ -524,6 +524,115 @@ After hardcoded-path migration, identify route constants in `route_names.dart` t
 - [ ] API endpoint paths in all datasources match backend `@Controller` paths (verified via smoke test: POS, sales, finance, reports, investments, expenses, deliveries, suppliers, discounts, inventory-counts)
 - [ ] Manual QA pass: navigate through every tab and every "Ещё" entry on device in both themes — no crashes, no 404s
 
+## Testing Strategy
+
+Existing test infrastructure lives in `app/test/` organized by `core/`, `domain/`, `presentation/`. Follow the established pattern: `test` files mirror `lib` structure (e.g., `lib/x/y.dart` → `test/x/y_test.dart`).
+
+**Test layers used in this redesign:**
+
+| Layer | Purpose | When to write |
+|-------|---------|---------------|
+| **Unit** | Logic in BLoCs, repositories, theme extensions, helpers | Any new logic (theme mode selector, route validator) |
+| **Widget** | New reusable widgets render correctly in both themes | Every new shared widget (KpiCard, QuickActionCard, etc.) |
+| **Golden** | Pixel-perfect screenshot regression | One per core screen, captured in both light + dark |
+| **Integration (manual)** | End-to-end flows on real device | Critical user journeys, once per sprint |
+
+### Sprint 1 — Theme Foundation Tests
+
+New test files:
+- `test/core/theme/theme_extensions_test.dart`
+  - `context.bg` returns `scaffoldBackgroundColor` for current theme
+  - `context.textPrimary` returns correct color for light vs dark
+  - `context.success` / `context.danger` return different shades per brightness
+- `test/app_test.dart` (or extend existing)
+  - When `SettingsBloc` emits `SettingsLoaded(themeMode: dark)`, `MaterialApp.themeMode` becomes `ThemeMode.dark`
+  - When `SettingsBloc` emits `SettingsLoaded(themeMode: light)`, `MaterialApp.themeMode` becomes `ThemeMode.light`
+  - Fallback to `ThemeMode.system` when state is not `SettingsLoaded`
+- `test/presentation/widgets/common/glass_card_test.dart`
+  - In light theme: renders solid white surface, NO backdrop blur
+  - In dark theme: renders glass surface with backdrop blur and white border
+  - `accentColor` prop adds `border-left` of the specified color
+
+### Sprint 2 — Core Screen Widget Tests
+
+New shared widgets each get a widget test:
+- `test/presentation/widgets/common/kpi_card_test.dart`
+  - Renders value + label + correct border-left color per accent type
+  - Money formatted with tabular-nums
+- `test/presentation/widgets/common/quick_action_card_test.dart`
+  - Renders icon in tinted background matching accent type
+  - Tap invokes `onTap` callback
+- `test/presentation/widgets/common/section_header_test.dart`
+  - Renders uppercase label
+  - Shows "Все ›" link only when `onSeeAll` provided, tap invokes callback
+- `test/presentation/widgets/common/empty_state_card_test.dart`
+- `test/presentation/widgets/common/gradient_cta_test.dart`
+  - Shows loading spinner when `loading: true`, button disabled
+  - Tap invokes `onPressed` when not loading
+
+Golden tests for core screens (one golden per screen, 2 variants for themes):
+- `test/presentation/pages/dashboard/dashboard_page_golden_test.dart` — light + dark snapshots with mocked non-empty state
+- `test/presentation/pages/finance/finance_dashboard_page_golden_test.dart`
+- `test/presentation/pages/pos/pos_checkout_page_golden_test.dart` — with 3 items in cart
+- `test/presentation/pages/product/product_list_page_golden_test.dart` — with mixed stock states
+- `test/presentation/pages/pos/sale_success_page_golden_test.dart`
+
+Goldens live in `test/golden/` subfolders. Regenerate with `flutter test --update-goldens` only when a change is intentional.
+
+### Sprint 3 — Full Migration Regression
+
+No new unit/widget tests required for pure color-token migration. Relies on:
+- Sprint 2 goldens catching accidental visual regressions when touching those screens
+- Manual QA pass on real device (both themes)
+- Lint rule: add a custom analysis rule or CI grep that fails the build if `AppColors.light*` or `AppColors.dark*` appears outside theme definition files
+
+### Sprint 4 — Routing & Connectivity Tests
+
+New test file: `test/core/router/app_router_test.dart`
+- Every `RouteNames.*` constant has a registered `GoRoute` with matching path
+- Every registered `GoRoute` has a corresponding `RouteNames.*` constant (no orphan paths)
+- `TransactionDetailPage` route builder, given `extra: Sale`, builds without crash
+- `TransactionDetailPage` route builder, given `extra: null`, shows `ErrorPage` (not crash)
+- Store-scoped routes (e.g., `/finance/balance`) reject navigation without `extra: storeId`
+
+New test file: `test/core/router/navigation_contract_test.dart`
+- Parametrized test over all store-scoped pages: for each page, verify its widget constructor requires `storeId` (non-nullable)
+
+Update existing navigation tests (if any) to use `RouteNames.*` constants, not hardcoded paths.
+
+CI check (shell script or dart analysis rule):
+- `grep -rE "context\.(push|go|pushReplacement)\('/" app/lib/presentation` must return 0 matches (excluding `route_names.dart`)
+
+### Test Coverage Targets
+
+| Area | Target |
+|------|--------|
+| New shared widgets (Sprint 2) | 100% — every widget has a widget test |
+| Theme extensions & toggle logic | 100% |
+| Router validation | 100% of routes covered by `app_router_test.dart` |
+| Golden tests | Core 5 screens × 2 themes = 10 goldens |
+| Overall project coverage | Do not regress below current baseline (measure once, use as floor) |
+
+### What NOT to test
+
+Per `.claude/rules/testing.md` and to keep the suite lean:
+- Don't snapshot-test every auxiliary screen (only core 5 get goldens)
+- Don't test Flutter framework behavior (`MaterialApp`, `GoRouter` internals) — we trust the framework
+- Don't mock colors/theme deeply in every widget test — use a real `MaterialApp` with `AppTheme.light`/`AppTheme.dark` and read from context
+- Don't add integration tests that require a running backend — keep integration manual for this phase
+
+### Running tests
+
+Standard Flutter test commands. Add to `app/README.md` if not already documented:
+```
+flutter test                                # All unit + widget tests
+flutter test test/presentation/widgets/     # Only widget tests
+flutter test --update-goldens               # Regenerate goldens (review diff carefully before committing)
+flutter test --coverage                     # With coverage report (HTML via lcov)
+```
+
+Sprints 1–4 must all ship with their test suite green. PRs failing tests do not merge.
+
 ## Out of Scope
 
 - New features (only visual refresh + theme fix + routing hardening — no new screens)
@@ -533,6 +642,8 @@ After hardcoded-path migration, identify route constants in `route_names.dart` t
 - Tablet-specific layouts (app is phone-only for now)
 - Backend API changes (if mismatch found, frontend is adjusted to match backend, not vice versa)
 - Deep link (URL from outside app) support — internal navigation only
+- Backfilling tests for pages that are NOT touched in this redesign (keep existing test suite as-is)
+- End-to-end automated integration tests (manual QA is acceptable for this phase)
 
 ## Dependencies & Risks
 
@@ -546,3 +657,6 @@ After hardcoded-path migration, identify route constants in `route_names.dart` t
 | Route migration breaks in-flight flows | Do Sprint 4 after Sprint 3 so visual QA already caught broken screens; migrate by feature area (POS → Settings → Products...) and smoke-test each area before moving on |
 | Renaming a route constant silently breaks callers | Before renaming any `RouteNames.xxx`, `grep -r "RouteNames.xxx"` and update all callers in the same commit |
 | Backend URL change goes unnoticed by frontend | Sprint 4 includes a one-time URL audit table cross-referencing every datasource method to a backend controller path; keep this table updated when adding new endpoints |
+| Golden tests become brittle after small visual tweaks | Regenerate goldens intentionally (`--update-goldens`) and always review the diff before committing; never blindly update all goldens at once |
+| Tests slow down CI significantly | Goldens only for 5 core screens; widget tests run in seconds; no integration tests in this phase — keep CI under 2 min |
+| Golden rendering differs between local macOS and CI Linux | Pin Flutter version in `pubspec.yaml` (`flutter: 3.24.x`) and use same environment for generation and CI |
