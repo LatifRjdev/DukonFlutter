@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class SettingsTile extends StatelessWidget {
@@ -25,8 +26,8 @@ class SettingsTile extends StatelessWidget {
         child: Icon(icon, color: iconColor ?? AppColors.primary, size: 20),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15)),
-      subtitle: subtitle != null ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)) : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary),
+      subtitle: subtitle != null ? Text(subtitle!, style: TextStyle(fontSize: 12, color: context.textSecondary)) : null,
+      trailing: trailing ?? Icon(Icons.chevron_right, color: context.textSecondary),
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: 2),
     );
