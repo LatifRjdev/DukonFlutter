@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
@@ -36,9 +37,9 @@ class _StaffListPageState extends State<StaffListPage> {
   Color _roleBadgeColor(String role) {
     switch (role.toUpperCase()) {
       case 'ADMIN': return AppColors.primary;
-      case 'CASHIER': return AppColors.lightTextSecondary;
+      case 'CASHIER': return context.textSecondary;
       case 'WAREHOUSE': return AppColors.info;
-      default: return AppColors.lightTextSecondary;
+      default: return context.textSecondary;
     }
   }
 
@@ -55,7 +56,7 @@ class _StaffListPageState extends State<StaffListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/staff/add', extra: widget.storeId),
@@ -120,7 +121,7 @@ class _StaffListPageState extends State<StaffListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.lightSurface,
+                                color: context.surface,
                                 borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                               ),
                               child: Row(
@@ -173,7 +174,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                               isOnShift ? 'На смене' : 'Не на смене',
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                color: isOnShift ? AppColors.success : AppColors.lightTextSecondary,
+                                                color: isOnShift ? AppColors.success : context.textSecondary,
                                               ),
                                             ),
                                             if (isOnShift && staff.todaySales != null && staff.todaySales! > 0) ...[
@@ -192,7 +193,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                 ],
                               ),
                             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/staff_member.dart';
 import '../../blocs/staff/staff_bloc.dart';
@@ -132,7 +133,7 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.lightBorder),
+                    border: Border.all(color: context.border),
                     borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                   child: DropdownButtonHideUnderline(

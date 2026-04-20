@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
@@ -62,7 +63,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
       case 'WAREHOUSE':
         return AppColors.warning;
       default:
-        return AppColors.lightTextSecondary;
+        return context.textSecondary;
     }
   }
 
@@ -103,7 +104,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
-                  color: AppColors.lightSurface,
+                  color: context.surface,
                   child: Column(
                     children: [
                       CircleAvatar(
@@ -139,11 +140,11 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.phone, size: 16, color: AppColors.lightTextSecondary),
+                            Icon(Icons.phone, size: 16, color: context.textSecondary),
                             const SizedBox(width: 4),
                             Text(
                               member.phone!,
-                              style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary),
+                              style: TextStyle(fontSize: 14, color: context.textSecondary),
                             ),
                           ],
                         ),
@@ -163,7 +164,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                           _InfoColumn(
                             label: 'Статус',
                             value: member.isOnShift ? 'На смене' : 'Нет смены',
-                            valueColor: member.isOnShift ? AppColors.success : AppColors.lightTextSecondary,
+                            valueColor: member.isOnShift ? AppColors.success : context.textSecondary,
                           ),
                         ],
                       ),
@@ -173,7 +174,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                 TabBar(
                   controller: _tabController,
                   labelColor: AppColors.primary,
-                  unselectedLabelColor: AppColors.lightTextSecondary,
+                  unselectedLabelColor: context.textSecondary,
                   indicatorColor: AppColors.primary,
                   tabs: const [
                     Tab(text: 'Смены'),
@@ -215,11 +216,11 @@ class _InfoColumn extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
-            color: valueColor ?? AppColors.lightTextPrimary,
+            color: valueColor ?? context.textPrimary,
           ),
         ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+        Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
       ],
     );
   }
@@ -239,8 +240,8 @@ class _ShiftsTab extends StatelessWidget {
         }
         if (state is ShiftLoaded) {
           if (state.shifts.isEmpty) {
-            return const Center(
-              child: Text('Нет смен', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
+            return Center(
+              child: Text('Нет смен', style: TextStyle(color: context.textSecondary, fontSize: 16)),
             );
           }
           return ListView.separated(
@@ -273,7 +274,7 @@ class _StatsTab extends StatelessWidget {
       child: Column(
         children: [
           _StatRow(label: 'Продажи сегодня', value: '${member.todaySales?.toStringAsFixed(0) ?? "0"} TJS'),
-          const Divider(height: 1, color: AppColors.lightBorder),
+          Divider(height: 1, color: context.border),
           _StatRow(label: 'Дата регистрации', value: '${member.createdAt.day.toString().padLeft(2, '0')}.${member.createdAt.month.toString().padLeft(2, '0')}.${member.createdAt.year}'),
         ],
       ),
@@ -293,7 +294,7 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+          Text(label, style: TextStyle(fontSize: 14, color: context.textSecondary)),
           Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         ],
       ),
