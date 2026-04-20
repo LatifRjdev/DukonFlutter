@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -218,12 +219,12 @@ class _InventoryView extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: AppColors.lightBackground,
+          backgroundColor: context.bg,
           appBar: AppBar(
             title: Text(title,
                 style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
             backgroundColor: Colors.white,
-            foregroundColor: AppColors.lightTextPrimary,
+            foregroundColor: context.textPrimary,
             elevation: 0,
           ),
           body: body,
@@ -264,13 +265,13 @@ class _StartScreen extends StatelessWidget {
                   fontFamily: 'Inter', fontSize: 22, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: AppConstants.spacingSm),
-            const Text(
+            Text(
               'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
-                  color: AppColors.lightTextSecondary),
+                  color: context.textSecondary),
             ),
             const SizedBox(height: AppConstants.spacingXl),
             SizedBox(
@@ -382,12 +383,12 @@ class _CountScreenState extends State<_CountScreen> {
               horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text('Нажмите на строку для редактирования',
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
-                        color: AppColors.lightTextSecondary)),
+                        color: context.textSecondary)),
               ),
               IconButton(
                 icon: const Icon(Icons.qr_code_scanner, color: AppColors.primary),
@@ -428,10 +429,10 @@ class _CountScreenState extends State<_CountScreen> {
                                   fontFamily: 'Inter', fontWeight: FontWeight.w500)),
                           const SizedBox(height: 2),
                           Text('Ожидается: ${fmt.format(product.expected)}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 12,
-                                  color: AppColors.lightTextSecondary)),
+                                  color: context.textSecondary)),
                         ],
                       ),
                     ),
@@ -457,13 +458,13 @@ class _CountScreenState extends State<_CountScreen> {
                             borderRadius:
                                 BorderRadius.circular(AppConstants.radiusSm),
                             borderSide:
-                                const BorderSide(color: AppColors.lightBorder),
+                                BorderSide(color: context.border),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(AppConstants.radiusSm),
                             borderSide:
-                                const BorderSide(color: AppColors.lightBorder),
+                                BorderSide(color: context.border),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
@@ -550,14 +551,14 @@ class _DiffScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppConstants.spacingMd, vertical: 10),
-                    decoration: const BoxDecoration(
-                      color: AppColors.lightSurfaceElevated,
+                    decoration: BoxDecoration(
+                      color: context.surfaceMuted,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(AppConstants.cardRadius),
                         topRight: Radius.circular(AppConstants.cardRadius),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Expanded(
                           flex: 3,
@@ -566,7 +567,7 @@ class _DiffScreen extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
-                                  color: AppColors.lightTextSecondary)),
+                                  color: context.textSecondary)),
                         ),
                         SizedBox(
                           width: 60,
@@ -575,7 +576,7 @@ class _DiffScreen extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 11,
-                                  color: AppColors.lightTextSecondary),
+                                  color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),
                         SizedBox(
@@ -585,7 +586,7 @@ class _DiffScreen extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 11,
-                                  color: AppColors.lightTextSecondary),
+                                  color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),
                         SizedBox(
@@ -595,7 +596,7 @@ class _DiffScreen extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 11,
-                                  color: AppColors.lightTextSecondary),
+                                  color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),
                       ],
@@ -667,7 +668,7 @@ class _DiffRow extends StatelessWidget {
     } else if (diff > 0) {
       diffColor = AppColors.warning;
     } else {
-      diffColor = AppColors.lightTextSecondary;
+      diffColor = context.textSecondary;
     }
 
     return Padding(
@@ -685,10 +686,10 @@ class _DiffRow extends StatelessWidget {
           SizedBox(
             width: 60,
             child: Text(fmt.format(product.expected),
-                style: const TextStyle(
+                style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,
-                    color: AppColors.lightTextSecondary),
+                    color: context.textSecondary),
                 textAlign: TextAlign.center),
           ),
           SizedBox(
@@ -749,12 +750,12 @@ class _DoneScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppConstants.spacingSm),
-            const Text(
+            Text(
               'Остатки товаров успешно обновлены.',
               style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
-                  color: AppColors.lightTextSecondary),
+                  color: context.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppConstants.spacingXl),
