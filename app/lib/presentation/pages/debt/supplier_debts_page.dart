@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
@@ -97,7 +98,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                   ),
                   child: Column(
                     children: [
-                      const Text('Наш долг', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                      Text('Наш долг', style: TextStyle(fontSize: 14, color: context.textSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.debt.toStringAsFixed(2)} TJS',
@@ -126,10 +127,10 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                 const Text('История оплат', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppConstants.spacingSm),
                 if (state.payments.isEmpty)
-                  const Center(
+                  Center(
                     child: Padding(
-                      padding: EdgeInsets.all(AppConstants.spacingXl),
-                      child: Text('Нет записей об оплате', style: TextStyle(color: AppColors.lightTextSecondary)),
+                      padding: const EdgeInsets.all(AppConstants.spacingXl),
+                      child: Text('Нет записей об оплате', style: TextStyle(color: context.textSecondary)),
                     ),
                   )
                 else
@@ -160,7 +161,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                                 children: [
                                   Text(method == 'CASH' ? 'Наличные' : 'Карта', style: const TextStyle(fontWeight: FontWeight.w500)),
                                   if (notes != null && notes.isNotEmpty)
-                                    Text(notes, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    Text(notes, style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
                                 ],
                               ),
                             ),
@@ -169,7 +170,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                               children: [
                                 Text('${amount.toStringAsFixed(2)} TJS', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.success)),
                                 if (date.isNotEmpty)
-                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                  Text(date.substring(0, 10), style: TextStyle(fontSize: 11, color: context.textSecondary)),
                               ],
                             ),
                           ],

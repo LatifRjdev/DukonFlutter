@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
@@ -70,7 +71,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           ),
                           child: Column(
                             children: [
-                              const Text('Нам должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Нам должны', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalCustomerDebt.toStringAsFixed(2)} TJS',
@@ -90,7 +91,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           ),
                           child: Column(
                             children: [
-                              const Text('Мы должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Мы должны', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalSupplierDebt.toStringAsFixed(2)} TJS',
@@ -150,7 +151,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           children: [
                             Icon(Icons.check_circle_outline, size: 64, color: AppColors.success),
                             const SizedBox(height: AppConstants.spacingMd),
-                            const Text('Нет активных долгов', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
+                            Text('Нет активных долгов', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                           ],
                         ),
                       ),
