@@ -27,3 +27,31 @@ Future<void> pumpPageWithTheme(
   );
   await tester.pumpAndSettle();
 }
+
+/// Wraps a standalone widget in a Scaffold for golden coverage.
+/// Use for any widget that does NOT have its own Scaffold (most shared components).
+Future<void> pumpWidgetWithTheme(
+  WidgetTester tester,
+  Widget widget, {
+  required Brightness brightness,
+  Widget Function(Widget child)? wrap,
+  Size size = const Size(390, 844),
+  EdgeInsets padding = const EdgeInsets.all(16),
+  Alignment alignment = Alignment.center,
+}) async {
+  final hosted = Scaffold(
+    body: SafeArea(
+      child: Padding(
+        padding: padding,
+        child: Align(alignment: alignment, child: widget),
+      ),
+    ),
+  );
+  await pumpPageWithTheme(
+    tester,
+    hosted,
+    brightness: brightness,
+    wrap: wrap,
+    size: size,
+  );
+}
