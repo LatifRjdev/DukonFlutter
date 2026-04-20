@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/shift.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
@@ -92,7 +93,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -205,7 +206,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         border: const Border(left: BorderSide(color: AppColors.success, width: 4)),
       ),
@@ -233,7 +234,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
           Text('Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}',
-            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+            style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 4),
           Text('Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}',
             style: const TextStyle(fontSize: 13)),
@@ -265,7 +266,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.lightSurface,
+          color: context.surface,
           borderRadius: BorderRadius.circular(AppConstants.cardRadius),
         ),
         child: Row(
@@ -277,7 +278,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   Row(
                     children: [
                       Text(dateFormat.format(shift.openedAt),
-                        style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 13, color: context.textSecondary)),
                       const SizedBox(width: 8),
                       Text(shift.staffName ?? '—',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
@@ -286,7 +287,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   const SizedBox(height: 4),
                   Text(
                     '${timeFormat.format(shift.openedAt)}–${shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],
               ),

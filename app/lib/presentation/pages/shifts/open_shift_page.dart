@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
@@ -82,10 +83,10 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
-                      const Text(
+                      Text(
                         'Укажите сумму наличных в кассе на начало смены',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                        style: TextStyle(color: context.textSecondary, fontSize: 14),
                       ),
                     ],
                   ),
