@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class BarcodeScannerSheet extends StatefulWidget {
   final ValueChanged<String> onScanned;
@@ -55,9 +56,9 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
 
     return Container(
       height: maxHeight,
-      decoration: const BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(AppConstants.radiusXl),
         ),
       ),
@@ -71,7 +72,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: context.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -88,14 +89,14 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
             ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Сканер штрихкода',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Inter',
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -103,9 +104,9 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                   ),
                   tooltip: 'Пӯшидан',
                 ),
@@ -113,7 +114,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
             ),
           ),
 
-          const Divider(height: 1, color: AppColors.lightBorder),
+          Divider(height: 1, color: context.border),
 
           // Camera preview with overlay
           Expanded(
@@ -147,12 +148,12 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
               bottom: AppConstants.spacingMd +
                   MediaQuery.of(context).viewPadding.bottom,
             ),
-            child: const Text(
+            child: Text(
               'Наведите камеру на штрихкод',
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextSecondary,
+                color: context.textSecondary,
               ),
             ),
           ),
