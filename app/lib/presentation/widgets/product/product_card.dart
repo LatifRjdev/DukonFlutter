@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/product.dart';
@@ -17,10 +18,10 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightSurface,
+      color: context.surface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.overlay,
+      shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -33,7 +34,7 @@ class ProductCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
+                  color: context.bg,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(AppConstants.cardRadius),
                   ),
@@ -46,10 +47,10 @@ class ProductCard extends StatelessWidget {
                         child: Image.network(
                           product.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => _buildImagePlaceholder(),
+                          errorBuilder: (_, _, _) => _buildImagePlaceholder(context),
                         ),
                       )
-                    : _buildImagePlaceholder(),
+                    : _buildImagePlaceholder(context),
               ),
             ),
             // Info area
@@ -63,10 +64,10 @@ class ProductCard extends StatelessWidget {
                   children: [
                     Text(
                       product.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextPrimary,
+                        color: context.textPrimary,
                         fontFamily: 'Inter',
                       ),
                       maxLines: 2,
@@ -86,7 +87,7 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        _buildQuantityIndicator(),
+                        _buildQuantityIndicator(context),
                       ],
                     ),
                   ],
@@ -99,24 +100,24 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImagePlaceholder() {
-    return const Center(
+  Widget _buildImagePlaceholder(BuildContext context) {
+    return Center(
       child: Icon(
         Icons.inventory_2_outlined,
-        color: AppColors.lightTextHint,
+        color: context.textMuted,
         size: 40,
       ),
     );
   }
 
-  Widget _buildQuantityIndicator() {
+  Widget _buildQuantityIndicator(BuildContext context) {
     Color indicatorColor;
     if (product.isOutOfStock) {
-      indicatorColor = AppColors.error;
+      indicatorColor = context.danger;
     } else if (product.isLowStock) {
-      indicatorColor = AppColors.warning;
+      indicatorColor = context.warning;
     } else {
-      indicatorColor = AppColors.success;
+      indicatorColor = context.success;
     }
 
     return Container(
