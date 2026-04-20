@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -165,16 +166,16 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Доставки', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
         backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        foregroundColor: context.textPrimary,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.lightTextSecondary,
+          unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
           labelStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 13),
           tabs: _tabs.map((t) => Tab(text: t.label)).toList(),
@@ -213,8 +214,8 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
                   children: [
                     Icon(Icons.local_shipping_outlined, size: 64, color: AppColors.disabled),
                     const SizedBox(height: AppConstants.spacingMd),
-                    const Text('Доставок пока нет',
-                        style: TextStyle(fontFamily: 'Inter', color: AppColors.lightTextSecondary, fontSize: 16)),
+                    Text('Доставок пока нет',
+                        style: TextStyle(fontFamily: 'Inter', color: context.textSecondary, fontSize: 16)),
                   ],
                 ),
               );
@@ -315,22 +316,22 @@ class _DeliveryCard extends StatelessWidget {
             const SizedBox(height: AppConstants.spacingSm),
             Row(
               children: [
-                const Icon(Icons.person_outline, size: 14, color: AppColors.lightTextSecondary),
+                Icon(Icons.person_outline, size: 14, color: context.textSecondary),
                 const SizedBox(width: 4),
                 Expanded(
                     child: Text(delivery.customerName,
                         style:
-                            const TextStyle(fontFamily: 'Inter', fontSize: 13, color: AppColors.lightTextSecondary))),
+                            TextStyle(fontFamily: 'Inter', fontSize: 13, color: context.textSecondary))),
               ],
             ),
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.location_on_outlined, size: 14, color: AppColors.lightTextSecondary),
+                Icon(Icons.location_on_outlined, size: 14, color: context.textSecondary),
                 const SizedBox(width: 4),
                 Expanded(
                     child: Text(delivery.address,
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: context.textSecondary),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis)),
               ],
@@ -343,7 +344,7 @@ class _DeliveryCard extends StatelessWidget {
                         fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.primary)),
                 const Spacer(),
                 Text(formatDate(delivery.createdAt),
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: AppColors.lightTextHint)),
+                    style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: context.textMuted)),
               ],
             ),
           ],

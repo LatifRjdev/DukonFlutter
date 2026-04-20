@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -194,12 +195,12 @@ class _CreateViewState extends State<_CreateView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         appBar: AppBar(
           title: const Text('Новая доставка',
               style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
           backgroundColor: Colors.white,
-          foregroundColor: AppColors.lightTextPrimary,
+          foregroundColor: context.textPrimary,
           elevation: 0,
         ),
         body: BlocBuilder<_CreateCubit, _CreateState>(
@@ -239,14 +240,14 @@ class _CreateViewState extends State<_CreateView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                        border: Border.all(color: AppColors.lightBorder),
+                        border: Border.all(color: context.border),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedSaleId,
                           isExpanded: true,
-                          hint: const Text('Выберите заказ',
-                              style: TextStyle(color: AppColors.lightTextHint)),
+                          hint: Text('Выберите заказ',
+                              style: TextStyle(color: context.textMuted)),
                           items: sales
                               .map((s) => DropdownMenuItem(value: s.id, child: Text(s.label)))
                               .toList(),
@@ -270,11 +271,11 @@ class _CreateViewState extends State<_CreateView> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                          borderSide: const BorderSide(color: AppColors.lightBorder),
+                          borderSide: BorderSide(color: context.border),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                          borderSide: const BorderSide(color: AppColors.lightBorder),
+                          borderSide: BorderSide(color: context.border),
                         ),
                       ),
                       maxLines: 2,
@@ -291,14 +292,14 @@ class _CreateViewState extends State<_CreateView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                        border: Border.all(color: AppColors.lightBorder),
+                        border: Border.all(color: context.border),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedCourierId,
                           isExpanded: true,
-                          hint: const Text('Выберите курьера',
-                              style: TextStyle(color: AppColors.lightTextHint)),
+                          hint: Text('Выберите курьера',
+                              style: TextStyle(color: context.textMuted)),
                           items: staff
                               .map((s) => DropdownMenuItem(value: s.id, child: Text(s.name)))
                               .toList(),
@@ -322,11 +323,11 @@ class _CreateViewState extends State<_CreateView> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                          borderSide: const BorderSide(color: AppColors.lightBorder),
+                          borderSide: BorderSide(color: context.border),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                          borderSide: const BorderSide(color: AppColors.lightBorder),
+                          borderSide: BorderSide(color: context.border),
                         ),
                       ),
                       maxLines: 3,
@@ -378,10 +379,10 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: const TextStyle(
+        style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: AppColors.lightTextSecondary));
+            color: context.textSecondary));
   }
 }

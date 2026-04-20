@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -149,12 +150,12 @@ class _DetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Детали доставки',
             style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
         backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        foregroundColor: context.textPrimary,
         elevation: 0,
       ),
       body: BlocBuilder<_DetailCubit, _DetailState>(
@@ -229,10 +230,10 @@ class _DetailView extends StatelessWidget {
                                     child: Text(delivery.items[i].name,
                                         style: const TextStyle(fontFamily: 'Inter', fontSize: 14))),
                                 Text('${delivery.items[i].qty} шт',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 13,
-                                        color: AppColors.lightTextSecondary)),
+                                        color: context.textSecondary)),
                                 const SizedBox(width: 12),
                                 Text(_formatPrice(delivery.items[i].price * delivery.items[i].qty),
                                     style: const TextStyle(
@@ -346,7 +347,7 @@ class _StatusStepper extends StatelessWidget {
               Expanded(
                 child: Container(
                   height: 2,
-                  color: i < currentIndex ? AppColors.primary : AppColors.lightBorder,
+                  color: i < currentIndex ? AppColors.primary : context.border,
                 ),
               ),
           ],
@@ -373,7 +374,7 @@ class _StepDot extends StatelessWidget {
           height: 20,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isActive ? AppColors.primary : AppColors.lightBorder,
+            color: isActive ? AppColors.primary : context.border,
             border: isCurrent
                 ? Border.all(color: AppColors.primary, width: 2)
                 : null,
@@ -387,7 +388,7 @@ class _StepDot extends StatelessWidget {
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 11,
-                color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
+                color: isActive ? AppColors.primary : context.textSecondary,
                 fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400)),
       ],
     );
@@ -427,8 +428,8 @@ class _InfoRow extends StatelessWidget {
         SizedBox(
           width: 80,
           child: Text(label,
-              style: const TextStyle(
-                  fontFamily: 'Inter', fontSize: 13, color: AppColors.lightTextSecondary)),
+              style: TextStyle(
+                  fontFamily: 'Inter', fontSize: 13, color: context.textSecondary)),
         ),
         Expanded(
             child: Text(value,
