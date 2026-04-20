@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
@@ -171,14 +172,14 @@ class _PayrollPageState extends State<PayrollPage> {
             children: [
               Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.disabled),
               const SizedBox(height: AppConstants.spacingMd),
-              const Text(
+              Text(
                 'Нет данных по зарплате',
-                style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                style: TextStyle(color: context.textSecondary, fontSize: 16),
               ),
               const SizedBox(height: AppConstants.spacingSm),
-              const Text(
+              Text(
                 'Выберите месяц и нажмите "Рассчитать"',
-                style: TextStyle(color: AppColors.lightTextHint, fontSize: 14),
+                style: TextStyle(color: context.textMuted, fontSize: 14),
               ),
             ],
           ),
@@ -264,9 +265,9 @@ class _PayrollPageState extends State<PayrollPage> {
                         children: [
                           Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
                           const SizedBox(height: AppConstants.spacingMd),
-                          const Text(
+                          Text(
                             'Нет данных по сотрудникам',
-                            style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                            style: TextStyle(color: context.textSecondary, fontSize: 16),
                           ),
                         ],
                       ),
@@ -338,7 +339,7 @@ class _PeriodCard extends StatelessWidget {
     }
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(String status, BuildContext context) {
     switch (status) {
       case 'CALCULATED':
         return AppColors.info;
@@ -347,7 +348,7 @@ class _PeriodCard extends StatelessWidget {
       case 'PAID':
         return AppColors.success;
       default:
-        return AppColors.lightTextSecondary;
+        return context.textSecondary;
     }
   }
 
@@ -377,13 +378,13 @@ class _PeriodCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _statusColor(status).withValues(alpha: 0.15),
+                      color: _statusColor(status, context).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                     ),
                     child: Text(
                       _statusLabel(status),
                       style: TextStyle(
-                        color: _statusColor(status),
+                        color: _statusColor(status, context),
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                       ),
@@ -392,7 +393,7 @@ class _PeriodCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppConstants.spacingSm),
-              const Divider(height: 1, color: AppColors.lightBorder),
+              Divider(height: 1, color: context.border),
               const SizedBox(height: AppConstants.spacingSm),
               Row(
                 children: [
@@ -408,9 +409,9 @@ class _PeriodCard extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Итого',
-                          style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       ],
                     ),
@@ -427,9 +428,9 @@ class _PeriodCard extends StatelessWidget {
                             color: AppColors.success,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Выплачено',
-                          style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       ],
                     ),
@@ -439,7 +440,7 @@ class _PeriodCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.people_outline, size: 16, color: AppColors.lightTextSecondary),
+                          Icon(Icons.people_outline, size: 16, color: context.textSecondary),
                           const SizedBox(width: 4),
                           Text(
                             '$staffCount',
@@ -447,9 +448,9 @@ class _PeriodCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Text(
+                      Text(
                         'Сотрудники',
-                        style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
                   ),
