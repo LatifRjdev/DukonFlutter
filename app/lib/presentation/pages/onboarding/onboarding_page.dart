@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_button.dart';
 
@@ -72,7 +73,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         width: _currentPage == i ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == i ? AppColors.primary : AppColors.lightBorder,
+                          color: _currentPage == i ? AppColors.primary : context.border,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -142,7 +143,7 @@ class _OnboardingSlide extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(description,
-            style: const TextStyle(fontSize: 16, color: AppColors.lightTextSecondary),
+            style: TextStyle(fontSize: 16, color: context.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
