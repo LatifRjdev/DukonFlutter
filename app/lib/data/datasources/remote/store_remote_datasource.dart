@@ -40,8 +40,8 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
           'name': name,
           'category': category,
           'currency': currency,
-          if (address != null) 'address': address,
-          if (phone != null) 'phone': phone,
+          'address': ?address,
+          'phone': ?phone,
         },
       );
 

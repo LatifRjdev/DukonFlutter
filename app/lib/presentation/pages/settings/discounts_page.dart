@@ -186,7 +186,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
         'name': name,
         'type': type,
         'value': value,
-        if (condition != null) 'condition': condition,
+        'condition': ?condition,
       };
       if (id != null) {
         await _dioClient.put('/stores/${widget.storeId}/discounts/$id', data: payload);

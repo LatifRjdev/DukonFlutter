@@ -57,11 +57,11 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
           'page': page,
           'limit': limit,
           if (search != null && search.isNotEmpty) 'search': search,
-          if (categoryId != null) 'categoryId': categoryId,
-          if (inStock != null) 'inStock': inStock,
-          if (lowStock != null) 'lowStock': lowStock,
-          if (sortBy != null) 'sortBy': sortBy,
-          if (sortOrder != null) 'sortOrder': sortOrder,
+          'categoryId': ?categoryId,
+          'inStock': ?inStock,
+          'lowStock': ?lowStock,
+          'sortBy': ?sortBy,
+          'sortOrder': ?sortOrder,
         },
       );
 

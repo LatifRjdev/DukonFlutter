@@ -91,7 +91,7 @@ class NotificationRemoteDatasourceImpl implements NotificationRemoteDatasource {
         '/users/me/fcm-token',
         data: {
           'token': token,
-          if (platform != null) 'platform': platform,
+          'platform': ?platform,
         },
       );
     } on DioException catch (e) {

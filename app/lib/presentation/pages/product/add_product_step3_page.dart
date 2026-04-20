@@ -170,7 +170,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                               ? supplierState.suppliers
                               : [];
                           return DropdownButtonFormField<String>(
-                            value: _selectedSupplierId,
+                            initialValue: _selectedSupplierId,
                             decoration: InputDecoration(
                               labelText: 'Поставщик',
                               prefixIcon: const Icon(Icons.local_shipping_outlined),

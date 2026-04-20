@@ -78,7 +78,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
             ? null
             : _descriptionController.text,
         'amount': amount,
-        if (returnAmount != null) 'returnAmount': returnAmount,
+        'returnAmount': ?returnAmount,
         'investorName': _investorNameController.text,
         'investorPhone': _investorPhoneController.text.isEmpty
             ? null

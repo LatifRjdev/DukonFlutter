@@ -176,7 +176,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         secondary: Icon(icon, color: value ? AppColors.primary : context.textSecondary),
         value: value,
-        activeColor: AppColors.primary,
+        activeThumbColor: AppColors.primary,
         onChanged: onChanged,
       ),
     );

@@ -55,7 +55,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           'phone': phone,
           'password': password,
           'name': name,
-          if (email != null) 'email': email,
+          'email': ?email,
         },
       );
 

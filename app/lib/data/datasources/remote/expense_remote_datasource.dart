@@ -43,10 +43,10 @@ class ExpenseRemoteDatasourceImpl implements ExpenseRemoteDatasource {
         queryParameters: {
           'page': page,
           'limit': limit,
-          if (category != null) 'category': category,
+          'category': ?category,
           if (startDate != null) 'startDate': startDate.toIso8601String(),
           if (endDate != null) 'endDate': endDate.toIso8601String(),
-          if (search != null) 'search': search,
+          'search': ?search,
         },
       );
 

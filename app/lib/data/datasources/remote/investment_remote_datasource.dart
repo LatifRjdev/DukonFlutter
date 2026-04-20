@@ -42,7 +42,7 @@ class InvestmentRemoteDatasourceImpl implements InvestmentRemoteDatasource {
         queryParameters: {
           'page': page,
           'limit': limit,
-          if (status != null) 'status': status,
+          'status': ?status,
           if (startDate != null) 'startDate': startDate.toIso8601String(),
           if (endDate != null) 'endDate': endDate.toIso8601String(),
         },

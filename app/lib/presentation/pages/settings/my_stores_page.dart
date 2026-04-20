@@ -100,7 +100,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: selectedCategory,
+              initialValue: selectedCategory,
               decoration: const InputDecoration(labelText: 'Категория *', border: OutlineInputBorder()),
               items: _categories.entries
                   .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
