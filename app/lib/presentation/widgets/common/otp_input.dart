@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class OtpInput extends StatefulWidget {
   final int length;
@@ -122,11 +123,11 @@ class _OtpInputState extends State<OtpInput> {
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 maxLength: 1,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Inter',
-                  color: AppColors.lightTextPrimary,
+                  color: context.textPrimary,
                 ),
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -135,12 +136,12 @@ class _OtpInputState extends State<OtpInput> {
                   counterText: '',
                   contentPadding: EdgeInsets.zero,
                   filled: true,
-                  fillColor: AppColors.lightSurface,
+                  fillColor: context.surface,
                   enabledBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(AppConstants.buttonRadius),
-                    borderSide: const BorderSide(
-                      color: AppColors.lightBorder,
+                    borderSide: BorderSide(
+                      color: context.border,
                       width: 1.5,
                     ),
                   ),

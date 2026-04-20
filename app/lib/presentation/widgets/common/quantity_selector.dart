@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class QuantitySelector extends StatelessWidget {
   final int quantity;
@@ -20,7 +21,7 @@ class QuantitySelector extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildButton(Icons.remove, () {
+        _buildButton(context, Icons.remove, () {
           if (quantity > min) onChanged(quantity - 1);
         }),
         Padding(
@@ -30,16 +31,16 @@ class QuantitySelector extends StatelessWidget {
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ),
-        _buildButton(Icons.add, () {
+        _buildButton(context, Icons.add, () {
           if (quantity < max) onChanged(quantity + 1);
         }),
       ],
     );
   }
 
-  Widget _buildButton(IconData icon, VoidCallback onTap) {
+  Widget _buildButton(BuildContext context, IconData icon, VoidCallback onTap) {
     return Material(
-      color: AppColors.lightBackground,
+      color: context.bg,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: onTap,

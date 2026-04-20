@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../l10n/app_localizations.dart';
 
 class AppBottomNavBar extends StatelessWidget {
@@ -20,14 +21,14 @@ class AppBottomNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final activeColor = AppColors.primary;
-    final inactiveColor = isDark ? AppColors.darkTextHint : AppColors.lightTextHint;
+    final inactiveColor = context.textMuted;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0x0AFFFFFF) : AppColors.lightSurface,
+        color: isDark ? const Color(0x0AFFFFFF) : context.surface,
         border: Border(
           top: BorderSide(
-            color: isDark ? const Color(0x0FFFFFFF) : AppColors.lightBorder,
+            color: isDark ? const Color(0x0FFFFFFF) : context.border,
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class AppLoading extends StatelessWidget {
   final String? message;
@@ -20,7 +21,7 @@ class AppLoading extends StatelessWidget {
           ),
           if (message != null) ...[
             const SizedBox(height: 16),
-            Text(message!, style: const TextStyle(color: AppColors.lightTextSecondary)),
+            Text(message!, style: TextStyle(color: context.textSecondary)),
           ],
         ],
       ),

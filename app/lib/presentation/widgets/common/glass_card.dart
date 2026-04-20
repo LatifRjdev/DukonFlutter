@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class GlassCard extends StatelessWidget {
   final Widget child;
@@ -33,7 +34,7 @@ class GlassCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.lightSurface,
+              color: context.surface,
               borderRadius: BorderRadius.circular(radius),
               border: accentColor != null
                   ? Border(left: BorderSide(color: accentColor!, width: 3))
