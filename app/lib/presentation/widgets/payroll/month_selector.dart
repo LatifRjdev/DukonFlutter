@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class MonthSelector extends StatelessWidget {
@@ -53,10 +53,10 @@ class MonthSelector extends StatelessWidget {
         vertical: AppConstants.spacingXs,
       ),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        boxShadow: const [
-          BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 2)),
+        boxShadow: [
+          BoxShadow(color: context.shadowColor, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -64,7 +64,7 @@ class MonthSelector extends StatelessWidget {
         children: [
           IconButton(
             onPressed: _previous,
-            icon: const Icon(Icons.chevron_left, color: AppColors.lightTextPrimary),
+            icon: Icon(Icons.chevron_left, color: context.textPrimary),
           ),
           Text(
             '${_monthNames[month - 1]} $year',
@@ -75,7 +75,7 @@ class MonthSelector extends StatelessWidget {
           ),
           IconButton(
             onPressed: _next,
-            icon: const Icon(Icons.chevron_right, color: AppColors.lightTextPrimary),
+            icon: Icon(Icons.chevron_right, color: context.textPrimary),
           ),
         ],
       ),
