@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
@@ -64,9 +65,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const Text('Забыли пароль?',
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.',
-                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                    style: TextStyle(color: context.textSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   PhoneInputField(

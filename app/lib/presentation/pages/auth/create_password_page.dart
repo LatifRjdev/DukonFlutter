@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
@@ -76,9 +77,9 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                   const Text('Новый пароль',
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Создайте новый пароль для вашего аккаунта',
-                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                    style: TextStyle(color: context.textSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   AppTextField(
