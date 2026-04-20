@@ -1,5 +1,16 @@
 # Sprint 2 — Page Theme Migration Implementation Plan
 
+## Sprint 2 Complete — 2026-04-19/20
+
+- **77 files migrated** across 21 feature folders + meta-task extending `ThemeColors` with 10 on-semantic/shadow/tinted-bg tokens
+- **0** `AppColors.(light|dark)(Background|Surface|Border|Text)` refs remaining in `app/lib/presentation/pages/`
+- **188 tests passing** (golden + unit), 0 flutter analyze errors, 0 warnings (only pre-existing info-level lints)
+- Every page covered with light + dark golden baselines
+- Commits: Task 0 → Task 5 (Phase 1), Phase 2–5 one commit per folder, plus meta-task "extend ThemeColors" (`e23e9a8`, `d325a9d`) and goldens regeneration (`ec8b8b7`)
+- Follow-up: Sprint 3 will migrate `lib/presentation/widgets/**` (shared components)
+
+---
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Migrate 77 Flutter page files in `lib/presentation/pages/**` from hardcoded `AppColors.lightX` references to theme-aware `context.X` getters, so that dark mode applies app-wide.
