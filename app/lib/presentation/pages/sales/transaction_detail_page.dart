@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
@@ -49,7 +50,7 @@ class TransactionDetailPage extends StatelessWidget {
     final dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -97,7 +98,7 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
@@ -123,7 +124,7 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
@@ -133,11 +134,11 @@ class TransactionDetailPage extends StatelessWidget {
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           if (sale.items.isEmpty)
-                            const Center(
+                            Center(
                               child: Padding(
-                                padding: EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(16),
                                 child: Text('Нет данных о товарах',
-                                  style: TextStyle(color: AppColors.lightTextSecondary)),
+                                  style: TextStyle(color: context.textSecondary)),
                               ),
                             )
                           else
@@ -158,9 +159,9 @@ class TransactionDetailPage extends StatelessWidget {
                                               style: const TextStyle(fontWeight: FontWeight.w500)),
                                             const SizedBox(height: 2),
                                             Text('${item.quantity} шт × ${_formatPrice(item.unitPrice)}',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 13,
-                                                color: AppColors.lightTextSecondary,
+                                                color: context.textSecondary,
                                               )),
                                           ],
                                         ),
@@ -182,7 +183,7 @@ class TransactionDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
+                        color: context.surface,
                         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                       ),
                       child: Column(
@@ -215,8 +216,8 @@ class TransactionDetailPage extends StatelessWidget {
             // Bottom buttons
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              decoration: const BoxDecoration(
-                color: AppColors.lightSurface,
+              decoration: BoxDecoration(
+                color: context.surface,
                 boxShadow: AppShadows.md,
               ),
               child: Row(
@@ -275,7 +276,7 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
+        Text(label, style: TextStyle(color: context.textSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
     );
@@ -296,7 +297,7 @@ class _TotalRow extends StatelessWidget {
       children: [
         Text(label,
           style: TextStyle(
-            color: AppColors.lightTextSecondary,
+            color: context.textSecondary,
             fontSize: isBold ? 16 : 14,
           )),
         Text(value,

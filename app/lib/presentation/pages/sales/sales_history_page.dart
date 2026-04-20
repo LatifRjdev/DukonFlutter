@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/route_names.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
 import '../../blocs/sales/sales_history_bloc.dart';
@@ -65,7 +66,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -262,10 +263,10 @@ class _SaleCard extends StatelessWidget {
     return AppColors.success;
   }
 
-  Color _statusBgColor() {
-    if (sale.status == 'REFUNDED') return AppColors.errorBg;
-    if (sale.paymentType == 'DEBT') return AppColors.warningBg;
-    return AppColors.successBg;
+  Color _statusBgColor(BuildContext context) {
+    if (sale.status == 'REFUNDED') return context.dangerBg;
+    if (sale.paymentType == 'DEBT') return context.warningBg;
+    return context.successBg;
   }
 
   String _paymentLabel() {
@@ -298,7 +299,7 @@ class _SaleCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: AppShadows.sm,
         ),
@@ -309,7 +310,7 @@ class _SaleCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: _statusBgColor(),
+                color: _statusBgColor(context),
                 shape: BoxShape.circle,
               ),
               child: Icon(_statusIcon(), size: 18, color: _statusColor()),
@@ -326,7 +327,7 @@ class _SaleCard extends StatelessWidget {
                       Text('Чек ${sale.receiptNo}',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(dateFormat.format(sale.createdAt),
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -335,7 +336,7 @@ class _SaleCard extends StatelessWidget {
                     children: [
                       Text(
                         '${sale.customerName ?? 'Розничный'}  •  ${sale.items.length} товаров',
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -348,17 +349,17 @@ class _SaleCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: isRefund ? AppColors.error : AppColors.lightTextPrimary,
+                          color: isRefund ? AppColors.error : context.textPrimary,
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(_paymentIcon(), size: 14, color: AppColors.lightTextSecondary),
+                          Icon(_paymentIcon(), size: 14, color: context.textSecondary),
                           const SizedBox(width: 4),
                           Text(isRefund ? 'Возврат' : _paymentLabel(),
                             style: TextStyle(
                               fontSize: 12,
-                              color: isRefund ? AppColors.error : AppColors.lightTextSecondary,
+                              color: isRefund ? AppColors.error : context.textSecondary,
                             )),
                         ],
                       ),
