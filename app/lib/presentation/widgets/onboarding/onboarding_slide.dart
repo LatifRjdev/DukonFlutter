@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class OnboardingSlide extends StatelessWidget {
@@ -52,7 +53,7 @@ class OnboardingSlide extends StatelessWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
+              color: context.textPrimary,
               fontFamily: 'Inter',
               height: 1.2,
             ),
@@ -65,7 +66,7 @@ class OnboardingSlide extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: AppColors.lightTextSecondary,
+              color: context.textSecondary,
               fontFamily: 'Inter',
               height: 1.5,
             ),
