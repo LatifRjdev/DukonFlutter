@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../common/glass_card.dart';
 
@@ -43,7 +44,7 @@ class StatCard extends StatelessWidget {
                 ),
                 child: Icon(icon, color: effectiveIconColor, size: 22),
               ),
-              if (trendPercentage != null) _buildTrendIndicator(theme),
+              if (trendPercentage != null) _buildTrendIndicator(context),
             ],
           ),
           const SizedBox(height: 12),
@@ -67,14 +68,9 @@ class StatCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTrendIndicator(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
-    final color = trendUp
-        ? (isDark ? AppColors.successDark : AppColors.success)
-        : (isDark ? AppColors.errorDark : AppColors.error);
-    final bgColor = trendUp
-        ? (isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successBg)
-        : (isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorBg);
+  Widget _buildTrendIndicator(BuildContext context) {
+    final color = trendUp ? context.success : context.danger;
+    final bgColor = trendUp ? context.successBg : context.dangerBg;
     final iconData = trendUp ? Icons.trending_up_rounded : Icons.trending_down_rounded;
 
     return Container(

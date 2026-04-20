@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class QuickActionCard extends StatelessWidget {
@@ -17,10 +18,10 @@ class QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightSurface,
+      color: context.surface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.overlay,
+      shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
@@ -33,7 +34,7 @@ class QuickActionCard extends StatelessWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha:0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: Icon(
@@ -46,10 +47,10 @@ class QuickActionCard extends StatelessWidget {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextPrimary,
+                  color: context.textPrimary,
                   fontFamily: 'Inter',
                 ),
                 maxLines: 2,
