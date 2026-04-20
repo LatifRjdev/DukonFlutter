@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../blocs/pos/cart_state.dart';
@@ -19,10 +20,10 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightSurface,
+      color: context.surface,
       borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       elevation: 1,
-      shadowColor: AppColors.overlay,
+      shadowColor: context.shadowColor,
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingSm + 4),
         child: Row(
@@ -34,10 +35,10 @@ class CartItemWidget extends StatelessWidget {
                 children: [
                   Text(
                     item.productName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                       fontFamily: 'Inter',
                     ),
                     maxLines: 1,
@@ -46,9 +47,9 @@ class CartItemWidget extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     Formatters.price(item.unitPrice),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: context.textSecondary,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -61,6 +62,7 @@ class CartItemWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildQuantityButton(
+                  context,
                   Icons.remove,
                   () {
                     if (item.quantity > 1) {
@@ -72,15 +74,16 @@ class CartItemWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '${item.quantity}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                       fontFamily: 'Inter',
                     ),
                   ),
                 ),
                 _buildQuantityButton(
+                  context,
                   Icons.add,
                   () => onQuantityChanged(item.quantity + 1),
                 ),
@@ -93,10 +96,10 @@ class CartItemWidget extends StatelessWidget {
               child: Text(
                 Formatters.price(item.total),
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextPrimary,
+                  color: context.textPrimary,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -111,7 +114,7 @@ class CartItemWidget extends StatelessWidget {
                 child: Icon(
                   Icons.close_rounded,
                   size: 20,
-                  color: AppColors.error.withValues(alpha: 0.7),
+                  color: context.danger.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -121,9 +124,9 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantityButton(IconData icon, VoidCallback onTap) {
+  Widget _buildQuantityButton(BuildContext context, IconData icon, VoidCallback onTap) {
     return Material(
-      color: AppColors.lightBackground,
+      color: context.bg,
       borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       child: InkWell(
         onTap: onTap,

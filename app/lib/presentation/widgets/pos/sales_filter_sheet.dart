@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 // ---------------------------------------------------------------------------
@@ -190,9 +191,9 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
 
     return Container(
       constraints: BoxConstraints(maxHeight: maxHeight),
-      decoration: const BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(AppConstants.radiusXl),
         ),
       ),
@@ -207,7 +208,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: context.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -224,14 +225,14 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
             ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Фильтры',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Inter',
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                     ),
                   ),
                 ),
@@ -248,9 +249,9 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                   ),
                   splashRadius: 20,
                   tooltip: 'Пӯшидан',
@@ -259,7 +260,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
             ),
           ),
 
-          const Divider(height: 1, color: AppColors.lightBorder),
+          Divider(height: 1, color: context.border),
 
           // Scrollable content
           Flexible(
@@ -438,11 +439,11 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Inter',
         fontSize: 13,
         fontWeight: FontWeight.w600,
-        color: AppColors.lightTextSecondary,
+        color: context.textSecondary,
         letterSpacing: 0.5,
       ),
     );
