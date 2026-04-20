@@ -198,12 +198,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                   data: {'enabled': v},
                                 );
                               } catch (e) {
-                                if (mounted) {
-                                  setState(() => _notificationsEnabled = !v);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Не удалось сохранить настройку')),
-                                  );
-                                }
+                                if (!context.mounted) return;
+                                setState(() => _notificationsEnabled = !v);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Не удалось сохранить настройку')),
+                                );
                               }
                             }),
                           _buildDivider(),
