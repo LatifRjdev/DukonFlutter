@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class PermissionToggleRow extends StatelessWidget {
@@ -73,7 +74,7 @@ class PermissionToggleRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: enabled ? AppColors.lightTextPrimary : AppColors.disabled,
+                    color: enabled ? context.textPrimary : AppColors.disabled,
                   ),
                 ),
                 if (description != null)
@@ -81,7 +82,7 @@ class PermissionToggleRow extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       description!,
-                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ),
               ],
