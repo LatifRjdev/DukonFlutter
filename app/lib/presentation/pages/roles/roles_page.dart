@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/roles/roles_bloc.dart';
 import '../../blocs/roles/roles_event.dart';
@@ -58,7 +59,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.lightTextSecondary,
+          unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
           tabs: _roleLabels.map((l) => Tab(text: l)).toList(),
         ),
