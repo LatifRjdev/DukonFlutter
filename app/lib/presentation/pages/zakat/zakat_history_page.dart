@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
@@ -32,7 +33,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -41,7 +42,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('История закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
@@ -80,19 +81,19 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.lightSurface,
+                            color: context.surface,
                             borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           ),
                           child: Column(
                             children: [
-                              const Text('Всего выплачено:',
-                                style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Всего выплачено:',
+                                style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(_formatPrice(totalPaid),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.primary)),
                               const SizedBox(height: 2),
                               Text('за ${state.payments.length} выплат',
-                                style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             ],
                           ),
                         ),
@@ -105,7 +106,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: AppColors.lightSurface,
+                              color: context.surface,
                               borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                             ),
                             child: Row(
@@ -124,11 +125,11 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text('Выплата закята',
+                                      Text('Выплата закята',
                                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                                       const SizedBox(height: 2),
                                       Text('Оплачен $dateStr',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     ],
                                   ),
                                 ),
@@ -139,7 +140,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
                                     const SizedBox(height: 2),
                                     Text('Облагаемая: ${_formatPrice(payment.totalAssets)}',
-                                      style: const TextStyle(fontSize: 10, color: AppColors.lightTextSecondary)),
+                                      style: TextStyle(fontSize: 10, color: context.textSecondary)),
                                   ],
                                 ),
                               ],

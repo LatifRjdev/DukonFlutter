@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
@@ -69,7 +70,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -78,7 +79,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Настройки закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
@@ -127,8 +128,8 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                         RadioListTile<String>(
-                          title: const Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                          title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
+                          subtitle: Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                           value: 'gold',
                           groupValue: _nisabStandard,
                           activeColor: AppColors.primary,
@@ -136,8 +137,8 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                           dense: true,
                         ),
                         RadioListTile<String>(
-                          title: const Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                          title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
+                          subtitle: Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                           value: 'silver',
                           groupValue: _nisabStandard,
                           activeColor: AppColors.primary,
@@ -223,12 +224,12 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                         _haulStartDate != null
                                             ? '${_haulStartDate!.day.toString().padLeft(2, '0')}.${_haulStartDate!.month.toString().padLeft(2, '0')}.${_haulStartDate!.year}'
                                             : 'Не выбрана',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 18),
+                                Icon(Icons.chevron_right, color: context.textSecondary, size: 18),
                               ],
                             ),
                           ),
@@ -248,14 +249,14 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 18),
                               ),
                               const SizedBox(width: 12),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Напоминание',
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                     Text('За 30 дней до окончания хавля',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
                                   ],
                                 ),
                               ),
@@ -323,13 +324,13 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
 
   Widget _buildSectionLabel(String title) {
     return Text(title,
-      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600));
+      style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600));
   }
 
   Widget _buildCard(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       child: Column(children: children),
@@ -350,7 +351,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               children: [
                 Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 if (subtitle != null)
-                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                  Text(subtitle, style: TextStyle(fontSize: 11, color: context.textSecondary)),
               ],
             ),
           ),

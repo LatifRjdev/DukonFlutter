@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
@@ -31,7 +32,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -40,16 +41,16 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-                  const Text('Калькулятор закята',
+                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  Text('Калькулятор закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.settings_outlined, color: AppColors.lightTextSecondary),
+                    icon: Icon(Icons.settings_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.list_alt_outlined, color: AppColors.lightTextSecondary),
+                    icon: Icon(Icons.list_alt_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/history', extra: widget.storeId),
                   ),
                 ],
@@ -87,7 +88,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: AppColors.infoBg,
+                            color: context.infoBg,
                             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             border: Border(left: BorderSide(color: AppColors.info, width: 3)),
                           ),
@@ -101,8 +102,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         // Assets section
                         Row(
                           children: [
-                            const Text('АКТИВЫ МАГАЗИНА',
-                              style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600)),
+                            Text('АКТИВЫ МАГАЗИНА',
+                              style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text(_formatPrice(totalAssets),
                               style: const TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
@@ -133,8 +134,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         // Deductions section
                         Row(
                           children: [
-                            const Text('ВЫЧЕТЫ',
-                              style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600)),
+                            Text('ВЫЧЕТЫ',
+                              style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text('-${_formatPrice(calc.payables)}',
                               style: const TextStyle(fontSize: 14, color: AppColors.error, fontWeight: FontWeight.w600)),
@@ -156,7 +157,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
 
                         // Dashed divider
                         CustomPaint(
-                          painter: _DashedLinePainter(),
+                          painter: _DashedLinePainter(context.border),
                           size: const Size(double.infinity, 1),
                         ),
                         const SizedBox(height: 16),
@@ -165,7 +166,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.lightSurface,
+                            color: context.surface,
                             borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                           ),
                           child: Column(
@@ -173,8 +174,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Облагаемая сумма:',
-                                    style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                                  Text('Облагаемая сумма:',
+                                    style: TextStyle(fontSize: 14, color: context.textSecondary)),
                                   Text(_formatPrice(calc.netAssets),
                                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                                 ],
@@ -183,8 +184,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Нисаб (85г золота):',
-                                    style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                                  Text('Нисаб (85г золота):',
+                                    style: TextStyle(fontSize: 14, color: context.textSecondary)),
                                   Row(
                                     children: [
                                       Text(_formatPrice(calc.nisabAmount),
@@ -219,7 +220,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppColors.warningBg,
+                              color: context.warningBg,
                               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: const Row(
@@ -319,7 +320,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       child: Row(
@@ -357,7 +358,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                  Text(subtitle, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 ],
               ],
             ),
@@ -371,10 +372,12 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
 }
 
 class _DashedLinePainter extends CustomPainter {
+  final Color color;
+  const _DashedLinePainter(this.color);
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.lightBorder
+      ..color = color
       ..strokeWidth = 1;
     const dashWidth = 6.0;
     const dashSpace = 4.0;
