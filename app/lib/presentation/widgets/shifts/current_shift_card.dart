@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/shift.dart';
 import '../common/app_card.dart';
@@ -74,7 +75,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                     const SizedBox(height: 2),
                     Text(
                       '${widget.shift.staffName ?? "Сотрудник"} - ${_formatElapsed(_elapsed)}',
-                      style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -141,7 +142,7 @@ class _StatItem extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
+            style: TextStyle(fontSize: 11, color: context.textSecondary),
           ),
         ],
       ),
