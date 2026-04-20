@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class PeriodSelector extends StatelessWidget {
@@ -27,14 +28,14 @@ class PeriodSelector extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.lightSurface,
+                color: isSelected ? AppColors.primary : context.surface,
                 borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
               ),
               alignment: Alignment.center,
               child: Text(
                 p.$2,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+                  color: isSelected ? context.onPrimary : context.textSecondary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   fontSize: 13,
                 ),

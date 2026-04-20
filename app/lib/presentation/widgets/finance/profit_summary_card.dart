@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../common/app_card.dart';
 
@@ -22,24 +23,24 @@ class ProfitSummaryCard extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          _buildRow('Доход', income, AppColors.success),
+          _buildRow(context, 'Доход', income, AppColors.success),
           const SizedBox(height: AppConstants.spacingSm),
-          _buildRow('Расходы', expenses, AppColors.error),
+          _buildRow(context, 'Расходы', expenses, AppColors.error),
           const Divider(),
-          _buildRow('Прибыль', profit, profit >= 0 ? AppColors.success : AppColors.error, isBold: true),
+          _buildRow(context, 'Прибыль', profit, profit >= 0 ? AppColors.success : AppColors.error, isBold: true),
         ],
       ),
     );
   }
 
-  Widget _buildRow(String label, double value, Color color, {bool isBold = false}) {
+  Widget _buildRow(BuildContext context, String label, double value, Color color, {bool isBold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: TextStyle(
           fontSize: isBold ? 16 : 14,
           fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
-          color: AppColors.lightTextPrimary,
+          color: context.textPrimary,
         )),
         Text(
           '${value.toStringAsFixed(2)} $currency',

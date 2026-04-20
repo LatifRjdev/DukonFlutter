@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/expense.dart';
 import '../common/app_card.dart';
@@ -57,7 +58,7 @@ class ExpenseCard extends StatelessWidget {
               children: [
                 Text(_categoryLabel(expense.category), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 if (expense.description != null)
-                  Text(expense.description!, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(expense.description!, style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -65,7 +66,7 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('-${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.error, fontSize: 14)),
-              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
           if (onDelete != null) ...[

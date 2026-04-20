@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../common/app_card.dart';
 
 class StatSummaryRow extends StatelessWidget {
@@ -19,7 +20,7 @@ class StatSummaryRow extends StatelessWidget {
                 const Icon(Icons.receipt_long, color: AppColors.primary),
                 const SizedBox(height: 4),
                 Text('$salesCount', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                const Text('Продаж', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                Text('Продаж', style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),
@@ -32,7 +33,7 @@ class StatSummaryRow extends StatelessWidget {
                 const Icon(Icons.trending_up, color: AppColors.primary),
                 const SizedBox(height: 4),
                 Text(avgCheck.toStringAsFixed(0), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                const Text('Средний чек', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                Text('Средний чек', style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),
