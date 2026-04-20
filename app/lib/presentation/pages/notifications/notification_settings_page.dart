@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
@@ -71,10 +72,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: context.surface,
       appBar: AppBar(
         title: const Text('Настройки уведомлений'),
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: context.surface,
         elevation: 0,
       ),
       body: _loading
@@ -82,11 +83,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(AppConstants.spacingMd),
               children: [
-                const Text(
+                Text(
                   'Выберите какие уведомления вы хотите получать',
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -138,13 +139,15 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                       ),
                     ),
-                    child: const Text(
-                      'Сохранить',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
+                    child: Builder(
+                      builder: (ctx) => Text(
+                        'Сохранить',
+                        style: TextStyle(
+                          color: ctx.onPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
                   ),
@@ -166,12 +169,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        side: const BorderSide(color: AppColors.lightBorder),
+        side: BorderSide(color: context.border),
       ),
       child: SwitchListTile(
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-        secondary: Icon(icon, color: value ? AppColors.primary : AppColors.lightTextSecondary),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
+        secondary: Icon(icon, color: value ? AppColors.primary : context.textSecondary),
         value: value,
         activeColor: AppColors.primary,
         onChanged: onChanged,

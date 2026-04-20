@@ -36,12 +36,12 @@ class TransactionDetailPage extends StatelessWidget {
     }
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(BuildContext context, String status) {
     switch (status.toUpperCase()) {
-      case 'COMPLETED': return AppColors.success;
-      case 'REFUNDED': return AppColors.error;
-      case 'PARTIALLY_REFUNDED': return AppColors.warning;
-      default: return AppColors.lightTextSecondary;
+      case 'COMPLETED': return context.success;
+      case 'REFUNDED': return context.danger;
+      case 'PARTIALLY_REFUNDED': return context.warning;
+      default: return context.textSecondary;
     }
   }
 
@@ -80,7 +80,7 @@ class TransactionDetailPage extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: _statusColor(sale.status),
+                          color: _statusColor(context, sale.status),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(_statusLabel(sale.status),

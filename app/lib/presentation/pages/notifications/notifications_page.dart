@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -213,7 +214,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  Color _typeColor(_NotifType type) {
+  Color _typeColor(_NotifType type, BuildContext ctx) {
     switch (type) {
       case _NotifType.warning:
         return AppColors.warning;
@@ -222,19 +223,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case _NotifType.truck:
         return AppColors.info;
       case _NotifType.bell:
-        return AppColors.lightTextSecondary;
+        return ctx.textSecondary;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Уведомления',
             style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: context.surface,
+        foregroundColor: context.textPrimary,
         elevation: 0,
         actions: [
           IconButton(
@@ -277,7 +278,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             return _NotificationCard(
                               notification: n,
                               icon: _typeIcon(n.type),
-                              iconColor: _typeColor(n.type),
+                              iconColor: _typeColor(n.type, context),
                               timeAgo: _timeAgo(n.createdAt),
                               onTap: () => _markRead(i),
                             );
@@ -295,7 +296,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           const Icon(Icons.error_outline, size: 48, color: AppColors.error),
           const SizedBox(height: 12),
           Text(_error!,
-              style: const TextStyle(color: AppColors.lightTextSecondary)),
+              style: TextStyle(color: context.textSecondary)),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => _load(refresh: true),
@@ -307,16 +308,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget _buildEmpty() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.notifications_none, size: 64, color: AppColors.lightTextHint),
-          SizedBox(height: 12),
+          Icon(Icons.notifications_none, size: 64, color: context.textMuted),
+          const SizedBox(height: 12),
           Text('Нет уведомлений',
               style: TextStyle(
                   fontSize: 16,
-                  color: AppColors.lightTextSecondary,
+                  color: context.textSecondary,
                   fontFamily: 'Inter')),
         ],
       ),
@@ -349,7 +350,7 @@ class _NotificationCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        color: unread ? AppColors.primary.withValues(alpha: 0.04) : Colors.white,
+        color: unread ? AppColors.primary.withValues(alpha: 0.04) : context.surface,
         padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.spacingMd, vertical: 12),
         child: Row(
@@ -379,7 +380,7 @@ class _NotificationCard extends StatelessWidget {
                             fontSize: 14,
                             fontWeight:
                                 unread ? FontWeight.w700 : FontWeight.w500,
-                            color: AppColors.lightTextPrimary,
+                            color: context.textPrimary,
                           ),
                         ),
                       ),
@@ -397,10 +398,10 @@ class _NotificationCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     notification.body,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: context.textSecondary,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -408,10 +409,10 @@ class _NotificationCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     timeAgo,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
-                      color: AppColors.lightTextHint,
+                      color: context.textMuted,
                     ),
                   ),
                 ],
