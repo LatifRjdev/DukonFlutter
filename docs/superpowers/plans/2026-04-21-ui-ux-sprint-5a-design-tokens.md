@@ -1,5 +1,16 @@
 # Sprint 5A — Design Tokens Expansion Implementation Plan
 
+## Sprint 5A Complete — 2026-04-21
+
+- **Design tokens expanded:** `AppConstants` gains `radiusXs=4`, `radiusXl=20` (new value), `radiusXxl=24` (renamed from old `radiusXl`), `motionFast=150ms`, `motionMedium=250ms`, `motionSlow=400ms`. `ThemeColors` gains `elevationSm/Md/Lg` (theme-aware via `shadowColor`).
+- **234 hardcoded sites migrated** to tokens: 93 `BorderRadius.circular` + 9 `BoxShadow` + 1 `Duration` (200ms) + 91 `cardRadius` + 50 `buttonRadius`. `cardRadius` and `buttonRadius` constants removed. 1 `Duration(600ms)` kept as literal (intentional elastic reveal).
+- **Acceptance:** `flutter analyze` 0 issues; `flutter test` 335/335 pass (332 + 3 new elevation tests). `grep BoxShadow` returns 0 in `lib/presentation/`; `grep BorderRadius.circular([0-9])` returns 9 (only 1px and 2px literals); `grep cardRadius/buttonRadius` returns 0.
+- **2 sticky footer shadows** mapped to `elevationMd` — downward cast (was upward). Minor visual regression on product_list and import_products sticky bottom bars, revisit if product feedback requests.
+- Commits: Task 1 (`1669d35`), Task 2 (`1c595f0`), Task 3 (`0e9e3bc`), Task 4 (`f278677`).
+- Follow-up: Sprint 5B — WCAG AA accessibility audit (contrast, touch targets, semantic labels).
+
+---
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Expand design token palette — add radii (xs/xl/xxl), motion (fast/medium/slow), elevations (sm/md/lg) — and migrate 241 hardcoded call sites (93 `BorderRadius.circular` + 9 `BoxShadow` + 2 `Duration` + 91 `cardRadius` + 50 `buttonRadius`) to the new scale.
