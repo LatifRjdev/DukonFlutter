@@ -64,7 +64,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.cardRadius)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
       ),
       builder: (_) => Padding(
         padding: EdgeInsets.fromLTRB(
@@ -131,7 +131,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
                   decoration: BoxDecoration(
                     color: AppColors.error.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                   ),
                   child: Column(
                     children: [
@@ -175,7 +175,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: AppColors.error,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                         ),
                                         child: const Text('Просрочено',
                                           style: TextStyle(fontSize: 10, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
@@ -205,7 +205,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.primary,
                                   side: const BorderSide(color: AppColors.primary),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                                 ),
                               ),
                             ),

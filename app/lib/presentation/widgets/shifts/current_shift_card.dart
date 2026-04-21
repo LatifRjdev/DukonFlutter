@@ -60,7 +60,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                 height: 44,
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Icon(Icons.access_time_filled, color: AppColors.success, size: 24),
               ),
@@ -114,7 +114,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                 foregroundColor: AppColors.error,
                 side: const BorderSide(color: AppColors.error),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 ),
               ),
             ),

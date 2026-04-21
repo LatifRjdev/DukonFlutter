@@ -244,7 +244,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         child: Column(
           children: [
             InkWell(
-              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
               onTap: () => _toggleCard(code),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

@@ -19,12 +19,12 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.surface,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       elevation: AppConstants.cardElevation,
       shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,13 +36,13 @@ class ProductCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: context.bg,
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(AppConstants.cardRadius),
+                    top: Radius.circular(AppConstants.radiusLg),
                   ),
                 ),
                 child: product.imageUrl != null
                     ? ClipRRect(
                         borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppConstants.cardRadius),
+                          top: Radius.circular(AppConstants.radiusLg),
                         ),
                         child: Image.network(
                           product.imageUrl!,

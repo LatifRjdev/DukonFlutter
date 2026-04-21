@@ -357,12 +357,12 @@ class _PeriodCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       elevation: AppConstants.cardElevation,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.spacingMd),
           child: Column(

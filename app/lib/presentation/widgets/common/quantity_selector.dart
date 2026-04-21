@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 
 class QuantitySelector extends StatelessWidget {
@@ -41,10 +42,10 @@ class QuantitySelector extends StatelessWidget {
   Widget _buildButton(BuildContext context, IconData icon, VoidCallback onTap) {
     return Material(
       color: context.bg,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
         child: Container(
           width: 36,
           height: 36,

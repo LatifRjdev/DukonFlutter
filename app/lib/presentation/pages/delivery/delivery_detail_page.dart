@@ -283,7 +283,7 @@ class _DetailView extends StatelessWidget {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.onPrimary,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                       ),
                       child: isActing
                           ? const SizedBox(
@@ -333,7 +333,7 @@ class _StatusStepper extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Row(
         children: [
@@ -408,7 +408,7 @@ class _SectionCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: child,
     );

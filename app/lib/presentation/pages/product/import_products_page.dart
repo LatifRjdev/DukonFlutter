@@ -240,7 +240,7 @@ class _InitialView extends StatelessWidget {
                 foregroundColor: context.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
               ),
             ),
@@ -256,7 +256,7 @@ class _InitialView extends StatelessWidget {
                 foregroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 side: const BorderSide(color: AppColors.primary),
               ),
@@ -300,7 +300,7 @@ class _PreviewView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.error.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                   ),
                   child: Text(
                     '${state.errors.length} ошибок',
@@ -394,7 +394,7 @@ class _PreviewView extends StatelessWidget {
               foregroundColor: context.onPrimary,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
             ),
             child: Text('Импортировать ${state.totalRows} товаров'),

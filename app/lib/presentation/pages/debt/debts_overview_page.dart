@@ -67,7 +67,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
                             color: AppColors.error.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
@@ -87,7 +87,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
                             color: AppColors.warning.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [

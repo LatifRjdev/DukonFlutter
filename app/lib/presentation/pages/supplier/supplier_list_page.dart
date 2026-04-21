@@ -240,7 +240,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: context.surface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -249,7 +249,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                     height: 40,
                                     decoration: BoxDecoration(
                                       color: AppColors.primary.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                     ),
                                     child: const Icon(Icons.factory_outlined, size: 20, color: AppColors.primary),
                                   ),

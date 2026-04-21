@@ -167,7 +167,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: context.surface,
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
@@ -321,7 +321,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Row(
         children: [
@@ -330,7 +330,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
             height: 36,
             decoration: BoxDecoration(
               color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: Icon(icon, color: iconColor ?? AppColors.primary, size: 18),
           ),
@@ -348,7 +348,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
                           color: AppColors.success.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                         child: Text(badge,
                           style: const TextStyle(fontSize: 9, color: AppColors.success, fontWeight: FontWeight.w600)),

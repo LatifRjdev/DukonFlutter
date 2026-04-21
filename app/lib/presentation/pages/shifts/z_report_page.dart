@@ -310,7 +310,7 @@ class _SectionCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         boxShadow: context.elevationSm,
       ),
       child: child,

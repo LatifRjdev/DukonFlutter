@@ -115,7 +115,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                             foregroundColor: AppColors.primary,
                             side: const BorderSide(color: AppColors.primary),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
                           ),
                           child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
                         );
@@ -207,7 +207,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: const Border(left: BorderSide(color: AppColors.success, width: 4)),
       ),
       child: Column(
@@ -222,7 +222,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Text('Активна',
                   style: TextStyle(fontSize: 11, color: AppColors.success, fontWeight: FontWeight.w500)),
@@ -267,7 +267,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: context.surface,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
         child: Row(
           children: [
@@ -298,7 +298,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 color: shift.closedAt != null
                     ? AppColors.success.withValues(alpha: 0.12)
                     : AppColors.warning.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Text(
                 shift.closedAt != null ? 'Сдано' : 'Открыта',

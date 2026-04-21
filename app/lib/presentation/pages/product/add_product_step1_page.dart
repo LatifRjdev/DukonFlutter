@@ -165,7 +165,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                           height: 150,
                           decoration: BoxDecoration(
                             color: context.surface,
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             border: Border.all(
                               color: _selectedImage != null ? context.primary : context.border,
                               width: _selectedImage != null ? 2 : 1,
@@ -173,7 +173,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                           ),
                           child: _selectedImage != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(AppConstants.cardRadius - 1),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusLg - 1),
                                   child: Image.file(_selectedImage!, fit: BoxFit.cover),
                                 )
                               : Column(

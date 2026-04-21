@@ -110,7 +110,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             padding: const EdgeInsets.symmetric(vertical: 24),
                             decoration: BoxDecoration(
                               color: context.infoBg,
-                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             ),
                             child: Column(
                               children: [
@@ -174,7 +174,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                     padding: const EdgeInsets.symmetric(vertical: 10),
                                     decoration: BoxDecoration(
                                       border: Border.all(color: context.border),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                                     ),
                                     child: const Center(
                                       child: Text('Без сдачи',
@@ -196,7 +196,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                 color: change >= 0
                                     ? AppColors.success.withValues(alpha: 0.1)
                                     : AppColors.error.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Column(
                                 children: [
@@ -260,7 +260,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(color: context.border),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppConstants.radiusXl),
           ),
           child: Center(
             child: Text(amount.toStringAsFixed(0),

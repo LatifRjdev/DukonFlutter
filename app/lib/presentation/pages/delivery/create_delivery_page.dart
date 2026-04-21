@@ -345,7 +345,7 @@ class _CreateViewState extends State<_CreateView> {
                           foregroundColor: AppColors.onPrimary,
                           shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.circular(AppConstants.buttonRadius)),
+                                  BorderRadius.circular(AppConstants.radiusLg)),
                         ),
                         child: isSubmitting
                             ? const SizedBox(

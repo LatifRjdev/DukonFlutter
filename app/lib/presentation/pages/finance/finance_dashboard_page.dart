@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/finance/finance_bloc.dart';
 import '../../blocs/finance/finance_event.dart';
@@ -243,7 +244,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                             toY: s.totalIncome,
                                             color: AppColors.primary,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                         BarChartGroupData(x: 1, barRods: [
@@ -251,7 +252,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                             toY: s.totalExpenses,
                                             color: context.danger,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                         BarChartGroupData(x: 2, barRods: [
@@ -259,7 +260,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                             toY: s.profit > 0 ? s.profit : 0,
                                             color: context.success,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                       ],
@@ -277,7 +278,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: context.surface,
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                                   ),
                                   child: Column(
                                     children: [
@@ -369,7 +370,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
         child: Container(
           decoration: BoxDecoration(
             color: context.surface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

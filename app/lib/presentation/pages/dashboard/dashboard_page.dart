@@ -293,7 +293,7 @@ class _DashboardPageState extends State<DashboardPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: _selectedPeriod == 'custom' ? AppColors.primary : context.surface,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                 border: Border.all(
                   color: _selectedPeriod == 'custom' ? AppColors.primary : context.border,
                 ),
@@ -610,7 +610,7 @@ class _MetricTile extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         boxShadow: AppShadows.sm,
       ),
       child: Column(
@@ -685,10 +685,10 @@ class _ActionTile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             child: Row(
@@ -698,7 +698,7 @@ class _ActionTile extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: accent.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
                   child: Icon(icon, size: 20, color: accent),
                 ),
@@ -787,7 +787,7 @@ class _SaleCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: const Icon(Icons.receipt_outlined,
               size: 20, color: AppColors.primary),

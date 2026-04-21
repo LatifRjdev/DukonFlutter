@@ -177,7 +177,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
@@ -198,7 +198,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       _buildCard([
                         InkWell(
                           onTap: _pickDate,
-                          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           child: Padding(
                             padding: const EdgeInsets.all(14),
                             child: Row(
@@ -208,7 +208,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   height: 36,
                                   decoration: BoxDecoration(
                                     color: AppColors.primary.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                   ),
                                   child: const Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
                                 ),
@@ -244,7 +244,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 height: 36,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 18),
                               ),
@@ -331,7 +331,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
     return Container(
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Column(children: children),
     );

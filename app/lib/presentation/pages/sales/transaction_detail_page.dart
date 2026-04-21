@@ -81,7 +81,7 @@ class TransactionDetailPage extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
                           color: _statusColor(context, sale.status),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                         ),
                         child: Text(_statusLabel(sale.status),
                           style: const TextStyle(
@@ -99,7 +99,7 @@ class TransactionDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +125,7 @@ class TransactionDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +184,7 @@ class TransactionDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

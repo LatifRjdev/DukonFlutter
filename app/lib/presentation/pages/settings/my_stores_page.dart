@@ -129,7 +129,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 onPressed: () async {
                   Navigator.pop(ctx);
@@ -257,7 +257,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               border: isActive
                                   ? Border.all(color: AppColors.primary, width: 2)
                                   : Border.all(color: context.border),
@@ -271,7 +271,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                     color: isActive
                                         ? AppColors.primary.withValues(alpha: 0.12)
                                         : context.bg,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                   ),
                                   child: Icon(Icons.storefront_outlined,
                                       color: isActive ? AppColors.primary : context.textSecondary),
@@ -293,7 +293,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                                   horizontal: 8, vertical: 2),
                                               decoration: BoxDecoration(
                                                 color: AppColors.primary.withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                               ),
                                               child: const Text('Активный',
                                                   style: TextStyle(

@@ -202,7 +202,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           decoration: BoxDecoration(
                             color: context.bg,
                             borderRadius:
-                                BorderRadius.circular(AppConstants.cardRadius),
+                                BorderRadius.circular(AppConstants.radiusLg),
                             border: Border.all(
                               color: context.border,
                               style: BorderStyle.solid,

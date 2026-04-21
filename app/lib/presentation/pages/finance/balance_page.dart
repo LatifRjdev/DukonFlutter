@@ -296,7 +296,7 @@ class _BalancePageState extends State<BalancePage> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -442,7 +442,7 @@ class _BalancePageState extends State<BalancePage> {
     return Container(
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Column(
         children: [

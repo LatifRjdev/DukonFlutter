@@ -41,7 +41,7 @@ class ShiftCard extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: (isOpen ? AppColors.success : context.textSecondary).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: Icon(
                   isOpen ? Icons.access_time : Icons.check_circle_outline,

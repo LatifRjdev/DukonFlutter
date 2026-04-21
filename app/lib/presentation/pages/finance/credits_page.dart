@@ -239,7 +239,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
       child: Row(
@@ -380,7 +380,7 @@ class _CreditCardState extends State<_CreditCard> {
                     backgroundColor: color,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),

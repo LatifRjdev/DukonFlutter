@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/enums.dart';
 import '../../../core/router/route_names.dart';
@@ -134,7 +135,7 @@ class _ProductListPageState extends State<ProductListPage> {
               child: Container(
                 decoration: BoxDecoration(
                   color: context.surface,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   boxShadow: context.elevationSm,
                 ),
                 child: TextField(
@@ -364,7 +365,7 @@ class _ProductCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: context.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           boxShadow: Theme.of(context).brightness == Brightness.light ? AppShadows.sm : null,
         ),
         child: Row(
@@ -375,7 +376,7 @@ class _ProductCard extends StatelessWidget {
               height: 64,
               decoration: BoxDecoration(
                 color: context.bg,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               clipBehavior: Clip.antiAlias,
               child: product.imageUrl != null

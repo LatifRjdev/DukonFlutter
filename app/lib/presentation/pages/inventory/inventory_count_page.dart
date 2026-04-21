@@ -285,7 +285,7 @@ class _StartScreen extends StatelessWidget {
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(AppConstants.buttonRadius)),
+                          BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 child: isLoading
                     ? const SizedBox(
@@ -496,7 +496,7 @@ class _CountScreenState extends State<_CountScreen> {
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(AppConstants.buttonRadius)),
+                          BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 child: widget.isSaving
                     ? const SizedBox(
@@ -543,7 +543,7 @@ class _DiffScreen extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
               ),
               child: Column(
                 children: [
@@ -554,8 +554,8 @@ class _DiffScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: context.surfaceMuted,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.cardRadius),
-                        topRight: Radius.circular(AppConstants.cardRadius),
+                        topLeft: Radius.circular(AppConstants.radiusLg),
+                        topRight: Radius.circular(AppConstants.radiusLg),
                       ),
                     ),
                     child: Row(
@@ -631,7 +631,7 @@ class _DiffScreen extends StatelessWidget {
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(AppConstants.buttonRadius)),
+                          BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 child: isApplying
                     ? const SizedBox(
@@ -769,7 +769,7 @@ class _DoneScreen extends StatelessWidget {
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(AppConstants.buttonRadius)),
+                          BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 child: const Text('Готово',
                     style: TextStyle(

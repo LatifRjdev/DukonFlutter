@@ -19,12 +19,12 @@ class ProductListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.surface,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       elevation: AppConstants.cardElevation,
       shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.spacingSm + 4),
           child: Row(

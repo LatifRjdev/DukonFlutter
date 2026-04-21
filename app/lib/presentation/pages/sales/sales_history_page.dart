@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/route_names.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
@@ -190,7 +191,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Text(
                               '$totalSales продаж  |  ${_formatPrice(totalAmount)}',
@@ -300,7 +301,7 @@ class _SaleCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: context.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           boxShadow: AppShadows.sm,
         ),
         child: Row(

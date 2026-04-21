@@ -80,7 +80,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       children: _languages.asMap().entries.map((entry) {
@@ -191,7 +191,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                         foregroundColor: AppColors.onPrimary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
-                                AppConstants.buttonRadius)),
+                                AppConstants.radiusLg)),
                       ),
                       onPressed: _saving ? null : _save,
                       child: _saving

@@ -97,7 +97,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                           ? AppColors.success.withValues(alpha: 0.08)
                           : context.dangerBg,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                       border: Border.all(
                         color: _connected
                             ? AppColors.success.withValues(alpha: 0.4)
@@ -169,7 +169,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Row(
                       children: [
@@ -177,7 +177,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                           width: 36, height: 36,
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: const Icon(Icons.people_outline,
                               color: AppColors.primary, size: 18),
@@ -213,7 +213,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,7 +234,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                             width: 120, height: 120,
                             decoration: BoxDecoration(
                               color: context.bg,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                               border: Border.all(color: context.border),
                             ),
                             child: Column(
@@ -266,7 +266,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                           foregroundColor: AppColors.onPrimary,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  AppConstants.buttonRadius)),
+                                  AppConstants.radiusLg)),
                         ),
                         onPressed: _sendingTest ? null : _sendTestMessage,
                         icon: _sendingTest

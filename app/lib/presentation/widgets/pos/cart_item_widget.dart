@@ -21,7 +21,7 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.surface,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       elevation: 1,
       shadowColor: context.shadowColor,
       child: Padding(

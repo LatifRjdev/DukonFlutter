@@ -54,7 +54,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                     color: state.connectedDevice != null
                         ? AppColors.success.withValues(alpha: 0.1)
                         : context.bg,
-                    borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     border: Border.all(
                       color: state.connectedDevice != null ? AppColors.success : context.border,
                     ),
@@ -187,7 +187,7 @@ class _DeviceTile extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingSm),
       decoration: BoxDecoration(
         color: isConnected ? AppColors.success.withValues(alpha: 0.05) : context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: isConnected ? AppColors.success : context.border),
       ),
       child: Row(
@@ -211,7 +211,7 @@ class _DeviceTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
                         child: const Text('По умолчанию',
                             style: TextStyle(fontSize: 10, color: AppColors.primary, fontWeight: FontWeight.w600)),

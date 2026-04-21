@@ -139,7 +139,7 @@ class _OtpInputState extends State<OtpInput> {
                   fillColor: context.surface,
                   enabledBorder: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(AppConstants.buttonRadius),
+                        BorderRadius.circular(AppConstants.radiusLg),
                     borderSide: BorderSide(
                       color: context.border,
                       width: 1.5,
@@ -147,7 +147,7 @@ class _OtpInputState extends State<OtpInput> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(AppConstants.buttonRadius),
+                        BorderRadius.circular(AppConstants.radiusLg),
                     borderSide: const BorderSide(
                       color: AppColors.primary,
                       width: 2,
@@ -155,7 +155,7 @@ class _OtpInputState extends State<OtpInput> {
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(AppConstants.buttonRadius),
+                        BorderRadius.circular(AppConstants.radiusLg),
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: 1.5,
@@ -163,7 +163,7 @@ class _OtpInputState extends State<OtpInput> {
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(AppConstants.buttonRadius),
+                        BorderRadius.circular(AppConstants.radiusLg),
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: 2,

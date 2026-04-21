@@ -187,7 +187,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: gradient,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +213,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: _statusColor(state.status).withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                   border: Border.all(
                       color: Colors.white.withValues(alpha: 0.4), width: 1),
                 ),
@@ -250,7 +250,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.amber.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppConstants.radiusXl),
               ),
               child: Text(
                 'Скидка ${state.adminDiscount!.toStringAsFixed(0)}%',
@@ -273,7 +273,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: context.warningBg,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
       ),
       child: const Row(
@@ -301,7 +301,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(
           color: isCurrent
               ? AppColors.primary
@@ -346,7 +346,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                         horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                     ),
                     child: const Text(
                       'Текущий план',
@@ -366,7 +366,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                       ),
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -442,7 +442,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         ),
         child: Row(
           children: [
@@ -480,7 +480,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: context.bg,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: Text(
                         payment.method == 'CARD' ? 'Карта' : 'Наличные',
@@ -495,7 +495,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: statusColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: Text(
                         statusLabel,
@@ -542,7 +542,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   style: TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 child: Image.network(
                   payment.receiptUrl!,
                   height: 200,
@@ -816,7 +816,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: context.bg,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -844,7 +844,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.circular(AppConstants.buttonRadius),
+                        BorderRadius.circular(AppConstants.radiusLg),
                   ),
                 ),
                 icon: _uploading
@@ -890,7 +890,7 @@ class _MethodTile extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           border: Border.all(
               color: Theme.of(context)
                   .colorScheme

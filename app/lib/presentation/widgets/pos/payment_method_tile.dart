@@ -33,7 +33,7 @@ class PaymentMethodTile extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : context.surface,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           border: Border.all(
             color: isSelected ? AppColors.primary : context.border,
             width: isSelected ? 2 : 1,

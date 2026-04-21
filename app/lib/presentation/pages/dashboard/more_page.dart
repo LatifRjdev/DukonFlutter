@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -163,7 +164,7 @@ class _MenuItem extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         ),
         child: Icon(icon, color: color, size: 22),
       ),

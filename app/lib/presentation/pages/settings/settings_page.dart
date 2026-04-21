@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -99,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               boxShadow: context.elevationMd,
                             ),
                             child: Row(
@@ -123,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: AppColors.primary.withValues(alpha: 0.12),
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                         ),
                                         child: const Text('Владелец',
                                           style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w500)),
@@ -257,7 +258,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.error,
                               side: const BorderSide(color: AppColors.error),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                             ),
                             child: const Text('Выйти из аккаунта',
                               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
@@ -286,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Column(children: children),
     );
@@ -304,7 +305,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Row(
@@ -314,7 +315,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 36,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Icon(icon, color: AppColors.primary, size: 18),
             ),
@@ -329,7 +330,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: (badgeColor ?? AppColors.primary).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: Text(badge,
                         style: TextStyle(fontSize: 10, color: badgeColor ?? AppColors.primary, fontWeight: FontWeight.w500)),
@@ -361,7 +362,7 @@ class _SettingsPageState extends State<SettingsPage> {
             height: 36,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: Icon(icon, color: AppColors.primary, size: 18),
           ),

@@ -74,7 +74,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         height: 8,
                         decoration: BoxDecoration(
                           color: _currentPage == i ? AppColors.primary : context.border,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -153,7 +154,7 @@ class _POSButton extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 gradient: AppGradients.primary,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 boxShadow: AppShadows.button,
               ),
               child: const Icon(Icons.point_of_sale, color: Colors.white, size: 24),

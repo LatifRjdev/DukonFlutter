@@ -168,7 +168,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                           ? AppColors.success.withValues(alpha: 0.08)
                           : context.warningBg,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                       border: Border.all(
                         color: _pendingOps == 0
                             ? AppColors.success.withValues(alpha: 0.4)
@@ -236,7 +236,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                         foregroundColor: AppColors.onPrimary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
-                                AppConstants.buttonRadius)),
+                                AppConstants.radiusLg)),
                       ),
                       onPressed: _syncing ? null : _manualSync,
                       icon: _syncing
@@ -265,7 +265,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -276,7 +276,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                             width: 36, height: 36,
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: const Icon(Icons.sync_outlined,
                                 color: AppColors.primary, size: 18),
@@ -314,7 +314,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                     decoration: BoxDecoration(
                       color: context.infoBg,
                       borderRadius:
-                          BorderRadius.circular(AppConstants.cardRadius),
+                          BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,7 +352,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                         side: const BorderSide(color: AppColors.error),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
-                                AppConstants.buttonRadius)),
+                                AppConstants.radiusLg)),
                       ),
                       onPressed: _confirmClearCache,
                       icon: const Icon(Icons.delete_outline),

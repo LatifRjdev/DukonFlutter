@@ -20,7 +20,7 @@ class ReceiptWidget extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingLg),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: context.border),
       ),
       child: Column(

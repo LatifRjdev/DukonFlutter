@@ -106,7 +106,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
           boxShadow: context.elevationMd,
         ),
         child: Column(
@@ -188,7 +188,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: context.surfaceMuted,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       children: [
@@ -214,7 +214,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Column(
@@ -253,7 +253,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Row(
@@ -285,7 +285,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Row(
@@ -316,7 +316,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       children: [
@@ -345,7 +345,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                         foregroundColor: AppColors.onPrimary,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(AppConstants.buttonRadius)),
+                                BorderRadius.circular(AppConstants.radiusLg)),
                       ),
                       onPressed: _saving ? null : _save,
                       child: _saving
@@ -373,7 +373,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
             height: 36,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: Icon(icon, color: AppColors.primary, size: 18),
           ),

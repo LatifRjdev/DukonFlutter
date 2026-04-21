@@ -151,7 +151,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.onPrimary,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                   ),
                   onPressed: () async {
                     Navigator.pop(ctx);
@@ -254,7 +254,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius:
-                                BorderRadius.circular(AppConstants.cardRadius),
+                                BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Row(
                             children: [
@@ -265,7 +265,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                                   color: type == 'percent'
                                       ? AppColors.primary.withValues(alpha: 0.12)
                                       : AppColors.success.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                 ),
                                 child: Text(
                                   type == 'percent'

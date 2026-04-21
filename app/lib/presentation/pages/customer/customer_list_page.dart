@@ -253,7 +253,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: context.surface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -282,7 +282,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                                 decoration: BoxDecoration(
                                                   color: AppColors.warning.withValues(alpha: 0.2),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                                 ),
                                                 child: const Row(
                                                   mainAxisSize: MainAxisSize.min,
@@ -350,7 +350,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : context.surface,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
           border: isSelected ? null : Border.all(color: context.border),
         ),
         child: Text(label,

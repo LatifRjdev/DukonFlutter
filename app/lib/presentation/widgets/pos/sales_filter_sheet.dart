@@ -406,7 +406,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.onPrimary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                   ),
                   elevation: 0,
                 ),

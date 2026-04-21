@@ -55,7 +55,7 @@ class GradientHeader extends StatelessWidget {
                     child: Container(
                       width: 36,
                       height: 36,
-                      decoration: BoxDecoration(color: const Color(0x33FFFFFF), borderRadius: BorderRadius.circular(18)),
+                      decoration: BoxDecoration(color: const Color(0x33FFFFFF), borderRadius: BorderRadius.circular(AppConstants.radiusXl)),
                       child: Center(
                         child: Text(
                           userName.isNotEmpty ? userName[0].toUpperCase() : '?',

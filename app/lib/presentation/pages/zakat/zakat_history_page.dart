@@ -82,7 +82,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: context.surface,
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
@@ -107,7 +107,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color: context.surface,
-                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             ),
                             child: Row(
                               children: [

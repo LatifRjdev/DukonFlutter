@@ -21,10 +21,7 @@ class AppConstants {
   // Button
   static const double buttonHeight = 56.0;
   static const double buttonHeightSmall = 40.0;
-  static const double buttonRadius = 14.0;
-
   // Card
-  static const double cardRadius = 16.0;
   static const double cardElevation = 2.0;
 
   // Motion durations

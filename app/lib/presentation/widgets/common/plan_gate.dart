@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/subscription/subscription_bloc.dart';
 import '../../blocs/subscription/subscription_state.dart';
@@ -96,7 +97,7 @@ class _DefaultLockedOverlay extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

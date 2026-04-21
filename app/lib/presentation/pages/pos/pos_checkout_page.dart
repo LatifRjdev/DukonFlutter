@@ -262,7 +262,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     Expanded(
                       child: GlassCard(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        radius: AppConstants.buttonRadius,
+                        radius: AppConstants.radiusLg,
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -281,7 +281,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       height: 48,
                       decoration: BoxDecoration(
                         gradient: AppGradients.primary,
-                        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                         boxShadow: AppShadows.md,
                       ),
                       child: IconButton(
@@ -654,7 +654,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             gradient: isSelected ? AppGradients.primary : null,
             color: isSelected ? null : Colors.transparent,
             border: isSelected ? null : Border.all(color: context.border),
-            borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
             boxShadow: isSelected ? AppShadows.sm : null,
           ),
           child: Column(

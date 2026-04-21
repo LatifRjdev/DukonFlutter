@@ -52,7 +52,7 @@ class AppTheme {
       color: AppColors.lightSurface,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -61,7 +61,7 @@ class AppTheme {
         foregroundColor: AppColors.onPrimary,
         minimumSize: const Size(double.infinity, AppConstants.buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
         textStyle: const TextStyle(
           fontFamily: _font,
@@ -75,7 +75,7 @@ class AppTheme {
         foregroundColor: AppColors.primary,
         minimumSize: const Size(double.infinity, AppConstants.buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
         side: const BorderSide(color: AppColors.primary, width: 2),
       ),
@@ -84,19 +84,19 @@ class AppTheme {
       filled: true,
       fillColor: AppColors.lightSurface,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.lightBorder, width: 1.5),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.lightBorder, width: 1.5),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.error, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -150,7 +150,7 @@ class AppTheme {
       color: AppColors.darkSurface,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -159,7 +159,7 @@ class AppTheme {
         foregroundColor: AppColors.onPrimary,
         minimumSize: const Size(double.infinity, AppConstants.buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
         textStyle: const TextStyle(
           fontFamily: _font,
@@ -172,19 +172,19 @@ class AppTheme {
       filled: true,
       fillColor: AppColors.darkSurface,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.darkBorder, width: 1.5),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.darkBorder, width: 1.5),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.primaryDark, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         borderSide: const BorderSide(color: AppColors.errorDark, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

@@ -946,7 +946,7 @@ class _SectionCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       child: Column(
@@ -1170,7 +1170,7 @@ class _SalesTab extends StatelessWidget {
                           toY: d.top5[i].revenue,
                           color: AppColors.primary,
                           width: 28,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
                       ],
                     ),
@@ -1437,13 +1437,13 @@ class _ProfitTab extends StatelessWidget {
                           toY: d.monthly[i].income,
                           color: AppColors.primary,
                           width: 14,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
                         BarChartRodData(
                           toY: d.monthly[i].expenses,
                           color: context.danger,
                           width: 14,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
                       ],
                     ),
@@ -1528,7 +1528,7 @@ class _ProductsTab extends StatelessWidget {
             gradient: const LinearGradient(
               colors: [AppColors.gradientStart, AppColors.gradientEnd],
             ),
-            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           ),
           child: Row(
             children: [
@@ -1748,7 +1748,7 @@ class _StaffTab extends StatelessWidget {
                         toY: rows[i].salesCount.toDouble(),
                         color: AppColors.primary,
                         width: 28,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                     ],
                   ),

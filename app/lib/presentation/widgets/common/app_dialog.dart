@@ -54,7 +54,7 @@ class _AppDialogContent extends StatelessWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       elevation: AppConstants.cardElevation,
       backgroundColor: context.surface,
@@ -106,7 +106,7 @@ class _AppDialogContent extends StatelessWidget {
                         side: BorderSide(color: context.border),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                            AppConstants.buttonRadius,
+                            AppConstants.radiusLg,
                           ),
                         ),
                       ),
@@ -135,7 +135,7 @@ class _AppDialogContent extends StatelessWidget {
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                            AppConstants.buttonRadius,
+                            AppConstants.radiusLg,
                           ),
                         ),
                       ),

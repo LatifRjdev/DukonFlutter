@@ -221,7 +221,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                             color: _statusColor(inv.status, context)
                                                 .withValues(alpha: 0.15),
                                             borderRadius:
-                                                BorderRadius.circular(12),
+                                                BorderRadius.circular(AppConstants.radiusMd),
                                           ),
                                           child: Text(
                                             _statusLabel(inv.status),

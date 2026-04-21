@@ -290,7 +290,7 @@ class _DeliveryCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppConstants.spacingMd),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           boxShadow: context.elevationMd,
         ),
         child: Column(

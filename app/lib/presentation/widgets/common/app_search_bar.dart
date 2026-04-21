@@ -24,7 +24,7 @@ class AppSearchBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         boxShadow: isDark ? null : AppShadows.sm,
         border: isDark ? Border.all(color: theme.colorScheme.outline) : null,
       ),

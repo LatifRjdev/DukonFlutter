@@ -37,7 +37,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.cardRadius)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
       ),
       builder: (_) => Padding(
         padding: EdgeInsets.fromLTRB(
@@ -94,7 +94,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
                   decoration: BoxDecoration(
                     color: AppColors.warning.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                   ),
                   child: Column(
                     children: [
@@ -119,7 +119,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                       ),
                     ),
                   ),
@@ -150,7 +150,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                               height: 40,
                               decoration: BoxDecoration(
                                 color: AppColors.success.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                               ),
                               child: const Icon(Icons.check, color: AppColors.success, size: 20),
                             ),

@@ -109,7 +109,7 @@ class ProductDetailPage extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.28,
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: product.imageUrl != null
@@ -139,7 +139,7 @@ class ProductDetailPage extends StatelessWidget {
                             color: product.isActive
                                 ? AppColors.success.withValues(alpha: 0.15)
                                 : AppColors.error.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                           ),
                           child: Text(
                             product.isActive ? 'Активен' : 'Неактивен',
@@ -208,7 +208,7 @@ class ProductDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                         boxShadow: AppShadows.md,
                       ),
                       child: Column(
@@ -228,7 +228,7 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                             child: LinearProgressIndicator(
                               value: stockPercent,
                               minHeight: 8,
@@ -253,7 +253,7 @@ class ProductDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: context.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                         boxShadow: AppShadows.md,
                       ),
                       child: Column(
@@ -555,7 +555,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.surface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         boxShadow: AppShadows.md,
       ),
       child: Column(

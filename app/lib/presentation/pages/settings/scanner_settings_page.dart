@@ -110,7 +110,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       child: Column(
                         children: [
@@ -125,7 +125,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                               width: 36, height: 36,
                               decoration: BoxDecoration(
                                 color: AppColors.primary.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                               ),
                               child: const Icon(Icons.camera_rear_outlined,
                                   color: AppColors.primary, size: 18),
@@ -144,7 +144,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                               width: 36, height: 36,
                               decoration: BoxDecoration(
                                 color: AppColors.primary.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                               ),
                               child: const Icon(Icons.camera_front_outlined,
                                   color: AppColors.primary, size: 18),
@@ -167,7 +167,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       children: [
@@ -206,7 +206,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                     ),
                     child: Column(
                       children: _allFormats.asMap().entries.map((entry) {
@@ -234,7 +234,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                                 width: 36, height: 36,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: const Icon(Icons.qr_code_outlined,
                                     color: AppColors.primary, size: 18),
@@ -257,7 +257,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                         foregroundColor: AppColors.onPrimary,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(AppConstants.buttonRadius)),
+                                BorderRadius.circular(AppConstants.radiusLg)),
                       ),
                       onPressed: _saving ? null : _save,
                       child: _saving
@@ -284,7 +284,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
             width: 36, height: 36,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: Icon(icon, color: AppColors.primary, size: 18),
           ),

@@ -126,7 +126,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: context.infoBg,
-                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
               ),
               child: const Row(
@@ -157,7 +157,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 border: Border.all(
                   color: _connectedDevice != null
                       ? AppColors.success
@@ -217,7 +217,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                   side: const BorderSide(color: AppColors.primary),
                   foregroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                 ),
                 onPressed: _isScanning ? null : _scan,
                 icon: _isScanning
@@ -296,7 +296,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -306,7 +306,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                       width: 36, height: 36,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                       ),
                       child: const Icon(Icons.print_outlined,
                           color: AppColors.primary, size: 18),
@@ -338,7 +338,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                     foregroundColor: AppColors.onPrimary,
                     shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(AppConstants.buttonRadius)),
+                            BorderRadius.circular(AppConstants.radiusLg)),
                   ),
                   onPressed: _isPrinting ? null : _testPrint,
                   icon: _isPrinting

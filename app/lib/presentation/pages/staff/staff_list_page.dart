@@ -122,7 +122,7 @@ class _StaffListPageState extends State<StaffListPage> {
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: context.surface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -151,7 +151,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                               decoration: BoxDecoration(
                                                 color: roleColor.withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(10),
+                                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                               ),
                                               child: Text(_roleLabel(staff.role),
                                                 style: TextStyle(fontSize: 11, color: roleColor, fontWeight: FontWeight.w500)),
