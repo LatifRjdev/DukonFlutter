@@ -43,7 +43,7 @@ class _SplashPageState extends State<SplashPage> {
                 height: 100,
                 decoration: BoxDecoration(
                   color: context.surface,
-                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXxl),
                 ),
                 child: const Icon(Icons.store, size: 60, color: AppColors.primary),
               ),

@@ -441,7 +441,7 @@ class _ReportsPageState extends State<ReportsPage>
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppConstants.radiusXl)),
+            top: Radius.circular(AppConstants.radiusXxl)),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(

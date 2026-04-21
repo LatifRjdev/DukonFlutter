@@ -91,4 +91,31 @@ extension ThemeColors on BuildContext {
   Color get infoBg => _isDark
       ? AppColors.infoDark.withValues(alpha: 0.15)
       : AppColors.infoBg;
+
+  /// Small elevation — list items, low-prominence cards.
+  List<BoxShadow> get elevationSm => [
+        BoxShadow(
+          color: shadowColor,
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ];
+
+  /// Medium elevation — floating cards, sticky bars.
+  List<BoxShadow> get elevationMd => [
+        BoxShadow(
+          color: shadowColor,
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  /// Large elevation — modals, popovers, FABs.
+  List<BoxShadow> get elevationLg => [
+        BoxShadow(
+          color: shadowColor,
+          blurRadius: 16,
+          offset: const Offset(0, 8),
+        ),
+      ];
 }

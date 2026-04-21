@@ -9,11 +9,13 @@ class AppConstants {
   static const double spacingXl = 32.0;
   static const double spacingXxl = 48.0;
 
-  // Radius
+  // Border radii — 4-based scale
+  static const double radiusXs = 4.0;
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
-  static const double radiusXl = 24.0;
+  static const double radiusXl = 20.0;
+  static const double radiusXxl = 24.0;
   static const double radiusRound = 100.0;
 
   // Button
@@ -24,6 +26,11 @@ class AppConstants {
   // Card
   static const double cardRadius = 16.0;
   static const double cardElevation = 2.0;
+
+  // Motion durations
+  static const Duration motionFast = Duration(milliseconds: 150);
+  static const Duration motionMedium = Duration(milliseconds: 250);
+  static const Duration motionSlow = Duration(milliseconds: 400);
 
   // Durations
   static const Duration animationFast = Duration(milliseconds: 200);

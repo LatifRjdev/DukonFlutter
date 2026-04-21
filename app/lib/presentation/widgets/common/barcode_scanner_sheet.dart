@@ -59,7 +59,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppConstants.radiusXl),
+          top: Radius.circular(AppConstants.radiusXxl),
         ),
       ),
       child: Column(

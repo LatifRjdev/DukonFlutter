@@ -326,4 +326,42 @@ void main() {
       expect(light, isNot(dark));
     });
   });
+
+  group('elevation tokens', () {
+    testWidgets('elevationSm returns single shadow with blur 4 and offset (0,2)', (tester) async {
+      List<BoxShadow>? val;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { val = ctx.elevationSm; return const SizedBox(); }),
+      ));
+      expect(val, isNotNull);
+      expect(val!.length, 1);
+      expect(val!.first.blurRadius, 4);
+      expect(val!.first.offset, const Offset(0, 2));
+    });
+
+    testWidgets('elevationMd returns single shadow with blur 8 and offset (0,4)', (tester) async {
+      List<BoxShadow>? val;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { val = ctx.elevationMd; return const SizedBox(); }),
+      ));
+      expect(val, isNotNull);
+      expect(val!.length, 1);
+      expect(val!.first.blurRadius, 8);
+      expect(val!.first.offset, const Offset(0, 4));
+    });
+
+    testWidgets('elevationLg returns single shadow with blur 16 and offset (0,8)', (tester) async {
+      List<BoxShadow>? val;
+      await tester.pumpWidget(_wrap(
+        AppTheme.light,
+        Builder(builder: (ctx) { val = ctx.elevationLg; return const SizedBox(); }),
+      ));
+      expect(val, isNotNull);
+      expect(val!.length, 1);
+      expect(val!.first.blurRadius, 16);
+      expect(val!.first.offset, const Offset(0, 8));
+    });
+  });
 }

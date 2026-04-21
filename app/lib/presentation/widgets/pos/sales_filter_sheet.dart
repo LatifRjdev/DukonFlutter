@@ -194,7 +194,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppConstants.radiusXl),
+          top: Radius.circular(AppConstants.radiusXxl),
         ),
       ),
       child: Column(
