@@ -185,6 +185,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
         appBar: AppBar(
           title: const Text('Продажа в долг'),
           leading: IconButton(
+            tooltip: 'Назад',
             icon: const Icon(Icons.arrow_back),
             onPressed: () => context.pop(),
           ),

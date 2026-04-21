@@ -90,6 +90,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                     child: Row(
                       children: [
                         IconButton(
+                          tooltip: 'Назад',
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () => context.pop(),
                         ),
@@ -168,18 +169,22 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               _quickChip(5000),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: GestureDetector(
-                                  onTap: () => _quickAmount(total),
-                                  child: Container(
-                                    constraints: const BoxConstraints(minHeight: 44),
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: context.border),
-                                      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                                child: Semantics(
+                                  label: 'Без сдачи',
+                                  button: true,
+                                  child: GestureDetector(
+                                    onTap: () => _quickAmount(total),
+                                    child: Container(
+                                      constraints: const BoxConstraints(minHeight: 44),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: context.border),
+                                        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                                      ),
+                                      child: const Text('Без сдачи',
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                     ),
-                                    child: const Text('Без сдачи',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                   ),
                                 ),
                               ),
@@ -254,18 +259,22 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
 
   Widget _quickChip(double amount) {
     return Expanded(
-      child: GestureDetector(
-        onTap: () => _quickAmount(amount),
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 44),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(color: context.border),
-            borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+      child: Semantics(
+        label: 'Быстрая сумма ${amount.toStringAsFixed(0)}',
+        button: true,
+        child: GestureDetector(
+          onTap: () => _quickAmount(amount),
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 44),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: context.border),
+              borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+            ),
+            child: Text(amount.toStringAsFixed(0),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
           ),
-          child: Text(amount.toStringAsFixed(0),
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
         ),
       ),
     );

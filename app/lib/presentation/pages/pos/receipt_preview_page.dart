@@ -82,6 +82,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            tooltip: 'Поделиться',
             icon: const Icon(Icons.share_outlined),
             onPressed: () => _shareReceipt(context),
           ),

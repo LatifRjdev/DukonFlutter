@@ -247,6 +247,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     ),
                     const Spacer(),
                     IconButton(
+                      tooltip: 'Выбрать клиента',
                       icon: const Icon(Icons.person_outline),
                       onPressed: _showCustomerSelection,
                     ),
@@ -285,6 +286,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         boxShadow: AppShadows.md,
                       ),
                       child: IconButton(
+                        tooltip: 'Сканировать штрихкод',
                         icon: Icon(Icons.qr_code_scanner, color: context.onPrimary),
                         onPressed: () {
                           BarcodeScannerSheet.show(
@@ -330,32 +332,36 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           separatorBuilder: (_, _) => const SizedBox(width: 8),
                           itemBuilder: (context, index) {
                             final p = quickProducts[index];
-                            return GestureDetector(
-                              onTap: () => _addProductToCart(p),
-                              child: Container(
-                                width: 80,
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: context.surface,
-                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                                  boxShadow: AppShadows.sm,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(p.name,
-                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center),
-                                    const SizedBox(height: 2),
-                                    Text(p.sellPrice.toStringAsFixed(0),
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.primary,
-                                      )),
-                                  ],
+                            return Semantics(
+                              label: 'Добавить товар',
+                              button: true,
+                              child: GestureDetector(
+                                onTap: () => _addProductToCart(p),
+                                child: Container(
+                                  width: 80,
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: context.surface,
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                                    boxShadow: AppShadows.sm,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(p.name,
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center),
+                                      const SizedBox(height: 2),
+                                      Text(p.sellPrice.toStringAsFixed(0),
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.primary,
+                                        )),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -554,6 +560,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 SizedBox(
                   width: 32, height: 32,
                   child: IconButton(
+                    tooltip: 'Уменьшить количество',
                     padding: EdgeInsets.zero,
                     iconSize: 18,
                     icon: const Icon(Icons.remove),
@@ -576,6 +583,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 SizedBox(
                   width: 32, height: 32,
                   child: IconButton(
+                    tooltip: 'Увеличить количество',
                     padding: EdgeInsets.zero,
                     iconSize: 18,
                     icon: const Icon(Icons.add),
@@ -598,6 +606,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           SizedBox(
             width: 32,
             child: IconButton(
+              tooltip: 'Удалить товар',
               padding: EdgeInsets.zero,
               iconSize: 18,
               icon: const Icon(Icons.delete_outline, color: AppColors.error),
