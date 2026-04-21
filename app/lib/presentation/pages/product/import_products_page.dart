@@ -376,13 +376,7 @@ class _PreviewView extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: context.surface,
-            boxShadow: [
-              BoxShadow(
-                color: context.shadowColor,
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
+            boxShadow: context.elevationMd,
           ),
           child: ElevatedButton(
             onPressed: state.totalRows > 0

@@ -55,9 +55,7 @@ class MonthSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        boxShadow: [
-          BoxShadow(color: context.shadowColor, blurRadius: 4, offset: Offset(0, 2)),
-        ],
+        boxShadow: context.elevationSm,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

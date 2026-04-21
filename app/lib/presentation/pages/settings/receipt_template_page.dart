@@ -107,13 +107,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: context.elevationMd,
         ),
         child: Column(
           children: [

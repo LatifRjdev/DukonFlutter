@@ -39,13 +39,7 @@ class GlassCard extends StatelessWidget {
               border: accentColor != null
                   ? Border(left: BorderSide(color: accentColor!, width: 3))
                   : null,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              boxShadow: context.elevationMd,
             ),
             child: body,
           ),

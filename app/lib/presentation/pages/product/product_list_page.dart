@@ -135,9 +135,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 decoration: BoxDecoration(
                   color: context.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(color: context.shadowColor, blurRadius: 4, offset: const Offset(0, 1)),
-                  ],
+                  boxShadow: context.elevationSm,
                 ),
                 child: TextField(
                   controller: _searchController,
@@ -285,9 +283,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             color: context.surface,
-                            boxShadow: [
-                              BoxShadow(color: context.shadowColor, blurRadius: 8, offset: const Offset(0, -2)),
-                            ],
+                            boxShadow: context.elevationMd,
                           ),
                           child: Row(
                             children: [

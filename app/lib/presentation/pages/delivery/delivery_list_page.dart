@@ -291,7 +291,7 @@ class _DeliveryCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))],
+          boxShadow: context.elevationMd,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
