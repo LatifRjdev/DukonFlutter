@@ -391,10 +391,7 @@ class _SectionItem {
   final String label;
   final IconData icon;
   final VoidCallback onTap;
-  /// True when the tile is a placeholder — used by _buildSectionsGrid to
-  /// render the icon/label in a dimmed style.
-  final bool stub;
-  _SectionItem(this.label, this.icon, this.onTap, {this.stub = false});
+  _SectionItem(this.label, this.icon, this.onTap);
 }
 
 class _KpiCardContent extends StatelessWidget {
