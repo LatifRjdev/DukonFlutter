@@ -7,8 +7,8 @@ class AppColors {
   static const Color gradientEnd = Color(0xFF8B5CF6);
 
   // Primary brand
-  static const Color primary = Color(0xFF6366F1);       // indigo-500
-  static const Color primaryDark = Color(0xFF818CF8);   // indigo-400 for dark theme
+  static const Color primary = Color(0xFF4F52D0);       // indigo-600 region — passes WCAG AA (6.09:1 on white)
+  static const Color primaryDark = Color(0xFF5E60EC);   // indigo-500 region for dark theme — passes WCAG AA (4.82:1 on white)
   static const Color onPrimary = Colors.white;
 
   // Secondary (gradient partner / accents)
@@ -21,8 +21,8 @@ class AppColors {
   static const Color lightSurfaceElevated = Color(0xFFF9F5FC);
   static const Color lightBorder = Color(0xFFE8E0F0);
   static const Color lightTextPrimary = Color(0xFF1E1B4B);
-  static const Color lightTextSecondary = Color(0xFF64748B);
-  static const Color lightTextHint = Color(0xFF94A3B8);
+  static const Color lightTextSecondary = Color(0xFF475569);  // slate-600 — passes WCAG AA (7.58:1 on white)
+  static const Color lightTextHint = Color(0xFF64748B);       // slate-500 — passes WCAG AA-large (4.76:1 on white)
 
   // Dark theme surfaces (not pure black — prevents OLED smear)
   static const Color darkBackground = Color(0xFF0F0A1A);
@@ -34,20 +34,20 @@ class AppColors {
   static const Color darkTextHint = Color(0xFFA09CB0);
 
   // Semantic accents (light theme values; dark variants via context.* extensions)
-  static const Color success = Color(0xFF10B981);       // emerald-500
-  static const Color successDark = Color(0xFF34D399);   // emerald-400 for dark
+  static const Color success = Color(0xFF047857);       // emerald-700 — passes WCAG AA (5.48:1 white on success)
+  static const Color successDark = Color(0xFF05865D);   // emerald-700 variant for dark — passes WCAG AA (4.59:1 white on successDark)
   static const Color successBg = Color(0xFFD1FAE5);
 
   static const Color warning = Color(0xFFF59E0B);       // amber-500
   static const Color warningDark = Color(0xFFFBBF24);   // amber-400 for dark
   static const Color warningBg = Color(0xFFFEF3C7);
 
-  static const Color error = Color(0xFFEF4444);         // red-500
-  static const Color errorDark = Color(0xFFF87171);     // red-400 for dark
+  static const Color error = Color(0xFFDC2626);         // red-600 — passes WCAG AA (4.83:1 white on error)
+  static const Color errorDark = Color(0xFFDC2626);     // red-600 for dark — passes WCAG AA (4.83:1 white on errorDark)
   static const Color errorBg = Color(0xFFFEE2E2);
 
-  static const Color info = Color(0xFF3B82F6);          // blue-500
-  static const Color infoDark = Color(0xFF60A5FA);      // blue-400 for dark
+  static const Color info = Color(0xFF2563EB);          // blue-600 — passes WCAG AA (5.17:1 white on info)
+  static const Color infoDark = Color(0xFF2563EB);      // blue-600 for dark — passes WCAG AA (5.17:1 white on infoDark)
   static const Color infoBg = Color(0xFFDBEAFE);
 
   // Accent tints for icon backgrounds (light mode)
