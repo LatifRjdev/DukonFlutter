@@ -104,55 +104,55 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                           fontWeight: FontWeight.w600,
                           color: context.textSecondary)),
                   const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-                    ),
-                    child: Column(
-                      children: [
-                        RadioListTile<String>(
-                          value: 'back',
-                          groupValue: _camera,
-                          onChanged: (v) => setState(() => _camera = v!),
-                          title: const Text('Задняя камера',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
-                          subtitle: const Text('Рекомендуется для сканирования',
-                              style: TextStyle(fontSize: 12)),
-                          secondary: Container(
-                            width: 36, height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
+                  RadioGroup<String>(
+                    groupValue: _camera,
+                    onChanged: (v) => setState(() => _camera = v!),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                      ),
+                      child: Column(
+                        children: [
+                          RadioListTile<String>(
+                            value: 'back',
+                            title: const Text('Задняя камера',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500)),
+                            subtitle: const Text('Рекомендуется для сканирования',
+                                style: TextStyle(fontSize: 12)),
+                            secondary: Container(
+                              width: 36, height: 36,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.camera_rear_outlined,
+                                  color: AppColors.primary, size: 18),
                             ),
-                            child: const Icon(Icons.camera_rear_outlined,
-                                color: AppColors.primary, size: 18),
+                            activeColor: AppColors.primary,
                           ),
-                          activeColor: AppColors.primary,
-                        ),
-                        const Divider(height: 1, indent: 52),
-                        RadioListTile<String>(
-                          value: 'front',
-                          groupValue: _camera,
-                          onChanged: (v) => setState(() => _camera = v!),
-                          title: const Text('Передняя камера',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
-                          subtitle: const Text('Фронтальная камера',
-                              style: TextStyle(fontSize: 12)),
-                          secondary: Container(
-                            width: 36, height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
+                          const Divider(height: 1, indent: 52),
+                          RadioListTile<String>(
+                            value: 'front',
+                            title: const Text('Передняя камера',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500)),
+                            subtitle: const Text('Фронтальная камера',
+                                style: TextStyle(fontSize: 12)),
+                            secondary: Container(
+                              width: 36, height: 36,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.camera_front_outlined,
+                                  color: AppColors.primary, size: 18),
                             ),
-                            child: const Icon(Icons.camera_front_outlined,
-                                color: AppColors.primary, size: 18),
+                            activeColor: AppColors.primary,
                           ),
-                          activeColor: AppColors.primary,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),

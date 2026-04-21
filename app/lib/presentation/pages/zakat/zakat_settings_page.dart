@@ -121,31 +121,31 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       // Method section
                       _buildSectionLabel('МЕТОД РАСЧЁТА'),
                       const SizedBox(height: 8),
-                      _buildCard([
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(14, 12, 14, 4),
-                          child: Text('Стандарт нисаба',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                        ),
-                        RadioListTile<String>(
-                          title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
-                          subtitle: Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
-                          value: 'gold',
-                          groupValue: _nisabStandard,
-                          activeColor: AppColors.primary,
-                          onChanged: (v) => setState(() => _nisabStandard = v!),
-                          dense: true,
-                        ),
-                        RadioListTile<String>(
-                          title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
-                          subtitle: Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
-                          value: 'silver',
-                          groupValue: _nisabStandard,
-                          activeColor: AppColors.primary,
-                          onChanged: (v) => setState(() => _nisabStandard = v!),
-                          dense: true,
-                        ),
-                      ]),
+                      RadioGroup<String>(
+                        groupValue: _nisabStandard,
+                        onChanged: (v) => setState(() => _nisabStandard = v!),
+                        child: _buildCard([
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(14, 12, 14, 4),
+                            child: Text('Стандарт нисаба',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
+                            subtitle: Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            value: 'gold',
+                            activeColor: AppColors.primary,
+                            dense: true,
+                          ),
+                          RadioListTile<String>(
+                            title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
+                            subtitle: Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            value: 'silver',
+                            activeColor: AppColors.primary,
+                            dense: true,
+                          ),
+                        ]),
+                      ),
                       const SizedBox(height: 8),
                       _buildCard([
                         Padding(
