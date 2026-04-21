@@ -311,8 +311,8 @@ class _SectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        boxShadow: const [
-          BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 2)),
+        boxShadow: [
+          BoxShadow(color: context.shadowColor, blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: child,

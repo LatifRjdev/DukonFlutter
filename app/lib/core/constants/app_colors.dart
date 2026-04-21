@@ -59,7 +59,6 @@ class AppColors {
 
   // Utility
   static const Color disabled = Color(0xFFCBD5E1);
-  static const Color overlay = Color(0x80000000);
 
   // Glassmorphism (dark theme only)
   static const Color glassBg = Color(0x14B387F5);       // rgba(139,92,246,0.08)
