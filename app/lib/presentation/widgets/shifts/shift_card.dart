@@ -21,6 +21,7 @@ class ShiftCard extends StatelessWidget {
     final diff = end.difference(open);
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);
+    // ignore: unnecessary_brace_in_string_interps
     return '${hours}ч ${minutes}м';
   }
 

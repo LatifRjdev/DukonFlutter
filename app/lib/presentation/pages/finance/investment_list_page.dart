@@ -172,7 +172,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                           child: ListView.separated(
                             padding: const EdgeInsets.all(AppConstants.spacingMd),
                             itemCount: state.investments.length,
-                            separatorBuilder: (_, __) =>
+                            separatorBuilder: (_, _) =>
                                 const SizedBox(height: AppConstants.spacingSm),
                             itemBuilder: (context, index) {
                               final inv = state.investments[index];

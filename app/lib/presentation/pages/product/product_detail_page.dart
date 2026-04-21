@@ -116,7 +116,7 @@ class ProductDetailPage extends StatelessWidget {
                           ? Image.network(
                               product.imageUrl!,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) =>
+                              errorBuilder: (_, _, _) =>
                                   const Center(child: Icon(Icons.image_outlined, size: 64, color: AppColors.disabled)),
                             )
                           : const Center(

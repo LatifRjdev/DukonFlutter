@@ -263,7 +263,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               vertical: AppConstants.spacingSm),
                           itemCount:
                               _notifications.length + (_loadingMore ? 1 : 0),
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (_, _) =>
                               const Divider(height: 1, indent: 72),
                           itemBuilder: (context, i) {
                             if (i >= _notifications.length) {

@@ -50,7 +50,7 @@ void main() {
       routes: [
         GoRoute(
           path: '/products/add',
-          builder: (_, __) => MultiBlocProvider(
+          builder: (_, _) => MultiBlocProvider(
             providers: [
               BlocProvider<StoreBloc>.value(value: storeBloc),
               BlocProvider<CategoryBloc>.value(value: categoryBloc),

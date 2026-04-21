@@ -42,6 +42,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
   String _formatElapsed(Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes.remainder(60);
+    // ignore: unnecessary_brace_in_string_interps
     return '${hours}ч ${minutes}м';
   }
 
