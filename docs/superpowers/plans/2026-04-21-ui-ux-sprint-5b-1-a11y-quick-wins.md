@@ -1,5 +1,17 @@
 # Sprint 5B.1 — Accessibility Quick Wins Implementation Plan
 
+## Sprint 5B.1 Complete — 2026-04-21
+
+- **Contrast foundation:** `contrast_utils.dart` with WCAG 2.1 `contrastRatio()` utility; `theme_contrast_test.dart` validates 22 critical `ThemeColors` pairs in light + dark. **10 violations fixed** by darkening AppColors backing (primary, success, error, info + their dark variants + lightTextSecondary/Hint).
+- **Font floor:** 61 sub-12sp sites bumped to 12sp via bulk sed.
+- **Touch targets:** 67 candidate sites audited (27 full-row skip / 12 icon-only fix / 15 chip-pill fix / 13 big-area skip). **27 sites fixed** across 16 files with `SizedBox(44, 44)` or `BoxConstraints(minHeight: 44)`.
+- **Gradient contrast spot-check:** brand gradient (#6366F1 → #8B5CF6) gives 4.06–4.47:1 with white text. All gradient text in-app is large (≥18pt or ≥14pt bold), so **AA-large threshold 3.0 passes**. Normal-size text never placed on gradient (UI pattern).
+- **Acceptance:** `flutter analyze` 0 issues; `flutter test` 357/357 pass (335 existing + 22 new contrast tests).
+- Commits: Task 1 (`9af8e50`), Task 2 (`47e726b`), Task 3 (`03eb325`).
+- Follow-up: Sprint 5B.2 — semantic labels for screen readers (TalkBack + VoiceOver), ~10-15h.
+
+---
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix the three quick-win WCAG 2.1 AA gaps in the app — minimum 12sp font, minimum 44×44 dp touch target, and ≥4.5:1 contrast on all critical `ThemeColors` pairs — across `lib/presentation/`.
