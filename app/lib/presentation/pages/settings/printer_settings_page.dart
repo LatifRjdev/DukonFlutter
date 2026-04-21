@@ -214,7 +214,7 @@ class _DeviceTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
                         child: const Text('По умолчанию',
-                            style: TextStyle(fontSize: 10, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                            style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ],

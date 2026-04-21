@@ -226,7 +226,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                           child: Text(
                                             _statusLabel(inv.status),
                                             style: TextStyle(
-                                              fontSize: 11,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.w600,
                                               color:
                                                   _statusColor(inv.status, context),

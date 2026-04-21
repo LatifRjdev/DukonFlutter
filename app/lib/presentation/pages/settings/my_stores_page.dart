@@ -297,7 +297,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                               ),
                                               child: const Text('Активный',
                                                   style: TextStyle(
-                                                      fontSize: 10,
+                                                      fontSize: 12,
                                                       color: AppColors.primary,
                                                       fontWeight: FontWeight.w600)),
                                             ),

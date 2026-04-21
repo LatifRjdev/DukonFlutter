@@ -411,7 +411,7 @@ class _NotificationCard extends StatelessWidget {
                     timeAgo,
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      fontSize: 11,
+                      fontSize: 12,
                       color: context.textMuted,
                     ),
                   ),

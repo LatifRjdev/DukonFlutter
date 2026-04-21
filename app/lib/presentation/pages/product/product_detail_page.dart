@@ -633,7 +633,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
                               if (date != null)
                                 Text(_formatDate(date),
                                     style: TextStyle(
-                                        fontSize: 11,
+                                        fontSize: 12,
                                         color: context.textMuted)),
                             ],
                           ),

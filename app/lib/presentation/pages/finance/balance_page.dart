@@ -360,7 +360,7 @@ class _BalancePageState extends State<BalancePage> {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
                     _formatDate(points[idx].date),
-                    style: TextStyle(fontSize: 10, color: context.textSecondary),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 );
               },

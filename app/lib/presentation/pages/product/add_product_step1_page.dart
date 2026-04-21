@@ -321,7 +321,7 @@ class _StepDot extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 11,
+            fontSize: 12,
             color: isActive ? context.primary : context.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),

@@ -1144,7 +1144,7 @@ class _SalesTab extends StatelessWidget {
                                   ? '${name.substring(0, 7)}…'
                                   : name,
                               style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   fontFamily: 'Inter',
                                   color: context.textSecondary),
                             ),
@@ -1242,7 +1242,7 @@ class _ExpensesTab extends StatelessWidget {
                     title: '${pct.toStringAsFixed(1)}%',
                     radius: 60,
                     titleStyle: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter',
                         color: Colors.white),
@@ -1410,7 +1410,7 @@ class _ProfitTab extends StatelessWidget {
                             child: Text(
                               d.monthly[idx].month,
                               style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   fontFamily: 'Inter',
                                   color: context.textSecondary),
                             ),
@@ -1722,7 +1722,7 @@ class _StaffTab extends StatelessWidget {
                                 ? '${name.substring(0, 7)}…'
                                 : name,
                             style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontFamily: 'Inter',
                                 color: context.textSecondary),
                           ),

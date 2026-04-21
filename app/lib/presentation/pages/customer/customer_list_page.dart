@@ -289,7 +289,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                                   children: [
                                                     Icon(Icons.star, size: 10, color: AppColors.warning),
                                                     SizedBox(width: 2),
-                                                    Text('VIP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.warning)),
+                                                    Text('VIP', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning)),
                                                   ],
                                                 ),
                                               ),
@@ -304,7 +304,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         if (customer.totalSpent > 0) ...[
                                           const SizedBox(height: 2),
                                           Text('Покупок: ${_formatPrice(customer.totalSpent)}',
-                                            style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                            style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                         ],
                                       ],
                                     ),

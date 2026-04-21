@@ -66,7 +66,7 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('-${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.error, fontSize: 14)),
-              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: TextStyle(fontSize: 11, color: context.textSecondary)),
+              Text('${expense.date.day}.${expense.date.month}.${expense.date.year}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ),
           if (onDelete != null) ...[

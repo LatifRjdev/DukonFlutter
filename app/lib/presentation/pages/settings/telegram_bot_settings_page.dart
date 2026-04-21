@@ -244,7 +244,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                                     size: 64, color: context.textPrimary),
                                 Text(_botUsername,
                                     style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         color: context.textSecondary)),
                               ],
                             ),

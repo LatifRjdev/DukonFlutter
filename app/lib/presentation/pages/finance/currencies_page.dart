@@ -412,7 +412,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                           child: Text(
                             fmtDate(points[idx].date),
                             style: TextStyle(
-                              fontSize: 9,
+                              fontSize: 12,
                               color: context.textSecondary,
                             ),
                           ),

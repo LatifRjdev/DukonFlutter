@@ -99,7 +99,7 @@ class StaffCard extends StatelessWidget {
                       ),
                       child: Text(
                         _roleLabel(staff.role),
-                        style: TextStyle(color: roleColor, fontSize: 11, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: roleColor, fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                     ),
                     if (staff.phone != null) ...[
@@ -124,7 +124,7 @@ class StaffCard extends StatelessWidget {
                 ),
                 Text(
                   'сегодня',
-                  style: TextStyle(fontSize: 11, color: context.textSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

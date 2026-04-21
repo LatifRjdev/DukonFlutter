@@ -356,7 +356,7 @@ class _CreditCardState extends State<_CreditCard> {
                     const SizedBox(height: 2),
                     Text(
                       'посл. ${widget.formatDate(item.lastPayment)}',
-                      style: TextStyle(fontSize: 11, color: context.textSecondary),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ],
                 ),

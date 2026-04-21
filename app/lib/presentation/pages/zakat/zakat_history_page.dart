@@ -140,7 +140,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
                                     const SizedBox(height: 2),
                                     Text('Облагаемая: ${_formatPrice(payment.totalAssets)}',
-                                      style: TextStyle(fontSize: 10, color: context.textSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
                               ],

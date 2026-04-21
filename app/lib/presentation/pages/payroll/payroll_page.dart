@@ -385,7 +385,7 @@ class _PeriodCard extends StatelessWidget {
                       _statusLabel(status),
                       style: TextStyle(
                         color: _statusColor(status, context),
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

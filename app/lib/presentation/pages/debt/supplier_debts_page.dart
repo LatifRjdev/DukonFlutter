@@ -170,7 +170,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                               children: [
                                 Text('${amount.toStringAsFixed(2)} TJS', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.success)),
                                 if (date.isNotEmpty)
-                                  Text(date.substring(0, 10), style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                  Text(date.substring(0, 10), style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               ],
                             ),
                           ],

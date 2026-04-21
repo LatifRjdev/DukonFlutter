@@ -51,7 +51,7 @@ class QuickProductChip extends StatelessWidget {
               child: Text(
                 Formatters.price(product.sellPrice),
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: context.primary,
                   fontFamily: 'Inter',

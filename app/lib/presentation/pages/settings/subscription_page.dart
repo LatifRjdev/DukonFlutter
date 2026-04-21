@@ -220,7 +220,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 child: Text(
                   _statusLabel(state.status),
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
@@ -351,7 +351,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     child: const Text(
                       'Текущий план',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
@@ -485,7 +485,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       child: Text(
                         payment.method == 'CARD' ? 'Карта' : 'Наличные',
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             color: context.textSecondary),
                       ),
                     ),
@@ -500,7 +500,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       child: Text(
                         statusLabel,
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             color: statusColor,
                             fontWeight: FontWeight.w600),
                       ),

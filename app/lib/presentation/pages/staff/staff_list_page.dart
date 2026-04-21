@@ -154,7 +154,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                               ),
                                               child: Text(_roleLabel(staff.role),
-                                                style: TextStyle(fontSize: 11, color: roleColor, fontWeight: FontWeight.w500)),
+                                                style: TextStyle(fontSize: 12, color: roleColor, fontWeight: FontWeight.w500)),
                                             ),
                                           ],
                                         ),

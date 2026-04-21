@@ -293,7 +293,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Общая сумма',
-                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalValue),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
@@ -306,7 +306,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Себестоимость',
-                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],

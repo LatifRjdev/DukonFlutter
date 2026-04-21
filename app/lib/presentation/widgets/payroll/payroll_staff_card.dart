@@ -74,7 +74,7 @@ class PayrollStaffCard extends StatelessWidget {
                   entry.isPaid ? 'Оплачено' : 'Не оплачено',
                   style: TextStyle(
                     color: entry.isPaid ? AppColors.success : AppColors.warning,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -169,7 +169,7 @@ class _PayrollItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          Text(label, style: TextStyle(fontSize: 11, color: context.textSecondary)),
+          Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ],
       ),
     );

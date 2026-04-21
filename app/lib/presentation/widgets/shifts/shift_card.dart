@@ -71,7 +71,7 @@ class ShiftCard extends StatelessWidget {
                             isOpen ? 'Открыта' : 'Закрыта',
                             style: TextStyle(
                               color: isOpen ? AppColors.success : context.textSecondary,
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -95,7 +95,7 @@ class ShiftCard extends StatelessWidget {
                   ),
                   Text(
                     '${shift.salesCount} продаж',
-                    style: TextStyle(fontSize: 11, color: context.textSecondary),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],
               ),

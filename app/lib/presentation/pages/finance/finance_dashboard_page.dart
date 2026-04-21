@@ -225,7 +225,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                                 return Padding(
                                                   padding: const EdgeInsets.only(top: 8),
                                                   child: Text(labels[value.toInt()],
-                                                    style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                                    style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                                 );
                                               }
                                               return const Text('');
@@ -378,7 +378,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
               Icon(s.icon, size: 24, color: AppColors.primary),
               const SizedBox(height: 4),
               Text(s.label,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center),
             ],
           ),

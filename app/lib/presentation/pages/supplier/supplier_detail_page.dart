@@ -236,7 +236,7 @@ class _ActionButton extends StatelessWidget {
             child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 11, color: color)),
+          Text(label, style: TextStyle(fontSize: 12, color: color)),
         ],
       ),
     );

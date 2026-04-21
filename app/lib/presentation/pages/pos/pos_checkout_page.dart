@@ -344,7 +344,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(p.name,
-                                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center),
@@ -664,7 +664,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               const SizedBox(height: 2),
               Text(label,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: isSelected ? context.onPrimary : context.textSecondary,
                 ),

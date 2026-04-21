@@ -575,7 +575,7 @@ class _DiffScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),
@@ -585,7 +585,7 @@ class _DiffScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),
@@ -595,7 +595,7 @@ class _DiffScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   color: context.textSecondary),
                               textAlign: TextAlign.center),
                         ),

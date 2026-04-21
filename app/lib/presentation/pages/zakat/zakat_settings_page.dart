@@ -256,7 +256,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                     Text('Напоминание',
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                     Text('За 30 дней до окончания хавля',
-                                      style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
                               ),
@@ -351,7 +351,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               children: [
                 Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 if (subtitle != null)
-                  Text(subtitle, style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                  Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),

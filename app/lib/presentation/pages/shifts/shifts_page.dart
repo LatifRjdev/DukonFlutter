@@ -225,7 +225,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Text('Активна',
-                  style: TextStyle(fontSize: 11, color: AppColors.success, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -303,7 +303,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               child: Text(
                 shift.closedAt != null ? 'Сдано' : 'Открыта',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: shift.closedAt != null ? AppColors.success : AppColors.warning,
                 ),
