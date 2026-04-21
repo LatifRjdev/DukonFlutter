@@ -158,7 +158,10 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Photo upload zone
-                      GestureDetector(
+                      Semantics(
+                        label: 'Загрузить фото',
+                        button: true,
+                        child: GestureDetector(
                         onTap: _pickImage,
                         child: Container(
                           width: double.infinity,
@@ -203,6 +206,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                                 ),
                         ),
                       ),
+                      ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _nameController,
@@ -225,6 +229,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                         label: 'Штрихкод',
                         prefixIcon: Icons.qr_code,
                         suffix: IconButton(
+                          tooltip: 'Сканировать штрихкод',
                           icon: const Icon(Icons.qr_code_scanner,
                               color: AppColors.primary),
                           onPressed: _scanBarcode,

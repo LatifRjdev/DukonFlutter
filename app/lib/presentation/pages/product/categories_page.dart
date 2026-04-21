@@ -179,6 +179,7 @@ class CategoriesPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
+                        tooltip: 'Редактировать категорию',
                         icon: Icon(Icons.edit_outlined,
                             size: 20, color: context.textSecondary),
                         onPressed: () => _showCategoryDialog(
@@ -188,6 +189,7 @@ class CategoriesPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
+                        tooltip: 'Удалить категорию',
                         icon: const Icon(Icons.delete_outline,
                             size: 20, color: AppColors.error),
                         onPressed: () =>

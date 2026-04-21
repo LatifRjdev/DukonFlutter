@@ -69,6 +69,7 @@ class ProductDetailPage extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
+                    tooltip: 'Назад',
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
@@ -76,6 +77,7 @@ class ProductDetailPage extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: 'Редактировать товар',
                     icon: const Icon(Icons.edit_outlined),
                     onPressed: () => context.push('/products/add', extra: {'product': product, 'isEditing': true}),
                   ),

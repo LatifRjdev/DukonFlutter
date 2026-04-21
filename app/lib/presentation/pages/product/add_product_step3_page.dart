@@ -194,7 +194,10 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                       const Text('Фото товара',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
-                      GestureDetector(
+                      Semantics(
+                        label: 'Загрузить фото',
+                        button: true,
+                        child: GestureDetector(
                         onTap: _pickImage,
                         child: Container(
                           width: double.infinity,
@@ -224,6 +227,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                                   ],
                                 ),
                         ),
+                      ),
                       ),
                     ],
                   ),

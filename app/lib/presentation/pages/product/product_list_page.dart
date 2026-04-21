@@ -122,6 +122,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     ],
                   ),
                   IconButton(
+                    tooltip: 'Добавить товар',
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: () => context.push('/products/add'),
                   ),
@@ -151,6 +152,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
+                          tooltip: 'Сканировать штрихкод',
                           icon: Icon(Icons.qr_code_scanner, color: context.textSecondary),
                           onPressed: () {
                             BarcodeScannerSheet.show(
@@ -163,6 +165,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           },
                         ),
                         IconButton(
+                          tooltip: 'Фильтры',
                           icon: Icon(Icons.tune, color: _showFilters ? context.primary : context.textSecondary),
                           onPressed: () {
                             setState(() => _showFilters = !_showFilters);
@@ -359,7 +362,10 @@ class _ProductCard extends StatelessWidget {
       stockColor = AppColors.success;
     }
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Открыть товар ${product.name}',
+      button: true,
+      child: GestureDetector(
       onTap: () => context.push('/products/${product.id}', extra: product),
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -440,6 +446,7 @@ class _ProductCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
