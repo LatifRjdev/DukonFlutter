@@ -109,12 +109,15 @@ class CartItemWidget extends StatelessWidget {
             InkWell(
               onTap: onDelete,
               borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Icons.close_rounded,
-                  size: 20,
-                  color: context.danger.withValues(alpha: 0.7),
+              child: SizedBox(
+                width: 44,
+                height: 44,
+                child: Center(
+                  child: Icon(
+                    Icons.close_rounded,
+                    size: 20,
+                    color: context.danger.withValues(alpha: 0.7),
+                  ),
                 ),
               ),
             ),
@@ -131,11 +134,10 @@ class CartItemWidget extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-        child: Container(
-          width: 32,
-          height: 32,
-          alignment: Alignment.center,
-          child: Icon(icon, size: 18, color: AppColors.primary),
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(child: Icon(icon, size: 18, color: AppColors.primary)),
         ),
       ),
     );

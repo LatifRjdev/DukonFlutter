@@ -347,7 +347,9 @@ class _CustomerListPageState extends State<CustomerListPage> {
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = filter),
       child: Container(
+        constraints: const BoxConstraints(minHeight: 44),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : context.surface,
           borderRadius: BorderRadius.circular(AppConstants.radiusXl),

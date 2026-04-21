@@ -171,15 +171,15 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                 child: GestureDetector(
                                   onTap: () => _quickAmount(total),
                                   child: Container(
+                                    constraints: const BoxConstraints(minHeight: 44),
                                     padding: const EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       border: Border.all(color: context.border),
                                       borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                                     ),
-                                    child: const Center(
-                                      child: Text('Без сдачи',
-                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                                    ),
+                                    child: const Text('Без сдачи',
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                   ),
                                 ),
                               ),
@@ -257,15 +257,15 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
       child: GestureDetector(
         onTap: () => _quickAmount(amount),
         child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
           padding: const EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border.all(color: context.border),
             borderRadius: BorderRadius.circular(AppConstants.radiusXl),
           ),
-          child: Center(
-            child: Text(amount.toStringAsFixed(0),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-          ),
+          child: Text(amount.toStringAsFixed(0),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
         ),
       ),
     );

@@ -126,14 +126,18 @@ class _OfflineBannerState extends State<OfflineBanner> {
             const SizedBox(width: 8),
             GestureDetector(
               onTap: () => _syncEngine.processQueue(),
-              child: const Text(
-                'Повторить',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.white,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
+                child: const Text(
+                  'Повторить',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white,
+                  ),
                 ),
               ),
             ),

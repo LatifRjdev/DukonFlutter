@@ -52,14 +52,20 @@ class GradientHeader extends StatelessWidget {
                   const SizedBox(width: 12),
                   GestureDetector(
                     onTap: onProfileTap,
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(color: const Color(0x33FFFFFF), borderRadius: BorderRadius.circular(AppConstants.radiusXl)),
+                    child: SizedBox(
+                      width: 44,
+                      height: 44,
                       child: Center(
-                        child: Text(
-                          userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                          style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(color: const Color(0x33FFFFFF), borderRadius: BorderRadius.circular(AppConstants.radiusXl)),
+                          child: Center(
+                            child: Text(
+                              userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -73,6 +79,7 @@ class GradientHeader extends StatelessWidget {
             GestureDetector(
               onTap: onStoreTap,
               child: Container(
+                constraints: const BoxConstraints(minHeight: 44),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: const Color(0x1FFFFFFF),
@@ -98,11 +105,17 @@ class GradientHeader extends StatelessWidget {
   Widget _iconButton(IconData icon, VoidCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(color: const Color(0x26FFFFFF), borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
-        child: Icon(icon, color: Colors.white, size: 20),
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(color: const Color(0x26FFFFFF), borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+            child: Icon(icon, color: Colors.white, size: 20),
+          ),
+        ),
       ),
     );
   }

@@ -25,6 +25,7 @@ class PeriodSelector extends StatelessWidget {
           child: GestureDetector(
             onTap: () => onChanged(p.$1),
             child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
               padding: const EdgeInsets.symmetric(vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(

@@ -478,7 +478,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         GestureDetector(
                           onTap: () => _showDiscountDialog(cartState),
                           child: Container(
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               border: Border.all(color: context.border),
                               borderRadius: BorderRadius.circular(AppConstants.radiusSm / 2),
@@ -649,7 +651,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       child: GestureDetector(
         onTap: () => setState(() => _selectedPaymentMethod = method),
         child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
           padding: const EdgeInsets.symmetric(vertical: 8),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             gradient: isSelected ? AppGradients.primary : null,
             color: isSelected ? null : Colors.transparent,
@@ -658,6 +662,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             boxShadow: isSelected ? AppShadows.sm : null,
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 18,
                 color: isSelected ? context.onPrimary : context.textSecondary),
@@ -696,7 +701,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     child: GestureDetector(
                       onTap: () => setDialogState(() => discountType = 'FIXED'),
                       child: Container(
+                        constraints: const BoxConstraints(minHeight: 44),
                         padding: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: discountType == 'FIXED'
                               ? AppColors.primary.withValues(alpha: 0.1)
@@ -706,11 +713,11 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           ),
                           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
-                        child: Center(child: Text('TJS',
+                        child: Text('TJS',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: discountType == 'FIXED' ? AppColors.primary : context.textSecondary,
-                          ))),
+                          )),
                       ),
                     ),
                   ),
@@ -719,7 +726,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     child: GestureDetector(
                       onTap: () => setDialogState(() => discountType = 'PERCENTAGE'),
                       child: Container(
+                        constraints: const BoxConstraints(minHeight: 44),
                         padding: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: discountType == 'PERCENTAGE'
                               ? AppColors.primary.withValues(alpha: 0.1)
@@ -729,11 +738,11 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           ),
                           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                         ),
-                        child: Center(child: Text('%',
+                        child: Text('%',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: discountType == 'PERCENTAGE' ? AppColors.primary : context.textSecondary,
-                          ))),
+                          )),
                       ),
                     ),
                   ),

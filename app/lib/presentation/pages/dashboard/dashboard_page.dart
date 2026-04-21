@@ -290,6 +290,7 @@ class _DashboardPageState extends State<DashboardPage> {
               }
             },
             child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: _selectedPeriod == 'custom' ? AppColors.primary : context.surface,
@@ -420,12 +421,16 @@ class _DashboardPageState extends State<DashboardPage> {
             if (stats.recentSales.isNotEmpty)
               GestureDetector(
                 onTap: () => context.push('/sales/history', extra: _getStoreId()),
-                child: const Text('Все продажи >',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  )),
+                child: Container(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  alignment: Alignment.center,
+                  child: const Text('Все продажи >',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
+                    )),
+                ),
               ),
           ],
         ),

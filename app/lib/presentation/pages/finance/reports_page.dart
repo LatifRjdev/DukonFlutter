@@ -836,13 +836,17 @@ class _ReportsPageState extends State<ReportsPage>
           const SizedBox(width: 8),
           GestureDetector(
             onTap: _pickFrom,
-            child: Text(
-              DateFormat('dd.MM.yyyy').format(_from),
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              alignment: Alignment.center,
+              child: Text(
+                DateFormat('dd.MM.yyyy').format(_from),
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -853,13 +857,17 @@ class _ReportsPageState extends State<ReportsPage>
           ),
           GestureDetector(
             onTap: _pickTo,
-            child: Text(
-              DateFormat('dd.MM.yyyy').format(_to),
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              alignment: Alignment.center,
+              child: Text(
+                DateFormat('dd.MM.yyyy').format(_to),
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

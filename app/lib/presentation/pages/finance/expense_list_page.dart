@@ -99,14 +99,18 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     setState(() => _selectedCategory = cat.$1);
                     _loadExpenses();
                   },
-                  child: Chip(
-                    label: Text(cat.$2),
-                    backgroundColor: isSelected ? AppColors.primary : context.surface,
-                    labelStyle: TextStyle(
-                      color: isSelected ? AppColors.onPrimary : context.textSecondary,
-                      fontSize: 13,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 44),
+                    alignment: Alignment.center,
+                    child: Chip(
+                      label: Text(cat.$2),
+                      backgroundColor: isSelected ? AppColors.primary : context.surface,
+                      labelStyle: TextStyle(
+                        color: isSelected ? AppColors.onPrimary : context.textSecondary,
+                        fontSize: 13,
+                      ),
+                      side: BorderSide.none,
                     ),
-                    side: BorderSide.none,
                   ),
                 );
               },

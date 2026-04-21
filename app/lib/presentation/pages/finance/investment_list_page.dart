@@ -108,18 +108,22 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                           setState(() => _selectedStatus = s.$1);
                           _loadInvestments(context);
                         },
-                        child: Chip(
-                          label: Text(s.$2),
-                          backgroundColor: isSelected
-                              ? AppColors.primary
-                              : context.surface,
-                          labelStyle: TextStyle(
-                            color: isSelected
-                                ? AppColors.onPrimary
-                                : context.textSecondary,
-                            fontSize: 13,
+                        child: Container(
+                          constraints: const BoxConstraints(minHeight: 44),
+                          alignment: Alignment.center,
+                          child: Chip(
+                            label: Text(s.$2),
+                            backgroundColor: isSelected
+                                ? AppColors.primary
+                                : context.surface,
+                            labelStyle: TextStyle(
+                              color: isSelected
+                                  ? AppColors.onPrimary
+                                  : context.textSecondary,
+                              fontSize: 13,
+                            ),
+                            side: BorderSide.none,
                           ),
-                          side: BorderSide.none,
                         ),
                       );
                     },
