@@ -1,5 +1,21 @@
 # Sprint 4 — Cleanup & Polish Implementation Plan
 
+## Sprint 4 Complete — 2026-04-21
+
+- **flutter analyze: 0 issues** (was 44 info + 1 warning before Sprint 4)
+- **flutter test: 332/332 passing** (328 existing + 4 new chrome tests)
+- `AppColors.primaryDark` (1 ref) → `context.primary`; `AppColors.overlay` (1 ref) → `context.shadowColor`. `AppColors.overlay` removed from `app_colors.dart` (0 refs).
+- `context.mounted` replaces `mounted` in `settings_page.dart` error handler
+- `_SectionItem.stub` unused param removed from `finance_dashboard_page.dart`
+- `AppButton` Row uses `Flexible` + ellipsis for narrow constraints; `receipt_preview` test renders at default 390×844 (no more `Size(412, 900)` override)
+- `RadioListTile` migrated to `RadioGroup<T>` ancestor (Flutter 3.32+ API) — 2 files, 8 sites
+- 4 × multi-underscore wildcards → single `_` (Dart 3.7+)
+- 2 × Cyrillic string interp false-positives suppressed with `// ignore:`
+- 2 new chrome smoke tests: `AppBottomSheet`, `AppDialog` — 4 `testWidgets` cases exercise real `showModalBottomSheet` / `showDialog` with Navigator
+- Follow-up: Sprint 5 — design system expansion (elevations, motion, radii) + accessibility / WCAG AA audit
+
+---
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Close Sprint 1–3 technical debt — remove last `AppColors.light/dark` external refs, zero out `flutter analyze`, fix `AppButton` overflow, migrate deprecated `RadioListTile` API, add 2 chrome smoke tests.
