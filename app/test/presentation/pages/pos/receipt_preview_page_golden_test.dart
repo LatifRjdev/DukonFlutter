@@ -84,9 +84,7 @@ void main() {
         page(),
         brightness: Brightness.light,
         wrap: wrapWithBlocs,
-        size: const Size(412, 900),
       );
-      tester.takeException();
       await screenMatchesGolden(tester, 'receipt_preview_light');
     });
 
@@ -96,9 +94,7 @@ void main() {
         page(),
         brightness: Brightness.dark,
         wrap: wrapWithBlocs,
-        size: const Size(412, 900),
       );
-      tester.takeException();
       await screenMatchesGolden(tester, 'receipt_preview_dark');
     });
   });
