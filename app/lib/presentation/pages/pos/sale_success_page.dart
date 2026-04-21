@@ -37,6 +37,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     super.initState();
     _animController = AnimationController(
       vsync: this,
+      // Intentionally slower than AppConstants.motionSlow (400ms) —
+      // elastic success reveal benefits from extended playback.
       duration: const Duration(milliseconds: 600),
     );
     _scaleAnimation = CurvedAnimation(

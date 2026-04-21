@@ -297,7 +297,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                     const SizedBox(width: 8),
                     AnimatedRotation(
                       turns: isExpanded ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 200),
+                      duration: AppConstants.motionMedium,
                       child: Icon(
                         Icons.keyboard_arrow_down,
                         color: context.textSecondary,
