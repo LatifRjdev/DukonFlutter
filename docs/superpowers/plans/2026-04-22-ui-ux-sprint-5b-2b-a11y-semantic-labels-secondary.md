@@ -10,6 +10,32 @@
 
 ---
 
+## Sprint 5B.2.b Complete — 2026-04-22
+
+**Outcome:** ~29 tooltip/Semantics additions across 20 files; ~15 sites deliberately skipped because subtree Text already self-identifies action (per rule 3) or because the IconButton sits inside `AppBar.leading` (auto-labeled).
+
+**Per-cluster commits:**
+- Settings (`b7164c3`) — 8 labels across 5 files; 1 skipped (payment tile with visible type+amount).
+- Finance (`3f1e068`) — 8 labels across 5 files; 3 skipped (chip filters + dashboard grid with Text).
+- CRM (`f7c8781`) — 4 labels across 2 files; 5 skipped (`_ActionButton` shares + card rows with customer/supplier name Text).
+- Shifts/Sales (`96e0448`) — 4 labels across 3 files; 3 skipped (sale card has receipt# Text, refund list rows have product Text).
+- Misc batch A (`238dafe`) — 6 labels across 6 files (staff/payroll/notifications/inventory/stock); 3 skipped (Text-bearing cards).
+- Misc batch B (`37833d6`) — 6 labels across 4 files (zakat/debt/delivery/dashboard); 4 skipped (dashboard Text-bearing tiles).
+- Misc batch B correction (`2af971d`) — 3 custom-Row-header zakat back buttons that batch B incorrectly classified as AppBar.leading equivalent.
+
+**Acceptance:**
+- `flutter analyze lib/` → 0 issues.
+- `flutter test` → 351 pass + 12 pre-existing Impeller-drift golden failures (unchanged from Sprint 5B.2.a baseline). No new failures.
+- Semantics/tooltip widgets do not change rendered pixels.
+
+**Coverage after 5B.2.a + 5B.2.b:** core-critical paths (auth, bottom nav, POS, product CRUD) + secondary paths (settings, finance, CRM, shifts/sales, staff, payroll, notifications, inventory, stock, zakat, debt, delivery, dashboard). Remaining uncovered: admin/employees pages (if any) and live-region announcements for dynamic content.
+
+**Follow-up:**
+- Sprint 5B.2.c — live regions via `SemanticsService.announce()` for SnackBar toasts, order-placed confirmations, sync-error messages (~95 call-sites).
+- Sprint 6 — localize hardcoded labels to ru/tg/uz `.arb` files.
+
+---
+
 ## Label Convention Additions (Sprint 5B.2.b)
 
 Prior 5B.2.a covered: Назад, Поделиться, Редактировать товар, Удалить категорию, Сканировать штрихкод, Загрузить фото, etc.
