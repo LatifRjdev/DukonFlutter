@@ -251,7 +251,10 @@ class _MyStoresPageState extends State<MyStoresPage> {
                         final address = store['address'] as String? ?? '';
                         final isActive = id == selectedId;
 
-                        return GestureDetector(
+                        return Semantics(
+                          label: 'Выбрать магазин $name',
+                          button: true,
+                          child: GestureDetector(
                           onTap: () => _switchStore(id, name),
                           child: Container(
                             padding: const EdgeInsets.all(16),
@@ -313,6 +316,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                   ),
                                 ),
                                 IconButton(
+                                  tooltip: 'Редактировать магазин',
                                   icon: Icon(Icons.edit_outlined,
                                       color: context.textSecondary, size: 18),
                                   onPressed: () => _showStoreForm(existing: store),
@@ -320,6 +324,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                               ],
                             ),
                           ),
+                        ),
                         );
                       },
                     ),

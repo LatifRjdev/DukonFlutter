@@ -94,7 +94,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       children: [
                         // Profile card
-                        GestureDetector(
+                        Semantics(
+                          label: 'Редактировать профиль',
+                          button: true,
+                          child: GestureDetector(
                           onTap: () => context.push(RouteNames.editProfile),
                           child: Container(
                             padding: const EdgeInsets.all(14),
@@ -136,6 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ],
                             ),
                           ),
+                        ),
                         ),
                         const SizedBox(height: 20),
 

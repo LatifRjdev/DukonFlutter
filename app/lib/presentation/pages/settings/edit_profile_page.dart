@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
                   child: Row(
                     children: [
-                      IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                      IconButton(tooltip: 'Назад', icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                       const Text('Профиль',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                       const Spacer(),

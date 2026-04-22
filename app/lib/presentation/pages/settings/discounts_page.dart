@@ -292,11 +292,13 @@ class _DiscountsPageState extends State<DiscountsPage> {
                                 activeThumbColor: AppColors.primary,
                               ),
                               IconButton(
+                                tooltip: 'Редактировать скидку',
                                 icon: Icon(Icons.edit_outlined,
                                     size: 18, color: context.textSecondary),
                                 onPressed: () => _showForm(existing: d),
                               ),
                               IconButton(
+                                tooltip: 'Удалить скидку',
                                 icon: const Icon(Icons.delete_outline,
                                     size: 18, color: AppColors.error),
                                 onPressed: () => _delete(id),

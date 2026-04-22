@@ -435,7 +435,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         statusLabel = 'Ожидает';
     }
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Платёж ${_planLabel(payment.plan)}',
+      button: true,
+      child: GestureDetector(
       onTap: () => _showPaymentDetail(payment),
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
@@ -511,6 +514,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

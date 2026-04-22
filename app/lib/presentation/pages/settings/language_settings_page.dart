@@ -90,7 +90,10 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
 
                         return Column(
                           children: [
-                            InkWell(
+                            Semantics(
+                              label: 'Выбрать язык ${lang.name}',
+                              button: true,
+                              child: InkWell(
                               onTap: () => setState(() => _selected = lang.code),
                               borderRadius: BorderRadius.vertical(
                                 top: entry.key == 0
@@ -152,6 +155,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                                   ],
                                 ),
                               ),
+                            ),
                             ),
                             if (!isLast)
                               const Divider(height: 1, indent: 68),
