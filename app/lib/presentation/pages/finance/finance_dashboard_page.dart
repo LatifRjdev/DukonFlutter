@@ -15,6 +15,7 @@ import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../core/router/route_names.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;
@@ -54,6 +55,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreLoaded && !_loaded) {
@@ -74,7 +76,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     IconButton(
-                      tooltip: 'Открыть отчёты',
+                      tooltip: l10n.a11yOpenReports,
                       icon: const Icon(Icons.file_download_outlined),
                       onPressed: () {
                         final storeState = context.read<StoreBloc>().state;

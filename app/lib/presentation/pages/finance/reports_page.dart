@@ -16,6 +16,7 @@ import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data models (local to this file)
@@ -835,7 +836,7 @@ class _ReportsPageState extends State<ReportsPage>
               size: 16, color: context.textSecondary),
           const SizedBox(width: 8),
           Semantics(
-            label: 'Выбрать период',
+            label: AppLocalizations.of(context)!.a11ySelectPeriod,
             button: true,
             child: GestureDetector(
               onTap: _pickFrom,
@@ -860,7 +861,7 @@ class _ReportsPageState extends State<ReportsPage>
                 style: TextStyle(color: context.textSecondary)),
           ),
           Semantics(
-            label: 'Выбрать период',
+            label: AppLocalizations.of(context)!.a11ySelectPeriod,
             button: true,
             child: GestureDetector(
               onTap: _pickTo,
@@ -881,7 +882,7 @@ class _ReportsPageState extends State<ReportsPage>
           ),
           const Spacer(),
           IconButton(
-            tooltip: 'Обновить',
+            tooltip: AppLocalizations.of(context)!.a11yRefresh,
             icon: Icon(Icons.refresh_outlined,
                 size: 18, color: context.textSecondary),
             onPressed: _loadCurrentTab,

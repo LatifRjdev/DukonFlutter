@@ -15,6 +15,7 @@ import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SupplierListPage extends StatefulWidget {
   const SupplierListPage({super.key});
@@ -135,6 +136,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
@@ -150,12 +152,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(tooltip: 'Назад', icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Поставщики',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Добавить поставщика',
+                    tooltip: l10n.addSupplier,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: _showAddSupplierDialog,
                   ),

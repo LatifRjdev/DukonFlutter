@@ -10,6 +10,7 @@ import '../../blocs/investment/investment_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class AddInvestmentPage extends StatefulWidget {
   final String storeId;
@@ -96,6 +97,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (_) => sl<InvestmentBloc>(),
       child: Builder(
@@ -180,7 +182,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
                       Semantics(
-                        label: 'Выбрать период',
+                        label: l10n.a11ySelectPeriod,
                         button: true,
                         child: GestureDetector(
                           onTap: _pickStartDate,
@@ -210,7 +212,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
                       Semantics(
-                        label: 'Выбрать период',
+                        label: l10n.a11ySelectPeriod,
                         button: true,
                         child: GestureDetector(
                           onTap: _pickEndDate,

@@ -7,6 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Models
@@ -244,7 +245,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         child: Column(
           children: [
             Semantics(
-              label: 'Выбрать валюту ${rate.code}',
+              label: AppLocalizations.of(context)!.a11ySelectCurrency(rate.code),
               button: true,
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppConstants.radiusLg),

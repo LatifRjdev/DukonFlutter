@@ -15,6 +15,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CustomerListPage extends StatefulWidget {
   const CustomerListPage({super.key});
@@ -136,6 +137,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
@@ -151,12 +153,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(tooltip: 'Назад', icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Клиенты',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Добавить клиента',
+                    tooltip: l10n.a11yAddClient,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: _showAddCustomerDialog,
                   ),

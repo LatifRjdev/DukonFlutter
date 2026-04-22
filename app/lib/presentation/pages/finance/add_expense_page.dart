@@ -9,6 +9,7 @@ import '../../blocs/expense/expense_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class AddExpensePage extends StatefulWidget {
   final String storeId;
@@ -74,6 +75,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: const Text('Добавить расход')),
       body: BlocListener<ExpenseBloc, ExpenseState>(
@@ -141,7 +143,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 Semantics(
-                  label: 'Выбрать период',
+                  label: l10n.a11ySelectPeriod,
                   button: true,
                   child: GestureDetector(
                     onTap: _pickDate,
