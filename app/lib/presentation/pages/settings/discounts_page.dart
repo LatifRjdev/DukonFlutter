@@ -5,6 +5,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class DiscountsPage extends StatefulWidget {
   final String storeId;
@@ -200,6 +201,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
@@ -287,13 +289,13 @@ class _DiscountsPageState extends State<DiscountsPage> {
                                 activeThumbColor: AppColors.primary,
                               ),
                               IconButton(
-                                tooltip: 'Редактировать скидку',
+                                tooltip: l10n.a11yEditDiscount,
                                 icon: Icon(Icons.edit_outlined,
                                     size: 18, color: context.textSecondary),
                                 onPressed: () => _showForm(existing: d),
                               ),
                               IconButton(
-                                tooltip: 'Удалить скидку',
+                                tooltip: l10n.a11yDeleteDiscount,
                                 icon: const Icon(Icons.delete_outline,
                                     size: 18, color: AppColors.error),
                                 onPressed: () => _delete(id),

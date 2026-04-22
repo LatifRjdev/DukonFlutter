@@ -11,6 +11,7 @@ import '../../blocs/subscription/subscription_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
 
@@ -437,7 +438,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     }
 
     return Semantics(
-      label: 'Платёж ${_planLabel(payment.plan)}',
+      label: AppLocalizations.of(context)!.a11yPaymentOf(_planLabel(payment.plan)),
       button: true,
       child: GestureDetector(
       onTap: () => _showPaymentDetail(payment),

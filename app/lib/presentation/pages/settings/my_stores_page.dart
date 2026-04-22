@@ -9,6 +9,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class MyStoresPage extends StatefulWidget {
   const MyStoresPage({super.key});
@@ -184,6 +185,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedId = _selectedStoreId();
 
     return Scaffold(
@@ -245,7 +247,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                         final isActive = id == selectedId;
 
                         return Semantics(
-                          label: 'Выбрать магазин $name',
+                          label: l10n.a11ySelectStore(name),
                           button: true,
                           child: GestureDetector(
                           onTap: () => _switchStore(id, name),
@@ -309,7 +311,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  tooltip: 'Редактировать магазин',
+                                  tooltip: l10n.a11yEditStore,
                                   icon: Icon(Icons.edit_outlined,
                                       color: context.textSecondary, size: 18),
                                   onPressed: () => _showStoreForm(existing: store),

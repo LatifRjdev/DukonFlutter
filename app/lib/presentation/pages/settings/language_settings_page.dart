@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
   const LanguageSettingsPage({super.key});
@@ -51,6 +52,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
@@ -86,7 +88,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                         return Column(
                           children: [
                             Semantics(
-                              label: 'Выбрать язык ${lang.name}',
+                              label: l10n.a11yChooseLanguage(lang.name),
                               button: true,
                               child: InkWell(
                               onTap: () => setState(() => _selected = lang.code),

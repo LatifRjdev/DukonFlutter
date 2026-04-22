@@ -16,6 +16,7 @@ import '../../blocs/store/store_state.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -64,6 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -96,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         // Profile card
                         Semantics(
-                          label: 'Редактировать профиль',
+                          label: l10n.a11yEditProfile,
                           button: true,
                           child: GestureDetector(
                           onTap: () => context.push(RouteNames.editProfile),

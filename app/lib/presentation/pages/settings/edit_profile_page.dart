@@ -8,6 +8,7 @@ import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
 import '../../blocs/settings/settings_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -43,6 +44,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.surface,
       body: SafeArea(
@@ -75,7 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
                   child: Row(
                     children: [
-                      IconButton(tooltip: 'Назад', icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                      IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                       const Text('Профиль',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                       const Spacer(),
