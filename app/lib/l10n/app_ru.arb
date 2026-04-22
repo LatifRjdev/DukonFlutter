@@ -546,5 +546,54 @@
   "@a11yPaymentOf": {
     "description": "Subscription payment history tile (semantic label)",
     "placeholders": { "plan": { "type": "String" } }
+  },
+
+  "snackRefundSuccess": "Возврат успешно оформлен",
+  "snackSelectOrder": "Выберите заказ",
+  "snackSelectCourier": "Выберите курьера",
+  "snackAdjustmentAdded": "Корректировка добавлена",
+  "snackCacheCleared": "Кэш очищен",
+  "snackScannerSettingsSaved": "Настройки сканера сохранены",
+  "snackSettingsSaved": "Настройки сохранены",
+  "snackTelegramSendFailed": "Не удалось отправить. Клиент не привязан к боту?",
+  "snackSettingSaveFailed": "Не удалось сохранить настройку",
+  "snackNoPhoneNumber": "Номер телефона не указан",
+  "snackPrintError": "Ошибка печати",
+  "snackSaveError": "Ошибка сохранения",
+  "snackPrinterNotConnected": "Принтер не подключён. Настройте в Настройки → Принтер.",
+  "snackIntakeSuccess": "Приход успешно оформлен",
+  "snackCalculationCopied": "Расчёт скопирован",
+  "snackSyncCompleted": "Синхронизация выполнена",
+  "snackShiftClosed": "Смена закрыта",
+  "snackShiftOpened": "Смена открыта",
+  "snackTestPrintDone": "Тестовая печать выполнена",
+  "snackTestMessageSent": "Тестовое сообщение отправлено",
+  "snackReceiptPrinted": "Чек напечатан",
+  "snackReceiptSentToTelegram": "Чек отправлен в Telegram",
+  "snackTemplateSaved": "Шаблон сохранён",
+  "snackLanguageSaved": "Язык сохранён. Перезапустите приложение для применения.",
+  "snackCustomerSelectedForSale": "Клиент {name} выбран для продажи",
+  "@snackCustomerSelectedForSale": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackStoreSelected": "Магазин \"{name}\" выбран",
+  "@snackStoreSelected": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackPrintErrorDetails": "Ошибка печати: {error}",
+  "@snackPrintErrorDetails": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackConnectionError": "Ошибка подключения: {error}",
+  "@snackConnectionError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackSyncError": "Ошибка синхронизации: {error}",
+  "@snackSyncError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackGenericError": "Ошибка: {error}",
+  "@snackGenericError": {
+    "placeholders": { "error": { "type": "String" } }
   }
 }

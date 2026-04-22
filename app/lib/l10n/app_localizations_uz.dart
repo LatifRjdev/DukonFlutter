@@ -1013,4 +1013,109 @@ class AppLocalizationsUz extends AppLocalizations {
   String a11yPaymentOf(String plan) {
     return 'To\'lov $plan';
   }
+
+  @override
+  String get snackRefundSuccess => 'Qaytarish muvaffaqiyatli rasmiylashtirildi';
+
+  @override
+  String get snackSelectOrder => 'Buyurtmani tanlang';
+
+  @override
+  String get snackSelectCourier => 'Kuryerni tanlang';
+
+  @override
+  String get snackAdjustmentAdded => 'Tuzatish qo\'shildi';
+
+  @override
+  String get snackCacheCleared => 'Kesh tozalandi';
+
+  @override
+  String get snackScannerSettingsSaved => 'Skaner sozlamalari saqlandi';
+
+  @override
+  String get snackSettingsSaved => 'Sozlamalar saqlandi';
+
+  @override
+  String get snackTelegramSendFailed =>
+      'Yuborib bo\'lmadi. Mijoz botga bog\'lanmagan?';
+
+  @override
+  String get snackSettingSaveFailed => 'Sozlamani saqlab bo\'lmadi';
+
+  @override
+  String get snackNoPhoneNumber => 'Telefon raqami ko\'rsatilmagan';
+
+  @override
+  String get snackPrintError => 'Chop etish xatosi';
+
+  @override
+  String get snackSaveError => 'Saqlash xatosi';
+
+  @override
+  String get snackPrinterNotConnected =>
+      'Printer ulanmagan. Sozlamalar → Printer bo\'limida sozlang.';
+
+  @override
+  String get snackIntakeSuccess => 'Kirim muvaffaqiyatli rasmiylashtirildi';
+
+  @override
+  String get snackCalculationCopied => 'Hisob-kitob nusxalandi';
+
+  @override
+  String get snackSyncCompleted => 'Sinxronizatsiya bajarildi';
+
+  @override
+  String get snackShiftClosed => 'Smena yopildi';
+
+  @override
+  String get snackShiftOpened => 'Smena ochildi';
+
+  @override
+  String get snackTestPrintDone => 'Sinov chop etildi';
+
+  @override
+  String get snackTestMessageSent => 'Sinov xabari yuborildi';
+
+  @override
+  String get snackReceiptPrinted => 'Chek chop etildi';
+
+  @override
+  String get snackReceiptSentToTelegram => 'Chek Telegram\'ga yuborildi';
+
+  @override
+  String get snackTemplateSaved => 'Shablon saqlandi';
+
+  @override
+  String get snackLanguageSaved =>
+      'Til saqlandi. Qo\'llash uchun ilovani qayta ishga tushiring.';
+
+  @override
+  String snackCustomerSelectedForSale(String name) {
+    return 'Mijoz $name sotish uchun tanlandi';
+  }
+
+  @override
+  String snackStoreSelected(String name) {
+    return 'Do\'kon \"$name\" tanlandi';
+  }
+
+  @override
+  String snackPrintErrorDetails(String error) {
+    return 'Chop etish xatosi: $error';
+  }
+
+  @override
+  String snackConnectionError(String error) {
+    return 'Ulanish xatosi: $error';
+  }
+
+  @override
+  String snackSyncError(String error) {
+    return 'Sinxronizatsiya xatosi: $error';
+  }
+
+  @override
+  String snackGenericError(String error) {
+    return 'Xatolik: $error';
+  }
 }

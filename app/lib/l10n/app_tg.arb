@@ -367,5 +367,54 @@
   "a11yPaymentOf": "Пардохт {plan}",
   "@a11yPaymentOf": {
     "placeholders": { "plan": { "type": "String" } }
+  },
+
+  "snackRefundSuccess": "Баргардонидан бомуваффақият анҷом шуд",
+  "snackSelectOrder": "Фармоишро интихоб кунед",
+  "snackSelectCourier": "Пешбарро интихоб кунед",
+  "snackAdjustmentAdded": "Ислоҳ илова шуд",
+  "snackCacheCleared": "Хотираи кэш тоза шуд",
+  "snackScannerSettingsSaved": "Танзимоти сканер нигоҳ дошта шуд",
+  "snackSettingsSaved": "Танзимот нигоҳ дошта шуд",
+  "snackTelegramSendFailed": "Фиристодан мумкин нашуд. Муштарӣ ба бот пайваст нест?",
+  "snackSettingSaveFailed": "Танзимотро нигоҳ доштан мумкин нашуд",
+  "snackNoPhoneNumber": "Рақами телефон нишон дода нашудааст",
+  "snackPrintError": "Хатои чоп",
+  "snackSaveError": "Хатои нигоҳдорӣ",
+  "snackPrinterNotConnected": "Принтер пайваст нест. Дар Танзимот → Принтер танзим кунед.",
+  "snackIntakeSuccess": "Қабул бомуваффақият анҷом шуд",
+  "snackCalculationCopied": "Ҳисобкунӣ нусхабардорӣ шуд",
+  "snackSyncCompleted": "Ҳамоҳангсозӣ иҷро шуд",
+  "snackShiftClosed": "Навбат пӯшида шуд",
+  "snackShiftOpened": "Навбат кушода шуд",
+  "snackTestPrintDone": "Чопи санҷишӣ иҷро шуд",
+  "snackTestMessageSent": "Паёми санҷишӣ фиристода шуд",
+  "snackReceiptPrinted": "Чек чоп карда шуд",
+  "snackReceiptSentToTelegram": "Чек ба Telegram фиристода шуд",
+  "snackTemplateSaved": "Қолаб нигоҳ дошта шуд",
+  "snackLanguageSaved": "Забон нигоҳ дошта шуд. Барои татбиқ барномаро аз нав оғоз кунед.",
+  "snackCustomerSelectedForSale": "Муштарӣ {name} барои фурӯш интихоб шуд",
+  "@snackCustomerSelectedForSale": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackStoreSelected": "Мағозаи \"{name}\" интихоб шуд",
+  "@snackStoreSelected": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackPrintErrorDetails": "Хатои чоп: {error}",
+  "@snackPrintErrorDetails": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackConnectionError": "Хатои пайвастшавӣ: {error}",
+  "@snackConnectionError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackSyncError": "Хатои ҳамоҳангсозӣ: {error}",
+  "@snackSyncError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackGenericError": "Хатогӣ: {error}",
+  "@snackGenericError": {
+    "placeholders": { "error": { "type": "String" } }
   }
 }

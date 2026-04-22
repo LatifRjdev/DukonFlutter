@@ -1012,4 +1012,109 @@ class AppLocalizationsRu extends AppLocalizations {
   String a11yPaymentOf(String plan) {
     return 'Платёж $plan';
   }
+
+  @override
+  String get snackRefundSuccess => 'Возврат успешно оформлен';
+
+  @override
+  String get snackSelectOrder => 'Выберите заказ';
+
+  @override
+  String get snackSelectCourier => 'Выберите курьера';
+
+  @override
+  String get snackAdjustmentAdded => 'Корректировка добавлена';
+
+  @override
+  String get snackCacheCleared => 'Кэш очищен';
+
+  @override
+  String get snackScannerSettingsSaved => 'Настройки сканера сохранены';
+
+  @override
+  String get snackSettingsSaved => 'Настройки сохранены';
+
+  @override
+  String get snackTelegramSendFailed =>
+      'Не удалось отправить. Клиент не привязан к боту?';
+
+  @override
+  String get snackSettingSaveFailed => 'Не удалось сохранить настройку';
+
+  @override
+  String get snackNoPhoneNumber => 'Номер телефона не указан';
+
+  @override
+  String get snackPrintError => 'Ошибка печати';
+
+  @override
+  String get snackSaveError => 'Ошибка сохранения';
+
+  @override
+  String get snackPrinterNotConnected =>
+      'Принтер не подключён. Настройте в Настройки → Принтер.';
+
+  @override
+  String get snackIntakeSuccess => 'Приход успешно оформлен';
+
+  @override
+  String get snackCalculationCopied => 'Расчёт скопирован';
+
+  @override
+  String get snackSyncCompleted => 'Синхронизация выполнена';
+
+  @override
+  String get snackShiftClosed => 'Смена закрыта';
+
+  @override
+  String get snackShiftOpened => 'Смена открыта';
+
+  @override
+  String get snackTestPrintDone => 'Тестовая печать выполнена';
+
+  @override
+  String get snackTestMessageSent => 'Тестовое сообщение отправлено';
+
+  @override
+  String get snackReceiptPrinted => 'Чек напечатан';
+
+  @override
+  String get snackReceiptSentToTelegram => 'Чек отправлен в Telegram';
+
+  @override
+  String get snackTemplateSaved => 'Шаблон сохранён';
+
+  @override
+  String get snackLanguageSaved =>
+      'Язык сохранён. Перезапустите приложение для применения.';
+
+  @override
+  String snackCustomerSelectedForSale(String name) {
+    return 'Клиент $name выбран для продажи';
+  }
+
+  @override
+  String snackStoreSelected(String name) {
+    return 'Магазин \"$name\" выбран';
+  }
+
+  @override
+  String snackPrintErrorDetails(String error) {
+    return 'Ошибка печати: $error';
+  }
+
+  @override
+  String snackConnectionError(String error) {
+    return 'Ошибка подключения: $error';
+  }
+
+  @override
+  String snackSyncError(String error) {
+    return 'Ошибка синхронизации: $error';
+  }
+
+  @override
+  String snackGenericError(String error) {
+    return 'Ошибка: $error';
+  }
 }

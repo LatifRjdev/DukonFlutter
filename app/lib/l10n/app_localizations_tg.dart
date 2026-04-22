@@ -1013,4 +1013,109 @@ class AppLocalizationsTg extends AppLocalizations {
   String a11yPaymentOf(String plan) {
     return 'Пардохт $plan';
   }
+
+  @override
+  String get snackRefundSuccess => 'Баргардонидан бомуваффақият анҷом шуд';
+
+  @override
+  String get snackSelectOrder => 'Фармоишро интихоб кунед';
+
+  @override
+  String get snackSelectCourier => 'Пешбарро интихоб кунед';
+
+  @override
+  String get snackAdjustmentAdded => 'Ислоҳ илова шуд';
+
+  @override
+  String get snackCacheCleared => 'Хотираи кэш тоза шуд';
+
+  @override
+  String get snackScannerSettingsSaved => 'Танзимоти сканер нигоҳ дошта шуд';
+
+  @override
+  String get snackSettingsSaved => 'Танзимот нигоҳ дошта шуд';
+
+  @override
+  String get snackTelegramSendFailed =>
+      'Фиристодан мумкин нашуд. Муштарӣ ба бот пайваст нест?';
+
+  @override
+  String get snackSettingSaveFailed => 'Танзимотро нигоҳ доштан мумкин нашуд';
+
+  @override
+  String get snackNoPhoneNumber => 'Рақами телефон нишон дода нашудааст';
+
+  @override
+  String get snackPrintError => 'Хатои чоп';
+
+  @override
+  String get snackSaveError => 'Хатои нигоҳдорӣ';
+
+  @override
+  String get snackPrinterNotConnected =>
+      'Принтер пайваст нест. Дар Танзимот → Принтер танзим кунед.';
+
+  @override
+  String get snackIntakeSuccess => 'Қабул бомуваффақият анҷом шуд';
+
+  @override
+  String get snackCalculationCopied => 'Ҳисобкунӣ нусхабардорӣ шуд';
+
+  @override
+  String get snackSyncCompleted => 'Ҳамоҳангсозӣ иҷро шуд';
+
+  @override
+  String get snackShiftClosed => 'Навбат пӯшида шуд';
+
+  @override
+  String get snackShiftOpened => 'Навбат кушода шуд';
+
+  @override
+  String get snackTestPrintDone => 'Чопи санҷишӣ иҷро шуд';
+
+  @override
+  String get snackTestMessageSent => 'Паёми санҷишӣ фиристода шуд';
+
+  @override
+  String get snackReceiptPrinted => 'Чек чоп карда шуд';
+
+  @override
+  String get snackReceiptSentToTelegram => 'Чек ба Telegram фиристода шуд';
+
+  @override
+  String get snackTemplateSaved => 'Қолаб нигоҳ дошта шуд';
+
+  @override
+  String get snackLanguageSaved =>
+      'Забон нигоҳ дошта шуд. Барои татбиқ барномаро аз нав оғоз кунед.';
+
+  @override
+  String snackCustomerSelectedForSale(String name) {
+    return 'Муштарӣ $name барои фурӯш интихоб шуд';
+  }
+
+  @override
+  String snackStoreSelected(String name) {
+    return 'Мағозаи \"$name\" интихоб шуд';
+  }
+
+  @override
+  String snackPrintErrorDetails(String error) {
+    return 'Хатои чоп: $error';
+  }
+
+  @override
+  String snackConnectionError(String error) {
+    return 'Хатои пайвастшавӣ: $error';
+  }
+
+  @override
+  String snackSyncError(String error) {
+    return 'Хатои ҳамоҳангсозӣ: $error';
+  }
+
+  @override
+  String snackGenericError(String error) {
+    return 'Хатогӣ: $error';
+  }
 }
