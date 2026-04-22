@@ -12,6 +12,18 @@
 
 ---
 
+## Sprint 5B.2.a Complete — 2026-04-21
+
+- **Task 1 (Auth):** no-op — all back buttons live inside `AppBar.leading`, inheriting `MaterialLocalizations.ru` "Назад" automatically. Password-visibility toggles and "Забыли пароль?" link were already labeled in prior sprints.
+- **Task 2 (Bottom nav):** 5 tabs (Главная, Товары, Касса, Финансы, Ещё) wrapped in `Semantics(label, button: true, selected:)` in `app_bottom_nav_bar.dart`.
+- **Task 3 (Checkout):** `tooltip:` on 3 standalone IconButtons (Назад × 2, Поделиться), `Semantics(...)` on 2 custom GestureDetectors (Без сдачи, Быстрая сумма). In-AppBar back buttons skipped by design.
+- **Task 4 (Product CRUD):** `tooltip:` on Назад / Редактировать товар / Редактировать категорию / Удалить категорию / Сканировать штрихкод (5 IconButtons); `Semantics(label: 'Загрузить фото', button: true)` on 2 GestureDetector photo-upload zones (step1, step3).
+- **Task 5 (Tests):** `critical_paths_semantics_test.dart` — 6 widget-level assertions for bottom-nav labels, button/selected states, and tap dispatch. Uses `byWidgetPredicate` (inspects `Semantics.properties` directly) because `find.bySemanticsLabel` requires a built semantic tree that `pumpWidget` does not produce by default in this codebase's test setup.
+- **Acceptance:** `flutter analyze` 0 issues; 357 tests pass (351 pre-existing + 6 new). 12 golden tests fail with Impeller pixel drift — **pre-existing** (reproduced on HEAD~3 before any Sprint 5B.2.a commits), not caused by Sprint 5B.2.a changes. Semantics and tooltip widgets do not modify rendered pixels.
+- **Follow-up:** Sprint 5B.2.b — secondary paths (finance, settings, admin, customer, supplier, etc.); Sprint 5B.2.c — live regions for SnackBar announcements; Sprint 6 — localization of labels to ru/tg/uz.
+
+---
+
 ## Pre-Task Audit (verified 2026-04-21)
 
 ### IconButton sites per critical-path file (25 total)
