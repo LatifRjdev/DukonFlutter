@@ -910,4 +910,106 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get navMore => 'Ещё';
+
+  @override
+  String get a11yShare => 'Поделиться';
+
+  @override
+  String get a11yRefresh => 'Обновить';
+
+  @override
+  String get a11yFilter => 'Фильтр';
+
+  @override
+  String get a11yFilters => 'Фильтры';
+
+  @override
+  String get a11yDeleteProduct => 'Удалить товар';
+
+  @override
+  String get a11yAddClient => 'Добавить клиента';
+
+  @override
+  String get a11yCallClient => 'Позвонить клиенту';
+
+  @override
+  String get a11ySelectClient => 'Выбрать клиента';
+
+  @override
+  String get a11yEditStore => 'Редактировать магазин';
+
+  @override
+  String get a11yEditDiscount => 'Редактировать скидку';
+
+  @override
+  String get a11yDeleteDiscount => 'Удалить скидку';
+
+  @override
+  String get a11yEditCategory => 'Редактировать категорию';
+
+  @override
+  String get a11yDeleteCategory => 'Удалить категорию';
+
+  @override
+  String get a11yOpenReports => 'Открыть отчёты';
+
+  @override
+  String get a11yDownloadReport => 'Скачать отчёт';
+
+  @override
+  String get a11yCalculationHistory => 'История расчётов';
+
+  @override
+  String get a11yIncreaseQuantity => 'Увеличить количество';
+
+  @override
+  String get a11yDecreaseQuantity => 'Уменьшить количество';
+
+  @override
+  String get a11yWithoutChange => 'Без сдачи';
+
+  @override
+  String get a11ySelectPeriod => 'Выбрать период';
+
+  @override
+  String get a11yUploadPhoto => 'Загрузить фото';
+
+  @override
+  String get a11yOpenZReport => 'Открыть Z-отчёт';
+
+  @override
+  String get a11yMarkAsRead => 'Отметить как прочитанное';
+
+  @override
+  String get a11yEditProfile => 'Редактировать профиль';
+
+  @override
+  String a11yQuickAmount(String amount) {
+    return 'Быстрая сумма $amount';
+  }
+
+  @override
+  String a11ySelectCurrency(String code) {
+    return 'Выбрать валюту $code';
+  }
+
+  @override
+  String a11ySelectStore(String name) {
+    return 'Выбрать магазин $name';
+  }
+
+  @override
+  String a11yChooseLanguage(String language) {
+    return 'Выбрать язык $language';
+  }
+
+  @override
+  String a11yOpenProduct(String name) {
+    return 'Открыть товар $name';
+  }
+
+  @override
+  String a11yPaymentOf(String plan) {
+    return 'Платёж $plan';
+  }
 }

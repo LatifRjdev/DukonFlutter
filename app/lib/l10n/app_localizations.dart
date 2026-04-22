@@ -1899,6 +1899,186 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Ещё'**
   String get navMore;
+
+  /// Share action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться'**
+  String get a11yShare;
+
+  /// Refresh action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновить'**
+  String get a11yRefresh;
+
+  /// Filter action singular (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтр'**
+  String get a11yFilter;
+
+  /// Filters action plural (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтры'**
+  String get a11yFilters;
+
+  /// Delete product action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить товар'**
+  String get a11yDeleteProduct;
+
+  /// Add client (tooltip). Distinct from addCustomer which uses 'покупателя'
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить клиента'**
+  String get a11yAddClient;
+
+  /// Call client phone action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Позвонить клиенту'**
+  String get a11yCallClient;
+
+  /// Select client action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать клиента'**
+  String get a11ySelectClient;
+
+  /// Edit store action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать магазин'**
+  String get a11yEditStore;
+
+  /// Edit discount action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать скидку'**
+  String get a11yEditDiscount;
+
+  /// Delete discount action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить скидку'**
+  String get a11yDeleteDiscount;
+
+  /// Edit category action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать категорию'**
+  String get a11yEditCategory;
+
+  /// Delete category action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить категорию'**
+  String get a11yDeleteCategory;
+
+  /// Open reports action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть отчёты'**
+  String get a11yOpenReports;
+
+  /// Download report action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать отчёт'**
+  String get a11yDownloadReport;
+
+  /// Calculation history action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'История расчётов'**
+  String get a11yCalculationHistory;
+
+  /// Increase item quantity (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Увеличить количество'**
+  String get a11yIncreaseQuantity;
+
+  /// Decrease item quantity (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Уменьшить количество'**
+  String get a11yDecreaseQuantity;
+
+  /// Cash payment without change (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Без сдачи'**
+  String get a11yWithoutChange;
+
+  /// Date range / period picker (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать период'**
+  String get a11ySelectPeriod;
+
+  /// Upload photo action (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузить фото'**
+  String get a11yUploadPhoto;
+
+  /// Open shift Z-report (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть Z-отчёт'**
+  String get a11yOpenZReport;
+
+  /// Mark notification as read (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить как прочитанное'**
+  String get a11yMarkAsRead;
+
+  /// Edit profile action (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать профиль'**
+  String get a11yEditProfile;
+
+  /// Quick-pick amount chip (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Быстрая сумма {amount}'**
+  String a11yQuickAmount(String amount);
+
+  /// Select currency row (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать валюту {code}'**
+  String a11ySelectCurrency(String code);
+
+  /// Select store card (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать магазин {name}'**
+  String a11ySelectStore(String name);
+
+  /// Select language row (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать язык {language}'**
+  String a11yChooseLanguage(String language);
+
+  /// Open product detail (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть товар {name}'**
+  String a11yOpenProduct(String name);
+
+  /// Subscription payment history tile (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж {plan}'**
+  String a11yPaymentOf(String plan);
 }
 
 class _AppLocalizationsDelegate

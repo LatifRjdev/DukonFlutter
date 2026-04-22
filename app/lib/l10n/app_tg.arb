@@ -318,5 +318,54 @@
   "navProducts": "Молҳо",
   "navPOS": "Касса",
   "navFinance": "Молия",
-  "navMore": "Бештар"
+  "navMore": "Бештар",
+
+  "a11yShare": "Мубодила",
+  "a11yRefresh": "Навсозӣ",
+  "a11yFilter": "Филтр",
+  "a11yFilters": "Филтрҳо",
+  "a11yDeleteProduct": "Молро нест кардан",
+  "a11yAddClient": "Муштарӣ илова кардан",
+  "a11yCallClient": "Ба муштарӣ занг задан",
+  "a11ySelectClient": "Муштариро интихоб кунед",
+  "a11yEditStore": "Мағозаро таҳрир кардан",
+  "a11yEditDiscount": "Тахфифро таҳрир кардан",
+  "a11yDeleteDiscount": "Тахфифро нест кардан",
+  "a11yEditCategory": "Гурӯҳро таҳрир кардан",
+  "a11yDeleteCategory": "Гурӯҳро нест кардан",
+  "a11yOpenReports": "Ҳисоботҳоро кушодан",
+  "a11yDownloadReport": "Боргирии ҳисобот",
+  "a11yCalculationHistory": "Таърихи ҳисобкуниҳо",
+  "a11yIncreaseQuantity": "Зиёд кардани миқдор",
+  "a11yDecreaseQuantity": "Кам кардани миқдор",
+  "a11yWithoutChange": "Бе қайтимӣ",
+  "a11ySelectPeriod": "Давраро интихоб кунед",
+  "a11yUploadPhoto": "Аксро бор кардан",
+  "a11yOpenZReport": "Ҳисоботи Z-ро кушодан",
+  "a11yMarkAsRead": "Ҳамчун хондашуда қайд кардан",
+  "a11yEditProfile": "Профилро таҳрир кардан",
+  "a11yQuickAmount": "Маблағи зуд {amount}",
+  "@a11yQuickAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "a11ySelectCurrency": "Асъорро интихоб кунед {code}",
+  "@a11ySelectCurrency": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "a11ySelectStore": "Мағозаро интихоб кунед {name}",
+  "@a11ySelectStore": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yChooseLanguage": "Забонро интихоб кунед {language}",
+  "@a11yChooseLanguage": {
+    "placeholders": { "language": { "type": "String" } }
+  },
+  "a11yOpenProduct": "Молро кушодан {name}",
+  "@a11yOpenProduct": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yPaymentOf": "Пардохт {plan}",
+  "@a11yPaymentOf": {
+    "placeholders": { "plan": { "type": "String" } }
+  }
 }

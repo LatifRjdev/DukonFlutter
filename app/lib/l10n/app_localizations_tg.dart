@@ -911,4 +911,106 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get navMore => 'Бештар';
+
+  @override
+  String get a11yShare => 'Мубодила';
+
+  @override
+  String get a11yRefresh => 'Навсозӣ';
+
+  @override
+  String get a11yFilter => 'Филтр';
+
+  @override
+  String get a11yFilters => 'Филтрҳо';
+
+  @override
+  String get a11yDeleteProduct => 'Молро нест кардан';
+
+  @override
+  String get a11yAddClient => 'Муштарӣ илова кардан';
+
+  @override
+  String get a11yCallClient => 'Ба муштарӣ занг задан';
+
+  @override
+  String get a11ySelectClient => 'Муштариро интихоб кунед';
+
+  @override
+  String get a11yEditStore => 'Мағозаро таҳрир кардан';
+
+  @override
+  String get a11yEditDiscount => 'Тахфифро таҳрир кардан';
+
+  @override
+  String get a11yDeleteDiscount => 'Тахфифро нест кардан';
+
+  @override
+  String get a11yEditCategory => 'Гурӯҳро таҳрир кардан';
+
+  @override
+  String get a11yDeleteCategory => 'Гурӯҳро нест кардан';
+
+  @override
+  String get a11yOpenReports => 'Ҳисоботҳоро кушодан';
+
+  @override
+  String get a11yDownloadReport => 'Боргирии ҳисобот';
+
+  @override
+  String get a11yCalculationHistory => 'Таърихи ҳисобкуниҳо';
+
+  @override
+  String get a11yIncreaseQuantity => 'Зиёд кардани миқдор';
+
+  @override
+  String get a11yDecreaseQuantity => 'Кам кардани миқдор';
+
+  @override
+  String get a11yWithoutChange => 'Бе қайтимӣ';
+
+  @override
+  String get a11ySelectPeriod => 'Давраро интихоб кунед';
+
+  @override
+  String get a11yUploadPhoto => 'Аксро бор кардан';
+
+  @override
+  String get a11yOpenZReport => 'Ҳисоботи Z-ро кушодан';
+
+  @override
+  String get a11yMarkAsRead => 'Ҳамчун хондашуда қайд кардан';
+
+  @override
+  String get a11yEditProfile => 'Профилро таҳрир кардан';
+
+  @override
+  String a11yQuickAmount(String amount) {
+    return 'Маблағи зуд $amount';
+  }
+
+  @override
+  String a11ySelectCurrency(String code) {
+    return 'Асъорро интихоб кунед $code';
+  }
+
+  @override
+  String a11ySelectStore(String name) {
+    return 'Мағозаро интихоб кунед $name';
+  }
+
+  @override
+  String a11yChooseLanguage(String language) {
+    return 'Забонро интихоб кунед $language';
+  }
+
+  @override
+  String a11yOpenProduct(String name) {
+    return 'Молро кушодан $name';
+  }
+
+  @override
+  String a11yPaymentOf(String plan) {
+    return 'Пардохт $plan';
+  }
 }

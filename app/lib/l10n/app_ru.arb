@@ -467,5 +467,84 @@
   "navProducts": "Товары",
   "navPOS": "Касса",
   "navFinance": "Финансы",
-  "navMore": "Ещё"
+  "navMore": "Ещё",
+
+  "a11yShare": "Поделиться",
+  "@a11yShare": { "description": "Share action (tooltip)" },
+  "a11yRefresh": "Обновить",
+  "@a11yRefresh": { "description": "Refresh action (tooltip)" },
+  "a11yFilter": "Фильтр",
+  "@a11yFilter": { "description": "Filter action singular (tooltip)" },
+  "a11yFilters": "Фильтры",
+  "@a11yFilters": { "description": "Filters action plural (tooltip)" },
+  "a11yDeleteProduct": "Удалить товар",
+  "@a11yDeleteProduct": { "description": "Delete product action (tooltip)" },
+  "a11yAddClient": "Добавить клиента",
+  "@a11yAddClient": { "description": "Add client (tooltip). Distinct from addCustomer which uses 'покупателя'" },
+  "a11yCallClient": "Позвонить клиенту",
+  "@a11yCallClient": { "description": "Call client phone action (tooltip)" },
+  "a11ySelectClient": "Выбрать клиента",
+  "@a11ySelectClient": { "description": "Select client action (tooltip)" },
+  "a11yEditStore": "Редактировать магазин",
+  "@a11yEditStore": { "description": "Edit store action (tooltip)" },
+  "a11yEditDiscount": "Редактировать скидку",
+  "@a11yEditDiscount": { "description": "Edit discount action (tooltip)" },
+  "a11yDeleteDiscount": "Удалить скидку",
+  "@a11yDeleteDiscount": { "description": "Delete discount action (tooltip)" },
+  "a11yEditCategory": "Редактировать категорию",
+  "@a11yEditCategory": { "description": "Edit category action (tooltip)" },
+  "a11yDeleteCategory": "Удалить категорию",
+  "@a11yDeleteCategory": { "description": "Delete category action (tooltip)" },
+  "a11yOpenReports": "Открыть отчёты",
+  "@a11yOpenReports": { "description": "Open reports action (tooltip)" },
+  "a11yDownloadReport": "Скачать отчёт",
+  "@a11yDownloadReport": { "description": "Download report action (tooltip)" },
+  "a11yCalculationHistory": "История расчётов",
+  "@a11yCalculationHistory": { "description": "Calculation history action (tooltip)" },
+  "a11yIncreaseQuantity": "Увеличить количество",
+  "@a11yIncreaseQuantity": { "description": "Increase item quantity (tooltip)" },
+  "a11yDecreaseQuantity": "Уменьшить количество",
+  "@a11yDecreaseQuantity": { "description": "Decrease item quantity (tooltip)" },
+  "a11yWithoutChange": "Без сдачи",
+  "@a11yWithoutChange": { "description": "Cash payment without change (semantic label)" },
+  "a11ySelectPeriod": "Выбрать период",
+  "@a11ySelectPeriod": { "description": "Date range / period picker (semantic label)" },
+  "a11yUploadPhoto": "Загрузить фото",
+  "@a11yUploadPhoto": { "description": "Upload photo action (semantic label)" },
+  "a11yOpenZReport": "Открыть Z-отчёт",
+  "@a11yOpenZReport": { "description": "Open shift Z-report (semantic label)" },
+  "a11yMarkAsRead": "Отметить как прочитанное",
+  "@a11yMarkAsRead": { "description": "Mark notification as read (semantic label)" },
+  "a11yEditProfile": "Редактировать профиль",
+  "@a11yEditProfile": { "description": "Edit profile action (semantic label)" },
+  "a11yQuickAmount": "Быстрая сумма {amount}",
+  "@a11yQuickAmount": {
+    "description": "Quick-pick amount chip (semantic label)",
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "a11ySelectCurrency": "Выбрать валюту {code}",
+  "@a11ySelectCurrency": {
+    "description": "Select currency row (semantic label)",
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "a11ySelectStore": "Выбрать магазин {name}",
+  "@a11ySelectStore": {
+    "description": "Select store card (semantic label)",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yChooseLanguage": "Выбрать язык {language}",
+  "@a11yChooseLanguage": {
+    "description": "Select language row (semantic label)",
+    "placeholders": { "language": { "type": "String" } }
+  },
+  "a11yOpenProduct": "Открыть товар {name}",
+  "@a11yOpenProduct": {
+    "description": "Open product detail (semantic label)",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yPaymentOf": "Платёж {plan}",
+  "@a11yPaymentOf": {
+    "description": "Subscription payment history tile (semantic label)",
+    "placeholders": { "plan": { "type": "String" } }
+  }
 }

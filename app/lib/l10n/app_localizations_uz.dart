@@ -911,4 +911,106 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get navMore => 'Ko\'proq';
+
+  @override
+  String get a11yShare => 'Ulashish';
+
+  @override
+  String get a11yRefresh => 'Yangilash';
+
+  @override
+  String get a11yFilter => 'Filtr';
+
+  @override
+  String get a11yFilters => 'Filtrlar';
+
+  @override
+  String get a11yDeleteProduct => 'Mahsulotni o\'chirish';
+
+  @override
+  String get a11yAddClient => 'Mijoz qo\'shish';
+
+  @override
+  String get a11yCallClient => 'Mijozga qo\'ng\'iroq qilish';
+
+  @override
+  String get a11ySelectClient => 'Mijozni tanlash';
+
+  @override
+  String get a11yEditStore => 'Do\'konni tahrirlash';
+
+  @override
+  String get a11yEditDiscount => 'Chegirmani tahrirlash';
+
+  @override
+  String get a11yDeleteDiscount => 'Chegirmani o\'chirish';
+
+  @override
+  String get a11yEditCategory => 'Kategoriyani tahrirlash';
+
+  @override
+  String get a11yDeleteCategory => 'Kategoriyani o\'chirish';
+
+  @override
+  String get a11yOpenReports => 'Hisobotlarni ochish';
+
+  @override
+  String get a11yDownloadReport => 'Hisobotni yuklab olish';
+
+  @override
+  String get a11yCalculationHistory => 'Hisob-kitoblar tarixi';
+
+  @override
+  String get a11yIncreaseQuantity => 'Miqdorni oshirish';
+
+  @override
+  String get a11yDecreaseQuantity => 'Miqdorni kamaytirish';
+
+  @override
+  String get a11yWithoutChange => 'Qaytarimsiz';
+
+  @override
+  String get a11ySelectPeriod => 'Davrni tanlang';
+
+  @override
+  String get a11yUploadPhoto => 'Rasm yuklash';
+
+  @override
+  String get a11yOpenZReport => 'Z-hisobotni ochish';
+
+  @override
+  String get a11yMarkAsRead => 'O\'qilgan deb belgilash';
+
+  @override
+  String get a11yEditProfile => 'Profilni tahrirlash';
+
+  @override
+  String a11yQuickAmount(String amount) {
+    return 'Tezkor summa $amount';
+  }
+
+  @override
+  String a11ySelectCurrency(String code) {
+    return 'Valyutani tanlang $code';
+  }
+
+  @override
+  String a11ySelectStore(String name) {
+    return 'Do\'konni tanlang $name';
+  }
+
+  @override
+  String a11yChooseLanguage(String language) {
+    return 'Tilni tanlang $language';
+  }
+
+  @override
+  String a11yOpenProduct(String name) {
+    return 'Mahsulotni ochish $name';
+  }
+
+  @override
+  String a11yPaymentOf(String plan) {
+    return 'To\'lov $plan';
+  }
 }
