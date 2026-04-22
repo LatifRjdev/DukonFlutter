@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 extension StringExtensions on String {
   String get capitalize => isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
@@ -43,6 +44,14 @@ extension ContextExtensions on BuildContext {
         content: Text(message),
         backgroundColor: isError ? Colors.red : null,
       ),
+    );
+
+    // Make the toast audible for screen-reader users (TalkBack / VoiceOver).
+    // SnackBar on its own does not steal focus.
+    SemanticsService.sendAnnouncement(
+      View.of(this),
+      message,
+      Directionality.of(this),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 
@@ -75,6 +76,15 @@ class AppSnackbar {
         elevation: 4,
         dismissDirection: DismissDirection.horizontal,
       ),
+    );
+
+    // Make the toast audible for screen-reader users (TalkBack / VoiceOver).
+    // SnackBar on its own does not steal focus, so transient messages are
+    // otherwise silent for assistive tech.
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      message,
+      Directionality.of(context),
     );
   }
 }
