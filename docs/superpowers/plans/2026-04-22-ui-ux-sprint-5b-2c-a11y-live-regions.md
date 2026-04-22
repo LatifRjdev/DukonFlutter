@@ -13,6 +13,35 @@
 
 ---
 
+## Sprint 5B.2.c Complete — 2026-04-22
+
+**Outcome:** 91 inline `ScaffoldMessenger.showSnackBar` sites across 50 files migrated to `AppSnackbar.success/error/info`; 2 central helpers (`AppSnackbar._show`, `ContextExtensions.showSnackBar`) now call `SemanticsService.sendAnnouncement()` on every toast.
+
+**Phase commits:**
+- `5e93de0` Phase 1 — announce() added to both central helpers (uses the new `sendAnnouncement(View.of(context), ...)` API; the older deprecated `announce()` was skipped).
+- `c533308` Phase 2.1 Auth — 5 files, 5 sites, all `.error`.
+- `3e6524c` Phase 2.2 POS — 5 files, 10 sites (mix success/error, 2 conditional splits).
+- `b5c717c` Phase 2.3 Product CRUD — 3 files, 3 migrated + 1 fallback (product_detail had `SnackBarAction`, kept inline + `// TODO(a11y): migrate when AppSnackbar supports actions`).
+- `340c24e` Phase 2.4 Settings + notifications_settings — 14 files, 31 sites (16 success / 14 error / 1 info).
+- `838b7e5` Phase 2.5 Finance + CRM — 8 files, 12 sites (2 async-gap variants in customer_list/supplier_list pre-capture `view`/`dir` before `await`).
+- `d93dae0` Phase 2.6 Shifts/Sales + Staff/Payroll — 6 files, 11 sites.
+- `1819ebe` Phase 2.7 Zakat/Debt/Delivery/Stock — 7 files, 15 sites.
+- `57ecb63` — regen `create_delivery_light/dark.png` goldens for intentional AppSnackbar visual change.
+
+**Totals:** 9 commits, 50 files touched, 91 inline sites migrated, 1 fallback (SnackBarAction), 2 async-gap variants.
+
+**Acceptance:**
+- `flutter analyze lib/` → 0 issues.
+- `flutter test` → 351 pass + 12 pre-existing Impeller-drift golden failures (same baseline as Sprint 5B.2.a/b). No new failures after regen.
+- Every app snackbar now fires a `SemanticsService.sendAnnouncement` so TalkBack/VoiceOver users hear dynamic messages.
+
+**Follow-up:**
+- Extend `AppSnackbar` with an `action`-supporting variant → migrate the 1 `product_detail_page.dart` TODO.
+- Sprint 6 — localize hardcoded Russian labels (5B.2.a/b tooltips + 5B.2.c messages) to ru/tg/uz `.arb` files.
+- Physical-device TalkBack QA pass on POS checkout, auth errors, and settings save confirmations.
+
+---
+
 ## Audit (2026-04-22)
 
 - `AppSnackbar.success/error/info` — defined in `lib/presentation/widgets/common/app_snackbar.dart`. Currently 0 usage outside own file.
