@@ -30,7 +30,7 @@ class ReceiptPreviewPage extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      AppSnackbar.error(context, 'Ошибка: ${e.toString()}');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(e.toString()));
     }
   }
 
@@ -41,7 +41,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         : 'DukonPro';
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
-      AppSnackbar.error(context, 'Принтер не подключён. Настройте в Настройки → Принтер.');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrinterNotConnected);
       return;
     }
 
@@ -52,9 +52,9 @@ class ReceiptPreviewPage extends StatelessWidget {
 
     if (!context.mounted) return;
     if (success) {
-      AppSnackbar.success(context, 'Чек напечатан');
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptPrinted);
     } else {
-      AppSnackbar.error(context, 'Ошибка печати');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintError);
     }
   }
 

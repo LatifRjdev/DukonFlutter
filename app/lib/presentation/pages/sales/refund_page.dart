@@ -15,6 +15,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class RefundPage extends StatefulWidget {
@@ -128,7 +129,7 @@ class _RefundPageState extends State<RefundPage> {
               .toList();
           if (updatedSale.isNotEmpty &&
               updatedSale.first.status != widget.sale.status) {
-            AppSnackbar.success(context, 'Возврат успешно оформлен');
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackRefundSuccess);
             context.pop();
           }
         }

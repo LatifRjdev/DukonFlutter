@@ -81,7 +81,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
     return BlocListener<StockIntakeBloc, StockIntakeState>(
       listener: (context, state) {
         if (state.isSuccess) {
-          AppSnackbar.success(context, 'Приход успешно оформлен');
+          AppSnackbar.success(context, AppLocalizations.of(context)!.snackIntakeSuccess);
           context.read<StockIntakeBloc>().add(StockIntakeReset());
           context.pop();
         }

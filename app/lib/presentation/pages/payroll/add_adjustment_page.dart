@@ -9,6 +9,7 @@ import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class AddAdjustmentPage extends StatefulWidget {
@@ -63,7 +64,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
       body: BlocListener<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollPeriodDetailLoaded) {
-            AppSnackbar.success(context, 'Корректировка добавлена');
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackAdjustmentAdded);
             context.pop();
           }
           if (state is PayrollError) {

@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class KkmSettingsPage extends StatefulWidget {
   const KkmSettingsPage({super.key});
@@ -45,7 +46,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
       if (mounted) setState(() => _connectedDevice = device);
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, 'Ошибка подключения: $e');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackConnectionError(e.toString()));
       }
     }
   }
@@ -65,11 +66,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
         bytes: ticket,
       );
       if (mounted) {
-        AppSnackbar.success(context, 'Тестовая печать выполнена');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackTestPrintDone);
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, 'Ошибка печати: $e');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintErrorDetails(e.toString()));
       }
     } finally {
       if (mounted) setState(() => _isPrinting = false);

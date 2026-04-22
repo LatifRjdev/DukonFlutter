@@ -46,7 +46,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
     await prefs.setString(_keyLanguage, _selected);
     if (mounted) {
       setState(() => _saving = false);
-      AppSnackbar.success(context, 'Язык сохранён. Перезапустите приложение для применения.');
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackLanguageSaved);
     }
   }
 

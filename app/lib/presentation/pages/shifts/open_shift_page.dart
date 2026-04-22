@@ -9,6 +9,7 @@ import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class OpenShiftPage extends StatefulWidget {
@@ -46,7 +47,7 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
       body: BlocListener<ShiftBloc, ShiftState>(
         listener: (context, state) {
           if (state is ShiftOpened) {
-            AppSnackbar.success(context, 'Смена открыта');
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackShiftOpened);
             context.pop();
           }
           if (state is ShiftError) {

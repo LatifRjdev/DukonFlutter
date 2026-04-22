@@ -5,6 +5,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final String storeId;
@@ -57,11 +58,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         'debtReminder': _debtReminder,
       });
       if (mounted) {
-        AppSnackbar.success(context, 'Настройки сохранены');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackSettingsSaved);
       }
     } catch (_) {
       if (mounted) {
-        AppSnackbar.error(context, 'Ошибка сохранения');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackSaveError);
       }
     }
   }

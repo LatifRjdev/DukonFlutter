@@ -5,6 +5,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class TelegramBotSettingsPage extends StatefulWidget {
   final String storeId;
@@ -52,11 +53,12 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
       await _dioClient.post(
           '/stores/${widget.storeId}/telegram-bot/test-message');
       if (mounted) {
-        AppSnackbar.success(context, 'Тестовое сообщение отправлено');
+        final l10n = AppLocalizations.of(context)!;
+      AppSnackbar.success(context, l10n.snackTestMessageSent);
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, 'Ошибка: \$e');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(e.toString()));
       }
     } finally {
       if (mounted) setState(() => _sendingTest = false);

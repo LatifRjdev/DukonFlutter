@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ScannerSettingsPage extends StatefulWidget {
   const ScannerSettingsPage({super.key});
@@ -61,7 +62,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
     await prefs.setStringList(_keyFormats, _formats.toList());
     if (mounted) {
       setState(() => _saving = false);
-      AppSnackbar.success(context, 'Настройки сканера сохранены');
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackScannerSettingsSaved);
     }
   }
 

@@ -180,7 +180,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
 
   void _switchStore(String storeId, String storeName) {
     context.read<StoreBloc>().add(StoreSelected(storeId));
-    AppSnackbar.success(context, 'Магазин "$storeName" выбран');
+    AppSnackbar.success(context, AppLocalizations.of(context)!.snackStoreSelected(storeName));
   }
 
   @override

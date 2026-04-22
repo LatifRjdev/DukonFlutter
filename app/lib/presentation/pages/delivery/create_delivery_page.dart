@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 // ─── Models ──────────────────────────────────────────────────────────────────
 
@@ -166,11 +167,11 @@ class _CreateViewState extends State<_CreateView> {
   void _submit(List<_Sale> sales, List<_StaffMember> staff) {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_selectedSaleId == null) {
-      AppSnackbar.info(context, 'Выберите заказ');
+      AppSnackbar.info(context, AppLocalizations.of(context)!.snackSelectOrder);
       return;
     }
     if (_selectedCourierId == null) {
-      AppSnackbar.info(context, 'Выберите курьера');
+      AppSnackbar.info(context, AppLocalizations.of(context)!.snackSelectCourier);
       return;
     }
     context.read<_CreateCubit>().submit(

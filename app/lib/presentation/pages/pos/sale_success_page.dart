@@ -13,6 +13,7 @@ import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SaleSuccessPage extends StatefulWidget {
   final Sale sale;
@@ -64,7 +65,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Принтер не подключён. Настройте в Настройки → Принтер.');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrinterNotConnected);
       return;
     }
 
@@ -75,9 +76,9 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
 
     if (!mounted) return;
     if (success) {
-      AppSnackbar.success(context, 'Чек напечатан');
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptPrinted);
     } else {
-      AppSnackbar.error(context, 'Ошибка печати');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintError);
     }
   }
 
@@ -218,11 +219,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
       final dio = sl<DioClient>();
       await dio.post('/stores/${sale.storeId}/telegram/send-receipt', data: {'saleId': sale.id});
       if (mounted) {
-        AppSnackbar.success(context, 'Чек отправлен в Telegram');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptSentToTelegram);
       }
     } catch (_) {
       if (mounted) {
-        AppSnackbar.error(context, 'Не удалось отправить. Клиент не привязан к боту?');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackTelegramSendFailed);
       }
     }
   }

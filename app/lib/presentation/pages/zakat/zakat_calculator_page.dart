@@ -283,7 +283,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                     'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
                                     'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.';
                                 Clipboard.setData(ClipboardData(text: text));
-                                AppSnackbar.info(context, 'Расчёт скопирован');
+                                AppSnackbar.info(context, l10n.snackCalculationCopied);
                               }
                             },
                             style: OutlinedButton.styleFrom(

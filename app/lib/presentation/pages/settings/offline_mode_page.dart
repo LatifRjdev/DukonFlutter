@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class OfflineModePage extends StatefulWidget {
   const OfflineModePage({super.key});
@@ -65,12 +66,12 @@ class _OfflineModePageState extends State<OfflineModePage> {
           _pendingOps = 0;
           _syncing = false;
         });
-        AppSnackbar.success(context, 'Синхронизация выполнена');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackSyncCompleted);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _syncing = false);
-        AppSnackbar.error(context, 'Ошибка синхронизации: \$e');
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackSyncError(e.toString()));
       }
     }
   }
@@ -114,7 +115,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
       await prefs.remove('last_sync_timestamp');
       if (mounted) {
         setState(() { _lastSync = null; _pendingOps = 0; });
-        AppSnackbar.success(context, 'Кэш очищен');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackCacheCleared);
       }
     } catch (e) {
       if (mounted) {

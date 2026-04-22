@@ -135,11 +135,11 @@ class _ShiftsPageState extends State<ShiftsPage> {
               child: BlocConsumer<ShiftBloc, ShiftState>(
                 listener: (context, state) {
                   if (state is ShiftOpened) {
-                    AppSnackbar.success(context, 'Смена открыта');
+                    AppSnackbar.success(context, l10n.snackShiftOpened);
                     _loadData();
                   }
                   if (state is ShiftClosed) {
-                    AppSnackbar.success(context, 'Смена закрыта');
+                    AppSnackbar.success(context, l10n.snackShiftClosed);
                     context.push('/shifts/${state.shift.id}/z-report', extra: widget.storeId);
                     _loadData();
                   }

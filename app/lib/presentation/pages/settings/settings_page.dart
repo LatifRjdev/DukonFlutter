@@ -202,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               } catch (e) {
                                 if (!context.mounted) return;
                                 setState(() => _notificationsEnabled = !v);
-                                AppSnackbar.info(context, 'Не удалось сохранить настройку');
+                                AppSnackbar.info(context, AppLocalizations.of(context)!.snackSettingSaveFailed);
                               }
                             }),
                           _buildDivider(),

@@ -15,6 +15,7 @@ import '../../blocs/pos/cart_event.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CustomerDetailPage extends StatefulWidget {
   final String customerId;
@@ -120,7 +121,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                             customerId: customer.id,
                             customerName: customer.name,
                           ));
-                          AppSnackbar.info(context, 'Клиент ${customer.name} выбран для продажи');
+                          AppSnackbar.info(context, AppLocalizations.of(context)!.snackCustomerSelectedForSale(customer.name));
                           context.go('/home');
                         },
                       ),

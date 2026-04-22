@@ -39,7 +39,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
 
   Future<void> _launchPhone() async {
     if (widget.customerPhone == null || widget.customerPhone!.isEmpty) {
-      AppSnackbar.info(context, 'Номер телефона не указан');
+      AppSnackbar.info(context, AppLocalizations.of(context)!.snackNoPhoneNumber);
       return;
     }
     final uri = Uri(scheme: 'tel', path: widget.customerPhone);

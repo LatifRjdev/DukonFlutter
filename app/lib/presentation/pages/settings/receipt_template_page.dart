@@ -5,6 +5,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ReceiptTemplatePage extends StatefulWidget {
   final String storeId;
@@ -77,7 +78,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
         'showDiscount': _showDiscount,
       });
       if (mounted) {
-        AppSnackbar.success(context, 'Шаблон сохранён');
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackTemplateSaved);
       }
     } catch (e) {
       if (mounted) {
