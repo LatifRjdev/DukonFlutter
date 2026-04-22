@@ -243,29 +243,53 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         padding: EdgeInsets.zero,
         child: Column(
           children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-              onTap: () => _toggleCard(code),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                child: Row(
-                  children: [
-                    Text(rate.flag, style: const TextStyle(fontSize: 28)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            Semantics(
+              label: 'Выбрать валюту ${rate.code}',
+              button: true,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+                onTap: () => _toggleCard(code),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row(
+                    children: [
+                      Text(rate.flag, style: const TextStyle(fontSize: 28)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              rate.code,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: context.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              rate.label,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: context.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            rate.code,
-                            style: TextStyle(
+                            '${_formatRate(rate.rate)} TJS',
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: context.textPrimary,
+                              color: AppColors.primary,
                             ),
                           ),
                           Text(
-                            rate.label,
+                            '1 ${rate.code}',
                             style: TextStyle(
                               fontSize: 12,
                               color: context.textSecondary,
@@ -273,37 +297,17 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${_formatRate(rate.rate)} TJS',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
-                          ),
+                      const SizedBox(width: 8),
+                      AnimatedRotation(
+                        turns: isExpanded ? 0.5 : 0,
+                        duration: AppConstants.motionMedium,
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: context.textSecondary,
                         ),
-                        Text(
-                          '1 ${rate.code}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: context.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    AnimatedRotation(
-                      turns: isExpanded ? 0.5 : 0,
-                      duration: AppConstants.motionMedium,
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: context.textSecondary,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

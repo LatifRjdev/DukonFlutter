@@ -143,23 +143,27 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
-                GestureDetector(
-                  onTap: _pickDate,
-                  child: Container(
-                    padding: const EdgeInsets.all(AppConstants.spacingMd),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: context.border),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.calendar_today, color: context.textSecondary, size: 20),
-                        const SizedBox(width: AppConstants.spacingSm),
-                        Text(
-                          '${_date.day.toString().padLeft(2, '0')}.${_date.month.toString().padLeft(2, '0')}.${_date.year}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
+                Semantics(
+                  label: 'Выбрать период',
+                  button: true,
+                  child: GestureDetector(
+                    onTap: _pickDate,
+                    child: Container(
+                      padding: const EdgeInsets.all(AppConstants.spacingMd),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: context.border),
+                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_today, color: context.textSecondary, size: 20),
+                          const SizedBox(width: AppConstants.spacingSm),
+                          Text(
+                            '${_date.day.toString().padLeft(2, '0')}.${_date.month.toString().padLeft(2, '0')}.${_date.year}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

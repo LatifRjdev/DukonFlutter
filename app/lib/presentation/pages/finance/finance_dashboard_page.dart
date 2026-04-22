@@ -74,6 +74,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     IconButton(
+                      tooltip: 'Открыть отчёты',
                       icon: const Icon(Icons.file_download_outlined),
                       onPressed: () {
                         final storeState = context.read<StoreBloc>().state;

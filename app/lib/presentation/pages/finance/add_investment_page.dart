@@ -186,24 +186,28 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
-                      GestureDetector(
-                        onTap: _pickStartDate,
-                        child: Container(
-                          padding: const EdgeInsets.all(AppConstants.spacingMd),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: context.border),
-                            borderRadius:
-                                BorderRadius.circular(AppConstants.radiusMd),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.calendar_today,
-                                  color: context.textSecondary,
-                                  size: 20),
-                              const SizedBox(width: AppConstants.spacingSm),
-                              Text(_formatDate(_startDate),
-                                  style: const TextStyle(fontSize: 16)),
-                            ],
+                      Semantics(
+                        label: 'Выбрать период',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: _pickStartDate,
+                          child: Container(
+                            padding: const EdgeInsets.all(AppConstants.spacingMd),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: context.border),
+                              borderRadius:
+                                  BorderRadius.circular(AppConstants.radiusMd),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_today,
+                                    color: context.textSecondary,
+                                    size: 20),
+                                const SizedBox(width: AppConstants.spacingSm),
+                                Text(_formatDate(_startDate),
+                                    style: const TextStyle(fontSize: 16)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -212,32 +216,36 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
-                      GestureDetector(
-                        onTap: _pickEndDate,
-                        child: Container(
-                          padding: const EdgeInsets.all(AppConstants.spacingMd),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: context.border),
-                            borderRadius:
-                                BorderRadius.circular(AppConstants.radiusMd),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.calendar_today,
-                                  color: context.textSecondary,
-                                  size: 20),
-                              const SizedBox(width: AppConstants.spacingSm),
-                              Text(
-                                _endDate != null
-                                    ? _formatDate(_endDate!)
-                                    : 'Не выбрана',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: _endDate != null
-                                        ? null
-                                        : context.textSecondary),
-                              ),
-                            ],
+                      Semantics(
+                        label: 'Выбрать период',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: _pickEndDate,
+                          child: Container(
+                            padding: const EdgeInsets.all(AppConstants.spacingMd),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: context.border),
+                              borderRadius:
+                                  BorderRadius.circular(AppConstants.radiusMd),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_today,
+                                    color: context.textSecondary,
+                                    size: 20),
+                                const SizedBox(width: AppConstants.spacingSm),
+                                Text(
+                                  _endDate != null
+                                      ? _formatDate(_endDate!)
+                                      : 'Не выбрана',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: _endDate != null
+                                          ? null
+                                          : context.textSecondary),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

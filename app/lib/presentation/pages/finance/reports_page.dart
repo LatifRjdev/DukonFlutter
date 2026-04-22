@@ -834,18 +834,22 @@ class _ReportsPageState extends State<ReportsPage>
           Icon(Icons.calendar_today_outlined,
               size: 16, color: context.textSecondary),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: _pickFrom,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-              alignment: Alignment.center,
-              child: Text(
-                DateFormat('dd.MM.yyyy').format(_from),
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+          Semantics(
+            label: 'Выбрать период',
+            button: true,
+            child: GestureDetector(
+              onTap: _pickFrom,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
+                child: Text(
+                  DateFormat('dd.MM.yyyy').format(_from),
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -855,24 +859,29 @@ class _ReportsPageState extends State<ReportsPage>
             child: Text('—',
                 style: TextStyle(color: context.textSecondary)),
           ),
-          GestureDetector(
-            onTap: _pickTo,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-              alignment: Alignment.center,
-              child: Text(
-                DateFormat('dd.MM.yyyy').format(_to),
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+          Semantics(
+            label: 'Выбрать период',
+            button: true,
+            child: GestureDetector(
+              onTap: _pickTo,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
+                child: Text(
+                  DateFormat('dd.MM.yyyy').format(_to),
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
           ),
           const Spacer(),
           IconButton(
+            tooltip: 'Обновить',
             icon: Icon(Icons.refresh_outlined,
                 size: 18, color: context.textSecondary),
             onPressed: _loadCurrentTab,
