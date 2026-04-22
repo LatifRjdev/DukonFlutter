@@ -7,6 +7,7 @@ import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
 import '../../blocs/settings/settings_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -44,15 +45,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       body: BlocListener<SettingsBloc, SettingsState>(
         listener: (context, state) {
           if (state is SettingsActionSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, state.message);
             context.pop();
           }
           if (state is SettingsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(

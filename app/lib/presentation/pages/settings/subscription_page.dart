@@ -10,6 +10,7 @@ import '../../blocs/subscription/subscription_event.dart';
 import '../../blocs/subscription/subscription_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
 
@@ -578,20 +579,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return BlocListener<SubscriptionBloc, SubscriptionState>(
       listener: (context, state) {
         if (state is SubscriptionActionSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.success,
-            ),
-          );
+          AppSnackbar.success(context, state.message);
         }
         if (state is SubscriptionError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackbar.error(context, state.message);
         }
       },
       child: Scaffold(

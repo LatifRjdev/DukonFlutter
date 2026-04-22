@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
   const LanguageSettingsPage({super.key});
@@ -44,13 +45,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
     await prefs.setString(_keyLanguage, _selected);
     if (mounted) {
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Язык сохранён. Перезапустите приложение для применения.'),
-          backgroundColor: AppColors.success,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      AppSnackbar.success(context, 'Язык сохранён. Перезапустите приложение для применения.');
     }
   }
 

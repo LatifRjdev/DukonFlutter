@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class OfflineModePage extends StatefulWidget {
   const OfflineModePage({super.key});
@@ -64,22 +65,12 @@ class _OfflineModePageState extends State<OfflineModePage> {
           _pendingOps = 0;
           _syncing = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Синхронизация выполнена'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        AppSnackbar.success(context, 'Синхронизация выполнена');
       }
     } catch (e) {
       if (mounted) {
         setState(() => _syncing = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка синхронизации: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        AppSnackbar.error(context, 'Ошибка синхронизации: \$e');
       }
     }
   }
@@ -123,18 +114,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
       await prefs.remove('last_sync_timestamp');
       if (mounted) {
         setState(() { _lastSync = null; _pendingOps = 0; });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Кэш очищен'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        AppSnackbar.success(context, 'Кэш очищен');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     }
   }

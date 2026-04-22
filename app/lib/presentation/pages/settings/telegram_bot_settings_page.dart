@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class TelegramBotSettingsPage extends StatefulWidget {
   final String storeId;
@@ -51,21 +52,11 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
       await _dioClient.post(
           '/stores/${widget.storeId}/telegram-bot/test-message');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Тестовое сообщение отправлено'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        AppSnackbar.success(context, 'Тестовое сообщение отправлено');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        AppSnackbar.error(context, 'Ошибка: \$e');
       }
     } finally {
       if (mounted) setState(() => _sendingTest = false);

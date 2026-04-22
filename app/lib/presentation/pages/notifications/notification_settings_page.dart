@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final String storeId;
@@ -56,15 +57,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         'debtReminder': _debtReminder,
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Настройки сохранены'), backgroundColor: AppColors.success),
-        );
+        AppSnackbar.success(context, 'Настройки сохранены');
       }
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка сохранения'), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, 'Ошибка сохранения');
       }
     }
   }

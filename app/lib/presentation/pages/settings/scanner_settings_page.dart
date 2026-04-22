@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class ScannerSettingsPage extends StatefulWidget {
   const ScannerSettingsPage({super.key});
@@ -60,12 +61,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
     await prefs.setStringList(_keyFormats, _formats.toList());
     if (mounted) {
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Настройки сканера сохранены'),
-          backgroundColor: AppColors.success,
-        ),
-      );
+      AppSnackbar.success(context, 'Настройки сканера сохранены');
     }
   }
 

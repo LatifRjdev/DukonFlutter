@@ -3,6 +3,7 @@ import 'package:thermal_printer/thermal_printer.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class KkmSettingsPage extends StatefulWidget {
   const KkmSettingsPage({super.key});
@@ -44,10 +45,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
       if (mounted) setState(() => _connectedDevice = device);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка подключения: $e'),
-              backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, 'Ошибка подключения: $e');
       }
     }
   }
@@ -67,19 +65,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
         bytes: ticket,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Тестовая печать выполнена'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        AppSnackbar.success(context, 'Тестовая печать выполнена');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка печати: $e'),
-              backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, 'Ошибка печати: $e');
       }
     } finally {
       if (mounted) setState(() => _isPrinting = false);

@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class ReceiptTemplatePage extends StatefulWidget {
   final String storeId;
@@ -76,18 +77,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
         'showDiscount': _showDiscount,
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Шаблон сохранён'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        AppSnackbar.success(context, 'Шаблон сохранён');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     } finally {
       if (mounted) setState(() => _saving = false);

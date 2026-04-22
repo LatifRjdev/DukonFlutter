@@ -4,6 +4,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class DiscountsPage extends StatefulWidget {
   final String storeId;
@@ -49,9 +50,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     }
   }
@@ -62,9 +61,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     }
   }
@@ -196,9 +193,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     }
   }

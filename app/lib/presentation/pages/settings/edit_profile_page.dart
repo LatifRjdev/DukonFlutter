@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
 import '../../blocs/settings/settings_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -56,15 +57,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               _phoneController.text = state.user.phone;
             }
             if (state is SettingsActionSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-              );
+              AppSnackbar.success(context, state.message);
               context.pop();
             }
             if (state is SettingsError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-              );
+              AppSnackbar.error(context, state.message);
             }
           },
           builder: (context, state) {

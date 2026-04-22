@@ -8,6 +8,7 @@ import '../../blocs/printer/printer_bloc.dart';
 import '../../blocs/printer/printer_event.dart';
 import '../../blocs/printer/printer_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class PrinterSettingsPage extends StatefulWidget {
   const PrinterSettingsPage({super.key});
@@ -30,14 +31,10 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
       body: BlocConsumer<PrinterBloc, PrinterState>(
         listener: (context, state) {
           if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error!), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.error!);
           }
           if (state.successMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.successMessage!), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, state.successMessage!);
           }
         },
         builder: (context, state) {

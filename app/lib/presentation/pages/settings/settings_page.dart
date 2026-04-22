@@ -15,6 +15,7 @@ import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -199,9 +200,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               } catch (e) {
                                 if (!context.mounted) return;
                                 setState(() => _notificationsEnabled = !v);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Не удалось сохранить настройку')),
-                                );
+                                AppSnackbar.info(context, 'Не удалось сохранить настройку');
                               }
                             }),
                           _buildDivider(),

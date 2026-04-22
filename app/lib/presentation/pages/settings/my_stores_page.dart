@@ -8,6 +8,7 @@ import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class MyStoresPage extends StatefulWidget {
   const MyStoresPage({super.key});
@@ -171,22 +172,14 @@ class _MyStoresPageState extends State<MyStoresPage> {
       context.read<StoreBloc>().add(StoreLoadRequested());
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, e.toString());
       }
     }
   }
 
   void _switchStore(String storeId, String storeName) {
     context.read<StoreBloc>().add(StoreSelected(storeId));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Магазин "$storeName" выбран'),
-        backgroundColor: AppColors.success,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    AppSnackbar.success(context, 'Магазин "$storeName" выбран');
   }
 
   @override
