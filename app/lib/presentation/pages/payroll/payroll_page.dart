@@ -13,6 +13,7 @@ import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class PayrollPage extends StatefulWidget {
   final String storeId;
@@ -220,7 +221,7 @@ class _PayrollPageState extends State<PayrollPage> {
               IconButton(
                 onPressed: _loadData,
                 icon: const Icon(Icons.arrow_back),
-                tooltip: 'Назад',
+                tooltip: AppLocalizations.of(context)!.back,
               ),
               Expanded(
                 child: Text(

@@ -10,6 +10,7 @@ import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ZakatHistoryPage extends StatefulWidget {
   final String storeId;
@@ -32,6 +33,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -43,7 +45,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Назад',
+                    tooltip: l10n.back,
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),

@@ -12,6 +12,7 @@ import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ShiftsPage extends StatefulWidget {
   final String storeId;
@@ -93,6 +94,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -103,7 +105,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: 'Назад', onPressed: () => context.pop()),
+                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
                   const Text('Смены',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
@@ -256,7 +258,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
     final timeFormat = DateFormat('HH:mm');
 
     return Semantics(
-      label: 'Открыть Z-отчёт',
+      label: AppLocalizations.of(context)!.a11yOpenZReport,
       button: true,
       child: GestureDetector(
       onTap: () => context.push('/shifts/${shift.id}/z-report', extra: widget.storeId),

@@ -11,6 +11,7 @@ import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
 import '../../widgets/shifts/shift_card.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class StaffDetailPage extends StatefulWidget {
   final String storeId;
@@ -69,6 +70,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Профиль сотрудника'),
@@ -78,7 +80,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
               if (state is StaffDetailLoaded) {
                 return IconButton(
                   icon: const Icon(Icons.edit),
-                  tooltip: 'Редактировать сотрудника',
+                  tooltip: l10n.editEmployee,
                   onPressed: () => context.push(
                     '/edit-staff/${widget.storeId}/${widget.staffId}',
                   ),

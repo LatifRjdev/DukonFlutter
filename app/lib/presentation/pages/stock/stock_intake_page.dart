@@ -20,6 +20,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_search_bar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class StockIntakePage extends StatefulWidget {
   const StockIntakePage({super.key});
@@ -338,7 +339,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    tooltip: 'Закрыть',
+                    tooltip: AppLocalizations.of(context)!.close,
                     onPressed: () {
                       context.read<StockIntakeBloc>().add(StockIntakeReset());
                       _quantityController.clear();

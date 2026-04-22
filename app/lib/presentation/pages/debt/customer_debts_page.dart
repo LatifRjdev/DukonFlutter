@@ -10,6 +10,7 @@ import '../../blocs/debt/debt_state.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/debt/payment_form.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CustomerDebtsPage extends StatefulWidget {
   final String storeId;
@@ -92,13 +93,14 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.customerName),
         actions: [
           if (widget.customerPhone != null && widget.customerPhone!.isNotEmpty)
             IconButton(
-              tooltip: 'Позвонить клиенту',
+              tooltip: l10n.a11yCallClient,
               icon: const Icon(Icons.phone_outlined, color: AppColors.success),
               onPressed: _launchPhone,
             ),

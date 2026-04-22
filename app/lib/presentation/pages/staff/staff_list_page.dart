@@ -10,6 +10,7 @@ import '../../widgets/common/app_error_widget.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff/staff_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class StaffListPage extends StatefulWidget {
   final String storeId;
@@ -55,6 +56,7 @@ class _StaffListPageState extends State<StaffListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
@@ -70,13 +72,13 @@ class _StaffListPageState extends State<StaffListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: 'Назад', onPressed: () => context.pop()),
+                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
                   const Text('Сотрудники',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.add, color: AppColors.primary),
-                    tooltip: 'Добавить сотрудника',
+                    tooltip: l10n.addEmployee,
                     onPressed: () => context.push('/staff/add', extra: widget.storeId),
                   ),
                 ],

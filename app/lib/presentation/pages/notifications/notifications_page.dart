@@ -9,6 +9,7 @@ import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../../injection.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Models
@@ -346,9 +347,10 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final unread = !notification.isRead;
     return Semantics(
-      label: 'Отметить как прочитанное',
+      label: l10n.a11yMarkAsRead,
       button: true,
       child: InkWell(
         onTap: onTap,

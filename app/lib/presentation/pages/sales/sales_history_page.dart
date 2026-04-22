@@ -17,6 +17,7 @@ import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/pos/sales_filter_sheet.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -66,6 +67,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -81,7 +83,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.filter_list_outlined),
-                    tooltip: 'Фильтр',
+                    tooltip: l10n.a11yFilter,
                     onPressed: () => SalesFilterSheet.show(
                       context,
                       initial: _activeFilter,
@@ -106,7 +108,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.file_download_outlined),
-                    tooltip: 'Скачать отчёт',
+                    tooltip: l10n.a11yDownloadReport,
                     onPressed: () {
                       final storeState = context.read<StoreBloc>().state;
                       final storeId = storeState is StoreLoaded

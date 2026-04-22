@@ -8,6 +8,7 @@ import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ZakatSettingsPage extends StatefulWidget {
   final String storeId;
@@ -70,6 +71,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -81,7 +83,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Назад',
+                    tooltip: l10n.back,
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
@@ -181,7 +183,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: IconButton(
-                                  tooltip: 'Обновить',
+                                  tooltip: l10n.a11yRefresh,
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
                                   onPressed: () {
                                     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));

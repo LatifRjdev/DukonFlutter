@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   final Sale sale;
@@ -47,6 +48,7 @@ class TransactionDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
 
     return Scaffold(
@@ -61,7 +63,7 @@ class TransactionDetailPage extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    tooltip: 'Назад',
+                    tooltip: l10n.back,
                     onPressed: () => context.pop(),
                   ),
                   Text('Чек ${sale.receiptNo}',

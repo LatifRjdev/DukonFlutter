@@ -10,6 +10,7 @@ import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ZakatCalculatorPage extends StatefulWidget {
   final String storeId;
@@ -32,6 +33,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -43,7 +45,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Назад',
+                    tooltip: l10n.back,
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
@@ -51,12 +53,12 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Настройки закята',
+                    tooltip: l10n.zakatSettings,
                     icon: Icon(Icons.settings_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
                   ),
                   IconButton(
-                    tooltip: 'История расчётов',
+                    tooltip: l10n.a11yCalculationHistory,
                     icon: Icon(Icons.list_alt_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/history', extra: widget.storeId),
                   ),
