@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
 import '../../blocs/investment/investment_event.dart';
@@ -133,21 +134,11 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                   child: BlocConsumer<InvestmentBloc, InvestmentState>(
                     listener: (context, state) {
                       if (state is InvestmentActionSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(state.message),
-                            backgroundColor: context.success,
-                          ),
-                        );
+                        AppSnackbar.success(context, state.message);
                         _loadInvestments(context);
                       }
                       if (state is InvestmentError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(state.message),
-                            backgroundColor: context.danger,
-                          ),
-                        );
+                        AppSnackbar.error(context, state.message);
                       }
                     },
                     builder: (context, state) {

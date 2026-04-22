@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/enums.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -10,6 +9,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class CreateStorePage extends StatefulWidget {
   const CreateStorePage({super.key});
@@ -55,9 +55,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
           if (state is StoreLoaded && state.selectedStore != null) {
             context.go('/home');
           } else if (state is StoreError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(

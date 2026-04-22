@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/customer.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
@@ -11,6 +10,7 @@ import '../../blocs/customer_detail/customer_detail_bloc.dart';
 import '../../blocs/customer_detail/customer_detail_event.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class CustomerFormPage extends StatefulWidget {
   final String storeId;
@@ -96,20 +96,10 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                 ),
               );
             }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(_isEditing ? 'Клиент обновлён' : 'Клиент добавлен'),
-                backgroundColor: AppColors.success,
-              ),
-            );
+            AppSnackbar.success(context, _isEditing ? 'Клиент обновлён' : 'Клиент добавлен');
             context.pop();
           } else if (state is CustomerFormError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(

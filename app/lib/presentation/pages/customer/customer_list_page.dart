@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -103,7 +104,11 @@ class _CustomerListPageState extends State<CustomerListPage> {
               // Capture refs before the await so we do not touch BuildContext
               // across the async gap (FE-P1-003).
               final navigator = Navigator.of(dialogContext);
+              // Pre-capture BuildContext-derived objects before the
+              // async gap to satisfy use_build_context_synchronously.
               final messenger = ScaffoldMessenger.of(context);
+              final view = View.of(context);
+              final dir = Directionality.of(context);
               try {
                 await sl<CustomerRepository>().createCustomer(
                   _getStoreId(),
@@ -114,9 +119,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
                 _loadCustomers();
               } catch (e) {
                 navigator.pop();
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Ошибка: $e')),
-                );
+                final msg = 'Ошибка: $e';
+                messenger.showSnackBar(SnackBar(
+                  content: Text(msg),
+                  backgroundColor: AppColors.error,
+                ));
+                SemanticsService.sendAnnouncement(view, msg, dir);
               }
             },
             child: const Text('Добавить'),

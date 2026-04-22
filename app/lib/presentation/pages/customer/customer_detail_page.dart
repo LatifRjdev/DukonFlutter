@@ -14,6 +14,7 @@ import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class CustomerDetailPage extends StatefulWidget {
   final String customerId;
@@ -119,9 +120,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                             customerId: customer.id,
                             customerName: customer.name,
                           ));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Клиент ${customer.name} выбран для продажи')),
-                          );
+                          AppSnackbar.info(context, 'Клиент ${customer.name} выбран для продажи');
                           context.go('/home');
                         },
                       ),

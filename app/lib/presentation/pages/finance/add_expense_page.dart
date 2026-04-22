@@ -8,6 +8,7 @@ import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class AddExpensePage extends StatefulWidget {
   final String storeId;
@@ -78,15 +79,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
       body: BlocListener<ExpenseBloc, ExpenseState>(
         listener: (context, state) {
           if (state is ExpenseActionSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: context.success),
-            );
+            AppSnackbar.success(context, state.message);
             context.pop();
           }
           if (state is ExpenseError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: context.danger),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(

@@ -9,6 +9,7 @@ import '../../blocs/investment/investment_event.dart';
 import '../../blocs/investment/investment_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class AddInvestmentPage extends StatefulWidget {
   final String storeId;
@@ -104,19 +105,11 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
             body: BlocListener<InvestmentBloc, InvestmentState>(
               listener: (context, state) {
                 if (state is InvestmentActionSuccess) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(state.message),
-                        backgroundColor: context.success),
-                  );
+                  AppSnackbar.success(context, state.message);
                   context.pop(true);
                 }
                 if (state is InvestmentError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(state.message),
-                        backgroundColor: context.danger),
-                  );
+                  AppSnackbar.error(context, state.message);
                 }
               },
               child: SingleChildScrollView(
