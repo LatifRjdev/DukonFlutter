@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/services/receipt_share_service.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../domain/entities/sale.dart';
@@ -10,6 +9,7 @@ import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/pos/receipt_widget.dart';
 
 class ReceiptPreviewPage extends StatelessWidget {
@@ -29,12 +29,7 @@ class ReceiptPreviewPage extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: ${e.toString()}'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      AppSnackbar.error(context, 'Ошибка: ${e.toString()}');
     }
   }
 
@@ -45,11 +40,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         : 'DukonPro';
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Принтер не подключён. Настройте в Настройки → Принтер.'),
-        ),
-      );
+      AppSnackbar.error(context, 'Принтер не подключён. Настройте в Настройки → Принтер.');
       return;
     }
 
@@ -59,12 +50,11 @@ class ReceiptPreviewPage extends StatelessWidget {
     );
 
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(success ? 'Чек напечатан' : 'Ошибка печати'),
-        backgroundColor: success ? AppColors.success : AppColors.error,
-      ),
-    );
+    if (success) {
+      AppSnackbar.success(context, 'Чек напечатан');
+    } else {
+      AppSnackbar.error(context, 'Ошибка печати');
+    }
   }
 
   @override

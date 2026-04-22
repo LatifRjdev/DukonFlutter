@@ -14,6 +14,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_text_field.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class CreditSalePage extends StatefulWidget {
   const CreditSalePage({super.key});
@@ -173,12 +174,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
           });
         }
         if (state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackbar.error(context, state.error!);
         }
       },
       child: Scaffold(

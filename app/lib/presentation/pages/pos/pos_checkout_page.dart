@@ -26,6 +26,7 @@ import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class PosCheckoutPage extends StatefulWidget {
   const PosCheckoutPage({super.key});
@@ -221,9 +222,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           context.go('/pos/success', extra: {'sale': state.saleResult});
         }
         if (state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error!), backgroundColor: AppColors.error),
-          );
+          AppSnackbar.error(context, state.error!);
         }
       },
       child: Scaffold(

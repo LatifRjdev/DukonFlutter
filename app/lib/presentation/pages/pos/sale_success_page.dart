@@ -12,6 +12,7 @@ import '../../../core/services/thermal_printer_service.dart';
 import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class SaleSuccessPage extends StatefulWidget {
   final Sale sale;
@@ -63,9 +64,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Принтер не подключён. Настройте в Настройки → Принтер.')),
-      );
+      AppSnackbar.error(context, 'Принтер не подключён. Настройте в Настройки → Принтер.');
       return;
     }
 
@@ -75,12 +74,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     );
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(success ? 'Чек напечатан' : 'Ошибка печати'),
-        backgroundColor: success ? AppColors.success : AppColors.error,
-      ),
-    );
+    if (success) {
+      AppSnackbar.success(context, 'Чек напечатан');
+    } else {
+      AppSnackbar.error(context, 'Ошибка печати');
+    }
   }
 
   @override
@@ -220,15 +218,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
       final dio = sl<DioClient>();
       await dio.post('/stores/${sale.storeId}/telegram/send-receipt', data: {'saleId': sale.id});
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Чек отправлен в Telegram'), backgroundColor: AppColors.success),
-        );
+        AppSnackbar.success(context, 'Чек отправлен в Telegram');
       }
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Не удалось отправить. Клиент не привязан к боту?'), backgroundColor: AppColors.error),
-        );
+        AppSnackbar.error(context, 'Не удалось отправить. Клиент не привязан к боту?');
       }
     }
   }
