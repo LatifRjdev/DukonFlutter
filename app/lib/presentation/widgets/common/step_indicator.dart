@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class StepIndicator extends StatelessWidget {
   final int currentStep;
@@ -75,7 +76,7 @@ class _StepCircle extends StatelessWidget {
                 ? Border.all(color: AppColors.disabled, width: 1.5)
                 : null,
           ),
-          child: Center(child: _innerContent),
+          child: Center(child: _innerContent(context)),
         ),
         if (label != null) ...[
           const SizedBox(height: AppConstants.spacingXs),
@@ -87,8 +88,8 @@ class _StepCircle extends StatelessWidget {
               fontWeight:
                   state == _StepState.active ? FontWeight.w600 : FontWeight.w400,
               color: state == _StepState.upcoming
-                  ? AppColors.lightTextHint
-                  : AppColors.lightTextPrimary,
+                  ? context.textMuted
+                  : context.textPrimary,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -109,18 +110,18 @@ class _StepCircle extends StatelessWidget {
     }
   }
 
-  Widget get _innerContent {
+  Widget _innerContent(BuildContext context) {
     switch (state) {
       case _StepState.completed:
-        return const Icon(Icons.check, size: 18, color: Colors.white);
+        return Icon(Icons.check, size: 18, color: context.onPrimary);
       case _StepState.active:
         return Text(
           '$stepNumber',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
             fontFamily: 'Inter',
-            color: Colors.white,
+            color: context.onPrimary,
           ),
         );
       case _StepState.upcoming:
@@ -151,7 +152,7 @@ class _ConnectingLine extends StatelessWidget {
           duration: AppConstants.animationNormal,
           height: 2,
           decoration: BoxDecoration(
-            color: isCompleted ? AppColors.primary : AppColors.lightBorder,
+            color: isCompleted ? AppColors.primary : context.border,
             borderRadius: BorderRadius.circular(1),
           ),
         ),

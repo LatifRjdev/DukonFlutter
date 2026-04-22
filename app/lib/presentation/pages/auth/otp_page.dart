@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class OtpPage extends StatefulWidget {
   final String phone;
@@ -65,14 +68,13 @@ class _OtpPageState extends State<OtpPage> {
 
   void _verify() {
     if (_otp.length == 6) {
-      // OTP verification — backend endpoint not yet available
-      context.go('/create-password', extra: {'phone': widget.phone, 'otp': _otp});
+      context.read<AuthBloc>().add(AuthVerifyOtpRequested(phone: widget.phone, code: _otp));
     }
   }
 
   void _resend() {
     if (_canResend) {
-      // Resend OTP — backend endpoint not yet available
+      context.read<AuthBloc>().add(AuthSendOtpRequested(phone: widget.phone));
       _startTimer();
     }
   }
@@ -100,10 +102,10 @@ class _OtpPageState extends State<OtpPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+          if (state is AuthAuthenticated) {
+            context.go('/home');
+          } else if (state is AuthFailure) {
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SafeArea(
@@ -118,7 +120,7 @@ class _OtpPageState extends State<OtpPage> {
                 const SizedBox(height: 8),
                 Text(
                   'Введите 6-значный код, отправленный на\n${widget.phone}',
-                  style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                  style: TextStyle(color: context.textSecondary, fontSize: 16),
                 ),
                 const SizedBox(height: 40),
                 Row(
@@ -175,7 +177,7 @@ class _OtpPageState extends State<OtpPage> {
                         )
                       : Text(
                           'Повторная отправка через $_remainingSeconds сек.',
-                          style: const TextStyle(color: AppColors.lightTextSecondary),
+                          style: TextStyle(color: context.textSecondary),
                         ),
                 ),
               ],

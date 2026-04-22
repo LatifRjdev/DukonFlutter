@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/repositories/customer_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
@@ -11,6 +15,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CustomerListPage extends StatefulWidget {
   const CustomerListPage({super.key});
@@ -100,7 +105,11 @@ class _CustomerListPageState extends State<CustomerListPage> {
               // Capture refs before the await so we do not touch BuildContext
               // across the async gap (FE-P1-003).
               final navigator = Navigator.of(dialogContext);
+              // Pre-capture BuildContext-derived objects before the
+              // async gap to satisfy use_build_context_synchronously.
               final messenger = ScaffoldMessenger.of(context);
+              final view = View.of(context);
+              final dir = Directionality.of(context);
               try {
                 await sl<CustomerRepository>().createCustomer(
                   _getStoreId(),
@@ -111,9 +120,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
                 _loadCustomers();
               } catch (e) {
                 navigator.pop();
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Ошибка: $e')),
-                );
+                final msg = 'Ошибка: $e';
+                messenger.showSnackBar(SnackBar(
+                  content: Text(msg),
+                  backgroundColor: AppColors.error,
+                ));
+                SemanticsService.sendAnnouncement(view, msg, dir);
               }
             },
             child: const Text('Добавить'),
@@ -125,8 +137,9 @@ class _CustomerListPageState extends State<CustomerListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddCustomerDialog,
@@ -140,11 +153,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Клиенты',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: l10n.a11yAddClient,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: _showAddCustomerDialog,
                   ),
@@ -157,18 +171,18 @@ class _CustomerListPageState extends State<CustomerListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.lightSurface,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) => _loadCustomers(),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Поиск клиента',
-                    hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
+                    hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
                 ),
               ),
@@ -203,20 +217,20 @@ class _CustomerListPageState extends State<CustomerListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is CustomerListError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadCustomers,
+                    );
                   }
                   if (state is CustomerListLoaded) {
                     final customers = state.customers;
                     if (customers.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Клиентов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.people_outline,
+                        title: 'Клиентов пока нет',
+                        subtitle: 'Добавьте первого клиента, чтобы отслеживать продажи и долги',
+                        buttonText: 'Добавить клиента',
+                        onButtonPressed: _showAddCustomerDialog,
                       );
                     }
 
@@ -249,8 +263,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.lightSurface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                color: context.surface,
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -279,14 +293,14 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                                 decoration: BoxDecoration(
                                                   color: AppColors.warning.withValues(alpha: 0.2),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                                 ),
                                                 child: const Row(
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
                                                     Icon(Icons.star, size: 10, color: AppColors.warning),
                                                     SizedBox(width: 2),
-                                                    Text('VIP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.warning)),
+                                                    Text('VIP', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning)),
                                                   ],
                                                 ),
                                               ),
@@ -296,12 +310,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         if (customer.phone != null && customer.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(customer.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                            style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                         ],
                                         if (customer.totalSpent > 0) ...[
                                           const SizedBox(height: 2),
                                           Text('Покупок: ${_formatPrice(customer.totalSpent)}',
-                                            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                            style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                         ],
                                       ],
                                     ),
@@ -320,7 +334,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     ],
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                 ],
                               ),
                             ),
@@ -344,17 +358,19 @@ class _CustomerListPageState extends State<CustomerListPage> {
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = filter),
       child: Container(
+        constraints: const BoxConstraints(minHeight: 44),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: AppColors.lightBorder),
+          color: isSelected ? AppColors.primary : context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+          border: isSelected ? null : Border.all(color: context.border),
         ),
         child: Text(label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
+            color: isSelected ? AppColors.onPrimary : context.textSecondary,
           )),
       ),
     );

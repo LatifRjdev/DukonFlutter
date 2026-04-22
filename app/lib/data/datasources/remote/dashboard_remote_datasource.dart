@@ -6,7 +6,7 @@ import '../../../domain/entities/sale.dart';
 import '../../../presentation/blocs/dashboard/dashboard_state.dart';
 
 abstract class DashboardRemoteDatasource {
-  Future<DashboardStats> getOverview(String storeId, {String period = 'today'});
+  Future<DashboardStats> getOverview(String storeId, {String period = 'today', DateTime? startDate, DateTime? endDate});
 }
 
 class DashboardRemoteDatasourceImpl implements DashboardRemoteDatasource {
@@ -16,11 +16,15 @@ class DashboardRemoteDatasourceImpl implements DashboardRemoteDatasource {
       : _dioClient = dioClient;
 
   @override
-  Future<DashboardStats> getOverview(String storeId, {String period = 'today'}) async {
+  Future<DashboardStats> getOverview(String storeId, {String period = 'today', DateTime? startDate, DateTime? endDate}) async {
     try {
       final response = await _dioClient.get(
         ApiEndpoints.financeOverview(storeId),
-        queryParameters: {'period': period},
+        queryParameters: {
+          'period': period,
+          if (startDate != null) 'startDate': startDate.toIso8601String(),
+          if (endDate != null) 'endDate': endDate.toIso8601String(),
+        },
       );
       final json = response.data as Map<String, dynamic>;
 

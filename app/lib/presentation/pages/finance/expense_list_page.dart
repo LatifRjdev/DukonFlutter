@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../domain/entities/expense.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/finance/expense_card.dart';
 
 
@@ -96,14 +99,18 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     setState(() => _selectedCategory = cat.$1);
                     _loadExpenses();
                   },
-                  child: Chip(
-                    label: Text(cat.$2),
-                    backgroundColor: isSelected ? AppColors.primary : AppColors.lightSurface,
-                    labelStyle: TextStyle(
-                      color: isSelected ? AppColors.onPrimary : AppColors.lightTextSecondary,
-                      fontSize: 13,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 44),
+                    alignment: Alignment.center,
+                    child: Chip(
+                      label: Text(cat.$2),
+                      backgroundColor: isSelected ? AppColors.primary : context.surface,
+                      labelStyle: TextStyle(
+                        color: isSelected ? AppColors.onPrimary : context.textSecondary,
+                        fontSize: 13,
+                      ),
+                      side: BorderSide.none,
                     ),
-                    side: BorderSide.none,
                   ),
                 );
               },
@@ -116,19 +123,19 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state is ExpenseError) {
-                  return Center(child: Text(state.message));
+                  return AppErrorWidget(
+                    message: state.message,
+                    onRetry: _loadExpenses,
+                  );
                 }
                 if (state is ExpenseLoaded) {
                   if (state.expenses.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.receipt_long, size: 64, color: AppColors.disabled),
-                          const SizedBox(height: AppConstants.spacingMd),
-                          const Text('Расходов пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                        ],
-                      ),
+                    return AppEmptyState(
+                      icon: Icons.receipt_long_outlined,
+                      title: 'Расходов пока нет',
+                      subtitle: 'Добавьте первый расход, чтобы видеть финансовую картину',
+                      buttonText: 'Добавить расход',
+                      onButtonPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
                     );
                   }
                   final expenses = state.expenses;
@@ -150,7 +157,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.error.withValues(alpha: 0.1),
+                            color: context.danger.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                           ),
                           child: Row(
@@ -158,19 +165,19 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                             children: [
                               Column(
                                 children: [
-                                  const Text('Сегодня', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                  Text('Сегодня', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(todayAmount)}',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
                                 ],
                               ),
-                              Container(width: 1, height: 40, color: AppColors.lightBorder),
+                              Container(width: 1, height: 40, color: context.border),
                               Column(
                                 children: [
-                                  const Text('За период', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                  Text('За период', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(totalAmount)}',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.error)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
                                 ],
                               ),
                             ],
@@ -182,7 +189,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8, top: 8),
                             child: Text(dateKey,
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary)),
                           ),
                           for (final expense in grouped[dateKey]!) ...[
                             ExpenseCard(

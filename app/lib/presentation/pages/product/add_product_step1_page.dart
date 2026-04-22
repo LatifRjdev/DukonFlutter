@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
@@ -15,6 +17,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class AddProductStep1Page extends StatefulWidget {
   const AddProductStep1Page({super.key});
@@ -86,8 +89,11 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
   }
 
   void _scanBarcode() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+    BarcodeScannerSheet.show(
+      context,
+      onScanned: (barcode) {
+        _barcodeController.text = barcode;
+      },
     );
   }
 
@@ -119,6 +125,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Редактировать товар' : 'Новый товар'),
@@ -153,22 +160,25 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Photo upload zone
-                      GestureDetector(
+                      Semantics(
+                        label: l10n.a11yUploadPhoto,
+                        button: true,
+                        child: GestureDetector(
                         onTap: _pickImage,
                         child: Container(
                           width: double.infinity,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: AppColors.lightSurface,
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            color: context.surface,
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             border: Border.all(
-                              color: _selectedImage != null ? AppColors.primary : AppColors.lightBorder,
+                              color: _selectedImage != null ? context.primary : context.border,
                               width: _selectedImage != null ? 2 : 1,
                             ),
                           ),
                           child: _selectedImage != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(AppConstants.cardRadius - 1),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusLg - 1),
                                   child: Image.file(_selectedImage!, fit: BoxFit.cover),
                                 )
                               : Column(
@@ -185,18 +195,19 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                                         color: AppColors.primary, size: 28),
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text('Добавить фото',
+                                    Text('Добавить фото',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
-                                        color: AppColors.lightTextSecondary,
+                                        color: context.textSecondary,
                                       )),
                                     const SizedBox(height: 4),
-                                    const Text('JPG, PNG до 5MB',
-                                      style: TextStyle(fontSize: 12, color: AppColors.lightTextHint)),
+                                    Text('JPG, PNG до 5MB',
+                                      style: TextStyle(fontSize: 12, color: context.textMuted)),
                                   ],
                                 ),
                         ),
+                      ),
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
@@ -220,6 +231,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                         label: 'Штрихкод',
                         prefixIcon: Icons.qr_code,
                         suffix: IconButton(
+                          tooltip: l10n.scanBarcode,
                           icon: const Icon(Icons.qr_code_scanner,
                               color: AppColors.primary),
                           onPressed: _scanBarcode,
@@ -298,14 +310,14 @@ class _StepDot extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : AppColors.lightBorder,
+            color: isActive ? context.primary : context.border,
             shape: BoxShape.circle,
           ),
           child: Center(
             child: Text(
               '$index',
               style: TextStyle(
-                color: isActive ? Colors.white : AppColors.lightTextSecondary,
+                color: isActive ? Colors.white : context.textSecondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),
@@ -316,8 +328,8 @@ class _StepDot extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 11,
-            color: isActive ? AppColors.primary : AppColors.lightTextSecondary,
+            fontSize: 12,
+            color: isActive ? context.primary : context.textSecondary,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/enums.dart';
+import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/entities/product.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
@@ -28,6 +35,7 @@ class _ProductListPageState extends State<ProductListPage> {
   final _searchController = TextEditingController();
   _StockFilter _stockFilter = _StockFilter.all;
   bool _loaded = false;
+  bool _showFilters = false;
 
   @override
   void initState() {
@@ -71,6 +79,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreLoaded && !_loaded) {
@@ -78,7 +87,7 @@ class _ProductListPageState extends State<ProductListPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -95,6 +104,12 @@ class _ProductListPageState extends State<ProductListPage> {
                     onSelected: (value) {
                       if (value == 'categories') {
                         context.push('/categories');
+                      } else if (value == 'import') {
+                        final storeState = context.read<StoreBloc>().state;
+                        final storeId = storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                        context.push('/products/import', extra: storeId);
                       }
                     },
                     itemBuilder: (context) => [
@@ -102,9 +117,14 @@ class _ProductListPageState extends State<ProductListPage> {
                         value: 'categories',
                         child: Text('Категории'),
                       ),
+                      const PopupMenuItem(
+                        value: 'import',
+                        child: Text('Импорт из Excel'),
+                      ),
                     ],
                   ),
                   IconButton(
+                    tooltip: l10n.addProduct,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: () => context.push('/products/add'),
                   ),
@@ -117,11 +137,9 @@ class _ProductListPageState extends State<ProductListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 1)),
-                  ],
+                  color: context.surface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                  boxShadow: context.elevationSm,
                 ),
                 child: TextField(
                   controller: _searchController,
@@ -130,22 +148,30 @@ class _ProductListPageState extends State<ProductListPage> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Поиск товара',
-                    hintStyle: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.lightTextSecondary),
+                    hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     suffixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.qr_code_scanner, color: AppColors.lightTextSecondary),
+                          tooltip: l10n.scanBarcode,
+                          icon: Icon(Icons.qr_code_scanner, color: context.textSecondary),
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+                            BarcodeScannerSheet.show(
+                              context,
+                              onScanned: (barcode) {
+                                _searchController.text = barcode;
+                                context.read<ProductListBloc>().add(ProductListSearchChanged(barcode));
+                              },
                             );
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.tune, color: AppColors.lightTextSecondary),
-                          onPressed: () {},
+                          tooltip: l10n.a11yFilters,
+                          icon: Icon(Icons.tune, color: _showFilters ? context.primary : context.textSecondary),
+                          onPressed: () {
+                            setState(() => _showFilters = !_showFilters);
+                          },
                         ),
                       ],
                     ),
@@ -201,54 +227,35 @@ class _ProductListPageState extends State<ProductListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ProductListError) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.error_outline, size: 64, color: AppColors.error),
-                          const SizedBox(height: 16),
-                          const Text('Ошибка загрузки',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 8),
-                          Text(state.message,
-                            style: const TextStyle(color: AppColors.lightTextSecondary),
-                            textAlign: TextAlign.center),
-                          const SizedBox(height: 24),
-                          ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadData,
                     );
                   }
                   if (state is ProductListLoaded) {
                     final filtered = _filterByStock(state.products);
                     if (filtered.isEmpty) {
+                      final isEmptyOverall = state.products.isEmpty;
                       return RefreshIndicator(
                         onRefresh: () async => _loadData(),
-                        child: SingleChildScrollView(
+                        child: ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.inventory_2_outlined, size: 64, color: AppColors.disabled),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    state.products.isEmpty ? 'Нет товаров' : 'Нет товаров по фильтру',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    state.products.isEmpty
-                                        ? 'Добавьте первый товар'
-                                        : 'Попробуйте изменить фильтр',
-                                    style: const TextStyle(color: AppColors.lightTextSecondary),
-                                  ),
-                                ],
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.6,
+                              child: AppEmptyState(
+                                icon: Icons.inventory_2_outlined,
+                                title: isEmptyOverall ? 'Нет товаров' : 'Нет товаров по фильтру',
+                                subtitle: isEmptyOverall
+                                    ? 'Добавьте первый товар в каталог'
+                                    : 'Попробуйте изменить фильтр или поисковый запрос',
+                                buttonText: isEmptyOverall ? 'Добавить товар' : null,
+                                onButtonPressed: isEmptyOverall
+                                    ? () => context.push(RouteNames.addProduct)
+                                    : null,
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       );
                     }
@@ -280,11 +287,9 @@ class _ProductListPageState extends State<ProductListPage> {
                         // Sticky footer
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(color: AppColors.overlay, blurRadius: 8, offset: Offset(0, -2)),
-                            ],
+                          decoration: BoxDecoration(
+                            color: context.surface,
+                            boxShadow: context.elevationMd,
                           ),
                           child: Row(
                             children: [
@@ -292,21 +297,21 @@ class _ProductListPageState extends State<ProductListPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Общая сумма',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                    Text('Общая сумма',
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalValue),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                               ),
-                              Container(width: 1, height: 32, color: AppColors.lightBorder),
+                              Container(width: 1, height: 32, color: context.border),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Себестоимость',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                    Text('Себестоимость',
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                   ],
@@ -339,6 +344,7 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     String unitName;
     try {
       final productUnit = ProductUnit.values.firstWhere(
@@ -359,13 +365,16 @@ class _ProductCard extends StatelessWidget {
       stockColor = AppColors.success;
     }
 
-    return GestureDetector(
+    return Semantics(
+      label: l10n.a11yOpenProduct(product.name),
+      button: true,
+      child: GestureDetector(
       onTap: () => context.push('/products/${product.id}', extra: product),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          color: context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           boxShadow: Theme.of(context).brightness == Brightness.light ? AppShadows.sm : null,
         ),
         child: Row(
@@ -375,8 +384,8 @@ class _ProductCard extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppColors.lightBackground,
-                borderRadius: BorderRadius.circular(10),
+                color: context.bg,
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               clipBehavior: Clip.antiAlias,
               child: product.imageUrl != null
@@ -401,13 +410,13 @@ class _ProductCard extends StatelessWidget {
                   if (product.sku != null && product.sku!.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text('Арт: ${product.sku}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                   ],
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text('На складе: ',
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                       Text('${product.quantity} $unitName',
                         style: TextStyle(
                           fontSize: 12,
@@ -425,21 +434,22 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(formatPrice(product.sellPrice),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextPrimary,
+                    color: context.textPrimary,
                   )),
                 if (product.costPrice != null) ...[
                   const SizedBox(height: 2),
                   Text(formatPrice(product.costPrice!),
-                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 ],
               ],
             ),
           ],
         ),
       ),
+    ),
     );
   }
 }

@@ -38,7 +38,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onPeriodChanged(DashboardPeriodChanged event, Emitter<DashboardState> emit) async {
     emit(DashboardLoading());
     try {
-      final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period);
+      final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period, startDate: event.startDate, endDate: event.endDate);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
       emit(DashboardError(mapErrorToUserMessage(e)));

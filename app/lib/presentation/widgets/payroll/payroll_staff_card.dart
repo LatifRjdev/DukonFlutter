@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/payroll_entry.dart';
 import '../common/app_card.dart';
@@ -58,7 +59,7 @@ class PayrollStaffCard extends StatelessWidget {
                     if (entry.staffRole != null)
                       Text(
                         _roleLabel(entry.staffRole),
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                   ],
                 ),
@@ -73,7 +74,7 @@ class PayrollStaffCard extends StatelessWidget {
                   entry.isPaid ? 'Оплачено' : 'Не оплачено',
                   style: TextStyle(
                     color: entry.isPaid ? AppColors.success : AppColors.warning,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -81,7 +82,7 @@ class PayrollStaffCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          const Divider(height: 1, color: AppColors.lightBorder),
+          Divider(height: 1, color: context.border),
           const SizedBox(height: AppConstants.spacingSm),
           Row(
             children: [
@@ -109,7 +110,7 @@ class PayrollStaffCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       adj.description,
-                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ),
                   Text(
@@ -164,11 +165,11 @@ class _PayrollItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
               fontSize: isBold ? 15 : 13,
-              color: isBold ? AppColors.primary : AppColors.lightTextPrimary,
+              color: isBold ? AppColors.primary : context.textPrimary,
             ),
           ),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+          Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ],
       ),
     );

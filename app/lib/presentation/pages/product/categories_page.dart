@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
 import '../../blocs/category/category_state.dart';
@@ -109,6 +111,7 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Категории'),
@@ -171,15 +174,16 @@ class CategoriesPage extends StatelessWidget {
                                     fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 2),
                             Text('${category.productCount} ${_pluralizeProducts(category.productCount)}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 13,
-                                    color: AppColors.lightTextSecondary)),
+                                    color: context.textSecondary)),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.edit_outlined,
-                            size: 20, color: AppColors.lightTextSecondary),
+                        tooltip: l10n.a11yEditCategory,
+                        icon: Icon(Icons.edit_outlined,
+                            size: 20, color: context.textSecondary),
                         onPressed: () => _showCategoryDialog(
                           context,
                           id: category.id,
@@ -187,6 +191,7 @@ class CategoriesPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
+                        tooltip: l10n.a11yDeleteCategory,
                         icon: const Icon(Icons.delete_outline,
                             size: 20, color: AppColors.error),
                         onPressed: () =>
@@ -204,7 +209,7 @@ class CategoriesPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => _showCategoryDialog(context),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: context.onPrimary),
       ),
     );
   }

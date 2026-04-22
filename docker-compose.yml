@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: dokonpro
+      POSTGRES_USER: dokonpro
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dokonpro"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  api:
+    build: ./api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://dokonpro:${DB_PASSWORD}@postgres:5432/dokonpro
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      FIREBASE_SERVICE_ACCOUNT: ${FIREBASE_SERVICE_ACCOUNT:-}
+      PORT: 4455
+    volumes:
+      - uploads:/app/uploads
+    restart: always
+
+  admin:
+    build: ./admin
+    depends_on: [api]
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.dukonpro.tj}
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot_data:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on: [api, admin]
+    restart: always
+
+volumes:
+  postgres_data:
+  uploads:
+  certbot_data:
+  certbot_www:

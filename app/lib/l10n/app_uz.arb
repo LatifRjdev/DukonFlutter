@@ -1,7 +1,7 @@
 {
   "@@locale": "uz",
 
-  "appTitle": "DokonPro",
+  "appTitle": "DukonPro",
 
   "save": "Saqlash",
   "cancel": "Bekor qilish",
@@ -318,5 +318,108 @@
   "navProducts": "Mahsulotlar",
   "navPOS": "Kassa",
   "navFinance": "Moliya",
-  "navMore": "Ko'proq"
+  "navMore": "Ko'proq",
+
+  "a11yShare": "Ulashish",
+  "a11yRefresh": "Yangilash",
+  "a11yFilter": "Filtr",
+  "a11yFilters": "Filtrlar",
+  "a11yDeleteProduct": "Mahsulotni o'chirish",
+  "a11yAddClient": "Mijoz qo'shish",
+  "a11yCallClient": "Mijozga qo'ng'iroq qilish",
+  "a11ySelectClient": "Mijozni tanlash",
+  "a11yEditStore": "Do'konni tahrirlash",
+  "a11yEditDiscount": "Chegirmani tahrirlash",
+  "a11yDeleteDiscount": "Chegirmani o'chirish",
+  "a11yEditCategory": "Kategoriyani tahrirlash",
+  "a11yDeleteCategory": "Kategoriyani o'chirish",
+  "a11yOpenReports": "Hisobotlarni ochish",
+  "a11yDownloadReport": "Hisobotni yuklab olish",
+  "a11yCalculationHistory": "Hisob-kitoblar tarixi",
+  "a11yIncreaseQuantity": "Miqdorni oshirish",
+  "a11yDecreaseQuantity": "Miqdorni kamaytirish",
+  "a11yWithoutChange": "Qaytarimsiz",
+  "a11ySelectPeriod": "Davrni tanlang",
+  "a11yUploadPhoto": "Rasm yuklash",
+  "a11yOpenZReport": "Z-hisobotni ochish",
+  "a11yMarkAsRead": "O'qilgan deb belgilash",
+  "a11yEditProfile": "Profilni tahrirlash",
+  "a11yQuickAmount": "Tezkor summa {amount}",
+  "@a11yQuickAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "a11ySelectCurrency": "Valyutani tanlang {code}",
+  "@a11ySelectCurrency": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "a11ySelectStore": "Do'konni tanlang {name}",
+  "@a11ySelectStore": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yChooseLanguage": "Tilni tanlang {language}",
+  "@a11yChooseLanguage": {
+    "placeholders": { "language": { "type": "String" } }
+  },
+  "a11yOpenProduct": "Mahsulotni ochish {name}",
+  "@a11yOpenProduct": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yPaymentOf": "To'lov {plan}",
+  "@a11yPaymentOf": {
+    "placeholders": { "plan": { "type": "String" } }
+  },
+
+  "snackRefundSuccess": "Qaytarish muvaffaqiyatli rasmiylashtirildi",
+  "snackSelectOrder": "Buyurtmani tanlang",
+  "snackSelectCourier": "Kuryerni tanlang",
+  "snackAdjustmentAdded": "Tuzatish qo'shildi",
+  "snackCacheCleared": "Kesh tozalandi",
+  "snackScannerSettingsSaved": "Skaner sozlamalari saqlandi",
+  "snackSettingsSaved": "Sozlamalar saqlandi",
+  "snackTelegramSendFailed": "Yuborib bo'lmadi. Mijoz botga bog'lanmagan?",
+  "snackSettingSaveFailed": "Sozlamani saqlab bo'lmadi",
+  "snackNoPhoneNumber": "Telefon raqami ko'rsatilmagan",
+  "snackPrintError": "Chop etish xatosi",
+  "snackSaveError": "Saqlash xatosi",
+  "snackPrinterNotConnected": "Printer ulanmagan. Sozlamalar → Printer bo'limida sozlang.",
+  "snackIntakeSuccess": "Kirim muvaffaqiyatli rasmiylashtirildi",
+  "snackCalculationCopied": "Hisob-kitob nusxalandi",
+  "snackSyncCompleted": "Sinxronizatsiya bajarildi",
+  "snackShiftClosed": "Smena yopildi",
+  "snackShiftOpened": "Smena ochildi",
+  "snackTestPrintDone": "Sinov chop etildi",
+  "snackTestMessageSent": "Sinov xabari yuborildi",
+  "snackReceiptPrinted": "Chek chop etildi",
+  "snackReceiptSentToTelegram": "Chek Telegram'ga yuborildi",
+  "snackTemplateSaved": "Shablon saqlandi",
+  "snackLanguageSaved": "Til saqlandi. Qo'llash uchun ilovani qayta ishga tushiring.",
+  "snackCustomerSelectedForSale": "Mijoz {name} sotish uchun tanlandi",
+  "@snackCustomerSelectedForSale": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackStoreSelected": "Do'kon \"{name}\" tanlandi",
+  "@snackStoreSelected": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackPrintErrorDetails": "Chop etish xatosi: {error}",
+  "@snackPrintErrorDetails": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackConnectionError": "Ulanish xatosi: {error}",
+  "@snackConnectionError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackSyncError": "Sinxronizatsiya xatosi: {error}",
+  "@snackSyncError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackGenericError": "Xatolik: {error}",
+  "@snackGenericError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackProductAddedToCart": "{name} savatga qo'shildi",
+  "@snackProductAddedToCart": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackActionGoToCheckout": "Kassaga"
 }

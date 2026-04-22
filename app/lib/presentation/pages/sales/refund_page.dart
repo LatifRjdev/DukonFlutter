@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/utils/formatters.dart';
@@ -13,6 +14,8 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class RefundPage extends StatefulWidget {
@@ -126,12 +129,7 @@ class _RefundPageState extends State<RefundPage> {
               .toList();
           if (updatedSale.isNotEmpty &&
               updatedSale.first.status != widget.sale.status) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Возврат успешно оформлен'),
-                backgroundColor: AppColors.success,
-              ),
-            );
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackRefundSuccess);
             context.pop();
           }
         }
@@ -164,15 +162,15 @@ class _RefundPageState extends State<RefundPage> {
                               AppConstants.radiusMd),
                         ),
                         child: Row(
-                          children: const [
-                            Icon(Icons.info_outline,
+                          children: [
+                            const Icon(Icons.info_outline,
                                 color: AppColors.warning, size: 20),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 'Выберите товары для возврата',
                                 style: TextStyle(
-                                    color: AppColors.lightTextPrimary,
+                                    color: context.textPrimary,
                                     fontSize: 14),
                               ),
                             ),
@@ -184,9 +182,9 @@ class _RefundPageState extends State<RefundPage> {
                       // Receipt info
                       Text(
                         'Чек ${widget.sale.receiptNo}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightTextSecondary,
+                          color: context.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -247,9 +245,9 @@ class _RefundPageState extends State<RefundPage> {
                                       const SizedBox(height: 2),
                                       Text(
                                         '${item.quantity} x ${Formatters.price(item.unitPrice)}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 13,
-                                            color: AppColors.lightTextSecondary),
+                                            color: context.textSecondary),
                                       ),
                                     ],
                                   ),
@@ -286,7 +284,7 @@ class _RefundPageState extends State<RefundPage> {
               Container(
                 padding: const EdgeInsets.all(AppConstants.spacingMd),
                 decoration: BoxDecoration(
-                  color: AppColors.lightSurface,
+                  color: context.surface,
                   boxShadow: AppShadows.sm,
                 ),
                 child: Column(
@@ -295,10 +293,10 @@ class _RefundPageState extends State<RefundPage> {
                       mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Сумма возврата:',
+                        Text('Сумма возврата:',
                             style: TextStyle(
                                 fontSize: 16,
-                                color: AppColors.lightTextSecondary)),
+                                color: context.textSecondary)),
                         Text(
                           Formatters.price(_refundTotal),
                           style: const TextStyle(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../injection.dart';
 import '../../blocs/supplier_detail/supplier_detail_bloc.dart';
@@ -82,26 +83,26 @@ class _SupplierDetailView extends StatelessWidget {
                         Text(supplier.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                         if (supplier.phone != null) ...[
                           const SizedBox(height: 4),
-                          Text(supplier.phone!, style: const TextStyle(color: AppColors.lightTextSecondary)),
+                          Text(supplier.phone!, style: TextStyle(color: context.textSecondary)),
                         ],
                         if (supplier.email != null) ...[
                           const SizedBox(height: 2),
-                          Text(supplier.email!, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
+                          Text(supplier.email!, style: TextStyle(color: context.textSecondary, fontSize: 13)),
                         ],
                         if (supplier.address != null && supplier.address!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.location_on, size: 16, color: AppColors.lightTextSecondary),
+                              Icon(Icons.location_on, size: 16, color: context.textSecondary),
                               const SizedBox(width: 4),
-                              Text(supplier.address!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text(supplier.address!, style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             ],
                           ),
                         ],
                         if (supplier.notes != null && supplier.notes!.isNotEmpty) ...[
                           const SizedBox(height: AppConstants.spacingSm),
-                          Text(supplier.notes!, style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
+                          Text(supplier.notes!, style: TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
                         ],
                       ],
                     ),
@@ -235,7 +236,7 @@ class _ActionButton extends StatelessWidget {
             child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 11, color: color)),
+          Text(label, style: TextStyle(fontSize: 12, color: color)),
         ],
       ),
     );

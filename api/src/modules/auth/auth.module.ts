@@ -5,6 +5,9 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { OtpService } from './otp.service';
+import { ConsoleSmsProvider } from './console-sms.provider';
+import { SMS_PROVIDER } from './sms-provider.interface';
 
 @Module({
   imports: [
@@ -12,7 +15,13 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
     JwtModule.register({}),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtAccessStrategy, JwtRefreshStrategy],
+  providers: [
+    AuthService,
+    JwtAccessStrategy,
+    JwtRefreshStrategy,
+    OtpService,
+    { provide: SMS_PROVIDER, useClass: ConsoleSmsProvider },
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

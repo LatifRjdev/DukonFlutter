@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/pos/checkout_bloc.dart';
 import '../../blocs/pos/checkout_event.dart';
 import '../../blocs/pos/checkout_state.dart';
@@ -12,6 +13,8 @@ import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CashPaymentPage extends StatefulWidget {
   const CashPaymentPage({super.key});
@@ -61,19 +64,18 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
         if (state.saleResult != null) {
           context.go('/pos/success', extra: {'sale': state.saleResult});
         }
         if (state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error!), backgroundColor: AppColors.error),
-          );
+          AppSnackbar.error(context, state.error!);
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: context.surface,
         body: SafeArea(
           child: BlocBuilder<CartBloc, CartState>(
             builder: (context, cart) {
@@ -89,6 +91,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                     child: Row(
                       children: [
                         IconButton(
+                          tooltip: 'Назад',
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () => context.pop(),
                         ),
@@ -108,13 +111,13 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 24),
                             decoration: BoxDecoration(
-                              color: AppColors.infoBg,
-                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                              color: context.infoBg,
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             ),
                             child: Column(
                               children: [
-                                const Text('Сумма к оплате',
-                                  style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                                Text('Сумма к оплате',
+                                  style: TextStyle(fontSize: 14, color: context.textSecondary),),
                                 const SizedBox(height: 8),
                                 Text(_formatPrice(total),
                                   style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
@@ -124,10 +127,10 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           const SizedBox(height: 24),
 
                           // Received amount input
-                          const Align(
+                          Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Получено от клиента',
-                              style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                              style: TextStyle(fontSize: 14, color: context.textSecondary)),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
@@ -143,7 +146,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               hintStyle: const TextStyle(fontSize: 24, color: AppColors.disabled),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                                borderSide: const BorderSide(color: AppColors.lightBorder),
+                                borderSide: BorderSide(color: context.border),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -158,25 +161,29 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           // Quick amount chips
                           Row(
                             children: [
-                              _quickChip(500),
+                              _quickChip(500, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(1000),
+                              _quickChip(1000, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(2000),
+                              _quickChip(2000, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(5000),
+                              _quickChip(5000, l10n),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: GestureDetector(
-                                  onTap: () => _quickAmount(total),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.lightBorder),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Center(
-                                      child: Text('Без сдачи',
+                                child: Semantics(
+                                  label: l10n.a11yWithoutChange,
+                                  button: true,
+                                  child: GestureDetector(
+                                    onTap: () => _quickAmount(total),
+                                    child: Container(
+                                      constraints: const BoxConstraints(minHeight: 44),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: context.border),
+                                        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                                      ),
+                                      child: const Text('Без сдачи',
                                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                     ),
                                   ),
@@ -195,7 +202,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                 color: change >= 0
                                     ? AppColors.success.withValues(alpha: 0.1)
                                     : AppColors.error.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Column(
                                 children: [
@@ -251,17 +258,21 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
     );
   }
 
-  Widget _quickChip(double amount) {
+  Widget _quickChip(double amount, AppLocalizations l10n) {
     return Expanded(
-      child: GestureDetector(
-        onTap: () => _quickAmount(amount),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lightBorder),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Center(
+      child: Semantics(
+        label: l10n.a11yQuickAmount(amount.toStringAsFixed(0)),
+        button: true,
+        child: GestureDetector(
+          onTap: () => _quickAmount(amount),
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 44),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: context.border),
+              borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+            ),
             child: Text(amount.toStringAsFixed(0),
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
           ),

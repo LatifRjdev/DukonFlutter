@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../../domain/repositories/supplier_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
@@ -11,6 +15,7 @@ import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SupplierListPage extends StatefulWidget {
   const SupplierListPage({super.key});
@@ -99,7 +104,11 @@ class _SupplierListPageState extends State<SupplierListPage> {
               // Capture refs before the await so we do not touch BuildContext
               // across the async gap (FE-P1-003).
               final navigator = Navigator.of(dialogContext);
+              // Pre-capture BuildContext-derived objects before the
+              // async gap to satisfy use_build_context_synchronously.
               final messenger = ScaffoldMessenger.of(context);
+              final view = View.of(context);
+              final dir = Directionality.of(context);
               try {
                 await sl<SupplierRepository>().createSupplier(
                   _getStoreId(),
@@ -110,9 +119,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
                 _loadSuppliers();
               } catch (e) {
                 navigator.pop();
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Ошибка: $e')),
-                );
+                final msg = 'Ошибка: $e';
+                messenger.showSnackBar(SnackBar(
+                  content: Text(msg),
+                  backgroundColor: AppColors.error,
+                ));
+                SemanticsService.sendAnnouncement(view, msg, dir);
               }
             },
             child: const Text('Добавить'),
@@ -124,8 +136,9 @@ class _SupplierListPageState extends State<SupplierListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: _showAddSupplierDialog,
@@ -139,11 +152,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Поставщики',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: l10n.addSupplier,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: _showAddSupplierDialog,
                   ),
@@ -156,18 +170,18 @@ class _SupplierListPageState extends State<SupplierListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.lightSurface,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) => _loadSuppliers(),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Поиск поставщика',
-                    hintStyle: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: AppColors.lightTextSecondary),
+                    hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
                 ),
               ),
@@ -182,20 +196,20 @@ class _SupplierListPageState extends State<SupplierListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is SupplierListError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadSuppliers,
+                    );
                   }
                   if (state is SupplierListLoaded) {
                     final suppliers = state.suppliers;
                     if (suppliers.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.local_shipping_outlined, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Поставщиков пока нет', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.local_shipping_outlined,
+                        title: 'Поставщиков пока нет',
+                        subtitle: 'Добавьте первого поставщика, чтобы отслеживать поставки и долги',
+                        buttonText: 'Добавить поставщика',
+                        onButtonPressed: _showAddSupplierDialog,
                       );
                     }
 
@@ -211,7 +225,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
-                              color: AppColors.warningBg,
+                              color: context.warningBg,
                               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Column(
@@ -236,8 +250,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.lightSurface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                color: context.surface,
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -246,7 +260,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                     height: 40,
                                     decoration: BoxDecoration(
                                       color: AppColors.primary.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                     ),
                                     child: const Icon(Icons.factory_outlined, size: 20, color: AppColors.primary),
                                   ),
@@ -256,11 +270,15 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(supplier.name,
-                                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis),
                                         if (supplier.phone != null && supplier.phone!.isNotEmpty) ...[
                                           const SizedBox(height: 2),
                                           Text(supplier.phone!,
-                                            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                            style: TextStyle(fontSize: 12, color: context.textSecondary),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
                                         ],
                                       ],
                                     ),
@@ -281,7 +299,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                                     ],
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                 ],
                               ),
                             ),

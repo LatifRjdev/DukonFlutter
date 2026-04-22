@@ -7,8 +7,8 @@ const PLACEHOLDER_SECRETS = new Set<string>([
   '__REPLACE_WITH_RANDOM_64_BYTE_HEX__',
   'access-secret-dev',
   'refresh-secret-dev',
-  'dokonpro-access-secret-change-in-production-32chars',
-  'dokonpro-refresh-secret-change-in-production-32chars',
+  'dukonpro-access-secret-change-in-production-32chars',
+  'dukonpro-refresh-secret-change-in-production-32chars',
 ]);
 
 function checkSecret(name: string, value: string | undefined): void {
@@ -49,7 +49,9 @@ export function validateEnvBeforeBoot(): void {
   // dotenv is pulled in transitively by @nestjs/config so it is always
   // present at runtime.
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const dotenv = require('dotenv') as { config: (opts: { path: string }) => void };
+  const dotenv = require('dotenv') as {
+    config: (opts: { path: string }) => void;
+  };
   // .env lives in the api/ dir relative to dist/main
   dotenv.config({ path: `${process.cwd()}/.env` });
 

@@ -22,6 +22,17 @@ abstract class AuthRemoteDatasource {
   );
 
   Future<void> logout();
+
+  Future<void> sendOtp(String phone);
+
+  Future<({User user, String accessToken, String refreshToken})> verifyOtp(
+    String phone,
+    String code,
+  );
+
+  Future<void> forgotPassword(String phone);
+
+  Future<void> resetPassword(String phone, String code, String newPassword);
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -44,7 +55,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           'phone': phone,
           'password': password,
           'name': name,
-          if (email != null) 'email': email,
+          'email': ?email,
         },
       );
 
@@ -108,6 +119,72 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<void> logout() async {
     try {
       await _dioClient.post(ApiEndpoints.logout);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> sendOtp(String phone) async {
+    try {
+      await _dioClient.post(
+        ApiEndpoints.sendOtp,
+        data: {'phone': phone},
+      );
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<({User user, String accessToken, String refreshToken})> verifyOtp(
+    String phone,
+    String code,
+  ) async {
+    try {
+      final response = await _dioClient.post(
+        ApiEndpoints.verifyOtp,
+        data: {'phone': phone, 'code': code},
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      return (
+        user: _mapUser(data['user'] as Map<String, dynamic>),
+        accessToken: data['accessToken'] as String,
+        refreshToken: data['refreshToken'] as String,
+      );
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> forgotPassword(String phone) async {
+    try {
+      await _dioClient.post(
+        ApiEndpoints.forgotPassword,
+        data: {'phone': phone},
+      );
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> resetPassword(
+    String phone,
+    String code,
+    String newPassword,
+  ) async {
+    try {
+      await _dioClient.post(
+        ApiEndpoints.resetPassword,
+        data: {
+          'phone': phone,
+          'code': code,
+          'newPassword': newPassword,
+        },
+      );
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

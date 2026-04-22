@@ -19,6 +19,8 @@ import 'presentation/blocs/expense/expense_bloc.dart';
 import 'presentation/blocs/debt/debt_bloc.dart';
 import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
+import 'presentation/blocs/settings/settings_event.dart';
+import 'presentation/blocs/settings/settings_state.dart';
 import 'presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'presentation/blocs/customer/customer_list_bloc.dart';
 import 'presentation/blocs/supplier/supplier_list_bloc.dart';
@@ -28,7 +30,6 @@ import 'presentation/blocs/shift/shift_bloc.dart';
 import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
-import 'presentation/blocs/settings/settings_state.dart';
 
 class DokonProApp extends StatelessWidget {
   const DokonProApp({super.key});
@@ -51,7 +52,9 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<ExpenseBloc>()),
         BlocProvider(create: (_) => sl<DebtBloc>()),
         BlocProvider(create: (_) => sl<ZakatBloc>()),
-        BlocProvider(create: (_) => sl<SettingsBloc>()),
+        BlocProvider(
+          create: (_) => sl<SettingsBloc>()..add(SettingsProfileRequested()),
+        ),
         BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
         BlocProvider(create: (_) => sl<CustomerListBloc>()),
         BlocProvider(create: (_) => sl<SupplierListBloc>()),
@@ -63,12 +66,20 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<PrinterBloc>()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, settingsState) {
-          final themeMode = settingsState is SettingsLoaded
-              ? settingsState.themeMode
-              : ThemeMode.system;
+        buildWhen: (prev, curr) {
+          // Only react to SettingsLoaded state transitions with a real
+          // themeMode change. Transient states (Loading, ActionSuccess,
+          // Error) must not trigger a rebuild — that was causing the
+          // MaterialApp.router to reset navigation back to splash.
+          if (curr is! SettingsLoaded) return false;
+          final prevTheme = prev is SettingsLoaded ? prev.themeMode : null;
+          return prevTheme != curr.themeMode;
+        },
+        builder: (context, state) {
+          final themeMode =
+              state is SettingsLoaded ? state.themeMode : ThemeMode.system;
           return MaterialApp.router(
-            title: 'DokonPro',
+            title: 'DukonPro',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,

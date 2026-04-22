@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
+import { ReceiptTemplateDto } from './dto/receipt-template.dto';
 
 @Injectable()
 export class StoresService {
@@ -9,8 +10,7 @@ export class StoresService {
 
   async create(ownerId: string, dto: CreateStoreDto) {
     const now = new Date();
-    const trialEnd = new Date(now);
-    trialEnd.setDate(trialEnd.getDate() + 14);
+    const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     return this.prisma.store.create({
       data: {
@@ -22,7 +22,7 @@ export class StoresService {
         phone: dto.phone,
         subscription: {
           create: {
-            plan: 'START',
+            plan: 'PREMIUM',
             status: 'TRIAL',
             trialEndsAt: trialEnd,
             currentPeriodStart: now,
@@ -71,5 +71,57 @@ export class StoresService {
       },
       include: { subscription: true },
     });
+  }
+
+  async getReceiptTemplate(storeId: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { id: storeId },
+      select: { settings: true },
+    });
+    if (!store) throw new NotFoundException('Store not found');
+
+    const settings = (store.settings as Record<string, any>) ?? {};
+    const template =
+      settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
+    return { receiptTemplate: template };
+  }
+
+  async updateReceiptTemplate(storeId: string, dto: ReceiptTemplateDto) {
+    const store = await this.prisma.store.findUnique({
+      where: { id: storeId },
+      select: { settings: true },
+    });
+    if (!store) throw new NotFoundException('Store not found');
+
+    const settings = (store.settings as Record<string, any>) ?? {};
+    const existing =
+      settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
+    const updated = this.prisma.store.update({
+      where: { id: storeId },
+      data: {
+        settings: {
+          ...settings,
+          receiptTemplate: { ...existing, ...dto },
+        },
+      },
+      select: { settings: true },
+    });
+
+    return updated.then((s) => ({
+      receiptTemplate: (s.settings as Record<string, any>)['receiptTemplate'],
+    }));
+  }
+
+  private defaultReceiptTemplate() {
+    return {
+      storeName: '',
+      address: '',
+      phone: '',
+      footer: 'Thank you for your purchase!',
+      showLogo: true,
+      showBarcode: true,
+      header: '',
+      taxId: '',
+    };
   }
 }

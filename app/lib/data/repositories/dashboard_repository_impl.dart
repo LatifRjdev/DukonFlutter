@@ -9,7 +9,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       : _remoteDatasource = remoteDatasource;
 
   @override
-  Future<DashboardStats> getOverview(String storeId, {String period = 'today'}) {
-    return _remoteDatasource.getOverview(storeId, period: period);
+  Future<DashboardStats> getOverview(String storeId, {String period = 'today', DateTime? startDate, DateTime? endDate}) {
+    return _remoteDatasource.getOverview(storeId, period: period, startDate: startDate, endDate: endDate);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class AppBottomSheet {
   AppBottomSheet._();
@@ -48,10 +48,10 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
     return Container(
       height: sheetHeight,
       constraints: BoxConstraints(maxHeight: maxHeight),
-      decoration: const BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppConstants.radiusXl),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppConstants.radiusXxl),
         ),
       ),
       child: Column(
@@ -65,7 +65,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: context.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -85,11 +85,11 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Inter',
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -97,9 +97,9 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                   ),
                   splashRadius: 20,
                   tooltip: 'Пӯшидан',
@@ -108,7 +108,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
             ),
           ),
 
-          const Divider(height: 1, color: AppColors.lightBorder),
+          Divider(height: 1, color: context.border),
 
           // Content
           if (sheetHeight != null)

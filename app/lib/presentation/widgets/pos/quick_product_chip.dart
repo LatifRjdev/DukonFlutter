@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/product.dart';
 
@@ -20,7 +21,9 @@ class QuickProductChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppConstants.animationFast,
+        constraints: const BoxConstraints(minHeight: 44),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(AppConstants.radiusRound),
@@ -49,10 +52,10 @@ class QuickProductChip extends StatelessWidget {
               ),
               child: Text(
                 Formatters.price(product.sellPrice),
-                style: const TextStyle(
-                  fontSize: 11,
+                style: TextStyle(
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.primaryDark,
+                  color: context.primary,
                   fontFamily: 'Inter',
                 ),
               ),

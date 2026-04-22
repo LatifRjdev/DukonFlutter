@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/product.dart';
@@ -17,13 +18,13 @@ class ProductListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightSurface,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+      color: context.surface,
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       elevation: AppConstants.cardElevation,
-      shadowColor: AppColors.overlay,
+      shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.spacingSm + 4),
           child: Row(
@@ -33,7 +34,7 @@ class ProductListItem extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
+                  color: context.bg,
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: product.imageUrl != null
@@ -42,10 +43,10 @@ class ProductListItem extends StatelessWidget {
                         child: Image.network(
                           product.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => _buildImagePlaceholder(),
+                          errorBuilder: (_, _, _) => _buildImagePlaceholder(context),
                         ),
                       )
-                    : _buildImagePlaceholder(),
+                    : _buildImagePlaceholder(context),
               ),
               const SizedBox(width: AppConstants.spacingSm + 4),
               // Product info
@@ -55,10 +56,10 @@ class ProductListItem extends StatelessWidget {
                   children: [
                     Text(
                       product.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextPrimary,
+                        color: context.textPrimary,
                         fontFamily: 'Inter',
                       ),
                       maxLines: 1,
@@ -68,9 +69,9 @@ class ProductListItem extends StatelessWidget {
                     if (product.sku != null)
                       Text(
                         'SKU: ${product.sku}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.lightTextSecondary,
+                          color: context.textSecondary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -89,7 +90,7 @@ class ProductListItem extends StatelessWidget {
               ),
               const SizedBox(width: AppConstants.spacingSm),
               // Quantity badge
-              _buildQuantityBadge(),
+              _buildQuantityBadge(context),
             ],
           ),
         ),
@@ -97,29 +98,29 @@ class ProductListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImagePlaceholder() {
-    return const Center(
+  Widget _buildImagePlaceholder(BuildContext context) {
+    return Center(
       child: Icon(
         Icons.inventory_2_outlined,
-        color: AppColors.lightTextHint,
+        color: context.textMuted,
         size: 28,
       ),
     );
   }
 
-  Widget _buildQuantityBadge() {
+  Widget _buildQuantityBadge(BuildContext context) {
     Color backgroundColor;
     Color textColor;
 
     if (product.isOutOfStock) {
-      backgroundColor = AppColors.error.withValues(alpha: 0.1);
-      textColor = AppColors.error;
+      backgroundColor = context.danger.withValues(alpha: 0.1);
+      textColor = context.danger;
     } else if (product.isLowStock) {
-      backgroundColor = AppColors.warning.withValues(alpha: 0.1);
-      textColor = AppColors.warning;
+      backgroundColor = context.warning.withValues(alpha: 0.1);
+      textColor = context.warning;
     } else {
-      backgroundColor = AppColors.success.withValues(alpha: 0.1);
-      textColor = AppColors.success;
+      backgroundColor = context.success.withValues(alpha: 0.1);
+      textColor = context.success;
     }
 
     return Container(

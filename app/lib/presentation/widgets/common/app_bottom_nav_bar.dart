@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../l10n/app_localizations.dart';
 
 class AppBottomNavBar extends StatelessWidget {
@@ -20,14 +22,14 @@ class AppBottomNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final activeColor = AppColors.primary;
-    final inactiveColor = isDark ? AppColors.darkTextHint : AppColors.lightTextHint;
+    final inactiveColor = context.textMuted;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0x0AFFFFFF) : AppColors.lightSurface,
+        color: isDark ? const Color(0x0AFFFFFF) : context.surface,
         border: Border(
           top: BorderSide(
-            color: isDark ? const Color(0x0FFFFFFF) : AppColors.lightBorder,
+            color: isDark ? const Color(0x0FFFFFFF) : context.border,
           ),
         ),
       ),
@@ -102,25 +104,32 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(isActive ? activeIcon : icon, color: color, size: 24),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                color: color,
+    return Semantics(
+      label: label,
+      selected: isActive,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: 56,
+          height: 44,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(isActive ? activeIcon : icon, color: color, size: 24),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                  color: color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -140,19 +149,23 @@ class _POSButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Transform.translate(
+    return Semantics(
+      label: label,
+      selected: isActive,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Transform.translate(
             offset: const Offset(0, -16),
             child: Container(
               width: 52,
               height: 52,
               decoration: BoxDecoration(
                 gradient: AppGradients.primary,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 boxShadow: AppShadows.button,
               ),
               child: const Icon(Icons.point_of_sale, color: Colors.white, size: 24),
@@ -161,12 +174,13 @@ class _POSButton extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

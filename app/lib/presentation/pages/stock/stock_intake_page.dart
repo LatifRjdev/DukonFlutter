@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/enums.dart';
 import '../../../core/utils/formatters.dart';
@@ -16,7 +18,9 @@ import '../../blocs/stock/stock_intake_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_search_bar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class StockIntakePage extends StatefulWidget {
   const StockIntakePage({super.key});
@@ -77,23 +81,13 @@ class _StockIntakePageState extends State<StockIntakePage> {
     return BlocListener<StockIntakeBloc, StockIntakeState>(
       listener: (context, state) {
         if (state.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Приход успешно оформлен'),
-              backgroundColor: AppColors.success,
-            ),
-          );
+          AppSnackbar.success(context, AppLocalizations.of(context)!.snackIntakeSuccess);
           context.read<StockIntakeBloc>().add(StockIntakeReset());
           context.pop();
         }
 
         if (state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackbar.error(context, state.error!);
         }
       },
       child: Scaffold(
@@ -112,8 +106,11 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   context.read<ProductListBloc>().add(ProductListSearchChanged(query));
                 },
                 onScanTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Сканер штрихкодов скоро будет доступен')),
+                  BarcodeScannerSheet.show(
+                    context,
+                    onScanned: (barcode) {
+                      context.read<ProductListBloc>().add(ProductListSearchChanged(barcode));
+                    },
                   );
                 },
               ),
@@ -146,9 +143,9 @@ class _StockIntakePageState extends State<StockIntakePage> {
         children: [
           Icon(Icons.inventory, size: 64, color: AppColors.disabled),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Найдите товар для оформления прихода',
-            style: TextStyle(color: AppColors.lightTextSecondary),
+            style: TextStyle(color: context.textSecondary),
           ),
         ],
       ),
@@ -171,7 +168,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 const SizedBox(height: 16),
                 Text(
                   state.message,
-                  style: const TextStyle(color: AppColors.lightTextSecondary),
+                  style: TextStyle(color: context.textSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -187,9 +184,9 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 children: [
                   Icon(Icons.search_off, size: 64, color: AppColors.disabled),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Товары не найдены',
-                    style: TextStyle(color: AppColors.lightTextSecondary),
+                    style: TextStyle(color: context.textSecondary),
                   ),
                 ],
               ),
@@ -229,7 +226,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                     return Container(
                       width: 48,
                       height: 48,
-                      color: AppColors.lightBackground,
+                      color: context.bg,
                       child: const Icon(Icons.inventory_2, color: AppColors.disabled),
                     );
                   },
@@ -239,7 +236,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
+                  color: context.bg,
                   borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 ),
                 child: const Icon(Icons.inventory_2, color: AppColors.disabled),
@@ -256,7 +253,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
               'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
               style: TextStyle(
                 fontSize: 12,
-                color: product.isLowStock ? AppColors.warning : AppColors.lightTextSecondary,
+                color: product.isLowStock ? AppColors.warning : context.textSecondary,
               ),
             ),
           ],
@@ -300,7 +297,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                           return Container(
                             width: 64,
                             height: 64,
-                            color: AppColors.lightBackground,
+                            color: context.bg,
                             child: const Icon(Icons.inventory_2, size: 32, color: AppColors.disabled),
                           );
                         },
@@ -311,7 +308,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: AppColors.lightBackground,
+                        color: context.bg,
                         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: const Icon(Icons.inventory_2, size: 32, color: AppColors.disabled),
@@ -331,17 +328,18 @@ class _StockIntakePageState extends State<StockIntakePage> {
                         const SizedBox(height: 4),
                         Text(
                           'Цена: ${Formatters.price(product.sellPrice, currency: currency)}',
-                          style: const TextStyle(color: AppColors.lightTextSecondary),
+                          style: TextStyle(color: context.textSecondary),
                         ),
                         Text(
                           'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
-                          style: const TextStyle(color: AppColors.lightTextSecondary),
+                          style: TextStyle(color: context.textSecondary),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
+                    tooltip: AppLocalizations.of(context)!.close,
                     onPressed: () {
                       context.read<StockIntakeBloc>().add(StockIntakeReset());
                       _quantityController.clear();
@@ -425,11 +423,11 @@ class _StockIntakePageState extends State<StockIntakePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Итоговая стоимость',
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.lightTextSecondary,
+                    color: context.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 4),

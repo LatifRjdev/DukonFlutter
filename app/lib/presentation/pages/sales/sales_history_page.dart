@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/route_names.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
 import '../../blocs/sales/sales_history_bloc.dart';
@@ -11,6 +14,10 @@ import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/pos/sales_filter_sheet.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SalesHistoryPage extends StatefulWidget {
   const SalesHistoryPage({super.key});
@@ -21,6 +28,7 @@ class SalesHistoryPage extends StatefulWidget {
 
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
   String _selectedPeriod = 'today';
+  SalesFilter _activeFilter = const SalesFilter();
 
   String get _storeId {
     final storeState = context.read<StoreBloc>().state;
@@ -59,8 +67,9 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -74,11 +83,39 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.filter_list_outlined),
-                    onPressed: () {},
+                    tooltip: l10n.a11yFilter,
+                    onPressed: () => SalesFilterSheet.show(
+                      context,
+                      initial: _activeFilter,
+                      onApply: (filter) {
+                        setState(() => _activeFilter = filter);
+                        context.read<SalesHistoryBloc>().add(
+                          SalesHistoryFilterByDate(
+                            dateFrom: filter.from,
+                            dateTo: filter.to,
+                          ),
+                        );
+                        if (filter.paymentTypeValue != null ||
+                            filter.payment == SalesFilterPayment.all) {
+                          context.read<SalesHistoryBloc>().add(
+                            SalesHistoryFilterByPaymentMethod(
+                              filter.paymentTypeValue,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.file_download_outlined),
-                    onPressed: () {},
+                    tooltip: l10n.a11yDownloadReport,
+                    onPressed: () {
+                      final storeState = context.read<StoreBloc>().state;
+                      final storeId = storeState is StoreLoaded
+                          ? (storeState.selectedStore?.id ?? '')
+                          : '';
+                      context.push(RouteNames.financeReports, extra: storeId);
+                    },
                   ),
                 ],
               ),
@@ -129,33 +166,17 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is SalesHistoryError) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.message,
-                            style: const TextStyle(color: AppColors.error),
-                            textAlign: TextAlign.center),
-                          const SizedBox(height: 16),
-                          TextButton(onPressed: _onRefresh, child: const Text('Повторить')),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _onRefresh,
                     );
                   }
                   if (state is SalesHistoryLoaded) {
                     if (state.sales.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Нет продаж', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                            SizedBox(height: 8),
-                            Text('История продаж появится здесь',
-                              style: TextStyle(color: AppColors.lightTextSecondary)),
-                          ],
-                        ),
+                      return const AppEmptyState(
+                        icon: Icons.receipt_long_outlined,
+                        title: 'Нет продаж',
+                        subtitle: 'История продаж появится здесь после первой транзакции',
                       );
                     }
 
@@ -174,7 +195,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Text(
                               '$totalSales продаж  |  ${_formatPrice(totalAmount)}',
@@ -247,10 +268,10 @@ class _SaleCard extends StatelessWidget {
     return AppColors.success;
   }
 
-  Color _statusBgColor() {
-    if (sale.status == 'REFUNDED') return AppColors.errorBg;
-    if (sale.paymentType == 'DEBT') return AppColors.warningBg;
-    return AppColors.successBg;
+  Color _statusBgColor(BuildContext context) {
+    if (sale.status == 'REFUNDED') return context.dangerBg;
+    if (sale.paymentType == 'DEBT') return context.warningBg;
+    return context.successBg;
   }
 
   String _paymentLabel() {
@@ -283,8 +304,8 @@ class _SaleCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          color: context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           boxShadow: AppShadows.sm,
         ),
         child: Row(
@@ -294,7 +315,7 @@ class _SaleCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: _statusBgColor(),
+                color: _statusBgColor(context),
                 shape: BoxShape.circle,
               ),
               child: Icon(_statusIcon(), size: 18, color: _statusColor()),
@@ -311,7 +332,7 @@ class _SaleCard extends StatelessWidget {
                       Text('Чек ${sale.receiptNo}',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(dateFormat.format(sale.createdAt),
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -320,7 +341,7 @@ class _SaleCard extends StatelessWidget {
                     children: [
                       Text(
                         '${sale.customerName ?? 'Розничный'}  •  ${sale.items.length} товаров',
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -333,17 +354,17 @@ class _SaleCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: isRefund ? AppColors.error : AppColors.lightTextPrimary,
+                          color: isRefund ? AppColors.error : context.textPrimary,
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(_paymentIcon(), size: 14, color: AppColors.lightTextSecondary),
+                          Icon(_paymentIcon(), size: 14, color: context.textSecondary),
                           const SizedBox(width: 4),
                           Text(isRefund ? 'Возврат' : _paymentLabel(),
                             style: TextStyle(
                               fontSize: 12,
-                              color: isRefund ? AppColors.error : AppColors.lightTextSecondary,
+                              color: isRefund ? AppColors.error : context.textSecondary,
                             )),
                         ],
                       ),

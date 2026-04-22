@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/shift.dart';
 import '../common/app_card.dart';
@@ -20,6 +21,7 @@ class ShiftCard extends StatelessWidget {
     final diff = end.difference(open);
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);
+    // ignore: unnecessary_brace_in_string_interps
     return '${hours}ч ${minutes}м';
   }
 
@@ -38,12 +40,12 @@ class ShiftCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: (isOpen ? AppColors.success : AppColors.lightTextSecondary).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: (isOpen ? AppColors.success : context.textSecondary).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: Icon(
                   isOpen ? Icons.access_time : Icons.check_circle_outline,
-                  color: isOpen ? AppColors.success : AppColors.lightTextSecondary,
+                  color: isOpen ? AppColors.success : context.textSecondary,
                   size: 20,
                 ),
               ),
@@ -68,8 +70,8 @@ class ShiftCard extends StatelessWidget {
                           child: Text(
                             isOpen ? 'Открыта' : 'Закрыта',
                             style: TextStyle(
-                              color: isOpen ? AppColors.success : AppColors.lightTextSecondary,
-                              fontSize: 11,
+                              color: isOpen ? AppColors.success : context.textSecondary,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -79,7 +81,7 @@ class ShiftCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '${_formatDateTime(shift.openedAt)} - ${_formatDuration(shift.openedAt, shift.closedAt)}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -93,7 +95,7 @@ class ShiftCard extends StatelessWidget {
                   ),
                   Text(
                     '${shift.salesCount} продаж',
-                    style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],
               ),

@@ -41,7 +41,7 @@ class AppButton extends StatelessWidget {
             foregroundColor: AppColors.primary,
             side: const BorderSide(color: AppColors.primary, width: 2),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
             ),
           ),
           child: _buildChild(AppColors.primary),
@@ -52,7 +52,7 @@ class AppButton extends StatelessWidget {
             backgroundColor: AppColors.error.withValues(alpha: 0.08),
             foregroundColor: AppColors.error,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
             ),
           ),
           child: _buildChild(AppColors.error),
@@ -63,7 +63,7 @@ class AppButton extends StatelessWidget {
             backgroundColor: AppColors.primary.withValues(alpha: 0.1),
             foregroundColor: AppColors.primary,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
             ),
           ),
           child: _buildChild(AppColors.primary),
@@ -80,14 +80,14 @@ class AppButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: onPressed != null ? AppGradients.primary : null,
         color: onPressed == null ? AppColors.disabled : null,
-        borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         boxShadow: onPressed != null ? AppShadows.button : null,
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           child: Center(child: _buildChild(Colors.white)),
         ),
       ),
@@ -108,7 +108,13 @@ class AppButton extends StatelessWidget {
         children: [
           Icon(icon, size: 20, color: color),
           const SizedBox(width: 8),
-          Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: color)),
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: color),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       );
     }

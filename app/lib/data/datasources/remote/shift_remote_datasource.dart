@@ -80,9 +80,9 @@ class ShiftRemoteDatasourceImpl implements ShiftRemoteDatasource {
         ApiEndpoints.shifts(storeId),
         queryParameters: {
           'page': page,
-          if (staffId != null) 'staffId': staffId,
-          if (dateFrom != null) 'dateFrom': dateFrom,
-          if (dateTo != null) 'dateTo': dateTo,
+          'staffId': ?staffId,
+          'dateFrom': ?dateFrom,
+          'dateTo': ?dateTo,
         },
       );
 

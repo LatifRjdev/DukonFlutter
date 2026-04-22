@@ -68,15 +68,23 @@ async function bootstrap() {
   // CORS — whitelist parsed from CORS_ORIGIN (comma-separated). In
   // development, fall back to any localhost origin. In production,
   // validateBootConfig already guarantees CORS_ORIGIN is explicit.
+  const corsOrigin = configService.get<string>('CORS_ORIGIN');
+  if (process.env.NODE_ENV === 'production' && !corsOrigin) {
+    logger.warn(
+      'WARNING: CORS_ORIGIN is not set in production. ' +
+        'Set CORS_ORIGIN to your frontend domain (e.g., https://app.dukonpro.com)',
+    );
+  }
+
   const rawCorsOrigin = configService.get<string>('CORS_ORIGIN');
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
   const allowedOrigins = rawCorsOrigin
-    ? rawCorsOrigin.split(',').map((s) => s.trim()).filter(Boolean)
+    ? rawCorsOrigin
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
-  type CorsOriginCallback = (
-    err: Error | null,
-    allow?: boolean,
-  ) => void;
+  type CorsOriginCallback = (err: Error | null, allow?: boolean) => void;
   app.enableCors({
     origin: (origin: string | undefined, callback: CorsOriginCallback) => {
       // Allow server-to-server / curl (no Origin header)
@@ -103,11 +111,14 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+  );
 
   // Swagger
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('DokonPro API')
+    .setTitle('DukonPro API')
     .setDescription('API для управления розничными магазинами')
     .setVersion('1.0')
     .addBearerAuth()

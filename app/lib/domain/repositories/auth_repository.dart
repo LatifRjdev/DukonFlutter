@@ -22,4 +22,15 @@ abstract class AuthRepository {
   Future<String?> getAccessToken();
 
   Future<User?> getCurrentUser();
+
+  Future<void> sendOtp(String phone);
+
+  Future<({User user, String accessToken, String refreshToken})> verifyOtp(
+    String phone,
+    String code,
+  );
+
+  Future<void> forgotPassword(String phone);
+
+  Future<void> resetPassword(String phone, String code, String newPassword);
 }

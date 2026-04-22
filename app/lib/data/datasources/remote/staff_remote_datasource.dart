@@ -40,8 +40,8 @@ class StaffRemoteDatasourceImpl implements StaffRemoteDatasource {
         ApiEndpoints.staff(storeId),
         queryParameters: {
           'page': page,
-          if (search != null) 'search': search,
-          if (role != null) 'role': role,
+          'search': ?search,
+          'role': ?role,
         },
       );
 

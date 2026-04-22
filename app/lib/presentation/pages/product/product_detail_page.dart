@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
+import '../../widgets/common/app_snackbar.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
+import '../../../core/network/dio_client.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/constants/enums.dart';
 import '../../../domain/entities/product.dart';
+import '../../../injection.dart';
 import '../../blocs/product/product_list_bloc.dart';
 import '../../blocs/product/product_list_event.dart';
 import '../../blocs/pos/cart_bloc.dart';
@@ -26,6 +31,7 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final extra = GoRouterState.of(context).extra;
     final product = extra is Product ? extra : null;
 
@@ -56,7 +62,7 @@ class ProductDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -66,6 +72,7 @@ class ProductDetailPage extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
+                    tooltip: l10n.back,
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
@@ -73,6 +80,7 @@ class ProductDetailPage extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: l10n.editProduct,
                     icon: const Icon(Icons.edit_outlined),
                     onPressed: () => context.push('/products/add', extra: {'product': product, 'isEditing': true}),
                   ),
@@ -105,15 +113,15 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.28,
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        color: context.surface,
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: product.imageUrl != null
                           ? Image.network(
                               product.imageUrl!,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) =>
+                              errorBuilder: (_, _, _) =>
                                   const Center(child: Icon(Icons.image_outlined, size: 64, color: AppColors.disabled)),
                             )
                           : const Center(
@@ -136,7 +144,7 @@ class ProductDetailPage extends StatelessWidget {
                             color: product.isActive
                                 ? AppColors.success.withValues(alpha: 0.15)
                                 : AppColors.error.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                           ),
                           child: Text(
                             product.isActive ? 'Активен' : 'Неактивен',
@@ -158,7 +166,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Цена продажи',
                             value: _formatPrice(product.sellPrice),
-                            bgColor: AppColors.successBg,
+                            bgColor: context.successBg,
                             textColor: AppColors.success,
                           ),
                         ),
@@ -169,7 +177,7 @@ class ProductDetailPage extends StatelessWidget {
                             value: product.costPrice != null
                                 ? _formatPrice(product.costPrice!)
                                 : '—',
-                            bgColor: AppColors.lightSurfaceElevated,
+                            bgColor: context.surfaceMuted,
                             textColor: AppColors.gradientMid,
                           ),
                         ),
@@ -182,7 +190,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Прибыль',
                             value: profit != null ? _formatPrice(profit) : '—',
-                            bgColor: AppColors.warningBg,
+                            bgColor: context.warningBg,
                             textColor: AppColors.warning,
                           ),
                         ),
@@ -191,7 +199,7 @@ class ProductDetailPage extends StatelessWidget {
                           child: _MiniMetricCard(
                             label: 'Маржа',
                             value: margin != null ? '${margin.toStringAsFixed(0)}%' : '—',
-                            bgColor: AppColors.infoBg,
+                            bgColor: context.infoBg,
                             textColor: AppColors.info,
                           ),
                         ),
@@ -204,8 +212,8 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        color: context.surface,
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                         boxShadow: AppShadows.md,
                       ),
                       child: Column(
@@ -220,16 +228,16 @@ class ProductDetailPage extends StatelessWidget {
                               Text('Текущий остаток: ${product.quantity} $unitName',
                                 style: const TextStyle(fontSize: 14)),
                               Text('Минимальный: ${product.minQuantity} $unitName',
-                                style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                                style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             ],
                           ),
                           const SizedBox(height: 10),
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                             child: LinearProgressIndicator(
                               value: stockPercent,
                               minHeight: 8,
-                              backgroundColor: AppColors.lightBorder,
+                              backgroundColor: context.border,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 product.isOutOfStock
                                     ? AppColors.error
@@ -249,8 +257,8 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.lightSurface,
-                        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                        color: context.surface,
+                        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                         boxShadow: AppShadows.md,
                       ),
                       child: Column(
@@ -269,6 +277,18 @@ class ProductDetailPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+
+                    // Stock movements history
+                    _StockMovementsSection(
+                      storeId: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        return storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                      }(),
+                      productId: product.id,
+                    ),
                     const SizedBox(height: 80),
                   ],
                 ),
@@ -277,8 +297,8 @@ class ProductDetailPage extends StatelessWidget {
             // 2 fixed bottom buttons: "Приход" + "Продать"
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              decoration: const BoxDecoration(
-                color: AppColors.lightSurface,
+              decoration: BoxDecoration(
+                color: context.surface,
                 boxShadow: AppShadows.md,
               ),
               child: Row(
@@ -303,24 +323,19 @@ class ProductDetailPage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        // Add product to cart
+                        final l10n = AppLocalizations.of(context)!;
                         context.read<CartBloc>().add(CartItemAdded(product: product));
-                        // Show confirmation
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${product.name} добавлен в корзину'),
-                            action: SnackBarAction(
-                              label: 'В кассу',
-                              onPressed: () => context.go('/home'),
-                            ),
-                          ),
+                        AppSnackbar.withAction(
+                          context,
+                          message: l10n.snackProductAddedToCart(product.name),
+                          actionLabel: l10n.snackActionGoToCheckout,
+                          onAction: () => context.go('/home'),
                         );
-                        // Navigate to home (POS tab is index 2)
                         context.go('/home');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: context.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -423,9 +438,222 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.lightTextSecondary, fontSize: 14)),
+        Text(label, style: TextStyle(color: context.textSecondary, fontSize: 14)),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Stock Movements History
+// ---------------------------------------------------------------------------
+
+class _StockMovementsSection extends StatefulWidget {
+  final String storeId;
+  final String productId;
+
+  const _StockMovementsSection({
+    required this.storeId,
+    required this.productId,
+  });
+
+  @override
+  State<_StockMovementsSection> createState() => _StockMovementsSectionState();
+}
+
+class _StockMovementsSectionState extends State<_StockMovementsSection> {
+  List<Map<String, dynamic>> _movements = [];
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMovements();
+  }
+
+  Future<void> _loadMovements() async {
+    if (widget.storeId.isEmpty) {
+      setState(() {
+        _loading = false;
+        _error = 'Магазин не выбран';
+      });
+      return;
+    }
+
+    try {
+      final resp = await sl<DioClient>().get<Map<String, dynamic>>(
+        '/stores/${widget.storeId}/products/${widget.productId}/stock-movements',
+        queryParameters: {'limit': 20},
+      );
+      final data = resp.data ?? {};
+      final items = (data['data'] as List? ?? data['items'] as List? ?? [])
+          .cast<Map<String, dynamic>>();
+      setState(() {
+        _movements = items;
+        _loading = false;
+      });
+    } catch (_) {
+      setState(() {
+        _loading = false;
+        _error = 'Не удалось загрузить историю движений';
+      });
+    }
+  }
+
+  IconData _typeIcon(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return Icons.arrow_downward_rounded;
+      case 'OUT':
+        return Icons.arrow_upward_rounded;
+      case 'ADJUSTMENT':
+        return Icons.tune_rounded;
+      default:
+        return Icons.swap_vert_rounded;
+    }
+  }
+
+  Color _typeColor(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return AppColors.success;
+      case 'OUT':
+        return AppColors.error;
+      case 'ADJUSTMENT':
+        return AppColors.warning;
+      default:
+        return context.textSecondary;
+    }
+  }
+
+  String _typeLabel(String type) {
+    switch (type.toUpperCase()) {
+      case 'IN':
+        return 'Приход';
+      case 'OUT':
+        return 'Расход';
+      case 'ADJUSTMENT':
+        return 'Корректировка';
+      default:
+        return type;
+    }
+  }
+
+  String _formatDate(String? dateStr) {
+    if (dateStr == null) return '';
+    final dt = DateTime.tryParse(dateStr);
+    if (dt == null) return dateStr;
+    return DateFormat('dd.MM.yyyy HH:mm').format(dt);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        boxShadow: AppShadows.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('История движений',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 12),
+          if (_loading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: AppColors.primary),
+              ),
+            )
+          else if (_error != null)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(_error!,
+                    style: TextStyle(
+                        color: context.textSecondary, fontSize: 13)),
+              ),
+            )
+          else if (_movements.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text('Нет движений',
+                    style: TextStyle(
+                        color: context.textSecondary, fontSize: 13)),
+              ),
+            )
+          else
+            ...List.generate(_movements.length, (i) {
+              final m = _movements[i];
+              final type = m['type'] as String? ?? '';
+              final quantity = m['quantity'] as num? ?? 0;
+              final note = m['note'] as String? ?? m['reason'] as String? ?? '';
+              final date = m['createdAt'] as String? ?? m['date'] as String?;
+              return Column(
+                children: [
+                  if (i > 0) const Divider(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: _typeColor(type).withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(_typeIcon(type),
+                              size: 16, color: _typeColor(type)),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_typeLabel(type),
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600)),
+                              if (note.isNotEmpty)
+                                Text(note,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: context.textSecondary),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
+                              if (date != null)
+                                Text(_formatDate(date),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: context.textMuted)),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          '${type.toUpperCase() == 'OUT' ? '-' : '+'}$quantity',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: _typeColor(type),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+        ],
+      ),
     );
   }
 }

@@ -94,4 +94,39 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<User?> getCurrentUser() async {
     return await _localDatasource.getUser();
   }
+
+  @override
+  Future<void> sendOtp(String phone) async {
+    await _remoteDatasource.sendOtp(phone);
+  }
+
+  @override
+  Future<({User user, String accessToken, String refreshToken})> verifyOtp(
+    String phone,
+    String code,
+  ) async {
+    final result = await _remoteDatasource.verifyOtp(phone, code);
+
+    await _localDatasource.saveTokens(
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    );
+    await _localDatasource.saveUser(result.user);
+
+    return result;
+  }
+
+  @override
+  Future<void> forgotPassword(String phone) async {
+    await _remoteDatasource.forgotPassword(phone);
+  }
+
+  @override
+  Future<void> resetPassword(
+    String phone,
+    String code,
+    String newPassword,
+  ) async {
+    await _remoteDatasource.resetPassword(phone, code, newPassword);
+  }
 }

@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// Application title
   ///
   /// In ru, this message translates to:
-  /// **'DokonPro'**
+  /// **'DukonPro'**
   String get appTitle;
 
   /// Save button
@@ -1899,6 +1899,378 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Ещё'**
   String get navMore;
+
+  /// Share action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться'**
+  String get a11yShare;
+
+  /// Refresh action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновить'**
+  String get a11yRefresh;
+
+  /// Filter action singular (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтр'**
+  String get a11yFilter;
+
+  /// Filters action plural (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтры'**
+  String get a11yFilters;
+
+  /// Delete product action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить товар'**
+  String get a11yDeleteProduct;
+
+  /// Add client (tooltip). Distinct from addCustomer which uses 'покупателя'
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить клиента'**
+  String get a11yAddClient;
+
+  /// Call client phone action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Позвонить клиенту'**
+  String get a11yCallClient;
+
+  /// Select client action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать клиента'**
+  String get a11ySelectClient;
+
+  /// Edit store action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать магазин'**
+  String get a11yEditStore;
+
+  /// Edit discount action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать скидку'**
+  String get a11yEditDiscount;
+
+  /// Delete discount action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить скидку'**
+  String get a11yDeleteDiscount;
+
+  /// Edit category action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать категорию'**
+  String get a11yEditCategory;
+
+  /// Delete category action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить категорию'**
+  String get a11yDeleteCategory;
+
+  /// Open reports action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть отчёты'**
+  String get a11yOpenReports;
+
+  /// Download report action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать отчёт'**
+  String get a11yDownloadReport;
+
+  /// Calculation history action (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'История расчётов'**
+  String get a11yCalculationHistory;
+
+  /// Increase item quantity (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Увеличить количество'**
+  String get a11yIncreaseQuantity;
+
+  /// Decrease item quantity (tooltip)
+  ///
+  /// In ru, this message translates to:
+  /// **'Уменьшить количество'**
+  String get a11yDecreaseQuantity;
+
+  /// Cash payment without change (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Без сдачи'**
+  String get a11yWithoutChange;
+
+  /// Date range / period picker (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать период'**
+  String get a11ySelectPeriod;
+
+  /// Upload photo action (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузить фото'**
+  String get a11yUploadPhoto;
+
+  /// Open shift Z-report (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть Z-отчёт'**
+  String get a11yOpenZReport;
+
+  /// Mark notification as read (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить как прочитанное'**
+  String get a11yMarkAsRead;
+
+  /// Edit profile action (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать профиль'**
+  String get a11yEditProfile;
+
+  /// Quick-pick amount chip (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Быстрая сумма {amount}'**
+  String a11yQuickAmount(String amount);
+
+  /// Select currency row (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать валюту {code}'**
+  String a11ySelectCurrency(String code);
+
+  /// Select store card (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать магазин {name}'**
+  String a11ySelectStore(String name);
+
+  /// Select language row (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать язык {language}'**
+  String a11yChooseLanguage(String language);
+
+  /// Open product detail (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть товар {name}'**
+  String a11yOpenProduct(String name);
+
+  /// Subscription payment history tile (semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж {plan}'**
+  String a11yPaymentOf(String plan);
+
+  /// No description provided for @snackRefundSuccess.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат успешно оформлен'**
+  String get snackRefundSuccess;
+
+  /// No description provided for @snackSelectOrder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите заказ'**
+  String get snackSelectOrder;
+
+  /// No description provided for @snackSelectCourier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите курьера'**
+  String get snackSelectCourier;
+
+  /// No description provided for @snackAdjustmentAdded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Корректировка добавлена'**
+  String get snackAdjustmentAdded;
+
+  /// No description provided for @snackCacheCleared.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кэш очищен'**
+  String get snackCacheCleared;
+
+  /// No description provided for @snackScannerSettingsSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки сканера сохранены'**
+  String get snackScannerSettingsSaved;
+
+  /// No description provided for @snackSettingsSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки сохранены'**
+  String get snackSettingsSaved;
+
+  /// No description provided for @snackTelegramSendFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось отправить. Клиент не привязан к боту?'**
+  String get snackTelegramSendFailed;
+
+  /// No description provided for @snackSettingSaveFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить настройку'**
+  String get snackSettingSaveFailed;
+
+  /// No description provided for @snackNoPhoneNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер телефона не указан'**
+  String get snackNoPhoneNumber;
+
+  /// No description provided for @snackPrintError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка печати'**
+  String get snackPrintError;
+
+  /// No description provided for @snackSaveError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка сохранения'**
+  String get snackSaveError;
+
+  /// No description provided for @snackPrinterNotConnected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер не подключён. Настройте в Настройки → Принтер.'**
+  String get snackPrinterNotConnected;
+
+  /// No description provided for @snackIntakeSuccess.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приход успешно оформлен'**
+  String get snackIntakeSuccess;
+
+  /// No description provided for @snackCalculationCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расчёт скопирован'**
+  String get snackCalculationCopied;
+
+  /// No description provided for @snackSyncCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация выполнена'**
+  String get snackSyncCompleted;
+
+  /// No description provided for @snackShiftClosed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена закрыта'**
+  String get snackShiftClosed;
+
+  /// No description provided for @snackShiftOpened.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена открыта'**
+  String get snackShiftOpened;
+
+  /// No description provided for @snackTestPrintDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовая печать выполнена'**
+  String get snackTestPrintDone;
+
+  /// No description provided for @snackTestMessageSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовое сообщение отправлено'**
+  String get snackTestMessageSent;
+
+  /// No description provided for @snackReceiptPrinted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек напечатан'**
+  String get snackReceiptPrinted;
+
+  /// No description provided for @snackReceiptSentToTelegram.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек отправлен в Telegram'**
+  String get snackReceiptSentToTelegram;
+
+  /// No description provided for @snackTemplateSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Шаблон сохранён'**
+  String get snackTemplateSaved;
+
+  /// No description provided for @snackLanguageSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык сохранён. Перезапустите приложение для применения.'**
+  String get snackLanguageSaved;
+
+  /// No description provided for @snackCustomerSelectedForSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент {name} выбран для продажи'**
+  String snackCustomerSelectedForSale(String name);
+
+  /// No description provided for @snackStoreSelected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин \"{name}\" выбран'**
+  String snackStoreSelected(String name);
+
+  /// No description provided for @snackPrintErrorDetails.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка печати: {error}'**
+  String snackPrintErrorDetails(String error);
+
+  /// No description provided for @snackConnectionError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка подключения: {error}'**
+  String snackConnectionError(String error);
+
+  /// No description provided for @snackSyncError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка синхронизации: {error}'**
+  String snackSyncError(String error);
+
+  /// No description provided for @snackGenericError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка: {error}'**
+  String snackGenericError(String error);
+
+  /// No description provided for @snackProductAddedToCart.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name} добавлен в корзину'**
+  String snackProductAddedToCart(String name);
+
+  /// Action button on add-to-cart snackbar — navigates to POS checkout
+  ///
+  /// In ru, this message translates to:
+  /// **'В кассу'**
+  String get snackActionGoToCheckout;
 }
 
 class _AppLocalizationsDelegate

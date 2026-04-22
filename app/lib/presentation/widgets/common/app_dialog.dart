@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class AppDialog {
   AppDialog._();
@@ -53,10 +54,10 @@ class _AppDialogContent extends StatelessWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       elevation: AppConstants.cardElevation,
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: context.surface,
       insetPadding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingLg,
         vertical: AppConstants.spacingXl,
@@ -70,11 +71,11 @@ class _AppDialogContent extends StatelessWidget {
             // Title
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextPrimary,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: AppConstants.spacingSm),
@@ -82,11 +83,11 @@ class _AppDialogContent extends StatelessWidget {
             // Message
             Text(
               message,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'Inter',
-                color: AppColors.lightTextSecondary,
+                color: context.textSecondary,
                 height: 1.5,
               ),
             ),
@@ -101,11 +102,11 @@ class _AppDialogContent extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.lightTextSecondary,
-                        side: const BorderSide(color: AppColors.lightBorder),
+                        foregroundColor: context.textSecondary,
+                        side: BorderSide(color: context.border),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                            AppConstants.buttonRadius,
+                            AppConstants.radiusLg,
                           ),
                         ),
                       ),
@@ -130,11 +131,11 @@ class _AppDialogContent extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: confirmColor,
-                        foregroundColor: Colors.white,
+                        foregroundColor: context.onPrimary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                            AppConstants.buttonRadius,
+                            AppConstants.radiusLg,
                           ),
                         ),
                       ),

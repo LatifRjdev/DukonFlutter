@@ -1,4 +1,4 @@
-# DokonPro — Комплексный редизайн: Vibrant Gradient
+# DukonPro — Комплексный редизайн: Vibrant Gradient
 
 **Дата:** 2026-04-09
 **Статус:** Draft
@@ -8,7 +8,7 @@
 
 ## 1. Цель
 
-Обновить визуальный стиль всего приложения DokonPro с текущего стандартного Material 3 (Cyan/Teal) на Vibrant Gradient стиль с glassmorphism. Подключить Dark Mode, улучшить UX, добавить accessibility. Создать единую дизайн-систему для всех трёх платформ.
+Обновить визуальный стиль всего приложения DukonPro с текущего стандартного Material 3 (Cyan/Teal) на Vibrant Gradient стиль с glassmorphism. Подключить Dark Mode, улучшить UX, добавить accessibility. Создать единую дизайн-систему для всех трёх платформ.
 
 ### Что НЕ входит в scope
 - Новые фичи и бизнес-логика

@@ -59,9 +59,9 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
         queryParameters: {
           'page': page,
           'limit': limit,
-          if (customerId != null) 'customerId': customerId,
-          if (status != null) 'status': status,
-          if (paymentType != null) 'paymentType': paymentType,
+          'customerId': ?customerId,
+          'status': ?status,
+          'paymentType': ?paymentType,
           if (dateFrom != null) 'dateFrom': dateFrom.toIso8601String(),
           if (dateTo != null) 'dateTo': dateTo.toIso8601String(),
         },

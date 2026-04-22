@@ -1,4 +1,4 @@
-# Dukon / DokonPro Full Application Audit — 2026-04-10
+# Dukon / DukonPro Full Application Audit — 2026-04-10
 
 ## Goal
 

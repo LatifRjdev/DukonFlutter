@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class AddAdjustmentPage extends StatefulWidget {
@@ -61,15 +64,11 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
       body: BlocListener<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollPeriodDetailLoaded) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Корректировка добавлена'), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackAdjustmentAdded);
             context.pop();
           }
           if (state is PayrollError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(
@@ -99,10 +98,10 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
-                      const Text(
+                      Text(
                         'Укажите тип, сумму и описание корректировки',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                        style: TextStyle(color: context.textSecondary, fontSize: 14),
                       ),
                     ],
                   ),
@@ -213,10 +212,10 @@ class _TypeToggle extends StatelessWidget {
           horizontal: AppConstants.spacingSm,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : AppColors.lightSurface,
+          color: isSelected ? color.withValues(alpha: 0.1) : context.surface,
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           border: Border.all(
-            color: isSelected ? color : AppColors.lightBorder,
+            color: isSelected ? color : context.border,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -227,7 +226,7 @@ class _TypeToggle extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? color : AppColors.lightTextSecondary,
+                color: isSelected ? color : context.textSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 fontSize: 14,
               ),

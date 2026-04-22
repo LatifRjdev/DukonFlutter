@@ -1,7 +1,7 @@
 {
   "@@locale": "tg",
 
-  "appTitle": "DokonPro",
+  "appTitle": "DukonPro",
 
   "save": "Нигоҳ доштан",
   "cancel": "Бекор кардан",
@@ -318,5 +318,108 @@
   "navProducts": "Молҳо",
   "navPOS": "Касса",
   "navFinance": "Молия",
-  "navMore": "Бештар"
+  "navMore": "Бештар",
+
+  "a11yShare": "Мубодила",
+  "a11yRefresh": "Навсозӣ",
+  "a11yFilter": "Филтр",
+  "a11yFilters": "Филтрҳо",
+  "a11yDeleteProduct": "Молро нест кардан",
+  "a11yAddClient": "Муштарӣ илова кардан",
+  "a11yCallClient": "Ба муштарӣ занг задан",
+  "a11ySelectClient": "Муштариро интихоб кунед",
+  "a11yEditStore": "Мағозаро таҳрир кардан",
+  "a11yEditDiscount": "Тахфифро таҳрир кардан",
+  "a11yDeleteDiscount": "Тахфифро нест кардан",
+  "a11yEditCategory": "Гурӯҳро таҳрир кардан",
+  "a11yDeleteCategory": "Гурӯҳро нест кардан",
+  "a11yOpenReports": "Ҳисоботҳоро кушодан",
+  "a11yDownloadReport": "Боргирии ҳисобот",
+  "a11yCalculationHistory": "Таърихи ҳисобкуниҳо",
+  "a11yIncreaseQuantity": "Зиёд кардани миқдор",
+  "a11yDecreaseQuantity": "Кам кардани миқдор",
+  "a11yWithoutChange": "Бе қайтимӣ",
+  "a11ySelectPeriod": "Давраро интихоб кунед",
+  "a11yUploadPhoto": "Аксро бор кардан",
+  "a11yOpenZReport": "Ҳисоботи Z-ро кушодан",
+  "a11yMarkAsRead": "Ҳамчун хондашуда қайд кардан",
+  "a11yEditProfile": "Профилро таҳрир кардан",
+  "a11yQuickAmount": "Маблағи зуд {amount}",
+  "@a11yQuickAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "a11ySelectCurrency": "Асъорро интихоб кунед {code}",
+  "@a11ySelectCurrency": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "a11ySelectStore": "Мағозаро интихоб кунед {name}",
+  "@a11ySelectStore": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yChooseLanguage": "Забонро интихоб кунед {language}",
+  "@a11yChooseLanguage": {
+    "placeholders": { "language": { "type": "String" } }
+  },
+  "a11yOpenProduct": "Молро кушодан {name}",
+  "@a11yOpenProduct": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "a11yPaymentOf": "Пардохт {plan}",
+  "@a11yPaymentOf": {
+    "placeholders": { "plan": { "type": "String" } }
+  },
+
+  "snackRefundSuccess": "Баргардонидан бомуваффақият анҷом шуд",
+  "snackSelectOrder": "Фармоишро интихоб кунед",
+  "snackSelectCourier": "Пешбарро интихоб кунед",
+  "snackAdjustmentAdded": "Ислоҳ илова шуд",
+  "snackCacheCleared": "Хотираи кэш тоза шуд",
+  "snackScannerSettingsSaved": "Танзимоти сканер нигоҳ дошта шуд",
+  "snackSettingsSaved": "Танзимот нигоҳ дошта шуд",
+  "snackTelegramSendFailed": "Фиристодан мумкин нашуд. Муштарӣ ба бот пайваст нест?",
+  "snackSettingSaveFailed": "Танзимотро нигоҳ доштан мумкин нашуд",
+  "snackNoPhoneNumber": "Рақами телефон нишон дода нашудааст",
+  "snackPrintError": "Хатои чоп",
+  "snackSaveError": "Хатои нигоҳдорӣ",
+  "snackPrinterNotConnected": "Принтер пайваст нест. Дар Танзимот → Принтер танзим кунед.",
+  "snackIntakeSuccess": "Қабул бомуваффақият анҷом шуд",
+  "snackCalculationCopied": "Ҳисобкунӣ нусхабардорӣ шуд",
+  "snackSyncCompleted": "Ҳамоҳангсозӣ иҷро шуд",
+  "snackShiftClosed": "Навбат пӯшида шуд",
+  "snackShiftOpened": "Навбат кушода шуд",
+  "snackTestPrintDone": "Чопи санҷишӣ иҷро шуд",
+  "snackTestMessageSent": "Паёми санҷишӣ фиристода шуд",
+  "snackReceiptPrinted": "Чек чоп карда шуд",
+  "snackReceiptSentToTelegram": "Чек ба Telegram фиристода шуд",
+  "snackTemplateSaved": "Қолаб нигоҳ дошта шуд",
+  "snackLanguageSaved": "Забон нигоҳ дошта шуд. Барои татбиқ барномаро аз нав оғоз кунед.",
+  "snackCustomerSelectedForSale": "Муштарӣ {name} барои фурӯш интихоб шуд",
+  "@snackCustomerSelectedForSale": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackStoreSelected": "Мағозаи \"{name}\" интихоб шуд",
+  "@snackStoreSelected": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackPrintErrorDetails": "Хатои чоп: {error}",
+  "@snackPrintErrorDetails": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackConnectionError": "Хатои пайвастшавӣ: {error}",
+  "@snackConnectionError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackSyncError": "Хатои ҳамоҳангсозӣ: {error}",
+  "@snackSyncError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackGenericError": "Хатогӣ: {error}",
+  "@snackGenericError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "snackProductAddedToCart": "{name} ба сабад илова шуд",
+  "@snackProductAddedToCart": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackActionGoToCheckout": "Ба касса"
 }

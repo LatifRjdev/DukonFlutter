@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'core/network/api_interceptor.dart';
 import 'core/network/dio_client.dart';
 import 'core/network/network_info.dart';
+import 'core/router/app_router.dart';
 
 import 'data/datasources/local/auth_local_datasource.dart';
 import 'data/datasources/local/category_local_datasource.dart';
@@ -47,22 +48,28 @@ import 'presentation/blocs/dashboard/dashboard_bloc.dart';
 import 'data/datasources/remote/dashboard_remote_datasource.dart';
 import 'data/datasources/remote/finance_remote_datasource.dart';
 import 'data/datasources/remote/expense_remote_datasource.dart';
+import 'data/datasources/remote/investment_remote_datasource.dart';
+import 'data/datasources/remote/notification_remote_datasource.dart';
 import 'data/datasources/remote/zakat_remote_datasource.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
 import 'data/repositories/finance_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
+import 'data/repositories/investment_repository_impl.dart';
 import 'data/repositories/zakat_repository_impl.dart';
 import 'domain/repositories/dashboard_repository.dart';
 import 'domain/repositories/finance_repository.dart';
 import 'domain/repositories/expense_repository.dart';
+import 'domain/repositories/investment_repository.dart';
 import 'domain/repositories/zakat_repository.dart';
 import 'presentation/blocs/finance/finance_bloc.dart';
 import 'presentation/blocs/expense/expense_bloc.dart';
+import 'presentation/blocs/investment/investment_bloc.dart';
 import 'presentation/blocs/debt/debt_bloc.dart';
 import 'presentation/blocs/zakat/zakat_bloc.dart';
 import 'presentation/blocs/settings/settings_bloc.dart';
 import 'presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'presentation/blocs/supplier_detail/supplier_detail_bloc.dart';
+import 'data/datasources/remote/currency_remote_datasource.dart';
 import 'data/datasources/remote/staff_remote_datasource.dart';
 import 'data/datasources/remote/shift_remote_datasource.dart';
 import 'data/datasources/remote/payroll_remote_datasource.dart';
@@ -84,6 +91,7 @@ import 'presentation/blocs/pos/checkout_bloc.dart';
 import 'presentation/blocs/sales/sales_history_bloc.dart';
 import 'presentation/blocs/stock/stock_intake_bloc.dart';
 import 'presentation/blocs/product/product_form_bloc.dart';
+import 'presentation/blocs/import/import_bloc.dart';
 import 'core/services/receipt_pdf_service.dart';
 import 'core/services/thermal_printer_service.dart';
 import 'core/services/receipt_share_service.dart';
@@ -117,7 +125,13 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<ApiInterceptor>(
-    () => ApiInterceptor(storage: sl<FlutterSecureStorage>()),
+    () => ApiInterceptor(
+      storage: sl<FlutterSecureStorage>(),
+      onSessionExpired: () {
+        sl<FlutterSecureStorage>().deleteAll();
+        AppRouter.router.go('/login');
+      },
+    ),
   );
 
   sl.registerLazySingleton<DioClient>(
@@ -205,6 +219,10 @@ Future<void> initDependencies() async {
     () => ExpenseRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
 
+  sl.registerLazySingleton<InvestmentRemoteDatasource>(
+    () => InvestmentRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
   sl.registerLazySingleton<ZakatRemoteDatasource>(
     () => ZakatRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
@@ -219,6 +237,14 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<PayrollRemoteDatasource>(
     () => PayrollRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<CurrencyRemoteDatasource>(
+    () => CurrencyRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<NotificationRemoteDatasource>(
+    () => NotificationRemoteDatasourceImpl(dioClient: sl<DioClient>()),
   );
 
   // ---------------------------------------------------------------------------
@@ -297,6 +323,10 @@ Future<void> initDependencies() async {
     () => ExpenseRepositoryImpl(remoteDatasource: sl<ExpenseRemoteDatasource>()),
   );
 
+  sl.registerLazySingleton<InvestmentRepository>(
+    () => InvestmentRepositoryImpl(remoteDatasource: sl<InvestmentRemoteDatasource>()),
+  );
+
   sl.registerLazySingleton<ZakatRepository>(
     () => ZakatRepositoryImpl(remoteDatasource: sl<ZakatRemoteDatasource>()),
   );
@@ -345,6 +375,10 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<ExpenseBloc>(
     () => ExpenseBloc(expenseRepository: sl<ExpenseRepository>()),
+  );
+
+  sl.registerFactory<InvestmentBloc>(
+    () => InvestmentBloc(investmentRepository: sl<InvestmentRepository>()),
   );
 
   sl.registerFactory<DebtBloc>(
@@ -412,6 +446,10 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<ProductFormBloc>(
     () => ProductFormBloc(productRepository: sl<ProductRepository>()),
+  );
+
+  sl.registerFactory<ImportBloc>(
+    () => ImportBloc(productDatasource: sl<ProductRemoteDatasource>()),
   );
 
   // ---------------------------------------------------------------------------

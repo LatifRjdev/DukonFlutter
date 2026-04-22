@@ -1,4 +1,4 @@
-Создай мобильный экран (iPhone 14 Pro, 393x852px) для приложения управления магазином "DokonPro". ТЁМНАЯ ТЕМА (Dark Mode). Стиль: современный, чистый, минималистичный.
+Создай мобильный экран (iPhone 14 Pro, 393x852px) для приложения управления магазином "DukonPro". ТЁМНАЯ ТЕМА (Dark Mode). Стиль: современный, чистый, минималистичный.
 
 Дизайн-система DARK MODE: Primary #00BCD4, Success #4CAF50, Danger #F44336, Background #121212, Surface #1E1E1E, Elevated #2C2C2C, Text #FFFFFF, Text Secondary #B0B0B0, Divider #333333. Шрифт Inter/SF Pro. Радиус карточек 16px. Иконки Outlined белые/бирюзовые.
 

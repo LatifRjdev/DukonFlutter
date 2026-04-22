@@ -4,13 +4,18 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/finance/finance_bloc.dart';
 import '../../blocs/finance/finance_event.dart';
 import '../../blocs/finance/finance_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/glass_card.dart';
+import '../../../core/router/route_names.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;
@@ -50,6 +55,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreLoaded && !_loaded) {
@@ -57,7 +63,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -70,8 +76,15 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     IconButton(
+                      tooltip: l10n.a11yOpenReports,
                       icon: const Icon(Icons.file_download_outlined),
-                      onPressed: () {},
+                      onPressed: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        final storeId = storeState is StoreLoaded
+                            ? (storeState.selectedStore?.id ?? '')
+                            : '';
+                        context.push(RouteNames.financeReports, extra: storeId);
+                      },
                     ),
                   ],
                 ),
@@ -84,15 +97,9 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (state is FinanceError) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(state.message, style: const TextStyle(color: AppColors.error)),
-                            const SizedBox(height: 16),
-                            TextButton(onPressed: _loadFinance, child: const Text('Повторить')),
-                          ],
-                        ),
+                      return AppErrorWidget(
+                        message: state.message,
+                        onRetry: _loadFinance,
                       );
                     }
                     if (state is FinanceLoaded) {
@@ -163,7 +170,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       child: _KpiCardContent(
                                         label: 'Общие расходы',
                                         value: _formatPrice(s.totalExpenses),
-                                        textColor: AppColors.error,
+                                        textColor: context.danger,
                                       ),
                                     ),
                                   ),
@@ -178,7 +185,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       child: _KpiCardContent(
                                         label: 'Валовая прибыль',
                                         value: _formatPrice(s.profit),
-                                        textColor: AppColors.warning,
+                                        textColor: context.warning,
                                       ),
                                     ),
                                   ),
@@ -189,7 +196,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       child: _KpiCardContent(
                                         label: 'Чистая прибыль',
                                         value: _formatPrice(s.profit - s.totalExpenses),
-                                        textColor: AppColors.success,
+                                        textColor: context.success,
                                       ),
                                     ),
                                   ),
@@ -221,7 +228,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                                 return Padding(
                                                   padding: const EdgeInsets.only(top: 8),
                                                   child: Text(labels[value.toInt()],
-                                                    style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                                    style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                                 );
                                               }
                                               return const Text('');
@@ -240,23 +247,23 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                             toY: s.totalIncome,
                                             color: AppColors.primary,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                         BarChartGroupData(x: 1, barRods: [
                                           BarChartRodData(
                                             toY: s.totalExpenses,
-                                            color: AppColors.error,
+                                            color: context.danger,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                         BarChartGroupData(x: 2, barRods: [
                                           BarChartRodData(
                                             toY: s.profit > 0 ? s.profit : 0,
-                                            color: AppColors.success,
+                                            color: context.success,
                                             width: 32,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                           ),
                                         ]),
                                       ],
@@ -273,8 +280,8 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                 const SizedBox(height: 8),
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
+                                    color: context.surface,
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                                   ),
                                   child: Column(
                                     children: [
@@ -285,10 +292,10 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                           child: Row(
                                             children: [
                                               Text('${i + 1}',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.lightTextSecondary,
+                                                  color: context.textSecondary,
                                                 )),
                                               const SizedBox(width: 12),
                                               Expanded(
@@ -296,7 +303,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                                   style: const TextStyle(fontWeight: FontWeight.w500)),
                                               ),
                                               Text('${s.topProducts[i].quantity} шт',
-                                                style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                                                style: TextStyle(fontSize: 13, color: context.textSecondary)),
                                               const SizedBox(width: 12),
                                               Text(_formatPrice(s.topProducts[i].revenue),
                                                 style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -335,35 +342,23 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
   Widget _buildSectionsGrid() {
     final storeId = _storeId ?? '';
-    // Empty onTap callbacks were a FD-P1-001 finding: tapping a stub tile
-    // did nothing at all. Until the corresponding pages exist they now show
-    // a "coming soon" snackbar so the UI acknowledges the tap.
-    void comingSoon(String label) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$label — скоро будет доступно'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-
     final sections = [
       _SectionItem('Баланс', Icons.account_balance_wallet_outlined,
-          () => comingSoon('Баланс'), stub: true),
+          () => context.push('/finance/balance', extra: storeId)),
       _SectionItem('Кредиты', Icons.credit_card_outlined,
-          () => comingSoon('Кредиты'), stub: true),
+          () => context.push('/finance/credits', extra: storeId)),
       _SectionItem('Вложения', Icons.trending_up_outlined,
-          () => comingSoon('Вложения'), stub: true),
+          () => context.push(RouteNames.investments, extra: storeId)),
       _SectionItem('Закят', Icons.volunteer_activism_outlined,
           () => context.push('/zakat', extra: storeId)),
       _SectionItem('Валюты', Icons.currency_exchange_outlined,
-          () => comingSoon('Валюты'), stub: true),
+          () => context.push('/finance/currencies', extra: storeId)),
       _SectionItem('Доставка', Icons.local_shipping_outlined,
-          () => comingSoon('Доставка'), stub: true),
+          () => context.push('/deliveries', extra: storeId)),
       _SectionItem('Отчёт', Icons.bar_chart_outlined,
-          () => comingSoon('Отчёт'), stub: true),
+          () => context.push('/finance/reports', extra: storeId)),
       _SectionItem('Расходы', Icons.money_off_outlined,
-          () => context.push('/expenses', extra: storeId)),
+          () => context.push(RouteNames.expenses, extra: storeId)),
     ];
 
     return GridView.count(
@@ -377,8 +372,8 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
         onTap: s.onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: context.surface,
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -386,7 +381,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
               Icon(s.icon, size: 24, color: AppColors.primary),
               const SizedBox(height: 4),
               Text(s.label,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center),
             ],
           ),
@@ -400,10 +395,7 @@ class _SectionItem {
   final String label;
   final IconData icon;
   final VoidCallback onTap;
-  /// True when the tile is a placeholder — used by _buildSectionsGrid to
-  /// render the icon/label in a dimmed style.
-  final bool stub;
-  _SectionItem(this.label, this.icon, this.onTap, {this.stub = false});
+  _SectionItem(this.label, this.icon, this.onTap);
 }
 
 class _KpiCardContent extends StatelessWidget {

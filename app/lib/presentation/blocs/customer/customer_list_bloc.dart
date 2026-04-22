@@ -12,6 +12,8 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
         super(CustomerListInitial()) {
     on<CustomerListLoadRequested>(_onLoadRequested);
     on<CustomerListSearchChanged>(_onSearchChanged);
+    on<CustomerCreateRequested>(_onCreateRequested);
+    on<CustomerUpdateRequested>(_onUpdateRequested);
   }
 
   String _storeId = '';
@@ -46,5 +48,35 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
   ) async {
     final query = event.query.isEmpty ? null : event.query;
     add(CustomerListLoadRequested(storeId: _storeId, search: query));
+  }
+
+  Future<void> _onCreateRequested(
+    CustomerCreateRequested event,
+    Emitter<CustomerListState> emit,
+  ) async {
+    emit(CustomerFormLoading());
+    try {
+      final customer = await _customerRepository.createCustomer(event.storeId, event.data);
+      emit(CustomerFormSuccess(customer: customer, isEditing: false));
+    } catch (e) {
+      emit(CustomerFormError(mapErrorToUserMessage(e)));
+    }
+  }
+
+  Future<void> _onUpdateRequested(
+    CustomerUpdateRequested event,
+    Emitter<CustomerListState> emit,
+  ) async {
+    emit(CustomerFormLoading());
+    try {
+      final customer = await _customerRepository.updateCustomer(
+        event.storeId,
+        event.customerId,
+        event.data,
+      );
+      emit(CustomerFormSuccess(customer: customer, isEditing: true));
+    } catch (e) {
+      emit(CustomerFormError(mapErrorToUserMessage(e)));
+    }
   }
 }

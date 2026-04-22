@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../widgets/common/app_button.dart';
 
 class EmptyProductsPage extends StatelessWidget {
@@ -36,10 +37,10 @@ class EmptyProductsPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом',
                 style: TextStyle(
-                    color: AppColors.lightTextSecondary, fontSize: 15, height: 1.4),
+                    color: context.textSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

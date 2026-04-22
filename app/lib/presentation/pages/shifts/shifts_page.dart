@@ -4,10 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/shift.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ShiftsPage extends StatefulWidget {
   final String storeId;
@@ -89,8 +94,9 @@ class _ShiftsPageState extends State<ShiftsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -99,7 +105,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
                   const Text('Смены',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
@@ -112,7 +118,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                             foregroundColor: AppColors.primary,
                             side: const BorderSide(color: AppColors.primary),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
                           ),
                           child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
                         );
@@ -129,22 +135,16 @@ class _ShiftsPageState extends State<ShiftsPage> {
               child: BlocConsumer<ShiftBloc, ShiftState>(
                 listener: (context, state) {
                   if (state is ShiftOpened) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Смена открыта'), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, l10n.snackShiftOpened);
                     _loadData();
                   }
                   if (state is ShiftClosed) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Смена закрыта'), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, l10n.snackShiftClosed);
                     context.push('/shifts/${state.shift.id}/z-report', extra: widget.storeId);
                     _loadData();
                   }
                   if (state is ShiftError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-                    );
+                    AppSnackbar.error(context, state.message);
                   }
                 },
                 builder: (context, state) {
@@ -171,16 +171,11 @@ class _ShiftsPageState extends State<ShiftsPage> {
                           ],
                           if (state.currentShift == null && state.shifts.isEmpty)
                             const Padding(
-                              padding: EdgeInsets.only(top: 100),
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.access_time, size: 64, color: AppColors.disabled),
-                                    SizedBox(height: 16),
-                                    Text('Нет смен',
-                                      style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                                  ],
-                                ),
+                              padding: EdgeInsets.only(top: 60),
+                              child: AppEmptyState(
+                                icon: Icons.access_time,
+                                title: 'Нет смен',
+                                subtitle: 'Откройте смену, чтобы начать приём платежей',
                               ),
                             ),
                         ],
@@ -188,7 +183,10 @@ class _ShiftsPageState extends State<ShiftsPage> {
                     );
                   }
                   if (state is ShiftError) {
-                    return Center(child: Text(state.message));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadData,
+                    );
                   }
                   return const SizedBox.shrink();
                 },
@@ -205,8 +203,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: const Border(left: BorderSide(color: AppColors.success, width: 4)),
       ),
       child: Column(
@@ -221,10 +219,10 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Text('Активна',
-                  style: TextStyle(fontSize: 11, color: AppColors.success, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -233,7 +231,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
           Text('Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}',
-            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+            style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 4),
           Text('Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}',
             style: const TextStyle(fontSize: 13)),
@@ -259,14 +257,17 @@ class _ShiftsPageState extends State<ShiftsPage> {
     final dateFormat = DateFormat('dd.MM');
     final timeFormat = DateFormat('HH:mm');
 
-    return GestureDetector(
+    return Semantics(
+      label: AppLocalizations.of(context)!.a11yOpenZReport,
+      button: true,
+      child: GestureDetector(
       onTap: () => context.push('/shifts/${shift.id}/z-report', extra: widget.storeId),
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          color: context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         ),
         child: Row(
           children: [
@@ -277,7 +278,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   Row(
                     children: [
                       Text(dateFormat.format(shift.openedAt),
-                        style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                        style: TextStyle(fontSize: 13, color: context.textSecondary)),
                       const SizedBox(width: 8),
                       Text(shift.staffName ?? '—',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
@@ -286,7 +287,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   const SizedBox(height: 4),
                   Text(
                     '${timeFormat.format(shift.openedAt)}–${shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],
               ),
@@ -297,12 +298,12 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 color: shift.closedAt != null
                     ? AppColors.success.withValues(alpha: 0.12)
                     : AppColors.warning.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Text(
                 shift.closedAt != null ? 'Сдано' : 'Открыта',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: shift.closedAt != null ? AppColors.success : AppColors.warning,
                 ),
@@ -311,6 +312,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }

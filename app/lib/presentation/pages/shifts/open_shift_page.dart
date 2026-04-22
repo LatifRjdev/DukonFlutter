@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class OpenShiftPage extends StatefulWidget {
@@ -44,15 +47,11 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
       body: BlocListener<ShiftBloc, ShiftState>(
         listener: (context, state) {
           if (state is ShiftOpened) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Смена открыта'), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, AppLocalizations.of(context)!.snackShiftOpened);
             context.pop();
           }
           if (state is ShiftError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(
@@ -82,10 +81,10 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
-                      const Text(
+                      Text(
                         'Укажите сумму наличных в кассе на начало смены',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+                        style: TextStyle(color: context.textSecondary, fontSize: 14),
                       ),
                     ],
                   ),

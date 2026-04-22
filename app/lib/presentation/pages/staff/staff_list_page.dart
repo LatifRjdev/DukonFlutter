@@ -3,10 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff/staff_state.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class StaffListPage extends StatefulWidget {
   final String storeId;
@@ -34,9 +38,9 @@ class _StaffListPageState extends State<StaffListPage> {
   Color _roleBadgeColor(String role) {
     switch (role.toUpperCase()) {
       case 'ADMIN': return AppColors.primary;
-      case 'CASHIER': return AppColors.lightTextSecondary;
+      case 'CASHIER': return context.textSecondary;
       case 'WAREHOUSE': return AppColors.info;
-      default: return AppColors.lightTextSecondary;
+      default: return context.textSecondary;
     }
   }
 
@@ -52,8 +56,9 @@ class _StaffListPageState extends State<StaffListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/staff/add', extra: widget.storeId),
@@ -67,12 +72,13 @@ class _StaffListPageState extends State<StaffListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
                   const Text('Сотрудники',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.add, color: AppColors.primary),
+                    tooltip: l10n.addEmployee,
                     onPressed: () => context.push('/staff/add', extra: widget.storeId),
                   ),
                 ],
@@ -87,20 +93,19 @@ class _StaffListPageState extends State<StaffListPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is StaffError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadStaff,
+                    );
                   }
                   if (state is StaffLoaded) {
                     if (state.staff.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Сотрудников пока нет',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                          ],
-                        ),
+                      return AppEmptyState(
+                        icon: Icons.people_outline,
+                        title: 'Сотрудников пока нет',
+                        subtitle: 'Добавьте сотрудников для учёта смен и зарплаты',
+                        buttonText: 'Добавить сотрудника',
+                        onButtonPressed: () => context.push('/staff/add', extra: widget.storeId),
                       );
                     }
                     return RefreshIndicator(
@@ -119,8 +124,8 @@ class _StaffListPageState extends State<StaffListPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: AppColors.lightSurface,
-                                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                color: context.surface,
+                                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                               ),
                               child: Row(
                                 children: [
@@ -138,17 +143,21 @@ class _StaffListPageState extends State<StaffListPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(staff.name,
-                                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                            Flexible(
+                                              child: Text(staff.name,
+                                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis),
+                                            ),
                                             const SizedBox(width: 8),
                                             Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                               decoration: BoxDecoration(
                                                 color: roleColor.withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(10),
+                                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                               ),
                                               child: Text(_roleLabel(staff.role),
-                                                style: TextStyle(fontSize: 11, color: roleColor, fontWeight: FontWeight.w500)),
+                                                style: TextStyle(fontSize: 12, color: roleColor, fontWeight: FontWeight.w500)),
                                             ),
                                           ],
                                         ),
@@ -168,7 +177,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                               isOnShift ? 'На смене' : 'Не на смене',
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                color: isOnShift ? AppColors.success : AppColors.lightTextSecondary,
+                                                color: isOnShift ? AppColors.success : context.textSecondary,
                                               ),
                                             ),
                                             if (isOnShift && staff.todaySales != null && staff.todaySales! > 0) ...[
@@ -187,7 +196,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 20),
+                                  Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                 ],
                               ),
                             ),

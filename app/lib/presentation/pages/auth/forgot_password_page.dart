@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/phone_input_field.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -28,8 +30,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       final phone = '+992${_phoneController.text}';
-      // Forgot password — backend endpoint not yet available
-      context.push('/otp', extra: phone);
+      context.read<AuthBloc>().add(AuthForgotPasswordRequested(phone: phone));
     }
   }
 
@@ -44,10 +45,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+          if (state is AuthOtpSent) {
+            context.push('/otp', extra: state.phone);
+          } else if (state is AuthFailure) {
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SafeArea(
@@ -62,9 +63,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const Text('Забыли пароль?',
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.',
-                    style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+                    style: TextStyle(color: context.textSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   PhoneInputField(

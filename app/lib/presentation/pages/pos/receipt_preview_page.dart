@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/services/receipt_share_service.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../domain/entities/sale.dart';
@@ -10,7 +9,9 @@ import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/pos/receipt_widget.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ReceiptPreviewPage extends StatelessWidget {
   final Sale sale;
@@ -21,7 +22,7 @@ class ReceiptPreviewPage extends StatelessWidget {
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DukonPro';
     try {
       await sl<ReceiptShareService>().shareReceipt(
         sale: sale,
@@ -29,12 +30,7 @@ class ReceiptPreviewPage extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: ${e.toString()}'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(e.toString()));
     }
   }
 
@@ -42,14 +38,10 @@ class ReceiptPreviewPage extends StatelessWidget {
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DukonPro';
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Принтер не подключён. Настройте в Настройки → Принтер.'),
-        ),
-      );
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrinterNotConnected);
       return;
     }
 
@@ -59,20 +51,20 @@ class ReceiptPreviewPage extends StatelessWidget {
     );
 
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(success ? 'Чек напечатан' : 'Ошибка печати'),
-        backgroundColor: success ? AppColors.success : AppColors.error,
-      ),
-    );
+    if (success) {
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptPrinted);
+    } else {
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintError);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DukonPro';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чек'),
@@ -82,6 +74,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            tooltip: l10n.a11yShare,
             icon: const Icon(Icons.share_outlined),
             onPressed: () => _shareReceipt(context),
           ),

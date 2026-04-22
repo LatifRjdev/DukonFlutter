@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/staff_member.dart';
 import '../common/app_card.dart';
@@ -26,7 +27,7 @@ class StaffCard extends StatelessWidget {
     }
   }
 
-  Color _roleColor(String role) {
+  Color _roleColor(BuildContext context, String role) {
     switch (role) {
       case 'OWNER':
         return AppColors.warning;
@@ -37,13 +38,13 @@ class StaffCard extends StatelessWidget {
       case 'WAREHOUSE':
         return AppColors.warning;
       default:
-        return AppColors.lightTextSecondary;
+        return context.textSecondary;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final roleColor = _roleColor(staff.role);
+    final roleColor = _roleColor(context, staff.role);
 
     return AppCard(
       onTap: onTap,
@@ -98,14 +99,14 @@ class StaffCard extends StatelessWidget {
                       ),
                       child: Text(
                         _roleLabel(staff.role),
-                        style: TextStyle(color: roleColor, fontSize: 11, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: roleColor, fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                     ),
                     if (staff.phone != null) ...[
                       const SizedBox(width: AppConstants.spacingSm),
                       Text(
                         staff.phone!,
-                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
                   ],
@@ -121,9 +122,9 @@ class StaffCard extends StatelessWidget {
                   '${staff.todaySales!.toStringAsFixed(0)} TJS',
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.success),
                 ),
-                const Text(
+                Text(
                   'сегодня',
-                  style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

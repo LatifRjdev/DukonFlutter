@@ -9,7 +9,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'DokonPro';
+  String get appTitle => 'DukonPro';
 
   @override
   String get save => 'Сохранить';
@@ -910,4 +910,219 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get navMore => 'Ещё';
+
+  @override
+  String get a11yShare => 'Поделиться';
+
+  @override
+  String get a11yRefresh => 'Обновить';
+
+  @override
+  String get a11yFilter => 'Фильтр';
+
+  @override
+  String get a11yFilters => 'Фильтры';
+
+  @override
+  String get a11yDeleteProduct => 'Удалить товар';
+
+  @override
+  String get a11yAddClient => 'Добавить клиента';
+
+  @override
+  String get a11yCallClient => 'Позвонить клиенту';
+
+  @override
+  String get a11ySelectClient => 'Выбрать клиента';
+
+  @override
+  String get a11yEditStore => 'Редактировать магазин';
+
+  @override
+  String get a11yEditDiscount => 'Редактировать скидку';
+
+  @override
+  String get a11yDeleteDiscount => 'Удалить скидку';
+
+  @override
+  String get a11yEditCategory => 'Редактировать категорию';
+
+  @override
+  String get a11yDeleteCategory => 'Удалить категорию';
+
+  @override
+  String get a11yOpenReports => 'Открыть отчёты';
+
+  @override
+  String get a11yDownloadReport => 'Скачать отчёт';
+
+  @override
+  String get a11yCalculationHistory => 'История расчётов';
+
+  @override
+  String get a11yIncreaseQuantity => 'Увеличить количество';
+
+  @override
+  String get a11yDecreaseQuantity => 'Уменьшить количество';
+
+  @override
+  String get a11yWithoutChange => 'Без сдачи';
+
+  @override
+  String get a11ySelectPeriod => 'Выбрать период';
+
+  @override
+  String get a11yUploadPhoto => 'Загрузить фото';
+
+  @override
+  String get a11yOpenZReport => 'Открыть Z-отчёт';
+
+  @override
+  String get a11yMarkAsRead => 'Отметить как прочитанное';
+
+  @override
+  String get a11yEditProfile => 'Редактировать профиль';
+
+  @override
+  String a11yQuickAmount(String amount) {
+    return 'Быстрая сумма $amount';
+  }
+
+  @override
+  String a11ySelectCurrency(String code) {
+    return 'Выбрать валюту $code';
+  }
+
+  @override
+  String a11ySelectStore(String name) {
+    return 'Выбрать магазин $name';
+  }
+
+  @override
+  String a11yChooseLanguage(String language) {
+    return 'Выбрать язык $language';
+  }
+
+  @override
+  String a11yOpenProduct(String name) {
+    return 'Открыть товар $name';
+  }
+
+  @override
+  String a11yPaymentOf(String plan) {
+    return 'Платёж $plan';
+  }
+
+  @override
+  String get snackRefundSuccess => 'Возврат успешно оформлен';
+
+  @override
+  String get snackSelectOrder => 'Выберите заказ';
+
+  @override
+  String get snackSelectCourier => 'Выберите курьера';
+
+  @override
+  String get snackAdjustmentAdded => 'Корректировка добавлена';
+
+  @override
+  String get snackCacheCleared => 'Кэш очищен';
+
+  @override
+  String get snackScannerSettingsSaved => 'Настройки сканера сохранены';
+
+  @override
+  String get snackSettingsSaved => 'Настройки сохранены';
+
+  @override
+  String get snackTelegramSendFailed =>
+      'Не удалось отправить. Клиент не привязан к боту?';
+
+  @override
+  String get snackSettingSaveFailed => 'Не удалось сохранить настройку';
+
+  @override
+  String get snackNoPhoneNumber => 'Номер телефона не указан';
+
+  @override
+  String get snackPrintError => 'Ошибка печати';
+
+  @override
+  String get snackSaveError => 'Ошибка сохранения';
+
+  @override
+  String get snackPrinterNotConnected =>
+      'Принтер не подключён. Настройте в Настройки → Принтер.';
+
+  @override
+  String get snackIntakeSuccess => 'Приход успешно оформлен';
+
+  @override
+  String get snackCalculationCopied => 'Расчёт скопирован';
+
+  @override
+  String get snackSyncCompleted => 'Синхронизация выполнена';
+
+  @override
+  String get snackShiftClosed => 'Смена закрыта';
+
+  @override
+  String get snackShiftOpened => 'Смена открыта';
+
+  @override
+  String get snackTestPrintDone => 'Тестовая печать выполнена';
+
+  @override
+  String get snackTestMessageSent => 'Тестовое сообщение отправлено';
+
+  @override
+  String get snackReceiptPrinted => 'Чек напечатан';
+
+  @override
+  String get snackReceiptSentToTelegram => 'Чек отправлен в Telegram';
+
+  @override
+  String get snackTemplateSaved => 'Шаблон сохранён';
+
+  @override
+  String get snackLanguageSaved =>
+      'Язык сохранён. Перезапустите приложение для применения.';
+
+  @override
+  String snackCustomerSelectedForSale(String name) {
+    return 'Клиент $name выбран для продажи';
+  }
+
+  @override
+  String snackStoreSelected(String name) {
+    return 'Магазин \"$name\" выбран';
+  }
+
+  @override
+  String snackPrintErrorDetails(String error) {
+    return 'Ошибка печати: $error';
+  }
+
+  @override
+  String snackConnectionError(String error) {
+    return 'Ошибка подключения: $error';
+  }
+
+  @override
+  String snackSyncError(String error) {
+    return 'Ошибка синхронизации: $error';
+  }
+
+  @override
+  String snackGenericError(String error) {
+    return 'Ошибка: $error';
+  }
+
+  @override
+  String snackProductAddedToCart(String name) {
+    return '$name добавлен в корзину';
+  }
+
+  @override
+  String get snackActionGoToCheckout => 'В кассу';
 }

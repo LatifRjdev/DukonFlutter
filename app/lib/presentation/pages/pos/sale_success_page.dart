@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../../core/network/dio_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/sale.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class SaleSuccessPage extends StatefulWidget {
   final Sale sale;
@@ -34,6 +39,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     super.initState();
     _animController = AnimationController(
       vsync: this,
+      // Intentionally slower than AppConstants.motionSlow (400ms) —
+      // elastic success reveal benefits from extended playback.
       duration: const Duration(milliseconds: 600),
     );
     _scaleAnimation = CurvedAnimation(
@@ -53,14 +60,12 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'DokonPro';
+        : 'DukonPro';
 
     final printerService = sl<ThermalPrinterService>();
     if (!printerService.isConnected) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Принтер не подключён. Настройте в Настройки → Принтер.')),
-      );
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrinterNotConnected);
       return;
     }
 
@@ -70,12 +75,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     );
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(success ? 'Чек напечатан' : 'Ошибка печати'),
-        backgroundColor: success ? AppColors.success : AppColors.error,
-      ),
-    );
+    if (success) {
+      AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptPrinted);
+    } else {
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintError);
+    }
   }
 
   @override
@@ -83,7 +87,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final sale = widget.sale;
 
     return Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: context.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -96,11 +100,11 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                 child: Container(
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    color: AppColors.success,
+                  decoration: BoxDecoration(
+                    color: context.success,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check, size: 48, color: Colors.white),
+                  child: Icon(Icons.check, size: 48, color: context.onSuccess),
                 ),
               ),
               const SizedBox(height: 24),
@@ -112,7 +116,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
               if (sale.change > 0) ...[
                 const SizedBox(height: 8),
                 Text('Сдача: ${_formatPrice(sale.change)}',
-                  style: const TextStyle(fontSize: 16, color: AppColors.lightTextSecondary)),
+                  style: TextStyle(fontSize: 16, color: context.textSecondary)),
               ],
               const Spacer(),
 
@@ -138,9 +142,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Отправка в Telegram скоро будет доступна')),
-                    );
+                    _showShareOptions(context);
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -160,7 +162,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                   onPressed: () => context.go('/home'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.onPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   child: const Text('Новая продажа',
@@ -172,5 +174,57 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
         ),
       ),
     );
+  }
+
+  void _showShareOptions(BuildContext context) {
+    final sale = widget.sale;
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.telegram, color: Colors.blue),
+              title: const Text('Telegram'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendTelegram(sale);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.chat, color: Colors.green),
+              title: const Text('WhatsApp'),
+              onTap: () {
+                Navigator.pop(context);
+                Share.share('Чек #${sale.receiptNo}\nИтого: ${sale.total.toStringAsFixed(2)} сом.');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.sms_outlined),
+              title: const Text('SMS'),
+              onTap: () {
+                Navigator.pop(context);
+                Share.share('Чек #${sale.receiptNo}, Итого: ${sale.total.toStringAsFixed(2)} сом.');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendTelegram(Sale sale) async {
+    try {
+      final dio = sl<DioClient>();
+      await dio.post('/stores/${sale.storeId}/telegram/send-receipt', data: {'saleId': sale.id});
+      if (mounted) {
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackReceiptSentToTelegram);
+      }
+    } catch (_) {
+      if (mounted) {
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackTelegramSendFailed);
+      }
+    }
   }
 }

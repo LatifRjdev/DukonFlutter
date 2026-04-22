@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ZakatSettingsPage extends StatefulWidget {
   final String storeId;
@@ -68,8 +71,9 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -78,7 +82,11 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(
+                    tooltip: l10n.back,
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
                   const Text('Настройки закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
@@ -99,15 +107,11 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     setState(() {});
                   }
                   if (state is ZakatActionSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, state.message);
                     context.pop();
                   }
                   if (state is ZakatError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-                    );
+                    AppSnackbar.error(context, state.message);
                   }
                 },
                 builder: (context, state) {
@@ -120,31 +124,31 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       // Method section
                       _buildSectionLabel('МЕТОД РАСЧЁТА'),
                       const SizedBox(height: 8),
-                      _buildCard([
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(14, 12, 14, 4),
-                          child: Text('Стандарт нисаба',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                        ),
-                        RadioListTile<String>(
-                          title: const Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-                          value: 'gold',
-                          groupValue: _nisabStandard,
-                          activeColor: AppColors.primary,
-                          onChanged: (v) => setState(() => _nisabStandard = v!),
-                          dense: true,
-                        ),
-                        RadioListTile<String>(
-                          title: const Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
-                          subtitle: const Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-                          value: 'silver',
-                          groupValue: _nisabStandard,
-                          activeColor: AppColors.primary,
-                          onChanged: (v) => setState(() => _nisabStandard = v!),
-                          dense: true,
-                        ),
-                      ]),
+                      RadioGroup<String>(
+                        groupValue: _nisabStandard,
+                        onChanged: (v) => setState(() => _nisabStandard = v!),
+                        child: _buildCard([
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(14, 12, 14, 4),
+                            child: Text('Стандарт нисаба',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
+                            subtitle: Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            value: 'gold',
+                            activeColor: AppColors.primary,
+                            dense: true,
+                          ),
+                          RadioListTile<String>(
+                            title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
+                            subtitle: Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            value: 'silver',
+                            activeColor: AppColors.primary,
+                            dense: true,
+                          ),
+                        ]),
+                      ),
                       const SizedBox(height: 8),
                       _buildCard([
                         Padding(
@@ -176,11 +180,14 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: IconButton(
+                                  tooltip: l10n.a11yRefresh,
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
+                                  },
                                 ),
                               ),
                             ],
@@ -195,7 +202,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       _buildCard([
                         InkWell(
                           onTap: _pickDate,
-                          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           child: Padding(
                             padding: const EdgeInsets.all(14),
                             child: Row(
@@ -205,7 +212,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   height: 36,
                                   decoration: BoxDecoration(
                                     color: AppColors.primary.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                   ),
                                   child: const Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
                                 ),
@@ -221,12 +228,12 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                         _haulStartDate != null
                                             ? '${_haulStartDate!.day.toString().padLeft(2, '0')}.${_haulStartDate!.month.toString().padLeft(2, '0')}.${_haulStartDate!.year}'
                                             : 'Не выбрана',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+                                        style: TextStyle(fontSize: 12, color: context.textSecondary),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: AppColors.lightTextSecondary, size: 18),
+                                Icon(Icons.chevron_right, color: context.textSecondary, size: 18),
                               ],
                             ),
                           ),
@@ -241,19 +248,19 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 height: 36,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 18),
                               ),
                               const SizedBox(width: 12),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Напоминание',
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                     Text('За 30 дней до окончания хавля',
-                                      style: TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
                               ),
@@ -321,14 +328,14 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
 
   Widget _buildSectionLabel(String title) {
     return Text(title,
-      style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary, fontWeight: FontWeight.w600));
+      style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600));
   }
 
   Widget _buildCard(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       ),
       child: Column(children: children),
     );
@@ -348,7 +355,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               children: [
                 Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 if (subtitle != null)
-                  Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary)),
+                  Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),

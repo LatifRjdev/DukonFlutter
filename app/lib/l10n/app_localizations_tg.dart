@@ -9,7 +9,7 @@ class AppLocalizationsTg extends AppLocalizations {
   AppLocalizationsTg([String locale = 'tg']) : super(locale);
 
   @override
-  String get appTitle => 'DokonPro';
+  String get appTitle => 'DukonPro';
 
   @override
   String get save => 'Нигоҳ доштан';
@@ -911,4 +911,219 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get navMore => 'Бештар';
+
+  @override
+  String get a11yShare => 'Мубодила';
+
+  @override
+  String get a11yRefresh => 'Навсозӣ';
+
+  @override
+  String get a11yFilter => 'Филтр';
+
+  @override
+  String get a11yFilters => 'Филтрҳо';
+
+  @override
+  String get a11yDeleteProduct => 'Молро нест кардан';
+
+  @override
+  String get a11yAddClient => 'Муштарӣ илова кардан';
+
+  @override
+  String get a11yCallClient => 'Ба муштарӣ занг задан';
+
+  @override
+  String get a11ySelectClient => 'Муштариро интихоб кунед';
+
+  @override
+  String get a11yEditStore => 'Мағозаро таҳрир кардан';
+
+  @override
+  String get a11yEditDiscount => 'Тахфифро таҳрир кардан';
+
+  @override
+  String get a11yDeleteDiscount => 'Тахфифро нест кардан';
+
+  @override
+  String get a11yEditCategory => 'Гурӯҳро таҳрир кардан';
+
+  @override
+  String get a11yDeleteCategory => 'Гурӯҳро нест кардан';
+
+  @override
+  String get a11yOpenReports => 'Ҳисоботҳоро кушодан';
+
+  @override
+  String get a11yDownloadReport => 'Боргирии ҳисобот';
+
+  @override
+  String get a11yCalculationHistory => 'Таърихи ҳисобкуниҳо';
+
+  @override
+  String get a11yIncreaseQuantity => 'Зиёд кардани миқдор';
+
+  @override
+  String get a11yDecreaseQuantity => 'Кам кардани миқдор';
+
+  @override
+  String get a11yWithoutChange => 'Бе қайтимӣ';
+
+  @override
+  String get a11ySelectPeriod => 'Давраро интихоб кунед';
+
+  @override
+  String get a11yUploadPhoto => 'Аксро бор кардан';
+
+  @override
+  String get a11yOpenZReport => 'Ҳисоботи Z-ро кушодан';
+
+  @override
+  String get a11yMarkAsRead => 'Ҳамчун хондашуда қайд кардан';
+
+  @override
+  String get a11yEditProfile => 'Профилро таҳрир кардан';
+
+  @override
+  String a11yQuickAmount(String amount) {
+    return 'Маблағи зуд $amount';
+  }
+
+  @override
+  String a11ySelectCurrency(String code) {
+    return 'Асъорро интихоб кунед $code';
+  }
+
+  @override
+  String a11ySelectStore(String name) {
+    return 'Мағозаро интихоб кунед $name';
+  }
+
+  @override
+  String a11yChooseLanguage(String language) {
+    return 'Забонро интихоб кунед $language';
+  }
+
+  @override
+  String a11yOpenProduct(String name) {
+    return 'Молро кушодан $name';
+  }
+
+  @override
+  String a11yPaymentOf(String plan) {
+    return 'Пардохт $plan';
+  }
+
+  @override
+  String get snackRefundSuccess => 'Баргардонидан бомуваффақият анҷом шуд';
+
+  @override
+  String get snackSelectOrder => 'Фармоишро интихоб кунед';
+
+  @override
+  String get snackSelectCourier => 'Пешбарро интихоб кунед';
+
+  @override
+  String get snackAdjustmentAdded => 'Ислоҳ илова шуд';
+
+  @override
+  String get snackCacheCleared => 'Хотираи кэш тоза шуд';
+
+  @override
+  String get snackScannerSettingsSaved => 'Танзимоти сканер нигоҳ дошта шуд';
+
+  @override
+  String get snackSettingsSaved => 'Танзимот нигоҳ дошта шуд';
+
+  @override
+  String get snackTelegramSendFailed =>
+      'Фиристодан мумкин нашуд. Муштарӣ ба бот пайваст нест?';
+
+  @override
+  String get snackSettingSaveFailed => 'Танзимотро нигоҳ доштан мумкин нашуд';
+
+  @override
+  String get snackNoPhoneNumber => 'Рақами телефон нишон дода нашудааст';
+
+  @override
+  String get snackPrintError => 'Хатои чоп';
+
+  @override
+  String get snackSaveError => 'Хатои нигоҳдорӣ';
+
+  @override
+  String get snackPrinterNotConnected =>
+      'Принтер пайваст нест. Дар Танзимот → Принтер танзим кунед.';
+
+  @override
+  String get snackIntakeSuccess => 'Қабул бомуваффақият анҷом шуд';
+
+  @override
+  String get snackCalculationCopied => 'Ҳисобкунӣ нусхабардорӣ шуд';
+
+  @override
+  String get snackSyncCompleted => 'Ҳамоҳангсозӣ иҷро шуд';
+
+  @override
+  String get snackShiftClosed => 'Навбат пӯшида шуд';
+
+  @override
+  String get snackShiftOpened => 'Навбат кушода шуд';
+
+  @override
+  String get snackTestPrintDone => 'Чопи санҷишӣ иҷро шуд';
+
+  @override
+  String get snackTestMessageSent => 'Паёми санҷишӣ фиристода шуд';
+
+  @override
+  String get snackReceiptPrinted => 'Чек чоп карда шуд';
+
+  @override
+  String get snackReceiptSentToTelegram => 'Чек ба Telegram фиристода шуд';
+
+  @override
+  String get snackTemplateSaved => 'Қолаб нигоҳ дошта шуд';
+
+  @override
+  String get snackLanguageSaved =>
+      'Забон нигоҳ дошта шуд. Барои татбиқ барномаро аз нав оғоз кунед.';
+
+  @override
+  String snackCustomerSelectedForSale(String name) {
+    return 'Муштарӣ $name барои фурӯш интихоб шуд';
+  }
+
+  @override
+  String snackStoreSelected(String name) {
+    return 'Мағозаи \"$name\" интихоб шуд';
+  }
+
+  @override
+  String snackPrintErrorDetails(String error) {
+    return 'Хатои чоп: $error';
+  }
+
+  @override
+  String snackConnectionError(String error) {
+    return 'Хатои пайвастшавӣ: $error';
+  }
+
+  @override
+  String snackSyncError(String error) {
+    return 'Хатои ҳамоҳангсозӣ: $error';
+  }
+
+  @override
+  String snackGenericError(String error) {
+    return 'Хатогӣ: $error';
+  }
+
+  @override
+  String snackProductAddedToCart(String name) {
+    return '$name ба сабад илова шуд';
+  }
+
+  @override
+  String get snackActionGoToCheckout => 'Ба касса';
 }

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/debt/payment_form.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CustomerDebtsPage extends StatefulWidget {
   final String storeId;
@@ -36,9 +39,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
 
   Future<void> _launchPhone() async {
     if (widget.customerPhone == null || widget.customerPhone!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Номер телефона не указан')),
-      );
+      AppSnackbar.info(context, AppLocalizations.of(context)!.snackNoPhoneNumber);
       return;
     }
     final uri = Uri(scheme: 'tel', path: widget.customerPhone);
@@ -63,7 +64,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.cardRadius)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
       ),
       builder: (_) => Padding(
         padding: EdgeInsets.fromLTRB(
@@ -92,12 +93,14 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.customerName),
         actions: [
           if (widget.customerPhone != null && widget.customerPhone!.isNotEmpty)
             IconButton(
+              tooltip: l10n.a11yCallClient,
               icon: const Icon(Icons.phone_outlined, color: AppColors.success),
               onPressed: _launchPhone,
             ),
@@ -106,15 +109,11 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
       body: BlocConsumer<DebtBloc, DebtState>(
         listener: (context, state) {
           if (state is DebtPaymentSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, state.message);
             context.read<DebtBloc>().add(CustomerDebtsRequested(storeId: widget.storeId, customerId: widget.customerId));
           }
           if (state is DebtError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         builder: (context, state) {
@@ -130,11 +129,11 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                   padding: const EdgeInsets.all(AppConstants.spacingLg),
                   decoration: BoxDecoration(
                     color: AppColors.error.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                   ),
                   child: Column(
                     children: [
-                      const Text('Общий долг', style: TextStyle(fontSize: 14, color: AppColors.lightTextSecondary)),
+                      Text('Общий долг', style: TextStyle(fontSize: 14, color: context.textSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.totalDebt.toStringAsFixed(2)} TJS',
@@ -147,7 +146,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                 const Text('Продажи с долгом', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppConstants.spacingSm),
                 if (state.sales.isEmpty)
-                  const Center(child: Text('Нет продаж с долгом', style: TextStyle(color: AppColors.lightTextSecondary)))
+                  Center(child: Text('Нет продаж с долгом', style: TextStyle(color: context.textSecondary)))
                 else
                   ...state.sales.map((sale) {
                     final saleId = sale['id'] as String? ?? '';
@@ -174,10 +173,10 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: AppColors.error,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                         ),
                                         child: const Text('Просрочено',
-                                          style: TextStyle(fontSize: 10, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
+                                          style: TextStyle(fontSize: 12, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
                                       ),
                                     ],
                                   ],
@@ -189,9 +188,9 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Итого: ${total.toStringAsFixed(2)} TJS', style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                                Text('Итого: ${total.toStringAsFixed(2)} TJS', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                                 if (date.isNotEmpty)
-                                  Text(date.substring(0, 10), style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                  Text(date.substring(0, 10), style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               ],
                             ),
                             const SizedBox(height: AppConstants.spacingSm),
@@ -204,7 +203,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.primary,
                                   side: const BorderSide(color: AppColors.primary),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.buttonRadius)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
                                 ),
                               ),
                             ),

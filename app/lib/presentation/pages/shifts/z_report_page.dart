@@ -1,7 +1,12 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/z_report.dart';
 import '../../blocs/shift/shift_bloc.dart';
@@ -72,12 +77,12 @@ class _ZReportPageState extends State<ZReportPage> {
                 const SizedBox(height: 4),
                 Text(
                   '${_formatDateTime(report.openedAt)} — ${_formatDateTime(report.closedAt)}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                  style: TextStyle(fontSize: 13, color: context.textSecondary),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Длительность: ${report.duration}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                  style: TextStyle(fontSize: 13, color: context.textSecondary),
                 ),
               ],
             ),
@@ -95,7 +100,7 @@ class _ZReportPageState extends State<ZReportPage> {
                 _ReportRow(label: 'Наличные', value: '${report.cashTotal.toStringAsFixed(2)} TJS'),
                 _ReportRow(label: 'Карта', value: '${report.cardTotal.toStringAsFixed(2)} TJS'),
                 _ReportRow(label: 'В долг', value: '${report.debtTotal.toStringAsFixed(2)} TJS'),
-                const Divider(color: AppColors.lightBorder),
+                Divider(color: context.border),
                 _ReportRow(
                   label: 'Итого продаж',
                   value: '${report.salesTotal.toStringAsFixed(2)} TJS',
@@ -136,10 +141,10 @@ class _ZReportPageState extends State<ZReportPage> {
                 _ReportRow(label: 'Продажи (нал.)', value: '+${report.cashSalesAmount.toStringAsFixed(2)} TJS', valueColor: AppColors.success),
                 _ReportRow(label: 'Возвраты (нал.)', value: '-${report.cashReturns.toStringAsFixed(2)} TJS', valueColor: AppColors.error),
                 _ReportRow(label: 'Изъятия', value: '-${report.withdrawals.toStringAsFixed(2)} TJS', valueColor: AppColors.error),
-                const Divider(color: AppColors.lightBorder),
+                Divider(color: context.border),
                 _ReportRow(label: 'Ожидаемая сумма', value: '${report.expectedCash.toStringAsFixed(2)} TJS', isBold: true),
                 _ReportRow(label: 'Фактическая сумма', value: '${report.actualCash.toStringAsFixed(2)} TJS', isBold: true),
-                const Divider(color: AppColors.lightBorder),
+                Divider(color: context.border),
                 _ReportRow(
                   label: 'Разница',
                   value: '${report.difference >= 0 ? '+' : ''}${report.difference.toStringAsFixed(2)} TJS',
@@ -173,7 +178,7 @@ class _ZReportPageState extends State<ZReportPage> {
                             width: 24,
                             child: Text(
                               '${index + 1}.',
-                              style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary),
                             ),
                           ),
                           Expanded(
@@ -181,7 +186,7 @@ class _ZReportPageState extends State<ZReportPage> {
                           ),
                           Text(
                             'x$qty',
-                            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                            style: TextStyle(fontSize: 13, color: context.textSecondary),
                           ),
                           const SizedBox(width: AppConstants.spacingMd),
                           Text(
@@ -218,6 +223,23 @@ class _ZReportPageState extends State<ZReportPage> {
               ),
               const SizedBox(width: 12),
               Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _shareReport(report),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: context.textPrimary,
+                    side: BorderSide(color: context.border),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                    ),
+                  ),
+                  icon: const Icon(Icons.share_outlined, size: 20),
+                  label: const Text('Поделиться',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => context.pop(),
                   style: ElevatedButton.styleFrom(
@@ -242,9 +264,38 @@ class _ZReportPageState extends State<ZReportPage> {
   }
 
   void _printReport(ZReport report) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Печать Z-отчёта скоро будет доступна')),
-    );
+    Printing.layoutPdf(onLayout: (format) async {
+      return _buildZReportPdf(report);
+    });
+  }
+
+  void _shareReport(ZReport report) async {
+    final bytes = await _buildZReportPdf(report);
+    await Printing.sharePdf(bytes: bytes, filename: 'z-report.pdf');
+  }
+
+  Future<Uint8List> _buildZReportPdf(ZReport report) {
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.roll80,
+      build: (ctx) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Z-ОТЧЁТ',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          pw.Text('Кассир: ${report.staffName}'),
+          pw.SizedBox(height: 8),
+          pw.Text('Продаж: ${report.salesCount}  Возвратов: ${report.returnsCount}'),
+          pw.Text('Наличные: ${report.cashTotal.toStringAsFixed(2)}'),
+          pw.Text('Карта: ${report.cardTotal.toStringAsFixed(2)}'),
+          pw.Text('Долг: ${report.debtTotal.toStringAsFixed(2)}'),
+          pw.Divider(),
+          pw.Text('ИТОГО: ${report.salesTotal.toStringAsFixed(2)} сом.',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+        ],
+      ),
+    ));
+    return doc.save();
   }
 }
 
@@ -258,11 +309,9 @@ class _SectionCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        boxShadow: const [
-          BoxShadow(color: AppColors.overlay, blurRadius: 4, offset: Offset(0, 2)),
-        ],
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        boxShadow: context.elevationSm,
       ),
       child: child,
     );
@@ -310,7 +359,7 @@ class _ReportRow extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 14,
-              color: isBold ? AppColors.lightTextPrimary : AppColors.lightTextSecondary,
+              color: isBold ? context.textPrimary : context.textSecondary,
               fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
             ),
           ),
@@ -319,7 +368,7 @@ class _ReportRow extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: valueColor ?? AppColors.lightTextPrimary,
+              color: valueColor ?? context.textPrimary,
             ),
           ),
         ],

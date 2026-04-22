@@ -14,6 +14,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
+    on<AuthSendOtpRequested>(_onSendOtpRequested);
+    on<AuthVerifyOtpRequested>(_onVerifyOtpRequested);
+    on<AuthForgotPasswordRequested>(_onForgotPasswordRequested);
+    on<AuthResetPasswordRequested>(_onResetPasswordRequested);
   }
 
   Future<void> _onCheckRequested(AuthCheckRequested event, Emitter<AuthState> emit) async {
@@ -58,5 +62,45 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onLogoutRequested(AuthLogoutRequested event, Emitter<AuthState> emit) async {
     await _authRepository.logout();
     emit(AuthUnauthenticated());
+  }
+
+  Future<void> _onSendOtpRequested(AuthSendOtpRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.sendOtp(event.phone);
+      emit(AuthOtpSent(phone: event.phone));
+    } catch (e) {
+      emit(AuthFailure(mapErrorToUserMessage(e)));
+    }
+  }
+
+  Future<void> _onVerifyOtpRequested(AuthVerifyOtpRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      final result = await _authRepository.verifyOtp(event.phone, event.code);
+      emit(AuthAuthenticated(result.user));
+    } catch (e) {
+      emit(AuthFailure(mapErrorToUserMessage(e)));
+    }
+  }
+
+  Future<void> _onForgotPasswordRequested(AuthForgotPasswordRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.forgotPassword(event.phone);
+      emit(AuthOtpSent(phone: event.phone));
+    } catch (e) {
+      emit(AuthFailure(mapErrorToUserMessage(e)));
+    }
+  }
+
+  Future<void> _onResetPasswordRequested(AuthResetPasswordRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.resetPassword(event.phone, event.code, event.newPassword);
+      emit(AuthPasswordResetSuccess());
+    } catch (e) {
+      emit(AuthFailure(mapErrorToUserMessage(e)));
+    }
   }
 }

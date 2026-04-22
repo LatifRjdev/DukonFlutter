@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/router/route_names.dart';
 import '../../../domain/entities/sale.dart';
@@ -16,6 +17,9 @@ import '../../widgets/common/app_card.dart';
 import '../../widgets/common/gradient_header.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_chip.dart';
+import '../../widgets/common/app_error_widget.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_shadows.dart';
 
 class DashboardPage extends StatefulWidget {
   final ValueChanged<int>? onTabChange;
@@ -29,6 +33,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   bool _loaded = false;
   String _selectedPeriod = 'today';
+  DateTimeRange? _customDateRange;
 
   static const _periods = [
     {'key': 'today', 'label': 'Сегодня'},
@@ -84,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightBackground,
+        backgroundColor: context.bg,
         body: Column(
           children: [
             // Gradient Header
@@ -102,23 +107,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   }
 
                   if (state is DashboardError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-                          const SizedBox(height: 16),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(state.message, textAlign: TextAlign.center),
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _loadDashboard,
-                            child: const Text('Повторить'),
-                          ),
-                        ],
-                      ),
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: _loadDashboard,
                     );
                   }
 
@@ -141,85 +132,35 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Overlapping stat cards
+                          // Hero revenue card — overlaps the gradient header
                           Transform.translate(
                             offset: const Offset(0, -36),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: GlassCard(
-                                      onTap: () => context.push('/sales/history', extra: _getStoreId()),
-                                      padding: const EdgeInsets.all(14),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.trending_up, size: 18, color: AppColors.lightTextPrimary),
-                                              const Spacer(),
-                                              const Icon(Icons.chevron_right, size: 18, color: AppColors.lightTextSecondary),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            _formatPrice(stats.todayRevenue),
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.lightTextPrimary,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          const Text('Продажи',
-                                            style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: GlassCard(
-                                      padding: const EdgeInsets.all(14),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Icon(Icons.account_balance_wallet_outlined, size: 18, color: AppColors.success),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            _formatPrice(stats.todayProfit),
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.success,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          const Text('Чистая прибыль',
-                                            style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              child: _HeroRevenueCard(
+                                stats: stats,
+                                period: _selectedPeriod,
+                                formatPrice: _formatPrice,
+                                onTap: () => context.push(
+                                  '/sales/history',
+                                  extra: _getStoreId(),
+                                ),
                               ),
                             ),
                           ),
-                          // Main content with negative top margin to account for overlap
                           Padding(
                             padding: const EdgeInsets.only(
                               left: AppConstants.spacingMd,
                               right: AppConstants.spacingMd,
-                              bottom: AppConstants.spacingMd,
+                              bottom: AppConstants.spacingXl,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildKpiCards(stats),
-                                const SizedBox(height: 20),
-                                _buildQuickActionsSection(stats),
-                                const SizedBox(height: 20),
+                                _build3UpMetrics(stats),
+                                const SizedBox(height: 24),
+                                _buildActionTiles(stats),
+                                const SizedBox(height: 24),
                                 _buildRecentSalesSection(stats),
                               ],
                             ),
@@ -236,7 +177,7 @@ class _DashboardPageState extends State<DashboardPage> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => widget.onTabChange?.call(2),
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: context.onPrimary,
           icon: const Icon(Icons.add),
           label: const Text('Новая продажа',
             style: TextStyle(fontWeight: FontWeight.w600)),
@@ -248,7 +189,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildHeader() {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
-        String storeName = 'DokonPro';
+        String storeName = 'DukonPro';
         List stores = [];
         String? selectedStoreId;
 
@@ -263,11 +204,9 @@ class _DashboardPageState extends State<DashboardPage> {
           userName: storeName,
           storeName: storeName,
           onNotificationTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Уведомления скоро появятся')),
-            );
+            context.push('/notifications', extra: _getStoreId());
           },
-          onProfileTap: () {},
+          onProfileTap: () => widget.onTabChange?.call(4),
           onStoreTap: stores.length > 1
               ? () => _showStoreSelector(stores, selectedStoreId)
               : null,
@@ -298,7 +237,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     : Icons.radio_button_unchecked,
                 color: store.id == selectedId
                     ? AppColors.primary
-                    : AppColors.lightTextSecondary,
+                    : ctx.textSecondary,
               ),
               title: Text(store.name),
               onTap: () {
@@ -328,28 +267,45 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             );
           }),
-          GestureDetector(
-            onTap: () async {
-              final picked = await showDateRangePicker(
-                context: context,
-                firstDate: DateTime(2024),
-                lastDate: DateTime.now(),
-                locale: const Locale('ru'),
-              );
-              if (picked != null) {
-                // Custom date range — for now reload with 'month'
-                _onPeriodChanged('month');
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.lightBorder),
+          Semantics(
+            label: 'Выбрать период',
+            button: true,
+            child: GestureDetector(
+              onTap: () async {
+                final picked = await showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2024),
+                  lastDate: DateTime.now(),
+                  initialDateRange: _customDateRange,
+                  locale: const Locale('ru'),
+                );
+                if (picked != null && mounted) {
+                  setState(() {
+                    _selectedPeriod = 'custom';
+                    _customDateRange = picked;
+                  });
+                  final storeId = _getStoreId();
+                  if (storeId != null) {
+                    context.read<DashboardBloc>().add(
+                      DashboardPeriodChanged(storeId, 'custom'),
+                    );
+                  }
+                }
+              },
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 44),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: _selectedPeriod == 'custom' ? AppColors.primary : context.surface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                  border: Border.all(
+                    color: _selectedPeriod == 'custom' ? AppColors.primary : context.border,
+                  ),
+                ),
+                child: Icon(Icons.calendar_today,
+                  size: 16,
+                  color: _selectedPeriod == 'custom' ? context.onPrimary : context.textSecondary),
               ),
-              child: const Icon(Icons.calendar_today,
-                size: 16, color: AppColors.lightTextSecondary),
             ),
           ),
         ],
@@ -357,120 +313,100 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  /// 4 KPI cards 2x2 per mockup: Продажи, Себестоимость, Расходы (red), Средний чек.
-  /// "Чистая прибыль" intentionally lives only in the hero header above this
-  /// grid — previously it was rendered twice (FD-P1-002).
-  Widget _buildKpiCards(DashboardStats stats) {
-    return Column(
+  /// 3-up metric row: Прибыль (green) · Себестоимость (neutral) · Расходы (red).
+  /// Revenue lives in the hero card above; avg check is shown inside the hero.
+  Widget _build3UpMetrics(DashboardStats stats) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _KpiCard(
-                title: 'Продажи',
-                value: _formatPrice(stats.todayRevenue),
-                icon: Icons.trending_up,
-                valueColor: AppColors.lightTextPrimary,
-                showArrow: true,
-                onTap: () => context.push('/sales/history', extra: _getStoreId()),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _KpiCard(
-                title: 'Себестоимость',
-                value: _formatPrice(stats.todayCost),
-                icon: Icons.inventory_2_outlined,
-                valueColor: AppColors.lightTextPrimary,
-              ),
-            ),
-          ],
+        Expanded(
+          child: _MetricTile(
+            label: 'Прибыль',
+            value: _formatPrice(stats.todayProfit),
+            accent: AppColors.success,
+          ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _KpiCard(
-                title: 'Расходы',
-                value: _formatPrice(stats.todayExpenses),
-                icon: Icons.arrow_downward,
-                valueColor: AppColors.error,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _KpiCard(
-                title: 'Средний чек',
-                value: _formatPrice(
-                  stats.todaySalesCount > 0
-                      ? stats.todayRevenue / stats.todaySalesCount
-                      : 0,
-                ),
-                icon: Icons.receipt_long_outlined,
-                valueColor: AppColors.lightTextPrimary,
-              ),
-            ),
-          ],
+        const SizedBox(width: 10),
+        Expanded(
+          child: _MetricTile(
+            label: 'Себестоимость',
+            value: _formatPrice(stats.todayCost),
+            accent: AppColors.info,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _MetricTile(
+            label: 'Расходы',
+            value: _formatPrice(stats.todayExpenses),
+            accent: AppColors.error,
+          ),
         ),
       ],
+      ),
     );
   }
 
-  /// Quick actions — horizontal scroll: Остатки, Долги поставщикам, Долги клиентов, Инвентаризация
-  Widget _buildQuickActionsSection(DashboardStats stats) {
+  /// Actionable list tiles — full-width rows with icon badge, title/subtitle,
+  /// and a right-aligned value or chevron. Much more scannable than the
+  /// previous horizontal strip of tiny cards.
+  Widget _buildActionTiles(DashboardStats stats) {
+    final hasCustomerDebt = stats.customerDebtsTotal > 0;
+    final hasSupplierDebt = stats.supplierDebtsTotal > 0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Быстрые действия',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _QuickActionCard(
-                icon: Icons.inventory_2_outlined,
-                label: 'Остатки',
-                subtitle: '${stats.totalProducts} товаров',
-                color: AppColors.primary,
-                onTap: () => widget.onTabChange?.call(1),
-              ),
-              const SizedBox(width: 12),
-              _QuickActionCard(
-                icon: Icons.arrow_upward,
-                label: 'Долги\nпоставщикам',
-                subtitle: stats.supplierDebtsTotal > 0
-                    ? '-${_formatPrice(stats.supplierDebtsTotal)}'
-                    : '0 TJS',
-                subtitleColor: AppColors.error,
-                color: AppColors.error,
-                onTap: () => context.push(RouteNames.supplierDebts, extra: _getStoreId()),
-              ),
-              const SizedBox(width: 12),
-              _QuickActionCard(
-                icon: Icons.arrow_downward,
-                label: 'Долги\nклиентов',
-                subtitle: stats.customerDebtsTotal > 0
-                    ? '+${_formatPrice(stats.customerDebtsTotal)}'
-                    : '0 TJS',
-                subtitleColor: AppColors.success,
-                color: AppColors.success,
-                onTap: () => context.push(RouteNames.customerDebts, extra: _getStoreId()),
-              ),
-              const SizedBox(width: 12),
-              _QuickActionCard(
-                icon: Icons.fact_check_outlined,
-                label: 'Инвента-\nризация',
-                subtitle: '',
-                color: AppColors.info,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Инвентаризация скоро появится')),
-                  );
-                },
-              ),
-            ],
-          ),
+        const Padding(
+          padding: EdgeInsets.only(left: 4, bottom: 10),
+          child: Text('Операции',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        ),
+        _ActionTile(
+          icon: Icons.inventory_2_outlined,
+          accent: AppColors.primary,
+          title: 'Остатки на складе',
+          subtitle: stats.lowStockProducts > 0
+              ? '${stats.totalProducts} товаров · ${stats.lowStockProducts} мало'
+              : '${stats.totalProducts} товаров',
+          subtitleColor: stats.lowStockProducts > 0
+              ? AppColors.warning
+              : context.textSecondary,
+          onTap: () => widget.onTabChange?.call(1),
+        ),
+        _ActionTile(
+          icon: Icons.arrow_downward_rounded,
+          accent: AppColors.success,
+          title: 'Вам должны',
+          subtitle: hasCustomerDebt
+              ? 'Долги клиентов по продажам'
+              : 'Нет активных долгов',
+          trailingValue: hasCustomerDebt
+              ? _formatPrice(stats.customerDebtsTotal)
+              : null,
+          trailingColor: AppColors.success,
+          onTap: () => context.push(RouteNames.customerDebts, extra: _getStoreId()),
+        ),
+        _ActionTile(
+          icon: Icons.arrow_upward_rounded,
+          accent: AppColors.error,
+          title: 'Вы должны',
+          subtitle: hasSupplierDebt
+              ? 'Долги поставщикам'
+              : 'Нет активных долгов',
+          trailingValue: hasSupplierDebt
+              ? _formatPrice(stats.supplierDebtsTotal)
+              : null,
+          trailingColor: AppColors.error,
+          onTap: () => context.push(RouteNames.supplierDebts, extra: _getStoreId()),
+        ),
+        _ActionTile(
+          icon: Icons.fact_check_outlined,
+          accent: AppColors.info,
+          title: 'Инвентаризация',
+          subtitle: 'Проверить фактические остатки',
+          onTap: () => context.push(RouteNames.inventoryCount, extra: _getStoreId()),
         ),
       ],
     );
@@ -489,12 +425,16 @@ class _DashboardPageState extends State<DashboardPage> {
             if (stats.recentSales.isNotEmpty)
               GestureDetector(
                 onTap: () => context.push('/sales/history', extra: _getStoreId()),
-                child: const Text('Все продажи >',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  )),
+                child: Container(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  alignment: Alignment.center,
+                  child: const Text('Все продажи >',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
+                    )),
+                ),
               ),
           ],
         ),
@@ -508,8 +448,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     Icon(Icons.receipt_long, size: 48, color: AppColors.disabled),
                     const SizedBox(height: 8),
-                    const Text('Пока нет продаж',
-                      style: TextStyle(color: AppColors.lightTextSecondary)),
+                    Text('Пока нет продаж',
+                      style: TextStyle(color: context.textSecondary)),
                   ],
                 ),
               ),
@@ -525,114 +465,301 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 }
 
-// ─── KPI Card ──────────────────────────────────────────────────
+// ─── Hero Revenue Card ─────────────────────────────────────────
 
-class _KpiCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color valueColor;
-  final bool showArrow;
+class _HeroRevenueCard extends StatelessWidget {
+  final DashboardStats stats;
+  final String period;
+  final String Function(double) formatPrice;
   final VoidCallback? onTap;
 
-  const _KpiCard({
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.valueColor,
-    this.showArrow = false,
+  const _HeroRevenueCard({
+    required this.stats,
+    required this.period,
+    required this.formatPrice,
     this.onTap,
   });
 
+  String get _periodLabel {
+    switch (period) {
+      case 'week':
+        return 'Выручка за неделю';
+      case 'month':
+        return 'Выручка за месяц';
+      case 'custom':
+        return 'Выручка за период';
+      default:
+        return 'Выручка сегодня';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final avgCheck = stats.todaySalesCount > 0
+        ? stats.todayRevenue / stats.todaySalesCount
+        : 0.0;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
+          decoration: BoxDecoration(
+            gradient: AppGradients.primaryFull,
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+            boxShadow: AppShadows.lg,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 18, color: valueColor),
-              const Spacer(),
-              if (showArrow)
-                const Icon(Icons.chevron_right, size: 18, color: AppColors.lightTextSecondary),
+              Row(
+                children: [
+                  Text(
+                    _periodLabel,
+                    style: const TextStyle(
+                      color: Color(0xCCFFFFFF),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.chevron_right,
+                    size: 20, color: Color(0xCCFFFFFF)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  formatPrice(stats.todayRevenue),
+                  style: TextStyle(
+                    color: context.onPrimary,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                    height: 1.0,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  _HeroMeta(
+                    icon: Icons.receipt_long_outlined,
+                    label: '${stats.todaySalesCount} продаж',
+                  ),
+                  const SizedBox(width: 16),
+                  _HeroMeta(
+                    icon: Icons.payments_outlined,
+                    label: 'Средний чек ${formatPrice(avgCheck)}',
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: valueColor,
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroMeta extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _HeroMeta({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: const Color(0xCCFFFFFF)),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Color(0xE6FFFFFF),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(title,
-            style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
         ],
       ),
     );
   }
 }
 
-// ─── Quick Action Card ─────────────────────────────────────────
+// ─── Metric Tile ───────────────────────────────────────────────
 
-class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
+class _MetricTile extends StatelessWidget {
   final String label;
+  final String value;
+  final Color accent;
+
+  const _MetricTile({
+    required this.label,
+    required this.value,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        boxShadow: AppShadows.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 4,
+            height: 16,
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: accent,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: context.textSecondary,
+              letterSpacing: 0.1,
+            ),
+          ),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: accent,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Action Tile ───────────────────────────────────────────────
+
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final Color accent;
+  final String title;
   final String subtitle;
   final Color? subtitleColor;
-  final Color color;
+  final String? trailingValue;
+  final Color? trailingColor;
   final VoidCallback onTap;
 
-  const _QuickActionCard({
+  const _ActionTile({
     required this.icon,
-    required this.label,
+    required this.accent,
+    required this.title,
     required this.subtitle,
     this.subtitleColor,
-    required this.color,
+    this.trailingValue,
+    this.trailingColor,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      onTap: onTap,
-      padding: const EdgeInsets.all(14),
-      child: SizedBox(
-        width: 96,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, size: 18, color: color),
-            ),
-            const SizedBox(height: 8),
-            Text(label,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.lightTextPrimary,
-              ),
-            ),
-            if (subtitle.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(subtitle,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: subtitleColor ?? AppColors.lightTextSecondary,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                  ),
+                  child: Icon(icon, size: 20, color: accent),
                 ),
-              ),
-            ],
-          ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: context.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: subtitleColor ?? context.textSecondary,
+                          fontWeight: subtitleColor != null
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (trailingValue != null) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    trailingValue!,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: trailingColor ?? context.textPrimary,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ],
+                const SizedBox(width: 4),
+                Icon(Icons.chevron_right,
+                  size: 20, color: context.textMuted),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -669,7 +796,7 @@ class _SaleCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             ),
             child: const Icon(Icons.receipt_outlined,
               size: 20, color: AppColors.primary),
@@ -685,8 +812,8 @@ class _SaleCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${timeFormat.format(sale.createdAt)} · $paymentLabel',
-                  style: const TextStyle(
-                    fontSize: 12, color: AppColors.lightTextSecondary),
+                  style: TextStyle(
+                    fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

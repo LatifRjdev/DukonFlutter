@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 class QuantitySelector extends StatelessWidget {
   final int quantity;
@@ -20,7 +22,7 @@ class QuantitySelector extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildButton(Icons.remove, () {
+        _buildButton(context, Icons.remove, () {
           if (quantity > min) onChanged(quantity - 1);
         }),
         Padding(
@@ -30,25 +32,24 @@ class QuantitySelector extends StatelessWidget {
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ),
-        _buildButton(Icons.add, () {
+        _buildButton(context, Icons.add, () {
           if (quantity < max) onChanged(quantity + 1);
         }),
       ],
     );
   }
 
-  Widget _buildButton(IconData icon, VoidCallback onTap) {
+  Widget _buildButton(BuildContext context, IconData icon, VoidCallback onTap) {
     return Material(
-      color: AppColors.lightBackground,
-      borderRadius: BorderRadius.circular(8),
+      color: context.bg,
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          width: 36,
-          height: 36,
-          alignment: Alignment.center,
-          child: Icon(icon, size: 20, color: AppColors.primary),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(child: Icon(icon, size: 20, color: AppColors.primary)),
         ),
       ),
     );

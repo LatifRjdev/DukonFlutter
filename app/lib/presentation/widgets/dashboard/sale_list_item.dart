@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/sale.dart';
@@ -17,13 +18,13 @@ class SaleListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightSurface,
-      borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+      color: context.surface,
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
       elevation: 1,
-      shadowColor: AppColors.overlay,
+      shadowColor: context.shadowColor,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.spacingMd,
@@ -36,7 +37,7 @@ class SaleListItem extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha:0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Icon(
@@ -53,19 +54,19 @@ class SaleListItem extends StatelessWidget {
                   children: [
                     Text(
                       '#${sale.receiptNo}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextPrimary,
+                        color: context.textPrimary,
                         fontFamily: 'Inter',
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       Formatters.time(sale.createdAt),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.lightTextSecondary,
+                        color: context.textSecondary,
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -78,15 +79,15 @@ class SaleListItem extends StatelessWidget {
                 children: [
                   Text(
                     Formatters.price(sale.total),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.lightTextPrimary,
+                      color: context.textPrimary,
                       fontFamily: 'Inter',
                     ),
                   ),
                   const SizedBox(height: 4),
-                  _buildPaymentBadge(),
+                  _buildPaymentBadge(context),
                 ],
               ),
             ],
@@ -96,38 +97,38 @@ class SaleListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentBadge() {
+  Widget _buildPaymentBadge(BuildContext context) {
     Color badgeColor;
     String badgeLabel;
 
     switch (sale.paymentType) {
       case 'CASH':
-        badgeColor = AppColors.success;
+        badgeColor = context.success;
         badgeLabel = 'Наличные';
         break;
       case 'CARD':
-        badgeColor = AppColors.info;
+        badgeColor = context.info;
         badgeLabel = 'Карта';
         break;
       case 'DEBT':
-        badgeColor = AppColors.warning;
+        badgeColor = context.warning;
         badgeLabel = 'В долг';
         break;
       default:
-        badgeColor = AppColors.lightTextSecondary;
+        badgeColor = context.textSecondary;
         badgeLabel = sale.paymentType;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: badgeColor.withValues(alpha:0.1),
+        color: badgeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
       ),
       child: Text(
         badgeLabel,
         style: TextStyle(
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
           color: badgeColor,
           fontFamily: 'Inter',

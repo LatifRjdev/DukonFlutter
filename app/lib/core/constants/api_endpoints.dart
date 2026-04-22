@@ -17,6 +17,10 @@ class ApiEndpoints {
   static const String login = '/auth/login';
   static const String refresh = '/auth/refresh';
   static const String logout = '/auth/logout';
+  static const String sendOtp = '/auth/send-otp';
+  static const String verifyOtp = '/auth/verify-otp';
+  static const String forgotPassword = '/auth/forgot-password';
+  static const String resetPassword = '/auth/reset-password';
 
   // Users
   static const String userMe = '/users/me';
@@ -35,6 +39,8 @@ class ApiEndpoints {
   static String productByBarcode(String storeId, String barcode) =>
       '/stores/$storeId/products/barcode/$barcode';
   static String productImport(String storeId) => '/stores/$storeId/products/import';
+  static String productImportPreview(String storeId) => '/stores/$storeId/products/import/preview';
+  static String productImportTemplate(String storeId) => '/stores/$storeId/products/import/template';
 
   // Stock Movements
   static String stockMovements(String storeId, String productId) =>
@@ -61,6 +67,10 @@ class ApiEndpoints {
   // Expenses
   static String expenses(String storeId) => '/stores/$storeId/expenses';
   static String expense(String storeId, String id) => '/stores/$storeId/expenses/$id';
+
+  // Investments
+  static String investments(String storeId) => '/stores/$storeId/investments';
+  static String investment(String storeId, String id) => '/stores/$storeId/investments/$id';
 
   // Customer Debts & Payments
   static String customerDebts(String storeId, String customerId) => '/stores/$storeId/customers/$customerId/debts';

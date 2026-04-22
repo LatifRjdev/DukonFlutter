@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
 import '../../widgets/debt/debt_card.dart';
+import '../../widgets/common/app_error_widget.dart';
 
 class DebtsOverviewPage extends StatefulWidget {
   final String storeId;
@@ -37,7 +39,10 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
         if (state is DebtError) {
           return Scaffold(
             appBar: AppBar(title: const Text('Долги')),
-            body: Center(child: Text(state.message)),
+            body: AppErrorWidget(
+              message: state.message,
+              onRetry: () => context.read<DebtBloc>().add(DebtsOverviewRequested(storeId: widget.storeId)),
+            ),
           );
         }
         if (state is DebtsOverviewLoaded) {
@@ -62,11 +67,11 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
                             color: AppColors.error.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
-                              const Text('Нам должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Нам должны', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalCustomerDebt.toStringAsFixed(2)} TJS',
@@ -82,11 +87,11 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           padding: const EdgeInsets.all(AppConstants.spacingMd),
                           decoration: BoxDecoration(
                             color: AppColors.warning.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
-                              const Text('Мы должны', style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Мы должны', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(
                                 '${totalSupplierDebt.toStringAsFixed(2)} TJS',
@@ -146,7 +151,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                           children: [
                             Icon(Icons.check_circle_outline, size: 64, color: AppColors.success),
                             const SizedBox(height: AppConstants.spacingMd),
-                            const Text('Нет активных долгов', style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
+                            Text('Нет активных долгов', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                           ],
                         ),
                       ),

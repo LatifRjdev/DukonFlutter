@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
@@ -41,14 +42,14 @@ class _SplashPageState extends State<SplashPage> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: AppColors.lightSurface,
-                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                  color: context.surface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXxl),
                 ),
                 child: const Icon(Icons.store, size: 60, color: AppColors.primary),
               ),
               const SizedBox(height: 24),
               const Text(
-                'DokonPro',
+                'DukonPro',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,

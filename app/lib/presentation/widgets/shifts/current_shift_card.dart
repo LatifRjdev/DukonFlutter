@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/shift.dart';
 import '../common/app_card.dart';
@@ -41,6 +42,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
   String _formatElapsed(Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes.remainder(60);
+    // ignore: unnecessary_brace_in_string_interps
     return '${hours}ч ${minutes}м';
   }
 
@@ -58,7 +60,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                 height: 44,
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: const Icon(Icons.access_time_filled, color: AppColors.success, size: 24),
               ),
@@ -74,7 +76,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                     const SizedBox(height: 2),
                     Text(
                       '${widget.shift.staffName ?? "Сотрудник"} - ${_formatElapsed(_elapsed)}',
-                      style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -112,7 +114,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                 foregroundColor: AppColors.error,
                 side: const BorderSide(color: AppColors.error),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 ),
               ),
             ),
@@ -141,7 +143,7 @@ class _StatItem extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.lightTextSecondary),
+            style: TextStyle(fontSize: 12, color: context.textSecondary),
           ),
         ],
       ),

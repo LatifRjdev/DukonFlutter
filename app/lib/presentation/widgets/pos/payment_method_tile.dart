@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class PaymentMethodTile extends StatelessWidget {
@@ -31,10 +32,10 @@ class PaymentMethodTile extends StatelessWidget {
           vertical: AppConstants.spacingSm + 4,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.lightBorder,
+            color: isSelected ? AppColors.primary : context.border,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -46,12 +47,12 @@ class PaymentMethodTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.primary.withValues(alpha: 0.15)
-                    : AppColors.lightBackground,
+                    : context.bg,
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? AppColors.primary : AppColors.lightTextSecondary,
+                color: isSelected ? AppColors.primary : context.textSecondary,
                 size: 22,
               ),
             ),
@@ -62,7 +63,7 @@ class PaymentMethodTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? AppColors.primary : AppColors.lightTextPrimary,
+                  color: isSelected ? AppColors.primary : context.textPrimary,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -74,7 +75,7 @@ class PaymentMethodTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.lightBorder,
+                  color: isSelected ? AppColors.primary : context.border,
                   width: 2,
                 ),
               ),

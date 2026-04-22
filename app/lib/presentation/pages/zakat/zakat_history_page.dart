@@ -3,10 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../widgets/common/app_empty_state.dart';
+import '../../widgets/common/app_error_widget.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ZakatHistoryPage extends StatefulWidget {
   final String storeId;
@@ -29,8 +33,9 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -39,7 +44,11 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(
+                    tooltip: l10n.back,
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
                   const Text('История закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
@@ -54,23 +63,17 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ZakatError) {
-                    return Center(child: Text(state.message));
+                    return AppErrorWidget(
+                      message: state.message,
+                      onRetry: () => context.read<ZakatBloc>().add(ZakatPaymentsRequested(storeId: widget.storeId)),
+                    );
                   }
                   if (state is ZakatPaymentsLoaded) {
                     if (state.payments.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.nightlight_round, size: 64, color: AppColors.disabled),
-                            SizedBox(height: 16),
-                            Text('Нет расчётов закята',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16)),
-                            SizedBox(height: 4),
-                            Text('Рассчитайте закят в калькуляторе',
-                              style: TextStyle(color: AppColors.lightTextSecondary, fontSize: 13)),
-                          ],
-                        ),
+                      return const AppEmptyState(
+                        icon: Icons.nightlight_round,
+                        title: 'Нет расчётов закята',
+                        subtitle: 'Рассчитайте закят в калькуляторе, чтобы история появилась здесь',
                       );
                     }
 
@@ -84,19 +87,19 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.lightSurface,
-                            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                            color: context.surface,
+                            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                           ),
                           child: Column(
                             children: [
-                              const Text('Всего выплачено:',
-                                style: TextStyle(fontSize: 13, color: AppColors.lightTextSecondary)),
+                              Text('Всего выплачено:',
+                                style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(_formatPrice(totalPaid),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.primary)),
                               const SizedBox(height: 2),
                               Text('за ${state.payments.length} выплат',
-                                style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             ],
                           ),
                         ),
@@ -109,8 +112,8 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: AppColors.lightSurface,
-                              borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                              color: context.surface,
+                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                             ),
                             child: Row(
                               children: [
@@ -128,11 +131,11 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text('Выплата закята',
+                                      Text('Выплата закята',
                                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                                       const SizedBox(height: 2),
                                       Text('Оплачен $dateStr',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+                                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     ],
                                   ),
                                 ),
@@ -143,7 +146,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
                                     const SizedBox(height: 2),
                                     Text('Облагаемая: ${_formatPrice(payment.totalAssets)}',
-                                      style: const TextStyle(fontSize: 10, color: AppColors.lightTextSecondary)),
+                                      style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
                               ],

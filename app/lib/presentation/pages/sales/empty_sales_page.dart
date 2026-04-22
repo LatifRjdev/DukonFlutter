@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_button.dart';
 
@@ -36,10 +37,10 @@ class EmptySalesPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Совершите первую продажу через кассу, и она появится здесь',
                 style: TextStyle(
-                    color: AppColors.lightTextSecondary, fontSize: 15, height: 1.4),
+                    color: context.textSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

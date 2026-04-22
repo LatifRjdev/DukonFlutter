@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 
 class PeriodSelector extends StatelessWidget {
@@ -24,17 +25,18 @@ class PeriodSelector extends StatelessWidget {
           child: GestureDetector(
             onTap: () => onChanged(p.$1),
             child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
               padding: const EdgeInsets.symmetric(vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.lightSurface,
-                borderRadius: BorderRadius.circular(AppConstants.buttonRadius),
+                color: isSelected ? AppColors.primary : context.surface,
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
               ),
               alignment: Alignment.center,
               child: Text(
                 p.$2,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+                  color: isSelected ? context.onPrimary : context.textSecondary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   fontSize: 13,
                 ),

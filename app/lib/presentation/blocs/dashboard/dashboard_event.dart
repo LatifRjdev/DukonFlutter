@@ -25,7 +25,9 @@ class DashboardRefreshRequested extends DashboardEvent {
 class DashboardPeriodChanged extends DashboardEvent {
   final String storeId;
   final String period;
-  const DashboardPeriodChanged(this.storeId, this.period);
+  final DateTime? startDate;
+  final DateTime? endDate;
+  const DashboardPeriodChanged(this.storeId, this.period, {this.startDate, this.endDate});
   @override
-  List<Object?> get props => [storeId, period];
+  List<Object?> get props => [storeId, period, startDate, endDate];
 }
