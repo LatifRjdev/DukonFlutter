@@ -9,6 +9,35 @@
 - **Phase 2** — migrate ~39 call-sites across ~30 files to `AppLocalizations.of(context)!.<key>` or `l10n.<key>`.
 - **Phase 3** — `flutter gen-l10n`, analyze, test, commit.
 
+---
+
+## Sprint 6 Complete — 2026-04-22
+
+**Outcome:** 39 hardcoded Russian a11y strings from Sprint 5B.2.a/b localized into ru/tg/uz arb; ~30 call-sites migrated; Impeller golden drift neutralized via 0.2% tolerance comparator.
+
+**Commits:**
+- `9b457d0` docs(sprint-6) — plan.
+- `d2b1d60` feat(l10n) — added 29 new `a11y*` keys to ru/tg/uz arb + ICU placeholders for 6 interpolated strings (ru verbatim, tg + uz best-effort).
+- `e0ad3de` refactor(l10n) — POS + product cluster.
+- `cb9f23e` refactor(l10n) — settings cluster.
+- `8ab40bf` refactor(l10n) — finance + CRM cluster.
+- `770d88e` refactor(l10n) — shifts/staff/zakat/misc cluster.
+- `3126439` test(goldens) — 0.2% pixel-tolerance comparator for Impeller drift.
+
+**Key stats:**
+- 10 keys reused from existing arb (back, close, scanBarcode, addProduct, editProduct, addSupplier, addEmployee, editEmployee, zakatSettings, etc.).
+- 29 new `a11y*` keys × 3 locales = 87 new arb entries.
+- 6 ICU placeholder methods (`a11yQuickAmount`, `a11ySelectCurrency`, `a11ySelectStore`, `a11yChooseLanguage`, `a11yOpenProduct`, `a11yPaymentOf`).
+
+**Acceptance:**
+- `flutter analyze lib/` → 0 issues.
+- `flutter test` → 363/363 pass (stable across consecutive runs thanks to pixel tolerance).
+
+**Follow-up:**
+- Native-speaker review of tg + uz translations (marked best-effort).
+- AppSnackbar messages (~91 strings in ru) still hardcoded — separate l10n sprint.
+- Physical-device TalkBack QA pass on tg/uz locales (dynamic-content announcement paths changed).
+
 **Non-goals:** SnackBar `AppSnackbar.success/error/info(context, 'сообщение')` messages remain hardcoded — those pre-date the a11y sprints and represent ~91 additional strings that need a separate l10n sprint.
 
 ---
