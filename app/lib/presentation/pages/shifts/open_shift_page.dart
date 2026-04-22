@@ -8,6 +8,7 @@ import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class OpenShiftPage extends StatefulWidget {
@@ -45,15 +46,11 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
       body: BlocListener<ShiftBloc, ShiftState>(
         listener: (context, state) {
           if (state is ShiftOpened) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Смена открыта'), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, 'Смена открыта');
             context.pop();
           }
           if (state is ShiftError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(

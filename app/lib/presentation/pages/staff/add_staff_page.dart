@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/staff_member.dart';
@@ -11,6 +10,7 @@ import '../../blocs/staff_form/staff_form_bloc.dart';
 import '../../blocs/staff_form/staff_form_event.dart';
 import '../../blocs/staff_form/staff_form_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class AddStaffPage extends StatefulWidget {
@@ -91,17 +91,13 @@ class _AddStaffPageState extends State<AddStaffPage> {
         listener: (context, state) {
           if (state is StaffFormSuccess) {
             context.read<StaffBloc>().add(LoadStaff(storeId: widget.storeId));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(_isEditing ? 'Сотрудник обновлён' : 'Сотрудник добавлен'),
-                backgroundColor: AppColors.success,
-              ),
+            AppSnackbar.success(
+              context,
+              _isEditing ? 'Сотрудник обновлён' : 'Сотрудник добавлен',
             );
             context.pop();
           } else if (state is StaffFormError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage ?? 'Ошибка'), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.errorMessage ?? 'Ошибка');
           }
         },
         child: SingleChildScrollView(

@@ -11,6 +11,7 @@ import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class ShiftsPage extends StatefulWidget {
   final String storeId;
@@ -132,22 +133,16 @@ class _ShiftsPageState extends State<ShiftsPage> {
               child: BlocConsumer<ShiftBloc, ShiftState>(
                 listener: (context, state) {
                   if (state is ShiftOpened) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Смена открыта'), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, 'Смена открыта');
                     _loadData();
                   }
                   if (state is ShiftClosed) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Смена закрыта'), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, 'Смена закрыта');
                     context.push('/shifts/${state.shift.id}/z-report', extra: widget.storeId);
                     _loadData();
                   }
                   if (state is ShiftError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-                    );
+                    AppSnackbar.error(context, state.message);
                   }
                 },
                 builder: (context, state) {

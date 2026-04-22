@@ -14,6 +14,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class RefundPage extends StatefulWidget {
@@ -127,12 +128,7 @@ class _RefundPageState extends State<RefundPage> {
               .toList();
           if (updatedSale.isNotEmpty &&
               updatedSale.first.status != widget.sale.status) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Возврат успешно оформлен'),
-                backgroundColor: AppColors.success,
-              ),
-            );
+            AppSnackbar.success(context, 'Возврат успешно оформлен');
             context.pop();
           }
         }

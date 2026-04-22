@@ -12,6 +12,7 @@ import '../../widgets/payroll/payroll_staff_card.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class PayrollPage extends StatefulWidget {
   final String storeId;
@@ -101,9 +102,7 @@ class _PayrollPageState extends State<PayrollPage> {
       body: BlocConsumer<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         builder: (context, state) {

@@ -8,6 +8,7 @@ import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class AddAdjustmentPage extends StatefulWidget {
@@ -62,15 +63,11 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
       body: BlocListener<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollPeriodDetailLoaded) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Корректировка добавлена'), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, 'Корректировка добавлена');
             context.pop();
           }
           if (state is PayrollError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SingleChildScrollView(
