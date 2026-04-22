@@ -46,10 +46,12 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: 'Настройки закята',
                     icon: Icon(Icons.settings_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
                   ),
                   IconButton(
+                    tooltip: 'История расчётов',
                     icon: Icon(Icons.list_alt_outlined, color: context.textSecondary),
                     onPressed: () => context.push('/zakat/history', extra: widget.storeId),
                   ),

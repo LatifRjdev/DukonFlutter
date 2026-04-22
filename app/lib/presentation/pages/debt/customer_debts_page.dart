@@ -99,6 +99,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
         actions: [
           if (widget.customerPhone != null && widget.customerPhone!.isNotEmpty)
             IconButton(
+              tooltip: 'Позвонить клиенту',
               icon: const Icon(Icons.phone_outlined, color: AppColors.success),
               onPressed: _launchPhone,
             ),

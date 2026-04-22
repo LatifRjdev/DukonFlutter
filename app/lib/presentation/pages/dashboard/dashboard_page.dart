@@ -267,41 +267,45 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             );
           }),
-          GestureDetector(
-            onTap: () async {
-              final picked = await showDateRangePicker(
-                context: context,
-                firstDate: DateTime(2024),
-                lastDate: DateTime.now(),
-                initialDateRange: _customDateRange,
-                locale: const Locale('ru'),
-              );
-              if (picked != null && mounted) {
-                setState(() {
-                  _selectedPeriod = 'custom';
-                  _customDateRange = picked;
-                });
-                final storeId = _getStoreId();
-                if (storeId != null) {
-                  context.read<DashboardBloc>().add(
-                    DashboardPeriodChanged(storeId, 'custom'),
-                  );
+          Semantics(
+            label: 'Выбрать период',
+            button: true,
+            child: GestureDetector(
+              onTap: () async {
+                final picked = await showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2024),
+                  lastDate: DateTime.now(),
+                  initialDateRange: _customDateRange,
+                  locale: const Locale('ru'),
+                );
+                if (picked != null && mounted) {
+                  setState(() {
+                    _selectedPeriod = 'custom';
+                    _customDateRange = picked;
+                  });
+                  final storeId = _getStoreId();
+                  if (storeId != null) {
+                    context.read<DashboardBloc>().add(
+                      DashboardPeriodChanged(storeId, 'custom'),
+                    );
+                  }
                 }
-              }
-            },
-            child: Container(
-              constraints: const BoxConstraints(minHeight: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: _selectedPeriod == 'custom' ? AppColors.primary : context.surface,
-                borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-                border: Border.all(
-                  color: _selectedPeriod == 'custom' ? AppColors.primary : context.border,
+              },
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 44),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: _selectedPeriod == 'custom' ? AppColors.primary : context.surface,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                  border: Border.all(
+                    color: _selectedPeriod == 'custom' ? AppColors.primary : context.border,
+                  ),
                 ),
+                child: Icon(Icons.calendar_today,
+                  size: 16,
+                  color: _selectedPeriod == 'custom' ? context.onPrimary : context.textSecondary),
               ),
-              child: Icon(Icons.calendar_today,
-                size: 16,
-                color: _selectedPeriod == 'custom' ? context.onPrimary : context.textSecondary),
             ),
           ),
         ],

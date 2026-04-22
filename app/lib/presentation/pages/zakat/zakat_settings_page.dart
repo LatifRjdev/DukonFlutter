@@ -180,6 +180,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                                 ),
                                 child: IconButton(
+                                  tooltip: 'Обновить',
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
                                   onPressed: () {
                                     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
