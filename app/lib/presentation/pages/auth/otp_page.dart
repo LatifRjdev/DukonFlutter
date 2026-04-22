@@ -10,6 +10,7 @@ import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class OtpPage extends StatefulWidget {
   final String phone;
@@ -104,9 +105,7 @@ class _OtpPageState extends State<OtpPage> {
           if (state is AuthAuthenticated) {
             context.go('/home');
           } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         child: SafeArea(
