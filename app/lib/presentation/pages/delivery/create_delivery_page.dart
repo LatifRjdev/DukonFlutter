@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 // ─── Models ──────────────────────────────────────────────────────────────────
 
@@ -165,13 +166,11 @@ class _CreateViewState extends State<_CreateView> {
   void _submit(List<_Sale> sales, List<_StaffMember> staff) {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_selectedSaleId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Выберите заказ')));
+      AppSnackbar.info(context, 'Выберите заказ');
       return;
     }
     if (_selectedCourierId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Выберите курьера')));
+      AppSnackbar.info(context, 'Выберите курьера');
       return;
     }
     context.read<_CreateCubit>().submit(
@@ -190,8 +189,7 @@ class _CreateViewState extends State<_CreateView> {
           context.pop();
         }
         if (state is _CreateError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.message)));
+          AppSnackbar.error(context, state.message);
         }
       },
       child: Scaffold(

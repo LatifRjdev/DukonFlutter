@@ -9,6 +9,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class ZakatCalculatorPage extends StatefulWidget {
   final String storeId;
@@ -68,15 +69,11 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
               child: BlocConsumer<ZakatBloc, ZakatState>(
                 listener: (context, state) {
                   if (state is ZakatActionSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-                    );
+                    AppSnackbar.success(context, state.message);
                     context.read<ZakatBloc>().add(ZakatCalculateRequested(storeId: widget.storeId));
                   }
                   if (state is ZakatError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-                    );
+                    AppSnackbar.error(context, state.message);
                   }
                 },
                 builder: (context, state) {
@@ -284,9 +281,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                     'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
                                     'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.';
                                 Clipboard.setData(ClipboardData(text: text));
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Расчёт скопирован')),
-                                );
+                                AppSnackbar.info(context, 'Расчёт скопирован');
                               }
                             },
                             style: OutlinedButton.styleFrom(

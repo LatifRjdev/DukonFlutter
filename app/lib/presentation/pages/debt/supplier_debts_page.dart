@@ -6,6 +6,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/debt/payment_form.dart';
 
@@ -70,15 +71,11 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
       body: BlocConsumer<DebtBloc, DebtState>(
         listener: (context, state) {
           if (state is DebtPaymentSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-            );
+            AppSnackbar.success(context, state.message);
             context.read<DebtBloc>().add(SupplierDebtsRequested(storeId: widget.storeId, supplierId: widget.supplierId));
           }
           if (state is DebtError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
+            AppSnackbar.error(context, state.message);
           }
         },
         builder: (context, state) {

@@ -18,6 +18,7 @@ import '../../blocs/stock/stock_intake_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_search_bar.dart';
 
 class StockIntakePage extends StatefulWidget {
@@ -79,23 +80,13 @@ class _StockIntakePageState extends State<StockIntakePage> {
     return BlocListener<StockIntakeBloc, StockIntakeState>(
       listener: (context, state) {
         if (state.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Приход успешно оформлен'),
-              backgroundColor: AppColors.success,
-            ),
-          );
+          AppSnackbar.success(context, 'Приход успешно оформлен');
           context.read<StockIntakeBloc>().add(StockIntakeReset());
           context.pop();
         }
 
         if (state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          AppSnackbar.error(context, state.error!);
         }
       },
       child: Scaffold(
