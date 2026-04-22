@@ -28,7 +28,14 @@
       "Bash(gh pr:*)",
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate)",
+      "Bash(cp /Users/latifrjdev/Downloads/Dukon/app/build/app/outputs/flutter-apk/app-arm64-v8a-debug.apk /Users/latifrjdev/Downloads/DukonPro-test.apk)",
+      "Read(//Users/latifrjdev/Downloads/**)",
+      "Bash(flutter run *)",
+      "Bash(disown)",
+      "Bash(awk '{print $2}')",
+      "Bash(xargs -r kill sleep 2 rm -f /tmp/flutter_stdin mkfifo /tmp/flutter_stdin echo \"fifo created\")"
     ],
     "additionalDirectories": [
       "/Users/latifrjdev/Downloads/Dukon/.git",

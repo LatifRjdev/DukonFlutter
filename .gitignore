@@ -92,3 +92,10 @@ desktop.ini
 *.key
 !public*.key
 .secrets/
+.superpowers/
+
+# golden_toolkit ephemeral outputs (generated on failed golden tests)
+**/failures/
+
+# Claude Code worktree sandboxes
+.claude/worktrees/
