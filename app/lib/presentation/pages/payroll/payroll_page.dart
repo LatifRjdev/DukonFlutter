@@ -221,6 +221,7 @@ class _PayrollPageState extends State<PayrollPage> {
               IconButton(
                 onPressed: _loadData,
                 icon: const Icon(Icons.arrow_back),
+                tooltip: 'Назад',
               ),
               Expanded(
                 child: Text(

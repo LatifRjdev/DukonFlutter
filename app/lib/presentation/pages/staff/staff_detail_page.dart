@@ -78,6 +78,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
               if (state is StaffDetailLoaded) {
                 return IconButton(
                   icon: const Icon(Icons.edit),
+                  tooltip: 'Редактировать сотрудника',
                   onPressed: () => context.push(
                     '/edit-staff/${widget.storeId}/${widget.staffId}',
                   ),

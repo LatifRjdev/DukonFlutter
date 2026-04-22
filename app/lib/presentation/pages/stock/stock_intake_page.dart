@@ -347,6 +347,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
+                    tooltip: 'Закрыть',
                     onPressed: () {
                       context.read<StockIntakeBloc>().add(StockIntakeReset());
                       _quantityController.clear();
