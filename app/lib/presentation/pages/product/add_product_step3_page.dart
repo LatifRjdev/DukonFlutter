@@ -17,6 +17,7 @@ import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import '../../widgets/common/app_snackbar.dart';
 
 class AddProductStep3Page extends StatefulWidget {
   const AddProductStep3Page({super.key});
@@ -83,11 +84,9 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
       body: BlocListener<ProductFormBloc, ProductFormState>(
         listener: (context, state) {
           if (state.isSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Товар сохранён. Синхронизация в фоне.'),
-                backgroundColor: context.success,
-              ),
+            AppSnackbar.success(
+              context,
+              'Товар сохранён. Синхронизация в фоне.',
             );
             context.read<ProductFormBloc>().add(ProductFormReset());
             // Trigger an explicit reload of the product list so the new
@@ -105,11 +104,9 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
             context.go('/home');
           }
           if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error!),
-                backgroundColor: context.danger,
-              ),
+            AppSnackbar.error(
+              context,
+              state.error!,
             );
           }
         },

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -66,12 +67,7 @@ class _ImportProductsView extends StatelessWidget {
             if (state is ImportSuccess) {
               _showSuccessDialog(context, state);
             } else if (state is ImportError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: AppColors.error,
-                ),
-              );
+              AppSnackbar.error(context, state.message);
             } else if (state is ImportTemplateDownloaded) {
               OpenFile.open(state.filePath);
             }

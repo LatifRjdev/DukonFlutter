@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -323,6 +324,12 @@ class ProductDetailPage extends StatelessWidget {
                         // Add product to cart
                         context.read<CartBloc>().add(CartItemAdded(product: product));
                         // Show confirmation
+                        // TODO(a11y): migrate when AppSnackbar supports actions
+                        SemanticsService.sendAnnouncement(
+                          View.of(context),
+                          '${product.name} добавлен в корзину',
+                          Directionality.of(context),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('${product.name} добавлен в корзину'),
