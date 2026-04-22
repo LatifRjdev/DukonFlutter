@@ -81,6 +81,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.filter_list_outlined),
+                    tooltip: 'Фильтр',
                     onPressed: () => SalesFilterSheet.show(
                       context,
                       initial: _activeFilter,
@@ -105,6 +106,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.file_download_outlined),
+                    tooltip: 'Скачать отчёт',
                     onPressed: () {
                       final storeState = context.read<StoreBloc>().state;
                       final storeId = storeState is StoreLoaded

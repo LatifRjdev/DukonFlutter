@@ -61,6 +61,7 @@ class TransactionDetailPage extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
+                    tooltip: 'Назад',
                     onPressed: () => context.pop(),
                   ),
                   Text('Чек ${sale.receiptNo}',

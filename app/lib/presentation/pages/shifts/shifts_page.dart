@@ -102,7 +102,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(icon: const Icon(Icons.arrow_back), tooltip: 'Назад', onPressed: () => context.pop()),
                   const Text('Смены',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
@@ -260,7 +260,10 @@ class _ShiftsPageState extends State<ShiftsPage> {
     final dateFormat = DateFormat('dd.MM');
     final timeFormat = DateFormat('HH:mm');
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Открыть Z-отчёт',
+      button: true,
+      child: GestureDetector(
       onTap: () => context.push('/shifts/${shift.id}/z-report', extra: widget.storeId),
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
@@ -312,6 +315,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
