@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
@@ -78,6 +79,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreLoaded && !_loaded) {
@@ -122,7 +124,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     ],
                   ),
                   IconButton(
-                    tooltip: 'Добавить товар',
+                    tooltip: l10n.addProduct,
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: () => context.push('/products/add'),
                   ),
@@ -152,7 +154,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          tooltip: 'Сканировать штрихкод',
+                          tooltip: l10n.scanBarcode,
                           icon: Icon(Icons.qr_code_scanner, color: context.textSecondary),
                           onPressed: () {
                             BarcodeScannerSheet.show(
@@ -165,7 +167,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           },
                         ),
                         IconButton(
-                          tooltip: 'Фильтры',
+                          tooltip: l10n.a11yFilters,
                           icon: Icon(Icons.tune, color: _showFilters ? context.primary : context.textSecondary),
                           onPressed: () {
                             setState(() => _showFilters = !_showFilters);
@@ -342,6 +344,7 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     String unitName;
     try {
       final productUnit = ProductUnit.values.firstWhere(
@@ -363,7 +366,7 @@ class _ProductCard extends StatelessWidget {
     }
 
     return Semantics(
-      label: 'Открыть товар ${product.name}',
+      label: l10n.a11yOpenProduct(product.name),
       button: true,
       child: GestureDetector(
       onTap: () => context.push('/products/${product.id}', extra: product),

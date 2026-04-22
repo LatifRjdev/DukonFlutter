@@ -11,6 +11,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/pos/receipt_widget.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class ReceiptPreviewPage extends StatelessWidget {
   final Sale sale;
@@ -59,6 +60,7 @@ class ReceiptPreviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
@@ -72,7 +74,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            tooltip: 'Поделиться',
+            tooltip: l10n.a11yShare,
             icon: const Icon(Icons.share_outlined),
             onPressed: () => _shareReceipt(context),
           ),

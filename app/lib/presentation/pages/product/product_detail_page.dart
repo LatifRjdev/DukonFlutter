@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -30,6 +31,7 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final extra = GoRouterState.of(context).extra;
     final product = extra is Product ? extra : null;
 
@@ -70,7 +72,7 @@ class ProductDetailPage extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Назад',
+                    tooltip: l10n.back,
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
@@ -78,7 +80,7 @@ class ProductDetailPage extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
-                    tooltip: 'Редактировать товар',
+                    tooltip: l10n.editProduct,
                     icon: const Icon(Icons.edit_outlined),
                     onPressed: () => context.push('/products/add', extra: {'product': product, 'isEditing': true}),
                   ),

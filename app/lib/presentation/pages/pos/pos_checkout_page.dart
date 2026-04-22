@@ -27,6 +27,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class PosCheckoutPage extends StatefulWidget {
   const PosCheckoutPage({super.key});
@@ -207,6 +208,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.watch<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
@@ -246,7 +248,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     ),
                     const Spacer(),
                     IconButton(
-                      tooltip: 'Выбрать клиента',
+                      tooltip: l10n.a11ySelectClient,
                       icon: const Icon(Icons.person_outline),
                       onPressed: _showCustomerSelection,
                     ),
@@ -285,7 +287,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         boxShadow: AppShadows.md,
                       ),
                       child: IconButton(
-                        tooltip: 'Сканировать штрихкод',
+                        tooltip: l10n.scanBarcode,
                         icon: Icon(Icons.qr_code_scanner, color: context.onPrimary),
                         onPressed: () {
                           BarcodeScannerSheet.show(
@@ -332,7 +334,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                           itemBuilder: (context, index) {
                             final p = quickProducts[index];
                             return Semantics(
-                              label: 'Добавить товар',
+                              label: l10n.addProduct,
                               button: true,
                               child: GestureDetector(
                                 onTap: () => _addProductToCart(p),
@@ -384,7 +386,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         subtitle: 'Найдите товар через поиск или выберите из списка выше',
                       );
                     }
-                    return _buildCartContent(cartState);
+                    return _buildCartContent(cartState, l10n);
                   },
                 ),
               ),
@@ -446,7 +448,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     );
   }
 
-  Widget _buildCartContent(CartState cartState) {
+  Widget _buildCartContent(CartState cartState, AppLocalizations l10n) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -457,7 +459,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           // Cart items
-          ...cartState.items.map((item) => _buildCartItem(item)),
+          ...cartState.items.map((item) => _buildCartItem(item, l10n)),
           const SizedBox(height: 12),
           // Totals block wrapped in GlassCard
           GlassCard(
@@ -525,7 +527,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     );
   }
 
-  Widget _buildCartItem(CartItem item) {
+  Widget _buildCartItem(CartItem item, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -559,7 +561,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 SizedBox(
                   width: 32, height: 32,
                   child: IconButton(
-                    tooltip: 'Уменьшить количество',
+                    tooltip: l10n.a11yDecreaseQuantity,
                     padding: EdgeInsets.zero,
                     iconSize: 18,
                     icon: const Icon(Icons.remove),
@@ -582,7 +584,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 SizedBox(
                   width: 32, height: 32,
                   child: IconButton(
-                    tooltip: 'Увеличить количество',
+                    tooltip: l10n.a11yIncreaseQuantity,
                     padding: EdgeInsets.zero,
                     iconSize: 18,
                     icon: const Icon(Icons.add),
@@ -605,7 +607,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           SizedBox(
             width: 32,
             child: IconButton(
-              tooltip: 'Удалить товар',
+              tooltip: l10n.a11yDeleteProduct,
               padding: EdgeInsets.zero,
               iconSize: 18,
               icon: const Icon(Icons.delete_outline, color: AppColors.error),

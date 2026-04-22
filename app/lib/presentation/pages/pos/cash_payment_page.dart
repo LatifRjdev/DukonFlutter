@@ -14,6 +14,7 @@ import '../../blocs/pos/cart_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class CashPaymentPage extends StatefulWidget {
   const CashPaymentPage({super.key});
@@ -63,6 +64,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
         if (state.saleResult != null) {
@@ -159,17 +161,17 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           // Quick amount chips
                           Row(
                             children: [
-                              _quickChip(500),
+                              _quickChip(500, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(1000),
+                              _quickChip(1000, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(2000),
+                              _quickChip(2000, l10n),
                               const SizedBox(width: 8),
-                              _quickChip(5000),
+                              _quickChip(5000, l10n),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Semantics(
-                                  label: 'Без сдачи',
+                                  label: l10n.a11yWithoutChange,
                                   button: true,
                                   child: GestureDetector(
                                     onTap: () => _quickAmount(total),
@@ -256,10 +258,10 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
     );
   }
 
-  Widget _quickChip(double amount) {
+  Widget _quickChip(double amount, AppLocalizations l10n) {
     return Expanded(
       child: Semantics(
-        label: 'Быстрая сумма ${amount.toStringAsFixed(0)}',
+        label: l10n.a11yQuickAmount(amount.toStringAsFixed(0)),
         button: true,
         child: GestureDetector(
           onTap: () => _quickAmount(amount),

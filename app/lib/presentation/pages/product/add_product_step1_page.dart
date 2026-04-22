@@ -17,6 +17,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class AddProductStep1Page extends StatefulWidget {
   const AddProductStep1Page({super.key});
@@ -124,6 +125,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Редактировать товар' : 'Новый товар'),
@@ -159,7 +161,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                     children: [
                       // Photo upload zone
                       Semantics(
-                        label: 'Загрузить фото',
+                        label: l10n.a11yUploadPhoto,
                         button: true,
                         child: GestureDetector(
                         onTap: _pickImage,
@@ -229,7 +231,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                         label: 'Штрихкод',
                         prefixIcon: Icons.qr_code,
                         suffix: IconButton(
-                          tooltip: 'Сканировать штрихкод',
+                          tooltip: l10n.scanBarcode,
                           icon: const Icon(Icons.qr_code_scanner,
                               color: AppColors.primary),
                           onPressed: _scanBarcode,

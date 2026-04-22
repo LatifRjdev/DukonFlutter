@@ -18,6 +18,7 @@ import '../../blocs/supplier/supplier_list_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dokonpro/l10n/app_localizations.dart';
 
 class AddProductStep3Page extends StatefulWidget {
   const AddProductStep3Page({super.key});
@@ -73,6 +74,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Новый товар'),
@@ -192,7 +194,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
                       Semantics(
-                        label: 'Загрузить фото',
+                        label: l10n.a11yUploadPhoto,
                         button: true,
                         child: GestureDetector(
                         onTap: _pickImage,
