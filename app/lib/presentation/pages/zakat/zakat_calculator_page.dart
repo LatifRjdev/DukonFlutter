@@ -41,7 +41,11 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(
+                    tooltip: 'Назад',
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
                   Text('Калькулятор закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),

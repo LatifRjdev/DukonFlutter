@@ -79,7 +79,11 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(
+                    tooltip: 'Назад',
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
                   const Text('Настройки закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],

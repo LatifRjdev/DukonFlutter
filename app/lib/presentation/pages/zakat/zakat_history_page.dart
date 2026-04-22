@@ -42,7 +42,11 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
                 children: [
-                  IconButton(icon: Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(
+                    tooltip: 'Назад',
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
                   const Text('История закята',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
