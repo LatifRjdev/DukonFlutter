@@ -1,4 +1,10 @@
-import { Injectable, ConflictException, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -42,7 +48,12 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user.id, user.phone);
     return {
-      user: { id: user.id, phone: user.phone, name: user.name, email: user.email },
+      user: {
+        id: user.id,
+        phone: user.phone,
+        name: user.name,
+        email: user.email,
+      },
       ...tokens,
     };
   }
@@ -67,7 +78,12 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user.id, user.phone);
     return {
-      user: { id: user.id, phone: user.phone, name: user.name, email: user.email },
+      user: {
+        id: user.id,
+        phone: user.phone,
+        name: user.name,
+        email: user.email,
+      },
       ...tokens,
     };
   }

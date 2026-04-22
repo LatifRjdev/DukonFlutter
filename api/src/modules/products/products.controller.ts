@@ -1,6 +1,17 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards,
-  UseInterceptors, UploadedFile, Res, BadRequestException,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
@@ -48,8 +59,10 @@ export class ProductsController {
   async downloadTemplate(@Res() res: Response) {
     const buffer = await generateImportTemplate();
     res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': 'attachment; filename="dukon-import-template.xlsx"',
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition':
+        'attachment; filename="dukon-import-template.xlsx"',
     });
     res.send(buffer);
   }
@@ -77,7 +90,10 @@ export class ProductsController {
 
   @Get('barcode/:barcode')
   @ApiOperation({ summary: 'Find product by barcode' })
-  findByBarcode(@Param('storeId') storeId: string, @Param('barcode') barcode: string) {
+  findByBarcode(
+    @Param('storeId') storeId: string,
+    @Param('barcode') barcode: string,
+  ) {
     return this.productsService.findByBarcode(storeId, barcode);
   }
 

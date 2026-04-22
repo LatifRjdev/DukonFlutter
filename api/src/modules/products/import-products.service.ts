@@ -21,28 +21,30 @@ export interface RowError {
 }
 
 const UNIT_MAP: Record<string, string> = {
-  'шт': 'PCS',
-  'штук': 'PCS',
-  'штука': 'PCS',
-  'pcs': 'PCS',
-  'кг': 'KG',
-  'kg': 'KG',
-  'л': 'L',
-  'литр': 'L',
-  'l': 'L',
-  'м': 'M',
-  'метр': 'M',
-  'm': 'M',
-  'уп': 'PACK',
-  'упаковка': 'PACK',
-  'pack': 'PACK',
+  шт: 'PCS',
+  штук: 'PCS',
+  штука: 'PCS',
+  pcs: 'PCS',
+  кг: 'KG',
+  kg: 'KG',
+  л: 'L',
+  литр: 'L',
+  l: 'L',
+  м: 'M',
+  метр: 'M',
+  m: 'M',
+  уп: 'PACK',
+  упаковка: 'PACK',
+  pack: 'PACK',
 };
 
 @Injectable()
 export class ImportProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async parseFile(buffer: Buffer): Promise<{ rows: ParsedRow[]; errors: RowError[] }> {
+  async parseFile(
+    buffer: Buffer,
+  ): Promise<{ rows: ParsedRow[]; errors: RowError[] }> {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer as any);
 
@@ -71,32 +73,56 @@ export class ImportProductsService {
 
       // Validate name
       if (!name) {
-        errors.push({ row: rowNumber, field: 'name', message: 'Название обязательно' });
+        errors.push({
+          row: rowNumber,
+          field: 'name',
+          message: 'Название обязательно',
+        });
         return;
       }
 
       // Validate sale price
-      const salePrice = typeof salePriceRaw === 'number'
-        ? salePriceRaw
-        : parseFloat(String(salePriceRaw));
+      const salePrice =
+        typeof salePriceRaw === 'number'
+          ? salePriceRaw
+          : parseFloat(String(salePriceRaw));
       if (!salePrice || isNaN(salePrice) || salePrice <= 0) {
-        errors.push({ row: rowNumber, field: 'salePrice', message: 'Цена продажи обязательна и должна быть > 0' });
+        errors.push({
+          row: rowNumber,
+          field: 'salePrice',
+          message: 'Цена продажи обязательна и должна быть > 0',
+        });
         return;
       }
 
       const purchasePrice = purchasePriceRaw
-        ? (typeof purchasePriceRaw === 'number' ? purchasePriceRaw : parseFloat(String(purchasePriceRaw)))
+        ? typeof purchasePriceRaw === 'number'
+          ? purchasePriceRaw
+          : parseFloat(String(purchasePriceRaw))
         : undefined;
-      if (purchasePrice !== undefined && (isNaN(purchasePrice) || purchasePrice < 0)) {
-        errors.push({ row: rowNumber, field: 'purchasePrice', message: 'Некорректная цена закупки' });
+      if (
+        purchasePrice !== undefined &&
+        (isNaN(purchasePrice) || purchasePrice < 0)
+      ) {
+        errors.push({
+          row: rowNumber,
+          field: 'purchasePrice',
+          message: 'Некорректная цена закупки',
+        });
         return;
       }
 
       const quantity = quantityRaw
-        ? (typeof quantityRaw === 'number' ? Math.floor(quantityRaw) : parseInt(String(quantityRaw), 10))
+        ? typeof quantityRaw === 'number'
+          ? Math.floor(quantityRaw)
+          : parseInt(String(quantityRaw), 10)
         : 0;
       if (isNaN(quantity) || quantity < 0) {
-        errors.push({ row: rowNumber, field: 'quantity', message: 'Некорректное количество' });
+        errors.push({
+          row: rowNumber,
+          field: 'quantity',
+          message: 'Некорректное количество',
+        });
         return;
       }
 
@@ -150,7 +176,9 @@ export class ImportProductsService {
     const importErrors: RowError[] = [...errors];
 
     // Collect unique category names
-    const categoryNames = [...new Set(rows.map((r) => r.category).filter(Boolean))] as string[];
+    const categoryNames = [
+      ...new Set(rows.map((r) => r.category).filter(Boolean)),
+    ] as string[];
 
     // Auto-create or find categories
     const categoryMap = new Map<string, string>();
@@ -198,7 +226,9 @@ export class ImportProductsService {
               storeId,
               name: row.name,
               barcode: row.barcode || null,
-              categoryId: row.category ? (categoryMap.get(row.category) ?? null) : null,
+              categoryId: row.category
+                ? (categoryMap.get(row.category) ?? null)
+                : null,
               costPrice: row.purchasePrice ?? null,
               sellPrice: row.salePrice,
               quantity: row.quantity,

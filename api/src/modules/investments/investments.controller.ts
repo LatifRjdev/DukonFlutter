@@ -1,5 +1,13 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -27,7 +35,10 @@ export class InvestmentsController {
 
   @Get()
   @ApiOperation({ summary: 'List investments with filters' })
-  findAll(@Param('storeId') storeId: string, @Query() query: InvestmentQueryDto) {
+  findAll(
+    @Param('storeId') storeId: string,
+    @Query() query: InvestmentQueryDto,
+  ) {
     return this.investmentsService.findAll(storeId, query);
   }
 
