@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dokonpro/l10n/app_localizations.dart';
+import '../../widgets/common/app_snackbar.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -323,25 +323,14 @@ class ProductDetailPage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        // Add product to cart
+                        final l10n = AppLocalizations.of(context)!;
                         context.read<CartBloc>().add(CartItemAdded(product: product));
-                        // Show confirmation
-                        // TODO(a11y): migrate when AppSnackbar supports actions
-                        SemanticsService.sendAnnouncement(
-                          View.of(context),
-                          '${product.name} добавлен в корзину',
-                          Directionality.of(context),
+                        AppSnackbar.withAction(
+                          context,
+                          message: l10n.snackProductAddedToCart(product.name),
+                          actionLabel: l10n.snackActionGoToCheckout,
+                          onAction: () => context.go('/home'),
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${product.name} добавлен в корзину'),
-                            action: SnackBarAction(
-                              label: 'В кассу',
-                              onPressed: () => context.go('/home'),
-                            ),
-                          ),
-                        );
-                        // Navigate to home (POS tab is index 2)
                         context.go('/home');
                       },
                       style: ElevatedButton.styleFrom(

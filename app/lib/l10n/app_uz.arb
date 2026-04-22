@@ -416,5 +416,10 @@
   "snackGenericError": "Xatolik: {error}",
   "@snackGenericError": {
     "placeholders": { "error": { "type": "String" } }
-  }
+  },
+  "snackProductAddedToCart": "{name} savatga qo'shildi",
+  "@snackProductAddedToCart": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackActionGoToCheckout": "Kassaga"
 }

@@ -416,5 +416,10 @@
   "snackGenericError": "Хатогӣ: {error}",
   "@snackGenericError": {
     "placeholders": { "error": { "type": "String" } }
-  }
+  },
+  "snackProductAddedToCart": "{name} ба сабад илова шуд",
+  "@snackProductAddedToCart": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackActionGoToCheckout": "Ба касса"
 }

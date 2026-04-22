@@ -595,5 +595,11 @@
   "snackGenericError": "Ошибка: {error}",
   "@snackGenericError": {
     "placeholders": { "error": { "type": "String" } }
-  }
+  },
+  "snackProductAddedToCart": "{name} добавлен в корзину",
+  "@snackProductAddedToCart": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "snackActionGoToCheckout": "В кассу",
+  "@snackActionGoToCheckout": { "description": "Action button on add-to-cart snackbar — navigates to POS checkout" }
 }

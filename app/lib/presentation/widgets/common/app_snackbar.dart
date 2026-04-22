@@ -33,11 +33,33 @@ class AppSnackbar {
     );
   }
 
+  /// Shows a snackbar with an inline action button (e.g. "Undo", "В кассу").
+  /// Defaults to `info` styling; override via [backgroundColor] if needed.
+  static void withAction(
+    BuildContext context, {
+    required String message,
+    required String actionLabel,
+    required VoidCallback onAction,
+    Color? backgroundColor,
+    IconData icon = Icons.info_rounded,
+  }) {
+    _show(
+      context,
+      message: message,
+      backgroundColor: backgroundColor ?? AppColors.info,
+      icon: icon,
+      actionLabel: actionLabel,
+      onAction: onAction,
+    );
+  }
+
   static void _show(
     BuildContext context, {
     required String message,
     required Color backgroundColor,
     required IconData icon,
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
     final messenger = ScaffoldMessenger.of(context);
 
@@ -75,6 +97,13 @@ class AppSnackbar {
         ),
         elevation: 4,
         dismissDirection: DismissDirection.horizontal,
+        action: (actionLabel != null && onAction != null)
+            ? SnackBarAction(
+                label: actionLabel,
+                textColor: Colors.white,
+                onPressed: onAction,
+              )
+            : null,
       ),
     );
 

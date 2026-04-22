@@ -2259,6 +2259,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Ошибка: {error}'**
   String snackGenericError(String error);
+
+  /// No description provided for @snackProductAddedToCart.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name} добавлен в корзину'**
+  String snackProductAddedToCart(String name);
+
+  /// Action button on add-to-cart snackbar — navigates to POS checkout
+  ///
+  /// In ru, this message translates to:
+  /// **'В кассу'**
+  String get snackActionGoToCheckout;
 }
 
 class _AppLocalizationsDelegate

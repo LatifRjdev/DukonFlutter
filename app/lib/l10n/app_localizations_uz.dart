@@ -1118,4 +1118,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String snackGenericError(String error) {
     return 'Xatolik: $error';
   }
+
+  @override
+  String snackProductAddedToCart(String name) {
+    return '$name savatga qo\'shildi';
+  }
+
+  @override
+  String get snackActionGoToCheckout => 'Kassaga';
 }

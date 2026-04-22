@@ -1117,4 +1117,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String snackGenericError(String error) {
     return 'Ошибка: $error';
   }
+
+  @override
+  String snackProductAddedToCart(String name) {
+    return '$name добавлен в корзину';
+  }
+
+  @override
+  String get snackActionGoToCheckout => 'В кассу';
 }

@@ -1118,4 +1118,12 @@ class AppLocalizationsTg extends AppLocalizations {
   String snackGenericError(String error) {
     return 'Хатогӣ: $error';
   }
+
+  @override
+  String snackProductAddedToCart(String name) {
+    return '$name ба сабад илова шуд';
+  }
+
+  @override
+  String get snackActionGoToCheckout => 'Ба касса';
 }
