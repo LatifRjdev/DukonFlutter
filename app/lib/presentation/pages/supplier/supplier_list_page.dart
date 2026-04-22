@@ -142,11 +142,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+                  IconButton(tooltip: 'Назад', icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
                   const Text('Поставщики',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
+                    tooltip: 'Добавить поставщика',
                     icon: const Icon(Icons.add, color: AppColors.primary),
                     onPressed: _showAddSupplierDialog,
                   ),
