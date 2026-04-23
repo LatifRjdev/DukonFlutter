@@ -24,7 +24,7 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     emit(SubscriptionLoading());
     try {
       final res =
-          await _dioClient.get('/stores/${event.storeId}/subscription/current');
+          await _dioClient.get('/stores/${event.storeId}/subscription');
       final data = res.data as Map<String, dynamic>? ?? {};
       emit(_mapLoaded(data));
     } catch (e) {

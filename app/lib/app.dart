@@ -30,6 +30,7 @@ import 'presentation/blocs/shift/shift_bloc.dart';
 import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
+import 'presentation/blocs/subscription/subscription_bloc.dart';
 
 class DokonProApp extends StatelessWidget {
   const DokonProApp({super.key});
@@ -64,6 +65,7 @@ class DokonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<PayrollBloc>()),
         BlocProvider(create: (_) => sl<StaffFormBloc>()),
         BlocProvider(create: (_) => sl<PrinterBloc>()),
+        BlocProvider(create: (_) => sl<SubscriptionBloc>()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         buildWhen: (prev, curr) {

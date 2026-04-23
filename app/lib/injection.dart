@@ -87,6 +87,7 @@ import 'presentation/blocs/shift/shift_bloc.dart';
 import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
+import 'presentation/blocs/subscription/subscription_bloc.dart';
 import 'presentation/blocs/pos/checkout_bloc.dart';
 import 'presentation/blocs/sales/sales_history_bloc.dart';
 import 'presentation/blocs/stock/stock_intake_bloc.dart';
@@ -476,6 +477,10 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<PrinterBloc>(
     () => PrinterBloc(printerService: sl<ThermalPrinterService>()),
+  );
+
+  sl.registerFactory<SubscriptionBloc>(
+    () => SubscriptionBloc(dioClient: sl<DioClient>()),
   );
 }
 
