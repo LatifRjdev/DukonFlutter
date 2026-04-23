@@ -101,6 +101,7 @@ export interface RegistrationPoint {
 
 export interface PendingPayment {
   id: string;
+  subscriptionId: string;
   storeId: string;
   storeName: string;
   planName: string;

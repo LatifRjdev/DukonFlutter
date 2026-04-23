@@ -84,7 +84,7 @@ function SubscriptionsContent() {
 
   const { data: pendingPayments = [], isLoading: pendingLoading } = useQuery<PendingPayment[]>({
     queryKey: ['pending-payments'],
-    queryFn: () => api.get('/admin/subscriptions/pending'),
+    queryFn: () => api.get('/admin/subscriptions/pending-payments'),
   });
 
   const extendMutation = useMutation({
@@ -111,7 +111,7 @@ function SubscriptionsContent() {
 
   const discountMutation = useMutation({
     mutationFn: ({ id, discount }: { id: string; discount: number }) =>
-      api.put(`/admin/subscriptions/${id}/discount`, { discount }),
+      api.put(`/admin/subscriptions/${id}/set-discount`, { percent: discount }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
       setDiscountDialog(null);
@@ -130,7 +130,10 @@ function SubscriptionsContent() {
   });
 
   const approveMutation = useMutation({
-    mutationFn: (id: string) => api.put(`/admin/subscriptions/payments/${id}/approve`),
+    mutationFn: (payment: { id: string; subscriptionId: string }) =>
+      api.put(
+        `/admin/subscriptions/${payment.subscriptionId}/approve-payment/${payment.id}`,
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-payments'] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
@@ -140,8 +143,17 @@ function SubscriptionsContent() {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      api.put(`/admin/subscriptions/payments/${id}/reject`, { reason }),
+    mutationFn: ({
+      payment,
+      reason,
+    }: {
+      payment: { id: string; subscriptionId: string };
+      reason: string;
+    }) =>
+      api.put(
+        `/admin/subscriptions/${payment.subscriptionId}/reject-payment/${payment.id}`,
+        { reason },
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-payments'] });
       setRejectDialog(null);
@@ -295,7 +307,7 @@ function SubscriptionsContent() {
                       <Button
                         size="sm"
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => approveMutation.mutate(p.id)}
+                        onClick={() => approveMutation.mutate(p)}
                         disabled={approveMutation.isPending}
                       >
                         <CheckCircle className="mr-1 h-3 w-3" />
@@ -464,7 +476,7 @@ function SubscriptionsContent() {
               variant="destructive"
               onClick={() =>
                 rejectDialog &&
-                rejectMutation.mutate({ id: rejectDialog.id, reason: rejectReason })
+                rejectMutation.mutate({ payment: rejectDialog, reason: rejectReason })
               }
               disabled={rejectMutation.isPending}
             >
