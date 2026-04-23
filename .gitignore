@@ -99,3 +99,6 @@ desktop.ini
 
 # Claude Code worktree sandboxes
 .claude/worktrees/
+
+# Claude Code ephemeral scheduled-task lockfile
+.claude/scheduled_tasks.lock
