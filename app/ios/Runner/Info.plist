@@ -42,9 +42,15 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Bluetooth is needed to connect to thermal receipt printers</string>
+	<string>Приложение использует Bluetooth для подключения к принтеру чеков.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Bluetooth is needed to connect to thermal receipt printers</string>
+	<string>Приложение использует Bluetooth для подключения к принтеру чеков.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Приложение использует камеру для сканирования штрихкодов товаров и съёмки фото товаров.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Приложение обращается к галерее для выбора фотографий товаров и квитанций об оплате.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Приложение сохраняет сгенерированные чеки в галерею.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
