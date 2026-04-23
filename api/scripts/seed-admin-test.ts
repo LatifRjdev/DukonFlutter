@@ -12,6 +12,18 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+  // --- Admin precondition ---
+  // Announcement creation below requires a non-null `sentBy` referencing
+  // an admin user. Resolve that up-front so we can fail fast without
+  // leaving the DB half-seeded if no admin exists yet.
+  const admin = await prisma.user.findFirst({ where: { isAdmin: true } });
+  if (!admin) {
+    throw new Error(
+      'No admin user found. Run: npx ts-node scripts/create-admin.ts first.',
+    );
+  }
+  const sentBy = admin.id;
+
   const hashedPassword = await bcrypt.hash('test12345', 10);
 
   // --- Users ---
@@ -96,10 +108,12 @@ async function main() {
   // Schema uses a single `Payment` model scoped to Subscription
   // (not a dedicated SubscriptionPayment model). It has no natural
   // unique key for idempotency, so we check manually.
+  // Match any existing payment on this subscription — an approved
+  // payment from a prior QA run is still 'seeded', we don't want a
+  // duplicate PENDING.
   const existingPendingPayment = await prisma.payment.findFirst({
     where: {
       subscriptionId: sub2.id,
-      status: PaymentStatus.PENDING,
     },
   });
 
@@ -118,15 +132,7 @@ async function main() {
   }
 
   // --- Announcement ---
-  // Announcement requires a non-null `sentBy` referencing the admin
-  // who issued it. Resolve the first admin user at runtime.
-  const admin = await prisma.user.findFirst({ where: { isAdmin: true } });
-  if (!admin) {
-    throw new Error(
-      'No admin user found. Run: npx ts-node scripts/create-admin.ts first.',
-    );
-  }
-
+  // Admin precondition was checked at the top of main(); reuse `sentBy`.
   await prisma.announcement.upsert({
     where: { id: 'seed-announcement-1' },
     update: {},
@@ -136,7 +142,7 @@ async function main() {
       body: 'Это тестовое объявление для QA админ-панели.',
       targetPlan: null,
       targetStatus: null,
-      sentBy: admin.id,
+      sentBy,
       recipientCount: 0,
     },
   });
