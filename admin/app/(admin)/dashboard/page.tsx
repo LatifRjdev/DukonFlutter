@@ -85,30 +85,35 @@ export default function DashboardPage() {
       value: stats?.totalUsers ?? 0,
       icon: Users,
       description: 'Всего зарегистрировано',
+      href: '/users',
     },
     {
       title: 'Магазины',
       value: stats?.totalStores ?? 0,
       icon: Store,
       description: 'Всего магазинов',
+      href: '/stores',
     },
     {
       title: 'Активные подписки',
       value: stats?.activeSubscriptions ?? 0,
       icon: CreditCard,
       description: 'Оплаченные подписки',
+      href: '/subscriptions?status=ACTIVE',
     },
     {
       title: 'Trial',
       value: stats?.trialSubscriptions ?? 0,
       icon: Clock,
       description: 'Пробный период',
+      href: '/subscriptions?status=TRIAL',
     },
     {
       title: 'Истекшие',
       value: stats?.expiredSubscriptions ?? 0,
       icon: XCircle,
       description: 'Подписки истекли',
+      href: '/subscriptions?status=EXPIRED',
     },
     {
       title: 'Выручка за месяц',
@@ -121,18 +126,21 @@ export default function DashboardPage() {
         : '—',
       icon: TrendingUp,
       description: 'Текущий месяц',
+      href: '/subscriptions',
     },
     {
       title: 'Новые за неделю',
       value: stats?.newUsersThisWeek ?? 0,
       icon: UserPlus,
       description: 'Новые пользователи',
+      href: '/users',
     },
     {
       title: 'Новые магазины',
       value: stats?.newStoresThisWeek ?? 0,
       icon: Building2,
       description: 'За последнюю неделю',
+      href: '/stores',
     },
   ];
 
@@ -154,6 +162,7 @@ export default function DashboardPage() {
             value={statsLoading ? '...' : card.value}
             description={card.description}
             icon={card.icon}
+            href={card.href}
           />
         ))}
       </div>

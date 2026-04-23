@@ -64,6 +64,8 @@ export default function SubscriptionsPage() {
 function SubscriptionsContent() {
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get('tab') === 'pending' ? 'pending' : 'all';
+  const initialStatus = searchParams.get('status') ?? 'all';
+  const [statusFilter, setStatusFilter] = useState(initialStatus);
   const queryClient = useQueryClient();
 
   // Dialogs
@@ -254,9 +256,37 @@ function SubscriptionsContent() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-4">
+        <TabsContent value="all" className="mt-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Статус:</span>
+            <Select value={statusFilter} onValueChange={(v) => v && setStatusFilter(v)}>
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все</SelectItem>
+                <SelectItem value="ACTIVE">Активные</SelectItem>
+                <SelectItem value="TRIAL">Trial</SelectItem>
+                <SelectItem value="PAST_DUE">Просрочены</SelectItem>
+                <SelectItem value="EXPIRED">Истекшие</SelectItem>
+                <SelectItem value="CANCELED">Отменены</SelectItem>
+              </SelectContent>
+            </Select>
+            {statusFilter !== 'all' && (
+              <button
+                onClick={() => setStatusFilter('all')}
+                className="text-xs text-muted-foreground hover:text-foreground underline"
+              >
+                сбросить
+              </button>
+            )}
+          </div>
           <DataTable
-            data={subscriptions}
+            data={
+              statusFilter === 'all'
+                ? subscriptions
+                : subscriptions.filter((s) => s.status === statusFilter)
+            }
             columns={columns}
             isLoading={subLoading}
             emptyMessage="Подписки не найдены"
