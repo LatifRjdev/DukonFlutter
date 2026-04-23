@@ -67,7 +67,7 @@ export default function StoresPage() {
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
-    queryFn: () => api.get('/admin/stores'),
+    queryFn: () => api.get('/admin/stores').then((r) => r.data ?? []),
   });
 
   const suspendMutation = useMutation({

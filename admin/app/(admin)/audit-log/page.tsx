@@ -64,7 +64,7 @@ export default function AuditLogPage() {
       if (actionFilter !== 'all') params.set('action', actionFilter);
       if (dateFrom) params.set('from', dateFrom);
       if (dateTo) params.set('to', dateTo);
-      return api.get(`/admin/audit-log?${params.toString()}`);
+      return api.get(`/admin/audit-log?${params.toString()}`).then((r) => r.data ?? []);
     },
   });
 

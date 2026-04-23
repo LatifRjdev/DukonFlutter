@@ -47,7 +47,7 @@ export default function AnnouncementsPage() {
 
   const { data: announcements = [], isLoading } = useQuery<Announcement[]>({
     queryKey: ['announcements'],
-    queryFn: () => api.get('/admin/announcements'),
+    queryFn: () => api.get('/admin/announcements').then((r) => r.data ?? []),
   });
 
   const previewMutation = useMutation({

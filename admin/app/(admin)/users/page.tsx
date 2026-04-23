@@ -29,7 +29,7 @@ export default function UsersPage() {
 
   const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ['users'],
-    queryFn: () => api.get('/admin/users'),
+    queryFn: () => api.get('/admin/users').then((r) => r.data ?? []),
   });
 
   const toggleAdminMutation = useMutation({
