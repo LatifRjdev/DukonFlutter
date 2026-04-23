@@ -58,22 +58,22 @@ function generateMockRegistrations(): RegistrationPoint[] {
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard-stats'],
-    queryFn: () => api.get('/admin/stats'),
+    queryFn: () => api.get('/admin/dashboard'),
   });
 
   const { data: revenueData } = useQuery<RevenuePoint[]>({
     queryKey: ['revenue-chart'],
-    queryFn: () => api.get('/admin/stats/revenue'),
+    queryFn: () => api.get('/admin/revenue'),
   });
 
   const { data: registrationData } = useQuery<RegistrationPoint[]>({
     queryKey: ['registrations-chart'],
-    queryFn: () => api.get('/admin/stats/registrations'),
+    queryFn: () => api.get('/admin/dashboard/registrations'),
   });
 
   const { data: pendingPayments } = useQuery<PendingPayment[]>({
     queryKey: ['pending-payments'],
-    queryFn: () => api.get('/admin/subscriptions/pending'),
+    queryFn: () => api.get('/admin/subscriptions/pending-payments'),
   });
 
   const mockRevenue = generateMockRevenue();
