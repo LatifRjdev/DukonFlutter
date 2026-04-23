@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Store, Loader2 } from 'lucide-react';
-import { api } from '@/lib/api';
 import { toast } from 'sonner';
 
 export default function LoginPage() {
@@ -23,28 +22,39 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', { phone, password });
-      const token = res.access_token || res.token || res.accessToken;
-      if (!token) throw new Error('Токен не получен');
-
-      // Verify admin access
-      localStorage.setItem('token', token);
-      const me = await api.get('/users/me');
-      if (!me.isAdmin) {
-        localStorage.removeItem('token');
+      // Proxy the credentials through our own Next.js route handler so the
+      // API's access token lands in an HttpOnly; Secure; SameSite=Strict
+      // cookie that JS (and any XSS payload) cannot read (Admin #1).
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.message || 'Ошибка входа');
+        setLoading(false);
+        return;
+      }
+      if (!data.user?.isAdmin) {
+        // Tear down the session cookie we just set so a non-admin user
+        // can't silently keep it around.
+        await fetch('/api/auth/logout', { method: 'POST' });
         setError('Доступ запрещён. Только для администраторов.');
         setLoading(false);
         return;
       }
 
-      localStorage.setItem('userName', me.name || me.phone || 'Администратор');
-      // Set cookie for middleware
-      document.cookie = `token=${token}; path=/; max-age=86400`;
+      // userName is display-only — not a credential. Safe to keep in
+      // localStorage so the topbar can greet the admin by name.
+      localStorage.setItem(
+        'userName',
+        data.user.name || data.user.phone || 'Администратор',
+      );
       toast.success('Вход выполнен успешно');
       router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка входа');
-      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }

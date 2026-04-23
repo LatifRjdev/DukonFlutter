@@ -1,23 +1,27 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4455/api';
 
 async function apiFetch(path: string, options?: RequestInit) {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
+    // Send our HttpOnly admin-session cookie cross-origin. The API
+    // must echo back `Access-Control-Allow-Credentials: true` for
+    // this to work — see api/src/main.ts (enableCors).
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
   });
   if (res.status === 401) {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
       window.location.href = '/login';
     }
     throw new Error('Unauthorized');
   }
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || `HTTP ${res.status}`);
+  }
   return res.json();
 }
 

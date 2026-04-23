@@ -46,13 +46,14 @@ export class AuthService {
       },
     });
 
-    const tokens = await this.generateTokens(user.id, user.phone);
+    const tokens = await this.generateTokens(user.id, user.phone, user.isAdmin);
     return {
       user: {
         id: user.id,
         phone: user.phone,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
       ...tokens,
     };
@@ -76,13 +77,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid phone or password');
     }
 
-    const tokens = await this.generateTokens(user.id, user.phone);
+    const tokens = await this.generateTokens(user.id, user.phone, user.isAdmin);
     return {
       user: {
         id: user.id,
         phone: user.phone,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
       ...tokens,
     };
@@ -108,7 +110,14 @@ export class AuthService {
           'Refresh token replay detected — all sessions revoked',
         );
       }
-      return this.issueTokens(tx, userId, phone);
+      // Re-read isAdmin on every refresh so admin status revocations
+      // propagate into the next access token (BE-P1-004 / Admin #3).
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: { isAdmin: true },
+      });
+
+      return this.issueTokens(tx, userId, phone, user?.isAdmin ?? false);
     });
   }
 
@@ -149,7 +158,7 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Пользователь с таким номером не найден');
     }
-    return this.generateTokens(user.id, user.phone);
+    return this.generateTokens(user.id, user.phone, user.isAdmin);
   }
 
   async forgotPassword(phone: string) {
@@ -171,8 +180,12 @@ export class AuthService {
     return { message: 'Пароль успешно изменён' };
   }
 
-  private async generateTokens(userId: string, phone: string) {
-    return this.issueTokens(this.prisma, userId, phone);
+  private async generateTokens(
+    userId: string,
+    phone: string,
+    isAdmin: boolean = false,
+  ) {
+    return this.issueTokens(this.prisma, userId, phone, isAdmin);
   }
 
   /**
@@ -182,17 +195,22 @@ export class AuthService {
    * delete the old row + insert the new row atomically — see refresh().
    *
    * Refresh expiry shrunk from 30d to 7d (BE-P1-002). Access is 15m.
+   *
+   * Access token payload includes `isAdmin` so stateless consumers
+   * (e.g. the admin panel Next.js middleware) can gate routes without
+   * hitting the API (Admin #3).
    */
   private async issueTokens(
     tx: Pick<PrismaService, 'refreshToken'>,
     userId: string,
     phone: string,
+    isAdmin: boolean = false,
   ) {
     const jti = uuidv4();
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: userId, phone },
+        { sub: userId, phone, isAdmin },
         {
           secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
           expiresIn: '15m',

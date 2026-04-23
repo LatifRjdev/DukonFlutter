@@ -1,26 +1,43 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+const JWT_SECRET = process.env.JWT_ACCESS_SECRET;
 
-  // Allow login page and static files
-  if (pathname === '/login') {
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Skip auth for Next internals, our own auth routes, and the login page.
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname === '/login' ||
+    pathname === '/favicon.ico'
+  ) {
     return NextResponse.next();
   }
 
-  // Check for token in cookies (set via login page)
-  const token = request.cookies.get('token')?.value;
-
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  const token = req.cookies.get('token')?.value;
+  if (!token || !JWT_SECRET) {
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  return NextResponse.next();
+  try {
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(JWT_SECRET),
+    );
+    if (!payload.isAdmin) {
+      // Authenticated but not an admin — reject at the edge so non-admin
+      // JWTs never reach the admin UI (Admin #3).
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+    return NextResponse.next();
+  } catch {
+    // Bad signature, expired, or malformed.
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|login).*)',
-  ],
+  matcher: ['/((?!api|_next|login|favicon.ico).*)'],
 };
