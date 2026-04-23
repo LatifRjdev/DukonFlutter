@@ -30,6 +30,7 @@ import { DiscountsModule } from './modules/discounts/discounts.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { InvestmentsModule } from './modules/investments/investments.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { AdminModule } from './modules/admin/admin.module';
     SubscriptionsModule,
     InvestmentsModule,
     AdminModule,
+    HealthModule,
   ],
   providers: [
     {
