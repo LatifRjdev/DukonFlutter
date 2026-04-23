@@ -37,7 +37,9 @@ export class AdminStoresController {
   }
 
   @Get(':id/subscription')
-  @ApiOperation({ summary: 'Get subscription for a store with recent payments' })
+  @ApiOperation({
+    summary: 'Get subscription for a store with recent payments',
+  })
   getStoreSubscription(@Param('id') id: string) {
     return this.adminService.getStoreSubscription(id);
   }
