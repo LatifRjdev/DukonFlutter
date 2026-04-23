@@ -36,6 +36,12 @@ export class AdminStoresController {
     return this.adminService.getStoreDetail(id);
   }
 
+  @Get(':id/subscription')
+  @ApiOperation({ summary: 'Get subscription for a store with recent payments' })
+  getStoreSubscription(@Param('id') id: string) {
+    return this.adminService.getStoreSubscription(id);
+  }
+
   @Put(':id/suspend')
   @ApiOperation({ summary: 'Suspend a store' })
   suspendStore(@Param('id') id: string) {

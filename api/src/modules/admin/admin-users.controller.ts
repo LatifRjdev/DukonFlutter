@@ -35,6 +35,12 @@ export class AdminUsersController {
     return this.adminService.getUserDetail(id);
   }
 
+  @Get(':id/stores')
+  @ApiOperation({ summary: 'List stores owned by a user' })
+  listUserStores(@Param('id') id: string) {
+    return this.adminService.listUserStores(id);
+  }
+
   @Put(':id/toggle-admin')
   @ApiOperation({ summary: 'Toggle admin flag for a user' })
   toggleAdmin(@Param('id') id: string) {

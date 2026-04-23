@@ -97,6 +97,28 @@ export class AdminService {
     return { ...user, totalSalesCount: salesCount };
   }
 
+  async listUserStores(userId: string) {
+    return this.prisma.store.findMany({
+      where: { ownerId: userId },
+      select: {
+        id: true,
+        name: true,
+        currency: true,
+        category: true,
+        isActive: true,
+        createdAt: true,
+        subscription: {
+          select: {
+            plan: true,
+            status: true,
+            currentPeriodEnd: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async toggleAdmin(id: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
@@ -216,6 +238,20 @@ export class AdminService {
       monthlySalesCount: monthlySales._count,
       lastSaleDate: lastSale?.createdAt ?? null,
     };
+  }
+
+  async getStoreSubscription(storeId: string) {
+    const sub = await this.prisma.subscription.findUnique({
+      where: { storeId },
+      include: {
+        payments: {
+          orderBy: { createdAt: 'desc' },
+          take: 10,
+        },
+      },
+    });
+    if (!sub) throw new NotFoundException('Subscription not found for store');
+    return sub;
   }
 
   async suspendStore(id: string) {
