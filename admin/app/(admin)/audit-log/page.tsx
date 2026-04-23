@@ -33,19 +33,24 @@ const ACTION_COLORS: Record<string, string> = {
 
 const ACTIONS = ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'APPROVE', 'REJECT', 'SUSPEND', 'BLOCK', 'UNBLOCK'];
 
-function ExpandableDetails({ details }: { details?: string }) {
+function ExpandableDetails({ details }: { details?: unknown }) {
   const [expanded, setExpanded] = useState(false);
-  if (!details) return <span className="text-muted-foreground text-xs">—</span>;
-  const short = details.length > 60 ? details.slice(0, 60) + '...' : details;
+  if (details == null) return <span className="text-muted-foreground text-xs">—</span>;
+  const text =
+    typeof details === 'string' ? details : JSON.stringify(details, null, 2);
+  if (!text) return <span className="text-muted-foreground text-xs">—</span>;
+  const short = text.length > 60 ? text.slice(0, 60) + '...' : text;
 
   return (
     <div className="max-w-xs">
       <button
         onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+        className="flex items-start gap-1 text-xs text-muted-foreground hover:text-foreground"
       >
-        {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-        {expanded ? details : short}
+        {expanded ? <ChevronDown className="h-3 w-3 mt-0.5 shrink-0" /> : <ChevronRight className="h-3 w-3 mt-0.5 shrink-0" />}
+        <pre className="whitespace-pre-wrap font-mono text-left">
+          {expanded ? text : short}
+        </pre>
       </button>
     </div>
   );
@@ -70,10 +75,18 @@ export default function AuditLogPage() {
 
   const filtered = logs.filter((l) => {
     if (!search) return true;
+    const q = search.toLowerCase();
+    const detailsText =
+      typeof l.details === 'string'
+        ? l.details
+        : l.details != null
+          ? JSON.stringify(l.details)
+          : '';
     return (
-      l.userName?.toLowerCase().includes(search.toLowerCase()) ||
-      l.entity?.toLowerCase().includes(search.toLowerCase()) ||
-      l.details?.toLowerCase().includes(search.toLowerCase())
+      (l.user?.name?.toLowerCase().includes(q) ?? false) ||
+      (l.user?.phone?.toLowerCase().includes(q) ?? false) ||
+      (l.entityType?.toLowerCase().includes(q) ?? false) ||
+      detailsText.toLowerCase().includes(q)
     );
   });
 
@@ -83,14 +96,14 @@ export default function AuditLogPage() {
       header: 'Дата',
       cell: (l) => (
         <span className="text-xs text-muted-foreground whitespace-nowrap">
-          {l.date ? format(new Date(l.date), 'dd.MM.yyyy HH:mm') : '—'}
+          {l.createdAt ? format(new Date(l.createdAt), 'dd.MM.yyyy HH:mm') : '—'}
         </span>
       ),
     },
     {
       key: 'user',
       header: 'Пользователь',
-      cell: (l) => <span className="text-sm">{l.userName || l.userId || '—'}</span>,
+      cell: (l) => <span className="text-sm">{l.user?.name || l.user?.phone || l.userId || '—'}</span>,
     },
     {
       key: 'action',
@@ -111,7 +124,7 @@ export default function AuditLogPage() {
       header: 'Сущность',
       cell: (l) => (
         <div>
-          <span className="text-sm font-medium">{l.entity}</span>
+          <span className="text-sm font-medium">{l.entityType}</span>
           {l.entityId && (
             <p className="text-xs text-muted-foreground font-mono">{l.entityId}</p>
           )}

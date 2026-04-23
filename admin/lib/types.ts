@@ -71,14 +71,14 @@ export interface Announcement {
 
 export interface AuditLog {
   id: string;
-  date: string;
+  createdAt: string;
   userId: string;
-  userName: string;
+  user?: { id: string; name?: string; phone?: string };
   action: string;
-  entity: string;
-  entityId?: string;
-  details?: string;
-  ip?: string;
+  entityType: string;
+  entityId?: string | null;
+  details?: unknown;
+  ip?: string | null;
 }
 
 export interface DashboardStats {
