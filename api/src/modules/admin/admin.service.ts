@@ -491,6 +491,26 @@ export class AdminService {
     });
   }
 
+  async previewAnnouncement(dto: CreateAnnouncementDto) {
+    // TODO(admin-panel): replace stub with real Firebase template expansion
+    // + proper targeting by plan/status once the delivery pipeline exists.
+    const whereClause: any = { isAdmin: false, isActive: true };
+    if (dto.targetPlan) {
+      // Count only users whose stores currently run on the target plan.
+      // Cheap approximation: users with at least one store on the plan.
+      whereClause.ownedStores = {
+        some: { subscription: { plan: dto.targetPlan } },
+      };
+    }
+    const audienceCount = await this.prisma.user.count({ where: whereClause });
+    return {
+      renderedTitle: dto.title,
+      renderedBody: dto.body,
+      audienceCount,
+      estimatedDeliveryMinutes: 1,
+    };
+  }
+
   async listAnnouncements(query: AnnouncementsQueryDto) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;

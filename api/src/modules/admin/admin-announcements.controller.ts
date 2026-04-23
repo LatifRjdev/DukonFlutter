@@ -32,6 +32,14 @@ export class AdminAnnouncementsController {
     return this.adminService.createAnnouncement(dto, req.user.id);
   }
 
+  @Post('preview')
+  @ApiOperation({
+    summary: 'Preview an announcement — returns rendered text + audience count',
+  })
+  previewAnnouncement(@Body() dto: CreateAnnouncementDto) {
+    return this.adminService.previewAnnouncement(dto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'List all past announcements' })
   listAnnouncements(@Query() query: AnnouncementsQueryDto) {
