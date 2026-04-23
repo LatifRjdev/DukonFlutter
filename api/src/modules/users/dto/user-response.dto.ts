@@ -17,5 +17,8 @@ export class UserResponseDto {
   avatar?: string;
 
   @ApiProperty()
+  isAdmin: boolean;
+
+  @ApiProperty()
   createdAt: Date;
 }
