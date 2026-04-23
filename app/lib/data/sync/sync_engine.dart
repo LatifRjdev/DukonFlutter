@@ -19,11 +19,20 @@ class SyncEngine {
 
   StreamSubscription<bool>? _connectivitySubscription;
   bool _isSyncing = false;
+  bool _disposed = false;
 
   /// Stream controller to broadcast sync status updates.
   final _syncStatusController = StreamController<SyncStatus>.broadcast();
 
   Stream<SyncStatus> get syncStatus => _syncStatusController.stream;
+
+  /// Returns the delay before the next retry, based on how many retries
+  /// have already happened. 1st retry: 2s, 2nd: 4s, 3rd: 8s, 4th: 16s,
+  /// 5th: 32s, clamped to 60s.
+  Duration _backoffFor(int retryCount) {
+    final seconds = (1 << retryCount).clamp(1, 60);
+    return Duration(seconds: seconds);
+  }
 
   SyncEngine({
     required SyncQueue syncQueue,
@@ -35,7 +44,13 @@ class SyncEngine {
         _networkInfo = networkInfo;
 
   /// Start listening for connectivity changes.
+  ///
+  /// Idempotent — calling `start()` after an existing subscription is active
+  /// is a no-op, so wiring this into both app startup and lifecycle hooks is
+  /// safe.
   void start() {
+    if (_disposed) return;
+    if (_connectivitySubscription != null) return;
     _connectivitySubscription = _networkInfo.onConnectivityChanged.listen(
       (isConnected) {
         if (isConnected) {
@@ -46,9 +61,15 @@ class SyncEngine {
   }
 
   /// Stop listening and clean up.
-  void dispose() {
-    _connectivitySubscription?.cancel();
-    _syncStatusController.close();
+  ///
+  /// Idempotent — safe to call multiple times (e.g. from both
+  /// `AppLifecycleState.detached` and `State.dispose()`).
+  Future<void> dispose() async {
+    if (_disposed) return;
+    _disposed = true;
+    await _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
+    await _syncStatusController.close();
   }
 
   /// Manually trigger sync queue processing.
@@ -83,6 +104,11 @@ class SyncEngine {
         } catch (e) {
           await _syncQueue.markFailed(item.id!);
           failCount++;
+          // Gate the next retry with exponential backoff so a connectivity
+          // flap doesn't hammer the server with simultaneous re-queues.
+          // 1st retry: 2s, 2nd: 4s, 3rd: 8s, 4th: 16s, 5th: 32s (capped 60s).
+          final delay = _backoffFor(item.retryCount + 1);
+          await Future.delayed(delay);
         }
       }
 
