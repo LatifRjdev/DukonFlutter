@@ -23,18 +23,20 @@ import { Store, Subscription } from '@/lib/types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
-const STATUS_LABELS: Record<string, string> = {
-  active: 'Активен',
-  trial: 'Trial',
-  suspended: 'Приостановлен',
-  expired: 'Истёк',
+const SUB_STATUS_LABELS: Record<string, string> = {
+  ACTIVE: 'Активна',
+  TRIAL: 'Trial',
+  PAST_DUE: 'Просрочена',
+  CANCELED: 'Отменена',
+  EXPIRED: 'Истекла',
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-green-100 text-green-700',
-  trial: 'bg-blue-100 text-blue-700',
-  suspended: 'bg-red-100 text-red-700',
-  expired: 'bg-yellow-100 text-yellow-700',
+const SUB_STATUS_COLORS: Record<string, string> = {
+  ACTIVE: 'bg-green-100 text-green-700',
+  TRIAL: 'bg-blue-100 text-blue-700',
+  PAST_DUE: 'bg-yellow-100 text-yellow-700',
+  CANCELED: 'bg-gray-100 text-gray-600',
+  EXPIRED: 'bg-red-100 text-red-700',
 };
 
 export default function StoreDetailPage({
@@ -60,7 +62,7 @@ export default function StoreDetailPage({
 
   const suspendMutation = useMutation({
     mutationFn: () =>
-      api.put(`/admin/stores/${id}/${store?.status === 'suspended' ? 'unsuspend' : 'suspend'}`),
+      api.put(`/admin/stores/${id}/${store && !store.isActive ? 'unsuspend' : 'suspend'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['store', id] });
       toast.success('Статус магазина обновлён');
@@ -120,27 +122,35 @@ export default function StoreDetailPage({
                 <p className="text-muted-foreground text-sm">{store.category}</p>
               )}
               <p className="text-sm text-muted-foreground mt-1">
-                Владелец: <span className="font-medium text-foreground">{store.ownerName || '—'}</span>
+                Владелец: <span className="font-medium text-foreground">{store.owner?.name || '—'}</span>
               </p>
               <p className="text-sm text-muted-foreground">
                 Создан:{' '}
                 {store.createdAt ? format(new Date(store.createdAt), 'dd.MM.yyyy') : '—'}
               </p>
             </div>
-            <Badge className={`${STATUS_COLORS[store.status] || ''} hover:opacity-80`}>
-              {STATUS_LABELS[store.status] || store.status}
-            </Badge>
+            {!store.isActive ? (
+              <Badge className="bg-red-100 text-red-700 hover:opacity-80">
+                Приостановлен
+              </Badge>
+            ) : store.subscription ? (
+              <Badge className={`${SUB_STATUS_COLORS[store.subscription.status] || ''} hover:opacity-80`}>
+                {SUB_STATUS_LABELS[store.subscription.status] || store.subscription.status}
+              </Badge>
+            ) : (
+              <Badge variant="outline">—</Badge>
+            )}
           </div>
 
           <Separator />
 
           <div className="flex gap-3">
             <Button
-              variant={store.status === 'suspended' ? 'outline' : 'destructive'}
+              variant={!store.isActive ? 'outline' : 'destructive'}
               onClick={() => suspendMutation.mutate()}
               disabled={suspendMutation.isPending}
             >
-              {store.status === 'suspended' ? (
+              {!store.isActive ? (
                 <>
                   <UserCheck className="mr-2 h-4 w-4" />
                   Восстановить
@@ -163,22 +173,22 @@ export default function StoreDetailPage({
       <div className="grid grid-cols-4 gap-4">
         <StatsCard
           title="Товары"
-          value={store.productCount ?? 0}
+          value={store._count?.products ?? 0}
           icon={Package}
         />
         <StatsCard
           title="Продаж/месяц"
-          value={store.monthlySales ?? 0}
+          value={store.monthlySalesCount ?? 0}
           icon={TrendingUp}
         />
         <StatsCard
-          title="Последняя активность"
-          value={store.lastActivity ? format(new Date(store.lastActivity), 'dd.MM') : '—'}
+          title="Последняя продажа"
+          value={store.lastSaleDate ? format(new Date(store.lastSaleDate), 'dd.MM') : '—'}
           icon={Clock}
         />
         <StatsCard
           title="Тариф"
-          value={store.planName || '—'}
+          value={store.subscription?.plan || '—'}
           icon={Users}
         />
       </div>
@@ -193,28 +203,30 @@ export default function StoreDetailPage({
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground">Тариф</p>
-                <p className="font-medium">{subscription.planName}</p>
+                <p className="font-medium">{subscription.plan}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Статус</p>
-                <Badge className={`${STATUS_COLORS[subscription.status] || ''} hover:opacity-80`}>
-                  {subscription.status}
+                <Badge className={`${SUB_STATUS_COLORS[subscription.status] || ''} hover:opacity-80`}>
+                  {SUB_STATUS_LABELS[subscription.status] || subscription.status}
                 </Badge>
               </div>
               <div>
                 <p className="text-muted-foreground">Истекает</p>
                 <p className="font-medium">
-                  {subscription.expiresAt
-                    ? format(new Date(subscription.expiresAt), 'dd.MM.yyyy')
+                  {subscription.currentPeriodEnd
+                    ? format(new Date(subscription.currentPeriodEnd), 'dd.MM.yyyy')
                     : '—'}
                 </p>
               </div>
-              {subscription.discount !== undefined && subscription.discount > 0 && (
-                <div>
-                  <p className="text-muted-foreground">Скидка</p>
-                  <p className="font-medium">{subscription.discount}%</p>
-                </div>
-              )}
+              {subscription.adminDiscount !== undefined &&
+                subscription.adminDiscount !== null &&
+                subscription.adminDiscount > 0 && (
+                  <div>
+                    <p className="text-muted-foreground">Скидка</p>
+                    <p className="font-medium">{subscription.adminDiscount}%</p>
+                  </div>
+                )}
             </div>
           </CardContent>
         </Card>

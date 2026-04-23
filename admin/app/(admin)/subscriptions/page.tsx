@@ -38,19 +38,19 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 
 const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-green-100 text-green-700',
-  trial: 'bg-blue-100 text-blue-700',
-  pending: 'bg-yellow-100 text-yellow-700',
-  expired: 'bg-red-100 text-red-700',
-  cancelled: 'bg-gray-100 text-gray-600',
+  ACTIVE: 'bg-green-100 text-green-700',
+  TRIAL: 'bg-blue-100 text-blue-700',
+  PAST_DUE: 'bg-yellow-100 text-yellow-700',
+  EXPIRED: 'bg-red-100 text-red-700',
+  CANCELED: 'bg-gray-100 text-gray-600',
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  active: 'Активна',
-  trial: 'Trial',
-  pending: 'Ожидает',
-  expired: 'Истекла',
-  cancelled: 'Отменена',
+  ACTIVE: 'Активна',
+  TRIAL: 'Trial',
+  PAST_DUE: 'Просрочена',
+  EXPIRED: 'Истекла',
+  CANCELED: 'Отменена',
 };
 
 export default function SubscriptionsPage() {
@@ -167,12 +167,12 @@ function SubscriptionsContent() {
     {
       key: 'store',
       header: 'Магазин',
-      cell: (s) => <span className="font-medium">{s.storeName}</span>,
+      cell: (s) => <span className="font-medium">{s.store?.name || '—'}</span>,
     },
     {
       key: 'plan',
       header: 'Тариф',
-      cell: (s) => <span className="text-sm">{s.planName}</span>,
+      cell: (s) => <span className="text-sm">{s.plan}</span>,
     },
     {
       key: 'status',
@@ -188,7 +188,7 @@ function SubscriptionsContent() {
       header: 'Истекает',
       cell: (s) => (
         <span className="text-sm text-muted-foreground">
-          {s.expiresAt ? format(new Date(s.expiresAt), 'dd.MM.yyyy') : '—'}
+          {s.currentPeriodEnd ? format(new Date(s.currentPeriodEnd), 'dd.MM.yyyy') : '—'}
         </span>
       ),
     },
@@ -196,7 +196,7 @@ function SubscriptionsContent() {
       key: 'discount',
       header: 'Скидка',
       cell: (s) => (
-        <span className="text-sm">{s.discount ? `${s.discount}%` : '—'}</span>
+        <span className="text-sm">{s.adminDiscount ? `${s.adminDiscount}%` : '—'}</span>
       ),
     },
     {
@@ -214,7 +214,7 @@ function SubscriptionsContent() {
             <DropdownMenuItem onClick={() => { setChangePlanStore(s); setNewPlan(''); }}>
               Изменить тариф
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => { setDiscountDialog(s); setDiscount(String(s.discount || '')); }}>
+            <DropdownMenuItem onClick={() => { setDiscountDialog(s); setDiscount(String(s.adminDiscount || '')); }}>
               Установить скидку
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -281,19 +281,19 @@ function SubscriptionsContent() {
                   <CardContent className="pt-4 space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="font-medium">{p.storeName}</p>
-                        <p className="text-sm text-muted-foreground">{p.planName}</p>
+                        <p className="font-medium">{p.subscription?.store?.name || '—'}</p>
+                        <p className="text-sm text-muted-foreground">{p.subscription?.plan || '—'}</p>
                         <p className="font-semibold text-lg mt-1">
                           {new Intl.NumberFormat('ru-TJ', {
                             style: 'currency',
-                            currency: 'TJS',
+                            currency: p.currency || 'TJS',
                             maximumFractionDigits: 0,
                           }).format(p.amount)}
                         </p>
                       </div>
-                      {p.receiptUrl && (
+                      {p.receiptImage && (
                         <button
-                          onClick={() => setReceiptPreview(p.receiptUrl!)}
+                          onClick={() => setReceiptPreview(p.receiptImage!)}
                           className="flex h-16 w-16 items-center justify-center rounded border bg-slate-50 hover:bg-slate-100 transition-colors"
                         >
                           <ImageIcon className="h-6 w-6 text-muted-foreground" />
@@ -339,7 +339,7 @@ function SubscriptionsContent() {
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Магазин: <strong>{extendDialog?.storeName}</strong>
+              Магазин: <strong>{extendDialog?.store?.name || '—'}</strong>
             </p>
             <div className="space-y-2">
               <Label>Количество дней</Label>
@@ -376,7 +376,7 @@ function SubscriptionsContent() {
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Магазин: <strong>{changePlanStore?.storeName}</strong>
+              Магазин: <strong>{changePlanStore?.store?.name || '—'}</strong>
             </p>
             <div className="space-y-2">
               <Label>Новый тариф</Label>
@@ -417,7 +417,7 @@ function SubscriptionsContent() {
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Магазин: <strong>{discountDialog?.storeName}</strong>
+              Магазин: <strong>{discountDialog?.store?.name || '—'}</strong>
             </p>
             <div className="space-y-2">
               <Label>Скидка (0–100%)</Label>
@@ -456,7 +456,7 @@ function SubscriptionsContent() {
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Магазин: <strong>{rejectDialog?.storeName}</strong>
+              Магазин: <strong>{rejectDialog?.subscription?.store?.name || '—'}</strong>
             </p>
             <div className="space-y-2">
               <Label>Причина отклонения</Label>

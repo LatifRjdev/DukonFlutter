@@ -39,18 +39,20 @@ const PLAN_COLORS: Record<string, string> = {
   PREMIUM: 'bg-purple-100 text-purple-700',
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-green-100 text-green-700',
-  trial: 'bg-blue-100 text-blue-700',
-  suspended: 'bg-red-100 text-red-700',
-  expired: 'bg-yellow-100 text-yellow-700',
+const SUB_STATUS_COLORS: Record<string, string> = {
+  ACTIVE: 'bg-green-100 text-green-700',
+  TRIAL: 'bg-blue-100 text-blue-700',
+  PAST_DUE: 'bg-yellow-100 text-yellow-700',
+  CANCELED: 'bg-gray-100 text-gray-600',
+  EXPIRED: 'bg-red-100 text-red-700',
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  active: 'Активен',
-  trial: 'Trial',
-  suspended: 'Приостановлен',
-  expired: 'Истёк',
+const SUB_STATUS_LABELS: Record<string, string> = {
+  ACTIVE: 'Активна',
+  TRIAL: 'Trial',
+  PAST_DUE: 'Просрочена',
+  CANCELED: 'Отменена',
+  EXPIRED: 'Истекла',
 };
 
 export default function StoresPage() {
@@ -70,7 +72,7 @@ export default function StoresPage() {
 
   const suspendMutation = useMutation({
     mutationFn: (store: Store) =>
-      api.put(`/admin/stores/${store.id}/${store.status === 'suspended' ? 'unsuspend' : 'suspend'}`),
+      api.put(`/admin/stores/${store.id}/${!store.isActive ? 'unsuspend' : 'suspend'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stores'] });
       toast.success('Статус магазина обновлён');
@@ -96,10 +98,11 @@ export default function StoresPage() {
     const matchesSearch =
       !search ||
       s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.ownerName?.toLowerCase().includes(search.toLowerCase());
+      s.owner?.name?.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || s.category === categoryFilter;
-    const matchesPlan = planFilter === 'all' || s.planName === planFilter;
-    const matchesStatus = statusFilter === 'all' || s.status === statusFilter;
+    const matchesPlan = planFilter === 'all' || s.subscription?.plan === planFilter;
+    const subStatus = s.isActive ? s.subscription?.status ?? 'EXPIRED' : 'SUSPENDED';
+    const matchesStatus = statusFilter === 'all' || subStatus === statusFilter;
     return matchesSearch && matchesCategory && matchesPlan && matchesStatus;
   });
 
@@ -112,7 +115,7 @@ export default function StoresPage() {
     {
       key: 'owner',
       header: 'Владелец',
-      cell: (s) => <span className="text-sm">{s.ownerName || '—'}</span>,
+      cell: (s) => <span className="text-sm">{s.owner?.name || '—'}</span>,
     },
     {
       key: 'category',
@@ -122,30 +125,40 @@ export default function StoresPage() {
     {
       key: 'plan',
       header: 'Тариф',
-      cell: (s) => s.planName ? (
-        <Badge className={`${PLAN_COLORS[s.planName] || 'bg-gray-100 text-gray-700'} hover:opacity-80`}>
-          {s.planName}
+      cell: (s) => s.subscription?.plan ? (
+        <Badge className={`${PLAN_COLORS[s.subscription.plan] || 'bg-gray-100 text-gray-700'} hover:opacity-80`}>
+          {s.subscription.plan}
         </Badge>
       ) : <span>—</span>,
     },
     {
       key: 'status',
       header: 'Статус',
-      cell: (s) => (
-        <Badge className={`${STATUS_COLORS[s.status] || ''} hover:opacity-80`}>
-          {STATUS_LABELS[s.status] || s.status}
-        </Badge>
-      ),
+      cell: (s) => {
+        if (!s.isActive) {
+          return (
+            <Badge className="bg-red-100 text-red-700 hover:opacity-80">
+              Приостановлен
+            </Badge>
+          );
+        }
+        const subStatus = s.subscription?.status ?? 'EXPIRED';
+        return (
+          <Badge className={`${SUB_STATUS_COLORS[subStatus] || ''} hover:opacity-80`}>
+            {SUB_STATUS_LABELS[subStatus] || subStatus}
+          </Badge>
+        );
+      },
     },
     {
       key: 'products',
       header: 'Товары',
-      cell: (s) => <span className="text-sm">{s.productCount ?? 0}</span>,
+      cell: (s) => <span className="text-sm">{s._count?.products ?? 0}</span>,
     },
     {
       key: 'sales',
       header: 'Продаж/мес',
-      cell: (s) => <span className="text-sm">{s.monthlySales ?? 0}</span>,
+      cell: (s) => <span className="text-sm">{s.monthlySalesCount ?? 0}</span>,
     },
     {
       key: 'actions',
@@ -164,9 +177,9 @@ export default function StoresPage() {
                 e.stopPropagation();
                 suspendMutation.mutate(s);
               }}
-              className={s.status === 'suspended' ? 'text-green-600' : 'text-red-600'}
+              className={!s.isActive ? 'text-green-600' : 'text-red-600'}
             >
-              {s.status === 'suspended' ? 'Восстановить' : 'Приостановить'}
+              {!s.isActive ? 'Восстановить' : 'Приостановить'}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -231,10 +244,11 @@ export default function StoresPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Все статусы</SelectItem>
-            <SelectItem value="active">Активен</SelectItem>
-            <SelectItem value="trial">Trial</SelectItem>
-            <SelectItem value="suspended">Приостановлен</SelectItem>
-            <SelectItem value="expired">Истёк</SelectItem>
+            <SelectItem value="ACTIVE">Активна</SelectItem>
+            <SelectItem value="TRIAL">Trial</SelectItem>
+            <SelectItem value="PAST_DUE">Просрочена</SelectItem>
+            <SelectItem value="SUSPENDED">Приостановлен</SelectItem>
+            <SelectItem value="EXPIRED">Истекла</SelectItem>
           </SelectContent>
         </Select>
       </div>

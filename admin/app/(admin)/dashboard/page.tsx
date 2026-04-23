@@ -188,8 +188,8 @@ export default function DashboardPage() {
                   className="flex items-center justify-between rounded-lg border p-3"
                 >
                   <div>
-                    <p className="font-medium text-sm">{p.storeName}</p>
-                    <p className="text-xs text-muted-foreground">{p.planName}</p>
+                    <p className="font-medium text-sm">{p.subscription?.store?.name || '—'}</p>
+                    <p className="text-xs text-muted-foreground">{p.subscription?.plan || '—'}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="font-semibold text-sm">

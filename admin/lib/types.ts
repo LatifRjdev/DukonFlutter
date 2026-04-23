@@ -6,36 +6,40 @@ export interface User {
   isAdmin: boolean;
   isActive: boolean;
   createdAt: string;
-  storeCount?: number;
+  _count?: { ownedStores: number };
 }
 
 export interface Store {
   id: string;
   name: string;
   category?: string;
-  ownerId: string;
-  ownerName?: string;
-  planId?: string;
-  planName?: string;
-  status: 'active' | 'suspended' | 'trial' | 'expired';
-  productCount?: number;
-  monthlySales?: number;
-  lastActivity?: string;
+  ownerId?: string;
+  owner?: { id: string; name: string; phone: string };
+  isActive: boolean;
+  subscription?: {
+    plan: string;
+    status: string;
+    currentPeriodEnd?: string;
+  };
+  _count?: { products: number; staff: number };
+  monthlySalesTotal?: number;
+  monthlySalesCount?: number;
+  lastSaleDate?: string;
   createdAt: string;
 }
 
 export interface Subscription {
   id: string;
   storeId: string;
-  storeName: string;
-  planId: string;
-  planName: string;
-  status: 'active' | 'trial' | 'expired' | 'pending' | 'cancelled';
-  expiresAt: string;
-  discount?: number;
-  amount?: number;
-  receiptUrl?: string;
+  plan: string;
+  status: string;
+  trialEndsAt?: string;
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
+  adminDiscount?: number;
   createdAt: string;
+  updatedAt?: string;
+  store?: { id: string; name: string };
 }
 
 export interface Plan {
@@ -102,10 +106,17 @@ export interface RegistrationPoint {
 export interface PendingPayment {
   id: string;
   subscriptionId: string;
-  storeId: string;
-  storeName: string;
-  planName: string;
   amount: number;
-  receiptUrl?: string;
+  currency?: string;
+  method?: string;
+  status?: string;
+  receiptImage?: string;
+  note?: string;
   createdAt: string;
+  subscription?: {
+    id: string;
+    plan: string;
+    status: string;
+    store?: { id: string; name: string };
+  };
 }

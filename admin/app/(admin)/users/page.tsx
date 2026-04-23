@@ -84,7 +84,7 @@ export default function UsersPage() {
       key: 'stores',
       header: 'Магазины',
       cell: (u) => (
-        <span className="text-sm text-center block">{u.storeCount ?? 0}</span>
+        <span className="text-sm text-center block">{u._count?.ownedStores ?? 0}</span>
       ),
     },
     {

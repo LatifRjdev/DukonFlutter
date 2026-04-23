@@ -206,14 +206,16 @@ export default function UserDetailPage({
                     <Badge
                       variant="outline"
                       className={
-                        store.status === 'active'
+                        !store.isActive
+                          ? 'text-red-700 border-red-300'
+                          : store.subscription?.status === 'ACTIVE'
                           ? 'text-green-700 border-green-300'
-                          : store.status === 'trial'
+                          : store.subscription?.status === 'TRIAL'
                           ? 'text-blue-700 border-blue-300'
-                          : 'text-red-700 border-red-300'
+                          : 'text-yellow-700 border-yellow-300'
                       }
                     >
-                      {store.planName || store.status}
+                      {store.subscription?.plan || store.subscription?.status || (store.isActive ? '—' : 'Приостановлен')}
                     </Badge>
                   </div>
                 </CardContent>
