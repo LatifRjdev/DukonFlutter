@@ -697,7 +697,15 @@ Closes prod-blocker Mobile #4 + permissions HIGH findings."
 
 ---
 
-## Task 6: Mobile i18n sweep — hardcoded Russian strings
+## Task 6: Mobile i18n sweep — hardcoded Russian strings — **DEFERRED TO SPRINT 2**
+
+**Decision (2026-04-24):** downgraded from BLOCKER to HIGH. Full `grep` revealed **396** `Text('Russian')` call-sites across **79** files — 4× the originally-estimated scope. Would blow Sprint 1's 1-week timebox.
+
+Shipping decision: ru-only at first launch is acceptable to both stores. tg/uz i18n closes in Sprint 2 (post-launch).
+
+Full backlog + suggested approach: [docs/superpowers/qa/2026-04-24-i18n-backlog-mobile.md](../qa/2026-04-24-i18n-backlog-mobile.md)
+
+### Original plan (deferred)
 
 **Blockers:** Mobile #7.
 

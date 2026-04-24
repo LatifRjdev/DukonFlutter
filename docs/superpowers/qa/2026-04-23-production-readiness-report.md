@@ -1,6 +1,36 @@
 # DukonPro Production-Readiness Report — 2026-04-23
 
-## TL;DR
+## Sprint 1 Progress Update — 2026-04-24
+
+**Статус: 🟡 YELLOW** (10 из 14 blocker-ов закрыто; 3 ждут user-gate; 1 downgrade → HIGH).
+
+| # | Blocker | Слой | Commit | Статус |
+|---|---|---|---|---|
+| M#4 | iOS Info.plist usage descriptions | mobile | `0c2e3d5` | ✅ closed |
+| M#6 | Sync retry without exponential backoff | mobile | `23fbdb6` | ✅ closed |
+| M#7 | Hardcoded Russian UI strings | mobile | — | ⚠️ DEFERRED → Sprint 2 (396 strings, ru-only OK to ship) |
+| A#1 | JWT in localStorage (XSS) | admin | `7065522` | ✅ closed |
+| A#2 | No security headers | admin | `920f3b3` | ✅ closed |
+| A#3 | isAdmin not in middleware | admin | `7065522` | ✅ closed |
+| I#1 | Containers run as root | infra | `0fc1fe2` | ✅ closed |
+| I#2 | No healthchecks | infra | `0fc1fe2` | ✅ closed |
+| I#3 | No /api/health endpoint | infra | `0fc1fe2` | ✅ closed |
+| M#1 | Package name mismatch | mobile | — | 🔐 GATE 0a (Firebase) |
+| M#2 | Firebase API key leaked | mobile | — | 🔐 GATE 0a (Firebase) |
+| M#3 | Firebase.initializeApp() missing | mobile | — | 🔐 GATE 0a (Firebase) |
+| M#5 | No crash reporting (Sentry) | all | — | 🔐 GATE 0b (Sentry DSNs) |
+| M#8 | No store metadata | mobile | — | 🔐 GATE 0d (privacy URL, screenshots) |
+
+**Что unblocks запуск:**
+- GATE 0a (Firebase rotation) → закрывает M#1, M#2, M#3
+- GATE 0b (3 Sentry DSNs) → закрывает M#5
+- GATE 0d (store metadata) → закрывает M#8
+
+После этих gate-ов Sprint 1 официально закрыт и можно подавать в стор на ru-only.
+
+---
+
+## TL;DR (изначальный audit)
 
 **🔴 НЕ ГОТОВ К ПРОДУ.**
 
