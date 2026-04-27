@@ -50,8 +50,16 @@ class ZakatBreakdownCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(label, style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.normal)),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.normal),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: AppConstants.spacingSm),
           Text(
             '${isNegative ? "-" : ""}${value.abs().toStringAsFixed(2)} TJS',
             style: TextStyle(fontSize: 14, fontWeight: isBold ? FontWeight.w600 : FontWeight.w500, color: isNegative ? AppColors.error : context.textPrimary),
