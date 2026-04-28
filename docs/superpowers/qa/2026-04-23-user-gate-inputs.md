@@ -15,10 +15,19 @@
    - `/Users/latifrjdev/Downloads/Dukon/app/android/app/google-services.json`
    - `/Users/latifrjdev/Downloads/Dukon/app/ios/Runner/GoogleService-Info.plist`
 
-- [ ] Rotation done — date: `YYYY-MM-DD`
-- [ ] New google-services.json placed
-- [ ] New GoogleService-Info.plist placed (iOS)
-- [ ] Old key revoked in Google Cloud Console
+- [x] Rotation done — date: `2026-04-28` (via Cloud Console restrictions, not regeneration)
+- [x] New google-services.json placed at `app/android/app/google-services.json` (with `com.itlsolutions.dukonpro` package)
+- [ ] New GoogleService-Info.plist placed (iOS) — pending iOS build setup
+- [x] Old key constrained in Google Cloud Console
+  - Project: `dukonpro-ca00c`
+  - Key: `AIzaSyA8uwf4buni-9P4NcV7sBXgMyEB58hnX54` (Android key, auto-created by Firebase)
+  - Application restrictions: Android apps
+    - Package: `com.itlsolutions.dukonpro`
+    - SHA-1 (release): `A9:C6:B9:D5:4D:54:D6:83:F6:E2:F8:75:47:85:E8:98:DB:26:A7:F5`
+    - SHA-1 (debug):   `9F:69:71:CF:AF:FC:38:35:E0:0B:DE:81:FF:90:01:01:84:FF:1A:BC`
+  - API restrictions: 25 APIs (Firebase default set)
+  - Verified: Restrictions column shows "Android apps, 25 APIs"
+- Release keystore: `~/dukonpro-release.jks`, alias `dukonpro` — **stored in 1Password / secure backup**, never committed
 
 ## GATE 0b — Sentry DSNs
 
@@ -30,10 +39,15 @@
 3. В каждом проекте: Settings → Client Keys (DSN) → скопировать DSN
 
 ```
-DSN_API:     
-DSN_ADMIN:   
-DSN_MOBILE:  
+DSN_API:     https://1cb6c561eae05fa51a22505da527045d@o4511295919095808.ingest.de.sentry.io/4511296168722512
+DSN_ADMIN:   https://badaaed08382cdd7fde67eb93f5bb394@o4511295919095808.ingest.de.sentry.io/4511295927877712
+DSN_MOBILE:  https://823a8cf336ed5df76bef64da62624afb@o4511295919095808.ingest.de.sentry.io/4511296176652368
 ```
+
+✅ Wired into all 3 layers in commit `c401e95`:
+- API:    `api/.env` SENTRY_DSN, init in `api/src/sentry.ts`, registered in `app.module.ts`
+- Admin:  `admin/.env.local` NEXT_PUBLIC_SENTRY_DSN, instrumentation.ts + 3 sentry.*.config.ts files
+- Mobile: passed via `--dart-define=SENTRY_DSN_MOBILE=...` at build time, init in `app/lib/core/sentry.dart`
 
 ## GATE 0c — iOS usage descriptions (дефолты есть, поменяй если хочешь)
 
