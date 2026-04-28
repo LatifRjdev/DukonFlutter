@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import {
+  BadRequestException,
   ExecutionContext,
   ForbiddenException,
   NotFoundException,
@@ -212,29 +213,31 @@ describe('Admin payments flow', () => {
       expect(diffDays).toBe(30);
     });
 
-    it('should remain idempotent in effect when adminApprovePayment is invoked twice', async () => {
-      // The service has no early-return for already-APPROVED payments — it
-      // would happily re-extend. This test pins down the CURRENT behavior:
-      // calling approve twice updates twice, so the caller (controller +
-      // AdminGuard + frontend) is responsible for not double-clicking.
-      // If/when idempotency is added at the service layer, this test will
-      // need to be flipped to assert no extra extension. We document the
-      // gap explicitly.
+    it('should be idempotent when adminApprovePayment is invoked twice on the same payment', async () => {
       seedSub({ status: 'TRIAL' });
       seedPayment({ status: 'PENDING' });
 
       await service.adminApprovePayment('sub-1', 'pay-1', 'admin-1');
       const firstEnd = prisma._subsById.get('sub-1')!.currentPeriodEnd;
+      const firstReviewedAt = prisma._payments.get('pay-1')!.reviewedAt;
 
       await service.adminApprovePayment('sub-1', 'pay-1', 'admin-1');
       const secondEnd = prisma._subsById.get('sub-1')!.currentPeriodEnd;
+      const secondReviewedAt = prisma._payments.get('pay-1')!.reviewedAt;
 
-      // Second call extends from now (since first call put end in future) —
-      // so secondEnd >= firstEnd. We assert at least the payment ends up
-      // APPROVED and subscription remains ACTIVE (no corruption).
       expect(prisma._payments.get('pay-1')!.status).toBe('APPROVED');
       expect(prisma._subsById.get('sub-1')!.status).toBe('ACTIVE');
-      expect(secondEnd.getTime()).toBeGreaterThanOrEqual(firstEnd.getTime());
+      expect(secondEnd.getTime()).toBe(firstEnd.getTime());
+      expect(secondReviewedAt).toEqual(firstReviewedAt);
+    });
+
+    it('should throw BadRequestException when approving a previously REJECTED payment', async () => {
+      seedSub({ status: 'TRIAL' });
+      seedPayment({ status: 'REJECTED' });
+
+      await expect(
+        service.adminApprovePayment('sub-1', 'pay-1', 'admin-1'),
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('should throw NotFoundException when payment id does not belong to subscription', async () => {

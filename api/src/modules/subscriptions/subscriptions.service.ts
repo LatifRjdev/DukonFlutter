@@ -263,7 +263,16 @@ export class SubscriptionsService implements OnModuleInit {
       throw new NotFoundException('Payment not found');
     }
 
-    // Determine the plan from the payment note
+    if (payment.status === 'APPROVED') {
+      return { payment, subscription };
+    }
+
+    if (payment.status === 'REJECTED') {
+      throw new BadRequestException(
+        'Cannot approve a payment that was previously rejected',
+      );
+    }
+
     let newPlan = subscription.plan;
     if (payment.note) {
       const match = payment.note.match(/Plan change request to (\w+)/);
