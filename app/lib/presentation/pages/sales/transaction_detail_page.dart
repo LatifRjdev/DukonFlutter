@@ -6,7 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../domain/entities/sale.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   final Sale sale;

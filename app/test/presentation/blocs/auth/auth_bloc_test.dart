@@ -2,12 +2,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/core/errors/exceptions.dart';
-import 'package:dokonpro/domain/entities/user.dart';
-import 'package:dokonpro/domain/repositories/auth_repository.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_bloc.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_event.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_state.dart';
+import 'package:dukonpro/core/errors/exceptions.dart';
+import 'package:dukonpro/domain/entities/user.dart';
+import 'package:dukonpro/domain/repositories/auth_repository.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_bloc.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_event.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_state.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 

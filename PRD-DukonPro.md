@@ -325,7 +325,7 @@ DukonPro создан специально для местного рынка и
 - [ ] Массовое изменение цен — Бизнес+
 - [ ] Кнопка удаления товара с подтверждением
 
-**Экраны:** dokonpro_edit_product_details
+**Экраны:** dukonpro_edit_product_details
 
 ---
 
@@ -956,7 +956,7 @@ DukonPro создан специально для местного рынка и
 - [ ] Ручное начисление/списание баллов
 - [ ] Максимальная скидка баллами (% от чека)
 
-**Экраны:** dokonpro_loyalty_program_settings (настройки), dokonpro_loyalty_points_management (управление баллами)
+**Экраны:** dukonpro_loyalty_program_settings (настройки), dukonpro_loyalty_points_management (управление баллами)
 
 ---
 
@@ -1132,7 +1132,7 @@ DukonPro создан специально для местного рынка и
 - [ ] График платежей
 - [ ] Логотип/аватар поставщика
 
-**Экраны:** dokonpro_suppliers_list, dokonpro_supplier_profile_details, dokonpro_add_new_supplier, dokonpro_supplier_debts_list
+**Экраны:** dukonpro_suppliers_list, dukonpro_supplier_profile_details, dukonpro_add_new_supplier, dukonpro_supplier_debts_list
 
 ---
 
@@ -2324,8 +2324,8 @@ describe('ProductsService', () => {
 // test/presentation/widgets/product_card_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/presentation/widgets/product/product_card.dart';
-import 'package:dokonpro/domain/entities/product.dart';
+import 'package:dukonpro/presentation/widgets/product/product_card.dart';
+import 'package:dukonpro/domain/entities/product.dart';
 
 void main() {
   group('ProductCard', () {
@@ -2382,7 +2382,7 @@ void main() {
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:dokonpro/main.dart' as app;
+import 'package:dukonpro/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -2436,7 +2436,7 @@ NODE_ENV=development
 PORT=3000
 
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/dokonpro
+DATABASE_URL=postgresql://user:password@localhost:5432/dukonpro
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -2461,7 +2461,7 @@ SENTRY_DSN=https://xxx@sentry.io/xxx
 S3_ENDPOINT=https://s3.example.com
 S3_ACCESS_KEY=your-access-key
 S3_SECRET_KEY=your-secret-key
-S3_BUCKET=dokonpro
+S3_BUCKET=dukonpro
 ```
 
 ### B. Полезные команды
@@ -2486,7 +2486,7 @@ flutter test
 # Сборка
 flutter build apk --release
 flutter build ios --release
-docker build -t dokonpro/api .
+docker build -t dukonpro/api .
 
 # Деплой
 docker compose -f docker-compose.prod.yml up -d
@@ -3139,7 +3139,7 @@ enum SyncStatus {
 - [ ] Сессия с refresh token
 - [ ] Блокировка после 5 неудачных попыток
 
-**Экраны:** dokonpro_admin_login
+**Экраны:** dukonpro_admin_login
 
 ---
 
@@ -3158,7 +3158,7 @@ enum SyncStatus {
 - [ ] Фильтр по периоду
 - [ ] Экспорт данных в CSV
 
-**Экраны:** dokonpro_admin_dashboard, dokonpro_platform_analytics
+**Экраны:** dukonpro_admin_dashboard, dukonpro_platform_analytics
 
 ---
 
@@ -3176,7 +3176,7 @@ enum SyncStatus {
 - [ ] Последние действия (audit trail)
 - [ ] Пагинация и экспорт
 
-**Экраны:** dokonpro_users_list, dokonpro_user_profile_details
+**Экраны:** dukonpro_users_list, dukonpro_user_profile_details
 
 ---
 
@@ -3192,7 +3192,7 @@ enum SyncStatus {
 - [ ] Деактивация магазина
 - [ ] Ссылка на профиль владельца
 
-**Экраны:** dokonpro_store_list, dokonpro_store_details
+**Экраны:** dukonpro_store_list, dukonpro_store_details
 
 ---
 
@@ -3210,7 +3210,7 @@ enum SyncStatus {
 - [ ] Таблица платежей с фильтрами
 - [ ] Экспорт в PDF / CSV
 
-**Экраны:** dokonpro_subscription_management, dokonpro_revenue_and_payments
+**Экраны:** dukonpro_subscription_management, dukonpro_revenue_and_payments
 
 ---
 
@@ -3227,7 +3227,7 @@ enum SyncStatus {
 - [ ] Статистика рассылок: отправлено, открыто, CTR
 - [ ] Планирование отправки по времени
 
-**Экраны:** dokonpro_support_tickets, dokonpro_notifications_and_newsletters
+**Экраны:** dukonpro_support_tickets, dukonpro_notifications_and_newsletters
 
 ---
 
@@ -3246,7 +3246,7 @@ enum SyncStatus {
 - [ ] Интеграция с Sentry: ошибки за 24ч, критические
 - [ ] Uptime и последний рестарт
 
-**Экраны:** dokonpro_platform_settings, dokonpro_audit_log, dokonpro_system_health_monitoring
+**Экраны:** dukonpro_platform_settings, dukonpro_audit_log, dukonpro_system_health_monitoring
 
 ---
 

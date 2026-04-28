@@ -144,7 +144,7 @@ Clusters (same as 5B.2.a/b split):
 
 ## Execution notes
 
-- **AppLocalizations imports:** `import 'package:dokonpro/l10n/app_localizations.dart';` — many files in the codebase already import it; grep before adding.
+- **AppLocalizations imports:** `import 'package:dukonpro/l10n/app_localizations.dart';` — many files in the codebase already import it; grep before adding.
 - **Context availability:** tooltip/Semantics inside `build()` have context. For tooltips assigned to IconButton inside helper methods (`_Widget`, `_Card`), pass l10n down as parameter or use `Builder` pattern.
 - **Interpolation:** when current code uses `${var.field}`, arb uses `{var}` and call-site passes value: `l10n.selectStore(name)`.
 - **Translation quality:** tg and uz translations are best-effort based on existing arb patterns. Mark with `// TODO(l10n-review)` comment in arb if uncertain.

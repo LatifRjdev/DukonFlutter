@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/pos/payment_method_tile.dart';
+import 'package:dukonpro/presentation/widgets/pos/payment_method_tile.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

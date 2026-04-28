@@ -10,7 +10,7 @@ import '../../blocs/investment/investment_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class AddInvestmentPage extends StatefulWidget {
   final String storeId;

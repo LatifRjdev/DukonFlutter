@@ -60,7 +60,7 @@ class NotificationService {
     String? payload,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'dokonpro_channel',
+      'dukonpro_channel',
       'DukonPro',
       channelDescription: 'DukonPro notifications',
       importance: Importance.high,

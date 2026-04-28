@@ -1,4 +1,4 @@
-import 'package:dokonpro/presentation/pages/product/empty_products_page.dart';
+import 'package:dukonpro/presentation/pages/product/empty_products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';

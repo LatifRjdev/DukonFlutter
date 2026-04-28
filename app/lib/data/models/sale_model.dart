@@ -1,5 +1,5 @@
-import 'package:dokonpro/domain/entities/sale.dart';
-import 'package:dokonpro/data/models/sale_item_model.dart';
+import 'package:dukonpro/domain/entities/sale.dart';
+import 'package:dukonpro/data/models/sale_item_model.dart';
 
 class SaleModel {
   final String id;

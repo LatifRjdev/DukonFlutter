@@ -88,9 +88,9 @@ Create `app/test/core/theme/theme_contrast_test.dart`. Reuses the existing `_wra
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/core/theme/contrast_utils.dart';
-import 'package:dokonpro/core/theme/theme_extensions.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/core/theme/contrast_utils.dart';
+import 'package:dukonpro/core/theme/theme_extensions.dart';
 
 const double _aa = 4.5;
 const double _aaLarge = 3.0;

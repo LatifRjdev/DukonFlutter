@@ -11,7 +11,7 @@ Comprehensive audit of every route, screen, button, and user-facing function acr
 - **Location:** `api/`
 - **Scale:** 80 HTTP routes across 16 controllers / 15 feature modules
 - **Modules:** `auth`, `stores`, `products`, `categories`, `customers`, `suppliers`, `sales`, `expenses`, `finances`, `zakat`, `staff`, `payroll`, `shifts`, `roles`, `users`
-- **Database:** PostgreSQL 16 (dokonpro-db, port 5435), Redis 7 (port 6380)
+- **Database:** PostgreSQL 16 (dukonpro-db, port 5435), Redis 7 (port 6380)
 - **Auth:** JWT access/refresh tokens
 
 ### Flutter App (Dart, Material 3, BLoC)
@@ -130,8 +130,8 @@ Tool: `adb shell svc wifi disable|enable`, backend logs.
 **Performance:**
 - `flutter build apk --analyze-size` — bundle size breakdown
 - `adb shell am start -W` — cold start time
-- `adb shell dumpsys gfxinfo com.itlsolutions.dokonpro` — frame jank stats during POS flow
-- Memory: `adb shell dumpsys meminfo com.itlsolutions.dokonpro`
+- `adb shell dumpsys gfxinfo com.itlsolutions.dukonpro` — frame jank stats during POS flow
+- Memory: `adb shell dumpsys meminfo com.itlsolutions.dukonpro`
 
 **Accessibility:**
 - Touch target sizes (<48dp is a fail)

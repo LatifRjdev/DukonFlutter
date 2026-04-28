@@ -8,7 +8,7 @@ import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
 import '../../blocs/settings/settings_state.dart';
 import '../../widgets/common/app_snackbar.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});

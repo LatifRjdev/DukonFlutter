@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/category.dart';
+import 'package:dukonpro/domain/entities/category.dart';
 
 class CategoryModel {
   final String id;

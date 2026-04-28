@@ -3,18 +3,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_bloc.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_event.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_state.dart';
-import 'package:dokonpro/domain/entities/user.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_bloc.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_event.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_state.dart';
+import 'package:dukonpro/domain/entities/user.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
 
 class _FakeEvent extends Fake implements SettingsEvent {}
 
-/// Harness mirrors the wiring we'll add inside DokonProApp.build().
+/// Harness mirrors the wiring we'll add inside DukonProApp.build().
 Widget _underTest(SettingsBloc bloc) {
   return BlocProvider<SettingsBloc>.value(
     value: bloc,

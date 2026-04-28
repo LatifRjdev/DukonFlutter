@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/core/network/network_info.dart';
-import 'package:dokonpro/data/datasources/local/product_local_datasource.dart';
-import 'package:dokonpro/data/datasources/remote/product_remote_datasource.dart';
-import 'package:dokonpro/data/repositories/product_repository_impl.dart';
-import 'package:dokonpro/data/sync/sync_queue.dart';
-import 'package:dokonpro/domain/entities/product.dart';
+import 'package:dukonpro/core/network/network_info.dart';
+import 'package:dukonpro/data/datasources/local/product_local_datasource.dart';
+import 'package:dukonpro/data/datasources/remote/product_remote_datasource.dart';
+import 'package:dukonpro/data/repositories/product_repository_impl.dart';
+import 'package:dukonpro/data/sync/sync_queue.dart';
+import 'package:dukonpro/domain/entities/product.dart';
 
 class _MockRemote extends Mock implements ProductRemoteDatasource {}
 

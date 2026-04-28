@@ -50,7 +50,7 @@
 
 ### Mobile (8 blockers — основная боль)
 
-1. **Mismatch package name** — Gradle `com.itlsolutions.dokonpro` vs `google-services.json` `com.itlsolutions.dukonpro`. FCM не инициализируется в release. [`build.gradle.kts:27`](app/android/app/build.gradle.kts#L27)
+1. **Mismatch package name** — Gradle `com.itlsolutions.dukonpro` vs `google-services.json` `com.itlsolutions.dukonpro`. FCM не инициализируется в release. [`build.gradle.kts:27`](app/android/app/build.gradle.kts#L27)
 2. **Firebase API key закоммичен в репо** — `AIzaSyA8uwf4buni-9P4NcV7sBXgMyEB58hnX54`. Ротировать + проверить git history. [`google-services.json:18`](app/android/app/google-services.json#L18)
 3. **`Firebase.initializeApp()` не вызывается**, но `FirebaseMessaging.instance.getToken()` дергается → runtime crash / silent token failure.
 4. **iOS: нет `NSCameraUsageDescription` и `NSPhotoLibraryUsageDescription`** в Info.plist → App Store отклонит upload.
@@ -123,7 +123,7 @@
 ### Неделя 1 — Mobile + Security blockers
 
 - [ ] Ротировать Firebase API key, добавить `google-services.json` в `.gitignore`, переписать git history через BFG если в истории.
-- [ ] Выровнять applicationId на `com.itlsolutions.dokonpro` везде.
+- [ ] Выровнять applicationId на `com.itlsolutions.dukonpro` везде.
 - [ ] Добавить `Firebase.initializeApp()` + `firebase_options.dart` (generated).
 - [ ] Добавить `NSCameraUsageDescription` + `NSPhotoLibraryUsageDescription` в iOS Info.plist.
 - [ ] Интегрировать Sentry во все 3 слоя (`@sentry/nestjs`, `@sentry/nextjs`, `sentry_flutter`).

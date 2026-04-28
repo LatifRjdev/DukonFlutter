@@ -7,7 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Models

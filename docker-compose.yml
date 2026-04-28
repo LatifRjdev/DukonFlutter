@@ -4,11 +4,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: dokonpro
-      POSTGRES_USER: dokonpro
+      POSTGRES_DB: dukonpro
+      POSTGRES_USER: dukonpro
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dokonpro"]
+      test: ["CMD-SHELL", "pg_isready -U dukonpro"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,7 +20,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://dokonpro:${DB_PASSWORD}@postgres:5432/dokonpro
+      DATABASE_URL: postgresql://dukonpro:${DB_PASSWORD}@postgres:5432/dukonpro
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}

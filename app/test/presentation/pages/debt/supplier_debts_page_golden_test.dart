@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/debt/debt_bloc.dart';
-import 'package:dokonpro/presentation/blocs/debt/debt_event.dart';
-import 'package:dokonpro/presentation/blocs/debt/debt_state.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/debt/supplier_debts_page.dart';
+import 'package:dukonpro/presentation/blocs/debt/debt_bloc.dart';
+import 'package:dukonpro/presentation/blocs/debt/debt_event.dart';
+import 'package:dukonpro/presentation/blocs/debt/debt_state.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/debt/supplier_debts_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

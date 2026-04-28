@@ -9,7 +9,7 @@ import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_text_field.dart';
 
 class AddAdjustmentPage extends StatefulWidget {

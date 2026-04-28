@@ -39,7 +39,7 @@ Before any mobile work ships, the user must provide:
 
 - [ ] **GATE 0a: Firebase API key rotation**
   - Open https://console.firebase.google.com → DukonPro project → Project Settings → General.
-  - Under "Your apps", locate the Android app (`com.itlsolutions.dokonpro`). Click the existing API key in the key registry.
+  - Under "Your apps", locate the Android app (`com.itlsolutions.dukonpro`). Click the existing API key in the key registry.
   - Click "Add API key restrictions" → Application restriction: "Android apps". Add SHA-1 fingerprint of the release keystore (get via `keytool -list -v -keystore path/to/keystore.jks`).
   - Alternatively (cleaner): delete the existing API key, generate a new one with restrictions. Download the replacement `google-services.json`.
   - Save the replacement to `/Users/latifrjdev/Downloads/Dukon/app/android/app/google-services.json` (overwrite existing).
@@ -191,7 +191,7 @@ Expected: HTTP 401 or 403 (key revoked). If the old key still works, GATE 0a was
 
 - [ ] **Step 2: Align package names**
 
-Open `app/android/app/build.gradle.kts`. Confirm line 27 reads `applicationId = "com.itlsolutions.dokonpro"` (already present). Then inspect `app/android/app/google-services.json` — the `package_name` value must match. If not, the replacement `google-services.json` is wrong — regenerate from Firebase console with the correct package.
+Open `app/android/app/build.gradle.kts`. Confirm line 27 reads `applicationId = "com.itlsolutions.dukonpro"` (already present). Then inspect `app/android/app/google-services.json` — the `package_name` value must match. If not, the replacement `google-services.json` is wrong — regenerate from Firebase console with the correct package.
 
 - [ ] **Step 3: Install FlutterFire CLI if missing, generate firebase_options.dart**
 
@@ -201,8 +201,8 @@ cd /Users/latifrjdev/Downloads/Dukon/app
 flutterfire configure \
   --project=<firebase-project-id-from-console> \
   --platforms=android,ios \
-  --ios-bundle-id=com.itlsolutions.dokonpro \
-  --android-package-name=com.itlsolutions.dokonpro \
+  --ios-bundle-id=com.itlsolutions.dukonpro \
+  --android-package-name=com.itlsolutions.dukonpro \
   --out=lib/firebase_options.dart
 ```
 Expected: `lib/firebase_options.dart` created and `ios/Runner/GoogleService-Info.plist` placed.
@@ -785,7 +785,7 @@ cd android && fastlane init
 cd ../ios && fastlane init
 ```
 
-Use app identifier `com.itlsolutions.dokonpro` for both. Decline to set up lanes for now — we only need the metadata skeleton.
+Use app identifier `com.itlsolutions.dukonpro` for both. Decline to set up lanes for now — we only need the metadata skeleton.
 
 - [ ] **Step 2: Populate ru-RU Android metadata**
 

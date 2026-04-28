@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/blocs/zakat/zakat_bloc.dart';
-import 'package:dokonpro/presentation/blocs/zakat/zakat_event.dart';
-import 'package:dokonpro/presentation/blocs/zakat/zakat_state.dart';
-import 'package:dokonpro/presentation/pages/zakat/zakat_calculator_page.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_bloc.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_event.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_state.dart';
+import 'package:dukonpro/presentation/pages/zakat/zakat_calculator_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

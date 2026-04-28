@@ -1,9 +1,9 @@
-import 'package:dokonpro/core/services/receipt_share_service.dart';
-import 'package:dokonpro/core/services/thermal_printer_service.dart';
-import 'package:dokonpro/domain/entities/sale.dart';
-import 'package:dokonpro/injection.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/pos/receipt_preview_page.dart';
+import 'package:dukonpro/core/services/receipt_share_service.dart';
+import 'package:dukonpro/core/services/thermal_printer_service.dart';
+import 'package:dukonpro/domain/entities/sale.dart';
+import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/pos/receipt_preview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

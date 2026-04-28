@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
+import 'package:dukonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
 
 void main() {
   group('BarcodeScannerSheet', () {

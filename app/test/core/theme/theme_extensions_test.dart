@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/constants/app_colors.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/core/theme/theme_extensions.dart';
+import 'package:dukonpro/core/constants/app_colors.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/core/theme/theme_extensions.dart';
 
 Widget _wrap(ThemeData theme, Widget child) => MaterialApp(
       home: Theme(

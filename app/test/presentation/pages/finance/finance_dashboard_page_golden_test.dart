@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/finance/finance_bloc.dart';
-import 'package:dokonpro/presentation/blocs/finance/finance_event.dart';
-import 'package:dokonpro/presentation/blocs/finance/finance_state.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/finance/finance_dashboard_page.dart';
+import 'package:dukonpro/presentation/blocs/finance/finance_bloc.dart';
+import 'package:dukonpro/presentation/blocs/finance/finance_event.dart';
+import 'package:dukonpro/presentation/blocs/finance/finance_state.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/finance/finance_dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

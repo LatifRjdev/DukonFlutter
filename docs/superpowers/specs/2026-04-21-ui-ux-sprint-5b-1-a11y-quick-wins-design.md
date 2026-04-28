@@ -130,9 +130,9 @@ File: `app/test/core/theme/theme_contrast_test.dart`
 Follows the existing `theme_extensions_test.dart` pattern for `_pumpLight` / `_pumpDark` helpers. Structure:
 
 ```dart
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/core/theme/contrast_utils.dart';
-import 'package:dokonpro/core/theme/theme_extensions.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/core/theme/contrast_utils.dart';
+import 'package:dukonpro/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

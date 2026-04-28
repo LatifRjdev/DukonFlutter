@@ -73,13 +73,13 @@ Format: JPEG or PNG, 16:9 ratio, min 320px, max 3840px
 ## Step 3: App Content
 
 ### Privacy policy
-URL: `https://latifrajabov.github.io/dokonpro-privacy/` (host your privacy-policy-ru.md as a GitHub Pages site)
+URL: `https://latifrajabov.github.io/dukonpro-privacy/` (host your privacy-policy-ru.md as a GitHub Pages site)
 
 How to host on GitHub Pages:
-1. Create repo: `LatifRjdev/dokonpro-privacy`
+1. Create repo: `LatifRjdev/dukonpro-privacy`
 2. Push `privacy-policy-ru.md` as `index.md`
 3. Enable GitHub Pages in repo settings (Source: main, /root)
-4. URL will be: `https://latifrjdev.github.io/dokonpro-privacy/`
+4. URL will be: `https://latifrjdev.github.io/dukonpro-privacy/`
 
 ### Content rating
 1. Go to: Policy and programs > App content > Content rating

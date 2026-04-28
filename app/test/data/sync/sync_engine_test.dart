@@ -5,10 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/core/network/dio_client.dart';
-import 'package:dokonpro/core/network/network_info.dart';
-import 'package:dokonpro/data/sync/sync_engine.dart';
-import 'package:dokonpro/data/sync/sync_queue.dart';
+import 'package:dukonpro/core/network/dio_client.dart';
+import 'package:dukonpro/core/network/network_info.dart';
+import 'package:dukonpro/data/sync/sync_engine.dart';
+import 'package:dukonpro/data/sync/sync_queue.dart';
 
 // We can't extend SyncQueue without a real Database, so we mock it via
 // mocktail (already a dev_dependency). SyncEngine only ever calls these

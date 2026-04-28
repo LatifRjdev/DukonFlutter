@@ -57,7 +57,7 @@ Add a first-class **staff invite** flow.
 
 ### Flutter changes
 
-- Deep link `dokonpro://invite?token=...` and matching https universal
+- Deep link `dukonpro://invite?token=...` and matching https universal
   link for future.
 - Accept screen in `lib/presentation/pages/auth/accept_invite_page.dart`:
   shows store/role/name, PIN-style password field, submit.

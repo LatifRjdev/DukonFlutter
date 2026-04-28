@@ -2,13 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/core/errors/exceptions.dart';
-import 'package:dokonpro/domain/entities/sale.dart';
-import 'package:dokonpro/domain/repositories/sale_repository.dart';
-import 'package:dokonpro/presentation/blocs/pos/cart_state.dart';
-import 'package:dokonpro/presentation/blocs/pos/checkout_bloc.dart';
-import 'package:dokonpro/presentation/blocs/pos/checkout_event.dart';
-import 'package:dokonpro/presentation/blocs/pos/checkout_state.dart';
+import 'package:dukonpro/core/errors/exceptions.dart';
+import 'package:dukonpro/domain/entities/sale.dart';
+import 'package:dukonpro/domain/repositories/sale_repository.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_state.dart';
+import 'package:dukonpro/presentation/blocs/pos/checkout_bloc.dart';
+import 'package:dukonpro/presentation/blocs/pos/checkout_event.dart';
+import 'package:dukonpro/presentation/blocs/pos/checkout_state.dart';
 
 class MockSaleRepository extends Mock implements SaleRepository {}
 

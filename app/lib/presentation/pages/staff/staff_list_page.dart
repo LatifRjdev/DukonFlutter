@@ -10,7 +10,7 @@ import '../../widgets/common/app_error_widget.dart';
 import '../../blocs/staff/staff_bloc.dart';
 import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff/staff_state.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class StaffListPage extends StatefulWidget {
   final String storeId;

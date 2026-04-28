@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/domain/entities/payroll_entry.dart';
-import 'package:dokonpro/domain/entities/payroll_adjustment.dart';
-import 'package:dokonpro/presentation/widgets/payroll/payroll_staff_card.dart';
+import 'package:dukonpro/domain/entities/payroll_entry.dart';
+import 'package:dukonpro/domain/entities/payroll_adjustment.dart';
+import 'package:dukonpro/presentation/widgets/payroll/payroll_staff_card.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

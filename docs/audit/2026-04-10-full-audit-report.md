@@ -4,7 +4,7 @@
 **Auditor:** Claude (Opus 4.6) with operator @Latif Rajabov
 **Scope:** NestJS backend (16 controllers, 80 routes, 15 modules) + Flutter app (lib/core + lib/data + lib/domain + lib/presentation, 58 pages, 24 BLoCs) + iOS/Android host shells (read-only, Flutter-only sanity)
 **Out of scope:** Prisma migration history, backend Docker/infra, iOS-native code, signed-release pipelines, marketing site
-**Build state at audit start:** `api` runs on `:4455`, `flutter run` installs `com.itlsolutions.dokonpro` on `emulator-5554`, `flutter analyze` = 0 errors / 0 warnings / 33 infos, `npm run build` in `api/` succeeds.
+**Build state at audit start:** `api` runs on `:4455`, `flutter run` installs `com.itlsolutions.dukonpro` on `emulator-5554`, `flutter analyze` = 0 errors / 0 warnings / 33 infos, `npm run build` in `api/` succeeds.
 
 ## Audit plan (from docs/audit/2026-04-10-full-audit-plan.md)
 

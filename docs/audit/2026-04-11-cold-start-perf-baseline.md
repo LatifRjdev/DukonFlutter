@@ -9,10 +9,10 @@ Android emulator `emulator-5554` (Pixel 8 API 35, x86_64), local dev
 machine. Command:
 
 ```
-adb shell am force-stop com.itlsolutions.dokonpro
+adb shell am force-stop com.itlsolutions.dukonpro
 sleep 3
 adb shell am start -W -a android.intent.action.MAIN \
-  -n com.itlsolutions.dokonpro/com.itlsolutions.dokonpro.MainActivity
+  -n com.itlsolutions.dukonpro/com.itlsolutions.dukonpro.MainActivity
 ```
 
 Three runs each, TotalTime reported by `am start -W` in milliseconds.

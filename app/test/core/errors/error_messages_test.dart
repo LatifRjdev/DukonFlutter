@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dokonpro/core/errors/error_messages.dart';
-import 'package:dokonpro/core/errors/exceptions.dart';
+import 'package:dukonpro/core/errors/error_messages.dart';
+import 'package:dukonpro/core/errors/exceptions.dart';
 
 // Covers the full decision table for mapErrorToUserMessage so future
 // refactors of the sealed-error layer cannot silently leak raw exception

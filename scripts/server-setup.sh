@@ -17,9 +17,9 @@ echo "[3/6] Installing Certbot..."
 apt install certbot -y
 
 # Create user
-echo "[4/6] Creating dokonpro user..."
-adduser --disabled-password --gecos "" dokonpro || true
-usermod -aG docker dokonpro
+echo "[4/6] Creating dukonpro user..."
+adduser --disabled-password --gecos "" dukonpro || true
+usermod -aG docker dukonpro
 
 # Firewall
 echo "[5/6] Configuring firewall..."
@@ -31,13 +31,13 @@ ufw --force enable
 # Create directories
 echo "[6/6] Creating directories..."
 mkdir -p /data/backups /data/uploads
-chown -R dokonpro:dokonpro /data
+chown -R dukonpro:dukonpro /data
 
 echo ""
 echo "=== Setup Complete ==="
 echo "Next steps:"
 echo "1. Setup SSL: certbot certonly --standalone -d api.dukonpro.tj -d admin.dukonpro.tj"
-echo "2. Clone repo: su - dokonpro && git clone ... && cd dokonpro"
+echo "2. Clone repo: su - dukonpro && git clone ... && cd dukonpro"
 echo "3. Create .env: cp .env.example .env && nano .env"
 echo "4. Start: docker compose up -d"
 echo "5. Migrate: docker compose exec api npx prisma migrate deploy"

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dokonpro/domain/entities/customer.dart';
-import 'package:dokonpro/domain/repositories/customer_repository.dart';
-import 'package:dokonpro/presentation/blocs/customer/customer_list_bloc.dart';
-import 'package:dokonpro/presentation/blocs/customer_detail/customer_detail_bloc.dart';
-import 'package:dokonpro/presentation/blocs/customer_detail/customer_detail_event.dart';
-import 'package:dokonpro/presentation/blocs/customer_detail/customer_detail_state.dart';
-import 'package:dokonpro/presentation/pages/customer/customer_form_page.dart';
+import 'package:dukonpro/domain/entities/customer.dart';
+import 'package:dukonpro/domain/repositories/customer_repository.dart';
+import 'package:dukonpro/presentation/blocs/customer/customer_list_bloc.dart';
+import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_bloc.dart';
+import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_event.dart';
+import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_state.dart';
+import 'package:dukonpro/presentation/pages/customer/customer_form_page.dart';
 
 // --- Fakes ---
 

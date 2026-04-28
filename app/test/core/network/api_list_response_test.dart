@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dokonpro/core/network/api_list_response.dart';
+import 'package:dukonpro/core/network/api_list_response.dart';
 
 // Minimal, dependency-free unit tests for the shared list/object decoders.
 // These cover the three historical response shapes that crashed staff,

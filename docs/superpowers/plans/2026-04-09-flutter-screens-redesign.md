@@ -8,7 +8,7 @@
 
 **Tech Stack:** Flutter, Material 3, flutter_bloc, GlassCard, GradientHeader, AppChip, AppShadows
 
-**Spec:** `docs/superpowers/specs/2026-04-09-dokonpro-redesign.md`
+**Spec:** `docs/superpowers/specs/2026-04-09-dukonpro-redesign.md`
 
 ---
 

@@ -15,7 +15,7 @@ import '../../blocs/pos/cart_event.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class CustomerDetailPage extends StatefulWidget {
   final String customerId;

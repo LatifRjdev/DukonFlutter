@@ -1,8 +1,8 @@
 // app/test/helpers/golden_pump_helper.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 /// Wrap [page] in a themed MaterialApp. Pass [wrap] to inject BlocProviders
 /// or any other InheritedWidget tree above the page.

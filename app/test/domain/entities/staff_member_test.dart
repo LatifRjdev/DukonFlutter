@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dokonpro/domain/entities/staff_member.dart';
+import 'package:dukonpro/domain/entities/staff_member.dart';
 
 // Regression tests for the FD-P0-002 crash chain: the backend returns
 // staff rows with identity fields under `user.*` not flat top-level

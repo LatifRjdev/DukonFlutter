@@ -27,7 +27,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import '../../widgets/common/app_snackbar.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class PosCheckoutPage extends StatefulWidget {
   const PosCheckoutPage({super.key});

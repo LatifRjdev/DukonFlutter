@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/sale_item.dart';
+import 'package:dukonpro/domain/entities/sale_item.dart';
 
 class SaleItemModel {
   final String id;

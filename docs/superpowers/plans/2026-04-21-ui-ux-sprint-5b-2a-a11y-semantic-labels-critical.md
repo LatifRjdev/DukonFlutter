@@ -581,21 +581,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/presentation/pages/auth/login_page.dart';
-import 'package:dokonpro/presentation/pages/pos/pos_checkout_page.dart';
-import 'package:dokonpro/presentation/pages/pos/cash_payment_page.dart';
-import 'package:dokonpro/presentation/pages/pos/receipt_preview_page.dart';
-import 'package:dokonpro/presentation/pages/product/product_list_page.dart';
-import 'package:dokonpro/presentation/pages/dashboard/home_page.dart';
+import 'package:dukonpro/presentation/pages/auth/login_page.dart';
+import 'package:dukonpro/presentation/pages/pos/pos_checkout_page.dart';
+import 'package:dukonpro/presentation/pages/pos/cash_payment_page.dart';
+import 'package:dukonpro/presentation/pages/pos/receipt_preview_page.dart';
+import 'package:dukonpro/presentation/pages/product/product_list_page.dart';
+import 'package:dukonpro/presentation/pages/dashboard/home_page.dart';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_bloc.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/blocs/pos/cart_bloc.dart';
-import 'package:dokonpro/presentation/blocs/pos/cart_state.dart';
-import 'package:dokonpro/presentation/blocs/pos/checkout_bloc.dart';
-import 'package:dokonpro/presentation/blocs/pos/checkout_state.dart';
-import 'package:dokonpro/presentation/blocs/product/product_list_bloc.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_bloc.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_bloc.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_state.dart';
+import 'package:dukonpro/presentation/blocs/pos/checkout_bloc.dart';
+import 'package:dukonpro/presentation/blocs/pos/checkout_state.dart';
+import 'package:dukonpro/presentation/blocs/product/product_list_bloc.dart';
 
 import '../../fixtures/mock_blocs.dart';
 import '../../helpers/golden_pump_helper.dart';

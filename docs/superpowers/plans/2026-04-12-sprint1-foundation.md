@@ -8,7 +8,7 @@
 
 **Tech Stack:** Flutter, BLoC, go_router, mobile_scanner, existing NestJS REST API
 
-**Spec:** `docs/superpowers/specs/2026-04-12-dokonpro-play-market-release.md` — Sprint 1
+**Spec:** `docs/superpowers/specs/2026-04-12-dukonpro-play-market-release.md` — Sprint 1
 
 ---
 
@@ -83,7 +83,7 @@ git commit -m "deps: add mobile_scanner for barcode scanning"
 // app/test/presentation/widgets/common/barcode_scanner_sheet_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
+import 'package:dukonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
 
 void main() {
   group('BarcodeScannerSheet', () {
@@ -565,7 +565,7 @@ git commit -m "feat: wire barcode scanner to stock intake"
 // app/test/presentation/pages/customer/customer_form_page_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/presentation/pages/customer/customer_form_page.dart';
+import 'package:dukonpro/presentation/pages/customer/customer_form_page.dart';
 
 void main() {
   group('CustomerFormPage', () {
@@ -833,7 +833,7 @@ git commit -m "feat: add customer form page with add/edit mode"
 // app/test/presentation/widgets/pos/sales_filter_sheet_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/presentation/widgets/pos/sales_filter_sheet.dart';
+import 'package:dukonpro/presentation/widgets/pos/sales_filter_sheet.dart';
 
 void main() {
   group('SalesFilterSheet', () {

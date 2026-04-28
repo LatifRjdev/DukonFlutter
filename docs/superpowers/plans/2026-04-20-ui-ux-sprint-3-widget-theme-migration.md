@@ -276,7 +276,7 @@ Create `app/test/presentation/widgets/common/glass_card_golden_test.dart`:
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/glass_card.dart';
+import 'package:dukonpro/presentation/widgets/common/glass_card.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -313,7 +313,7 @@ void main() {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/app_loading.dart';
+import 'package:dukonpro/presentation/widgets/common/app_loading.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -350,7 +350,7 @@ void main() {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/quantity_selector.dart';
+import 'package:dukonpro/presentation/widgets/common/quantity_selector.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -384,7 +384,7 @@ Check the actual `QuantitySelector` constructor if the sample above doesn't comp
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/app_bottom_nav_bar.dart';
+import 'package:dukonpro/presentation/widgets/common/app_bottom_nav_bar.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -428,7 +428,7 @@ Adapt constructor args to match the real `AppBottomNavBar` — inspect the file 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/otp_input.dart';
+import 'package:dukonpro/presentation/widgets/common/otp_input.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -460,7 +460,7 @@ void main() {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/step_indicator.dart';
+import 'package:dukonpro/presentation/widgets/common/step_indicator.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -586,7 +586,7 @@ All `:0`.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/app_dialog.dart';
+import 'package:dukonpro/presentation/widgets/common/app_dialog.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -624,7 +624,7 @@ Adapt constructor args to real `AppDialog` API — inspect the source file first
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/app_bottom_sheet.dart';
+import 'package:dukonpro/presentation/widgets/common/app_bottom_sheet.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -672,7 +672,7 @@ void main() {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
+import 'package:dukonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
@@ -863,8 +863,8 @@ For each `.dart` file in `lib/presentation/widgets/dashboard/`, create a matchin
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/domain/entities/sale.dart';
-import 'package:dokonpro/presentation/widgets/dashboard/sale_list_item.dart';
+import 'package:dukonpro/domain/entities/sale.dart';
+import 'package:dukonpro/presentation/widgets/dashboard/sale_list_item.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

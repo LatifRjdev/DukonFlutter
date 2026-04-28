@@ -66,7 +66,7 @@ void main() async {
 
   // SyncEngine.start() / dispose() are managed by _AppLifecycleHost so the
   // broadcast StreamController is closed deterministically on teardown.
-  runApp(const _AppLifecycleHost(child: DokonProApp()));
+  runApp(const _AppLifecycleHost(child: DukonProApp()));
 }
 
 /// Owns process-lifetime resources that must be bound to the Flutter widget

@@ -13,9 +13,9 @@
   - Tab "Общие" (показан, справа от вертикальных табов):
     - Карточка "Основные настройки":
       - "Название платформы" — input: "DukonPro"
-      - "Email поддержки" — input: "support@dokonpro.com"
+      - "Email поддержки" — input: "support@dukonpro.com"
       - "Телефон поддержки" — input: "+992 44 600 00 00"
-      - "Telegram поддержки" — input: "@dokonpro_support"
+      - "Telegram поддержки" — input: "@dukonpro_support"
       - "Максимум магазинов на аккаунт" — input: "10"
       - "Trial период (дни)" — input: "10"
 

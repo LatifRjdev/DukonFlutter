@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/product/product_form_bloc.dart';
-import 'package:dokonpro/presentation/blocs/product/product_form_event.dart';
-import 'package:dokonpro/presentation/blocs/product/product_form_state.dart';
-import 'package:dokonpro/presentation/pages/product/add_product_step2_page.dart';
+import 'package:dukonpro/presentation/blocs/product/product_form_bloc.dart';
+import 'package:dukonpro/presentation/blocs/product/product_form_event.dart';
+import 'package:dukonpro/presentation/blocs/product/product_form_state.dart';
+import 'package:dukonpro/presentation/pages/product/add_product_step2_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

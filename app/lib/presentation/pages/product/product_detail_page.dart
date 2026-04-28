@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';

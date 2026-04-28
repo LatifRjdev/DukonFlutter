@@ -310,9 +310,9 @@ Create `app/test/core/theme/theme_extensions_test.dart`:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/constants/app_colors.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/core/theme/theme_extensions.dart';
+import 'package:dukonpro/core/constants/app_colors.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/core/theme/theme_extensions.dart';
 
 Widget _wrap(ThemeData theme, Widget child) =>
     MaterialApp(theme: theme, home: Scaffold(body: Builder(builder: (_) => child)));
@@ -372,7 +372,7 @@ cd /Users/latifrjdev/Downloads/Dukon/app
 flutter test test/core/theme/theme_extensions_test.dart
 ```
 
-Expected: FAIL with "Target of URI doesn't exist: 'package:dokonpro/core/theme/theme_extensions.dart'".
+Expected: FAIL with "Target of URI doesn't exist: 'package:dukonpro/core/theme/theme_extensions.dart'".
 
 - [ ] **Step 3: Create theme_extensions.dart**
 
@@ -461,9 +461,9 @@ Create `app/test/presentation/widgets/common/glass_card_test.dart`:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/constants/app_colors.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/glass_card.dart';
+import 'package:dukonpro/core/constants/app_colors.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/glass_card.dart';
 
 Widget _host(ThemeData theme, Widget child) =>
     MaterialApp(theme: theme, home: Scaffold(body: child));
@@ -646,10 +646,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_bloc.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_state.dart';
-import 'package:dokonpro/domain/entities/user.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_bloc.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_state.dart';
+import 'package:dukonpro/domain/entities/user.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}

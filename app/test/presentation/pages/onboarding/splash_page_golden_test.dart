@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_bloc.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_event.dart';
-import 'package:dokonpro/presentation/blocs/auth/auth_state.dart';
-import 'package:dokonpro/presentation/pages/onboarding/splash_page.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_bloc.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_event.dart';
+import 'package:dukonpro/presentation/blocs/auth/auth_state.dart';
+import 'package:dukonpro/presentation/pages/onboarding/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

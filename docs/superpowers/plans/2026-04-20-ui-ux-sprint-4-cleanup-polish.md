@@ -707,8 +707,8 @@ Adapt the test code in Steps 2–3 accordingly.
 // app/test/presentation/widgets/common/app_bottom_sheet_chrome_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/app_bottom_sheet.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/app_bottom_sheet.dart';
 
 void main() {
   Widget buildHost() => MaterialApp(
@@ -778,8 +778,8 @@ If `pumpAndSettle` hangs (animation issue):
 // app/test/presentation/widgets/common/app_dialog_chrome_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/app_dialog.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/app_dialog.dart';
 
 void main() {
   late int confirmCount;

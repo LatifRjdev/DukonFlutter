@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/dashboard/sale_list_item.dart';
-import 'package:dokonpro/domain/entities/sale.dart';
-import 'package:dokonpro/domain/entities/sale_item.dart';
+import 'package:dukonpro/presentation/widgets/dashboard/sale_list_item.dart';
+import 'package:dukonpro/domain/entities/sale.dart';
+import 'package:dukonpro/domain/entities/sale_item.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

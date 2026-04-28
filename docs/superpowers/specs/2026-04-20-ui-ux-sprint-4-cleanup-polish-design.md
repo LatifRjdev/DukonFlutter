@@ -257,8 +257,8 @@ Two new test files in `app/test/presentation/widgets/common/`. These use `testWi
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/app_bottom_sheet.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/app_bottom_sheet.dart';
 
 void main() {
   Widget buildHost() => MaterialApp(
@@ -314,8 +314,8 @@ void main() {
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/app_dialog.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/app_dialog.dart';
 
 void main() {
   late int confirmCount;

@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/user.dart';
+import 'package:dukonpro/domain/entities/user.dart';
 
 class UserModel {
   final String id;

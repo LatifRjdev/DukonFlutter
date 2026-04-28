@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/sales/sales_history_bloc.dart';
-import 'package:dokonpro/presentation/blocs/sales/sales_history_event.dart';
-import 'package:dokonpro/presentation/blocs/sales/sales_history_state.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/sales/sales_history_page.dart';
+import 'package:dukonpro/presentation/blocs/sales/sales_history_bloc.dart';
+import 'package:dukonpro/presentation/blocs/sales/sales_history_event.dart';
+import 'package:dukonpro/presentation/blocs/sales/sales_history_state.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/sales/sales_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,7 +1,7 @@
 # Flutter Screens Dynamic Audit — 2026-04-10
 
 **Device:** Android emulator-5554 (Pixel ~6.0" screen, 1080x2400)
-**App version:** com.itlsolutions.dokonpro (debug build)
+**App version:** com.itlsolutions.dukonpro (debug build)
 **Locale during audit:** ru (Russian) — tg/uz switch NOT tested (deferred to next pass)
 **User logged in:** `+992901234567` / Latif Test (OWNER role)
 **Backend:** http://localhost:4455/api (NestJS, local)

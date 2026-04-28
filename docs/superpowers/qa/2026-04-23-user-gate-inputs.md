@@ -7,7 +7,7 @@
 Старый ключ (`AIzaSyA8uwf4buni-9P4NcV7sBXgMyEB58hnX54`) закоммичен в репо и должен считаться скомпрометированным.
 
 1. Зайти на https://console.firebase.google.com → DukonPro → Project Settings
-2. В разделе "Your apps" найти Android app (`com.itlsolutions.dokonpro`)
+2. В разделе "Your apps" найти Android app (`com.itlsolutions.dukonpro`)
 3. Получить SHA-1 release keystore: `keytool -list -v -keystore path/to/release.jks -alias <alias>`
 4. В Google Cloud Console → APIs & Services → Credentials: удалить старый API key ИЛИ привязать SHA-1 restriction к нему
 5. Если удалил: скачать новый `google-services.json` + перегенерить `GoogleService-Info.plist` для iOS

@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/supplier.dart';
+import 'package:dukonpro/domain/entities/supplier.dart';
 
 class SupplierModel {
   final String id;

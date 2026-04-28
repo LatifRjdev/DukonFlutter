@@ -1,9 +1,9 @@
 // app/test/fixtures/mock_blocs.dart
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/blocs/store/store_event.dart';
-import 'package:dokonpro/presentation/blocs/store/store_state.dart';
-import 'package:dokonpro/domain/entities/store.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/store/store_event.dart';
+import 'package:dukonpro/presentation/blocs/store/store_state.dart';
+import 'package:dukonpro/domain/entities/store.dart';
 
 class MockStoreBloc extends MockBloc<StoreEvent, StoreState>
     implements StoreBloc {}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
-import 'package:dokonpro/presentation/widgets/common/app_dialog.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/presentation/widgets/common/app_dialog.dart';
 
 void main() {
   late int confirmCount;

@@ -11,7 +11,7 @@
 ## Step 2: Add Android App
 
 1. In Firebase console, click "Add app" → Android
-2. Package name: `com.itlsolutions.dokonpro`
+2. Package name: `com.itlsolutions.dukonpro`
 3. App nickname: `DukonPro`
 4. SHA-1 (get it by running): 
    ```bash
@@ -33,7 +33,7 @@
 6. Convert to single-line: `cat firebase-key.json | jq -c .`
 7. Add to backend `.env`:
    ```
-   FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"dokonpro",...}
+   FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"dukonpro",...}
    ```
 
 ## Step 4: Verify Flutter Config
@@ -41,7 +41,7 @@
 ```bash
 cd /Users/latifrjdev/Downloads/Dukon/app
 dart pub global activate flutterfire_cli
-flutterfire configure --project=dokonpro
+flutterfire configure --project=dukonpro
 ```
 
 This generates `firebase_options.dart` — commit it.

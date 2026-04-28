@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dokonpro/domain/entities/payroll_entry.dart';
+import 'package:dukonpro/domain/entities/payroll_entry.dart';
 
 // Regression tests for FD-P0-003 — the payroll detail response returns
 // staff identity under `staff.user.*` but the original parser cast

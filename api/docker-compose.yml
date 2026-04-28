@@ -1,25 +1,25 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: dokonpro-db
+    container_name: dukonpro-db
     restart: unless-stopped
     ports:
       - '5435:5432'
     environment:
-      POSTGRES_DB: dokonpro
-      POSTGRES_USER: dokonpro
-      POSTGRES_PASSWORD: dokonpro_secret
+      POSTGRES_DB: dukonpro
+      POSTGRES_USER: dukonpro
+      POSTGRES_PASSWORD: dukonpro_secret
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U dokonpro']
+      test: ['CMD-SHELL', 'pg_isready -U dukonpro']
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: dokonpro-redis
+    container_name: dukonpro-redis
     restart: unless-stopped
     ports:
       - '6380:6379'

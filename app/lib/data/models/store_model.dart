@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dokonpro/domain/entities/store.dart';
+import 'package:dukonpro/domain/entities/store.dart';
 
 class StoreModel {
   final String id;

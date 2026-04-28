@@ -239,15 +239,15 @@ controllers / 15 feature modules.
 - **Description:** `.env` (not `.env.example`) contains literal dev
   secrets:
   ```
-  JWT_ACCESS_SECRET=dokonpro-access-secret-change-in-production-32chars
-  JWT_REFRESH_SECRET=dokonpro-refresh-secret-change-in-production-32chars
+  JWT_ACCESS_SECRET=dukonpro-access-secret-change-in-production-32chars
+  JWT_REFRESH_SECRET=dukonpro-refresh-secret-change-in-production-32chars
   ```
   `.gitignore` at the repo root does exclude `.env` (see
   `Dukon/.gitignore` lines 7-10), so these should not be reaching
   GitHub — but they are present in the developer checkout. Any leak
   of the dev `.env` (screen share, backup) hands over the token-
   signing key. Also the DB connection string
-  `postgresql://dokonpro:dokonpro_secret@localhost:5435/dokonpro` is
+  `postgresql://dukonpro:dukonpro_secret@localhost:5435/dukonpro` is
   committed in `.env`, so the password is public.
 - **Recommended fix:** Rotate both secrets. Document in the README
   that developers must generate their own `.env` via a one-shot

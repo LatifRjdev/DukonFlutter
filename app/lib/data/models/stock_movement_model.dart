@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/stock_movement.dart';
+import 'package:dukonpro/domain/entities/stock_movement.dart';
 
 class StockMovementModel {
   final String id;

@@ -82,7 +82,7 @@ NODE_ENV=development
 PORT=4455
 
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5435/dokonpro
+DATABASE_URL=postgresql://user:password@localhost:5435/dukonpro
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -384,7 +384,7 @@ Copy `api/.env.example` to `api/.env` and configure:
 |----------|-------------|---------|
 | NODE_ENV | Environment | `production` |
 | PORT | Server port | `4455` |
-| DATABASE_URL | PostgreSQL connection | `postgresql://user:pass@host:5432/dokonpro` |
+| DATABASE_URL | PostgreSQL connection | `postgresql://user:pass@host:5432/dukonpro` |
 | REDIS_URL | Redis connection | `redis://host:6379` |
 | JWT_ACCESS_SECRET | Access token signing key (64+ chars) | Generate with `openssl rand -hex 32` |
 | JWT_REFRESH_SECRET | Refresh token signing key (64+ chars) | Generate with `openssl rand -hex 32` |

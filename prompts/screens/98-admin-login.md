@@ -12,7 +12,7 @@
   - Отступ 32px
   - "Вход в систему" (20px SemiBold, по центру)
   - Отступ 24px
-  - Поле "Email *" — input (outlined, радиус 12px, иконка mail слева, placeholder "admin@dokonpro.com")
+  - Поле "Email *" — input (outlined, радиус 12px, иконка mail слева, placeholder "admin@dukonpro.com")
   - Отступ 16px
   - Поле "Пароль *" — input (outlined, type password, иконка lock слева, иконка eye справа для показа, placeholder "••••••••")
   - Отступ 16px

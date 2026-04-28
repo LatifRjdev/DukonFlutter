@@ -1,11 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cp /Users/latifrjdev/Downloads/Dukon/CLAUDE.md.example /Users/latifrjdev/Desktop/DokonPro-Native/CLAUDE.md)",
-      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/settings.local.json.example /Users/latifrjdev/Desktop/DokonPro-Native/.claude/settings.local.json)",
-      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/rules/*.md /Users/latifrjdev/Desktop/DokonPro-Native/.claude/rules/)",
-      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/commands/*.md /Users/latifrjdev/Desktop/DokonPro-Native/.claude/commands/)",
-      "Read(//Users/latifrjdev/Desktop/DokonPro-Native/**)",
+      "Bash(cp /Users/latifrjdev/Downloads/Dukon/CLAUDE.md.example /Users/latifrjdev/Desktop/DukonPro-Native/CLAUDE.md)",
+      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/settings.local.json.example /Users/latifrjdev/Desktop/DukonPro-Native/.claude/settings.local.json)",
+      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/rules/*.md /Users/latifrjdev/Desktop/DukonPro-Native/.claude/rules/)",
+      "Bash(cp /Users/latifrjdev/Downloads/Dukon/.claude/commands/*.md /Users/latifrjdev/Desktop/DukonPro-Native/.claude/commands/)",
+      "Read(//Users/latifrjdev/Desktop/DukonPro-Native/**)",
       "mcp__plugin_claude-mem_mcp-search__get_observations",
       "Bash(xargs -I {} basename {})",
       "mcp__plugin_claude-mem_mcp-search__smart_outline",
@@ -19,7 +19,7 @@
       "Read(//tmp/**)",
       "Bash(docker exec:*)",
       "Bash(docker volume:*)",
-      "Bash(PGPASSWORD=dokonpro_secret psql -h localhost -p 5435 -U dokonpro -d dokonpro -c \"SELECT 1;\")",
+      "Bash(PGPASSWORD=dukonpro_secret psql -h localhost -p 5435 -U dukonpro -d dukonpro -c \"SELECT 1;\")",
       "Bash(gh repo:*)",
       "Bash(git remote:*)",
       "Bash(brew list:*)",

@@ -206,7 +206,7 @@ If error about unknown field / enum, fix the script and re-run. It's idempotent.
 
 Run:
 ```bash
-docker exec dokonpro-db psql -U dokonpro -d dokonpro -c \
+docker exec dukonpro-db psql -U dukonpro -d dukonpro -c \
   "SELECT phone FROM \"User\" WHERE phone LIKE '+99290%';"
 ```
 Expected: 2 rows (`+992900000010`, `+992900000011`) plus your admin user.

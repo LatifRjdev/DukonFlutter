@@ -10,7 +10,7 @@ import '../../blocs/debt/debt_state.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/debt/payment_form.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class CustomerDebtsPage extends StatefulWidget {
   final String storeId;

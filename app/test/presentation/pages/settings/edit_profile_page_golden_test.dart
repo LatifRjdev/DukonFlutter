@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/domain/entities/user.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_bloc.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_event.dart';
-import 'package:dokonpro/presentation/blocs/settings/settings_state.dart';
-import 'package:dokonpro/presentation/pages/settings/edit_profile_page.dart';
+import 'package:dukonpro/domain/entities/user.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_bloc.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_event.dart';
+import 'package:dukonpro/presentation/blocs/settings/settings_state.dart';
+import 'package:dukonpro/presentation/pages/settings/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -32,8 +32,8 @@ import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
 import 'presentation/blocs/subscription/subscription_bloc.dart';
 
-class DokonProApp extends StatelessWidget {
-  const DokonProApp({super.key});
+class DukonProApp extends StatelessWidget {
+  const DukonProApp({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -140,7 +140,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 // app/test/helpers/golden_pump_helper.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dokonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/core/theme/app_theme.dart';
 
 /// Wrap [page] in a themed MaterialApp. Pass [wrap] to inject BlocProviders
 /// or any other InheritedWidget tree above the page.
@@ -172,9 +172,9 @@ Create `app/test/fixtures/mock_blocs.dart` with mocks stubbed out. Start with a 
 ```dart
 // app/test/fixtures/mock_blocs.dart
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/blocs/store/store_state.dart';
-import 'package:dokonpro/domain/entities/store.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/store/store_state.dart';
+import 'package:dukonpro/domain/entities/store.dart';
 
 class MockStoreBloc extends MockBloc<StoreEvent, StoreState> implements StoreBloc {}
 
@@ -340,10 +340,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:dokonpro/presentation/blocs/dashboard/dashboard_bloc.dart';
-import 'package:dokonpro/presentation/blocs/dashboard/dashboard_state.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/dashboard/dashboard_page.dart';
+import 'package:dukonpro/presentation/blocs/dashboard/dashboard_bloc.dart';
+import 'package:dukonpro/presentation/blocs/dashboard/dashboard_state.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/dashboard/dashboard_page.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 import '../../../fixtures/mock_blocs.dart';

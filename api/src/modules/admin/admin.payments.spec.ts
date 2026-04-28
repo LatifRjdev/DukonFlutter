@@ -32,7 +32,13 @@ function makePrismaFake() {
     amount: number;
     currency: string;
     method: string;
-    status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+    status:
+      | 'PENDING'
+      | 'APPROVED'
+      | 'REJECTED'
+      | 'COMPLETED'
+      | 'FAILED'
+      | 'REFUNDED';
     note: string | null;
     receiptImage: string | null;
     reviewedAt: Date | null;
@@ -60,8 +66,7 @@ function makePrismaFake() {
           const filterId = include.payments.where?.id;
           const matched = Array.from(payments.values()).filter(
             (p) =>
-              p.subscriptionId === sub.id &&
-              (!filterId || p.id === filterId),
+              p.subscriptionId === sub.id && (!filterId || p.id === filterId),
           );
           return { ...sub, payments: matched };
         }

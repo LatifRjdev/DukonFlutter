@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dokonpro/injection.dart';
-import 'package:dokonpro/presentation/blocs/import/import_bloc.dart';
-import 'package:dokonpro/presentation/blocs/import/import_event.dart';
-import 'package:dokonpro/presentation/blocs/import/import_state.dart';
-import 'package:dokonpro/presentation/pages/product/import_products_page.dart';
+import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/presentation/blocs/import/import_bloc.dart';
+import 'package:dukonpro/presentation/blocs/import/import_event.dart';
+import 'package:dukonpro/presentation/blocs/import/import_state.dart';
+import 'package:dukonpro/presentation/pages/product/import_products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';

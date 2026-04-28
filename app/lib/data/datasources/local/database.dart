@@ -16,7 +16,7 @@ class AppDatabase {
 
   Future<Database> initDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = '$dbPath/dokonpro.db';
+    final path = '$dbPath/dukonpro.db';
 
     return await openDatabase(
       path,

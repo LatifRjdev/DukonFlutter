@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/presentation/widgets/dashboard/quick_action_card.dart';
+import 'package:dukonpro/presentation/widgets/dashboard/quick_action_card.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

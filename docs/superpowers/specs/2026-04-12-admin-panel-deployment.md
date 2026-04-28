@@ -251,8 +251,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: dokonpro
-      POSTGRES_USER: dokonpro
+      POSTGRES_DB: dukonpro
+      POSTGRES_USER: dukonpro
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     restart: always
 
@@ -260,7 +260,7 @@ services:
     build: ./api
     depends_on: [postgres]
     environment:
-      DATABASE_URL: postgresql://dokonpro:${DB_PASSWORD}@postgres:5432/dokonpro
+      DATABASE_URL: postgresql://dukonpro:${DB_PASSWORD}@postgres:5432/dukonpro
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
@@ -311,8 +311,8 @@ curl -fsSL https://get.docker.com | sh
 apt install docker-compose-plugin certbot -y
 
 # User
-adduser dokonpro
-usermod -aG docker dokonpro
+adduser dukonpro
+usermod -aG docker dukonpro
 
 # Firewall
 ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw enable
@@ -323,9 +323,9 @@ certbot certonly --standalone -d api.dukonpro.tj -d admin.dukonpro.tj
 
 **First Deploy:**
 ```bash
-su - dokonpro
-git clone https://github.com/LatifRjdev/DukonFlutter.git dokonpro
-cd dokonpro
+su - dukonpro
+git clone https://github.com/LatifRjdev/DukonFlutter.git dukonpro
+cd dukonpro
 cp api/.env.example .env
 nano .env  # fill all secrets
 docker compose up -d
@@ -335,8 +335,8 @@ docker compose exec api npx ts-node scripts/create-admin.ts
 
 **Updates:**
 ```bash
-ssh dokonpro@SERVER_IP
-cd dokonpro && git pull
+ssh dukonpro@SERVER_IP
+cd dukonpro && git pull
 docker compose build api admin
 docker compose up -d api admin
 docker compose exec api npx prisma migrate deploy
@@ -346,7 +346,7 @@ docker compose exec api npx prisma migrate deploy
 
 Daily PostgreSQL backup via cron:
 ```
-0 3 * * * docker compose exec -T postgres pg_dump -U dokonpro dokonpro | gzip > /data/backups/db-$(date +\%Y\%m\%d).sql.gz
+0 3 * * * docker compose exec -T postgres pg_dump -U dukonpro dukonpro | gzip > /data/backups/db-$(date +\%Y\%m\%d).sql.gz
 0 4 * * * find /data/backups -name "*.sql.gz" -mtime +30 -delete
 ```
 

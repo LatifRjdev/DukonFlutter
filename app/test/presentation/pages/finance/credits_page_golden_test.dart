@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart' show Options, Response;
-import 'package:dokonpro/core/network/dio_client.dart';
-import 'package:dokonpro/injection.dart';
-import 'package:dokonpro/presentation/blocs/store/store_bloc.dart';
-import 'package:dokonpro/presentation/pages/finance/credits_page.dart';
+import 'package:dukonpro/core/network/dio_client.dart';
+import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/pages/finance/credits_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

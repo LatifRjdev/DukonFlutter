@@ -15,7 +15,7 @@ import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../core/router/route_names.dart';
-import 'package:dokonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;

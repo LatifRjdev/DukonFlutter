@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:dokonpro/domain/entities/shift.dart';
-import 'package:dokonpro/presentation/widgets/shifts/shift_card.dart';
+import 'package:dukonpro/domain/entities/shift.dart';
+import 'package:dukonpro/presentation/widgets/shifts/shift_card.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 

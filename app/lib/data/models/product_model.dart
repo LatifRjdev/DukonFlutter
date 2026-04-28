@@ -1,4 +1,4 @@
-import 'package:dokonpro/domain/entities/product.dart';
+import 'package:dukonpro/domain/entities/product.dart';
 
 class ProductModel {
   final String id;
