@@ -102,3 +102,11 @@ desktop.ini
 
 # Claude Code ephemeral scheduled-task lockfile
 .claude/scheduled_tasks.lock
+
+# Firebase secrets — generated per-developer / per-environment
+app/android/app/google-services.json
+app/ios/Runner/GoogleService-Info.plist
+app/lib/firebase_options.dart
+
+# API env backups
+api/.env.backup

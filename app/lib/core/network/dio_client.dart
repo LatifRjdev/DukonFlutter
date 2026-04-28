@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../constants/api_endpoints.dart';
 import 'api_interceptor.dart';
 
@@ -19,14 +20,16 @@ class DioClient {
       ),
     );
 
-    _dio.interceptors.addAll([
-      apiInterceptor,
-      LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        error: true,
-      ),
-    ]);
+    _dio.interceptors.add(apiInterceptor);
+    if (kDebugMode) {
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          error: true,
+        ),
+      );
+    }
   }
 
   Dio get dio => _dio;

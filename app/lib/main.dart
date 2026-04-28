@@ -6,11 +6,16 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'core/constants/api_endpoints.dart';
 import 'core/network/dio_client.dart';
+import 'core/sentry.dart';
 import 'injection.dart';
 import 'data/sync/sync_engine.dart';
 import 'core/services/notification_service.dart';
 
 void main() async {
+  await initSentryAndRun(_runApp);
+}
+
+Future<void> _runApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {

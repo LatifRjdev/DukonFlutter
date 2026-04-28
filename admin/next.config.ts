@@ -19,7 +19,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
-  `connect-src 'self' ${apiOrigin} https://*.sentry.io https://*.ingest.sentry.io`,
+  `connect-src 'self' ${apiOrigin} https://*.sentry.io https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

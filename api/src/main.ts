@@ -1,3 +1,7 @@
+import { initSentry } from './sentry';
+
+initSentry();
+
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
