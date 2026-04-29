@@ -66,7 +66,12 @@ DSN_MOBILE:  https://823a8cf336ed5df76bef64da62624afb@o4511295919095808.ingest.d
 Нужно для финального Task 7 (Fastlane scaffolding). Не блокирует другие таски.
 
 ```
-Privacy policy URL:       (обязательно — без этого Apple/Google откажут)
+Privacy policy URL:       https://latifrjdev.github.io/dukonpro-privacy/
+                          ⚠️ Needs 2 amendments before store submission:
+                            1. Add Sentry to section 4 (third-party data sharing)
+                            2. Add "uploaded images" section (payment receipt photos)
+                          See main commit message in 8239412 follow-up for the
+                          exact text additions.
 Support email:            (e.g. support@dukonpro.tj)
 App name (Play + Apple): ≤30 символов
 Short description:        ≤80 символов (только Play)
