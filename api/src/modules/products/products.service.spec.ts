@@ -130,9 +130,9 @@ describe('ProductsService', () => {
 
       expect(created.storeId).toBe('store-A');
       // Cross-store isolation: another store cannot retrieve it via findOne.
-      await expect(service.findOne('store-B', created.id)).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(
+        service.findOne('store-B', created.id),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('should throw ConflictException when barcode already exists in store', async () => {

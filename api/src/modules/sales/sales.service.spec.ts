@@ -50,9 +50,7 @@ function makePrismaFake() {
         const ids: string[] = where.id?.in ?? [];
         return ids
           .map((id) => products.get(id))
-          .filter(
-            (p): p is ProductRow => !!p && p.storeId === where.storeId,
-          );
+          .filter((p): p is ProductRow => !!p && p.storeId === where.storeId);
       }),
       update: jest.fn(async ({ where, data }: any) => {
         const p = products.get(where.id);

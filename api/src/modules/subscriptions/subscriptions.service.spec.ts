@@ -103,9 +103,9 @@ describe('SubscriptionsService — read paths', () => {
     });
 
     it('should throw NotFoundException when no subscription exists for store', async () => {
-      await expect(service.getSubscription('ghost-store')).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(
+        service.getSubscription('ghost-store'),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('should compute remaining days correctly when subscription is active in the future', async () => {

@@ -42,28 +42,20 @@ function buildFakePrisma() {
       otps.push(row);
       return row;
     }),
-    findFirst: jest.fn(
-      async ({
-        where,
-      }: {
-        where: any;
-        orderBy?: any;
-      }) => {
-        const now =
-          (where.expiresAt?.gte as Date | undefined) ?? new Date();
-        const candidates = otps
-          .filter(
-            (o) =>
-              o.phone === where.phone &&
-              o.code === where.code &&
-              o.type === where.type &&
-              o.used === false &&
-              o.expiresAt >= now,
-          )
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-        return candidates[0] ?? null;
-      },
-    ),
+    findFirst: jest.fn(async ({ where }: { where: any; orderBy?: any }) => {
+      const now = (where.expiresAt?.gte as Date | undefined) ?? new Date();
+      const candidates = otps
+        .filter(
+          (o) =>
+            o.phone === where.phone &&
+            o.code === where.code &&
+            o.type === where.type &&
+            o.used === false &&
+            o.expiresAt >= now,
+        )
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      return candidates[0] ?? null;
+    }),
     update: jest.fn(async ({ where, data }: { where: any; data: any }) => {
       const row = otps.find((o) => o.id === where.id);
       if (!row) throw new Error('not found');

@@ -102,7 +102,9 @@ function buildFakePrisma() {
   const prisma: any = {
     user: userApi,
     refreshToken: refreshTokenApi,
-    $transaction: jest.fn(async (cb: (tx: any) => Promise<any>) => cb(txClient)),
+    $transaction: jest.fn(async (cb: (tx: any) => Promise<any>) =>
+      cb(txClient),
+    ),
   };
 
   // Test-only handles for assertions:
