@@ -18,6 +18,11 @@ abstract class AuthLocalDatasource {
   Future<void> deleteUser();
 
   Future<bool> hasTokens();
+
+  /// True when the stored access token's JWT `exp` claim is in the past,
+  /// or no token is stored, or the token can't be decoded. Caller should
+  /// treat any of these as "needs refresh or login".
+  Future<bool> isAccessTokenExpired();
 }
 
 class AuthLocalDatasourceImpl implements AuthLocalDatasource {
@@ -127,5 +132,37 @@ class AuthLocalDatasourceImpl implements AuthLocalDatasource {
   Future<bool> hasTokens() async {
     final token = await getAccessToken();
     return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<bool> isAccessTokenExpired() async {
+    final token = await getAccessToken();
+    if (token == null || token.isEmpty) return true;
+    final exp = _decodeJwtExp(token);
+    if (exp == null) return true;
+    final nowSec = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    return nowSec >= exp;
+  }
+
+  static int? _decodeJwtExp(String jwt) {
+    try {
+      final parts = jwt.split('.');
+      if (parts.length != 3) return null;
+      var payload = parts[1].replaceAll('-', '+').replaceAll('_', '/');
+      switch (payload.length % 4) {
+        case 2:
+          payload += '==';
+          break;
+        case 3:
+          payload += '=';
+          break;
+      }
+      final decoded = utf8.decode(base64.decode(payload));
+      final json = jsonDecode(decoded) as Map<String, dynamic>;
+      final exp = json['exp'];
+      return exp is int ? exp : null;
+    } catch (_) {
+      return null;
+    }
   }
 }

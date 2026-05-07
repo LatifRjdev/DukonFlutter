@@ -1,12 +1,25 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4455/api';
-
+// Browser calls go through /api/proxy/<path>, a same-origin Next.js
+// route handler that reads the HttpOnly admin-session cookie and
+// re-issues the upstream request with `Authorization: Bearer <token>`.
+// The backend's JwtAccessStrategy only reads the Authorization header,
+// not cookies — without this proxy, every fetch returns 401.
+//
+// Closes P0 from qa/2026-05-06-admin-audit.md.
 async function apiFetch(path: string, options?: RequestInit) {
-  const res = await fetch(`${API_URL}${path}`, {
+  // path is something like "/admin/users" (with leading slash). The
+  // proxy mount point is "/api/proxy" and the catch-all expects the
+  // remainder without a leading slash, so trim it.
+  const trimmed = path.startsWith('/') ? path.slice(1) : path;
+  // Resolve to an absolute URL when a window origin is available.
+  // Production browsers accept relative URLs in fetch(), but jsdom-based
+  // tests + the @mswjs/interceptors fetch wrapper require an absolute URL.
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : '';
+  const url = `${origin}/api/proxy/${trimmed}`;
+  const res = await fetch(url, {
     ...options,
-    // Send our HttpOnly admin-session cookie cross-origin. The API
-    // must echo back `Access-Control-Allow-Credentials: true` for
-    // this to work — see api/src/main.ts (enableCors).
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,

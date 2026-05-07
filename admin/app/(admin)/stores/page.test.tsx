@@ -20,7 +20,7 @@ vi.mock('sonner', () => ({
 
 import StoresPage from './page';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.test/api';
+const API_URL = 'http://localhost:3000/api/proxy';
 
 function renderWithQuery(ui: React.ReactElement) {
   const qc = new QueryClient({

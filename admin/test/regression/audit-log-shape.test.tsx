@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({
 
 import AuditLogPage from '../../app/(admin)/audit-log/page';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.test/api';
+const API_URL = 'http://localhost:3000/api/proxy';
 
 function renderWithQuery(ui: React.ReactElement) {
   const qc = new QueryClient({

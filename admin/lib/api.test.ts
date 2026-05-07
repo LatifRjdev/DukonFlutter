@@ -3,7 +3,10 @@ import { http, HttpResponse } from 'msw';
 import { server } from '../test/msw/server';
 import { api } from './api';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.test/api';
+// Browser fetches now go through the same-origin proxy at /api/proxy
+// (see admin/app/api/proxy/[...path]/route.ts). Tests intercept on the
+// jsdom origin (http://localhost:3000) instead of the upstream API host.
+const API_URL = 'http://localhost:3000/api/proxy';
 
 describe('lib/api', () => {
   let originalLocation: Location;
@@ -12,10 +15,12 @@ describe('lib/api', () => {
     originalLocation = window.location;
     // jsdom's location is read-only — replace with a writable stub so we can
     // observe the redirect on 401 without navigating.
+    // Keep the jsdom origin intact so apiFetch can build absolute URLs;
+    // we only need .href to be writable so the 401-redirect assertion works.
     Object.defineProperty(window, 'location', {
       configurable: true,
       writable: true,
-      value: { href: '/' } as Location,
+      value: { href: '/', origin: 'http://localhost:3000' } as Location,
     });
   });
 
@@ -47,12 +52,15 @@ describe('lib/api', () => {
     expect(window.location.href).toBe('/login');
   });
 
-  it('api.post sends JSON body and credentials: include', async () => {
-    const captured: { body?: string; credentials?: string; headers?: Record<string, string> } = {};
+  it('api.post sends JSON body to the same-origin proxy', async () => {
+    // Same-origin proxy: no credentials: include needed (cookies travel
+    // automatically on same-origin requests). The proxy reads the
+    // HttpOnly cookie server-side and forwards as Bearer to the API.
+    const captured: { url?: string; body?: string; headers?: Record<string, string> } = {};
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(
       async (input: RequestInfo | URL, init?: RequestInit) => {
+        captured.url = typeof input === 'string' ? input : input.toString();
         captured.body = init?.body as string;
-        captured.credentials = init?.credentials;
         captured.headers = init?.headers as Record<string, string>;
         return new Response(JSON.stringify({ ok: true }), {
           status: 200,
@@ -63,8 +71,8 @@ describe('lib/api', () => {
 
     const result = await api.post('/admin/users', { name: 'Carol' });
     expect(result).toEqual({ ok: true });
+    expect(captured.url).toBe('http://localhost:3000/api/proxy/admin/users');
     expect(captured.body).toBe(JSON.stringify({ name: 'Carol' }));
-    expect(captured.credentials).toBe('include');
     expect(captured.headers).toMatchObject({ 'Content-Type': 'application/json' });
 
     fetchSpy.mockRestore();

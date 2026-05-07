@@ -1,6 +1,10 @@
 import { http, HttpResponse } from 'msw';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.test/api';
+// Browser fetches go through the same-origin Next.js proxy at
+// /api/proxy/<path> (closes admin Bearer-from-cookie P0; see
+// admin/app/api/proxy/[...path]/route.ts). Tests intercept on this
+// origin instead of the upstream API origin.
+const API_URL = 'http://localhost:3000/api/proxy';
 
 // Default test fixtures. Tests that need different shapes (failure paths,
 // custom envelopes) override with server.use(...) inside the test.

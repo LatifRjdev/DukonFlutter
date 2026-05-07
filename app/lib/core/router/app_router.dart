@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'route_names.dart';
 import '../../injection.dart';
 import '../../data/datasources/local/auth_local_datasource.dart';
+import '../../domain/repositories/auth_repository.dart';
 
 import '../../presentation/pages/onboarding/splash_page.dart';
 import '../../presentation/pages/onboarding/onboarding_page.dart';
@@ -101,10 +102,31 @@ class AppRouter {
     redirect: (context, state) async {
       final path = state.uri.path;
       final isPublic = _publicPaths.contains(path);
-      final hasTokens = await sl<AuthLocalDatasource>().hasTokens();
+      final auth = sl<AuthLocalDatasource>();
+      var hasTokens = await auth.hasTokens();
 
-      // Don't redirect from splash — it handles its own navigation
+      // Splash handles its own navigation — don't fight it.
       if (path == RouteNames.splash) return null;
+
+      // Tokens present but access JWT exp is in the past — try a silent
+      // refresh BEFORE deciding the user is logged out. Without this,
+      // an idle user gets ejected to /login on the next navigation even
+      // though the refresh token is still valid (P1 from QA 2026-05-06).
+      if (hasTokens && await auth.isAccessTokenExpired()) {
+        final refresh = await auth.getRefreshToken();
+        if (refresh == null || refresh.isEmpty) {
+          await auth.deleteTokens();
+          hasTokens = false;
+        } else {
+          try {
+            await sl<AuthRepository>().refreshToken(refresh);
+            // Repository persists the new token pair via local datasource.
+          } catch (_) {
+            await auth.deleteTokens();
+            hasTokens = false;
+          }
+        }
+      }
 
       // Not authenticated → redirect to login (unless already on public page)
       if (!hasTokens && !isPublic) return RouteNames.login;
