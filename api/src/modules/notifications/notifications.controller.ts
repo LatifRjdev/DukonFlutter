@@ -14,6 +14,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { NotificationsService } from './notifications.service';
 import { SaveFcmTokenDto } from './dto/save-fcm-token.dto';
 import { NotificationQueryDto } from './dto/notification-query.dto';
@@ -81,6 +82,7 @@ export class NotificationsController {
    */
   @Put('stores/:storeId/notifications/settings')
   @UseGuards(StoreAccessGuard)
+  @RequiresFeature('hasAllPush')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Update notification preferences for store' })
   async saveSettings(

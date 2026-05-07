@@ -3,12 +3,21 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { ApplicableDiscountQueryDto } from './dto/applicable-discount-query.dto';
+import { assertWithinPlanLimit } from '../../common/guards/plan-limit.helper';
 
 @Injectable()
 export class DiscountsService {
   constructor(private prisma: PrismaService) {}
 
   async create(storeId: string, dto: CreateDiscountDto) {
+    // F2.1: enforce plan-limit. START allows 0 discounts so any create
+    // call from a START-plan store is rejected here. Counts only active
+    // rows (soft-delete sets active=false).
+    const activeCount = await this.prisma.discount.count({
+      where: { storeId, active: true },
+    });
+    await assertWithinPlanLimit(this.prisma, storeId, 'maxDiscounts', activeCount);
+
     return this.prisma.discount.create({
       data: {
         storeId,

@@ -4,12 +4,20 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { Prisma } from '@prisma/client';
+import { assertWithinPlanLimit } from '../../common/guards/plan-limit.helper';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async create(storeId: string, dto: CreateProductDto) {
+    // F2.1: enforce plan-limit before any write. Counts only active rows
+    // so soft-deleted products don't burn quota (paired with F3.1 fix).
+    const activeCount = await this.prisma.product.count({
+      where: { storeId, isActive: true },
+    });
+    await assertWithinPlanLimit(this.prisma, storeId, 'maxProducts', activeCount);
+
     if (dto.sku) {
       const existing = await this.prisma.product.findUnique({
         where: { storeId_sku: { storeId, sku: dto.sku } },
@@ -46,7 +54,13 @@ export class ProductsService {
   }
 
   async findAll(storeId: string, query: ProductQueryDto) {
+    // F3.1: soft-deleted (isActive=false) products previously remained
+    // visible in list + total count. Default to active-only here; pass
+    // `?includeArchived=true` to see archived rows.
     const where: Prisma.ProductWhereInput = { storeId };
+    if (!query.includeArchived) {
+      where.isActive = true;
+    }
 
     if (query.search) {
       where.OR = [
@@ -95,8 +109,9 @@ export class ProductsService {
   }
 
   async findOne(storeId: string, id: string) {
+    // F3.1: only return active products. Soft-deleted rows surface as 404.
     const product = await this.prisma.product.findFirst({
-      where: { id, storeId },
+      where: { id, storeId, isActive: true },
       include: { category: true, supplier: true },
     });
     if (!product) throw new NotFoundException('Product not found');

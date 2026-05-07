@@ -76,6 +76,29 @@ export class SalesService {
       const change = paidAmount.gt(total) ? paidAmount.sub(total) : new Prisma.Decimal(0);
       const debtAmount = total.gt(paidAmount) ? total.sub(paidAmount) : new Prisma.Decimal(0);
 
+      // F4.1: a CASH or CARD sale that doesn't fully cover the total used
+      // to silently spawn an orphan-debt row with customerId=null. That
+      // money was effectively lost — the merchant delivered goods, no
+      // customer was on the hook. Block the path: shortfalls must use
+      // DEBT (full credit) or MIXED (cash + credit) with a customerId.
+      if (debtAmount.gt(0) && (dto.paymentType === 'CASH' || dto.paymentType === 'CARD')) {
+        throw new BadRequestException(
+          `${dto.paymentType} payment must cover the full total. ` +
+            `For partial payment + credit, use paymentType=MIXED or DEBT and supply customerId.`,
+        );
+      }
+      // F4.1: any debt-bearing sale must be linked to a customer so the
+      // debt has an owner.
+      if (
+        debtAmount.gt(0) &&
+        (dto.paymentType === 'DEBT' || dto.paymentType === 'MIXED') &&
+        !dto.customerId
+      ) {
+        throw new BadRequestException(
+          'A sale with debtAmount > 0 must be linked to a customerId.',
+        );
+      }
+
       // Create sale
       const sale = await tx.sale.create({
         data: {
@@ -193,6 +216,10 @@ export class SalesService {
 
     return this.prisma.$transaction(async (tx) => {
       let isFullRefund = true;
+      // F4.2: track total refunded value so we can decrement customer
+      // debt + sale.debtAmount + customer.totalSpent in a consistent
+      // single transaction with the stock restore.
+      let refundedValue = new Prisma.Decimal(0);
 
       for (const refundItem of dto.items) {
         const saleItem = sale.items.find((i) => i.id === refundItem.saleItemId);
@@ -217,6 +244,35 @@ export class SalesService {
             notes: dto.reason,
           },
         });
+
+        // Per-line refund value = unitPrice × refundedQty (proportional
+        // discount handling: line discount stays attached to original
+        // remaining qty, so refund returns the gross unitPrice).
+        const lineRefund = new Prisma.Decimal(saleItem.unitPrice).mul(refundItem.quantity);
+        refundedValue = refundedValue.add(lineRefund);
+      }
+
+      // F4.2: if the original sale carried debt and a customer, drop the
+      // debt by min(refundedValue, sale.debtAmount). totalSpent goes
+      // down by the gross refunded value because the customer no longer
+      // "spent" that money on us.
+      const saleDebt = new Prisma.Decimal(sale.debtAmount);
+      let saleDebtDecrement = new Prisma.Decimal(0);
+      if (saleDebt.gt(0) && sale.customerId) {
+        saleDebtDecrement = refundedValue.gt(saleDebt) ? saleDebt : refundedValue;
+        await tx.customer.update({
+          where: { id: sale.customerId },
+          data: {
+            debt: { decrement: saleDebtDecrement },
+            totalSpent: { decrement: refundedValue },
+          },
+        });
+      } else if (sale.customerId && refundedValue.gt(0)) {
+        // Cash or card sale on a known customer: only adjust totalSpent.
+        await tx.customer.update({
+          where: { id: sale.customerId },
+          data: { totalSpent: { decrement: refundedValue } },
+        });
       }
 
       // Check if all items are fully refunded
@@ -229,7 +285,14 @@ export class SalesService {
 
       const updated = await tx.sale.update({
         where: { id: saleId },
-        data: { status: newStatus },
+        data: {
+          status: newStatus,
+          // F4.2: drop the sale's outstanding debt by the same amount we
+          // credited back to the customer.
+          ...(saleDebtDecrement.gt(0) && {
+            debtAmount: { decrement: saleDebtDecrement },
+          }),
+        },
         include: { items: true },
       });
 

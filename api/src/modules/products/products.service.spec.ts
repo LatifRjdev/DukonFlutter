@@ -102,6 +102,23 @@ function makePrismaFake() {
         rows.set(where.id, updated);
         return updated;
       }),
+      count: jest.fn(async ({ where }: any) => {
+        let count = 0;
+        for (const r of rows.values()) {
+          if (where?.storeId && r.storeId !== where.storeId) continue;
+          if (where?.isActive !== undefined && r.isActive !== where.isActive) continue;
+          count += 1;
+        }
+        return count;
+      }),
+    },
+    // F2.1: plan-limit helper queries subscription + planConfig. Stub
+    // both as fail-open (null) so legacy spec assertions don't change.
+    subscription: {
+      findUnique: jest.fn(async () => null),
+    },
+    subscriptionPlanConfig: {
+      findUnique: jest.fn(async () => null),
     },
   };
 }

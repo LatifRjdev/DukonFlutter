@@ -45,6 +45,14 @@ export class ProductQueryDto {
   @IsString()
   sortOrder?: 'asc' | 'desc' = 'desc';
 
+  // F3.1: caller opts in to seeing soft-deleted (isActive=false) rows.
+  // Default false → list returns only live products.
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  includeArchived?: boolean;
+
   get skip(): number {
     return ((this.page || 1) - 1) * (this.limit || 20);
   }

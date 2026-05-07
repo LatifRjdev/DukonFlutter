@@ -5,12 +5,21 @@ import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { Prisma, StaffRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { assertWithinPlanLimit } from '../../common/guards/plan-limit.helper';
 
 @Injectable()
 export class StaffService {
   constructor(private prisma: PrismaService) {}
 
   async create(storeId: string, dto: CreateStaffDto) {
+    // F2.1: enforce plan-limit. OWNER staff row is auto-created with the
+    // store and counts toward the cap (so START's maxStaff=2 = owner + 1
+    // cashier).
+    const activeCount = await this.prisma.staff.count({
+      where: { storeId, isActive: true },
+    });
+    await assertWithinPlanLimit(this.prisma, storeId, 'maxStaff', activeCount);
+
     // Look up user by phone
     let user = await this.prisma.user.findUnique({
       where: { phone: dto.phone },

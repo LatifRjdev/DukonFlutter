@@ -53,8 +53,9 @@ export class CustomersService {
   }
 
   async findOne(storeId: string, id: string) {
+    // F5.2: only return active customers. Soft-deleted rows surface as 404.
     const customer = await this.prisma.customer.findFirst({
-      where: { id, storeId },
+      where: { id, storeId, isActive: true },
       include: {
         sales: {
           orderBy: { createdAt: 'desc' },
