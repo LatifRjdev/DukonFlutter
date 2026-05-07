@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -16,20 +20,27 @@ export class ProductsService {
     const activeCount = await this.prisma.product.count({
       where: { storeId, isActive: true },
     });
-    await assertWithinPlanLimit(this.prisma, storeId, 'maxProducts', activeCount);
+    await assertWithinPlanLimit(
+      this.prisma,
+      storeId,
+      'maxProducts',
+      activeCount,
+    );
 
     if (dto.sku) {
       const existing = await this.prisma.product.findUnique({
         where: { storeId_sku: { storeId, sku: dto.sku } },
       });
-      if (existing) throw new ConflictException('Product with this SKU already exists');
+      if (existing)
+        throw new ConflictException('Product with this SKU already exists');
     }
 
     if (dto.barcode) {
       const existing = await this.prisma.product.findUnique({
         where: { storeId_barcode: { storeId, barcode: dto.barcode } },
       });
-      if (existing) throw new ConflictException('Product with this barcode already exists');
+      if (existing)
+        throw new ConflictException('Product with this barcode already exists');
     }
 
     return this.prisma.product.create({

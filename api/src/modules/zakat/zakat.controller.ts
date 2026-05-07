@@ -7,6 +7,7 @@ import { Permissions } from '../../common/decorators/permissions.decorator';
 import { ZakatService } from './zakat.service';
 import { UpsertZakatSettingsDto } from './dto/upsert-zakat-settings.dto';
 import { CreateZakatPaymentDto } from './dto/create-zakat-payment.dto';
+import { assertNonEmptyDto } from '../../common/validators/non-empty-dto';
 
 @ApiTags('Zakat')
 @ApiBearerAuth()
@@ -34,6 +35,9 @@ export class ZakatController {
     @Param('storeId') storeId: string,
     @Body() dto: UpsertZakatSettingsDto,
   ) {
+    // Carryover P2: reject {} so an empty POST can't silently
+    // overwrite zakat settings with defaults.
+    assertNonEmptyDto(dto, 'zakat settings');
     return this.zakatService.upsertSettings(storeId, dto);
   }
 

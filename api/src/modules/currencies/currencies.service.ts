@@ -22,16 +22,47 @@ export class CurrenciesService {
   /**
    * Fetch html from a URL using Node's built-in https module.
    * Avoids external HTTP client dependency in this module.
+   *
+   * F7.1: previously a non-200 status was silently coerced into an
+   * unparseable HTML body that produced 0 rows; the call site then
+   * returned [] with no diagnostic. Log the status + body length so
+   * we can tell "fetch failed" from "table structure changed".
    */
   private fetchHtml(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       https
-        .get(url, (res) => {
-          let data = '';
-          res.on('data', (chunk: string) => (data += chunk));
-          res.on('end', () => resolve(data));
-        })
-        .on('error', reject);
+        .get(
+          url,
+          {
+            // Some sites reject node's default UA. Pretend to be a real
+            // browser so we get the same HTML the QA team sees.
+            headers: {
+              'User-Agent':
+                'Mozilla/5.0 (compatible; DukonProBot/1.0; +https://dukonpro.tj)',
+              Accept: 'text/html,application/xhtml+xml',
+              'Accept-Language': 'en,ru;q=0.8,tg;q=0.6',
+            },
+          },
+          (res) => {
+            const status = res.statusCode || 0;
+            let data = '';
+            res.on('data', (chunk: string) => (data += chunk));
+            res.on('end', () => {
+              if (status < 200 || status >= 300) {
+                this.logger.warn(
+                  `nbt.tj returned HTTP ${status} for ${url} (body length ${data.length})`,
+                );
+                resolve('');
+                return;
+              }
+              resolve(data);
+            });
+          },
+        )
+        .on('error', (err) => {
+          this.logger.error(`fetch ${url} failed`, err);
+          reject(err);
+        });
     });
   }
 
@@ -75,8 +106,15 @@ export class CurrenciesService {
       });
 
       if (rates.length === 0) {
+        // F7.1: surface enough context to diagnose without re-running.
+        // Most likely causes: site moved the table, returned a JS-only
+        // shell, or the request was blocked by Cloudflare and HTML is
+        // a challenge page. Body length is a quick signal.
+        const tableCount = $('table').length;
+        const trCount = $('table tr').length;
         this.logger.warn(
-          'No currency rates parsed from nbt.tj — page structure may have changed',
+          `No currency rates parsed from nbt.tj — html bytes=${html.length}, tables=${tableCount}, trs=${trCount}. ` +
+            `Page structure may have changed; consider switching to https://nbt.tj/ru/kurs/kurs.php or the official XML feed.`,
         );
         return [];
       }

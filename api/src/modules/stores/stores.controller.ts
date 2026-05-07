@@ -18,6 +18,7 @@ import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { StoreResponseDto } from './dto/store-response.dto';
 import { ReceiptTemplateDto } from './dto/receipt-template.dto';
+import { assertNonEmptyDto } from '../../common/validators/non-empty-dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
@@ -77,6 +78,9 @@ export class StoresController {
     @Param('storeId') storeId: string,
     @Body() dto: ReceiptTemplateDto,
   ) {
+    // Carryover P2: reject {} so a stray PUT can't silently wipe the
+    // template back to defaults.
+    assertNonEmptyDto(dto, 'receipt template');
     return this.storesService.updateReceiptTemplate(storeId, dto);
   }
 }

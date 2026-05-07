@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
@@ -50,7 +54,9 @@ export class StaffService {
       where: { storeId_userId: { storeId, userId: user.id } },
     });
     if (existing) {
-      throw new ConflictException('This user is already a staff member of this store');
+      throw new ConflictException(
+        'This user is already a staff member of this store',
+      );
     }
 
     // Create staff record

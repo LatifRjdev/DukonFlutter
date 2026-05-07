@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -14,7 +19,8 @@ export class CustomersService {
       const existing = await this.prisma.customer.findUnique({
         where: { storeId_phone: { storeId, phone: dto.phone } },
       });
-      if (existing) throw new ConflictException('Customer with this phone already exists');
+      if (existing)
+        throw new ConflictException('Customer with this phone already exists');
     }
 
     return this.prisma.customer.create({
@@ -60,7 +66,13 @@ export class CustomersService {
         sales: {
           orderBy: { createdAt: 'desc' },
           take: 10,
-          select: { id: true, receiptNo: true, total: true, createdAt: true, status: true },
+          select: {
+            id: true,
+            receiptNo: true,
+            total: true,
+            createdAt: true,
+            status: true,
+          },
         },
       },
     });
@@ -120,7 +132,11 @@ export class CustomersService {
     };
   }
 
-  async addPayment(storeId: string, customerId: string, dto: CreateCustomerPaymentDto) {
+  async addPayment(
+    storeId: string,
+    customerId: string,
+    dto: CreateCustomerPaymentDto,
+  ) {
     await this.findOne(storeId, customerId);
 
     const sale = await this.prisma.sale.findFirst({
@@ -136,7 +152,9 @@ export class CustomersService {
     }
 
     if (dto.amount > Number(sale.debtAmount)) {
-      throw new BadRequestException('Payment amount exceeds the outstanding debt for this sale');
+      throw new BadRequestException(
+        'Payment amount exceeds the outstanding debt for this sale',
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {

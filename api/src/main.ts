@@ -3,7 +3,8 @@ import { initSentry } from './sentry';
 initSentry();
 
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
+import { RuValidationPipe } from './common/pipes/ru-validation-pipe';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -105,15 +106,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Global pipes, filters, interceptors
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
+  // F1.2: replace bare ValidationPipe with the Russian-aware variant.
+  // Same options + the same DTO contracts; the only difference is that
+  // class-validator's English defaults get rewritten on their way out.
+  app.useGlobalPipes(new RuValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(
     new LoggingInterceptor(),

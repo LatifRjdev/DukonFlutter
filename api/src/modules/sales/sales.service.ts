@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
@@ -42,10 +47,13 @@ export class SalesService {
 
       for (const item of dto.items) {
         const product = productMap.get(item.productId);
-        if (!product) throw new BadRequestException(`Product ${item.productId} not found`);
+        if (!product)
+          throw new BadRequestException(`Product ${item.productId} not found`);
 
         if (product.quantity < item.quantity) {
-          throw new BadRequestException(`Insufficient stock for ${product.name}. Available: ${product.quantity}`);
+          throw new BadRequestException(
+            `Insufficient stock for ${product.name}. Available: ${product.quantity}`,
+          );
         }
 
         const unitPrice = product.sellPrice;
@@ -73,15 +81,22 @@ export class SalesService {
 
       const total = subtotal.sub(saleDiscount);
       const paidAmount = new Prisma.Decimal(dto.paidAmount);
-      const change = paidAmount.gt(total) ? paidAmount.sub(total) : new Prisma.Decimal(0);
-      const debtAmount = total.gt(paidAmount) ? total.sub(paidAmount) : new Prisma.Decimal(0);
+      const change = paidAmount.gt(total)
+        ? paidAmount.sub(total)
+        : new Prisma.Decimal(0);
+      const debtAmount = total.gt(paidAmount)
+        ? total.sub(paidAmount)
+        : new Prisma.Decimal(0);
 
       // F4.1: a CASH or CARD sale that doesn't fully cover the total used
       // to silently spawn an orphan-debt row with customerId=null. That
       // money was effectively lost — the merchant delivered goods, no
       // customer was on the hook. Block the path: shortfalls must use
       // DEBT (full credit) or MIXED (cash + credit) with a customerId.
-      if (debtAmount.gt(0) && (dto.paymentType === 'CASH' || dto.paymentType === 'CARD')) {
+      if (
+        debtAmount.gt(0) &&
+        (dto.paymentType === 'CASH' || dto.paymentType === 'CARD')
+      ) {
         throw new BadRequestException(
           `${dto.paymentType} payment must cover the full total. ` +
             `For partial payment + credit, use paymentType=MIXED or DEBT and supply customerId.`,
@@ -177,7 +192,14 @@ export class SalesService {
         where,
         include: {
           customer: { select: { id: true, name: true } },
-          items: { select: { id: true, productName: true, quantity: true, total: true } },
+          items: {
+            select: {
+              id: true,
+              productName: true,
+              quantity: true,
+              total: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip: query.skip,
@@ -199,7 +221,11 @@ export class SalesService {
     const sale = await this.prisma.sale.findFirst({
       where: { id, storeId },
       include: {
-        items: { include: { product: { select: { id: true, name: true, imageUrl: true } } } },
+        items: {
+          include: {
+            product: { select: { id: true, name: true, imageUrl: true } },
+          },
+        },
         customer: true,
         debtPayments: true,
       },
@@ -223,9 +249,14 @@ export class SalesService {
 
       for (const refundItem of dto.items) {
         const saleItem = sale.items.find((i) => i.id === refundItem.saleItemId);
-        if (!saleItem) throw new BadRequestException(`Sale item ${refundItem.saleItemId} not found`);
+        if (!saleItem)
+          throw new BadRequestException(
+            `Sale item ${refundItem.saleItemId} not found`,
+          );
         if (refundItem.quantity > saleItem.quantity) {
-          throw new BadRequestException(`Refund quantity exceeds sale quantity for ${saleItem.productName}`);
+          throw new BadRequestException(
+            `Refund quantity exceeds sale quantity for ${saleItem.productName}`,
+          );
         }
         if (refundItem.quantity < saleItem.quantity) isFullRefund = false;
 
@@ -248,7 +279,9 @@ export class SalesService {
         // Per-line refund value = unitPrice × refundedQty (proportional
         // discount handling: line discount stays attached to original
         // remaining qty, so refund returns the gross unitPrice).
-        const lineRefund = new Prisma.Decimal(saleItem.unitPrice).mul(refundItem.quantity);
+        const lineRefund = new Prisma.Decimal(saleItem.unitPrice).mul(
+          refundItem.quantity,
+        );
         refundedValue = refundedValue.add(lineRefund);
       }
 
@@ -259,7 +292,9 @@ export class SalesService {
       const saleDebt = new Prisma.Decimal(sale.debtAmount);
       let saleDebtDecrement = new Prisma.Decimal(0);
       if (saleDebt.gt(0) && sale.customerId) {
-        saleDebtDecrement = refundedValue.gt(saleDebt) ? saleDebt : refundedValue;
+        saleDebtDecrement = refundedValue.gt(saleDebt)
+          ? saleDebt
+          : refundedValue;
         await tx.customer.update({
           where: { id: sale.customerId },
           data: {
@@ -281,7 +316,8 @@ export class SalesService {
         return refundItem && refundItem.quantity === saleItem.quantity;
       });
 
-      const newStatus = allItemsRefunded && isFullRefund ? 'RETURNED' : 'PARTIALLY_RETURNED';
+      const newStatus =
+        allItemsRefunded && isFullRefund ? 'RETURNED' : 'PARTIALLY_RETURNED';
 
       const updated = await tx.sale.update({
         where: { id: saleId },

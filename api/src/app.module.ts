@@ -37,7 +37,13 @@ import { HealthModule } from './modules/health/health.module';
   imports: [
     SentryModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
-    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+    // F1.3: 100 req/min globally was too tight for legitimate use —
+    // a busy shop hit it during a normal sale burst (every checkout
+    // fires ~3-5 calls). 300 req/min ≈ 5 req/sec sustained is enough
+    // headroom for a single-cashier shift without weakening abuse
+    // protection (auth endpoints have their own per-route stricter
+    // throttles set via @Throttle).
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 300 }]),
     ScheduleModule.forRoot(),
     PrismaModule,
     RedisModule,

@@ -16,7 +16,12 @@ export class DiscountsService {
     const activeCount = await this.prisma.discount.count({
       where: { storeId, active: true },
     });
-    await assertWithinPlanLimit(this.prisma, storeId, 'maxDiscounts', activeCount);
+    await assertWithinPlanLimit(
+      this.prisma,
+      storeId,
+      'maxDiscounts',
+      activeCount,
+    );
 
     return this.prisma.discount.create({
       data: {
