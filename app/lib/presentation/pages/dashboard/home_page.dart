@@ -5,7 +5,6 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
-import '../../widgets/common/offline_banner.dart';
 import '../dashboard/dashboard_page.dart';
 import '../dashboard/more_page.dart';
 import '../product/product_list_page.dart';
@@ -59,16 +58,12 @@ class _HomePageState extends State<HomePage> {
         }
       },
       child: Scaffold(
-        body: Column(
-          children: [
-            const OfflineBanner(),
-            Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: pages,
-              ),
-            ),
-          ],
+        // Offline banner is mounted globally in MaterialApp.builder so it
+        // also shows on push'd routes (Оплата, success, settings…). Don't
+        // re-add it here.
+        body: IndexedStack(
+          index: _currentIndex,
+          children: pages,
         ),
         bottomNavigationBar: AppBottomNavBar(
           currentIndex: _currentIndex,

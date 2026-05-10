@@ -24,6 +24,9 @@ import { UpdateCountItemsDto } from './dto/update-count-items.dto';
 export class InventoryCountsController {
   constructor(private inventoryCountsService: InventoryCountsService) {}
 
+  // Every endpoint requires hasInventory. Without per-method decorators,
+  // START tier could read/finalize counts that were created during a
+  // trial-PREMIUM window after downgrading.
   @Post()
   @Permissions('inventory.write')
   @RequiresFeature('hasInventory')
@@ -36,6 +39,7 @@ export class InventoryCountsController {
   }
 
   @Get(':id')
+  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Get inventory count session with items (includes product name, barcode)',
@@ -46,6 +50,7 @@ export class InventoryCountsController {
 
   @Put(':id')
   @Permissions('inventory.write')
+  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary: 'Update actual quantities for items in a count session (batch)',
   })
@@ -59,6 +64,7 @@ export class InventoryCountsController {
 
   @Post(':id/apply')
   @Permissions('inventory.write')
+  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Finalize count: update product stock quantities and set status=COMPLETED',

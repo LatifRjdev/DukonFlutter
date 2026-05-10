@@ -4,6 +4,7 @@ import 'l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'injection.dart';
+import 'presentation/widgets/common/offline_banner.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/store/store_bloc.dart';
 import 'presentation/blocs/pos/cart_bloc.dart';
@@ -90,6 +91,25 @@ class DukonProApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             locale: const Locale('ru'),
+            // Stack the offline banner above every route so sub-pages
+            // (Оплата наличными, success, settings, …) keep showing it
+            // when connectivity drops mid-flow. Previously the banner
+            // lived only on the HomePage Scaffold.
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context),
+                child: SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: Column(
+                    children: [
+                      const OfflineBanner(),
+                      Expanded(child: child ?? const SizedBox.shrink()),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

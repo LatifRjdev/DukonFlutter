@@ -35,7 +35,11 @@ export class DeliveriesController {
     return this.deliveriesService.create(storeId, dto);
   }
 
+  // Read endpoints also require hasDelivery — START tier users have no
+  // deliveries to see anyway, but without the guard they could enumerate
+  // deliveries created during a trial-PREMIUM window after downgrading.
   @Get()
+  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary:
       'List deliveries with optional filters (status, date range) and pagination',
@@ -45,6 +49,7 @@ export class DeliveriesController {
   }
 
   @Get(':id')
+  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary: 'Get delivery details including sale items and courier',
   })
@@ -54,6 +59,7 @@ export class DeliveriesController {
 
   @Put(':id/status')
   @Permissions('deliveries.write')
+  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary: 'Update delivery status (NEW→IN_TRANSIT→DELIVERED)',
   })

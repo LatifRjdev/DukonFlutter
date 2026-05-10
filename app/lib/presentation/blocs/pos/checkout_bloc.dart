@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/sale_repository.dart';
 import 'checkout_event.dart';
@@ -59,6 +60,13 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       CheckoutProcessPayment event, Emitter<CheckoutState> emit) async {
     emit(state.copyWith(isProcessing: true, error: null));
     try {
+      final localId = const Uuid().v4();
+      final occurredAt = DateTime.now().toUtc().toIso8601String();
+      final change =
+          state.paidAmount > state.total ? state.paidAmount - state.total : 0.0;
+      final debt =
+          state.total > state.paidAmount ? state.total - state.paidAmount : 0.0;
+
       final saleData = <String, dynamic>{
         'items': state.items
             .map((item) => {
@@ -72,6 +80,19 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         'paymentType': state.paymentMethod,
         'paidAmount': state.paidAmount,
         if (state.customerId != null) 'customerId': state.customerId,
+        // localId + occurredAt are accepted by the API and also used by the
+        // offline-replay path so the receipt the cashier holds matches the
+        // row that eventually lands on the server.
+        'localId': localId,
+        'occurredAt': occurredAt,
+        // Offline-only metadata. SaleRemoteDatasource strips these before
+        // POSTing because the API rejects unknown fields. SaleRepository
+        // reads them when constructing the local-only Sale entity so the
+        // success screen shows the right total instead of 0 TJS.
+        '_offlineSubtotal': state.subtotal,
+        '_offlineTotal': state.total,
+        '_offlineChange': change,
+        '_offlineDebt': debt,
       };
 
       final sale = await _saleRepository.createSale(event.storeId, saleData);

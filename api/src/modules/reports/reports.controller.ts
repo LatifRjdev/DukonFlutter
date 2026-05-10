@@ -14,7 +14,10 @@ import { ReportQueryDto } from './dto/report-query.dto';
 export class ReportsController {
   constructor(private reportsService: ReportsService) {}
 
+  // /sales originally lacked @RequiresFeature; the other three had it.
+  // That left the most-hit report open to START tier. All four now gated.
   @Get('sales')
+  @RequiresFeature('hasReportsAll')
   @ApiOperation({
     summary: 'Sales report: aggregated by date, top 5 products by revenue',
   })

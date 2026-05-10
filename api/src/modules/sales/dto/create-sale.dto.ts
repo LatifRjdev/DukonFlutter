@@ -88,4 +88,14 @@ export class CreateSaleDto {
   @IsOptional()
   @IsString()
   localId?: string;
+
+  // Client-supplied real-world sale time. For online sales the client may
+  // omit it and the server stamps `now()`. For offline sales replayed by
+  // the sync engine, the original cash-register time MUST be passed in
+  // here so end-of-day reports group the sale under the correct day even
+  // if reconnect spans midnight.
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  occurredAt?: string;
 }

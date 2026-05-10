@@ -32,9 +32,13 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
   @override
   Future<Sale> createSale(String storeId, Map<String, dynamic> data) async {
     try {
+      // Strip offline-only metadata. The API runs forbidNonWhitelisted=true
+      // and would 400 on any `_offline*` field that leaked through.
+      final apiPayload = Map<String, dynamic>.from(data)
+        ..removeWhere((k, _) => k.startsWith('_offline'));
       final response = await _dioClient.post(
         ApiEndpoints.sales(storeId),
-        data: data,
+        data: apiPayload,
       );
       return _mapSale(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

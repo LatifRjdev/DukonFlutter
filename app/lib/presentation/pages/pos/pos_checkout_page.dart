@@ -56,6 +56,15 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     if (storeState is StoreLoaded && storeState.selectedStore != null) {
       _storeId = storeState.selectedStore!.id;
     }
+    // Refresh the product list every time POS is mounted. ProductListBloc
+    // is app-scoped, so without this dispatch the chip strip shows the
+    // snapshot taken at app cold-start — newly created products and stock
+    // changes don't appear until the next full restart.
+    if (_storeId != null) {
+      context
+          .read<ProductListBloc>()
+          .add(ProductListLoadRequested(storeId: _storeId!));
+    }
   }
 
   @override
@@ -317,11 +326,13 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 child: _showSearchResults ? _buildSearchResults() : const SizedBox.shrink(),
               ),
 
-              // Quick products horizontal scroll
+              // Quick products horizontal scroll. Height bumped from 72→84
+              // because at the default text-scale + Material 1.5 line-height
+              // a 2-line name + price + 2x8 padding overflows by 2px.
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
                 child: SizedBox(
-                  height: 72,
+                  height: 84,
                   child: BlocBuilder<ProductListBloc, ProductListState>(
                     builder: (context, state) {
                       if (state is ProductListLoaded && state.products.isNotEmpty) {

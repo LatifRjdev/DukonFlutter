@@ -159,31 +159,48 @@ class SaleRepositoryImpl implements SaleRepository {
     Map<String, dynamic> data,
   ) async {
     final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
-    final now = DateTime.now();
+    final occurredAtIso = data['occurredAt'] as String?;
+    final occurredAt =
+        occurredAtIso != null ? DateTime.parse(occurredAtIso).toLocal() : DateTime.now();
+
+    // Computed totals come from CheckoutBloc as `_offline*` keys; the API
+    // payload (without them) has only items/discount/paidAmount, so without
+    // these we'd persist a Sale with total=0 and the success screen would
+    // show "0 TJS" until the next online refresh.
+    final subtotal = (data['_offlineSubtotal'] as num?)?.toDouble() ?? 0;
+    final total = (data['_offlineTotal'] as num?)?.toDouble() ?? 0;
+    final change = (data['_offlineChange'] as num?)?.toDouble() ?? 0;
+    final debt = (data['_offlineDebt'] as num?)?.toDouble() ?? 0;
 
     final sale = Sale(
       id: tempId,
       storeId: storeId,
       customerId: data['customerId'] as String?,
-      receiptNo: 'OFF-${now.millisecondsSinceEpoch}',
-      subtotal: (data['subtotal'] as num?)?.toDouble() ?? 0,
+      receiptNo: 'OFF-${occurredAt.millisecondsSinceEpoch}',
+      subtotal: subtotal,
       discount: (data['discount'] as num?)?.toDouble() ?? 0,
       discountType: data['discountType'] as String?,
-      total: (data['total'] as num?)?.toDouble() ?? 0,
+      total: total,
       paymentType: data['paymentType'] as String? ?? 'CASH',
       paidAmount: (data['paidAmount'] as num?)?.toDouble() ?? 0,
-      change: (data['change'] as num?)?.toDouble() ?? 0,
-      debtAmount: (data['debtAmount'] as num?)?.toDouble() ?? 0,
+      change: change,
+      debtAmount: debt,
       notes: data['notes'] as String?,
-      createdAt: now,
+      createdAt: occurredAt,
     );
 
     await _localDatasource.saveSale(sale);
+
+    // Drop the _offline* metadata before queueing — those keys would be
+    // rejected by the API on replay (forbidNonWhitelisted).
+    final apiPayload = Map<String, dynamic>.from(data)
+      ..removeWhere((k, _) => k.startsWith('_offline'));
+
     await _syncQueue.enqueue(
       entityType: 'sale',
       entityId: '$storeId:$tempId',
       operation: 'CREATE',
-      payload: data,
+      payload: apiPayload,
     );
 
     return sale;

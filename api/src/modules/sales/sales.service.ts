@@ -141,6 +141,12 @@ export class SalesService {
           dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
           notes: dto.notes,
           localId: dto.localId,
+          // F-OFFLINE-1: client may pass occurredAt for offline-replayed
+          // sales so the row lands in the right business day. We don't
+          // override updatedAt — that one stays as server "last touched".
+          ...(dto.occurredAt
+            ? { createdAt: new Date(dto.occurredAt) }
+            : {}),
           items: { create: saleItems },
         },
         include: { items: true, customer: true },
