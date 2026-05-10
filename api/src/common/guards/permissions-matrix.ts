@@ -35,6 +35,15 @@ export const DEFAULT_PERMISSIONS: Record<StaffRole, readonly string[]> = {
     'expenses.write',
     'zakat.manage',
     'reports.view',
+    // Bug #21 (2026-05-10 matrix probe): ADMIN was missing the four
+    // operational write permissions below. The "ADMIN can do everything
+    // except billing" intent was undermined — admins couldn't create
+    // discounts, run inventory counts, manage deliveries, or create
+    // investments. All four added to the default matrix.
+    'discounts.write',
+    'inventory.write',
+    'deliveries.write',
+    'investments.write',
   ],
   CASHIER: [
     // POS cashier — only runs the till, no management.
@@ -55,6 +64,14 @@ export const DEFAULT_PERMISSIONS: Record<StaffRole, readonly string[]> = {
     'suppliers.view',
     'suppliers.manage',
     'stock.manage',
+    // Bug #22 (2026-05-10 matrix probe): WAREHOUSE literally counts
+    // stock — they are the role that runs inventory cycles. Was
+    // returning 403 because `inventory.write` was missing from the
+    // matrix.
+    'inventory.write',
+    // Receiving deliveries from suppliers is part of the warehouse
+    // workflow too.
+    'deliveries.write',
   ],
 };
 

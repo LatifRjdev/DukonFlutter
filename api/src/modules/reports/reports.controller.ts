@@ -3,7 +3,9 @@ import type { Response } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { SubscriptionGuard } from '../../common/guards/subscription.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { ReportsService } from './reports.service';
 import { ExportService } from './export.service';
@@ -11,7 +13,12 @@ import { ReportQueryDto } from './dto/report-query.dto';
 
 @ApiTags('Reports')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard)
+// Bug #23/24 (2026-05-10 matrix probe): reports controller had no
+// PermissionsGuard, so ANY authenticated staff (including CASHIER and
+// WAREHOUSE) could read sales, profit, and products reports — and
+// PREMIUM-tier cashiers could even export sales as xlsx. Add the
+// guard so per-route @Permissions decorators take effect.
+@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
 @Controller('stores/:storeId/reports')
 export class ReportsController {
   constructor(
@@ -23,6 +30,7 @@ export class ReportsController {
   // That left the most-hit report open to START tier. All four now gated.
   @Get('sales')
   @RequiresFeature('hasReportsAll')
+  @Permissions('reports.view')
   @ApiOperation({
     summary: 'Sales report: aggregated by date, top 5 products by revenue',
   })
@@ -35,6 +43,7 @@ export class ReportsController {
 
   @Get('profit')
   @RequiresFeature('hasReportsAll')
+  @Permissions('reports.view')
   @ApiOperation({
     summary: 'Profit report: income, expenses, profit, margin %',
   })
@@ -47,6 +56,7 @@ export class ReportsController {
 
   @Get('products')
   @RequiresFeature('hasReportsAll')
+  @Permissions('reports.view')
   @ApiOperation({
     summary:
       'Products report: top sellers by qty/revenue, dead stock, total stock value',
@@ -60,6 +70,7 @@ export class ReportsController {
 
   @Get('staff')
   @RequiresFeature('hasReportsAll')
+  @Permissions('reports.view')
   @ApiOperation({
     summary: 'Staff report: sales per cashier, avg check per cashier',
   })
@@ -76,6 +87,7 @@ export class ReportsController {
   // needed for the data sizes we cap at (10k rows).
   @Get('export')
   @RequiresFeature('hasExport')
+  @Permissions('reports.view')
   @ApiOperation({
     summary:
       'Export sales / products / customers as xlsx. Query: ?type=sales|products|customers',
