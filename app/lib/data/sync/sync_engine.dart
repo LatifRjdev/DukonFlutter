@@ -214,6 +214,29 @@ class SyncEngine {
         }
         return ApiEndpoints.store(parts[0]);
 
+      // E.1: shift open via /shifts/open. Offline-replay sends the
+      // localId in the payload so the server returns the existing
+      // shift on retry. CLOSE intentionally not queued — close-shift
+      // happens at end of day which generally has connectivity.
+      case 'shift':
+        final storeId = parts[0];
+        if (item.operation == 'CREATE') {
+          return ApiEndpoints.shiftOpen(storeId);
+        }
+        return null;
+
+      // E.3: debt payments. entityId format =
+      // `storeId:customerId:localId`. Server idempotency dedupes by
+      // localId so retry after partial-success is safe.
+      case 'debt_payment':
+        if (parts.length < 2) return null;
+        final storeId = parts[0];
+        final customerId = parts[1];
+        if (item.operation == 'CREATE') {
+          return ApiEndpoints.customerPayments(storeId, customerId);
+        }
+        return null;
+
       default:
         return null;
     }

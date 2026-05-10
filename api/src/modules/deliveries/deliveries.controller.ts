@@ -23,13 +23,16 @@ import { DeliveryQueryDto } from './dto/delivery-query.dto';
 @ApiTags('Deliveries')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
+// F.2: class-level @RequiresFeature now works (guard reads handler
+// THEN class metadata explicitly). Cleaner than repeating it on each
+// method.
+@RequiresFeature('hasDelivery')
 @Controller('stores/:storeId/deliveries')
 export class DeliveriesController {
   constructor(private deliveriesService: DeliveriesService) {}
 
   @Post()
   @Permissions('deliveries.write')
-  @RequiresFeature('hasDelivery')
   @ApiOperation({ summary: 'Create a new delivery for a sale' })
   create(@Param('storeId') storeId: string, @Body() dto: CreateDeliveryDto) {
     return this.deliveriesService.create(storeId, dto);
@@ -39,7 +42,6 @@ export class DeliveriesController {
   // deliveries to see anyway, but without the guard they could enumerate
   // deliveries created during a trial-PREMIUM window after downgrading.
   @Get()
-  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary:
       'List deliveries with optional filters (status, date range) and pagination',
@@ -49,7 +51,6 @@ export class DeliveriesController {
   }
 
   @Get(':id')
-  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary: 'Get delivery details including sale items and courier',
   })
@@ -59,7 +60,6 @@ export class DeliveriesController {
 
   @Put(':id/status')
   @Permissions('deliveries.write')
-  @RequiresFeature('hasDelivery')
   @ApiOperation({
     summary: 'Update delivery status (NEW→IN_TRANSIT→DELIVERED)',
   })

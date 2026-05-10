@@ -63,9 +63,12 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
 
+    // F.1: bump tokensRevokedAt so any access token issued before
+    // this moment is rejected by the JWT strategy. The user has to
+    // log in again with the new password to get fresh tokens.
     await this.prisma.user.update({
       where: { id: userId },
-      data: { password: hashedPassword },
+      data: { password: hashedPassword, tokensRevokedAt: new Date() },
     });
 
     return { message: 'Password changed successfully' };

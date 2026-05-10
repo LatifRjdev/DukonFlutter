@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/product.dart';
+import 'cart_state.dart';
 
 abstract class CartEvent extends Equatable {
   const CartEvent();
@@ -46,4 +47,14 @@ class CartCustomerSelected extends CartEvent {
   const CartCustomerSelected({this.customerId, this.customerName});
   @override
   List<Object?> get props => [customerId];
+}
+
+// E.4: emitted when the user accepts the "restore previous cart?"
+// prompt at app cold start. Replaces the empty CartState with the
+// previously-persisted one.
+class CartRestored extends CartEvent {
+  final CartState state;
+  const CartRestored(this.state);
+  @override
+  List<Object?> get props => [state];
 }

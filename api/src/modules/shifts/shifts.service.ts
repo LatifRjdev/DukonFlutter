@@ -35,6 +35,21 @@ export class ShiftsService {
   async openShift(storeId: string, userId: string, dto: OpenShiftDto) {
     const staffId = await this.getStaffId(storeId, userId);
 
+    // E.1: idempotent on localId. If a queued offline open-shift
+    // arrives twice (network blip + replay), return the existing
+    // shift instead of throwing the active-shift conflict.
+    if (dto.localId) {
+      const existing = await this.prisma.shift.findFirst({
+        where: { storeId, staffId, localId: dto.localId },
+        include: {
+          staff: {
+            include: { user: { select: { id: true, name: true } } },
+          },
+        },
+      });
+      if (existing) return existing;
+    }
+
     // Check no active shift exists for this staff
     const activeShift = await this.prisma.shift.findFirst({
       where: { storeId, staffId, status: 'OPEN' },
@@ -52,6 +67,7 @@ export class ShiftsService {
         staffId,
         openingCash: dto.openingCash,
         status: 'OPEN',
+        localId: dto.localId,
       },
       include: {
         staff: {

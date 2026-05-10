@@ -143,6 +143,16 @@ export class CustomersService {
   ) {
     await this.findOne(storeId, customerId);
 
+    // E.3: idempotent on localId. Offline-replay path may push the
+    // same payment twice; return the existing row instead of double-
+    // decrementing the debt.
+    if (dto.localId) {
+      const existing = await this.prisma.debtPayment.findFirst({
+        where: { localId: dto.localId, sale: { storeId, customerId } },
+      });
+      if (existing) return existing;
+    }
+
     const sale = await this.prisma.sale.findFirst({
       where: { id: dto.saleId, customerId, storeId },
     });
@@ -188,6 +198,7 @@ export class CustomersService {
           amount: dto.amount,
           method: dto.method,
           notes: dto.notes,
+          localId: dto.localId,
         },
       });
 

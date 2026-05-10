@@ -20,7 +20,7 @@ export class JwtAccessStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: { sub: string; phone: string }) {
+  async validate(payload: { sub: string; phone: string; iat?: number }) {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
       select: {
@@ -29,11 +29,23 @@ export class JwtAccessStrategy extends PassportStrategy(
         name: true,
         isActive: true,
         isAdmin: true,
+        tokensRevokedAt: true,
       },
     });
 
     if (!user || !user.isActive) {
       throw new UnauthorizedException('User not found or inactive');
+    }
+
+    // F.1: reject any token issued before the user's tokensRevokedAt.
+    // JWT `iat` is in seconds, tokensRevokedAt is millisecond-precision.
+    if (user.tokensRevokedAt && payload.iat) {
+      const revokedAtSec = Math.floor(user.tokensRevokedAt.getTime() / 1000);
+      if (payload.iat <= revokedAtSec) {
+        throw new UnauthorizedException(
+          'Token revoked. Please sign in again.',
+        );
+      }
     }
 
     return {

@@ -18,6 +18,11 @@ model User {
   avatar        String?
   isActive      Boolean        @default(true)
   isAdmin       Boolean        @default(false)
+  // F.1: bumped on password change (or admin-forced logout). JWT
+  // strategies reject any access token whose `iat` predates this
+  // timestamp, so a leaked token is invalidated as soon as the
+  // user (or admin) rotates the password.
+  tokensRevokedAt DateTime?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -359,6 +364,8 @@ model DebtPayment {
   amount    Decimal         @db.Decimal(12, 2)
   method    SalePaymentType
   notes     String?
+  // E.3: client-supplied UUID for offline-replay idempotency.
+  localId   String?
   createdAt DateTime        @default(now())
 
   @@map("debt_payments")
@@ -462,6 +469,8 @@ model Shift {
   cashWithdrawals Decimal     @default(0) @db.Decimal(12, 2)
   status          ShiftStatus @default(OPEN)
   notes           String?
+  // E.1: client-supplied UUID for offline-replay idempotency.
+  localId         String?
 
   sales Sale[]
 

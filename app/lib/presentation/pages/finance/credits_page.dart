@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -491,7 +492,15 @@ class _CreditCardState extends State<_CreditCard> {
                           final endpoint = widget.isReceivable
                               ? '/stores/${widget.storeId}/customers/${widget.item.id}/payments'
                               : '/stores/${widget.storeId}/suppliers/${widget.item.id}/payments';
-                          await dio.post(endpoint, data: {'amount': amount, 'method': selectedMethod});
+                          // E.3: attach a stable localId so a network
+                          // retry of the same payment doesn't double-
+                          // decrement the debt — the API now dedupes
+                          // by localId and returns the existing row.
+                          await dio.post(endpoint, data: {
+                            'amount': amount,
+                            'method': selectedMethod,
+                            'localId': const Uuid().v4(),
+                          });
                           if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                           widget.onPaymentDone();
                         } catch (e) {

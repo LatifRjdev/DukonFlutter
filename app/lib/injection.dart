@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'core/network/api_interceptor.dart';
@@ -9,6 +10,7 @@ import 'core/network/network_info.dart';
 import 'core/router/app_router.dart';
 
 import 'data/datasources/local/auth_local_datasource.dart';
+import 'data/datasources/local/cart_local_datasource.dart';
 import 'data/datasources/local/category_local_datasource.dart';
 import 'data/datasources/local/product_local_datasource.dart';
 import 'data/datasources/local/sale_local_datasource.dart';
@@ -111,6 +113,12 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton<FlutterSecureStorage>(() => secureStorage);
 
+  // E.4: register SharedPreferences as a singleton so the cart
+  // persistence layer (and others) can take it via DI without
+  // awaiting on every call.
+  final sharedPrefs = await SharedPreferences.getInstance();
+  sl.registerSingleton<SharedPreferences>(sharedPrefs);
+
   sl.registerLazySingleton<Connectivity>(() => Connectivity());
 
   // SQLite database
@@ -178,6 +186,12 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<CategoryLocalDatasource>(
     () => CategoryLocalDatasourceImpl(database: sl<Database>()),
+  );
+
+  // E.4: cart persistence — uses SharedPreferences fetched lazily on
+  // first save to keep init() synchronous.
+  sl.registerLazySingleton<CartLocalDatasource>(
+    () => CartLocalDatasource(sl<SharedPreferences>()),
   );
 
   // ---------------------------------------------------------------------------
@@ -337,7 +351,11 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<ShiftRepository>(
-    () => ShiftRepositoryImpl(remoteDatasource: sl<ShiftRemoteDatasource>()),
+    () => ShiftRepositoryImpl(
+      remoteDatasource: sl<ShiftRemoteDatasource>(),
+      networkInfo: sl<NetworkInfo>(),
+      syncQueue: sl<SyncQueue>(),
+    ),
   );
 
   sl.registerLazySingleton<PayrollRepository>(
@@ -364,7 +382,9 @@ Future<void> initDependencies() async {
     () => CategoryBloc(categoryRepository: sl<CategoryRepository>()),
   );
 
-  sl.registerFactory<CartBloc>(() => CartBloc());
+  sl.registerFactory<CartBloc>(
+    () => CartBloc(persistence: sl<CartLocalDatasource>()),
+  );
 
   sl.registerFactory<DashboardBloc>(
     () => DashboardBloc(dashboardRepository: sl<DashboardRepository>()),

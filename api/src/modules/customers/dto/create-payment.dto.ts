@@ -20,4 +20,12 @@ export class CreateCustomerPaymentDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  // E.3: client-supplied UUID for offline-replay idempotency. Server
+  // returns the existing payment row instead of double-decrementing
+  // the debt if it sees the same localId again.
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  localId?: string;
 }

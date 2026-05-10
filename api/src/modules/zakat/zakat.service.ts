@@ -50,8 +50,17 @@ export class ZakatService {
     const totalAssets = breakdown.inventoryValue + breakdown.cashOnHand + breakdown.receivables;
     const netAssets = totalAssets - breakdown.payables;
     const nisabAmount = settings ? Number(settings.nisabAmount) : 0;
-    const isAboveNisab = nisabAmount > 0 ? netAssets >= nisabAmount : true;
-    const zakatDue = isAboveNisab ? (netAssets * zakatRate) / 100 : 0;
+    // G.2: previous default when nisabAmount is unset was
+    // `isAboveNisab=true` — that ALWAYS triggered zakat on any
+    // positive netAssets, including amounts well below the
+    // religiously-required threshold. The conservative default for
+    // users who haven't set their nisab is "no zakat due"; they
+    // need to opt in explicitly via Zakat settings. Net-negative
+    // also short-circuits to zero (was previously missing).
+    const isAboveNisab =
+      nisabAmount > 0 ? netAssets >= nisabAmount : false;
+    const zakatDue =
+      isAboveNisab && netAssets > 0 ? (netAssets * zakatRate) / 100 : 0;
 
     return {
       breakdown,

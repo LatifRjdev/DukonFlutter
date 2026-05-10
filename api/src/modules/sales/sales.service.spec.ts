@@ -6,6 +6,7 @@ import { SalesService } from './sales.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 // Behavioral fake: Map-backed product/sale/saleItem stores, plus a
 // transaction wrapper that just runs the callback against the same fake
@@ -185,6 +186,11 @@ describe('SalesService', () => {
         // D.3 — AuditLogService is fire-and-forget; tests don't care
         // about it but the DI container does.
         { provide: AuditLogService, useValue: { record: jest.fn() } },
+        // F.3 — NotificationsService.sendPush is fire-and-forget.
+        {
+          provide: NotificationsService,
+          useValue: { sendPush: jest.fn(async () => undefined) },
+        },
       ],
     }).compile();
     service = moduleRef.get(SalesService);

@@ -8,6 +8,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleQueryDto } from './dto/sale-query.dto';
 import { RefundSaleDto } from './dto/refund-sale.dto';
@@ -21,7 +22,13 @@ export class SalesService {
     private prisma: PrismaService,
     private redis: RedisService,
     private audit: AuditLogService,
+    private notifications: NotificationsService,
   ) {}
+
+  // F.3: per-store threshold (in store currency) above which a sale
+  // triggers a "big sale" push to the store owner. Hardcoded for
+  // now; future iteration can promote to store.settings JSON.
+  private readonly BIG_SALE_THRESHOLD = 1000;
 
   async create(storeId: string, dto: CreateSaleDto) {
     if (!dto.items || dto.items.length === 0) {
@@ -82,7 +89,7 @@ export class SalesService {
       }
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       // F4.3: receipt number generation moved AFTER all validations.
       // Previously, INCR ran first and a subsequent BadRequestException
       // (insufficient stock, missing product, F4.1 cash-shortfall, …)
@@ -277,6 +284,40 @@ export class SalesService {
 
       return sale;
     });
+
+    // F.3: fire a "big sale" push to the store owner for amounts
+    // ≥ threshold. Outside the transaction so a notification failure
+    // can't roll back a real sale. Push is also gated by hasAllPush
+    // because notifications.service silently no-ops if the feature
+    // flag is off and FCM is unavailable.
+    void this.maybeNotifyBigSale(storeId, result);
+
+    return result;
+  }
+
+  private async maybeNotifyBigSale(
+    storeId: string,
+    sale: { id: string; total: any; receiptNo: string },
+  ) {
+    try {
+      if (Number(sale.total) < this.BIG_SALE_THRESHOLD) return;
+      const store = await this.prisma.store.findUnique({
+        where: { id: storeId },
+        select: { ownerId: true, name: true, currency: true },
+      });
+      if (!store) return;
+      await this.notifications.sendPush(
+        store.ownerId,
+        `Крупная продажа в "${store.name}"`,
+        `Чек ${sale.receiptNo}: ${Number(sale.total)} ${store.currency}`,
+        'BIG_SALE',
+        storeId,
+      );
+    } catch (err) {
+      this.logger.warn(
+        `big-sale notification failed for ${sale.id}: ${(err as Error).message}`,
+      );
+    }
   }
 
   async findAll(storeId: string, query: SaleQueryDto) {

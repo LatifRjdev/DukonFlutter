@@ -115,7 +115,12 @@ function makePrismaFake() {
           nisabGold: 85,
           nisabSilver: 595,
           nisabCurrency: 'TJS',
-          nisabAmount: 0,
+          // G.2: changed from 0 → 1 because the new safer default
+          // is "no zakat under nisab"; setting nisabAmount=0 in
+          // these fixtures used to mean "ignore the threshold".
+          // Tests that intentionally explore the "below nisab"
+          // path still set nisabAmount explicitly above 1.
+          nisabAmount: 1,
           haulStartDate: null,
           zakatRate: 2.5,
           includeStock: true,
@@ -198,9 +203,18 @@ describe('ZakatService', () => {
   };
 
   describe('calculate', () => {
-    it('should compute zakat as 2.5% of net assets when settings are at default', async () => {
-      // 10 * 100 = 1000 inventory, no debts → zakatDue = 1000 * 2.5% = 25
+    it('should compute zakat as 2.5% of net assets when nisabAmount is configured', async () => {
+      // G.2: previously this test ran against the default
+      // synthesized settings (nisabAmount=0). The old code defaulted
+      // isAboveNisab=true for unset nisab, which religiously over-
+      // triggered zakat. New default = no zakat unless nisabAmount
+      // is explicitly set, so we configure it here.
       seedProduct({ quantity: 10, costPrice: 100, sellPrice: 150 });
+      await prisma.zakatSettings.upsert({
+        where: { storeId: 'store-A' },
+        update: { nisabAmount: 100 },
+        create: { storeId: 'store-A', nisabAmount: 100 },
+      } as any);
 
       const result = await service.calculate('store-A');
 
@@ -212,20 +226,33 @@ describe('ZakatService', () => {
       expect(result.isAboveNisab).toBe(true);
     });
 
+    it('should NOT trigger zakat by default when nisabAmount is unset (G.2 conservative default)', async () => {
+      seedProduct({ quantity: 10, costPrice: 100, sellPrice: 150 });
+      const result = await service.calculate('store-A');
+      expect(result.netAssets).toBe(1000);
+      expect(result.isAboveNisab).toBe(false);
+      expect(result.zakatDue).toBe(0);
+    });
+
     it('should subtract supplier payables from total assets when computing netAssets', async () => {
       seedProduct({ quantity: 10, costPrice: 100, sellPrice: 150 });
-      // Receivables 200 (customer debt to us)
       prisma._customers.set('c1', {
         id: 'c1',
         storeId: 'store-A',
         debt: 200,
       });
-      // Payables 300 (we owe supplier)
       prisma._suppliers.set('s1', {
         id: 's1',
         storeId: 'store-A',
         debt: 300,
       });
+      // G.2: nisabAmount must be set for zakat to compute (new
+      // conservative default).
+      await prisma.zakatSettings.upsert({
+        where: { storeId: 'store-A' },
+        update: { nisabAmount: 100 },
+        create: { storeId: 'store-A', nisabAmount: 100 },
+      } as any);
 
       const result = await service.calculate('store-A');
 
@@ -275,7 +302,8 @@ describe('ZakatService', () => {
         nisabGold: 85,
         nisabSilver: 595,
         nisabCurrency: 'TJS',
-        nisabAmount: 0,
+        // G.2: nisabAmount must be set for zakat to be computed.
+        nisabAmount: 100,
         haulStartDate: null,
         zakatRate: 5, // doubled from default
         includeStock: true,
