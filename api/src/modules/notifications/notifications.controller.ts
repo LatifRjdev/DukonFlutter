@@ -13,6 +13,7 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { NotificationsService } from './notifications.service';
@@ -81,7 +82,7 @@ export class NotificationsController {
    * Stored in store.settings.notifications JSON.
    */
   @Put('stores/:storeId/notifications/settings')
-  @UseGuards(StoreAccessGuard)
+  @UseGuards(StoreAccessGuard, SubscriptionGuard)
   @RequiresFeature('hasAllPush')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Update notification preferences for store' })

@@ -10,6 +10,7 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { TelegramService } from './telegram.service';
 import { SendReceiptDto } from './dto/send-receipt.dto';
@@ -37,7 +38,7 @@ export class TelegramController {
    * Requires store-scoped auth.
    */
   @Post('stores/:storeId/telegram/send-receipt')
-  @UseGuards(JwtAuthGuard, StoreAccessGuard)
+  @UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard)
   @RequiresFeature('hasTelegram')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Send sale receipt to customer via Telegram' })

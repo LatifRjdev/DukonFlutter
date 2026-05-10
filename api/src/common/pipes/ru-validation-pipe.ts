@@ -56,10 +56,7 @@ export function translate(msg: string): string {
       /^property (.+) should not exist$/,
       (m) => `Поле «${m[1]}» не разрешено в этом запросе`,
     ],
-    [
-      /^(.+) must be a string$/,
-      (m) => `Поле «${m[1]}» должно быть строкой`,
-    ],
+    [/^(.+) must be a string$/, (m) => `Поле «${m[1]}» должно быть строкой`],
     [
       /^(.+) must be a number conforming to the specified constraints$/,
       (m) => `Поле «${m[1]}» должно быть числом`,
@@ -72,10 +69,7 @@ export function translate(msg: string): string {
       /^(.+) must be a valid ISO 8601 date string$/,
       (m) => `Поле «${m[1]}» должно быть датой в формате ISO 8601`,
     ],
-    [
-      /^(.+) must be an array$/,
-      (m) => `Поле «${m[1]}» должно быть массивом`,
-    ],
+    [/^(.+) must be an array$/, (m) => `Поле «${m[1]}» должно быть массивом`],
     [
       /^(.+) should not be empty$/,
       (m) => `Поле «${m[1]}» не должно быть пустым`,
@@ -108,10 +102,7 @@ export function translate(msg: string): string {
       /^(.+) must be an email$/,
       (m) => `Поле «${m[1]}» должно быть корректным email`,
     ],
-    [
-      /^(.+) must be a UUID$/,
-      (m) => `Поле «${m[1]}» должно быть UUID`,
-    ],
+    [/^(.+) must be a UUID$/, (m) => `Поле «${m[1]}» должно быть UUID`],
     [
       /^Phone must be a valid Tajik number \(\+992XXXXXXXXX\)$/,
       () => 'Номер телефона должен быть в формате +992XXXXXXXXX',
