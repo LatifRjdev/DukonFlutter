@@ -69,7 +69,24 @@ export class ProductsController {
 
   @Post('import/preview')
   @Permissions('products.manage')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    // F-UPLOAD-1: cap at 5MB. Excel of 10k rows is ~2MB so 5MB is
+    // plenty of headroom. Without explicit limits the endpoint
+    // accepts arbitrary-size payloads → trivial DoS via RAM
+    // exhaustion. Mimetype filter blocks obvious wrong types
+    // before the parser allocates buffers.
+    FileInterceptor('file', {
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) => {
+        const ok = [
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel',
+          'text/csv',
+        ].includes(file.mimetype);
+        cb(ok ? null : new BadRequestException('Unsupported file type'), ok);
+      },
+    }),
+  )
   @ApiOperation({ summary: 'Preview import file' })
   async previewImport(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Файл не загружен');
@@ -78,7 +95,24 @@ export class ProductsController {
 
   @Post('import')
   @Permissions('products.manage')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    // F-UPLOAD-1: cap at 5MB. Excel of 10k rows is ~2MB so 5MB is
+    // plenty of headroom. Without explicit limits the endpoint
+    // accepts arbitrary-size payloads → trivial DoS via RAM
+    // exhaustion. Mimetype filter blocks obvious wrong types
+    // before the parser allocates buffers.
+    FileInterceptor('file', {
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) => {
+        const ok = [
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel',
+          'text/csv',
+        ].includes(file.mimetype);
+        cb(ok ? null : new BadRequestException('Unsupported file type'), ok);
+      },
+    }),
+  )
   @ApiOperation({ summary: 'Import products from file' })
   async importProducts(
     @Param('storeId') storeId: string,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -60,6 +64,30 @@ export class StoresService {
   }
 
   async update(id: string, dto: UpdateStoreDto) {
+    // F-MONEY-2: Sale rows store amounts as plain Decimals with no
+    // currency column. If the merchant flips store currency from TJS
+    // to USD after running sales, the historic numbers stay 5/10/100
+    // but the UI re-labels them as USD — silently inflating every
+    // historical figure by 10×. Block currency change once any sale
+    // exists; an admin tool can do the explicit migration.
+    if (dto.currency) {
+      const current = await this.prisma.store.findUnique({
+        where: { id },
+        select: { currency: true },
+      });
+      if (current && current.currency !== dto.currency) {
+        const saleCount = await this.prisma.sale.count({
+          where: { storeId: id },
+        });
+        if (saleCount > 0) {
+          throw new BadRequestException(
+            'Currency cannot be changed once sales exist for this store. ' +
+              'Contact support if you need a migration.',
+          );
+        }
+      }
+    }
+
     return this.prisma.store.update({
       where: { id },
       data: {

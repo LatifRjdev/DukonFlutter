@@ -26,6 +26,60 @@ export class SalesService {
       throw new BadRequestException('Sale must have at least one item');
     }
 
+    // F-IDEMPOTENT-1: if the client supplied a localId and a sale with
+    // that localId already exists in this store, return it instead of
+    // creating a duplicate. This makes the offline-replay path safe
+    // under network-timeout retries — without dedupe, a sync that
+    // succeeded server-side but timed out client-side would create
+    // a second sale on the next retry.
+    if (dto.localId) {
+      const existing = await this.prisma.sale.findFirst({
+        where: { storeId, localId: dto.localId },
+        include: { items: true, customer: true },
+      });
+      if (existing) return existing;
+    }
+
+    // F-FK-1: validate referenced foreign keys belong to this store
+    // BEFORE the transaction. Without these checks, a bogus shiftId or
+    // staffId or customerId surfaces as a Prisma FK constraint error
+    // and Nest maps it to a 500. Validating here means a 400 with a
+    // friendly message instead.
+    if (dto.shiftId) {
+      const shift = await this.prisma.shift.findFirst({
+        where: { id: dto.shiftId, storeId },
+        select: { id: true, status: true },
+      });
+      if (!shift) {
+        throw new BadRequestException('shiftId not found in this store');
+      }
+      if (shift.status !== 'OPEN') {
+        throw new BadRequestException(
+          'shiftId references a closed shift. Open a new shift first.',
+        );
+      }
+    }
+    if (dto.staffId) {
+      const staff = await this.prisma.staff.findFirst({
+        where: { id: dto.staffId, storeId, isActive: true },
+        select: { id: true },
+      });
+      if (!staff) {
+        throw new BadRequestException(
+          'staffId not found in this store or is inactive',
+        );
+      }
+    }
+    if (dto.customerId) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { id: dto.customerId, storeId },
+        select: { id: true },
+      });
+      if (!customer) {
+        throw new BadRequestException('customerId not found in this store');
+      }
+    }
+
     return this.prisma.$transaction(async (tx) => {
       // F4.3: receipt number generation moved AFTER all validations.
       // Previously, INCR ran first and a subsequent BadRequestException

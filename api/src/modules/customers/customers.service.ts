@@ -158,6 +158,26 @@ export class CustomersService {
     }
 
     return this.prisma.$transaction(async (tx) => {
+      // F-RACE-3: under concurrency two payments each = full debt
+      // both passed the pre-tx check at default READ COMMITTED, both
+      // wrote a debt_payment row, then both decremented. The clamp-
+      // to-0 safety net hid the overpayment in the aggregate but
+      // left orphan payment rows recording money that wasn't owed.
+      // Atomic conditional update makes the DB enforce "you can only
+      // pay off what's still owed".
+      const result = await tx.sale.updateMany({
+        where: {
+          id: dto.saleId,
+          debtAmount: { gte: dto.amount },
+        },
+        data: { debtAmount: { decrement: dto.amount } },
+      });
+      if (result.count === 0) {
+        throw new ConflictException(
+          'Payment amount exceeds remaining debt (another payment may have just settled it).',
+        );
+      }
+
       const payment = await tx.debtPayment.create({
         data: {
           saleId: dto.saleId,
@@ -167,30 +187,14 @@ export class CustomersService {
         },
       });
 
-      await tx.sale.update({
-        where: { id: dto.saleId },
-        data: {
-          debtAmount: {
-            decrement: dto.amount,
-          },
-        },
+      // Customer.debt is the rolling aggregate across all sales —
+      // guard with a conditional decrement so the same race can't
+      // push it negative. The clamp-to-0 fallback stays as belt-
+      // and-braces for legacy data.
+      await tx.customer.updateMany({
+        where: { id: customerId, debt: { gte: dto.amount } },
+        data: { debt: { decrement: dto.amount } },
       });
-
-      await tx.customer.update({
-        where: { id: customerId },
-        data: {
-          debt: {
-            decrement: dto.amount,
-          },
-        },
-      });
-
-      // Ensure debt values don't go below 0
-      await tx.sale.updateMany({
-        where: { id: dto.saleId, debtAmount: { lt: 0 } },
-        data: { debtAmount: 0 },
-      });
-
       await tx.customer.updateMany({
         where: { id: customerId, debt: { lt: 0 } },
         data: { debt: 0 },

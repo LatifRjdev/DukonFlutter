@@ -86,8 +86,16 @@ function makePrismaFake() {
           if (where.debtAmount?.lt !== undefined) {
             if (!(sale.debtAmount < where.debtAmount.lt)) continue;
           }
+          // F-RACE-3: addPayment now uses conditional `gte` +
+          // `decrement` for atomic check-and-pay.
+          if (where.debtAmount?.gte !== undefined) {
+            if (!(sale.debtAmount >= where.debtAmount.gte)) continue;
+          }
           if (typeof data.debtAmount === 'number') {
             sale.debtAmount = data.debtAmount;
+            count++;
+          } else if (data.debtAmount?.decrement !== undefined) {
+            sale.debtAmount = sale.debtAmount - data.debtAmount.decrement;
             count++;
           }
         }
@@ -112,8 +120,14 @@ function makePrismaFake() {
           if (where.debt?.lt !== undefined) {
             if (!(c.debt < where.debt.lt)) continue;
           }
+          if (where.debt?.gte !== undefined) {
+            if (!(c.debt >= where.debt.gte)) continue;
+          }
           if (typeof data.debt === 'number') {
             c.debt = data.debt;
+            count++;
+          } else if (data.debt?.decrement !== undefined) {
+            c.debt = c.debt - data.debt.decrement;
             count++;
           }
         }
