@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 import { SalesService } from './sales.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 // Behavioral fake: Map-backed product/sale/saleItem stores, plus a
 // transaction wrapper that just runs the callback against the same fake
@@ -118,6 +119,11 @@ function makePrismaFake() {
         stockMovements.push(data);
         return data;
       }),
+      createMany: jest.fn(async ({ data }: any) => {
+        const rows = Array.isArray(data) ? data : [data];
+        for (const r of rows) stockMovements.push(r);
+        return { count: rows.length };
+      }),
     },
     customer: {
       update: jest.fn(async () => ({})),
@@ -176,6 +182,9 @@ describe('SalesService', () => {
         SalesService,
         { provide: PrismaService, useValue: prisma },
         { provide: RedisService, useValue: fakeRedis() },
+        // D.3 — AuditLogService is fire-and-forget; tests don't care
+        // about it but the DI container does.
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(SalesService);

@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 // Behavioral fake of Prisma slice used by StoresService. Stores the relevant
 // bits in Maps so we can assert on persisted shape (trial period setup,
@@ -120,6 +121,7 @@ describe('StoresService', () => {
       providers: [
         StoresService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(StoresService);

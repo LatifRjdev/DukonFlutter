@@ -4,11 +4,15 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { UpdateCountItemsDto } from './dto/update-count-items.dto';
 
 @Injectable()
 export class InventoryCountsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   async create(storeId: string) {
     // Load all active products with their current quantities as expectedQty
@@ -159,6 +163,14 @@ export class InventoryCountsService {
         },
       }),
     ]);
+
+    // D.3: audit the apply step. The before/after deltas are already
+    // captured per-item in the count rows themselves, so we record the
+    // session id and let the audit consumer join.
+    void this.audit.record('system', 'inventory.apply', 'inventory_count', id, {
+      storeId,
+      itemCount: inventoryCount.items.length,
+    });
 
     return this.findOne(storeId, id);
   }

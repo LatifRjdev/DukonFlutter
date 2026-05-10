@@ -41,7 +41,6 @@ export class SubscriptionsService implements OnModuleInit {
       {
         plan: 'START' as const,
         price: 200,
-        maxStores: 1,
         maxProducts: 500,
         maxStaff: 2,
         maxDiscounts: 0,
@@ -55,7 +54,6 @@ export class SubscriptionsService implements OnModuleInit {
       {
         plan: 'BUSINESS' as const,
         price: 400,
-        maxStores: 3,
         maxProducts: 2000,
         maxStaff: 10,
         maxDiscounts: 5,
@@ -69,7 +67,6 @@ export class SubscriptionsService implements OnModuleInit {
       {
         plan: 'PREMIUM' as const,
         price: 600,
-        maxStores: 5,
         maxProducts: -1,
         maxStaff: -1,
         maxDiscounts: -1,
@@ -464,21 +461,25 @@ export class SubscriptionsService implements OnModuleInit {
       },
     });
 
-    for (const sub of expired) {
-      await this.prisma.subscription.update({
-        where: { id: sub.id },
+    if (expired.length > 0) {
+      // D.4: was N+1 (one update per expired sub). Single updateMany
+      // batches the status flip. The push notifications still fire
+      // per-subscription because each owner gets their own message.
+      await this.prisma.subscription.updateMany({
+        where: { id: { in: expired.map((s) => s.id) } },
         data: { status: 'EXPIRED' },
       });
 
-      await this.notificationsService.sendPush(
-        sub.store.ownerId,
-        'Подписка истекла',
-        `Ваша подписка для магазина "${sub.store.name}" истекла. Обновите подписку для продолжения работы.`,
-        'SUBSCRIPTION_EXPIRED',
-        sub.store.id,
-      );
-
-      this.logger.log(`Subscription ${sub.id} marked as EXPIRED`);
+      for (const sub of expired) {
+        await this.notificationsService.sendPush(
+          sub.store.ownerId,
+          'Подписка истекла',
+          `Ваша подписка для магазина "${sub.store.name}" истекла. Обновите подписку для продолжения работы.`,
+          'SUBSCRIPTION_EXPIRED',
+          sub.store.id,
+        );
+        this.logger.log(`Subscription ${sub.id} marked as EXPIRED`);
+      }
     }
   }
 

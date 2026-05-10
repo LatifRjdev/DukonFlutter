@@ -6,6 +6,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
+import { AuditLogModule } from './common/audit/audit-log.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { StoresModule } from './modules/stores/stores.module';
@@ -47,6 +48,7 @@ import { HealthModule } from './modules/health/health.module';
     ScheduleModule.forRoot(),
     PrismaModule,
     RedisModule,
+    AuditLogModule,
     AuthModule,
     UsersModule,
     StoresModule,

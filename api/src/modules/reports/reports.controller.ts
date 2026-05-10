@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { ReportsService } from './reports.service';
+import { ExportService } from './export.service';
 import { ReportQueryDto } from './dto/report-query.dto';
 
 @ApiTags('Reports')
@@ -12,7 +14,10 @@ import { ReportQueryDto } from './dto/report-query.dto';
 @UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard)
 @Controller('stores/:storeId/reports')
 export class ReportsController {
-  constructor(private reportsService: ReportsService) {}
+  constructor(
+    private reportsService: ReportsService,
+    private exportService: ExportService,
+  ) {}
 
   // /sales originally lacked @RequiresFeature; the other three had it.
   // That left the most-hit report open to START tier. All four now gated.
@@ -63,5 +68,38 @@ export class ReportsController {
     @Query() query: ReportQueryDto,
   ) {
     return this.reportsService.getStaffReport(storeId, query);
+  }
+
+  // D.2: PREMIUM-only xlsx export. Closes the dead `hasExport` flag
+  // by giving it an actual gated endpoint. Streams the file as a
+  // direct download — no separate "prepare → fetch URL" round-trip
+  // needed for the data sizes we cap at (10k rows).
+  @Get('export')
+  @RequiresFeature('hasExport')
+  @ApiOperation({
+    summary:
+      'Export sales / products / customers as xlsx. Query: ?type=sales|products|customers',
+  })
+  async exportXlsx(
+    @Param('storeId') storeId: string,
+    @Query('type') type: string,
+    @Res() res: Response,
+  ) {
+    const t = this.exportService.validateType(type);
+    let buf: Buffer;
+    if (t === 'sales') buf = await this.exportService.exportSales(storeId);
+    else if (t === 'products')
+      buf = await this.exportService.exportProducts(storeId);
+    else buf = await this.exportService.exportCustomers(storeId);
+
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${this.exportService.filenameFor(
+        t,
+      )}"`,
+      'Content-Length': buf.length.toString(),
+    });
+    res.send(buf);
   }
 }

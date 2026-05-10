@@ -408,7 +408,6 @@ export class AdminService {
 
     const updateData: Prisma.SubscriptionPlanConfigUpdateInput = {};
     if (dto.price !== undefined) updateData.price = dto.price;
-    if (dto.maxStores !== undefined) updateData.maxStores = dto.maxStores;
     if (dto.maxProducts !== undefined) updateData.maxProducts = dto.maxProducts;
     if (dto.maxStaff !== undefined) updateData.maxStaff = dto.maxStaff;
     if (dto.maxDiscounts !== undefined)

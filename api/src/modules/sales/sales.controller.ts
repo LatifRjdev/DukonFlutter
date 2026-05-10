@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleQueryDto } from './dto/sale-query.dto';
@@ -42,7 +43,8 @@ export class SalesController {
     @Param('storeId') storeId: string,
     @Param('id') id: string,
     @Body() dto: RefundSaleDto,
+    @CurrentUser('id') userId: string,
   ) {
-    return this.salesService.refund(storeId, id, dto);
+    return this.salesService.refund(storeId, id, dto, userId);
   }
 }

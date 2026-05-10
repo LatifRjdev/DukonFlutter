@@ -174,7 +174,6 @@ enum PaymentStatus {
 model SubscriptionPlanConfig {
   plan          SubscriptionPlan @id
   price         Decimal          @db.Decimal(12, 2)
-  maxStores     Int
   maxProducts   Int
   maxStaff      Int
   maxDiscounts  Int

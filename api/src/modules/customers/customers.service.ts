@@ -5,6 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CreateCustomerPaymentDto } from './dto/create-payment.dto';
@@ -12,7 +13,10 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CustomersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   async create(storeId: string, dto: CreateCustomerDto) {
     if (dto.phone) {
@@ -199,6 +203,21 @@ export class CustomersService {
         where: { id: customerId, debt: { lt: 0 } },
         data: { debt: 0 },
       });
+
+      // D.3: log debt payment for audit. Caller may not have actor
+      // context (e.g. batch reconcile), so default to 'system'.
+      void this.audit.record(
+        'system',
+        'debt.payment',
+        'debt_payment',
+        payment.id,
+        {
+          saleId: dto.saleId,
+          customerId,
+          amount: dto.amount,
+          method: dto.method,
+        },
+      );
 
       return payment;
     });

@@ -1,11 +1,11 @@
 import { ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
-export type PlanLimitField =
-  | 'maxStores'
-  | 'maxProducts'
-  | 'maxStaff'
-  | 'maxDiscounts';
+// `maxStores` was dropped in 2026-05 (Sprint D.1): each store has its
+// own subscription, so a per-merchant store cap had no architectural
+// anchor and was never enforced. The column was removed from
+// SubscriptionPlanConfig.
+export type PlanLimitField = 'maxProducts' | 'maxStaff' | 'maxDiscounts';
 
 /**
  * Server-side plan-limit gate. Throws ForbiddenException when the
@@ -48,8 +48,6 @@ export async function assertWithinPlanLimit(
 
 function humanize(field: PlanLimitField): string {
   switch (field) {
-    case 'maxStores':
-      return 'stores';
     case 'maxProducts':
       return 'products';
     case 'maxStaff':

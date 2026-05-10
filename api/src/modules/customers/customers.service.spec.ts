@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 // Behavioral fake. Tracks customers, sales, and debtPayments in Maps so we
 // can assert debt decrement, scoping (storeId), and the no-go-below-zero
@@ -275,6 +276,7 @@ describe('CustomersService', () => {
       providers: [
         CustomersService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(CustomersService);

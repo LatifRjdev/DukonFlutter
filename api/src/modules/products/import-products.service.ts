@@ -180,20 +180,29 @@ export class ImportProductsService {
       ...new Set(rows.map((r) => r.category).filter(Boolean)),
     ] as string[];
 
-    // Auto-create or find categories
+    // D.4: was an N+1 (one findUnique per category name on Excel
+    // import; a 2k-row file with 50 distinct categories meant 50
+    // round-trips). Now: single findMany batches the lookup, then a
+    // createMany handles missing rows in one round-trip. With 50
+    // distinct categories the query count drops from 50 → 2.
     const categoryMap = new Map<string, string>();
-    for (const catName of categoryNames) {
-      const existing = await this.prisma.category.findUnique({
-        where: { storeId_name: { storeId, name: catName } },
+    const existingCats = await this.prisma.category.findMany({
+      where: { storeId, name: { in: categoryNames } },
+      select: { id: true, name: true },
+    });
+    for (const ec of existingCats) categoryMap.set(ec.name, ec.id);
+
+    const missingNames = categoryNames.filter((n) => !categoryMap.has(n));
+    if (missingNames.length > 0) {
+      await this.prisma.category.createMany({
+        data: missingNames.map((name) => ({ storeId, name })),
+        skipDuplicates: true,
       });
-      if (existing) {
-        categoryMap.set(catName, existing.id);
-      } else {
-        const created = await this.prisma.category.create({
-          data: { storeId, name: catName },
-        });
-        categoryMap.set(catName, created.id);
-      }
+      const created = await this.prisma.category.findMany({
+        where: { storeId, name: { in: missingNames } },
+        select: { id: true, name: true },
+      });
+      for (const c of created) categoryMap.set(c.name, c.id);
     }
 
     // Fetch existing barcodes for this store

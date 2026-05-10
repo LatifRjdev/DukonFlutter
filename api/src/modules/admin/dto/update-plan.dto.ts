@@ -9,12 +9,7 @@ export class UpdatePlanDto {
   @IsNumber()
   price?: number;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  maxStores?: number;
+  // maxStores dropped in 2026-05 (Sprint D.1) — see PlanLimitField.
 
   @ApiPropertyOptional()
   @IsOptional()

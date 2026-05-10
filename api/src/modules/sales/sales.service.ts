@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleQueryDto } from './dto/sale-query.dto';
 import { RefundSaleDto } from './dto/refund-sale.dto';
@@ -19,6 +20,7 @@ export class SalesService {
   constructor(
     private prisma: PrismaService,
     private redis: RedisService,
+    private audit: AuditLogService,
   ) {}
 
   async create(storeId: string, dto: CreateSaleDto) {
@@ -231,6 +233,9 @@ export class SalesService {
       // negative. Replaced with `updateMany WHERE quantity >= requested`
       // so the database does the atomic check + decrement; if zero
       // rows are affected, another transaction got there first.
+      //
+      // D.4: stock-movement creation moved out of the loop to a single
+      // createMany after all decrements succeed (was 1 query per item).
       for (const item of dto.items) {
         const product = productMap.get(item.productId)!;
         const result = await tx.product.updateMany({
@@ -245,16 +250,16 @@ export class SalesService {
             `Insufficient stock for ${product.name} (another sale just claimed the last units).`,
           );
         }
-
-        await tx.stockMovement.create({
-          data: {
-            productId: item.productId,
-            type: 'SALE',
-            quantity: item.quantity,
-            reference: receiptNo,
-          },
-        });
       }
+
+      await tx.stockMovement.createMany({
+        data: dto.items.map((item) => ({
+          productId: item.productId,
+          type: 'SALE' as const,
+          quantity: item.quantity,
+          reference: receiptNo,
+        })),
+      });
 
       // Update customer debt and totalSpent
       if (dto.customerId) {
@@ -335,7 +340,12 @@ export class SalesService {
     return sale;
   }
 
-  async refund(storeId: string, saleId: string, dto: RefundSaleDto) {
+  async refund(
+    storeId: string,
+    saleId: string,
+    dto: RefundSaleDto,
+    actorId: string = 'system',
+  ) {
     const sale = await this.findOne(storeId, saleId);
     if (sale.status === 'RETURNED' || sale.status === 'CANCELLED') {
       throw new BadRequestException('Sale is already returned or cancelled');
@@ -448,6 +458,18 @@ export class SalesService {
           }),
         },
         include: { items: true },
+      });
+
+      // D.3: emit audit log outside the inner write but still inside
+      // the transaction promise. Failures in the logger are swallowed
+      // so they can't roll back the refund.
+      void this.audit.record(actorId, 'sale.refund', 'sale', saleId, {
+        receiptNo: sale.receiptNo,
+        refundedValue: refundedValue.toString(),
+        saleDebtDecrement: saleDebtDecrement.toString(),
+        newStatus,
+        reason: dto.reason,
+        items: dto.items,
       });
 
       return updated;

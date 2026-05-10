@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InventoryCountsService } from './inventory-counts.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 type ProductRow = {
   id: string;
@@ -160,6 +161,7 @@ describe('InventoryCountsService', () => {
       providers: [
         InventoryCountsService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(InventoryCountsService);

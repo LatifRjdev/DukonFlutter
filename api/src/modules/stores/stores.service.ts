@@ -4,13 +4,17 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { ReceiptTemplateDto } from './dto/receipt-template.dto';
 
 @Injectable()
 export class StoresService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   async create(ownerId: string, dto: CreateStoreDto) {
     const now = new Date();
@@ -63,7 +67,7 @@ export class StoresService {
     return store;
   }
 
-  async update(id: string, dto: UpdateStoreDto) {
+  async update(id: string, dto: UpdateStoreDto, actorId: string = 'system') {
     // F-MONEY-2: Sale rows store amounts as plain Decimals with no
     // currency column. If the merchant flips store currency from TJS
     // to USD after running sales, the historic numbers stay 5/10/100
@@ -88,7 +92,7 @@ export class StoresService {
       }
     }
 
-    return this.prisma.store.update({
+    const result = await this.prisma.store.update({
       where: { id },
       data: {
         ...(dto.name && { name: dto.name }),
@@ -99,6 +103,16 @@ export class StoresService {
       },
       include: { subscription: true },
     });
+
+    // D.3: audit currency changes specifically (other fields are
+    // low-impact metadata).
+    if (dto.currency) {
+      void this.audit.record(actorId, 'store.currency_change', 'store', id, {
+        newCurrency: dto.currency,
+      });
+    }
+
+    return result;
   }
 
   async getReceiptTemplate(storeId: string) {
