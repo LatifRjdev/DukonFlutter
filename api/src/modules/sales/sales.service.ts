@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
   Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -62,7 +63,15 @@ export class SalesService {
 
         const unitPrice = product.sellPrice;
         const itemDiscount = new Prisma.Decimal(item.discount || 0);
-        const itemTotal = unitPrice.mul(item.quantity).sub(itemDiscount);
+        // F-MONEY-1: clamp line discount so item.total can never go
+        // negative. Previously a `1×@5 -100` line wrote items[0].total
+        // = -95 which then propagated to sale.total. The cashier could
+        // hand free goods AND owe the customer money via change=...
+        const lineGross = unitPrice.mul(item.quantity);
+        const clampedItemDiscount = itemDiscount.gt(lineGross)
+          ? lineGross
+          : itemDiscount;
+        const itemTotal = lineGross.sub(clampedItemDiscount);
 
         subtotal = subtotal.add(itemTotal);
 
@@ -72,15 +81,22 @@ export class SalesService {
           quantity: item.quantity,
           unitPrice,
           costPrice: product.costPrice,
-          discount: itemDiscount,
+          discount: clampedItemDiscount,
           total: itemTotal,
         });
       }
 
-      // Apply sale-level discount
+      // Apply sale-level discount.
+      // F-MONEY-1: clamp PERCENTAGE to 0..100 and FIXED to 0..subtotal.
+      // Without these clamps, discount=100 on a 5-TJS sale wrote
+      // total=-95 and change=95 — i.e. the sale "owed" the customer 95
+      // and stamped that as paid by the cashier.
       let saleDiscount = new Prisma.Decimal(dto.discount || 0);
       if (dto.discountType === 'PERCENTAGE') {
-        saleDiscount = subtotal.mul(dto.discount || 0).div(100);
+        const pct = Math.min(Math.max(dto.discount || 0, 0), 100);
+        saleDiscount = subtotal.mul(pct).div(100);
+      } else if (saleDiscount.gt(subtotal)) {
+        saleDiscount = subtotal;
       }
 
       const total = subtotal.sub(saleDiscount);
@@ -152,12 +168,29 @@ export class SalesService {
         include: { items: true, customer: true },
       });
 
-      // Decrement product quantities and create stock movements
+      // Decrement product quantities and create stock movements.
+      //
+      // F-RACE-1: the earlier `findMany` + `update` pair was a TOCTOU.
+      // At default Postgres READ COMMITTED isolation, two concurrent
+      // sales for the last unit both read quantity=1, both pass the
+      // validation block above, and both decrement — final qty goes
+      // negative. Replaced with `updateMany WHERE quantity >= requested`
+      // so the database does the atomic check + decrement; if zero
+      // rows are affected, another transaction got there first.
       for (const item of dto.items) {
-        await tx.product.update({
-          where: { id: item.productId },
+        const product = productMap.get(item.productId)!;
+        const result = await tx.product.updateMany({
+          where: {
+            id: item.productId,
+            quantity: { gte: item.quantity },
+          },
           data: { quantity: { decrement: item.quantity } },
         });
+        if (result.count === 0) {
+          throw new ConflictException(
+            `Insufficient stock for ${product.name} (another sale just claimed the last units).`,
+          );
+        }
 
         await tx.stockMovement.create({
           data: {
@@ -290,12 +323,29 @@ export class SalesService {
           },
         });
 
-        // Per-line refund value = unitPrice × refundedQty (proportional
-        // discount handling: line discount stays attached to original
-        // remaining qty, so refund returns the gross unitPrice).
-        const lineRefund = new Prisma.Decimal(saleItem.unitPrice).mul(
-          refundItem.quantity,
-        );
+        // F-RACE-2: refund value must match what the customer actually
+        // paid for those units, NOT the gross unitPrice. The previous
+        // formula `unitPrice × refundedQty` over-credited whenever a
+        // line discount or sale-level discount applied — refunding 1
+        // unit out of a `1×@5 -1` sale was crediting 5 even though
+        // the customer paid 4. customer.totalSpent went negative.
+        //
+        // Sale.discount (sale-level) is split proportionally across
+        // line totals; line.discount is already deducted from line.total.
+        // So the fair per-unit refund is `line.total / line.quantity`,
+        // pro-rated by saleDiscount/sale.subtotal.
+        const lineNet = new Prisma.Decimal(saleItem.total);
+        const perUnitNet = lineNet.div(saleItem.quantity);
+        let lineRefund = perUnitNet.mul(refundItem.quantity);
+        if (
+          (sale.discount as unknown as number) > 0 &&
+          (sale.subtotal as unknown as number) > 0
+        ) {
+          const ratio = new Prisma.Decimal(1).sub(
+            new Prisma.Decimal(sale.discount).div(sale.subtotal),
+          );
+          lineRefund = lineRefund.mul(ratio);
+        }
         refundedValue = refundedValue.add(lineRefund);
       }
 

@@ -63,6 +63,19 @@ function makePrismaFake() {
         }
         return p;
       }),
+      // F-RACE-1: sales.create now uses conditional updateMany so the
+      // DB enforces stock invariants under concurrency. Mirror the
+      // semantics here so the existing tests continue to pass.
+      updateMany: jest.fn(async ({ where, data }: any) => {
+        const p = products.get(where.id);
+        if (!p) return { count: 0 };
+        const need = data.quantity?.decrement ?? 0;
+        if (where.quantity?.gte != null && p.quantity < where.quantity.gte) {
+          return { count: 0 };
+        }
+        p.quantity -= need;
+        return { count: 1 };
+      }),
     },
     sale: {
       create: jest.fn(async ({ data }: any) => {
