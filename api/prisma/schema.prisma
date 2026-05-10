@@ -143,10 +143,15 @@ model Payment {
   status         PaymentStatus
   transactionId  String?
   receiptImage   String?
-  note           String?
-  reviewedAt     DateTime?
-  reviewedBy     String?
-  createdAt      DateTime      @default(now())
+  // F2.5: original request note (e.g. "Plan change request to BUSINESS")
+  // and rejection reason now live in separate columns. Previously both
+  // shared `note`, so rejecting overwrote the requested-plan audit
+  // trail.
+  note            String?
+  rejectionReason String?
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  createdAt       DateTime      @default(now())
 
   @@map("payments")
 }

@@ -40,6 +40,7 @@ function makePrismaFake() {
       | 'FAILED'
       | 'REFUNDED';
     note: string | null;
+    rejectionReason: string | null;
     receiptImage: string | null;
     reviewedAt: Date | null;
     reviewedBy: string | null;
@@ -150,6 +151,9 @@ describe('Admin payments flow', () => {
       method: 'CARD',
       status: 'PENDING' as const,
       note: 'Plan change request to BUSINESS',
+      // F2.5: separate column for rejection reason; defaults to null
+      // until the admin actually rejects.
+      rejectionReason: null as string | null,
       receiptImage: 'uploads/receipts/x.png',
       reviewedAt: null,
       reviewedBy: null,
@@ -270,7 +274,10 @@ describe('Admin payments flow', () => {
 
       const p = prisma._payments.get('pay-1')!;
       expect(p.status).toBe('REJECTED');
-      expect(p.note).toBe('Receipt unreadable');
+      // F2.5: rejection reason now lives on its own column. The
+      // original `note` (request audit trail) is preserved.
+      expect(p.rejectionReason).toBe('Receipt unreadable');
+      expect(p.note).toBe('Plan change request to BUSINESS');
       expect(prisma._subsById.get('sub-1')!.status).toBe(originalStatus);
       expect(prisma._subsById.get('sub-1')!.currentPeriodEnd.getTime()).toBe(
         originalEnd,

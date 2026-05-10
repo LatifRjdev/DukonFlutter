@@ -118,13 +118,18 @@ export class FinancesService {
           createdAt: { gte: startDate, lte: endDate },
         },
       }),
-      // Top products by quantity sold
+      // F7.2: top-products previously filtered status='COMPLETED' only,
+      // which dropped the entire sale row when even one item had been
+      // partially refunded. Include PARTIALLY_RETURNED so the original
+      // sold quantity is still counted. (Refund quantities aren't yet
+      // subtracted line-by-line — follow-up; this fix at least
+      // restores the dashboard's intuitive total.)
       this.prisma.saleItem.groupBy({
         by: ['productId', 'productName'],
         where: {
           sale: {
             storeId,
-            status: 'COMPLETED',
+            status: { in: ['COMPLETED', 'PARTIALLY_RETURNED'] },
             createdAt: { gte: startDate, lte: endDate },
           },
         },

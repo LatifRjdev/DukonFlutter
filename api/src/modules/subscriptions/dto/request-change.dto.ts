@@ -19,6 +19,11 @@ export class RequestChangeDto {
   @IsNotEmpty()
   plan: SubscriptionPlanEnum;
 
+  // F2.4: DTO write-side field is `paymentMethod`. The persisted Payment
+  // row exposes the same value as `method` on read — the asymmetry is
+  // preserved for backwards compatibility with existing clients that
+  // already POST `paymentMethod` and parse `method` from the response.
+  // New code should NOT introduce a third name.
   @ApiProperty({ enum: PaymentMethodEnum })
   @IsEnum(PaymentMethodEnum)
   @IsNotEmpty()

@@ -40,6 +40,12 @@ export class CategoriesService {
   }
 
   async remove(id: string) {
+    // F3.2: categories hard-delete by design — no soft-delete column on
+    // the schema. Inconsistent with products+customers which soft-delete,
+    // but categories are config not transactional data; once cleared,
+    // they don't need archiving. The guard below blocks delete when
+    // products still reference the category, preventing referential-
+    // integrity errors at the DB layer.
     const category = await this.prisma.category.findUnique({
       where: { id },
       include: { _count: { select: { products: true } } },
@@ -48,7 +54,9 @@ export class CategoriesService {
     if (!category) throw new NotFoundException('Category not found');
 
     if (category._count.products > 0) {
-      throw new BadRequestException('Cannot delete category with products. Move or delete products first.');
+      throw new BadRequestException(
+        'Cannot delete category with products. Move or delete products first.',
+      );
     }
 
     return this.prisma.category.delete({ where: { id } });

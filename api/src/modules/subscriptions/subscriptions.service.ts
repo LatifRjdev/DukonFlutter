@@ -354,7 +354,10 @@ export class SubscriptionsService implements OnModuleInit {
       where: { id: paymentId },
       data: {
         status: 'REJECTED',
-        note: dto.reason,
+        // F2.5: write the rejection reason to its own column so the
+        // original `note` (e.g. "Plan change request to BUSINESS")
+        // survives in the audit trail.
+        rejectionReason: dto.reason,
         reviewedAt: now,
         reviewedBy,
       },

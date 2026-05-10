@@ -134,6 +134,12 @@ export class StaffService {
 
       return {
         ...staffData,
+        // F6.1: Staff doesn't have its own `name` column — it lives on
+        // the related User. Surface a top-level `name` so a client that
+        // reads `staff.name` (rather than `staff.user.name`) doesn't
+        // see null. Same for `phone` for symmetry.
+        name: staff.user?.name ?? null,
+        phone: staff.user?.phone ?? null,
         isOnShift,
         currentShift,
         todaySalesCount,

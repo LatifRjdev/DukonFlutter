@@ -26,8 +26,12 @@ export class SalesService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      // Generate receipt number
-      const receiptNo = await this.generateReceiptNo(storeId);
+      // F4.3: receipt number generation moved AFTER all validations.
+      // Previously, INCR ran first and a subsequent BadRequestException
+      // (insufficient stock, missing product, F4.1 cash-shortfall, …)
+      // would consume a receipt number that never reached the DB,
+      // leaving gaps in the sequence the auditor expects to be
+      // continuous.
 
       // Fetch products and validate
       const productIds = dto.items.map((i) => i.productId);
@@ -113,6 +117,10 @@ export class SalesService {
           'A sale with debtAmount > 0 must be linked to a customerId.',
         );
       }
+
+      // F4.3: now safe to allocate a receipt number — every validation
+      // above has passed, so this number will land in the DB.
+      const receiptNo = await this.generateReceiptNo(storeId);
 
       // Create sale
       const sale = await tx.sale.create({

@@ -26,17 +26,31 @@ export class CreateDiscountDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ enum: DiscountType })
+  @ApiProperty({
+    enum: DiscountType,
+    description:
+      'FIXED = absolute amount off (TJS). PERCENTAGE = percent off the line/cart total.',
+    example: 'PERCENTAGE',
+  })
   @IsEnum(DiscountType)
   type: DiscountType;
 
-  @ApiProperty()
+  @ApiProperty({
+    description:
+      'When type=FIXED, amount in store currency. When type=PERCENTAGE, value 0–100.',
+    example: 10,
+  })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   value: number;
 
-  @ApiProperty({ enum: DiscountCondition })
+  @ApiProperty({
+    enum: DiscountCondition,
+    description:
+      'CART = applies to whole cart. CATEGORY requires categoryId. PRODUCT requires productId.',
+    example: 'CART',
+  })
   @IsEnum(DiscountCondition)
   condition: DiscountCondition;
 

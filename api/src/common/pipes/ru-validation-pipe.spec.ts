@@ -3,18 +3,12 @@ import { translate } from './ru-validation-pipe';
 
 describe('translate (RU validation messages)', () => {
   test.each([
-    [
-      'name must be a string',
-      'Поле «name» должно быть строкой',
-    ],
+    ['name must be a string', 'Поле «name» должно быть строкой'],
     [
       'sellPrice must be a number conforming to the specified constraints',
       'Поле «sellPrice» должно быть числом',
     ],
-    [
-      'name should not be empty',
-      'Поле «name» не должно быть пустым',
-    ],
+    ['name should not be empty', 'Поле «name» не должно быть пустым'],
     [
       'name must be shorter than or equal to 80 characters',
       'Поле «name» должно содержать не более 80 символов',
@@ -35,10 +29,7 @@ describe('translate (RU validation messages)', () => {
       'property startDate should not exist',
       'Поле «startDate» не разрешено в этом запросе',
     ],
-    [
-      'email must be an email',
-      'Поле «email» должно быть корректным email',
-    ],
+    ['email must be an email', 'Поле «email» должно быть корректным email'],
     [
       'birthday must be a valid ISO 8601 date string',
       'Поле «birthday» должно быть датой в формате ISO 8601',

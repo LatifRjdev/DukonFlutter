@@ -106,7 +106,8 @@ function makePrismaFake() {
         let count = 0;
         for (const r of rows.values()) {
           if (where?.storeId && r.storeId !== where.storeId) continue;
-          if (where?.isActive !== undefined && r.isActive !== where.isActive) continue;
+          if (where?.isActive !== undefined && r.isActive !== where.isActive)
+            continue;
           count += 1;
         }
         return count;
