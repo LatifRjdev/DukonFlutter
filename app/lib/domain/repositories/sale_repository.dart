@@ -3,7 +3,8 @@ import '../entities/sale.dart';
 abstract class SaleRepository {
   Future<Sale> createSale(String storeId, Map<String, dynamic> data);
 
-  Future<({List<Sale> data, int total, int totalPages})> getSales(
+  Future<({List<Sale> data, int total, int totalPages, int skippedRows})>
+      getSales(
     String storeId, {
     int page = 1,
     int limit = 20,

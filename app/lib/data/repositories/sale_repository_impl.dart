@@ -38,7 +38,8 @@ class SaleRepositoryImpl implements SaleRepository {
   }
 
   @override
-  Future<({List<Sale> data, int total, int totalPages})> getSales(
+  Future<({List<Sale> data, int total, int totalPages, int skippedRows})>
+      getSales(
     String storeId, {
     int page = 1,
     int limit = 20,
@@ -76,6 +77,7 @@ class SaleRepositoryImpl implements SaleRepository {
           data: localSales,
           total: localSales.length,
           totalPages: 1,
+          skippedRows: 0,
         );
       }
     } on NetworkException {
@@ -84,6 +86,7 @@ class SaleRepositoryImpl implements SaleRepository {
         data: localSales,
         total: localSales.length,
         totalPages: 1,
+        skippedRows: 0,
       );
     }
   }

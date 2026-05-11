@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../core/network/dio_client.dart';
@@ -8,7 +9,8 @@ import '../../../domain/entities/sale_item.dart';
 abstract class SaleRemoteDatasource {
   Future<Sale> createSale(String storeId, Map<String, dynamic> data);
 
-  Future<({List<Sale> data, int total, int totalPages})> getSales(
+  Future<({List<Sale> data, int total, int totalPages, int skippedRows})>
+      getSales(
     String storeId, {
     int page = 1,
     int limit = 20,
@@ -47,7 +49,8 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
   }
 
   @override
-  Future<({List<Sale> data, int total, int totalPages})> getSales(
+  Future<({List<Sale> data, int total, int totalPages, int skippedRows})>
+      getSales(
     String storeId, {
     int page = 1,
     int limit = 20,
@@ -72,14 +75,30 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
       );
 
       final responseData = response.data as Map<String, dynamic>;
-      final list = responseData['data'] as List;
+
+      // BUG #28: parse each row independently. ONE malformed row (e.g. an
+      // unexpected null in a required field) used to blow up the whole
+      // list. Now we skip-and-warn so the rest of the page still renders.
+      final raw = responseData['data'] as List;
+      final list = <Sale>[];
+      int skipped = 0;
+      for (final entry in raw) {
+        try {
+          list.add(_mapSale(entry as Map<String, dynamic>));
+        } catch (e, st) {
+          skipped++;
+          debugPrint('SaleRemoteDatasource: skipped malformed row: $e');
+          debugPrint(
+              '  row keys: ${(entry is Map) ? entry.keys.toList() : entry.runtimeType}');
+          debugPrint('  stack: $st');
+        }
+      }
 
       return (
-        data: list
-            .map((json) => _mapSale(json as Map<String, dynamic>))
-            .toList(),
+        data: list,
         total: responseData['total'] as int? ?? 0,
         totalPages: responseData['totalPages'] as int? ?? 1,
+        skippedRows: skipped,
       );
     } on DioException catch (e) {
       throw _handleDioError(e);
