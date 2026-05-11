@@ -31,6 +31,16 @@ class _HomePageState extends State<HomePage> {
       _currentIndex = 1; // products tab index
       _productsInitialFilter = initialFilter;
     });
+    // Reset on next frame so ProductListPage.initState (which reads
+    // widget.initialFilter once) has consumed it. Keeps the field
+    // honestly "consumed once" — a future refactor that destroys and
+    // rebuilds ProductListPage won't surprise the user with a stale
+    // pre-filter.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => _productsInitialFilter = null);
+      }
+    });
   }
 
   @override
@@ -41,7 +51,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onTabChange(int index) {
-    setState(() => _currentIndex = index);
+    setState(() {
+      _currentIndex = index;
+      _productsInitialFilter = null;
+    });
   }
 
   @override

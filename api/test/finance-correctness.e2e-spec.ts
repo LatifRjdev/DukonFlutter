@@ -10,6 +10,8 @@ import { AppModule } from '../src/app.module';
 describe('Finance correctness — DB CHECK constraints', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let testStoreId: string;
+  let testUserId: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -18,9 +20,32 @@ describe('Finance correctness — DB CHECK constraints', () => {
     app = moduleRef.createNestApplication();
     await app.init();
     prisma = app.get(PrismaService);
+
+    // Seed a real owner+store so the FK constraint passes; we want
+    // the CHECK constraint to be the thing that fires.
+    const user = await prisma.user.create({
+      data: {
+        phone: '+992999000099',
+        password: 'x',
+        name: 'CHK test owner',
+      },
+    });
+    testUserId = user.id;
+    const store = await prisma.store.create({
+      data: {
+        name: 'CHK test store',
+        category: 'GROCERY',
+        ownerId: user.id,
+      },
+    });
+    testStoreId = store.id;
   });
 
   afterAll(async () => {
+    // Best-effort cleanup. Sales rows from rejected INSERTs never
+    // committed; only the seed rows need removal.
+    await prisma.store.deleteMany({ where: { id: testStoreId } });
+    await prisma.user.deleteMany({ where: { id: testUserId } });
     await app.close();
   });
 
@@ -33,7 +58,7 @@ describe('Finance correctness — DB CHECK constraints', () => {
            (id, "storeId", "receiptNo", subtotal, total, "paymentType",
             "paidAmount", status, "createdAt", "updatedAt")
          VALUES
-           (gen_random_uuid(), gen_random_uuid()::text,
+           (gen_random_uuid(), '${testStoreId}',
             'CHK-TEST-NEG', 5, -1, 'CASH', 5, 'COMPLETED', NOW(), NOW())`,
       ),
     ).rejects.toThrow(/sales_total_non_negative/);
@@ -46,7 +71,7 @@ describe('Finance correctness — DB CHECK constraints', () => {
            (id, "storeId", "receiptNo", subtotal, total, "paymentType",
             "paidAmount", status, "createdAt", "updatedAt")
          VALUES
-           (gen_random_uuid(), gen_random_uuid()::text,
+           (gen_random_uuid(), '${testStoreId}',
             'CHK-TEST-SUB', -1, 0, 'CASH', 0, 'COMPLETED', NOW(), NOW())`,
       ),
     ).rejects.toThrow(/sales_subtotal_non_negative/);
