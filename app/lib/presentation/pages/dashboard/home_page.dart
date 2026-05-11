@@ -21,6 +21,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
+  // BUG #26: when the dashboard "Остатки на складе" tile is tapped we
+  // switch to the products tab AND apply a preset filter. The preset
+  // is consumed once on next build of ProductListPage.
+  String? _productsInitialFilter;
+
+  void _switchToProducts({String? initialFilter}) {
+    setState(() {
+      _currentIndex = 1; // products tab index
+      _productsInitialFilter = initialFilter;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,8 +47,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      DashboardPage(onTabChange: _onTabChange),
-      const ProductListPage(),
+      DashboardPage(
+        onTabChange: _onTabChange,
+        onSwitchToProducts: _switchToProducts,
+      ),
+      ProductListPage(initialFilter: _productsInitialFilter),
       const PosCheckoutPage(),
       const FinanceDashboardPage(),
       const MorePage(),

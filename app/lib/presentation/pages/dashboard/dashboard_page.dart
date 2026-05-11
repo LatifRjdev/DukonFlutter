@@ -23,8 +23,13 @@ import '../../../core/theme/app_shadows.dart';
 
 class DashboardPage extends StatefulWidget {
   final ValueChanged<int>? onTabChange;
+  final void Function({String? initialFilter})? onSwitchToProducts;
 
-  const DashboardPage({super.key, this.onTabChange});
+  const DashboardPage({
+    super.key,
+    this.onTabChange,
+    this.onSwitchToProducts,
+  });
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -373,7 +378,8 @@ class _DashboardPageState extends State<DashboardPage> {
           subtitleColor: stats.lowStockProducts > 0
               ? AppColors.warning
               : context.textSecondary,
-          onTap: () => widget.onTabChange?.call(1),
+          onTap: () =>
+              widget.onSwitchToProducts?.call(initialFilter: 'attention'),
         ),
         _ActionTile(
           icon: Icons.arrow_downward_rounded,
