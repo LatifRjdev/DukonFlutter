@@ -56,6 +56,22 @@ class _ProductListPageState extends State<ProductListPage> {
     _loadData();
   }
 
+  @override
+  void didUpdateWidget(covariant ProductListPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // BUG #26 follow-up (final click test): when this page lives
+    // inside an IndexedStack (HomePage's pages list), initState only
+    // fires once for the whole session. Tapping the dashboard
+    // "Остатки на складе" tile changes widget.initialFilter to
+    // 'attention' on a subsequent build — but without this
+    // didUpdateWidget hook, the existing _stockFilter value sticks
+    // and the user never sees the preset chip applied.
+    if (widget.initialFilter != oldWidget.initialFilter &&
+        widget.initialFilter == 'attention') {
+      setState(() => _stockFilter = _StockFilter.attention);
+    }
+  }
+
   void _loadData() {
     final storeState = context.read<StoreBloc>().state;
     if (storeState is StoreLoaded && storeState.selectedStore != null) {

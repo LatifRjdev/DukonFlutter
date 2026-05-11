@@ -392,13 +392,15 @@ class _DashboardPageState extends State<DashboardPage> {
               ? _formatPrice(stats.customerDebtsTotal)
               : null,
           trailingColor: AppColors.success,
-          // BUG #27 (2026-05-11 click test): the /debts/customer
-          // route expects extra to be a Map<String,dynamic>, but
-          // dashboard was passing the bare storeId String. Caused a
-          // red Flutter "type cast failed" screen on tap. Wrap.
+          // BUG #30 (2026-05-11 final click test): the tile is the
+          // "all customers who owe us" entry-point, NOT a single-
+          // customer detail. Route to /debts (DebtsOverviewPage)
+          // which has tabs for receivables vs payables. Previously
+          // routed to /debts/customer which expects a customerId
+          // (single-customer page) and showed an empty error.
           onTap: () => context.push(
-            RouteNames.customerDebts,
-            extra: {'storeId': _getStoreId() ?? ''},
+            RouteNames.debtsOverview,
+            extra: _getStoreId() ?? '',
           ),
         ),
         _ActionTile(
@@ -412,10 +414,11 @@ class _DashboardPageState extends State<DashboardPage> {
               ? _formatPrice(stats.supplierDebtsTotal)
               : null,
           trailingColor: AppColors.error,
-          // BUG #27 (same root cause): /debts/supplier also expects Map.
+          // BUG #30: same as "Вам должны" — route to /debts overview
+          // which has both Нам должны / Мы должны tabs in one view.
           onTap: () => context.push(
-            RouteNames.supplierDebts,
-            extra: {'storeId': _getStoreId() ?? ''},
+            RouteNames.debtsOverview,
+            extra: _getStoreId() ?? '',
           ),
         ),
         _ActionTile(
