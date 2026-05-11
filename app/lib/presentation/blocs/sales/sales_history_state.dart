@@ -21,6 +21,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
   final String? paymentType;
   final bool isLoadingMore;
   final bool isRefunding;
+  final int skippedRows;
 
   const SalesHistoryLoaded({
     required this.sales,
@@ -32,6 +33,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
     this.paymentType,
     this.isLoadingMore = false,
     this.isRefunding = false,
+    this.skippedRows = 0,
   });
 
   bool get hasMore => currentPage < totalPages;
@@ -46,6 +48,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
     String? paymentType,
     bool? isLoadingMore,
     bool? isRefunding,
+    int? skippedRows,
     bool clearDateFrom = false,
     bool clearDateTo = false,
     bool clearPaymentType = false,
@@ -60,6 +63,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
       paymentType: clearPaymentType ? null : (paymentType ?? this.paymentType),
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isRefunding: isRefunding ?? this.isRefunding,
+      skippedRows: skippedRows ?? this.skippedRows,
     );
   }
 
@@ -74,6 +78,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
         paymentType,
         isLoadingMore,
         isRefunding,
+        skippedRows,
       ];
 }
 

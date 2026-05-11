@@ -219,6 +219,23 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                               padding: EdgeInsets.all(16),
                               child: Center(child: CircularProgressIndicator()),
                             ),
+                          // BUG #28: when the parser skipped any rows we tell the user
+                          // rather than silently swallowing them. The skip-and-warn
+                          // policy lives in sale_remote_datasource.dart.
+                          if (state.skippedRows > 0)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: Text(
+                                '${state.skippedRows} ${_pluralRecord(state.skippedRows)} пропущено',
+                                style: TextStyle(
+                                  color: context.textSecondary,
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                         ],
                       ),
                     );
@@ -378,4 +395,14 @@ class _SaleCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _pluralRecord(int n) {
+  // 1 запись, 2-4 записи, 5+ записей. Russian plural rules.
+  final mod10 = n % 10;
+  final mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return 'записей';
+  if (mod10 == 1) return 'запись';
+  if (mod10 >= 2 && mod10 <= 4) return 'записи';
+  return 'записей';
 }

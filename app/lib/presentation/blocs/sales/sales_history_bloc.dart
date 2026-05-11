@@ -49,6 +49,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         dateFrom: dateFrom,
         dateTo: dateTo,
         paymentType: paymentType,
+        skippedRows: result.skippedRows,
       ));
     } catch (e) {
       emit(SalesHistoryError(mapErrorToUserMessage(e)));
@@ -103,6 +104,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
           dateFrom: currentState.dateFrom,
           dateTo: currentState.dateTo,
           paymentType: currentState.paymentType,
+          skippedRows: currentState.skippedRows + result.skippedRows,
         ));
       } catch (e) {
         emit(currentState.copyWith(isLoadingMore: false));
