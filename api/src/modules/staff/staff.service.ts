@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { Prisma, StaffRole } from '@prisma/client';
@@ -13,7 +14,10 @@ import { assertWithinPlanLimit } from '../../common/guards/plan-limit.helper';
 
 @Injectable()
 export class StaffService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   async create(storeId: string, dto: CreateStaffDto) {
     // F2.1: enforce plan-limit. OWNER staff row is auto-created with the
@@ -162,9 +166,9 @@ export class StaffService {
   }
 
   async update(storeId: string, id: string, dto: UpdateStaffDto) {
-    await this.findOne(storeId, id);
+    const before = await this.findOne(storeId, id);
 
-    return this.prisma.staff.update({
+    const updated = await this.prisma.staff.update({
       where: { id },
       data: {
         role: dto.role ? (dto.role as StaffRole) : undefined,
@@ -177,6 +181,20 @@ export class StaffService {
         },
       },
     });
+
+    // Deferred #2: audit any role change separately from salary tweaks
+    // because role escalations carry security weight.
+    if (dto.role && before.role !== dto.role) {
+      void this.audit.record(
+        'system',
+        'staff.role_change',
+        'staff',
+        id,
+        { from: before.role, to: dto.role, storeId },
+      );
+    }
+
+    return updated;
   }
 
   async remove(storeId: string, id: string) {

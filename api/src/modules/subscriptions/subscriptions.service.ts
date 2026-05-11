@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RequestChangeDto } from './dto/request-change.dto';
 import { AdminSubscriptionQueryDto } from './dto/admin-subscription-query.dto';
@@ -28,6 +29,7 @@ export class SubscriptionsService implements OnModuleInit {
   constructor(
     private prisma: PrismaService,
     private notificationsService: NotificationsService,
+    private audit: AuditLogService,
   ) {}
 
   // ─── Seed plan configs on startup ───────────────────────────────────────────
@@ -323,6 +325,19 @@ export class SubscriptionsService implements OnModuleInit {
       );
     }
 
+    // Deferred #2: audit subscription approval.
+    void this.audit.record(
+      'system',
+      'subscription.approve',
+      'subscription',
+      updatedSubscription.id,
+      {
+        paymentId: updatedPayment.id,
+        plan: updatedSubscription.plan,
+        newPeriodEnd: updatedSubscription.currentPeriodEnd,
+      },
+    );
+
     return { payment: updatedPayment, subscription: updatedSubscription };
   }
 
@@ -376,6 +391,15 @@ export class SubscriptionsService implements OnModuleInit {
       );
     }
 
+    // Deferred #2: audit subscription rejection.
+    void this.audit.record(
+      reviewedBy,
+      'subscription.reject',
+      'subscription_payment',
+      paymentId,
+      { subscriptionId, reason: dto.reason },
+    );
+
     return updatedPayment;
   }
 
@@ -406,10 +430,23 @@ export class SubscriptionsService implements OnModuleInit {
       throw new NotFoundException('Subscription not found');
     }
 
-    return this.prisma.subscription.update({
+    const updated = await this.prisma.subscription.update({
       where: { id: subscriptionId },
       data: { plan: dto.plan as any },
     });
+
+    // Deferred #2: audit plan changes — both upgrades (revenue
+    // implication) and downgrades (which silently lose access to
+    // premium features under the F.2 fixed guard).
+    void this.audit.record(
+      'system',
+      'subscription.plan_change',
+      'subscription',
+      subscriptionId,
+      { from: subscription.plan, to: dto.plan },
+    );
+
+    return updated;
   }
 
   async adminSetDiscount(subscriptionId: string, dto: SetDiscountDto) {

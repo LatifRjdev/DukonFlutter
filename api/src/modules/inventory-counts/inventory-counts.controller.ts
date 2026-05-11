@@ -20,6 +20,11 @@ import { UpdateCountItemsDto } from './dto/update-count-items.dto';
 @ApiTags('Inventory Counts')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
+// Deferred #3 (2026-05-11): all 4 routes require the same feature,
+// so the decorator now lives on the class. SubscriptionGuard's
+// reflector lookup (F.2 fix) reads handler-then-class metadata so
+// this works as expected.
+@RequiresFeature('hasInventory')
 @Controller('stores/:storeId/inventory-counts')
 export class InventoryCountsController {
   constructor(private inventoryCountsService: InventoryCountsService) {}
@@ -29,7 +34,6 @@ export class InventoryCountsController {
   // trial-PREMIUM window after downgrading.
   @Post()
   @Permissions('inventory.write')
-  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Create a new inventory count session (loads all products with current stock)',
@@ -39,7 +43,6 @@ export class InventoryCountsController {
   }
 
   @Get(':id')
-  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Get inventory count session with items (includes product name, barcode)',
@@ -50,7 +53,6 @@ export class InventoryCountsController {
 
   @Put(':id')
   @Permissions('inventory.write')
-  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary: 'Update actual quantities for items in a count session (batch)',
   })
@@ -64,7 +66,6 @@ export class InventoryCountsController {
 
   @Post(':id/apply')
   @Permissions('inventory.write')
-  @RequiresFeature('hasInventory')
   @ApiOperation({
     summary:
       'Finalize count: update product stock quantities and set status=COMPLETED',

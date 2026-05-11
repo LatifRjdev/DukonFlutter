@@ -25,10 +25,12 @@ export class SalesService {
     private notifications: NotificationsService,
   ) {}
 
-  // F.3: per-store threshold (in store currency) above which a sale
-  // triggers a "big sale" push to the store owner. Hardcoded for
-  // now; future iteration can promote to store.settings JSON.
-  private readonly BIG_SALE_THRESHOLD = 1000;
+  // F.3 + Deferred #1 (2026-05-11): per-store threshold (in store
+  // currency) above which a sale triggers a "big sale" push to the
+  // store owner. Read from `store.settings.bigSaleThreshold` if set;
+  // otherwise falls back to this default. Setting it to 0 disables
+  // the alert (useful for low-volume merchants who'd be spammed).
+  private readonly DEFAULT_BIG_SALE_THRESHOLD = 1000;
 
   async create(storeId: string, dto: CreateSaleDto) {
     if (!dto.items || dto.items.length === 0) {
@@ -300,12 +302,21 @@ export class SalesService {
     sale: { id: string; total: any; receiptNo: string },
   ) {
     try {
-      if (Number(sale.total) < this.BIG_SALE_THRESHOLD) return;
       const store = await this.prisma.store.findUnique({
         where: { id: storeId },
-        select: { ownerId: true, name: true, currency: true },
+        select: { ownerId: true, name: true, currency: true, settings: true },
       });
       if (!store) return;
+      // Deferred #1: threshold can be overridden per-store via
+      // store.settings.bigSaleThreshold. 0 disables the alert.
+      const settings = (store.settings as Record<string, any>) ?? {};
+      const overrideRaw = settings['bigSaleThreshold'];
+      const threshold =
+        typeof overrideRaw === 'number'
+          ? overrideRaw
+          : this.DEFAULT_BIG_SALE_THRESHOLD;
+      if (threshold <= 0) return;
+      if (Number(sale.total) < threshold) return;
       await this.notifications.sendPush(
         store.ownerId,
         `Крупная продажа в "${store.name}"`,

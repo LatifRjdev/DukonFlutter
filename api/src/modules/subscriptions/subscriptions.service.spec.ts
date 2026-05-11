@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { SubscriptionsService } from './subscriptions.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 // Behavioral fake covering only the prisma surface SubscriptionsService
@@ -70,6 +71,7 @@ describe('SubscriptionsService — read paths', () => {
         SubscriptionsService,
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(SubscriptionsService);

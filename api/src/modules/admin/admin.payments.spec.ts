@@ -9,6 +9,7 @@ import {
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { AdminGuard } from '../../common/guards/admin.guard';
 
 // Behavioral fake covering admin payment flows. Keeps tx history so we can
@@ -172,6 +173,8 @@ describe('Admin payments flow', () => {
         SubscriptionsService,
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: notifications },
+        // Deferred #2 (2026-05-11) wired AuditLogService into SubscriptionsService.
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(SubscriptionsService);

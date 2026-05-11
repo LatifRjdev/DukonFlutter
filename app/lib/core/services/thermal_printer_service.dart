@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thermal_printer/thermal_printer.dart';
 import 'package:thermal_printer/esc_pos_utils_platform/esc_pos_utils_platform.dart';
@@ -95,6 +96,28 @@ class ThermalPrinterService {
     }
   }
 
+  /// Public for tests. The print path itself is BLE-bound and not
+  /// hermetically testable without a real printer, but the byte
+  /// stream we hand to the printer IS deterministic, so the test
+  /// suite (deferred #4) builds bytes for representative sales and
+  /// asserts shape — codepage selection, line wrapping, totals are
+  /// present. Production code should keep calling printReceipt().
+  @visibleForTesting
+  Future<List<int>> buildReceiptBytesForTest({
+    required Sale sale,
+    required String storeName,
+    String? storeAddress,
+    String? storePhone,
+    int paperWidth = 80,
+  }) =>
+      _buildReceiptBytes(
+        sale: sale,
+        storeName: storeName,
+        storeAddress: storeAddress,
+        storePhone: storePhone,
+        paperWidth: paperWidth,
+      );
+
   Future<List<int>> _buildReceiptBytes({
     required Sale sale,
     required String storeName,
@@ -105,6 +128,28 @@ class ThermalPrinterService {
     final profile = await CapabilityProfile.load();
     final paperSize = paperWidth == 58 ? PaperSize.mm58 : PaperSize.mm80;
     final generator = Generator(paperSize, profile);
+    // BUG #25 (discovered 2026-05-11 by deferred #4 test framework):
+    // thermal_printer 1.0.5 hardcodes `latin1.encode(text)` in
+    // Generator._encode (line ~70). It cannot emit Cyrillic at all;
+    // calling `text('Товар')` throws with "Contains invalid
+    // characters". setGlobalCodeTable('CP1251') sets the wire
+    // codepage byte but doesn't change the encoder.
+    //
+    // Workarounds we considered:
+    //   - Fork thermal_printer to swap latin1 for cp1251 → big
+    //     maintenance burden.
+    //   - Pre-encode strings ourselves to CP1251 bytes and append
+    //     via generator.rawBytes() → loses style/alignment helpers
+    //     entirely, makes the receipt template a wall of bytes.
+    //   - Switch to a different printer lib (esc_pos_printer or
+    //     esc_pos_utils_plus, both of which DO support codepage
+    //     encoders). Recommended path; tracked separately.
+    //
+    // For now: receipts with Cyrillic content fail at print time on
+    // real hardware. Test framework documents the failure mode so we
+    // can verify the fix once we swap libraries. UI-side a check
+    // could fall back to the OS share-receipt sheet rather than the
+    // thermal printer for non-Latin merchants.
     var bytes = <int>[];
 
     bytes += generator.text(storeName,
