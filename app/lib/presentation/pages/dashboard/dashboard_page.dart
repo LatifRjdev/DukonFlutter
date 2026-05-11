@@ -386,7 +386,14 @@ class _DashboardPageState extends State<DashboardPage> {
               ? _formatPrice(stats.customerDebtsTotal)
               : null,
           trailingColor: AppColors.success,
-          onTap: () => context.push(RouteNames.customerDebts, extra: _getStoreId()),
+          // BUG #27 (2026-05-11 click test): the /debts/customer
+          // route expects extra to be a Map<String,dynamic>, but
+          // dashboard was passing the bare storeId String. Caused a
+          // red Flutter "type cast failed" screen on tap. Wrap.
+          onTap: () => context.push(
+            RouteNames.customerDebts,
+            extra: {'storeId': _getStoreId() ?? ''},
+          ),
         ),
         _ActionTile(
           icon: Icons.arrow_upward_rounded,
@@ -399,7 +406,11 @@ class _DashboardPageState extends State<DashboardPage> {
               ? _formatPrice(stats.supplierDebtsTotal)
               : null,
           trailingColor: AppColors.error,
-          onTap: () => context.push(RouteNames.supplierDebts, extra: _getStoreId()),
+          // BUG #27 (same root cause): /debts/supplier also expects Map.
+          onTap: () => context.push(
+            RouteNames.supplierDebts,
+            extra: {'storeId': _getStoreId() ?? ''},
+          ),
         ),
         _ActionTile(
           icon: Icons.fact_check_outlined,

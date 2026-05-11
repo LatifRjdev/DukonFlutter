@@ -185,13 +185,11 @@ export class StaffService {
     // Deferred #2: audit any role change separately from salary tweaks
     // because role escalations carry security weight.
     if (dto.role && before.role !== dto.role) {
-      void this.audit.record(
-        'system',
-        'staff.role_change',
-        'staff',
-        id,
-        { from: before.role, to: dto.role, storeId },
-      );
+      void this.audit.record('system', 'staff.role_change', 'staff', id, {
+        from: before.role,
+        to: dto.role,
+        storeId,
+      });
     }
 
     return updated;
