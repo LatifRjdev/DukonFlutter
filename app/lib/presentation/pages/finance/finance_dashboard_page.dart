@@ -17,6 +17,19 @@ import '../../widgets/common/glass_card.dart';
 import '../../../core/router/route_names.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
+/// Clamp helper for revenue-style finance cards (Общий доход, Общие
+/// расходы). These fields are sums of money flowing in or out and
+/// cannot be negative conceptually — yet legacy data and UI bugs have
+/// produced "-127 TJS" displays in the past. The migration fixes the
+/// data; this clamp is the display safety net that protects against
+/// future re-occurrence (e.g. cached stale state, unexpected API
+/// edge cases).
+///
+/// Profit cards (Валовая прибыль, Чистая прибыль) deliberately do NOT
+/// use this — a loss is a real signal the merchant must see.
+@visibleForTesting
+double clampRevenueCard(double value) => value < 0 ? 0 : value;
+
 class FinanceDashboardPage extends StatefulWidget {
   final String? storeId;
   const FinanceDashboardPage({super.key, this.storeId});
@@ -158,7 +171,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: 'Общий доход',
-                                        value: _formatPrice(s.totalIncome),
+                                        value: _formatPrice(clampRevenueCard(s.totalIncome)),
                                         textColor: AppColors.primary,
                                       ),
                                     ),
@@ -169,7 +182,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: 'Общие расходы',
-                                        value: _formatPrice(s.totalExpenses),
+                                        value: _formatPrice(clampRevenueCard(s.totalExpenses)),
                                         textColor: context.danger,
                                       ),
                                     ),
