@@ -22,10 +22,20 @@ import '../../blocs/product/product_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 
-enum _StockFilter { all, inStock, lowStock, outOfStock }
+// Spec 2026-05-11-finance-nav-fixes-design.md, BUG #26 (Q2=B): the new
+// `attention` value is the union of `lowStock + outOfStock`. The
+// "Остатки на складе" tile on the dashboard pre-selects this filter so
+// the merchant lands on what needs to be replenished.
+enum _StockFilter { all, inStock, lowStock, outOfStock, attention }
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({super.key});
+  // Spec 2026-05-11-finance-nav-fixes-design.md, BUG #26: the dashboard
+  // tile "Остатки на складе" passes `initialFilter: 'attention'` so we
+  // open with the new chip pre-selected. Direct navigation via the
+  // bottom-nav passes nothing and we default to `all` (no behaviour
+  // change for the existing flow).
+  final String? initialFilter;
+  const ProductListPage({super.key, this.initialFilter});
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -33,13 +43,16 @@ class ProductListPage extends StatefulWidget {
 
 class _ProductListPageState extends State<ProductListPage> {
   final _searchController = TextEditingController();
-  _StockFilter _stockFilter = _StockFilter.all;
+  late _StockFilter _stockFilter;
   bool _loaded = false;
   bool _showFilters = false;
 
   @override
   void initState() {
     super.initState();
+    _stockFilter = widget.initialFilter == 'attention'
+        ? _StockFilter.attention
+        : _StockFilter.all;
     _loadData();
   }
 
@@ -63,6 +76,9 @@ class _ProductListPageState extends State<ProductListPage> {
         return products.where((p) => p.isLowStock).toList();
       case _StockFilter.outOfStock:
         return products.where((p) => p.isOutOfStock).toList();
+      case _StockFilter.attention:
+        // Union of lowStock + outOfStock — anything that needs replenishment.
+        return products.where((p) => p.isLowStock || p.isOutOfStock).toList();
     }
   }
 
@@ -213,6 +229,12 @@ class _ProductListPageState extends State<ProductListPage> {
                       label: 'Нет в наличии',
                       isSelected: _stockFilter == _StockFilter.outOfStock,
                       onTap: () => setState(() => _stockFilter = _StockFilter.outOfStock),
+                    ),
+                    const SizedBox(width: 8),
+                    AppChip(
+                      label: 'Требует внимания',
+                      isSelected: _stockFilter == _StockFilter.attention,
+                      onTap: () => setState(() => _stockFilter = _StockFilter.attention),
                     ),
                   ],
                 ),
