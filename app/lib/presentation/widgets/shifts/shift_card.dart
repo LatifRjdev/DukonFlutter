@@ -9,7 +9,15 @@ class ShiftCard extends StatelessWidget {
   final ShiftModel shift;
   final VoidCallback? onTap;
 
-  const ShiftCard({super.key, required this.shift, this.onTap});
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+
+  const ShiftCard({
+    super.key,
+    required this.shift,
+    this.onTap,
+    this.now,
+  });
 
   String _formatDateTime(DateTime dt) {
     return '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year} '
@@ -17,7 +25,7 @@ class ShiftCard extends StatelessWidget {
   }
 
   String _formatDuration(DateTime open, DateTime? close) {
-    final end = close ?? DateTime.now();
+    final end = close ?? (now ?? DateTime.now)();
     final diff = end.difference(open);
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);

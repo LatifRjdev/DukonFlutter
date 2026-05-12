@@ -49,7 +49,9 @@ void main() {
     );
   });
 
-  Widget page() => const CreditSalePage();
+  // Frozen "now" → _dueDate = 2024-04-14, deterministic across runs.
+  final fixedNow = DateTime(2024, 3, 15, 10, 30);
+  Widget page() => CreditSalePage(now: () => fixedNow);
 
   Widget wrapWithBlocs(Widget child) => MultiBlocProvider(
         providers: [

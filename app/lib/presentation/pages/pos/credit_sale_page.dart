@@ -17,7 +17,10 @@ import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
 
 class CreditSalePage extends StatefulWidget {
-  const CreditSalePage({super.key});
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+
+  const CreditSalePage({super.key, this.now});
 
   @override
   State<CreditSalePage> createState() => _CreditSalePageState();
@@ -27,7 +30,15 @@ class _CreditSalePageState extends State<CreditSalePage> {
   final _notesController = TextEditingController();
   String? _selectedCustomerId;
   String? _selectedCustomerName;
-  DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
+  late DateTime _dueDate;
+
+  DateTime _now() => (widget.now ?? DateTime.now)();
+
+  @override
+  void initState() {
+    super.initState();
+    _dueDate = _now().add(const Duration(days: 30));
+  }
 
   @override
   void dispose() {
@@ -39,8 +50,8 @@ class _CreditSalePageState extends State<CreditSalePage> {
     final date = await showDatePicker(
       context: context,
       initialDate: _dueDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      firstDate: _now(),
+      lastDate: _now().add(const Duration(days: 365)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

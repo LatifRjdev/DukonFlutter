@@ -9,6 +9,8 @@ import '../../../helpers/golden_pump_helper.dart';
 void main() {
   group('ShiftCard goldens', () {
     final openedAt = DateTime(2024, 3, 15, 9, 0);
+    // Frozen "now" for open shifts → duration = 1ч 30м, deterministic.
+    final fixedNow = DateTime(2024, 3, 15, 10, 30);
 
     Widget openSample() => ShiftCard(
           shift: ShiftModel(
@@ -25,6 +27,7 @@ void main() {
             status: 'OPEN',
           ),
           onTap: () {},
+          now: () => fixedNow,
         );
 
     Widget closedSample() => ShiftCard(
