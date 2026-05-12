@@ -1,0 +1,15 @@
+Setup: SUB_BIZ=00673821-7656-4df3-8660-b56ff66bf1a5 SUB_PREM=8b18285a-6678-47b9-8079-e7f45fe69bde
+
+✓ Scenario 1: TRIAL→ACTIVE; sub.status=ACTIVE, payment.status=APPROVED
+
+✓ Scenario 2: renewal extended periodEnd (2026-05-22 05:57:06.816 → 2026-06-21 05:57:06.816)
+
+✓ Scenario 3: extend +7d; delta=7.0000000000000000d
+
+✓ Scenario 4: downgrade access loss immediate (200→403, plan=START)
+
+? Scenario 5: EXPIRED transition simulated via SQL (cron has no manual trigger). Guard rejects EXPIRED with 403 as expected.
+
+✓ Scenario 6: EXPIRED→ACTIVE; status=ACTIVE plan=PREMIUM periodEnd>now=t
+
+=== Summary ===
