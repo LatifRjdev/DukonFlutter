@@ -1,49 +1,46 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:thermal_printer/thermal_printer.dart';
-import 'package:thermal_printer/esc_pos_utils_platform/esc_pos_utils_platform.dart';
+import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import '../../domain/entities/sale.dart';
 import '../utils/formatters.dart';
 
 class ThermalPrinterService {
-  PrinterDevice? _connectedDevice;
+  BluetoothDevice? _connectedDevice;
 
-  bool get isConnected => _connectedDevice != null;
-  PrinterDevice? get connectedDevice => _connectedDevice;
+  bool get isConnected => BluetoothPrintPlus.isConnected;
+  BluetoothDevice? get connectedDevice => _connectedDevice;
 
-  Future<List<PrinterDevice>> scanDevices() async {
-    final devices = <PrinterDevice>[];
-    final subscription = PrinterManager.instance
-        .discovery(type: PrinterType.bluetooth)
-        .listen((device) {
-      devices.add(device);
+  Future<List<BluetoothDevice>> scanDevices() async {
+    final devices = <BluetoothDevice>[];
+    final subscription = BluetoothPrintPlus.scanResults.listen((list) {
+      devices
+        ..clear()
+        ..addAll(list);
     });
-
+    await BluetoothPrintPlus.startScan(timeout: const Duration(seconds: 4));
     await Future.delayed(const Duration(seconds: 4));
+    await BluetoothPrintPlus.stopScan();
     await subscription.cancel();
-    return devices;
+    return List<BluetoothDevice>.from(devices);
   }
 
-  Future<bool> connect(PrinterDevice device) async {
+  Future<bool> connect(BluetoothDevice device) async {
     try {
-      await PrinterManager.instance.connect(
-        type: PrinterType.bluetooth,
-        model: BluetoothPrinterInput(
-          name: device.name,
-          address: device.address ?? '',
-          autoConnect: true,
-        ),
-      );
+      await BluetoothPrintPlus.connect(device);
+      // Wait briefly for connectState to flip.
+      await Future.delayed(const Duration(milliseconds: 800));
       _connectedDevice = device;
-      return true;
+      return BluetoothPrintPlus.isConnected;
     } catch (e) {
+      debugPrint('Bluetooth connect failed: $e');
       return false;
     }
   }
 
   Future<void> disconnect() async {
     try {
-      await PrinterManager.instance.disconnect(type: PrinterType.bluetooth);
+      await BluetoothPrintPlus.disconnect();
     } catch (_) {}
     _connectedDevice = null;
   }
@@ -55,7 +52,7 @@ class ThermalPrinterService {
     String? storePhone,
     int paperWidth = 80,
   }) async {
-    if (_connectedDevice == null) return false;
+    if (!BluetoothPrintPlus.isConnected) return false;
 
     try {
       final bytes = await _buildReceiptBytes(
@@ -66,19 +63,20 @@ class ThermalPrinterService {
         paperWidth: paperWidth,
       );
 
-      await PrinterManager.instance.send(type: PrinterType.bluetooth, bytes: bytes);
-      return true;
+      await BluetoothPrintPlus.write(Uint8List.fromList(bytes));
+      return BluetoothPrintPlus.isConnected;
     } catch (e) {
       return false;
     }
   }
 
   Future<bool> testPrint() async {
-    if (_connectedDevice == null) return false;
+    if (!BluetoothPrintPlus.isConnected) return false;
 
     try {
       final profile = await CapabilityProfile.load();
       final generator = Generator(PaperSize.mm80, profile);
+      generator.setGlobalCodeTable('CP1251');
       var bytes = <int>[];
       bytes += generator.text('DukonPro - Test Print',
           styles: const PosStyles(align: PosAlign.center, bold: true));
@@ -89,8 +87,8 @@ class ThermalPrinterService {
       bytes += generator.feed(2);
       bytes += generator.cut();
 
-      await PrinterManager.instance.send(type: PrinterType.bluetooth, bytes: bytes);
-      return true;
+      await BluetoothPrintPlus.write(Uint8List.fromList(bytes));
+      return BluetoothPrintPlus.isConnected;
     } catch (e) {
       return false;
     }
@@ -128,28 +126,8 @@ class ThermalPrinterService {
     final profile = await CapabilityProfile.load();
     final paperSize = paperWidth == 58 ? PaperSize.mm58 : PaperSize.mm80;
     final generator = Generator(paperSize, profile);
-    // BUG #25 (discovered 2026-05-11 by deferred #4 test framework):
-    // thermal_printer 1.0.5 hardcodes `latin1.encode(text)` in
-    // Generator._encode (line ~70). It cannot emit Cyrillic at all;
-    // calling `text('Товар')` throws with "Contains invalid
-    // characters". setGlobalCodeTable('CP1251') sets the wire
-    // codepage byte but doesn't change the encoder.
-    //
-    // Workarounds we considered:
-    //   - Fork thermal_printer to swap latin1 for cp1251 → big
-    //     maintenance burden.
-    //   - Pre-encode strings ourselves to CP1251 bytes and append
-    //     via generator.rawBytes() → loses style/alignment helpers
-    //     entirely, makes the receipt template a wall of bytes.
-    //   - Switch to a different printer lib (esc_pos_printer or
-    //     esc_pos_utils_plus, both of which DO support codepage
-    //     encoders). Recommended path; tracked separately.
-    //
-    // For now: receipts with Cyrillic content fail at print time on
-    // real hardware. Test framework documents the failure mode so we
-    // can verify the fix once we swap libraries. UI-side a check
-    // could fall back to the OS share-receipt sheet rather than the
-    // thermal printer for non-Latin merchants.
+    // Encodes Cyrillic + Tajik via esc_pos_utils_plus CP1251.
+    generator.setGlobalCodeTable('CP1251');
     var bytes = <int>[];
 
     bytes += generator.text(storeName,
