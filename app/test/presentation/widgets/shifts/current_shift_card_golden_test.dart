@@ -9,6 +9,8 @@ import '../../../helpers/golden_pump_helper.dart';
 void main() {
   group('CurrentShiftCard goldens', () {
     final openedAt = DateTime(2024, 3, 15, 9, 0);
+    // Frozen "now" → elapsed = 1ч 30м, deterministic across runs.
+    final fixedNow = DateTime(2024, 3, 15, 10, 30);
 
     Widget sample() => CurrentShiftCard(
           shift: ShiftModel(
@@ -25,6 +27,7 @@ void main() {
             status: 'OPEN',
           ),
           onClose: () {},
+          now: () => fixedNow,
         );
 
     testGoldens('light theme', (tester) async {

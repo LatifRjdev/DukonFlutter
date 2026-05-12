@@ -10,7 +10,15 @@ class CurrentShiftCard extends StatefulWidget {
   final ShiftModel shift;
   final VoidCallback? onClose;
 
-  const CurrentShiftCard({super.key, required this.shift, this.onClose});
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+
+  const CurrentShiftCard({
+    super.key,
+    required this.shift,
+    this.onClose,
+    this.now,
+  });
 
   @override
   State<CurrentShiftCard> createState() => _CurrentShiftCardState();
@@ -29,7 +37,8 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
 
   void _updateElapsed() {
     setState(() {
-      _elapsed = DateTime.now().difference(widget.shift.openedAt);
+      final now = (widget.now ?? DateTime.now)();
+      _elapsed = now.difference(widget.shift.openedAt);
     });
   }
 
