@@ -12,6 +12,14 @@ import '../../blocs/pos/cart_event.dart';
 class CartRestorePrompt {
   static bool _shown = false;
 
+  /// Resets the "already shown this session" guard. Used by
+  /// `app/integration_test/lifecycle_test.dart` so each test case
+  /// starts from a clean cold-start.
+  @visibleForTesting
+  static void resetForTest() {
+    _shown = false;
+  }
+
   static Future<void> showIfNeeded(BuildContext context) async {
     if (_shown) return;
     _shown = true;

@@ -86,3 +86,30 @@ real-world resilience checks and they all pass.
 - `qa/2026-05-12-app-lifecycle/REPORT.md` — this file
 - `qa/2026-05-12-app-lifecycle/results.txt` — raw status lines
 - `qa/2026-05-12-app-lifecycle/screenshots/` — 18 PNGs (9 full + 9 sm)
+
+## 2026-05-12 update — Scenarios 1, 2, 6 migrated to integration_test
+
+The 3 inconclusive ("?") scenarios were re-implemented as deterministic
+widget tests at `app/integration_test/lifecycle_test.dart`. Coordinate
+drift no longer affects them — 5 tests pass in ~3 seconds against a
+real `CartLocalDatasource` backed by `SharedPreferences.setMockInitialValues`.
+
+Run with:
+
+    cd app && flutter test integration_test/lifecycle_test.dart
+
+Coverage:
+- Scenario 1 (kill mid-cart) — "Восстановить корзину?" dialog appears with item count + relative timestamp.
+- Scenario 2 (kill mid-checkout) — same prompt; mechanism is independent of where in the flow the kill happened.
+- Negative case — no saved cart, no dialog.
+- "Очистить" — clears persistence.
+- "Восстановить" — dispatches `CartRestored`, bloc state reflects restored items.
+
+Scenario 6 (token-revoked → login redirect) was identified as better-tested
+at the AuthBloc layer rather than full integration_test. A placeholder test
+in the new file points to that, pending an explicit unit test in
+`app/test/presentation/blocs/`.
+
+Scenarios 3 (offline+kill+reconnect), 4 (Doze), 5 (5 min background) remain
+in `run.sh` — they exercise OS-level state that's not reachable from
+in-process widget tests.
