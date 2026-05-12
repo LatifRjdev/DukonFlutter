@@ -10,6 +10,7 @@ import '../dashboard/more_page.dart';
 import '../product/product_list_page.dart';
 import '../pos/pos_checkout_page.dart';
 import '../finance/finance_dashboard_page.dart';
+import 'cart_restore_prompt.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,6 +49,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Load stores on app startup — required for all API calls
     context.read<StoreBloc>().add(StoreLoadRequested());
+    // E.4 follow-up: ask the cashier whether to restore a persisted
+    // cart from the previous session. Post-frame so BlocProvider
+    // ancestors are mounted before we read<CartBloc>().
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) CartRestorePrompt.showIfNeeded(context);
+    });
   }
 
   void _onTabChange(int index) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dukonpro/core/network/network_info.dart';
 import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/data/datasources/local/cart_local_datasource.dart';
 import 'package:dukonpro/data/sync/sync_engine.dart';
 import 'package:dukonpro/data/sync/sync_queue.dart';
 import 'package:dukonpro/injection.dart';
@@ -88,6 +89,24 @@ class _FakeSyncQueue implements SyncQueue {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+/// Fake CartLocalDatasource that always reports "nothing saved" so the
+/// CartRestorePrompt is a no-op in golden tests. Bypasses the real
+/// constructor (which needs SharedPreferences) by extending and
+/// overriding only the methods the prompt touches.
+class _FakeCartLocalDatasource implements CartLocalDatasource {
+  @override
+  ({CartState state, DateTime savedAt})? load() => null;
+
+  @override
+  Future<void> save(CartState state) async {}
+
+  @override
+  Future<void> clear() async {}
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
@@ -110,6 +129,9 @@ void main() {
     }
     if (!sl.isRegistered<SyncQueue>()) {
       sl.registerSingleton<SyncQueue>(_FakeSyncQueue());
+    }
+    if (!sl.isRegistered<CartLocalDatasource>()) {
+      sl.registerSingleton<CartLocalDatasource>(_FakeCartLocalDatasource());
     }
 
     storeBloc = MockStoreBloc();
@@ -135,6 +157,9 @@ void main() {
     if (sl.isRegistered<NetworkInfo>()) sl.unregister<NetworkInfo>();
     if (sl.isRegistered<SyncEngine>()) sl.unregister<SyncEngine>();
     if (sl.isRegistered<SyncQueue>()) sl.unregister<SyncQueue>();
+    if (sl.isRegistered<CartLocalDatasource>()) {
+      sl.unregister<CartLocalDatasource>();
+    }
   });
 
   const page = HomePage();
