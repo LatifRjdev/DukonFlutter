@@ -96,6 +96,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<User> verifyToken() async {
+    final user = await _remoteDatasource.verifyToken();
+    // Refresh the cached user so any stale profile data (name, email,
+    // avatar) reflects what the server says after a successful round-trip.
+    await _localDatasource.saveUser(user);
+    return user;
+  }
+
+  @override
   Future<void> sendOtp(String phone) async {
     await _remoteDatasource.sendOtp(phone);
   }

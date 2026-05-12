@@ -8,6 +8,14 @@ abstract class AuthEvent extends Equatable {
 
 class AuthCheckRequested extends AuthEvent {}
 
+/// Fired when the app returns to the foreground — round-trips to the
+/// backend so that a server-side token revocation (e.g. the user changed
+/// their password from another device) is detected immediately instead
+/// of waiting for the next user-initiated API call. On a successful
+/// 200 the authenticated state stays untouched; on 401 we eject to
+/// [AuthUnauthenticated] and the router redirects to /login.
+class AuthVerifyRequested extends AuthEvent {}
+
 class AuthLoginRequested extends AuthEvent {
   final String phone;
   final String password;

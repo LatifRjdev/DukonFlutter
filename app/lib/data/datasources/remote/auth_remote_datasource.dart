@@ -23,6 +23,13 @@ abstract class AuthRemoteDatasource {
 
   Future<void> logout();
 
+  /// Hits `GET /users/me` against the backend with the current access token
+  /// to confirm the session is still valid. Returns the up-to-date [User]
+  /// payload on success; throws [UnauthorizedException] if the server says
+  /// the token has been revoked (e.g. after a server-side password change
+  /// bumped `tokensRevokedAt`).
+  Future<User> verifyToken();
+
   Future<void> sendOtp(String phone);
 
   Future<({User user, String accessToken, String refreshToken})> verifyOtp(
@@ -119,6 +126,16 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<void> logout() async {
     try {
       await _dioClient.post(ApiEndpoints.logout);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<User> verifyToken() async {
+    try {
+      final response = await _dioClient.get(ApiEndpoints.userMe);
+      return _mapUser(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

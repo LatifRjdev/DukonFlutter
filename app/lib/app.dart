@@ -6,6 +6,8 @@ import 'core/router/app_router.dart';
 import 'injection.dart';
 import 'presentation/widgets/common/offline_banner.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
+import 'presentation/blocs/auth/auth_event.dart';
+import 'presentation/blocs/auth/auth_state.dart';
 import 'presentation/blocs/store/store_bloc.dart';
 import 'presentation/blocs/pos/cart_bloc.dart';
 import 'presentation/blocs/dashboard/dashboard_bloc.dart';
@@ -68,7 +70,8 @@ class DukonProApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<PrinterBloc>()),
         BlocProvider(create: (_) => sl<SubscriptionBloc>()),
       ],
-      child: BlocBuilder<SettingsBloc, SettingsState>(
+      child: _AuthLifecycleWatcher(
+        child: BlocBuilder<SettingsBloc, SettingsState>(
         buildWhen: (prev, curr) {
           // Only react to SettingsLoaded state transitions with a real
           // themeMode change. Transient states (Loading, ActionSuccess,
@@ -113,6 +116,56 @@ class DukonProApp extends StatelessWidget {
           );
         },
       ),
+      ),
     );
   }
+}
+
+/// Pings `GET /users/me` whenever the app returns to the foreground
+/// (`AppLifecycleState.resumed`) so that server-side token revocation —
+/// e.g. the user changed their password from another device while the
+/// app was in the background — is detected immediately and the router
+/// redirects to /login, instead of the dashboard staying stale until
+/// the next outbound API call surfaces a 401.
+///
+/// Lives inside [MultiBlocProvider] so [context.read<AuthBloc>] resolves
+/// to the same instance the rest of the UI uses, regardless of whether
+/// the bloc is registered as a factory or a singleton in GetIt.
+class _AuthLifecycleWatcher extends StatefulWidget {
+  const _AuthLifecycleWatcher({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_AuthLifecycleWatcher> createState() => _AuthLifecycleWatcherState();
+}
+
+class _AuthLifecycleWatcherState extends State<_AuthLifecycleWatcher>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    if (!mounted) return;
+    final auth = context.read<AuthBloc>();
+    // Skip the round-trip unless we currently believe we're logged in —
+    // a logged-out splash / login screen has nothing to verify.
+    if (auth.state is AuthAuthenticated) {
+      auth.add(AuthVerifyRequested());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

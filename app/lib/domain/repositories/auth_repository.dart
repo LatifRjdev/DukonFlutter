@@ -23,6 +23,14 @@ abstract class AuthRepository {
 
   Future<User?> getCurrentUser();
 
+  /// Round-trips to the backend (`GET /users/me`) to confirm the cached
+  /// access token has not been revoked. Returns the fresh [User] on
+  /// success and refreshes the local cache; throws if the server rejects
+  /// the token (e.g. password changed elsewhere). Used by the app
+  /// lifecycle observer to detect server-side token revocation when the
+  /// app is brought back to the foreground.
+  Future<User> verifyToken();
+
   Future<void> sendOtp(String phone);
 
   Future<({User user, String accessToken, String refreshToken})> verifyOtp(

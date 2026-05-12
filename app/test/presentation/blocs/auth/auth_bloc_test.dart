@@ -187,5 +187,83 @@ void main() {
         },
       );
     });
+
+    group('AuthVerifyRequested (lifecycle resume)', () {
+      blocTest<AuthBloc, AuthState>(
+        'is a no-op when not currently authenticated',
+        build: () => AuthBloc(authRepository: repository),
+        act: (bloc) => bloc.add(AuthVerifyRequested()),
+        expect: () => const <AuthState>[],
+        verify: (_) {
+          verifyNever(() => repository.verifyToken());
+        },
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'keeps Authenticated state on 200 (no redundant emit for same user)',
+        setUp: () {
+          when(() => repository.verifyToken()).thenAnswer((_) async => testUser);
+        },
+        build: () => AuthBloc(authRepository: repository),
+        seed: () => AuthAuthenticated(testUser),
+        act: (bloc) => bloc.add(AuthVerifyRequested()),
+        // Bloc dedupes consecutive equal states via Equatable — verifying
+        // the same user produces no observable state change, which is
+        // exactly the behaviour we want (no UI churn on every resume).
+        expect: () => const <AuthState>[],
+        verify: (_) {
+          verify(() => repository.verifyToken()).called(1);
+        },
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'emits AuthAuthenticated with refreshed user when profile changed',
+        setUp: () {
+          final refreshedUser = User(
+            id: testUser.id,
+            phone: testUser.phone,
+            name: 'Renamed',
+            createdAt: testUser.createdAt,
+          );
+          when(() => repository.verifyToken())
+              .thenAnswer((_) async => refreshedUser);
+        },
+        build: () => AuthBloc(authRepository: repository),
+        seed: () => AuthAuthenticated(testUser),
+        act: (bloc) => bloc.add(AuthVerifyRequested()),
+        expect: () => [isA<AuthAuthenticated>()],
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'logs out and emits AuthUnauthenticated on UnauthorizedException',
+        setUp: () {
+          when(() => repository.verifyToken())
+              .thenThrow(const UnauthorizedException('token revoked'));
+          when(() => repository.logout()).thenAnswer((_) async {});
+        },
+        build: () => AuthBloc(authRepository: repository),
+        seed: () => AuthAuthenticated(testUser),
+        act: (bloc) => bloc.add(AuthVerifyRequested()),
+        expect: () => [isA<AuthUnauthenticated>()],
+        verify: (_) {
+          verify(() => repository.logout()).called(1);
+        },
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'keeps user authenticated on transient network/server errors',
+        setUp: () {
+          when(() => repository.verifyToken())
+              .thenThrow(const NetworkException());
+        },
+        build: () => AuthBloc(authRepository: repository),
+        seed: () => AuthAuthenticated(testUser),
+        act: (bloc) => bloc.add(AuthVerifyRequested()),
+        expect: () => const <AuthState>[],
+        verify: (_) {
+          verifyNever(() => repository.logout());
+        },
+      );
+    });
   });
 }

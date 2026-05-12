@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../../core/errors/exceptions.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -11,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : _authRepository = authRepository,
         super(AuthInitial()) {
     on<AuthCheckRequested>(_onCheckRequested);
+    on<AuthVerifyRequested>(_onVerifyRequested);
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
@@ -31,6 +33,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } else {
       emit(AuthUnauthenticated());
+    }
+  }
+
+  Future<void> _onVerifyRequested(
+    AuthVerifyRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    // Cheap guard — never round-trip if we don't believe we're logged in.
+    // Stops a logged-out splash/login screen from pinging /users/me every
+    // time the OS resumes the process.
+    if (state is! AuthAuthenticated) return;
+
+    try {
+      final user = await _authRepository.verifyToken();
+      // Re-emit Authenticated with the (possibly updated) user so any
+      // listeners pick up a fresh profile. Equatable on AuthAuthenticated
+      // means an unchanged user is a no-op for buildWhen consumers.
+      emit(AuthAuthenticated(user));
+    } on UnauthorizedException {
+      // Server says the token is revoked — eject the user. The router's
+      // redirect rule + the ApiInterceptor's onSessionExpired callback
+      // will land us on /login.
+      await _authRepository.logout();
+      emit(AuthUnauthenticated());
+    } catch (_) {
+      // Network errors, server 5xx, etc. don't tell us anything about the
+      // auth state — keep the user where they are. The next real API call
+      // will surface a 401 if the token genuinely is dead.
     }
   }
 
