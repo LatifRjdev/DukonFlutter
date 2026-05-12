@@ -210,4 +210,29 @@ export class AdminSubscriptionsController {
   cancel(@Param('id') id: string) {
     return this.subscriptionsService.adminCancel(id);
   }
+
+  // ─── Manual cron triggers (QA / ops) ───────────────────────────────────────
+  // The matching @Cron jobs run at midnight and 09:00. These admin-gated
+  // POST endpoints let QA exercise the EXPIRED-state flip and the
+  // 3-day-out FCM reminder without waiting for the scheduler.
+
+  @Post('run-expiry-check')
+  @ApiOperation({
+    summary:
+      'Admin: manually run the expiry check cron (flips overdue subs to EXPIRED + push)',
+  })
+  async runExpiryCheck() {
+    await this.subscriptionsService.checkExpiredSubscriptions();
+    return { ok: true, message: 'Expiry check executed' };
+  }
+
+  @Post('send-expiry-reminders')
+  @ApiOperation({
+    summary:
+      'Admin: manually dispatch 3-day expiry reminder push notifications',
+  })
+  async sendExpiryReminders() {
+    await this.subscriptionsService.sendExpiryReminders();
+    return { ok: true, message: 'Expiry reminders dispatched' };
+  }
 }

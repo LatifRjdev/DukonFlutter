@@ -40,7 +40,9 @@ export class CreateStoreDto {
 
   @ApiPropertyOptional({ enum: ['TJS', 'USD', 'RUB'], default: 'TJS' })
   @IsOptional()
-  @IsEnum(['TJS', 'USD', 'RUB'])
+  @IsEnum(['TJS', 'USD', 'RUB'], {
+    message: 'currency must be one of: TJS, USD, RUB',
+  })
   currency?: string;
 
   @ApiPropertyOptional()
