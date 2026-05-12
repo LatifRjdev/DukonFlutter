@@ -1,0 +1,6 @@
+? Scenario 1: restore prompt NOT detected - may have empty cart or coordinate drift; check 02-cold-start-prompt screenshot
+? Scenario 2: prompt not detected - see 04-after-checkout-kill screenshot
+OK Scenario 3: offline+kill+reconnect cycle clean (sales count 24 -> 24, no duplicate)
+OK Scenario 4: Doze forced - device state mState=IDLE; app should remain interactive in foreground
+OK Scenario 5: relaunched after 5-min background - see 06-resume-after-5min screenshot
+? Scenario 6: post-revoke screen unclear - see 07-after-token-revoke
