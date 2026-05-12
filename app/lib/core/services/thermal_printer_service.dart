@@ -4,6 +4,7 @@ import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import '../../domain/entities/sale.dart';
 import '../utils/formatters.dart';
+import '../utils/cp1251_codec.dart';
 
 class ThermalPrinterService {
   BluetoothDevice? _connectedDevice;
@@ -125,8 +126,8 @@ class ThermalPrinterService {
   }) async {
     final profile = await CapabilityProfile.load();
     final paperSize = paperWidth == 58 ? PaperSize.mm58 : PaperSize.mm80;
-    final generator = Generator(paperSize, profile);
-    // Encodes Cyrillic + Tajik via esc_pos_utils_plus CP1251.
+    final generator = Generator(paperSize, profile, codec: cp1251);
+    // Tells the printer hardware to use CP1251 character table.
     generator.setGlobalCodeTable('CP1251');
     var bytes = <int>[];
 

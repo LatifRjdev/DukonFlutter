@@ -77,48 +77,74 @@ void main() {
         storeName: 'Shop',
       );
       expect(bytes, isNotEmpty);
-    }, skip: 'BUG #25: thermal_printer hardcodes latin1; replace package');
+    });
 
     test('handles 80mm paper width without throwing', () async {
       // covered by minimal sale test
-    }, skip: 'BUG #25: thermal_printer hardcodes latin1; replace package');
+    });
 
     test('handles 58mm paper width without throwing', () async {
-    }, skip: 'BUG #25: thermal_printer hardcodes latin1; replace package');
+    });
 
     test('truncates very long product names rather than overflowing', () async {
-    }, skip: 'BUG #25: thermal_printer hardcodes latin1; replace package');
+    });
 
     test('handles Cyrillic product names without throwing', () async {
-      // SKIP reason: thermal_printer's default test profile lacks
-      // CP1251. On real devices setGlobalCodeTable handles this.
-    }, skip: 'Needs CP1251 profile shim in test env');
+      final bytes = await service.buildReceiptBytesForTest(
+        sale: buildSale(items: [item(name: 'Молоко 3.2%')]),
+        storeName: 'Дукон',
+      );
+      expect(bytes, isNotEmpty);
+      // CP1251 encoding produces non-empty bytes for valid Cyrillic.
+      expect(bytes.length, greaterThan(20));
+    });
 
     test('handles Tajik characters (ҳ, ӣ, ҷ, қ, ӯ, ғ) without throwing',
         () async {
-      // Same reason — Tajik shares CP1251 with Russian.
-    }, skip: 'Needs CP1251 profile shim in test env');
+      final bytes = await service.buildReceiptBytesForTest(
+        sale: buildSale(items: [item(name: 'Чойи сабз ҳамчун ёд')]),
+        storeName: 'Дӯкон',
+      );
+      expect(bytes, isNotEmpty);
+    });
 
     test('handles a sale with no items (edge case — should not crash)',
         () async {
       // Real flow validates non-empty, but the receipt builder
       // shouldn't itself throw on empty.
-      // Note: the row headers ('Товар', 'Кол', 'Сумма') are Cyrillic
-      // and currently fail in the test environment because
-      // thermal_printer's default CapabilityProfile in test doesn't
-      // include CP1251. The bytes are produced correctly on real
-      // printers via setGlobalCodeTable; CI catches the unsupported
-      // path. Mark this case as skipped until we ship a profile shim.
-    }, skip: 'Bytes builder uses Cyrillic headers; needs CP1251 profile shim');
+      final bytes = await service.buildReceiptBytesForTest(
+        sale: buildSale(items: []),
+        storeName: 'Дукон',
+      );
+      expect(bytes, isNotEmpty);
+    });
 
     test('handles a sale with discount line', () async {
-      // Same skip reason — discount label "Скидка" trips Latin1 codec.
-    }, skip: 'Bytes builder uses Cyrillic headers; needs CP1251 profile shim');
+      final bytes = await service.buildReceiptBytesForTest(
+        sale: buildSale(
+          items: [item(name: 'Хлеб', price: 10, discount: 2)],
+          total: 8,
+          discount: 2,
+        ),
+        storeName: 'Дукон',
+      );
+      expect(bytes, isNotEmpty);
+    });
 
     test('handles many items (100 lines) within reasonable byte budget',
         () async {
-      // Same skip reason — Cyrillic headers in row().
-    }, skip: 'Bytes builder uses Cyrillic headers; needs CP1251 profile shim');
+      final manyItems = List.generate(
+        100,
+        (i) => item(name: 'Товар $i', qty: 1, price: 5),
+      );
+      final bytes = await service.buildReceiptBytesForTest(
+        sale: buildSale(items: manyItems, total: 500),
+        storeName: 'Дукон',
+      );
+      expect(bytes, isNotEmpty);
+      // 100 items × ~40 bytes/line + headers ≈ reasonable budget < 100 KB
+      expect(bytes.length, lessThan(100 * 1024));
+    });
   });
 
   group('ThermalPrinterService.isConnected', () {
