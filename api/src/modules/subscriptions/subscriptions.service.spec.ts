@@ -222,7 +222,10 @@ describe('SubscriptionsService — admin audit logs', () => {
       providers: [
         SubscriptionsService,
         { provide: PrismaService, useValue: makeAdminPrismaFake() },
-        { provide: NotificationsService, useValue: { sendPush: jest.fn(async () => undefined) } },
+        {
+          provide: NotificationsService,
+          useValue: { sendPush: jest.fn(async () => undefined) },
+        },
         { provide: AuditLogService, useValue: { record: auditRecord } },
       ],
     }).compile();
@@ -230,7 +233,11 @@ describe('SubscriptionsService — admin audit logs', () => {
   });
 
   it('should record subscription.approve audit log with the acting admin userId when adminApprovePayment succeeds', async () => {
-    await service.adminApprovePayment('sub-audit', 'pay-audit', 'admin-user-42');
+    await service.adminApprovePayment(
+      'sub-audit',
+      'pay-audit',
+      'admin-user-42',
+    );
 
     // audit.record is called with void (fire-and-forget) — flush microtasks
     await new Promise((r) => setImmediate(r));
@@ -266,7 +273,11 @@ describe('SubscriptionsService — admin audit logs', () => {
   });
 
   it('should record subscription.plan_change audit log with the acting admin userId when adminChangePlan is called', async () => {
-    await service.adminChangePlan('sub-audit', { plan: SubscriptionPlanEnum.BUSINESS }, 'admin-user-42');
+    await service.adminChangePlan(
+      'sub-audit',
+      { plan: SubscriptionPlanEnum.BUSINESS },
+      'admin-user-42',
+    );
 
     await new Promise((r) => setImmediate(r));
 
