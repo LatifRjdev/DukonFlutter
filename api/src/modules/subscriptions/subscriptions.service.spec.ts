@@ -5,6 +5,7 @@ import { SubscriptionsService } from './subscriptions.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { SubscriptionPlanEnum } from './dto/request-change.dto';
 
 // Behavioral fake covering only the prisma surface SubscriptionsService
 // touches in the methods under test. We DO NOT call onModuleInit (which
@@ -130,5 +131,158 @@ describe('SubscriptionsService — read paths', () => {
       expect(expiredEnd < now).toBe(true);
       expect(activeEnd < now).toBe(false);
     });
+  });
+});
+
+// ─── Admin write-path audit log tests ────────────────────────────────────────
+
+function makeAdminPrismaFake() {
+  const now = new Date();
+  const in30 = new Date(now);
+  in30.setDate(in30.getDate() + 30);
+
+  const baseSub = {
+    id: 'sub-audit',
+    storeId: 'store-audit',
+    plan: 'START',
+    status: 'ACTIVE',
+    currentPeriodStart: now,
+    currentPeriodEnd: in30,
+    adminDiscount: null,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  const basePayment = {
+    id: 'pay-audit',
+    subscriptionId: 'sub-audit',
+    status: 'PENDING',
+    amount: 200,
+    plan: 'START',
+    note: null,
+    rejectionReason: null,
+    reviewedAt: null,
+    reviewedBy: null,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  const fakePrisma: any = {
+    $transaction: jest.fn(async (ops: Promise<any>[]) => Promise.all(ops)),
+    subscription: {
+      findUnique: jest.fn(async ({ where, include }: any = {}) => {
+        if (where?.id !== 'sub-audit') return null;
+        const sub = { ...baseSub };
+        if (include?.payments) {
+          return {
+            ...sub,
+            payments: [{ ...basePayment }],
+          };
+        }
+        return sub;
+      }),
+      update: jest.fn(async ({ data }: any) => ({ ...baseSub, ...data })),
+    },
+    payment: {
+      update: jest.fn(async ({ data }: any) => ({
+        ...basePayment,
+        ...data,
+        status: data.status ?? basePayment.status,
+      })),
+    },
+    store: {
+      findUnique: jest.fn(async () => ({
+        ownerId: 'owner-1',
+        name: 'Test Store',
+      })),
+    },
+    subscriptionPlanConfig: {
+      findUnique: jest.fn(async ({ where }: any) => {
+        const prices: Record<string, number> = {
+          START: 200,
+          BUSINESS: 400,
+          PREMIUM: 600,
+        };
+        return prices[where.plan] !== undefined
+          ? { plan: where.plan, price: prices[where.plan] }
+          : null;
+      }),
+    },
+  };
+  return fakePrisma;
+}
+
+describe('SubscriptionsService — admin audit logs', () => {
+  let service: SubscriptionsService;
+  let auditRecord: jest.Mock;
+
+  beforeEach(async () => {
+    auditRecord = jest.fn();
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: makeAdminPrismaFake() },
+        { provide: NotificationsService, useValue: { sendPush: jest.fn(async () => undefined) } },
+        { provide: AuditLogService, useValue: { record: auditRecord } },
+      ],
+    }).compile();
+    service = moduleRef.get(SubscriptionsService);
+  });
+
+  it('should record subscription.approve audit log with the acting admin userId when adminApprovePayment succeeds', async () => {
+    await service.adminApprovePayment('sub-audit', 'pay-audit', 'admin-user-42');
+
+    // audit.record is called with void (fire-and-forget) — flush microtasks
+    await new Promise((r) => setImmediate(r));
+
+    expect(auditRecord).toHaveBeenCalledWith(
+      'admin-user-42',
+      'subscription.approve',
+      'subscription',
+      'sub-audit',
+      expect.objectContaining({ paymentId: 'pay-audit' }),
+    );
+    expect(auditRecord).not.toHaveBeenCalledWith(
+      'system',
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
+  });
+
+  it('should record subscription.extend audit log with the acting admin userId when adminExtend is called', async () => {
+    await service.adminExtend('sub-audit', { days: 7 }, 'admin-user-42');
+
+    await new Promise((r) => setImmediate(r));
+
+    expect(auditRecord).toHaveBeenCalledWith(
+      'admin-user-42',
+      'subscription.extend',
+      'subscription',
+      'sub-audit',
+      expect.objectContaining({ days: 7 }),
+    );
+  });
+
+  it('should record subscription.plan_change audit log with the acting admin userId when adminChangePlan is called', async () => {
+    await service.adminChangePlan('sub-audit', { plan: SubscriptionPlanEnum.BUSINESS }, 'admin-user-42');
+
+    await new Promise((r) => setImmediate(r));
+
+    expect(auditRecord).toHaveBeenCalledWith(
+      'admin-user-42',
+      'subscription.plan_change',
+      'subscription',
+      'sub-audit',
+      expect.objectContaining({ from: 'START', to: 'BUSINESS' }),
+    );
+    expect(auditRecord).not.toHaveBeenCalledWith(
+      'system',
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
   });
 });

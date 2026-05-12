@@ -327,7 +327,7 @@ export class SubscriptionsService implements OnModuleInit {
 
     // Deferred #2: audit subscription approval.
     void this.audit.record(
-      'system',
+      reviewedBy,
       'subscription.approve',
       'subscription',
       updatedSubscription.id,
@@ -403,7 +403,11 @@ export class SubscriptionsService implements OnModuleInit {
     return updatedPayment;
   }
 
-  async adminExtend(subscriptionId: string, dto: ExtendSubscriptionDto) {
+  async adminExtend(
+    subscriptionId: string,
+    dto: ExtendSubscriptionDto,
+    adminUserId: string,
+  ) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
     });
@@ -415,13 +419,27 @@ export class SubscriptionsService implements OnModuleInit {
     const newEnd = new Date(subscription.currentPeriodEnd);
     newEnd.setDate(newEnd.getDate() + dto.days);
 
-    return this.prisma.subscription.update({
+    const updated = await this.prisma.subscription.update({
       where: { id: subscriptionId },
       data: { currentPeriodEnd: newEnd },
     });
+
+    void this.audit.record(
+      adminUserId,
+      'subscription.extend',
+      'subscription',
+      subscriptionId,
+      { days: dto.days, newPeriodEnd: newEnd },
+    );
+
+    return updated;
   }
 
-  async adminChangePlan(subscriptionId: string, dto: ChangePlanDto) {
+  async adminChangePlan(
+    subscriptionId: string,
+    dto: ChangePlanDto,
+    adminUserId: string,
+  ) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
     });
@@ -439,7 +457,7 @@ export class SubscriptionsService implements OnModuleInit {
     // implication) and downgrades (which silently lose access to
     // premium features under the F.2 fixed guard).
     void this.audit.record(
-      'system',
+      adminUserId,
       'subscription.plan_change',
       'subscription',
       subscriptionId,

@@ -181,14 +181,22 @@ export class AdminSubscriptionsController {
 
   @Put(':id/extend')
   @ApiOperation({ summary: 'Admin: extend subscription by N days' })
-  extend(@Param('id') id: string, @Body() dto: ExtendSubscriptionDto) {
-    return this.subscriptionsService.adminExtend(id, dto);
+  extend(
+    @Param('id') id: string,
+    @Body() dto: ExtendSubscriptionDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.subscriptionsService.adminExtend(id, dto, userId);
   }
 
   @Put(':id/change-plan')
   @ApiOperation({ summary: 'Admin: change subscription plan' })
-  changePlan(@Param('id') id: string, @Body() dto: ChangePlanDto) {
-    return this.subscriptionsService.adminChangePlan(id, dto);
+  changePlan(
+    @Param('id') id: string,
+    @Body() dto: ChangePlanDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.subscriptionsService.adminChangePlan(id, dto, userId);
   }
 
   @Put(':id/set-discount')
