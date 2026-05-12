@@ -1,9 +1,9 @@
+import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import 'package:equatable/equatable.dart';
-import 'package:thermal_printer/thermal_printer.dart';
 
 class PrinterState extends Equatable {
-  final List<PrinterDevice> devices;
-  final PrinterDevice? connectedDevice;
+  final List<BluetoothDevice> devices;
+  final BluetoothDevice? connectedDevice;
   final String? defaultPrinterName;
   final String? defaultPrinterAddress;
   final bool isScanning;
@@ -23,8 +23,8 @@ class PrinterState extends Equatable {
   });
 
   PrinterState copyWith({
-    List<PrinterDevice>? devices,
-    PrinterDevice? connectedDevice,
+    List<BluetoothDevice>? devices,
+    BluetoothDevice? connectedDevice,
     bool clearConnectedDevice = false,
     String? defaultPrinterName,
     String? defaultPrinterAddress,

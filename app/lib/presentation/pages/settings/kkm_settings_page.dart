@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:thermal_printer/thermal_printer.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -14,36 +17,56 @@ class KkmSettingsPage extends StatefulWidget {
 }
 
 class _KkmSettingsPageState extends State<KkmSettingsPage> {
-  final _printerManager = PrinterManager.instance;
-  List<PrinterDevice> _devices = [];
-  PrinterDevice? _connectedDevice;
+  List<BluetoothDevice> _devices = [];
+  BluetoothDevice? _connectedDevice;
   bool _isScanning = false;
   bool _autoPrint = false;
   bool _isPrinting = false;
 
+  StreamSubscription<List<BluetoothDevice>>? _scanSub;
+  StreamSubscription<ConnectState>? _connectSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _scanSub = BluetoothPrintPlus.scanResults.listen((list) {
+      if (mounted) setState(() => _devices = list);
+    });
+    _connectSub = BluetoothPrintPlus.connectState.listen((event) {
+      if (!mounted) return;
+      if (event == ConnectState.disconnected) {
+        setState(() => _connectedDevice = null);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scanSub?.cancel();
+    _connectSub?.cancel();
+    super.dispose();
+  }
+
   Future<void> _scan() async {
-    setState(() { _isScanning = true; _devices = []; });
+    setState(() {
+      _isScanning = true;
+      _devices = [];
+    });
     try {
-      _printerManager.discovery(type: PrinterType.bluetooth).listen((device) {
-        if (mounted) setState(() => _devices.add(device));
-      });
-      await Future.delayed(const Duration(seconds: 5));
+      await BluetoothPrintPlus.startScan(timeout: const Duration(seconds: 5));
     } finally {
       if (mounted) setState(() => _isScanning = false);
     }
   }
 
-  Future<void> _connect(PrinterDevice device) async {
+  Future<void> _connect(BluetoothDevice device) async {
     try {
-      await _printerManager.connect(
-        type: PrinterType.bluetooth,
-        model: BluetoothPrinterInput(
-          name: device.name,
-          address: device.address ?? '',
-          isBle: false,
-        ),
-      );
-      if (mounted) setState(() => _connectedDevice = device);
+      await BluetoothPrintPlus.connect(device);
+      // Give connectState a brief moment to settle.
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (mounted && BluetoothPrintPlus.isConnected) {
+        setState(() => _connectedDevice = device);
+      }
     } catch (e) {
       if (mounted) {
         AppSnackbar.error(context, AppLocalizations.of(context)!.snackConnectionError(e.toString()));
@@ -52,7 +75,9 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
   }
 
   Future<void> _disconnect() async {
-    await _printerManager.disconnect(type: PrinterType.bluetooth);
+    try {
+      await BluetoothPrintPlus.disconnect();
+    } catch (_) {}
     if (mounted) setState(() => _connectedDevice = null);
   }
 
@@ -61,10 +86,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
     setState(() => _isPrinting = true);
     try {
       final ticket = await _buildTestTicket();
-      await _printerManager.send(
-        type: PrinterType.bluetooth,
-        bytes: ticket,
-      );
+      await BluetoothPrintPlus.write(Uint8List.fromList(ticket));
       if (mounted) {
         AppSnackbar.success(context, AppLocalizations.of(context)!.snackTestPrintDone);
       }
@@ -257,11 +279,10 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                             Text(device.name,
                                 style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600)),
-                            if (device.address != null)
-                              Text(device.address!,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: context.textSecondary)),
+                            Text(device.address,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: context.textSecondary)),
                           ],
                         ),
                       ),

@@ -1,6 +1,6 @@
+import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thermal_printer/thermal_printer.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -135,7 +135,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                         isDefault: state.defaultPrinterAddress == device.address,
                         onConnect: () => context.read<PrinterBloc>().add(PrinterConnectRequested(device)),
                         onSetDefault: () => context.read<PrinterBloc>().add(
-                              PrinterSetDefaultRequested(name: device.name, address: device.address ?? ''),
+                              PrinterSetDefaultRequested(name: device.name, address: device.address),
                             ),
                       )),
                 ],
@@ -163,7 +163,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 }
 
 class _DeviceTile extends StatelessWidget {
-  final PrinterDevice device;
+  final BluetoothDevice device;
   final bool isConnected;
   final bool isDefault;
   final VoidCallback onConnect;
@@ -216,8 +216,7 @@ class _DeviceTile extends StatelessWidget {
                     ],
                   ],
                 ),
-                if (device.address != null)
-                  Text(device.address!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                Text(device.address, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),
