@@ -48,7 +48,8 @@ dependencies:
   printing: ^5.13.3
 
   # Bluetooth Thermal Printer
-  thermal_printer: ^1.0.5
+  esc_pos_utils_plus: ^2.0.4
+  bluetooth_print_plus: ^2.4.6
 
   # Share
   share_plus: ^10.1.4
