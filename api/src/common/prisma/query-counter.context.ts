@@ -14,10 +14,10 @@ export interface QueryCounterStore {
 const storage = new AsyncLocalStorage<QueryCounterStore>();
 
 export function runWithCounter<T>(
-  endpoint: string,
+  store: QueryCounterStore,
   fn: () => Promise<T>,
 ): Promise<T> {
-  return storage.run({ count: 0, endpoint }, fn);
+  return storage.run(store, fn);
 }
 
 export function incrementCounter(): void {

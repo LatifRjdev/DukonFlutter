@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { QueryCounterInterceptor } from './common/interceptors/query-counter.interceptor';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { AuditLogModule } from './common/audit/audit-log.module';
@@ -77,6 +78,7 @@ import { HealthModule } from './modules/health/health.module';
     HealthModule,
   ],
   providers: [
+    { provide: APP_INTERCEPTOR, useClass: QueryCounterInterceptor },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

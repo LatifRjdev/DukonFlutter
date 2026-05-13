@@ -1,19 +1,38 @@
 // api/src/common/prisma/query-counter.middleware.ts
 //
-// Attaches a query-counter listener to a PrismaClient. Prisma 6
-// removed the $use middleware API; using $extends would change
-// the client's TS type and force every consumer to migrate. The
-// simpler path is Prisma's $on('query') event listener, which
-// works as long as the client is constructed with the matching
-// log config (see PrismaService).
+// Attaches a query-counter to a PrismaClient. Prisma 6 removed
+// $use, and $on('query') events do NOT propagate AsyncLocalStorage
+// (they're emitted from an internal EventEmitter outside our async
+// chain). The only way to preserve the request context across
+// queries is $extends with a query callback — it runs inline in the
+// call chain so AsyncLocalStorage is visible.
+//
+// To avoid changing the PrismaClient TS type (which would force
+// every consumer to migrate), we apply $extends at runtime and
+// copy the extended model proxies back onto the base instance.
+// External callers continue to see the standard PrismaClient API.
 import { PrismaClient } from '@prisma/client';
 import { incrementCounter } from './query-counter.context';
 
 export function attachQueryCounter(prisma: PrismaClient): void {
-  // $on('query', ...) is only typed when the client is built with
-  // log: [{ emit: 'event', level: 'query' }]. Cast to bypass the
-  // narrowing — PrismaService guarantees the right config.
-  (prisma as unknown as {
-    $on(event: 'query', listener: () => void): void;
-  }).$on('query', () => incrementCounter());
+  const ext = prisma.$extends({
+    query: {
+      $allOperations({ args, query }: { args: unknown; query: (a: unknown) => Promise<unknown> }) {
+        incrementCounter();
+        return query(args);
+      },
+    },
+  });
+
+  // Copy model accessors (prisma.user, prisma.product, etc.) from
+  // the extended client back onto the base. Skip dunder / $-prefixed
+  // properties (those are PrismaClient internals like $connect,
+  // $transaction, $on, etc. which we want to keep on the base).
+  for (const key of Object.keys(ext)) {
+    if (key.startsWith('$') || key.startsWith('_')) continue;
+    const value = (ext as unknown as Record<string, unknown>)[key];
+    if (value !== null && typeof value === 'object') {
+      (prisma as unknown as Record<string, unknown>)[key] = value;
+    }
+  }
 }
