@@ -97,10 +97,10 @@ only — proposed fixes for follow-up sprints.
 
 ## P1 fix-list (inline in this spec)
 
-- [ ] **I-P1-1**: investments DTO accepts negative/unbounded `amount`/`returnAmount`/pagination. Add `@Min(0.01)` + `@Max(9_999_999_999.99)` + `+992` phone regex.
+- [x] **I-P1-1** (commit 9e41d68): investments DTO accepts negative/unbounded `amount`/`returnAmount`/pagination. Add `@Min(0.01)` + `@Max(9_999_999_999.99)` + `+992` phone regex.
 - [ ] **Z-P1-1**: zakat `createPayment` trusts client-supplied amounts. Re-derive `zakatDue` server-side from `calculate()`; reject if client-supplied diverges by > 0.5%. Add `localId` idempotency.
 - [ ] **Z-P1-2**: zakat write paths bypass `AuditLogService`. Inject + record on `upsertSettings` + `createPayment`. Inject `@CurrentUser()` so actor id is captured.
-- [ ] **Z-P1-3**: zakat DTOs too permissive. Add `@Max(100)` on `zakatRate`, `@Min(0)` on every Decimal, expose `nisabCurrency` in `UpsertZakatSettingsDto`.
+- [x] **Z-P1-3** (commit 9e41d68): zakat DTOs too permissive. Add `@Max(100)` on `zakatRate`, `@Min(0)` on every Decimal, expose `nisabCurrency` in `UpsertZakatSettingsDto`.
 - [ ] **Z-P1-4**: no `hasZakat` tier flag + no `@RequiresFeature`. **Decision-deferred** — needs product call: should zakat be tier-gated or baseline? Documented as deferred; no inline fix.
 - [x] **Z-P1-5**: zakat FKs `NoAction`. Migration to `onDelete: Cascade`. *(Fixed 2026-05-14: migration `20260514070427_g2_zakat_cascade` — both `zakat_settings_storeId_fkey` + `zakat_payments_storeId_fkey` now CASCADE; plus 7 CHECK constraints on Decimal money columns.)*
 - [ ] **Z-P1-6**: zakat `calculate` uses JS `Number` on `Decimal`. Wrap in `$transaction`; convert to `Prisma.Decimal` arithmetic.
