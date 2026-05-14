@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsEnum, IsDateString, IsNumber } from 'class-validator';
+import { IsOptional, IsEnum, IsDateString, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import { InvestmentStatus } from '@prisma/client';
 
@@ -8,12 +8,15 @@ export class InvestmentQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
+  @Min(1)
   page?: number = 1;
 
   @ApiPropertyOptional({ default: 20 })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
+  @Min(1)
+  @Max(100)
   limit?: number = 20;
 
   @ApiPropertyOptional({ enum: InvestmentStatus })

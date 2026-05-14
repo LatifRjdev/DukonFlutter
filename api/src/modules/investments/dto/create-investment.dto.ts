@@ -6,6 +6,9 @@ import {
   IsEnum,
   IsDateString,
   MaxLength,
+  Min,
+  Max,
+  Matches,
 } from 'class-validator';
 import { InvestmentStatus } from '@prisma/client';
 
@@ -22,11 +25,15 @@ export class CreateInvestmentDto {
 
   @ApiProperty({ example: 50000 })
   @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0.01)
+  @Max(9_999_999_999.99)
   amount: number;
 
   @ApiPropertyOptional({ example: 60000 })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(9_999_999_999.99)
   returnAmount?: number;
 
   @ApiProperty({ example: 'Иванов Иван' })
@@ -36,6 +43,9 @@ export class CreateInvestmentDto {
   @ApiPropertyOptional({ example: '+992901234567' })
   @IsOptional()
   @IsString()
+  @Matches(/^\+992\d{9}$/, {
+    message: 'Phone must be a valid Tajik number (+992XXXXXXXXX)',
+  })
   investorPhone?: string;
 
   @ApiPropertyOptional({ enum: InvestmentStatus, default: 'ACTIVE' })

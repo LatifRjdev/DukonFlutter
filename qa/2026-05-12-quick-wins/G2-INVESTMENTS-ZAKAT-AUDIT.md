@@ -102,7 +102,7 @@ only — proposed fixes for follow-up sprints.
 - [ ] **Z-P1-2**: zakat write paths bypass `AuditLogService`. Inject + record on `upsertSettings` + `createPayment`. Inject `@CurrentUser()` so actor id is captured.
 - [ ] **Z-P1-3**: zakat DTOs too permissive. Add `@Max(100)` on `zakatRate`, `@Min(0)` on every Decimal, expose `nisabCurrency` in `UpsertZakatSettingsDto`.
 - [ ] **Z-P1-4**: no `hasZakat` tier flag + no `@RequiresFeature`. **Decision-deferred** — needs product call: should zakat be tier-gated or baseline? Documented as deferred; no inline fix.
-- [ ] **Z-P1-5**: zakat FKs `NoAction`. Migration to `onDelete: Cascade`.
+- [x] **Z-P1-5**: zakat FKs `NoAction`. Migration to `onDelete: Cascade`. *(Fixed 2026-05-14: migration `20260514070427_g2_zakat_cascade` — both `zakat_settings_storeId_fkey` + `zakat_payments_storeId_fkey` now CASCADE; plus 7 CHECK constraints on Decimal money columns.)*
 - [ ] **Z-P1-6**: zakat `calculate` uses JS `Number` on `Decimal`. Wrap in `$transaction`; convert to `Prisma.Decimal` arithmetic.
 - [ ] **ZC-P1-1**: haul (354-day) not enforced. Backend: gate `zakatDue` on `now - haulStartDate >= 354 days`. Flutter: surface "haul completes on YYYY-MM-DD" hint when below threshold.
 - [ ] **X-P1-1**: settings save HTTP verb mismatch. Either change Flutter datasource to `POST` OR add `@Put('settings')` server-side. Pick the one consistent with existing convention (POST is what backend uses for create-or-update — change Flutter to POST).

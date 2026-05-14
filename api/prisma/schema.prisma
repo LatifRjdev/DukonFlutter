@@ -530,7 +530,7 @@ model ExchangeRate {
 model ZakatSettings {
   id             String   @id @default(uuid())
   storeId        String   @unique
-  store          Store    @relation(fields: [storeId], references: [id])
+  store          Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   nisabGold      Decimal  @default(85) @db.Decimal(12, 2)
   nisabSilver    Decimal  @default(595) @db.Decimal(12, 2)
   nisabCurrency  Currency @default(TJS)
@@ -549,7 +549,7 @@ model ZakatSettings {
 model ZakatPayment {
   id          String   @id @default(uuid())
   storeId     String
-  store       Store    @relation(fields: [storeId], references: [id])
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   amount      Decimal  @db.Decimal(12, 2)
   totalAssets Decimal  @db.Decimal(12, 2)
   zakatDue    Decimal  @db.Decimal(12, 2)

@@ -10,11 +10,13 @@ export class CreateZakatPaymentDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
+  @Min(0)
   totalAssets?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
+  @Min(0)
   zakatDue?: number;
 
   @ApiPropertyOptional()
