@@ -28,4 +28,13 @@ export class CreateZakatPaymentDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  // Z-P1-1: client-generated UUID. When present, the backend
+  // upserts on (storeId, localId) so a retried POST after a flaky
+  // network is a no-op rather than a duplicate row. Optional for
+  // backwards compatibility with older Flutter builds.
+  @ApiPropertyOptional({ description: 'Client-generated UUID for idempotency' })
+  @IsOptional()
+  @IsString()
+  localId?: string;
 }

@@ -557,8 +557,15 @@ model ZakatPayment {
   notes       String?
   paidAt      DateTime @default(now())
   createdAt   DateTime @default(now())
+  // Z-P1-1: client-supplied UUID for idempotent retries. Scoped per
+  // store so two stores can independently send the same client UUID
+  // without collision (e.g. clients that reset their UUID seed on
+  // re-install). Existing rows keep `localId = NULL` and are exempt
+  // from the unique constraint via Postgres' default NULL semantics.
+  localId     String?
 
   @@index([storeId, paidAt])
+  @@unique([storeId, localId])
   @@map("zakat_payments")
 }
 
