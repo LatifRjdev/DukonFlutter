@@ -31,19 +31,21 @@ export class SubscriptionGuard implements CanActivate {
       return true; // No store context — skip guard
     }
 
-    // F.2: read handler-then-class metadata explicitly. The previous
-    // `getAllAndOverride([handler, class])` skipped class-level
-    // decorators in some controller configurations, leaving methods
-    // ungated when the controller author put @RequiresFeature on
-    // the class instead of every method. Explicit lookup avoids the
-    // surprise.
-    const requiredPlan =
-      this.reflector.get<string>(REQUIRED_PLAN_KEY, context.getHandler()) ??
-      this.reflector.get<string>(REQUIRED_PLAN_KEY, context.getClass());
+    // F.2: read handler-then-class metadata via the standard NestJS
+    // Reflector pattern. `getAllAndOverride([handler, class])` returns
+    // the first non-undefined value, so method-level metadata still
+    // wins; class-level applies to methods that have no method-level
+    // decorator. This makes class-level @RequiresFeature work as a
+    // controller-wide default.
+    const requiredPlan = this.reflector.getAllAndOverride<string>(
+      REQUIRED_PLAN_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
-    const requiredFeature =
-      this.reflector.get<string>(REQUIRED_FEATURE_KEY, context.getHandler()) ??
-      this.reflector.get<string>(REQUIRED_FEATURE_KEY, context.getClass());
+    const requiredFeature = this.reflector.getAllAndOverride<string>(
+      REQUIRED_FEATURE_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     // If no subscription requirements, allow
     if (!requiredPlan && !requiredFeature) {
