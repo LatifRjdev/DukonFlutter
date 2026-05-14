@@ -22,7 +22,9 @@ void main() {
     when(() => expenseBloc.state).thenReturn(ExpenseInitial());
   });
 
-  Widget page() => const AddExpensePage(storeId: 'test-store-id');
+  // Frozen "now" → _date deterministic across runs.
+  final fixedNow = DateTime(2024, 3, 15, 10, 30);
+  Widget page() => AddExpensePage(storeId: 'test-store-id', now: () => fixedNow);
 
   Widget wrapWithBlocs(Widget child) => BlocProvider<ExpenseBloc>.value(
         value: expenseBloc,

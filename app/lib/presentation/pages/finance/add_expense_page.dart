@@ -13,7 +13,9 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 
 class AddExpensePage extends StatefulWidget {
   final String storeId;
-  const AddExpensePage({super.key, required this.storeId});
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+  const AddExpensePage({super.key, required this.storeId, this.now});
   @override
   State<AddExpensePage> createState() => _AddExpensePageState();
 }
@@ -24,7 +26,15 @@ class _AddExpensePageState extends State<AddExpensePage> {
   final _descriptionController = TextEditingController();
   final _notesController = TextEditingController();
   String _category = 'OTHER';
-  DateTime _date = DateTime.now();
+  late DateTime _date;
+
+  DateTime _now() => (widget.now ?? DateTime.now)();
+
+  @override
+  void initState() {
+    super.initState();
+    _date = _now();
+  }
 
   final _categoryOptions = [
     ('PURCHASE', 'Закупка'),
@@ -49,7 +59,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
       context: context,
       initialDate: _date,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+      lastDate: _now(),
     );
     if (picked != null) {
       setState(() => _date = picked);

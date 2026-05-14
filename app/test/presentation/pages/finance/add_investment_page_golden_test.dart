@@ -30,7 +30,9 @@ void main() {
     if (sl.isRegistered<InvestmentBloc>()) sl.unregister<InvestmentBloc>();
   });
 
-  Widget page() => const AddInvestmentPage(storeId: 'test-store-id');
+  // Frozen "now" → _startDate deterministic across runs.
+  final fixedNow = DateTime(2024, 3, 15, 10, 30);
+  Widget page() => AddInvestmentPage(storeId: 'test-store-id', now: () => fixedNow);
 
   group('AddInvestmentPage goldens', () {
     testGoldens('light theme', (tester) async {

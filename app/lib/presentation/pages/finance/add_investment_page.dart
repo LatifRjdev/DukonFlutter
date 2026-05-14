@@ -14,7 +14,9 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 
 class AddInvestmentPage extends StatefulWidget {
   final String storeId;
-  const AddInvestmentPage({super.key, required this.storeId});
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+  const AddInvestmentPage({super.key, required this.storeId, this.now});
   @override
   State<AddInvestmentPage> createState() => _AddInvestmentPageState();
 }
@@ -27,8 +29,16 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
   final _returnAmountController = TextEditingController();
   final _investorNameController = TextEditingController();
   final _investorPhoneController = TextEditingController();
-  DateTime _startDate = DateTime.now();
+  late DateTime _startDate;
   DateTime? _endDate;
+
+  DateTime _now() => (widget.now ?? DateTime.now)();
+
+  @override
+  void initState() {
+    super.initState();
+    _startDate = _now();
+  }
 
   @override
   void dispose() {
