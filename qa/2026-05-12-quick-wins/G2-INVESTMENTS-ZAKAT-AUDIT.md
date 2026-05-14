@@ -105,7 +105,7 @@ only — proposed fixes for follow-up sprints.
 - [x] **Z-P1-5**: zakat FKs `NoAction`. Migration to `onDelete: Cascade`. *(Fixed 2026-05-14: migration `20260514070427_g2_zakat_cascade` — both `zakat_settings_storeId_fkey` + `zakat_payments_storeId_fkey` now CASCADE; plus 7 CHECK constraints on Decimal money columns.)*
 - [ ] **Z-P1-6**: zakat `calculate` uses JS `Number` on `Decimal`. Wrap in `$transaction`; convert to `Prisma.Decimal` arithmetic.
 - [ ] **ZC-P1-1**: haul (354-day) not enforced. Backend: gate `zakatDue` on `now - haulStartDate >= 354 days`. Flutter: surface "haul completes on YYYY-MM-DD" hint when below threshold.
-- [ ] **X-P1-1**: settings save HTTP verb mismatch. Either change Flutter datasource to `POST` OR add `@Put('settings')` server-side. Pick the one consistent with existing convention (POST is what backend uses for create-or-update — change Flutter to POST).
+- [x] **X-P1-1** (commit PENDING): settings save HTTP verb mismatch — Flutter datasource changed from PUT to POST to match backend controller.
 
 ## P2 / P3 findings (documented, NOT fixed)
 

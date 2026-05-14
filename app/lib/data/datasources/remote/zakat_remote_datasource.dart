@@ -48,7 +48,7 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
   @override
   Future<ZakatSettings> upsertSettings(String storeId, Map<String, dynamic> data) async {
     try {
-      final response = await _dioClient.put(
+      final response = await _dioClient.post(
         ApiEndpoints.zakatSettings(storeId),
         data: data,
       );
