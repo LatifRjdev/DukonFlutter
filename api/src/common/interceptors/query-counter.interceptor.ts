@@ -30,10 +30,7 @@ const ERROR_THRESHOLD = 25;
 export class QueryCounterInterceptor implements NestInterceptor {
   private readonly logger = new Logger('QueryCounter');
 
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<unknown> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest<{
       method: string;
       url: string;

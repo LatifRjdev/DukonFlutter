@@ -1,6 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsNumber, IsEnum, IsArray, ValidateNested, Min, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsEnum,
+  IsArray,
+  ValidateNested,
+  Min,
+  IsDateString,
+} from 'class-validator';
 
 export enum SalePaymentType {
   CASH = 'CASH',

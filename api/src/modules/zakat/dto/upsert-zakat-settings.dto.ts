@@ -1,4 +1,12 @@
-import { IsOptional, IsNumber, IsBoolean, IsDateString, IsEnum, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  Min,
+  Max,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Currency } from '@prisma/client';
 

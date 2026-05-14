@@ -17,7 +17,13 @@ import { incrementCounter } from './query-counter.context';
 export function attachQueryCounter(prisma: PrismaClient): void {
   const ext = prisma.$extends({
     query: {
-      $allOperations({ args, query }: { args: unknown; query: (a: unknown) => Promise<unknown> }) {
+      $allOperations({
+        args,
+        query,
+      }: {
+        args: unknown;
+        query: (a: unknown) => Promise<unknown>;
+      }) {
         incrementCounter();
         return query(args);
       },

@@ -51,7 +51,10 @@ function makeContext(opts: {
 function makePrisma(opts: {
   subscription?: FakeSubscription | null;
   planConfig?: FakePlanConfig | null;
-}): { subscription: { findUnique: jest.Mock }; subscriptionPlanConfig: { findUnique: jest.Mock } } {
+}): {
+  subscription: { findUnique: jest.Mock };
+  subscriptionPlanConfig: { findUnique: jest.Mock };
+} {
   return {
     subscription: {
       findUnique: jest.fn().mockResolvedValue(opts.subscription ?? null),
