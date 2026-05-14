@@ -19,6 +19,7 @@ import { ReportQueryDto } from './dto/report-query.dto';
 // PREMIUM-tier cashiers could even export sales as xlsx. Add the
 // guard so per-route @Permissions decorators take effect.
 @UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard, SubscriptionGuard)
+@RequiresFeature('hasReportsAll')
 @Controller('stores/:storeId/reports')
 export class ReportsController {
   constructor(
@@ -27,9 +28,9 @@ export class ReportsController {
   ) {}
 
   // /sales originally lacked @RequiresFeature; the other three had it.
-  // That left the most-hit report open to START tier. All four now gated.
+  // That left the most-hit report open to START tier. All four now gated
+  // via class-level @RequiresFeature('hasReportsAll') above.
   @Get('sales')
-  @RequiresFeature('hasReportsAll')
   @Permissions('reports.view')
   @ApiOperation({
     summary: 'Sales report: aggregated by date, top 5 products by revenue',
@@ -42,7 +43,6 @@ export class ReportsController {
   }
 
   @Get('profit')
-  @RequiresFeature('hasReportsAll')
   @Permissions('reports.view')
   @ApiOperation({
     summary: 'Profit report: income, expenses, profit, margin %',
@@ -55,7 +55,6 @@ export class ReportsController {
   }
 
   @Get('products')
-  @RequiresFeature('hasReportsAll')
   @Permissions('reports.view')
   @ApiOperation({
     summary:
@@ -69,7 +68,6 @@ export class ReportsController {
   }
 
   @Get('staff')
-  @RequiresFeature('hasReportsAll')
   @Permissions('reports.view')
   @ApiOperation({
     summary: 'Staff report: sales per cashier, avg check per cashier',
