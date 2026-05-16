@@ -323,7 +323,11 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<StockRepository>(
-    () => StockRepositoryImpl(dioClient: sl<DioClient>()),
+    () => StockRepositoryImpl(
+      dioClient: sl<DioClient>(),
+      networkInfo: sl<NetworkInfo>(),
+      syncQueue: sl<SyncQueue>(),
+    ),
   );
 
   sl.registerLazySingleton<DashboardRepository>(

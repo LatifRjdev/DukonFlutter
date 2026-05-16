@@ -1,15 +1,28 @@
 import 'package:dio/dio.dart';
+import 'package:uuid/uuid.dart';
 import '../../core/constants/api_endpoints.dart';
 import '../../core/errors/exceptions.dart';
 import '../../core/network/dio_client.dart';
+import '../../core/network/network_info.dart';
 import '../../domain/entities/stock_movement.dart';
 import '../../domain/repositories/stock_repository.dart';
+import '../sync/sync_queue.dart';
 
+/// Spec B E.2: offline-aware. Online → POST. Offline → enqueue with
+/// client-generated `localId` so the server returns the existing row
+/// on retry instead of double-counting stock.
 class StockRepositoryImpl implements StockRepository {
   final DioClient _dioClient;
+  final NetworkInfo _networkInfo;
+  final SyncQueue _syncQueue;
 
-  StockRepositoryImpl({required DioClient dioClient})
-      : _dioClient = dioClient;
+  StockRepositoryImpl({
+    required DioClient dioClient,
+    required NetworkInfo networkInfo,
+    required SyncQueue syncQueue,
+  })  : _dioClient = dioClient,
+        _networkInfo = networkInfo,
+        _syncQueue = syncQueue;
 
   @override
   Future<StockMovement> createStockMovement(
@@ -17,17 +30,48 @@ class StockRepositoryImpl implements StockRepository {
     String productId,
     Map<String, dynamic> data,
   ) async {
+    final payload = Map<String, dynamic>.from(data);
+    payload['localId'] ??= const Uuid().v4();
+
     try {
-      final response = await _dioClient.post(
-        ApiEndpoints.stockMovements(storeId, productId),
-        data: data,
-      );
-      return _mapStockMovement(
-        response.data['data'] as Map<String, dynamic>,
-      );
+      if (await _networkInfo.isConnected) {
+        final response = await _dioClient.post(
+          ApiEndpoints.stockMovements(storeId, productId),
+          data: payload,
+        );
+        return _mapStockMovement(
+          response.data['data'] as Map<String, dynamic>,
+        );
+      }
+    } on NetworkException {
+      // Fall through to offline path.
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
+
+    // Offline: enqueue + return temp StockMovement so UI updates.
+    final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
+    final tempMovement = StockMovement(
+      id: tempId,
+      productId: productId,
+      type: data['type'] as String? ?? 'PURCHASE',
+      quantity: (data['quantity'] as num?)?.toInt() ?? 0,
+      unitCost: (data['unitCost'] as num?)?.toDouble(),
+      totalCost: (data['totalCost'] as num?)?.toDouble(),
+      supplierId: data['supplierId'] as String?,
+      reference: data['reference'] as String?,
+      notes: data['notes'] as String?,
+      createdAt: DateTime.now(),
+    );
+
+    await _syncQueue.enqueue(
+      entityType: 'stock_movement',
+      entityId: '$storeId:$productId:$tempId',
+      operation: 'CREATE',
+      payload: payload,
+    );
+
+    return tempMovement;
   }
 
   @override
