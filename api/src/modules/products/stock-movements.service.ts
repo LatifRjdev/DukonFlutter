@@ -6,7 +6,11 @@ import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 export class StockMovementsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(storeId: string, dto: CreateStockMovementDto, createdBy?: string) {
+  async create(
+    storeId: string,
+    dto: CreateStockMovementDto,
+    createdBy?: string,
+  ) {
     // Spec B E.2: idempotent replay. If localId already used,
     // return the existing row instead of creating a duplicate
     // (and skip re-applying the stock-quantity change).
@@ -21,7 +25,8 @@ export class StockMovementsService {
     const product = await this.prisma.product.findFirst({
       where: { id: dto.productId, storeId },
     });
-    if (!product) throw new NotFoundException('Product not found in this store');
+    if (!product)
+      throw new NotFoundException('Product not found in this store');
 
     const totalCost = dto.unitCost ? dto.unitCost * dto.quantity : undefined;
 
