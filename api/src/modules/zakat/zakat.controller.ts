@@ -5,6 +5,8 @@ import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { ZakatService } from './zakat.service';
 import { UpsertZakatSettingsDto } from './dto/upsert-zakat-settings.dto';
 import { CreateZakatPaymentDto } from './dto/create-zakat-payment.dto';
@@ -12,7 +14,8 @@ import { assertNonEmptyDto } from '../../common/validators/non-empty-dto';
 
 @ApiTags('Zakat')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard, PermissionsGuard)
+@RequiresFeature('hasZakat')
 @Controller('stores/:storeId/zakat')
 export class ZakatController {
   constructor(private zakatService: ZakatService) {}

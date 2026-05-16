@@ -188,6 +188,7 @@ model SubscriptionPlanConfig {
   hasAllPush    Boolean
   hasDelivery   Boolean
   hasInventory  Boolean
+  hasZakat      Boolean  @default(false)
 
   @@map("subscription_plan_configs")
 }

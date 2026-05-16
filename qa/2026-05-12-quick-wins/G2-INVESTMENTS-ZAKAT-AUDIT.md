@@ -17,7 +17,7 @@ only — proposed fixes for follow-up sprints.
 | Severity | Count | Disposition |
 |----------|------:|-------------|
 | P0 | 0 | — |
-| P1 | 9 | inline fix in this spec |
+| P1 | 9 | inline fix in this spec (all 9 fixed) |
 | P2 | 16 | documented, deferred |
 | P3 | 13 | documented, deferred |
 
@@ -101,7 +101,7 @@ only — proposed fixes for follow-up sprints.
 - [x] **Z-P1-1** (G.2 P1 bundle): zakat `createPayment` trusts client-supplied amounts. Re-derive `zakatDue` server-side from `calculate()`; reject if client-supplied diverges by > 0.5%. Add `localId` idempotency. *(Fixed 2026-05-12: server now re-derives zakatDue, rejects > 0.5% divergence with `BadRequestException`; new `localId` column + `(storeId, localId)` unique index supports idempotent retries via upsert.)*
 - [x] **Z-P1-2** (G.2 P1 bundle): zakat write paths bypass `AuditLogService`. Inject + record on `upsertSettings` + `createPayment`. Inject `@CurrentUser()` so actor id is captured. *(Fixed 2026-05-12: `AuditLogService` injected into `ZakatService`; `userId` threaded through controller via `@CurrentUser('id')`; both `zakat.payment.create` and `zakat.settings.upsert` now audit-logged with actor.)*
 - [x] **Z-P1-3** (commit 9e41d68): zakat DTOs too permissive. Add `@Max(100)` on `zakatRate`, `@Min(0)` on every Decimal, expose `nisabCurrency` in `UpsertZakatSettingsDto`.
-- [ ] **Z-P1-4**: no `hasZakat` tier flag + no `@RequiresFeature`. **Decision-deferred** — needs product call: should zakat be tier-gated or baseline? Documented as deferred; no inline fix.
+- [x] **Z-P1-4**: no `hasZakat` tier flag + no `@RequiresFeature`. *(Fixed 2026-05-16: product decision = tier-gated. Added `hasZakat` Boolean column to `SubscriptionPlanConfig` (migration `20260516000000_g2_zakat_tier_flag`); seeded `false` on START, `true` on BUSINESS+PREMIUM (same pattern as `hasReportsAll`/`hasInventory`/`hasDelivery`). `ZakatController` now uses `SubscriptionGuard` + `@RequiresFeature('hasZakat')` at class level. Live-verified: START → 403, BUSINESS → 200 on `/zakat/calculate`.)*
 - [x] **Z-P1-5**: zakat FKs `NoAction`. Migration to `onDelete: Cascade`. *(Fixed 2026-05-14: migration `20260514070427_g2_zakat_cascade` — both `zakat_settings_storeId_fkey` + `zakat_payments_storeId_fkey` now CASCADE; plus 7 CHECK constraints on Decimal money columns.)*
 - [x] **Z-P1-6** (G.2 P1 bundle): zakat `calculate` uses JS `Number` on `Decimal`. Wrap in `$transaction`; convert to `Prisma.Decimal` arithmetic. *(Fixed 2026-05-12: 4-statement read batch wrapped in `prisma.$transaction([...])` for snapshot isolation; all arithmetic now `Prisma.Decimal` end-to-end; `TransformInterceptor` coerces back to JS Number on the wire.)*
 - [x] **ZC-P1-1** (G.2 P1 bundle): haul (354-day) not enforced. Backend: gate `zakatDue` on `now - haulStartDate >= 354 days`. Flutter: surface "haul completes on YYYY-MM-DD" hint when below threshold. *(Fixed 2026-05-12: backend gate enforced — `zakatDue=0` when `haulStartDate` is set and < 354 days have passed; response now surfaces `isHaulComplete` + `haulCompletesOn` for Flutter to render the hint and disable the "mark as paid" CTA. Flutter wire-up tracked separately.)*
@@ -151,6 +151,6 @@ only — proposed fixes for follow-up sprints.
 ## Recommendations
 
 1. **For the next sprint**, bundle the P2 cluster on **money discipline** (idempotency, audit, `$transaction`, DB CHECK) into a single "data integrity hardening" spec covering investments + zakat together.
-2. The **single biggest follow-up** is the **zakat tier-gating decision** (Z-P1-4). Without a product call we can't fix this in this spec — leaving it open is intentional.
+2. ~~The **single biggest follow-up** is the **zakat tier-gating decision** (Z-P1-4). Without a product call we can't fix this in this spec — leaving it open is intentional.~~ *(Resolved 2026-05-16: tier-gated, BUSINESS+PREMIUM only.)*
 3. The **`investment_bloc` ROI gap** (no math today) becomes critical the moment a future PR adds a "Profit %" widget. Mention in the bloc's docstring + add a TODO referencing this audit.
 4. Multi-currency support is broken in 2 places (`zakat_settings_page.dart` hardcoded TJS, `_formatPrice` hardcoded TJS). When the multi-currency feature ships properly, both fixes belong in that spec.

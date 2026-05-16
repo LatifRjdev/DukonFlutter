@@ -52,6 +52,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasAllPush: false,
         hasDelivery: false,
         hasInventory: false,
+        hasZakat: false,
       },
       {
         plan: 'BUSINESS' as const,
@@ -65,6 +66,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasAllPush: true,
         hasDelivery: true,
         hasInventory: true,
+        hasZakat: true,
       },
       {
         plan: 'PREMIUM' as const,
@@ -78,6 +80,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasAllPush: true,
         hasDelivery: true,
         hasInventory: true,
+        hasZakat: true,
       },
     ];
 
