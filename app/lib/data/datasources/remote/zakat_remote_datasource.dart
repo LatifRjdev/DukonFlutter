@@ -5,16 +5,8 @@ import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/zakat_calculation.dart';
 import '../../../domain/entities/zakat_settings.dart';
 import '../../../domain/entities/zakat_payment.dart';
-
-// Spec E B.1: paginated payments-list response. Kept as a typedef
-// record so the bloc/repository layers can pattern-match the four
-// fields without hand-rolling a DTO class for a transport-only shape.
-typedef ZakatPaymentsPage = ({
-  List<ZakatPayment> data,
-  int total,
-  int totalPages,
-  int currentPage,
-});
+// Spec E B.1: ZakatPaymentsPage record defined in the domain layer.
+import '../../../domain/repositories/zakat_repository.dart' show ZakatPaymentsPage;
 
 abstract class ZakatRemoteDatasource {
   Future<ZakatCalculation> calculate(String storeId);

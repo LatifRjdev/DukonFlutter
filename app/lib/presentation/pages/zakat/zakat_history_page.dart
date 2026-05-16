@@ -31,6 +31,19 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
     context.read<ZakatBloc>().add(ZakatPaymentsRequested(storeId: widget.storeId));
   }
 
+  // Spec E B.2: dispatch a fresh page-1 fetch and await its
+  // completion so RefreshIndicator's spinner stops at the right
+  // moment. We listen for the next non-loading state instead of
+  // blindly delaying — the latter would either be too short
+  // (spinner pops away mid-fetch) or too long (UX feels sticky).
+  Future<void> _refresh() async {
+    final bloc = context.read<ZakatBloc>();
+    bloc.add(ZakatPaymentsRequested(storeId: widget.storeId));
+    await bloc.stream.firstWhere(
+      (s) => s is ZakatPaymentsLoaded || s is ZakatError,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -70,16 +83,30 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                   }
                   if (state is ZakatPaymentsLoaded) {
                     if (state.payments.isEmpty) {
-                      return const AppEmptyState(
-                        icon: Icons.nightlight_round,
-                        title: 'Нет расчётов закята',
-                        subtitle: 'Рассчитайте закят в калькуляторе, чтобы история появилась здесь',
+                      // Spec E B.2: empty state still needs to be
+                      // scrollable so pull-to-refresh works.
+                      return RefreshIndicator(
+                        onRefresh: _refresh,
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: const [
+                            SizedBox(height: 120),
+                            AppEmptyState(
+                              icon: Icons.nightlight_round,
+                              title: 'Нет расчётов закята',
+                              subtitle: 'Рассчитайте закят в калькуляторе, чтобы история появилась здесь',
+                            ),
+                          ],
+                        ),
                       );
                     }
 
                     final totalPaid = state.payments.fold<double>(0, (sum, p) => sum + p.amount);
 
-                    return ListView(
+                    return RefreshIndicator(
+                      onRefresh: _refresh,
+                      child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(16),
                       children: [
                         // Stats card
@@ -98,8 +125,13 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                               Text(_formatPrice(totalPaid),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.primary)),
                               const SizedBox(height: 2),
-                              Text('за ${state.payments.length} выплат',
-                                style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                              Text(
+                                // Spec E B.1: prefer the server-known
+                                // total over the locally-buffered count
+                                // so users see "of 47" not "of 20".
+                                'за ${state.total > 0 ? state.total : state.payments.length} выплат',
+                                style: TextStyle(fontSize: 12, color: context.textSecondary),
+                              ),
                             ],
                           ),
                         ),
@@ -153,7 +185,27 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                             ),
                           );
                         }),
+
+                        // Spec E B.1: load-more button. Only rendered
+                        // when the bloc knows more pages exist on the
+                        // server (currentPage < totalPages).
+                        if (state.hasMore) ...[
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () => context.read<ZakatBloc>().add(
+                                ZakatPaymentsRequested(
+                                  storeId: widget.storeId,
+                                  page: state.currentPage + 1,
+                                ),
+                              ),
+                              child: const Text('Загрузить ещё'),
+                            ),
+                          ),
+                        ],
                       ],
+                      ),
                     );
                   }
                   return const SizedBox.shrink();

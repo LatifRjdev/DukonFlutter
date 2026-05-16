@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
@@ -50,8 +58,20 @@ export class ZakatController {
 
   @Get('payments')
   @ApiOperation({ summary: 'List zakat payments' })
-  getPayments(@Param('storeId') storeId: string) {
-    return this.zakatService.getPayments(storeId);
+  // Spec E B.1: paginate zakat history. `page` defaults to 1,
+  // `limit` is clamped to 1..100 with a default of 20. Service
+  // returns `{ data, total, totalPages, currentPage }` so the
+  // Flutter client can render a hasMore / load-more button.
+  getPayments(
+    @Param('storeId') storeId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const parsedPage = page ? Math.max(1, parseInt(page, 10) || 1) : 1;
+    const parsedLimit = limit
+      ? Math.min(100, Math.max(1, parseInt(limit, 10) || 20))
+      : 20;
+    return this.zakatService.getPayments(storeId, parsedPage, parsedLimit);
   }
 
   @Post('payments')

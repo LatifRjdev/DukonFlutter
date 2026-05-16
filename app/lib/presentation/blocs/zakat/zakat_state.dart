@@ -27,11 +27,26 @@ class ZakatSettingsLoaded extends ZakatState {
   List<Object?> get props => [settings];
 }
 
+// Spec E B.1: payments-loaded state carries pagination metadata so
+// the page can render a "load more" button when more rows exist on
+// the server. `hasMore` is derived from currentPage < totalPages so
+// the page can't accidentally fetch a non-existent page.
 class ZakatPaymentsLoaded extends ZakatState {
   final List<ZakatPayment> payments;
-  const ZakatPaymentsLoaded(this.payments);
+  final int total;
+  final int totalPages;
+  final int currentPage;
+  const ZakatPaymentsLoaded(
+    this.payments, {
+    this.total = 0,
+    this.totalPages = 1,
+    this.currentPage = 1,
+  });
+
+  bool get hasMore => currentPage < totalPages;
+
   @override
-  List<Object?> get props => [payments];
+  List<Object?> get props => [payments, total, totalPages, currentPage];
 }
 
 class ZakatActionSuccess extends ZakatState {

@@ -198,11 +198,27 @@ export class ZakatService {
     return settings;
   }
 
-  async getPayments(storeId: string) {
-    return this.prisma.zakatPayment.findMany({
-      where: { storeId },
-      orderBy: { paidAt: 'desc' },
-    });
+  // Spec E B.1: pagination. Returns rows + total count + page meta
+  // in a single $transaction so the count is consistent with the page.
+  // `orderBy: { paidAt: 'desc' }` is asserted in zakat.service.spec.ts
+  // (Spec E B.3) so a future refactor can't silently change ordering.
+  async getPayments(storeId: string, page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.zakatPayment.findMany({
+        where: { storeId },
+        orderBy: { paidAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.zakatPayment.count({ where: { storeId } }),
+    ]);
+    return {
+      data,
+      total,
+      totalPages: total === 0 ? 0 : Math.ceil(total / limit),
+      currentPage: page,
+    };
   }
 
   async createPayment(

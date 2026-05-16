@@ -36,9 +36,17 @@ class ZakatPaymentSubmitted extends ZakatEvent {
   List<Object?> get props => [storeId, data];
 }
 
+// Spec E B.1: paginate zakat history. `page` defaults to 1 to keep
+// existing call sites compatible; the load-more UI bumps it.
 class ZakatPaymentsRequested extends ZakatEvent {
   final String storeId;
-  const ZakatPaymentsRequested({required this.storeId});
+  final int page;
+  final int limit;
+  const ZakatPaymentsRequested({
+    required this.storeId,
+    this.page = 1,
+    this.limit = 20,
+  });
   @override
-  List<Object?> get props => [storeId];
+  List<Object?> get props => [storeId, page, limit];
 }

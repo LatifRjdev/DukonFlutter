@@ -26,8 +26,12 @@ class ZakatRepositoryImpl implements ZakatRepository {
   }
 
   @override
-  Future<List<ZakatPayment>> getPayments(String storeId) {
-    return _remoteDatasource.getPayments(storeId);
+  Future<ZakatPaymentsPage> getPayments(
+    String storeId, {
+    int page = 1,
+    int limit = 20,
+  }) {
+    return _remoteDatasource.getPayments(storeId, page: page, limit: limit);
   }
 
   @override

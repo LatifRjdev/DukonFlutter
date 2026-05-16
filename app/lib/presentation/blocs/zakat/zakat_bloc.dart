@@ -63,10 +63,28 @@ class ZakatBloc extends Bloc<ZakatEvent, ZakatState> {
   }
 
   Future<void> _onPaymentsRequested(ZakatPaymentsRequested event, Emitter<ZakatState> emit) async {
-    emit(ZakatLoading());
+    // Spec E B.1: only show the spinner on the initial fetch.
+    // Load-more (page > 1) keeps the existing list visible while
+    // appending — otherwise the screen would flash empty between
+    // pages, which is jarring UX.
+    final current = state;
+    final isAppend = event.page > 1 && current is ZakatPaymentsLoaded;
+    if (!isAppend) emit(ZakatLoading());
     try {
-      final payments = await _zakatRepository.getPayments(event.storeId);
-      emit(ZakatPaymentsLoaded(payments));
+      final result = await _zakatRepository.getPayments(
+        event.storeId,
+        page: event.page,
+        limit: event.limit,
+      );
+      final merged = isAppend
+          ? [...current.payments, ...result.data]
+          : result.data;
+      emit(ZakatPaymentsLoaded(
+        merged,
+        total: result.total,
+        totalPages: result.totalPages,
+        currentPage: result.currentPage,
+      ));
     } catch (e) {
       emit(ZakatError(mapErrorToUserMessage(e)));
     }

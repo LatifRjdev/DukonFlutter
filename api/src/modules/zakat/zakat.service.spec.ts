@@ -191,10 +191,22 @@ function makePrismaFake() {
         paymentsByLocalId.set(key, row);
         return row;
       }),
-      findMany: jest.fn(async ({ where }: any) =>
-        Array.from(payments.values())
+      findMany: jest.fn(async ({ where, skip, take }: any) => {
+        const all = Array.from(payments.values())
           .filter((p) => p.storeId === where.storeId)
-          .sort((a, b) => b.paidAt.getTime() - a.paidAt.getTime()),
+          .sort((a, b) => b.paidAt.getTime() - a.paidAt.getTime());
+        // Spec E B.1: mirror Prisma skip/take semantics so paginated
+        // service calls can be unit-tested without a real DB.
+        const start = skip ?? 0;
+        const end = take !== undefined ? start + take : undefined;
+        return all.slice(start, end);
+      }),
+      // Spec E B.1: count() backs the totalPages math in getPayments.
+      count: jest.fn(
+        async ({ where }: any) =>
+          Array.from(payments.values()).filter(
+            (p) => p.storeId === where.storeId,
+          ).length,
       ),
     },
     auditLog: {
@@ -669,8 +681,57 @@ describe('ZakatService', () => {
 
       const res = await service.getPayments('store-A');
 
-      expect(res.length).toBe(1);
-      expect(res[0].id).toBe('p1');
+      // Spec E B.1: paginated shape — `data` is the page slice,
+      // store isolation still holds.
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].id).toBe('p1');
+      expect(res.total).toBe(1);
+      expect(res.totalPages).toBe(1);
+      expect(res.currentPage).toBe(1);
+    });
+
+    // Spec E B.3: explicit sort assertion. Prevents a future refactor
+    // from silently re-ordering history rows (which would scramble the
+    // UI without surfacing as a test failure).
+    it('getPayments calls findMany with orderBy { paidAt: desc }', async () => {
+      await service.getPayments('store-1');
+      expect(prisma.zakatPayment.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { paidAt: 'desc' },
+        }),
+      );
+    });
+
+    // Spec E B.1: pagination math + skip/take are wired correctly so
+    // page 3 of size 10 fetches rows 21-30 and surfaces totalPages.
+    it('getPayments respects skip/take and reports totalPages', async () => {
+      // Seed 42 payments in store-X so we can exercise pagination math.
+      for (let i = 0; i < 42; i++) {
+        prisma._payments.set(`x-${i}`, {
+          id: `x-${i}`,
+          storeId: 'store-X',
+          amount: 1,
+          totalAssets: 1,
+          zakatDue: 1,
+          breakdown: {},
+          paidAt: new Date(2026, 0, i + 1),
+        } as any);
+      }
+
+      const result = await service.getPayments('store-X', 2, 10);
+
+      expect(prisma.zakatPayment.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { storeId: 'store-X' },
+          orderBy: { paidAt: 'desc' },
+          skip: 10,
+          take: 10,
+        }),
+      );
+      expect(result.data.length).toBe(10);
+      expect(result.total).toBe(42);
+      expect(result.totalPages).toBe(5);
+      expect(result.currentPage).toBe(2);
     });
   });
 });
