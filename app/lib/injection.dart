@@ -417,7 +417,11 @@ Future<void> initDependencies() async {
   );
 
   sl.registerFactory<DebtBloc>(
-    () => DebtBloc(dioClient: sl<DioClient>()),
+    () => DebtBloc(
+      dioClient: sl<DioClient>(),
+      debtRepository: sl<DebtRepository>(),
+      networkInfo: sl<NetworkInfo>(),
+    ),
   );
 
   sl.registerFactory<ZakatBloc>(

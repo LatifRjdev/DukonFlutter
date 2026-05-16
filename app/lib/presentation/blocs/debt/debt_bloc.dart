@@ -2,14 +2,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/network/network_info.dart';
+import '../../../domain/repositories/debt_repository.dart';
 import 'debt_event.dart';
 import 'debt_state.dart';
 
 class DebtBloc extends Bloc<DebtEvent, DebtState> {
   final DioClient _dioClient;
+  final DebtRepository _debtRepository;
+  final NetworkInfo _networkInfo;
 
-  DebtBloc({required DioClient dioClient})
-      : _dioClient = dioClient,
+  DebtBloc({
+    required DioClient dioClient,
+    required DebtRepository debtRepository,
+    required NetworkInfo networkInfo,
+  })  : _dioClient = dioClient,
+        _debtRepository = debtRepository,
+        _networkInfo = networkInfo,
         super(DebtInitial()) {
     on<CustomerDebtsRequested>(_onCustomerDebts);
     on<SupplierDebtsRequested>(_onSupplierDebts);
@@ -47,17 +56,23 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
   Future<void> _onDebtPayment(DebtPaymentSubmitted event, Emitter<DebtState> emit) async {
     emit(DebtLoading());
     try {
-      await _dioClient.post(
-        ApiEndpoints.customerPayments(event.storeId, event.customerId),
-        data: {
+      final wasOnline = await _networkInfo.isConnected;
+      await _debtRepository.addCustomerPayment(
+        event.storeId,
+        event.customerId,
+        {
           'saleId': event.saleId,
           'amount': event.amount,
           'method': event.method,
           if (event.notes != null) 'notes': event.notes,
         },
       );
-      emit(const DebtPaymentSuccess('Оплата принята'));
-      add(CustomerDebtsRequested(storeId: event.storeId, customerId: event.customerId));
+      if (!wasOnline) {
+        emit(const DebtPaymentQueued());
+      } else {
+        emit(const DebtPaymentSuccess('Оплата принята'));
+        add(CustomerDebtsRequested(storeId: event.storeId, customerId: event.customerId));
+      }
     } catch (e) {
       emit(DebtError(mapErrorToUserMessage(e)));
     }
@@ -101,16 +116,22 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
   Future<void> _onSupplierPayment(SupplierPaymentSubmitted event, Emitter<DebtState> emit) async {
     emit(DebtLoading());
     try {
-      await _dioClient.post(
-        ApiEndpoints.supplierPayments(event.storeId, event.supplierId),
-        data: {
+      final wasOnline = await _networkInfo.isConnected;
+      await _debtRepository.addSupplierPayment(
+        event.storeId,
+        event.supplierId,
+        {
           'amount': event.amount,
           'method': event.method,
           if (event.notes != null) 'notes': event.notes,
         },
       );
-      emit(const DebtPaymentSuccess('Оплата записана'));
-      add(SupplierDebtsRequested(storeId: event.storeId, supplierId: event.supplierId));
+      if (!wasOnline) {
+        emit(const DebtPaymentQueued());
+      } else {
+        emit(const DebtPaymentSuccess('Оплата записана'));
+        add(SupplierDebtsRequested(storeId: event.storeId, supplierId: event.supplierId));
+      }
     } catch (e) {
       emit(DebtError(mapErrorToUserMessage(e)));
     }
