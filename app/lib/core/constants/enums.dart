@@ -4,18 +4,6 @@ enum StoreCategory { grocery, clothing, electronics, hardware, pharmacy, other }
 
 enum ProductUnit { pcs, kg, l, m, pack }
 
-enum SalePaymentType { cash, card, debt, mixed, loyaltyPoints }
-
-enum SaleStatus { completed, returned, partiallyReturned, cancelled }
-
-enum DiscountType { percentage, fixed }
-
-enum MovementType { purchase, sale, returnType, adjustment, transfer, writeOff }
-
-enum StaffRole { owner, admin, cashier, warehouse }
-
-enum SyncStatus { pending, processing, syncCompleted, failed, conflict }
-
 extension CurrencyExtension on Currency {
   String get symbol {
     switch (this) {
