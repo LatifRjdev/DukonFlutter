@@ -62,7 +62,9 @@ export class CreateInvestmentDto {
   @IsDateString()
   endDate?: string;
 
-  @ApiPropertyOptional({ description: 'Client-generated UUID for idempotent replay' })
+  @ApiPropertyOptional({
+    description: 'Client-generated UUID for idempotent replay',
+  })
   @IsOptional()
   @IsString()
   localId?: string;

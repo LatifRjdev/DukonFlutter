@@ -13,7 +13,10 @@ function makePrismaFake() {
       findMany: jest.fn(async () => [] as any[]),
     },
     announcement: {
-      create: jest.fn(async ({ data }: any) => ({ id: 'a-generated', ...data })),
+      create: jest.fn(async ({ data }: any) => ({
+        id: 'a-generated',
+        ...data,
+      })),
     },
   };
 }
@@ -75,7 +78,8 @@ describe('AdminService — announcements (Spec C)', () => {
 
     expect(preview.audienceCount).toBe(2);
     expect((created as any).id).toBe('a1');
-    const createCall = (prisma.announcement.create as jest.Mock).mock.calls[0][0];
+    const createCall = (prisma.announcement.create as jest.Mock).mock
+      .calls[0][0];
     expect(createCall.data.recipientCount).toBe(preview.audienceCount);
   });
 
