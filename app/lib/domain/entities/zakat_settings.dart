@@ -12,6 +12,7 @@ class ZakatSettings extends Equatable {
   final bool includeStock;
   final bool includeCash;
   final bool includeDebts;
+  final double cashOnHand;
 
   const ZakatSettings({
     required this.id,
@@ -25,8 +26,9 @@ class ZakatSettings extends Equatable {
     this.includeStock = true,
     this.includeCash = true,
     this.includeDebts = true,
+    this.cashOnHand = 0,
   });
 
   @override
-  List<Object?> get props => [id, storeId, nisabAmount, zakatRate];
+  List<Object?> get props => [id, storeId, nisabAmount, zakatRate, cashOnHand];
 }

@@ -6,11 +6,25 @@ import '../../../domain/entities/zakat_calculation.dart';
 import '../../../domain/entities/zakat_settings.dart';
 import '../../../domain/entities/zakat_payment.dart';
 
+// Spec E B.1: paginated payments-list response. Kept as a typedef
+// record so the bloc/repository layers can pattern-match the four
+// fields without hand-rolling a DTO class for a transport-only shape.
+typedef ZakatPaymentsPage = ({
+  List<ZakatPayment> data,
+  int total,
+  int totalPages,
+  int currentPage,
+});
+
 abstract class ZakatRemoteDatasource {
   Future<ZakatCalculation> calculate(String storeId);
   Future<ZakatSettings?> getSettings(String storeId);
   Future<ZakatSettings> upsertSettings(String storeId, Map<String, dynamic> data);
-  Future<List<ZakatPayment>> getPayments(String storeId);
+  Future<ZakatPaymentsPage> getPayments(
+    String storeId, {
+    int page = 1,
+    int limit = 20,
+  });
   Future<ZakatPayment> createPayment(String storeId, Map<String, dynamic> data);
 }
 
@@ -59,15 +73,43 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
   }
 
   @override
-  Future<List<ZakatPayment>> getPayments(String storeId) async {
+  Future<ZakatPaymentsPage> getPayments(
+    String storeId, {
+    int page = 1,
+    int limit = 20,
+  }) async {
     try {
       final response = await _dioClient.get(
         ApiEndpoints.zakatPayments(storeId),
+        queryParameters: {'page': page, 'limit': limit},
       );
-      final list = response.data as List;
-      return list
+      // Spec E B.1: the backend now returns
+      // `{ data, total, totalPages, currentPage }`. We tolerate the
+      // legacy list-shaped body so a mismatched (older) backend
+      // build doesn't crash the screen — fall back to "single page,
+      // unknown total" semantics.
+      final body = response.data;
+      if (body is List) {
+        final items = body
+            .map((json) => _mapPayment(json as Map<String, dynamic>))
+            .toList();
+        return (
+          data: items,
+          total: items.length,
+          totalPages: 1,
+          currentPage: 1,
+        );
+      }
+      final map = body as Map<String, dynamic>;
+      final items = (map['data'] as List)
           .map((json) => _mapPayment(json as Map<String, dynamic>))
           .toList();
+      return (
+        data: items,
+        total: (map['total'] as num?)?.toInt() ?? items.length,
+        totalPages: (map['totalPages'] as num?)?.toInt() ?? 1,
+        currentPage: (map['currentPage'] as num?)?.toInt() ?? page,
+      );
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
@@ -115,6 +157,7 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
       includeStock: json['includeStock'] as bool? ?? true,
       includeCash: json['includeCash'] as bool? ?? true,
       includeDebts: json['includeDebts'] as bool? ?? true,
+      cashOnHand: (json['cashOnHand'] as num?)?.toDouble() ?? 0,
     );
   }
 

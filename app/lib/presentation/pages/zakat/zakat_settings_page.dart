@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../blocs/store/store_bloc.dart';
+import '../../blocs/store/store_state.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
@@ -12,13 +14,19 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 
 class ZakatSettingsPage extends StatefulWidget {
   final String storeId;
-  const ZakatSettingsPage({super.key, required this.storeId});
+
+  /// Optional clock for deterministic golden tests. Defaults to [DateTime.now].
+  final DateTime Function()? now;
+
+  const ZakatSettingsPage({super.key, required this.storeId, this.now});
   @override
   State<ZakatSettingsPage> createState() => _ZakatSettingsPageState();
 }
 
 class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
+  final _formKey = GlobalKey<FormState>();
   final _goldPriceController = TextEditingController();
+  final _cashOnHandController = TextEditingController();
   DateTime? _haulStartDate;
   String _nisabStandard = 'gold';
   bool _includeStock = true;
@@ -27,6 +35,8 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   bool _includeSupplierDebts = true;
   bool _reminderEnabled = true;
   bool _initialized = false;
+
+  DateTime _now() => (widget.now ?? DateTime.now)();
 
   @override
   void initState() {
@@ -37,15 +47,17 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   @override
   void dispose() {
     _goldPriceController.dispose();
+    _cashOnHandController.dispose();
     super.dispose();
   }
 
   Future<void> _pickDate() async {
+    final now = _now();
     final picked = await showDatePicker(
       context: context,
-      initialDate: _haulStartDate ?? DateTime.now(),
+      initialDate: _haulStartDate ?? now,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: now.add(const Duration(days: 365)),
     );
     if (picked != null) {
       setState(() => _haulStartDate = picked);
@@ -53,6 +65,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   }
 
   void _save() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     final goldPrice = double.tryParse(_goldPriceController.text);
     final nisabAmount = _nisabStandard == 'gold' ? (goldPrice ?? 920) * 85 : (goldPrice ?? 920) * 595 / 85;
 
@@ -65,6 +78,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
         'includeStock': _includeStock,
         'includeCash': _includeCash,
         'includeDebts': _includeDebts,
+        'cashOnHand': double.tryParse(_cashOnHandController.text) ?? 0,
       },
     ));
   }
@@ -72,6 +86,10 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final storeState = context.watch<StoreBloc>().state;
+    final currency = (storeState is StoreLoaded && storeState.selectedStore != null)
+        ? storeState.selectedStore!.currency
+        : 'TJS';
     return Scaffold(
       backgroundColor: context.bg,
       body: SafeArea(
@@ -100,6 +118,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     _initialized = true;
                     final s = state.settings;
                     _goldPriceController.text = (s.nisabAmount / 85).toStringAsFixed(2);
+                    _cashOnHandController.text = s.cashOnHand.toString();
                     _haulStartDate = s.haulStartDate;
                     _includeStock = s.includeStock;
                     _includeCash = s.includeCash;
@@ -118,7 +137,9 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                   if (state is ZakatLoading && !_initialized) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  return ListView(
+                  return Form(
+                    key: _formKey,
+                    child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
                       // Method section
@@ -135,14 +156,14 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                           ),
                           RadioListTile<String>(
                             title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
-                            subtitle: Text('~ 78,200 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            subtitle: Text('~ 78,200 $currency', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             value: 'gold',
                             activeColor: AppColors.primary,
                             dense: true,
                           ),
                           RadioListTile<String>(
                             title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
-                            subtitle: Text('~ 5,400 TJS', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                            subtitle: Text('~ 5,400 $currency', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             value: 'silver',
                             activeColor: AppColors.primary,
                             dense: true,
@@ -165,8 +186,15 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                     TextFormField(
                                       controller: _goldPriceController,
                                       keyboardType: TextInputType.number,
+                                      validator: (v) {
+                                        if (v == null || v.isEmpty) return 'Обязательное поле';
+                                        final parsed = double.tryParse(v);
+                                        if (parsed == null) return 'Введите число';
+                                        if (parsed < 0) return 'Не может быть отрицательным';
+                                        return null;
+                                      },
                                       decoration: InputDecoration(
-                                        suffixText: 'TJS',
+                                        suffixText: currency,
                                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                       ),
@@ -188,6 +216,37 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   onPressed: () {
                                     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
                                   },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 12),
+                      _buildCard([
+                        Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Наличные в кассе',
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                controller: _cashOnHandController,
+                                keyboardType: TextInputType.number,
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return null;
+                                  final parsed = double.tryParse(v);
+                                  if (parsed == null) return 'Введите число';
+                                  if (parsed < 0) return 'Не может быть отрицательным';
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  helperText: 'Учитывается в активах при расчёте закята',
+                                  suffixText: currency,
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                 ),
                               ),
                             ],
@@ -316,6 +375,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       ),
                       const SizedBox(height: 16),
                     ],
+                  ),
                   );
                 },
               ),
