@@ -269,4 +269,133 @@ describe('InvestmentsService', () => {
       ).rejects.toBeInstanceOf(NotFoundException);
     });
   });
+
+  describe('Spec D — investments hardening', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('create: passes localId through to prisma.create.data', async () => {
+      const createSpy = (prisma.investment.create as jest.Mock).mockResolvedValue({
+        id: 'inv-1',
+        amount: { toString: () => '1000' },
+        name: 'Test',
+        storeId: 's1',
+      });
+      await service.create(
+        's1',
+        {
+          name: 'Test',
+          amount: 1000,
+          investorName: 'A',
+          startDate: '2026-01-01',
+          status: 'ACTIVE',
+          localId: 'abc-123',
+        } as any,
+        'user-1',
+      );
+      expect(createSpy.mock.calls[0][0].data.localId).toBe('abc-123');
+    });
+
+    it('create: returns existing row when localId already used (idempotent)', async () => {
+      (prisma.investment.findUnique as jest.Mock).mockResolvedValue({
+        id: 'existing-1',
+        name: 'Old',
+      });
+      const createSpy = prisma.investment.create as jest.Mock;
+
+      const result = await service.create(
+        's1',
+        {
+          name: 'Test',
+          amount: 1000,
+          investorName: 'A',
+          startDate: '2026-01-01',
+          status: 'ACTIVE',
+          localId: 'abc-123',
+        } as any,
+        'user-1',
+      );
+
+      expect((result as any).id).toBe('existing-1');
+      expect(createSpy).not.toHaveBeenCalled();
+    });
+
+    it('create: writes investment.create audit log with userId', async () => {
+      (prisma.investment.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.investment.create as jest.Mock).mockResolvedValue({
+        id: 'inv-1',
+        amount: { toString: () => '500' },
+        name: 'X',
+        storeId: 's1',
+      });
+      const auditMock = audit.record as jest.Mock;
+      await service.create(
+        's1',
+        {
+          name: 'X',
+          amount: 500,
+          investorName: 'A',
+          startDate: '2026-01-01',
+          status: 'ACTIVE',
+        } as any,
+        'admin-42',
+      );
+      // Positional signature: (userId, action, entityType, entityId, details)
+      expect(auditMock).toHaveBeenCalledWith(
+        'admin-42',
+        'investment.create',
+        'investment',
+        'inv-1',
+        expect.any(Object),
+      );
+    });
+
+    it('update: throws NotFound when row missing', async () => {
+      (prisma.investment.findFirst as jest.Mock).mockResolvedValue(null);
+      await expect(
+        service.update('s1', 'missing-id', { name: 'New' } as any, 'user-1'),
+      ).rejects.toThrow(/not found/i);
+    });
+
+    it('update: writes investment.update audit log', async () => {
+      (prisma.investment.findFirst as jest.Mock).mockResolvedValue({
+        id: 'inv-1',
+        amount: 100,
+      });
+      (prisma.investment.update as jest.Mock).mockResolvedValue({
+        id: 'inv-1',
+        amount: { toString: () => '200' },
+        status: 'ACTIVE',
+      });
+      const auditMock = audit.record as jest.Mock;
+      await service.update('s1', 'inv-1', { amount: 200 } as any, 'admin-42');
+      expect(auditMock).toHaveBeenCalledWith(
+        'admin-42',
+        'investment.update',
+        'investment',
+        'inv-1',
+        expect.any(Object),
+      );
+    });
+
+    it('remove: writes investment.delete audit log', async () => {
+      (prisma.investment.findFirst as jest.Mock).mockResolvedValue({
+        id: 'inv-1',
+        amount: { toString: () => '100' },
+        name: 'X',
+        storeId: 's1',
+      });
+      (prisma.investment.delete as jest.Mock).mockResolvedValue({});
+      const auditMock = audit.record as jest.Mock;
+      await service.remove('s1', 'inv-1', 'admin-42');
+      expect(auditMock).toHaveBeenCalledWith(
+        'admin-42',
+        'investment.delete',
+        'investment',
+        'inv-1',
+        expect.any(Object),
+      );
+    });
+  });
 });
