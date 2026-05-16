@@ -545,6 +545,10 @@ model ZakatSettings {
   nisabAmount   Decimal   @default(0) @db.Decimal(12, 2)
   haulStartDate DateTime?
   zakatRate     Decimal   @default(2.5) @db.Decimal(5, 2)
+  // Spec E: merchant-supplied cash on hand. Calculated into
+  // totalAssets when includeCash=true. Default 0 so existing
+  // rows continue to compute correctly until merchant fills in.
+  cashOnHand    Decimal   @default(0) @db.Decimal(12, 2)
   includeStock  Boolean   @default(true)
   includeCash   Boolean   @default(true)
   includeDebts  Boolean   @default(true)
