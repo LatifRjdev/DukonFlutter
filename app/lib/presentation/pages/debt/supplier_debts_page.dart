@@ -73,8 +73,9 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
           if (state is DebtPaymentSuccess) {
             AppSnackbar.success(context, state.message);
             context.read<DebtBloc>().add(SupplierDebtsRequested(storeId: widget.storeId, supplierId: widget.supplierId));
-          }
-          if (state is DebtError) {
+          } else if (state is DebtPaymentQueued) {
+            AppSnackbar.info(context, 'Платёж сохранён офлайн — отправим при подключении');
+          } else if (state is DebtError) {
             AppSnackbar.error(context, state.message);
           }
         },
