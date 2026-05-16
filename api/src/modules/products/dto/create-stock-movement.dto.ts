@@ -47,4 +47,9 @@ export class CreateStockMovementDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @ApiPropertyOptional({ description: 'Client-generated UUID for idempotent replay' })
+  @IsOptional()
+  @IsString()
+  localId?: string;
 }

@@ -7,6 +7,16 @@ export class StockMovementsService {
   constructor(private prisma: PrismaService) {}
 
   async create(storeId: string, dto: CreateStockMovementDto, createdBy?: string) {
+    // Spec B E.2: idempotent replay. If localId already used,
+    // return the existing row instead of creating a duplicate
+    // (and skip re-applying the stock-quantity change).
+    if (dto.localId) {
+      const existing = await this.prisma.stockMovement.findUnique({
+        where: { localId: dto.localId },
+      });
+      if (existing) return existing;
+    }
+
     // Verify product belongs to store
     const product = await this.prisma.product.findFirst({
       where: { id: dto.productId, storeId },
@@ -27,6 +37,7 @@ export class StockMovementsService {
           reference: dto.reference,
           notes: dto.notes,
           createdBy,
+          localId: dto.localId ?? null,
         },
       });
 
