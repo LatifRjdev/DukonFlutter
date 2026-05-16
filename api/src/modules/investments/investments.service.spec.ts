@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { InvestmentsService } from './investments.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 // Map-backed Prisma fake for InvestmentsService. Supports findFirst, findMany,
 // count, create, update, delete, and aggregate filtered by storeId + status.
@@ -43,8 +44,12 @@ function makePrismaFake() {
       return true;
     });
 
-  return {
+  const api: any = {
     _rows: rows,
+    // Spec D: service now wraps update/remove in $transaction. Run
+    // the callback synchronously against the same fake so existing
+    // tests keep working.
+    $transaction: jest.fn(async (cb: any) => cb(api)),
     investment: {
       create: jest.fn(async ({ data }: any) => {
         const id = newId();
@@ -71,6 +76,21 @@ function makePrismaFake() {
           if (where.id && r.id !== where.id) continue;
           if (where.storeId && r.storeId !== where.storeId) continue;
           return r;
+        }
+        return null;
+      }),
+      // Spec D: idempotent create looks up by (storeId, localId).
+      findUnique: jest.fn(async ({ where }: any) => {
+        const composite = where.storeId_localId;
+        if (composite) {
+          for (const r of rows.values()) {
+            if (
+              r.storeId === composite.storeId &&
+              (r as any).localId === composite.localId
+            ) {
+              return r;
+            }
+          }
         }
         return null;
       }),
@@ -118,18 +138,24 @@ function makePrismaFake() {
       }),
     },
   };
+  return api;
 }
 
 describe('InvestmentsService', () => {
   let service: InvestmentsService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let audit: { record: jest.Mock };
 
   beforeEach(async () => {
     prisma = makePrismaFake();
+    // Spec D: AuditLogService is now a constructor dep. Provide a
+    // no-op fake — we only need DI to resolve, not real persistence.
+    audit = { record: jest.fn(async () => undefined) };
     const moduleRef = await Test.createTestingModule({
       providers: [
         InvestmentsService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditLogService, useValue: audit },
       ],
     }).compile();
     service = moduleRef.get(InvestmentsService);
@@ -239,7 +265,7 @@ describe('InvestmentsService', () => {
   describe('remove', () => {
     it('should throw NotFoundException when removing a non-existent investment', async () => {
       await expect(
-        service.remove('store-A', 'missing'),
+        service.remove('store-A', 'missing', 'user-1'),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
   });

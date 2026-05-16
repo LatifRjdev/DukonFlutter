@@ -14,6 +14,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { UpdateInvestmentDto } from './dto/update-investment.dto';
@@ -29,8 +30,14 @@ export class InvestmentsController {
   @Post()
   @Permissions('investments.write')
   @ApiOperation({ summary: 'Create investment' })
-  create(@Param('storeId') storeId: string, @Body() dto: CreateInvestmentDto) {
-    return this.investmentsService.create(storeId, dto);
+  create(
+    @Param('storeId') storeId: string,
+    @Body() dto: CreateInvestmentDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    // Spec D: pass acting userId so the service can write an audit
+    // log entry and so retries with the same localId are idempotent.
+    return this.investmentsService.create(storeId, dto, userId);
   }
 
   @Get()
@@ -61,14 +68,19 @@ export class InvestmentsController {
     @Param('storeId') storeId: string,
     @Param('id') id: string,
     @Body() dto: UpdateInvestmentDto,
+    @CurrentUser('id') userId: string,
   ) {
-    return this.investmentsService.update(storeId, id, dto);
+    return this.investmentsService.update(storeId, id, dto, userId);
   }
 
   @Delete(':id')
   @Permissions('investments.write')
   @ApiOperation({ summary: 'Delete investment' })
-  remove(@Param('storeId') storeId: string, @Param('id') id: string) {
-    return this.investmentsService.remove(storeId, id);
+  remove(
+    @Param('storeId') storeId: string,
+    @Param('id') id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.investmentsService.remove(storeId, id, userId);
   }
 }
