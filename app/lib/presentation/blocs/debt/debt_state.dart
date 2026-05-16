@@ -53,3 +53,13 @@ class DebtError extends DebtState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Spec B E.3: emitted when a debt payment was successfully queued
+/// for offline replay (i.e. user is offline). UI should show a
+/// snackbar like "Платёж сохранён, отправится при подключении".
+class DebtPaymentQueued extends DebtState {
+  const DebtPaymentQueued();
+
+  @override
+  List<Object?> get props => const [];
+}

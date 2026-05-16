@@ -23,6 +23,7 @@ import 'data/datasources/remote/store_remote_datasource.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'data/repositories/category_repository_impl.dart';
 import 'data/repositories/customer_repository_impl.dart';
+import 'data/repositories/debt_repository_impl.dart';
 import 'data/repositories/product_repository_impl.dart';
 import 'data/repositories/sale_repository_impl.dart';
 import 'data/repositories/stock_repository_impl.dart';
@@ -35,6 +36,7 @@ import 'data/sync/sync_queue.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/category_repository.dart';
 import 'domain/repositories/customer_repository.dart';
+import 'domain/repositories/debt_repository.dart';
 import 'domain/repositories/product_repository.dart';
 import 'domain/repositories/sale_repository.dart';
 import 'domain/repositories/stock_repository.dart';
@@ -309,6 +311,14 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<CustomerRepository>(
     () => CustomerRepositoryImpl(
       remoteDatasource: sl<CustomerRemoteDatasource>(),
+      networkInfo: sl<NetworkInfo>(),
+      syncQueue: sl<SyncQueue>(),
+    ),
+  );
+
+  sl.registerLazySingleton<DebtRepository>(
+    () => DebtRepositoryImpl(
+      dioClient: sl<DioClient>(),
       networkInfo: sl<NetworkInfo>(),
       syncQueue: sl<SyncQueue>(),
     ),
