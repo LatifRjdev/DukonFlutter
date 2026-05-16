@@ -8,6 +8,7 @@ class ZakatCalculation extends Equatable {
   final double nisabAmount;
   final double zakatDue;
   final bool isAboveNisab;
+  final double zakatRate;
 
   const ZakatCalculation({
     required this.stockValue,
@@ -17,8 +18,9 @@ class ZakatCalculation extends Equatable {
     required this.nisabAmount,
     required this.zakatDue,
     required this.isAboveNisab,
+    this.zakatRate = 2.5,
   });
 
   @override
-  List<Object?> get props => [stockValue, netAssets, zakatDue, isAboveNisab];
+  List<Object?> get props => [stockValue, netAssets, zakatDue, isAboveNisab, zakatRate];
 }

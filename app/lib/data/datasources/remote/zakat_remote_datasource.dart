@@ -96,6 +96,7 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
       nisabAmount: (json['nisabAmount'] as num?)?.toDouble() ?? 0,
       zakatDue: (json['zakatDue'] as num?)?.toDouble() ?? 0,
       isAboveNisab: json['isAboveNisab'] as bool? ?? false,
+      zakatRate: (json['zakatRate'] as num?)?.toDouble() ?? 2.5,
     );
   }
 
