@@ -14,10 +14,7 @@ import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
 import { AnnouncementsQueryDto } from './dto/announcements-query.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Prisma, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
-import {
-  renderTemplate,
-  AnnouncementVars,
-} from './announcements-template';
+import { renderTemplate, AnnouncementVars } from './announcements-template';
 
 @Injectable()
 export class AdminService {
@@ -494,9 +491,7 @@ export class AdminService {
             subscription: {
               plan: store.subscription?.plan ?? 'START',
               currentPeriodEnd: store.subscription?.currentPeriodEnd
-                ? store.subscription.currentPeriodEnd
-                    .toISOString()
-                    .slice(0, 10)
+                ? store.subscription.currentPeriodEnd.toISOString().slice(0, 10)
                 : '—',
             },
           },
