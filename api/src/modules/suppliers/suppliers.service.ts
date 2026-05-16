@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
@@ -82,15 +86,31 @@ export class SuppliersService {
     };
   }
 
-  async addPayment(storeId: string, supplierId: string, dto: CreateSupplierPaymentDto) {
+  async addPayment(
+    storeId: string,
+    supplierId: string,
+    dto: CreateSupplierPaymentDto,
+  ) {
     const supplier = await this.findOne(storeId, supplierId);
+
+    // E.3: idempotent on localId. Offline-replay path may push the
+    // same payment twice; return the existing row instead of double-
+    // decrementing the supplier debt.
+    if (dto.localId) {
+      const existing = await this.prisma.supplierPayment.findUnique({
+        where: { storeId_localId: { storeId, localId: dto.localId } },
+      });
+      if (existing) return existing;
+    }
 
     if (Number(supplier.debt) <= 0) {
       throw new BadRequestException('This supplier has no outstanding debt');
     }
 
     if (dto.amount > Number(supplier.debt)) {
-      throw new BadRequestException('Payment amount exceeds the outstanding debt');
+      throw new BadRequestException(
+        'Payment amount exceeds the outstanding debt',
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -101,6 +121,7 @@ export class SuppliersService {
           amount: dto.amount,
           method: dto.method,
           notes: dto.notes,
+          localId: dto.localId ?? null,
         },
       });
 

@@ -16,4 +16,14 @@ export class CreateSupplierPaymentDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  // E.3: client-supplied UUID for offline-replay idempotency. Server
+  // returns the existing payment row instead of double-decrementing
+  // the supplier debt if it sees the same localId again.
+  @ApiPropertyOptional({
+    description: 'Client-generated UUID for idempotent replay',
+  })
+  @IsOptional()
+  @IsString()
+  localId?: string;
 }
