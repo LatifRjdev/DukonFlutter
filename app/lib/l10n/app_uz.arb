@@ -421,5 +421,9 @@
   "@snackProductAddedToCart": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "snackActionGoToCheckout": "Kassaga"
+  "snackActionGoToCheckout": "Kassaga",
+
+  "investmentCreated": "Investitsiya qoʻshildi",
+  "investmentUpdated": "Investitsiya yangilandi",
+  "investmentDeleted": "Investitsiya oʻchirildi"
 }

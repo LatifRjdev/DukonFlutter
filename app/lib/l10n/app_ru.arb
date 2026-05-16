@@ -601,5 +601,12 @@
     "placeholders": { "name": { "type": "String" } }
   },
   "snackActionGoToCheckout": "В кассу",
-  "@snackActionGoToCheckout": { "description": "Action button on add-to-cart snackbar — navigates to POS checkout" }
+  "@snackActionGoToCheckout": { "description": "Action button on add-to-cart snackbar — navigates to POS checkout" },
+
+  "investmentCreated": "Вложение добавлено",
+  "@investmentCreated": { "description": "Snackbar after a new investment is created" },
+  "investmentUpdated": "Вложение обновлено",
+  "@investmentUpdated": { "description": "Snackbar after an investment is updated" },
+  "investmentDeleted": "Вложение удалено",
+  "@investmentDeleted": { "description": "Snackbar after an investment is deleted" }
 }

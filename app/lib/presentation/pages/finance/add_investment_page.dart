@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
 import '../../blocs/investment/investment_event.dart';
+import '../../blocs/investment/investment_l10n_key.dart';
 import '../../blocs/investment/investment_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
@@ -117,7 +118,12 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
             body: BlocListener<InvestmentBloc, InvestmentState>(
               listener: (context, state) {
                 if (state is InvestmentActionSuccess) {
-                  AppSnackbar.success(context, state.message);
+                  final message = switch (state.key) {
+                    InvestmentL10nKey.created => l10n.investmentCreated,
+                    InvestmentL10nKey.updated => l10n.investmentUpdated,
+                    InvestmentL10nKey.deleted => l10n.investmentDeleted,
+                  };
+                  AppSnackbar.success(context, message);
                   context.pop(true);
                 }
                 if (state is InvestmentError) {

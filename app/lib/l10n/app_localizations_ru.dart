@@ -1125,4 +1125,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get snackActionGoToCheckout => 'В кассу';
+
+  @override
+  String get investmentCreated => 'Вложение добавлено';
+
+  @override
+  String get investmentUpdated => 'Вложение обновлено';
+
+  @override
+  String get investmentDeleted => 'Вложение удалено';
 }

@@ -421,5 +421,9 @@
   "@snackProductAddedToCart": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "snackActionGoToCheckout": "Ба касса"
+  "snackActionGoToCheckout": "Ба касса",
+
+  "investmentCreated": "Маблағгузорӣ илова шуд",
+  "investmentUpdated": "Маблағгузорӣ нав карда шуд",
+  "investmentDeleted": "Маблағгузорӣ нест карда шуд"
 }

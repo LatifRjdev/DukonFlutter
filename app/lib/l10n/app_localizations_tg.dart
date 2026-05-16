@@ -1126,4 +1126,13 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get snackActionGoToCheckout => 'Ба касса';
+
+  @override
+  String get investmentCreated => 'Маблағгузорӣ илова шуд';
+
+  @override
+  String get investmentUpdated => 'Маблағгузорӣ нав карда шуд';
+
+  @override
+  String get investmentDeleted => 'Маблағгузорӣ нест карда шуд';
 }

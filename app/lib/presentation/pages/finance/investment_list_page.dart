@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import '../../widgets/common/app_snackbar.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
 import '../../blocs/investment/investment_event.dart';
+import '../../blocs/investment/investment_l10n_key.dart';
 import '../../blocs/investment/investment_state.dart';
 
 class InvestmentListPage extends StatefulWidget {
@@ -134,7 +136,13 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                   child: BlocConsumer<InvestmentBloc, InvestmentState>(
                     listener: (context, state) {
                       if (state is InvestmentActionSuccess) {
-                        AppSnackbar.success(context, state.message);
+                        final l10n = AppLocalizations.of(context)!;
+                        final message = switch (state.key) {
+                          InvestmentL10nKey.created => l10n.investmentCreated,
+                          InvestmentL10nKey.updated => l10n.investmentUpdated,
+                          InvestmentL10nKey.deleted => l10n.investmentDeleted,
+                        };
+                        AppSnackbar.success(context, message);
                         _loadInvestments(context);
                       }
                       if (state is InvestmentError) {

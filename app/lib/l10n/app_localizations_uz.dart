@@ -1126,4 +1126,13 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get snackActionGoToCheckout => 'Kassaga';
+
+  @override
+  String get investmentCreated => 'Investitsiya qoʻshildi';
+
+  @override
+  String get investmentUpdated => 'Investitsiya yangilandi';
+
+  @override
+  String get investmentDeleted => 'Investitsiya oʻchirildi';
 }

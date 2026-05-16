@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/investment.dart';
+import 'investment_l10n_key.dart';
 
 abstract class InvestmentState extends Equatable {
   const InvestmentState();
@@ -56,10 +57,10 @@ class InvestmentSummaryLoaded extends InvestmentState {
 }
 
 class InvestmentActionSuccess extends InvestmentState {
-  final String message;
-  const InvestmentActionSuccess(this.message);
+  final InvestmentL10nKey key;
+  const InvestmentActionSuccess(this.key);
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [key];
 }
 
 class InvestmentError extends InvestmentState {

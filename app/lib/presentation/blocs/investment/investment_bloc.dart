@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/investment_repository.dart';
 import 'investment_event.dart';
+import 'investment_l10n_key.dart';
 import 'investment_state.dart';
 
 class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
@@ -59,7 +60,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     emit(InvestmentLoading());
     try {
       await _investmentRepository.createInvestment(event.storeId, event.data);
-      emit(const InvestmentActionSuccess('Вложение добавлено'));
+      emit(const InvestmentActionSuccess(InvestmentL10nKey.created));
       // Spec E D.2: yield to event loop so BlocBuilder consumers see
       // the success state before it's overwritten by the chained reload.
       await Future<void>.delayed(Duration.zero);
@@ -73,7 +74,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     emit(InvestmentLoading());
     try {
       await _investmentRepository.updateInvestment(event.storeId, event.id, event.data);
-      emit(const InvestmentActionSuccess('Вложение обновлено'));
+      emit(const InvestmentActionSuccess(InvestmentL10nKey.updated));
       // Spec E D.2: yield to event loop so BlocBuilder consumers see
       // the success state before it's overwritten by the chained reload.
       await Future<void>.delayed(Duration.zero);
@@ -87,7 +88,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     emit(InvestmentLoading());
     try {
       await _investmentRepository.deleteInvestment(event.storeId, event.id);
-      emit(const InvestmentActionSuccess('Вложение удалено'));
+      emit(const InvestmentActionSuccess(InvestmentL10nKey.deleted));
       // Spec E D.2: yield to event loop so BlocBuilder consumers see
       // the success state before it's overwritten by the chained reload.
       await Future<void>.delayed(Duration.zero);

@@ -2271,6 +2271,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'В кассу'**
   String get snackActionGoToCheckout;
+
+  /// Snackbar after a new investment is created
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложение добавлено'**
+  String get investmentCreated;
+
+  /// Snackbar after an investment is updated
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложение обновлено'**
+  String get investmentUpdated;
+
+  /// Snackbar after an investment is deleted
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложение удалено'**
+  String get investmentDeleted;
 }
 
 class _AppLocalizationsDelegate
