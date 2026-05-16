@@ -64,7 +64,10 @@ export class ZakatService {
     const inventoryRaw = new Decimal(stockResult[0]?.total ?? '0');
     const receivablesRaw = new Decimal(customers._sum.debt ?? 0);
     const payablesRaw = new Decimal(suppliers._sum.debt ?? 0);
-    const cashOnHand = new Decimal(0); // user enters this manually in Flutter; not yet persisted
+    const cashOnHand =
+      settings?.includeCash === false
+        ? new Decimal(0)
+        : new Decimal(settings?.cashOnHand ?? 0);
 
     const includeStock = settings?.includeStock !== false;
     const includeDebts = settings?.includeDebts !== false;

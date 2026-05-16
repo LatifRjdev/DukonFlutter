@@ -33,6 +33,7 @@ function makePrismaFake() {
     nisabAmount: number;
     haulStartDate: Date | null;
     zakatRate: number;
+    cashOnHand: number;
     includeStock: boolean;
     includeCash: boolean;
     includeDebts: boolean;
@@ -137,6 +138,7 @@ function makePrismaFake() {
           nisabAmount: 1,
           haulStartDate: null,
           zakatRate: 2.5,
+          cashOnHand: 0,
           includeStock: true,
           includeCash: true,
           includeDebts: true,
@@ -333,6 +335,7 @@ describe('ZakatService', () => {
         nisabAmount: 1000, // above the 50 inventory value
         haulStartDate: null,
         zakatRate: 2.5,
+        cashOnHand: 0,
         includeStock: true,
         includeCash: true,
         includeDebts: true,
@@ -376,6 +379,7 @@ describe('ZakatService', () => {
         nisabAmount: 100,
         haulStartDate: null,
         zakatRate: 5, // doubled from default
+        cashOnHand: 0,
         includeStock: true,
         includeCash: true,
         includeDebts: true,
@@ -398,6 +402,7 @@ describe('ZakatService', () => {
         nisabAmount: 0,
         haulStartDate: null,
         zakatRate: 2.5,
+        cashOnHand: 0,
         includeStock: false,
         includeCash: true,
         includeDebts: true,
@@ -406,6 +411,51 @@ describe('ZakatService', () => {
       const result = await service.calculate('store-A');
 
       expect(num(result.breakdown.inventoryValue)).toBe(0);
+      expect(num(result.totalAssets)).toBe(0);
+    });
+
+    // Spec E A.2.2: cashOnHand is read from settings and gated by includeCash.
+    it('includes cashOnHand in totalAssets when includeCash is true', async () => {
+      prisma._settings.set('store-A', {
+        id: 'zs1',
+        storeId: 'store-A',
+        nisabGold: 85,
+        nisabSilver: 595,
+        nisabCurrency: 'TJS',
+        nisabAmount: 100,
+        haulStartDate: null,
+        zakatRate: 2.5,
+        cashOnHand: 1500,
+        includeStock: true,
+        includeCash: true,
+        includeDebts: true,
+      });
+
+      const result = await service.calculate('store-A');
+
+      expect(num(result.breakdown.cashOnHand)).toBe(1500);
+      expect(num(result.totalAssets)).toBe(1500);
+    });
+
+    it('excludes cashOnHand when includeCash is false', async () => {
+      prisma._settings.set('store-A', {
+        id: 'zs1',
+        storeId: 'store-A',
+        nisabGold: 85,
+        nisabSilver: 595,
+        nisabCurrency: 'TJS',
+        nisabAmount: 100,
+        haulStartDate: null,
+        zakatRate: 2.5,
+        cashOnHand: 1500,
+        includeStock: true,
+        includeCash: false,
+        includeDebts: true,
+      });
+
+      const result = await service.calculate('store-A');
+
+      expect(num(result.breakdown.cashOnHand)).toBe(0);
       expect(num(result.totalAssets)).toBe(0);
     });
   });
@@ -427,6 +477,7 @@ describe('ZakatService', () => {
         nisabAmount: 100,
         haulStartDate: new Date('2026-01-01'),
         zakatRate: 2.5,
+        cashOnHand: 0,
         includeStock: true,
         includeCash: true,
         includeDebts: true,
@@ -456,6 +507,7 @@ describe('ZakatService', () => {
         nisabAmount: 100,
         haulStartDate: new Date('2024-01-01'),
         zakatRate: 2.5,
+        cashOnHand: 0,
         includeStock: true,
         includeCash: true,
         includeDebts: true,

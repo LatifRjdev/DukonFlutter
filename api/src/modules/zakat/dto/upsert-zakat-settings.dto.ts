@@ -46,6 +46,12 @@ export class UpsertZakatSettingsDto {
   @Max(100)
   zakatRate?: number;
 
+  @ApiPropertyOptional({ description: 'Cash on hand (TJS) included in total assets when includeCash=true' })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  cashOnHand?: number;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
