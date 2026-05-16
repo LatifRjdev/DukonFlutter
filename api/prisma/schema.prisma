@@ -177,18 +177,19 @@ enum PaymentStatus {
 }
 
 model SubscriptionPlanConfig {
-  plan          SubscriptionPlan @id
-  price         Decimal          @db.Decimal(12, 2)
-  maxProducts   Int
-  maxStaff      Int
-  maxDiscounts  Int
-  hasReportsAll Boolean
-  hasExport     Boolean
-  hasTelegram   Boolean
-  hasAllPush    Boolean
-  hasDelivery   Boolean
-  hasInventory  Boolean
-  hasZakat      Boolean          @default(false)
+  plan           SubscriptionPlan @id
+  price          Decimal          @db.Decimal(12, 2)
+  maxProducts    Int
+  maxStaff       Int
+  maxDiscounts   Int
+  hasReportsAll  Boolean
+  hasExport      Boolean
+  hasTelegram    Boolean
+  hasAllPush     Boolean
+  hasDelivery    Boolean
+  hasInventory   Boolean
+  hasZakat       Boolean          @default(false)
+  hasInvestments Boolean          @default(false)
 
   @@map("subscription_plan_configs")
 }
@@ -1004,10 +1005,15 @@ model Investment {
   status        InvestmentStatus @default(ACTIVE)
   startDate     DateTime
   endDate       DateTime?
+  // Spec D: client-supplied UUID for offline-replay idempotency.
+  // Per-store unique because clients may reset UUIDs on re-install.
+  localId       String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
+  @@unique([storeId, localId])
   @@index([storeId])
   @@index([status])
+  @@index([storeId, createdAt(sort: Desc)])
   @@map("investments")
 }
