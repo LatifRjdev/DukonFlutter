@@ -225,6 +225,17 @@ class SyncEngine {
         }
         return null;
 
+      // B.E.2: stock movements. entityId format =
+      // `storeId:productId:tempId`.
+      case 'stock_movement':
+        if (parts.length < 3) return null;
+        final storeId = parts[0];
+        final productId = parts[1];
+        if (item.operation == 'CREATE') {
+          return ApiEndpoints.stockMovements(storeId, productId);
+        }
+        return null;
+
       // E.3: debt payments. entityId format =
       // `storeId:customerId:localId`. Server idempotency dedupes by
       // localId so retry after partial-success is safe.
@@ -234,6 +245,17 @@ class SyncEngine {
         final customerId = parts[1];
         if (item.operation == 'CREATE') {
           return ApiEndpoints.customerPayments(storeId, customerId);
+        }
+        return null;
+
+      // B.E.3: supplier debt payments. entityId format =
+      // `storeId:supplierId:tempId`.
+      case 'supplier_debt_payment':
+        if (parts.length < 3) return null;
+        final storeId = parts[0];
+        final supplierId = parts[1];
+        if (item.operation == 'CREATE') {
+          return ApiEndpoints.supplierPayments(storeId, supplierId);
         }
         return null;
 
