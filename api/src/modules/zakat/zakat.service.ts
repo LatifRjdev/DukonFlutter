@@ -76,8 +76,12 @@ export class ZakatService {
     const totalAssets = inventoryValue.add(cashOnHand).add(receivables);
     const netAssets = totalAssets.sub(payables);
 
-    const zakatRate = settings ? new Decimal(settings.zakatRate) : new Decimal('2.5');
-    const nisabAmount = settings ? new Decimal(settings.nisabAmount) : new Decimal(0);
+    const zakatRate = settings
+      ? new Decimal(settings.zakatRate)
+      : new Decimal('2.5');
+    const nisabAmount = settings
+      ? new Decimal(settings.nisabAmount)
+      : new Decimal(0);
     // G.2: same conservative default — no zakat unless nisabAmount
     // is explicitly configured > 0.
     const isAboveNisab = nisabAmount.gt(0) && netAssets.gte(nisabAmount);
@@ -87,10 +91,13 @@ export class ZakatService {
     let isHaulComplete = true; // default true if haul date never set (backwards compat)
     let haulCompletesOn: Date | null = null;
     if (haulStartDate) {
-      const elapsedDays = (now.getTime() - haulStartDate.getTime()) / MS_PER_DAY;
+      const elapsedDays =
+        (now.getTime() - haulStartDate.getTime()) / MS_PER_DAY;
       isHaulComplete = elapsedDays >= HAUL_DAYS;
       if (!isHaulComplete) {
-        haulCompletesOn = new Date(haulStartDate.getTime() + HAUL_DAYS * MS_PER_DAY);
+        haulCompletesOn = new Date(
+          haulStartDate.getTime() + HAUL_DAYS * MS_PER_DAY,
+        );
       }
     }
 
@@ -158,11 +165,15 @@ export class ZakatService {
       create: {
         storeId,
         ...dto,
-        haulStartDate: dto.haulStartDate ? new Date(dto.haulStartDate) : undefined,
+        haulStartDate: dto.haulStartDate
+          ? new Date(dto.haulStartDate)
+          : undefined,
       },
       update: {
         ...dto,
-        haulStartDate: dto.haulStartDate ? new Date(dto.haulStartDate) : undefined,
+        haulStartDate: dto.haulStartDate
+          ? new Date(dto.haulStartDate)
+          : undefined,
       },
     });
 
@@ -214,7 +225,10 @@ export class ZakatService {
       // claim outright — no tolerance — since 0.5% of 0 is 0.
       dueDiff = clientZakatDue.abs();
     } else {
-      dueDiff = clientZakatDue.sub(serverZakatDue).abs().div(serverZakatDue.abs());
+      dueDiff = clientZakatDue
+        .sub(serverZakatDue)
+        .abs()
+        .div(serverZakatDue.abs());
     }
 
     if (dueDiff.gt(ZAKAT_DUE_TOLERANCE)) {

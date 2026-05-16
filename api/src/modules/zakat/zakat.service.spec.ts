@@ -68,8 +68,12 @@ function makePrismaFake() {
       aggregate: jest.fn(async ({ where, _sum }: any) => {
         const matched = Array.from(products.values()).filter((p) => {
           if (where.storeId && p.storeId !== where.storeId) return false;
-          if (where.isActive !== undefined && p.isActive !== where.isActive) return false;
-          if (where.quantity?.gt !== undefined && p.quantity <= where.quantity.gt)
+          if (where.isActive !== undefined && p.isActive !== where.isActive)
+            return false;
+          if (
+            where.quantity?.gt !== undefined &&
+            p.quantity <= where.quantity.gt
+          )
             return false;
           return true;
         });
@@ -93,7 +97,8 @@ function makePrismaFake() {
       aggregate: jest.fn(async ({ where }: any) => {
         const matched = Array.from(customers.values()).filter(
           (c) =>
-            c.storeId === where.storeId && c.debt > (where.debt?.gt ?? -Infinity),
+            c.storeId === where.storeId &&
+            c.debt > (where.debt?.gt ?? -Infinity),
         );
         return { _sum: { debt: matched.reduce((s, c) => s + c.debt, 0) } };
       }),
@@ -102,7 +107,8 @@ function makePrismaFake() {
       aggregate: jest.fn(async ({ where }: any) => {
         const matched = Array.from(suppliers.values()).filter(
           (s) =>
-            s.storeId === where.storeId && s.debt > (where.debt?.gt ?? -Infinity),
+            s.storeId === where.storeId &&
+            s.debt > (where.debt?.gt ?? -Infinity),
         );
         return { _sum: { debt: matched.reduce((acc, s) => acc + s.debt, 0) } };
       }),
@@ -155,7 +161,8 @@ function makePrismaFake() {
           localId: data.localId ?? null,
         };
         payments.set(id, row);
-        if (row.localId) paymentsByLocalId.set(`${row.storeId}::${row.localId}`, row);
+        if (row.localId)
+          paymentsByLocalId.set(`${row.storeId}::${row.localId}`, row);
         return row;
       }),
       // Z-P1-1: support idempotent upsert keyed on (storeId, localId).
@@ -339,8 +346,18 @@ describe('ZakatService', () => {
     });
 
     it('should not include inventory from other stores when computing assets', async () => {
-      seedProduct({ id: 'a1', storeId: 'store-A', quantity: 5, costPrice: 100 });
-      seedProduct({ id: 'b1', storeId: 'store-B', quantity: 100, costPrice: 9999 });
+      seedProduct({
+        id: 'a1',
+        storeId: 'store-A',
+        quantity: 5,
+        costPrice: 100,
+      });
+      seedProduct({
+        id: 'b1',
+        storeId: 'store-B',
+        quantity: 100,
+        costPrice: 9999,
+      });
 
       const result = await service.calculate('store-A');
 
@@ -516,7 +533,9 @@ describe('ZakatService', () => {
       expect(prisma.zakatPayment.upsert).toHaveBeenCalledTimes(2);
       expect(prisma.zakatPayment.upsert).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { storeId_localId: { storeId: 'store-A', localId: 'abc-123' } },
+          where: {
+            storeId_localId: { storeId: 'store-A', localId: 'abc-123' },
+          },
         }),
       );
       // Map only ever gained one row.
