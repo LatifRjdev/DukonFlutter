@@ -147,24 +147,41 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                       }
                       if (state is InvestmentLoaded) {
                         if (state.investments.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.trending_up,
-                                    size: 64, color: AppColors.disabled),
-                                const SizedBox(height: AppConstants.spacingMd),
-                                Text('Вложений пока нет',
-                                    style: TextStyle(
-                                        color: context.textSecondary,
-                                        fontSize: 16)),
-                              ],
-                            ),
+                          return Stack(
+                            children: [
+                              Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.trending_up,
+                                        size: 64, color: AppColors.disabled),
+                                    const SizedBox(height: AppConstants.spacingMd),
+                                    Text('Вложений пока нет',
+                                        style: TextStyle(
+                                            color: context.textSecondary,
+                                            fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                              if (state.isRefreshing)
+                                const Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child:
+                                        CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                ),
+                            ],
                           );
                         }
-                        return RefreshIndicator(
-                          onRefresh: () async => _loadInvestments(context),
-                          child: ListView.separated(
+                        return Stack(
+                          children: [
+                            RefreshIndicator(
+                              onRefresh: () async => _loadInvestments(context),
+                              child: ListView.separated(
                             padding: const EdgeInsets.all(AppConstants.spacingMd),
                             itemCount: state.investments.length,
                             separatorBuilder: (_, _) =>
@@ -235,6 +252,18 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                               );
                             },
                           ),
+                            ),
+                            if (state.isRefreshing)
+                              const Positioned(
+                                top: 8,
+                                right: 8,
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              ),
+                          ],
                         );
                       }
                       return const SizedBox.shrink();

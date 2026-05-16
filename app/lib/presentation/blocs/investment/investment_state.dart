@@ -16,9 +16,36 @@ class InvestmentLoaded extends InvestmentState {
   final int totalPages;
   final int currentPage;
   final String? selectedStatus;
-  const InvestmentLoaded({required this.investments, required this.total, required this.totalPages, this.currentPage = 1, this.selectedStatus});
+  final bool isRefreshing;
+  const InvestmentLoaded({
+    required this.investments,
+    required this.total,
+    required this.totalPages,
+    this.currentPage = 1,
+    this.selectedStatus,
+    this.isRefreshing = false,
+  });
+
+  InvestmentLoaded copyWith({
+    List<Investment>? investments,
+    int? total,
+    int? totalPages,
+    int? currentPage,
+    String? selectedStatus,
+    bool? isRefreshing,
+  }) {
+    return InvestmentLoaded(
+      investments: investments ?? this.investments,
+      total: total ?? this.total,
+      totalPages: totalPages ?? this.totalPages,
+      currentPage: currentPage ?? this.currentPage,
+      selectedStatus: selectedStatus ?? this.selectedStatus,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+    );
+  }
+
   @override
-  List<Object?> get props => [investments, total, totalPages, currentPage, selectedStatus];
+  List<Object?> get props => [investments, total, totalPages, currentPage, selectedStatus, isRefreshing];
 }
 
 class InvestmentSummaryLoaded extends InvestmentState {

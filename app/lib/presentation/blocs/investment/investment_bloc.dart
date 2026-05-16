@@ -18,7 +18,14 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
   }
 
   Future<void> _onListRequested(InvestmentListRequested event, Emitter<InvestmentState> emit) async {
-    emit(InvestmentLoading());
+    // Spec E D.1: avoid Loading flicker on filter switch by reusing
+    // the previous Loaded state with isRefreshing=true.
+    final prevState = state;
+    if (prevState is InvestmentLoaded) {
+      emit(prevState.copyWith(isRefreshing: true));
+    } else {
+      emit(InvestmentLoading());
+    }
     try {
       final result = await _investmentRepository.getInvestments(
         event.storeId,
@@ -31,6 +38,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
         totalPages: result.totalPages,
         currentPage: event.page,
         selectedStatus: event.status,
+        isRefreshing: false,
       ));
     } catch (e) {
       emit(InvestmentError(mapErrorToUserMessage(e)));
@@ -52,6 +60,9 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     try {
       await _investmentRepository.createInvestment(event.storeId, event.data);
       emit(const InvestmentActionSuccess('Вложение добавлено'));
+      // Spec E D.2: yield to event loop so BlocBuilder consumers see
+      // the success state before it's overwritten by the chained reload.
+      await Future<void>.delayed(Duration.zero);
       add(InvestmentListRequested(storeId: event.storeId));
     } catch (e) {
       emit(InvestmentError(mapErrorToUserMessage(e)));
@@ -63,6 +74,9 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     try {
       await _investmentRepository.updateInvestment(event.storeId, event.id, event.data);
       emit(const InvestmentActionSuccess('Вложение обновлено'));
+      // Spec E D.2: yield to event loop so BlocBuilder consumers see
+      // the success state before it's overwritten by the chained reload.
+      await Future<void>.delayed(Duration.zero);
       add(InvestmentListRequested(storeId: event.storeId));
     } catch (e) {
       emit(InvestmentError(mapErrorToUserMessage(e)));
@@ -74,6 +88,9 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
     try {
       await _investmentRepository.deleteInvestment(event.storeId, event.id);
       emit(const InvestmentActionSuccess('Вложение удалено'));
+      // Spec E D.2: yield to event loop so BlocBuilder consumers see
+      // the success state before it's overwritten by the chained reload.
+      await Future<void>.delayed(Duration.zero);
       add(InvestmentListRequested(storeId: event.storeId));
     } catch (e) {
       emit(InvestmentError(mapErrorToUserMessage(e)));
