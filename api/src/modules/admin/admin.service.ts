@@ -14,6 +14,10 @@ import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
 import { AnnouncementsQueryDto } from './dto/announcements-query.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Prisma, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
+import {
+  renderTemplate,
+  AnnouncementVars,
+} from './announcements-template';
 
 @Injectable()
 export class AdminService {
@@ -429,49 +433,106 @@ export class AdminService {
 
   // ============ ANNOUNCEMENTS ============
 
-  async createAnnouncement(dto: CreateAnnouncementDto, adminId: string) {
-    // Build user filter based on their store subscriptions
-    const subscriptionWhere: Prisma.SubscriptionWhereInput = {};
-    if (dto.targetPlan) subscriptionWhere.plan = dto.targetPlan;
-    if (dto.targetStatus) subscriptionWhere.status = dto.targetStatus;
+  // Spec C: shared audience resolver — used by both preview and
+  // create. Returns one record per recipient with userId, primary
+  // storeId (for sendPush), and pre-built vars (for renderTemplate).
+  // Dedupes by userId in case a user owns multiple stores matching
+  // the filter.
+  private async _resolveAnnouncementAudience(
+    dto: CreateAnnouncementDto,
+  ): Promise<
+    Array<{
+      userId: string;
+      storeId: string;
+      vars: AnnouncementVars;
+    }>
+  > {
+    const stores = await this.prisma.store.findMany({
+      where: {
+        isActive: true,
+        owner: { isActive: true, isAdmin: false },
+        ...(dto.targetPlan || dto.targetStatus
+          ? {
+              subscription: {
+                ...(dto.targetPlan && { plan: dto.targetPlan }),
+                ...(dto.targetStatus && { status: dto.targetStatus }),
+              },
+            }
+          : {}),
+      },
+      include: {
+        owner: { select: { id: true, name: true, phone: true } },
+        subscription: { select: { plan: true, currentPeriodEnd: true } },
+      },
+    });
 
-    const hasFilter = dto.targetPlan || dto.targetStatus;
+    // Dedupe by ownerId — pick FIRST store per user as the primary
+    // (sendPush requires a storeId; if user has multiple, we just
+    // need one).
+    const seen = new Set<string>();
+    const audience: Array<{
+      userId: string;
+      storeId: string;
+      vars: AnnouncementVars;
+    }> = [];
 
-    let userIds: string[];
-    if (hasFilter) {
-      const subscriptions = await this.prisma.subscription.findMany({
-        where: subscriptionWhere,
-        select: { store: { select: { ownerId: true } } },
+    for (const store of stores) {
+      if (seen.has(store.ownerId)) continue;
+      seen.add(store.ownerId);
+
+      audience.push({
+        userId: store.ownerId,
+        storeId: store.id,
+        vars: {
+          user: {
+            name: store.owner.name,
+            phone: store.owner.phone ?? '',
+          },
+          store: {
+            name: store.name,
+            currency: store.currency,
+            subscription: {
+              plan: store.subscription?.plan ?? 'START',
+              currentPeriodEnd: store.subscription?.currentPeriodEnd
+                ? store.subscription.currentPeriodEnd
+                    .toISOString()
+                    .slice(0, 10)
+                : '—',
+            },
+          },
+        },
       });
-      userIds = subscriptions.map((s) => s.store.ownerId);
-    } else {
-      const users = await this.prisma.user.findMany({
-        where: { isActive: true },
-        select: { id: true },
-      });
-      userIds = users.map((u) => u.id);
     }
 
-    // Remove duplicates
-    userIds = [...new Set(userIds)];
+    return audience;
+  }
 
-    // Get a storeId for each user (use their first store) — required by sendPush signature
-    const userStores = await this.prisma.store.findMany({
-      where: { ownerId: { in: userIds } },
-      select: { ownerId: true, id: true },
-      distinct: ['ownerId'],
-    });
-    const storeByUser = new Map(userStores.map((s) => [s.ownerId, s.id]));
+  private _fakeVarsForEmptyAudience(): AnnouncementVars {
+    return {
+      user: { name: 'Имя', phone: '+992XXXXXXXXX' },
+      store: {
+        name: 'Магазин',
+        currency: 'TJS',
+        subscription: { plan: 'START', currentPeriodEnd: '—' },
+      },
+    };
+  }
 
-    // Send FCM to each user (fire-and-forget per user)
+  async createAnnouncement(dto: CreateAnnouncementDto, adminId: string) {
+    // Spec C: shared audience resolver + per-user template render.
+    // Each recipient gets THEIR rendered title/body via FCM. The
+    // raw template is stored on Announcement so the row mirrors
+    // what the admin typed (not the personalized expansion).
+    const audience = await this._resolveAnnouncementAudience(dto);
+
     await Promise.allSettled(
-      userIds.map((userId) => {
-        const storeId = storeByUser.get(userId);
-        if (!storeId) return Promise.resolve();
+      audience.map(({ userId, storeId, vars }) => {
+        const renderedTitle = renderTemplate(dto.title, vars);
+        const renderedBody = renderTemplate(dto.body, vars);
         return this.notifications.sendPush(
           userId,
-          dto.title,
-          dto.body,
+          renderedTitle,
+          renderedBody,
           'ANNOUNCEMENT',
           storeId,
         );
@@ -480,33 +541,37 @@ export class AdminService {
 
     return this.prisma.announcement.create({
       data: {
-        title: dto.title,
+        title: dto.title, // raw template — admin sees what was authored
         body: dto.body,
         targetPlan: dto.targetPlan,
         targetStatus: dto.targetStatus,
         sentBy: adminId,
-        recipientCount: userIds.length,
+        recipientCount: audience.length,
       },
     });
   }
 
   async previewAnnouncement(dto: CreateAnnouncementDto) {
-    // TODO(admin-panel): replace stub with real Firebase template expansion
-    // + proper targeting by plan/status once the delivery pipeline exists.
-    const whereClause: any = { isAdmin: false, isActive: true };
-    if (dto.targetPlan) {
-      // Count only users whose stores currently run on the target plan.
-      // Cheap approximation: users with at least one store on the plan.
-      whereClause.ownedStores = {
-        some: { subscription: { plan: dto.targetPlan } },
-      };
-    }
-    const audienceCount = await this.prisma.user.count({ where: whereClause });
+    // Spec C: real audience resolver + template expansion.
+    const audience = await this._resolveAnnouncementAudience(dto);
+    const sample = audience[0]?.vars ?? this._fakeVarsForEmptyAudience();
+
+    const renderedTitle = renderTemplate(dto.title, sample);
+    const renderedBody = renderTemplate(dto.body, sample);
+
+    // FCM Admin SDK throughput on a single Node process: ~100 users/sec
+    // (10 parallel batches at ~50ms each). 6000 users/min, rounded up.
+    // Min 1 minute so the UI never shows 0.
+    const estimatedDeliveryMinutes = Math.max(
+      1,
+      Math.ceil(audience.length / 6000),
+    );
+
     return {
-      renderedTitle: dto.title,
-      renderedBody: dto.body,
-      audienceCount,
-      estimatedDeliveryMinutes: 1,
+      renderedTitle,
+      renderedBody,
+      audienceCount: audience.length,
+      estimatedDeliveryMinutes,
     };
   }
 
