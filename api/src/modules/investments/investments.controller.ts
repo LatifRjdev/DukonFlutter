@@ -15,6 +15,8 @@ import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { UpdateInvestmentDto } from './dto/update-investment.dto';
@@ -22,7 +24,8 @@ import { InvestmentQueryDto } from './dto/investment-query.dto';
 
 @ApiTags('Investments')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard, PermissionsGuard)
+@RequiresFeature('hasInvestments')
 @Controller('stores/:storeId/investments')
 export class InvestmentsController {
   constructor(private investmentsService: InvestmentsService) {}
