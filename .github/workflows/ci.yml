@@ -30,6 +30,10 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: npm audit (high+ only — advisory)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
       - name: Prisma generate
         run: npx prisma generate
 
@@ -43,6 +47,41 @@ jobs:
       # the nest build step which is what prod actually runs.
       - name: Build
         run: npm run build
+
+  backend-e2e:
+    name: Backend e2e (Jest + Postgres)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dukonpro
+          POSTGRES_PASSWORD: dukonpro
+          POSTGRES_DB: dukonpro
+        ports: ['5435:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: api
+    env:
+      DATABASE_URL: postgresql://dukonpro:dukonpro@localhost:5435/dukonpro?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - name: Install deps
+        run: npm ci
+      - name: Prisma migrate deploy
+        run: npx prisma migrate deploy
+      - name: e2e tests (Jest)
+        run: npm run test:e2e -- --ci --colors
 
   flutter:
     name: Flutter app (analyze + test)
@@ -69,8 +108,12 @@ jobs:
       - name: Fetch packages
         run: flutter pub get
 
-      - name: Dart analyze
-        run: flutter analyze --no-fatal-infos
+      - name: flutter pub outdated (advisory)
+        run: flutter pub outdated --no-dependency-overrides --no-dev-dependencies
+        continue-on-error: true
+
+      - name: Dart analyze (strict)
+        run: flutter analyze
 
       - name: i18n lint (check_i18n.dart)
         run: dart run tool/check_i18n.dart
