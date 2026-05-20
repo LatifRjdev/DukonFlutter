@@ -1,0 +1,25 @@
+pre-commit:
+  parallel: true
+  commands:
+    api-prettier:
+      glob: "api/**/*.{ts,tsx,js,json}"
+      run: cd api && npx prettier --check {staged_files}
+    api-tsc:
+      glob: "api/**/*.{ts,tsx}"
+      run: cd api && npx tsc --noEmit
+    api-eslint:
+      glob: "api/**/*.{ts,tsx}"
+      run: cd api && npx eslint {staged_files} --max-warnings=0
+    flutter-format:
+      glob: "app/**/*.dart"
+      run: cd app && dart format --set-exit-if-changed {staged_files}
+    flutter-analyze:
+      glob: "app/**/*.dart"
+      run: cd app && dart analyze {staged_files}
+
+pre-push:
+  commands:
+    api-test:
+      run: cd api && npm test -- --ci --silent
+    flutter-test:
+      run: cd app && flutter test --reporter compact
