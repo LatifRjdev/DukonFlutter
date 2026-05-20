@@ -39,7 +39,10 @@ function makePrismaFake() {
     Array.from(rows.values()).filter((r) => {
       if (where.storeId && r.storeId !== where.storeId) return false;
       if (where.status && r.status !== where.status) return false;
-      if (where.startDate && !inRange(r.startDate, where.startDate.gte, where.startDate.lte))
+      if (
+        where.startDate &&
+        !inRange(r.startDate, where.startDate.gte, where.startDate.lte)
+      )
         return false;
       return true;
     });
@@ -59,7 +62,8 @@ function makePrismaFake() {
           name: data.name,
           description: data.description ?? null,
           amount: Number(data.amount),
-          returnAmount: data.returnAmount != null ? Number(data.returnAmount) : null,
+          returnAmount:
+            data.returnAmount != null ? Number(data.returnAmount) : null,
           investorName: data.investorName,
           investorPhone: data.investorPhone ?? null,
           status: data.status ?? 'ACTIVE',
@@ -276,7 +280,9 @@ describe('InvestmentsService', () => {
     });
 
     it('create: passes localId through to prisma.create.data', async () => {
-      const createSpy = (prisma.investment.create as jest.Mock).mockResolvedValue({
+      const createSpy = (
+        prisma.investment.create as jest.Mock
+      ).mockResolvedValue({
         id: 'inv-1',
         amount: { toString: () => '1000' },
         name: 'Test',

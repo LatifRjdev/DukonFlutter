@@ -43,11 +43,17 @@ export class InvestmentsService {
 
     // Spec D: audit mutation. AuditLogService swallows its own
     // errors so a logging failure can't roll back the create.
-    await this.audit.record(userId, 'investment.create', 'investment', created.id, {
-      storeId,
-      amount: created.amount.toString(),
-      name: created.name,
-    });
+    await this.audit.record(
+      userId,
+      'investment.create',
+      'investment',
+      created.id,
+      {
+        storeId,
+        amount: created.amount.toString(),
+        name: created.name,
+      },
+    );
 
     return created;
   }
@@ -99,7 +105,12 @@ export class InvestmentsService {
   // to close the TOCTOU window where a concurrent delete between
   // findFirst and update could update a row that no longer belongs
   // to this store (or no longer exists at all).
-  async update(storeId: string, id: string, dto: UpdateInvestmentDto, userId: string) {
+  async update(
+    storeId: string,
+    id: string,
+    dto: UpdateInvestmentDto,
+    userId: string,
+  ) {
     const updated = await this.prisma.$transaction(async (tx) => {
       const existing = await tx.investment.findFirst({
         where: { id, storeId },
