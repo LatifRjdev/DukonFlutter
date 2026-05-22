@@ -1,5 +1,7 @@
+import { initOtel } from './otel';
 import { initSentry } from './sentry';
 
+initOtel();
 initSentry();
 
 import { NestFactory } from '@nestjs/core';
