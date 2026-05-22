@@ -1,9 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../core/errors/exceptions.dart';
+import '../../../domain/entities/user.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+
+/// Binds the current user to Sentry's scope so crash/error reports include
+/// the user id. Pass `null` on logout to clear the scope.
+///
+/// Safe no-op when Sentry isn't initialized (dev builds without a DSN) —
+/// `configureScope` short-circuits via the no-op hub.
+Future<void> _bindSentryUser(User? user) async {
+  await Sentry.configureScope((scope) {
+    scope.setUser(user == null ? null : SentryUser(id: user.id));
+  });
+}
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -27,11 +40,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (isAuth) {
       final user = await _authRepository.getCurrentUser();
       if (user != null) {
+        await _bindSentryUser(user);
         emit(AuthAuthenticated(user));
       } else {
+        await _bindSentryUser(null);
         emit(AuthUnauthenticated());
       }
     } else {
+      await _bindSentryUser(null);
       emit(AuthUnauthenticated());
     }
   }
@@ -50,12 +66,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Re-emit Authenticated with the (possibly updated) user so any
       // listeners pick up a fresh profile. Equatable on AuthAuthenticated
       // means an unchanged user is a no-op for buildWhen consumers.
+      await _bindSentryUser(user);
       emit(AuthAuthenticated(user));
     } on UnauthorizedException {
       // Server says the token is revoked — eject the user. The router's
       // redirect rule + the ApiInterceptor's onSessionExpired callback
       // will land us on /login.
       await _authRepository.logout();
+      await _bindSentryUser(null);
       emit(AuthUnauthenticated());
     } catch (_) {
       // Network errors, server 5xx, etc. don't tell us anything about the
@@ -68,6 +86,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final result = await _authRepository.login(phone: event.phone, password: event.password);
+      await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
       emit(AuthFailure(mapErrorToUserMessage(e)));
@@ -83,6 +102,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         name: event.name,
         email: event.email,
       );
+      await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
       emit(AuthFailure(mapErrorToUserMessage(e)));
@@ -91,6 +111,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLogoutRequested(AuthLogoutRequested event, Emitter<AuthState> emit) async {
     await _authRepository.logout();
+    await _bindSentryUser(null);
     emit(AuthUnauthenticated());
   }
 
@@ -108,6 +129,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final result = await _authRepository.verifyOtp(event.phone, event.code);
+      await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
       emit(AuthFailure(mapErrorToUserMessage(e)));
