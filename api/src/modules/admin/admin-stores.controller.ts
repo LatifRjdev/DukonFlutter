@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { AdminGuard } from '../../common/guards/admin.guard';
 import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
@@ -45,18 +46,21 @@ export class AdminStoresController {
   }
 
   @Put(':id/suspend')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Suspend a store' })
   suspendStore(@Param('id') id: string) {
     return this.adminService.suspendStore(id);
   }
 
   @Put(':id/unsuspend')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Unsuspend a store' })
   unsuspendStore(@Param('id') id: string) {
     return this.adminService.unsuspendStore(id);
   }
 
   @Put(':id/transfer')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Transfer store ownership to another user' })
   transferStore(@Param('id') id: string, @Body() dto: TransferStoreDto) {
     return this.adminService.transferStore(id, dto);

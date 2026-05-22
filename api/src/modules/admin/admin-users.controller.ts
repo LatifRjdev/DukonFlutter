@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { AdminGuard } from '../../common/guards/admin.guard';
 import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
@@ -42,24 +43,28 @@ export class AdminUsersController {
   }
 
   @Put(':id/toggle-admin')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Toggle admin flag for a user' })
   toggleAdmin(@Param('id') id: string) {
     return this.adminService.toggleAdmin(id);
   }
 
   @Put(':id/block')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Block user and revoke all refresh tokens' })
   blockUser(@Param('id') id: string) {
     return this.adminService.blockUser(id);
   }
 
   @Put(':id/unblock')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Unblock a previously blocked user' })
   unblockUser(@Param('id') id: string) {
     return this.adminService.unblockUser(id);
   }
 
   @Delete(':id')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
   @ApiOperation({ summary: 'Soft-delete user: anonymize phone, nullify email' })
   deleteUser(@Param('id') id: string) {
     return this.adminService.deleteUser(id);

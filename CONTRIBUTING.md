@@ -97,6 +97,26 @@ Co-Authored-By: ... (when pairing)
 Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`,
 `schema`, `ci`, `style`.
 
+## Throttle limits
+
+| Endpoint | Limit | TTL | Reason |
+|----------|------:|-----|--------|
+| Global default | 300 | 60s | Normal POS traffic |
+| Auth /register | 3 | 60s | Account creation abuse |
+| Auth /login | 5 | 60s | Password brute-force |
+| Auth /refresh | 10 | 60s | Token cycling |
+| Auth /send-otp | 3 | 60s | SMS spam |
+| Auth /verify-otp | 5 | 60s | OTP brute-force |
+| Auth /forgot-password | 3 | 60s | SMS spam |
+| Auth /reset-password | 3 | 60s | Password reset abuse |
+| Admin mutations | 60 | 60s | Compromised admin account |
+
+Admin mutations covered: `POST /admin/announcements`, `POST /admin/announcements/preview`,
+`PUT /admin/plans/:plan`, `PUT /admin/stores/:id/suspend`, `PUT /admin/stores/:id/unsuspend`,
+`PUT /admin/stores/:id/transfer`, `PUT /admin/users/:id/toggle-admin`,
+`PUT /admin/users/:id/block`, `PUT /admin/users/:id/unblock`, `DELETE /admin/users/:id`.
+Admin read endpoints (`GET`) remain at the global 300/min.
+
 ## Where things live
 
 - `api/` — NestJS + Prisma backend
