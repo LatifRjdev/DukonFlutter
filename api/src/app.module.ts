@@ -5,6 +5,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { QueryCounterInterceptor } from './common/interceptors/query-counter.interceptor';
+import { SentryUserContextInterceptor } from './common/interceptors/sentry-user-context.interceptor';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { AuditLogModule } from './common/audit/audit-log.module';
@@ -79,6 +80,7 @@ import { HealthModule } from './modules/health/health.module';
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: QueryCounterInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: SentryUserContextInterceptor },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

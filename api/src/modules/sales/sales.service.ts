@@ -13,6 +13,7 @@ import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleQueryDto } from './dto/sale-query.dto';
 import { RefundSaleDto } from './dto/refund-sale.dto';
 import { Prisma } from '@prisma/client';
+import * as Sentry from '@sentry/nestjs';
 
 @Injectable()
 export class SalesService {
@@ -33,6 +34,18 @@ export class SalesService {
   private readonly DEFAULT_BIG_SALE_THRESHOLD = 1000;
 
   async create(storeId: string, dto: CreateSaleDto) {
+    Sentry.addBreadcrumb({
+      category: 'sales',
+      message: 'sale.create',
+      data: {
+        storeId,
+        itemCount: dto.items?.length ?? 0,
+        paidAmount: dto.paidAmount,
+        paymentType: dto.paymentType,
+        localId: dto.localId,
+      },
+    });
+
     if (!dto.items || dto.items.length === 0) {
       throw new BadRequestException('Sale must have at least one item');
     }
@@ -396,6 +409,17 @@ export class SalesService {
     dto: RefundSaleDto,
     actorId: string = 'system',
   ) {
+    Sentry.addBreadcrumb({
+      category: 'sales',
+      message: 'sale.refund',
+      data: {
+        storeId,
+        saleId,
+        itemCount: dto.items?.length ?? 0,
+        reason: dto.reason,
+      },
+    });
+
     const sale = await this.findOne(storeId, saleId);
     if (sale.status === 'RETURNED' || sale.status === 'CANCELLED') {
       throw new BadRequestException('Sale is already returned or cancelled');

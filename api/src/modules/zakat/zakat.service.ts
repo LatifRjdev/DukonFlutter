@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { UpsertZakatSettingsDto } from './dto/upsert-zakat-settings.dto';
 import { CreateZakatPaymentDto } from './dto/create-zakat-payment.dto';
+import * as Sentry from '@sentry/nestjs';
 
 // ZC-P1-1: Hijri lunar year — 354 days. Zakat is only due on
 // wealth that has been held above the nisab threshold for one
@@ -280,6 +281,12 @@ export class ZakatService {
           update: {},
         })
       : await this.prisma.zakatPayment.create({ data });
+
+    Sentry.addBreadcrumb({
+      category: 'zakat',
+      message: 'zakat.payment.create',
+      data: { paymentId: payment.id, amount: payment.amount.toString() },
+    });
 
     // Z-P1-2: audit mutation with the actor's userId.
     await this.audit.record(

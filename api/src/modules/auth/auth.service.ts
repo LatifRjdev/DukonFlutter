@@ -14,6 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { OtpService } from './otp.service';
 import { OtpType } from '@prisma/client';
+import * as Sentry from '@sentry/nestjs';
 
 @Injectable()
 export class AuthService {
@@ -76,6 +77,12 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid phone or password');
     }
+
+    Sentry.addBreadcrumb({
+      category: 'auth',
+      message: 'auth.login',
+      data: { userId: user.id },
+    });
 
     const tokens = await this.generateTokens(user.id, user.phone, user.isAdmin);
     return {

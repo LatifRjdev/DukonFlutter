@@ -15,6 +15,7 @@ import { RejectPaymentDto } from './dto/reject-payment.dto';
 import { ChangePlanDto } from './dto/change-plan.dto';
 import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
 import { SetDiscountDto } from './dto/set-discount.dto';
+import * as Sentry from '@sentry/nestjs';
 
 const PLAN_HIERARCHY: Record<string, number> = {
   START: 1,
@@ -254,6 +255,12 @@ export class SubscriptionsService implements OnModuleInit {
     paymentId: string,
     reviewedBy: string,
   ) {
+    Sentry.addBreadcrumb({
+      category: 'subscriptions',
+      message: 'subscription.approve',
+      data: { subId: subscriptionId, payId: paymentId, approvedBy: reviewedBy },
+    });
+
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
       include: { payments: { where: { id: paymentId } } },
@@ -353,6 +360,12 @@ export class SubscriptionsService implements OnModuleInit {
     dto: RejectPaymentDto,
     reviewedBy: string,
   ) {
+    Sentry.addBreadcrumb({
+      category: 'subscriptions',
+      message: 'subscription.reject',
+      data: { subId: subscriptionId, payId: paymentId, rejectedBy: reviewedBy },
+    });
+
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
       include: { payments: { where: { id: paymentId } } },
