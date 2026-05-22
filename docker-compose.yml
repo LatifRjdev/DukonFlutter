@@ -1,6 +1,15 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16
+    # Spec G C: slow-query log (>=500ms), DDL audit, lock-wait visibility.
+    command:
+      - postgres
+      - -c
+      - log_min_duration_statement=500
+      - -c
+      - log_statement=ddl
+      - -c
+      - log_lock_waits=on-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
