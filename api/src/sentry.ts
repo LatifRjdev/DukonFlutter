@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { scrubEventPii } from './common/sentry/scrub-pii';
 
 export function initSentry(): void {
   const dsn = process.env.SENTRY_DSN;
@@ -22,5 +23,9 @@ export function initSentry(): void {
     tracesSampleRate: env === 'production' ? 0.1 : 0,
     profilesSampleRate: env === 'production' ? 0.1 : 0,
     sendDefaultPii: false,
+    beforeSend(event) {
+      scrubEventPii(event as any);
+      return event;
+    },
   });
 }
