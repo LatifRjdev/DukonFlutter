@@ -334,3 +334,111 @@ describe('SalesService', () => {
     });
   });
 });
+
+// ─── Big-sale notification — multi-currency ───────────────────────────────
+
+function makeUsdSaleFake() {
+  const tx = {
+    product: {
+      findMany: jest.fn(async () => [
+        {
+          id: 'p-luxury',
+          storeId: 'store-usd',
+          name: 'Luxury Item',
+          sellPrice: new Prisma.Decimal('1100'),
+          costPrice: new Prisma.Decimal('900'),
+          quantity: 50,
+        },
+      ]),
+      updateMany: jest.fn(async () => ({ count: 1 })),
+    },
+    sale: {
+      create: jest.fn(async ({ data }: any) => ({
+        id: 'sale-usd-1',
+        storeId: 'store-usd',
+        cashierId: 'cashier-1',
+        receiptNo: data.receiptNo,
+        subtotal: new Prisma.Decimal('1100'),
+        discount: new Prisma.Decimal('0'),
+        discountType: 'FIXED',
+        total: new Prisma.Decimal('1100'),
+        paymentType: 'CASH',
+        paidAmount: new Prisma.Decimal('1100'),
+        change: new Prisma.Decimal('0'),
+        debtAmount: new Prisma.Decimal('0'),
+        customerId: null,
+        status: 'COMPLETED',
+        createdAt: new Date(),
+        items: [
+          {
+            id: 'si-usd-1',
+            saleId: 'sale-usd-1',
+            productId: 'p-luxury',
+            quantity: 1,
+            sellPrice: new Prisma.Decimal('1100'),
+            total: new Prisma.Decimal('1100'),
+          },
+        ],
+        debtPayments: [],
+      })),
+    },
+    stockMovement: { createMany: jest.fn(async () => ({ count: 1 })) },
+    customer: { update: jest.fn(async () => ({})) },
+  };
+
+  return {
+    store: {
+      findUnique: jest.fn(async () => ({
+        id: 'store-usd',
+        ownerId: 'owner-usd',
+        name: 'USD Shop',
+        currency: 'USD',
+        settings: {},
+      })),
+    },
+    $transaction: jest.fn(async (cb: (tx: any) => Promise<any>) => cb(tx)),
+    sale: {
+      findFirst: jest.fn(async () => null),
+      findMany: jest.fn(async () => []),
+      count: jest.fn(async () => 0),
+    },
+  };
+}
+
+describe('SalesService — big-sale notification (USD store)', () => {
+  let service: SalesService;
+  let sendPushMock: jest.Mock;
+
+  beforeEach(async () => {
+    sendPushMock = jest.fn(async () => undefined);
+    const module = await Test.createTestingModule({
+      providers: [
+        SalesService,
+        { provide: PrismaService, useValue: makeUsdSaleFake() },
+        { provide: RedisService, useValue: fakeRedis() },
+        { provide: NotificationsService, useValue: { sendPush: sendPushMock } },
+        { provide: AuditLogService, useValue: { record: jest.fn(async () => undefined) } },
+      ],
+    }).compile();
+    service = module.get(SalesService);
+  });
+
+  it('should include store currency in big-sale push body when sale total exceeds threshold', async () => {
+    await service.create('store-usd', {
+      items: [{ productId: 'p-luxury', quantity: 1 }],
+      paymentType: 'CASH',
+      paidAmount: 1100,
+    } as any);
+
+    // maybeNotifyBigSale is void — drain the async queue before asserting
+    await new Promise<void>((r) => setImmediate(r));
+
+    expect(sendPushMock).toHaveBeenCalledWith(
+      'owner-usd',
+      expect.any(String),
+      expect.stringContaining('USD'),
+      'BIG_SALE',
+      'store-usd',
+    );
+  });
+});
