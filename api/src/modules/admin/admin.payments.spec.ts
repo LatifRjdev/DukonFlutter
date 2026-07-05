@@ -122,7 +122,8 @@ describe('Admin payments flow', () => {
 
   const seedSub = (overrides: Partial<any> = {}) => {
     const now = new Date('2026-04-27T00:00:00Z');
-    const periodEnd = new Date('2026-05-27T00:00:00Z');
+    // Keep periodEnd in the future so service extends from periodEnd (not now).
+    const periodEnd = new Date(Date.now() + 40 * 24 * 60 * 60 * 1000);
     const sub = {
       id: 'sub-1',
       storeId: 'store-A',
