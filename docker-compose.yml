@@ -9,7 +9,7 @@ services:
       - -c
       - log_statement=ddl
       - -c
-      - log_lock_waits=on-alpine
+      - log_lock_waits=on
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:

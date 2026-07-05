@@ -24,6 +24,7 @@ import {
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { AdminGuard } from '../../common/guards/admin.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SubscriptionsService } from './subscriptions.service';
 import { RequestChangeDto } from './dto/request-change.dto';
@@ -153,6 +154,7 @@ export class AdminSubscriptionsController {
     return this.subscriptionsService.adminGetPendingPayments();
   }
 
+  @SkipThrottle()
   @Put(':id/approve-payment/:paymentId')
   @ApiOperation({ summary: 'Admin: approve payment — activates subscription' })
   approvePayment(
@@ -163,6 +165,7 @@ export class AdminSubscriptionsController {
     return this.subscriptionsService.adminApprovePayment(id, paymentId, userId);
   }
 
+  @SkipThrottle()
   @Put(':id/reject-payment/:paymentId')
   @ApiOperation({ summary: 'Admin: reject payment with reason' })
   rejectPayment(

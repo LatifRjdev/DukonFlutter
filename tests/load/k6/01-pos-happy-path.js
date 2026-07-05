@@ -41,7 +41,7 @@ export function setup() {
 
   // Fetch first page of products to get real product IDs.
   const productsRes = http.get(
-    `${BASE_URL}/api/stores/${storeId}/products?take=10`,
+    `${BASE_URL}/api/stores/${storeId}/products?limit=10`,
     authHeaders(token),
   );
   check(productsRes, { 'setup: products 200': (r) => r.status === 200 });
@@ -66,7 +66,7 @@ export default function (data) {
 
   // Step 1: List products (simulates cashier browsing/searching)
   const productsRes = http.get(
-    `${BASE_URL}/api/stores/${storeId}/products?take=20`,
+    `${BASE_URL}/api/stores/${storeId}/products?limit=20`,
     headers,
   );
   check(productsRes, { 'products list 200': (r) => r.status === 200 });

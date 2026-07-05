@@ -39,7 +39,7 @@ export function setup() {
 export default function (data) {
   const { token, storeId } = data;
   const headers = authHeaders(token);
-  const query = '?startDate=2026-01-01&endDate=2026-12-31';
+  const query = '?from=2026-01-01&to=2026-12-31';
   const base = `${BASE_URL}/api/stores/${storeId}/reports`;
 
   const salesRes = http.get(`${base}/sales${query}`, headers);
