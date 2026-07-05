@@ -2,7 +2,7 @@
  * Scenario 01 — POS happy path
  *
  * Simulates a cashier completing a full sale + refund cycle.
- * Ramp: 50 VU → 100 VU over 2 min, hold 3 min, ramp down 30s.
+ * Ramp: 0 → 100 VU over 2 min, hold 3 min, ramp down 30s.
  * Thresholds: p(95) < 500ms, error rate < 1%.
  *
  * Required env vars:
