@@ -134,4 +134,23 @@ describe('SubscriptionGuard', () => {
       ForbiddenException,
     );
   });
+
+  it('rejects START plan subscriber when endpoint requires PREMIUM (explicit downgrade guard)', async () => {
+    // Documents the downgrade-access-denial path: a store that was on
+    // PREMIUM and downgraded to START must be blocked from PREMIUM features.
+    // The guard reads REQUIRED_PLAN_KEY metadata and compares plan tiers.
+    const prisma = makePrisma({
+      subscription: { storeId: 's1', status: 'ACTIVE', plan: 'START' },
+    });
+    const guard = new SubscriptionGuard(reflector, prisma as never);
+
+    const ctx = makeContext({
+      storeId: 's1',
+      classMetadata: { [REQUIRED_PLAN_KEY]: 'PREMIUM' },
+    });
+
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
+  });
 });
