@@ -124,3 +124,4 @@ Admin read endpoints (`GET`) remain at the global 300/min.
 - `docs/superpowers/specs/` — design docs
 - `docs/superpowers/plans/` — implementation plans
 - `qa/<date>-<topic>/` — verification artefacts (REPORT.md, scripts, screenshots)
+- `tests/load/` — k6 load scenarios (run manually, not in CI); see `tests/load/README.md`
