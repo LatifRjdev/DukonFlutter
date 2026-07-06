@@ -69,15 +69,30 @@ function makePrismaFake(): {
   _adjustments: Map<string, AdjRow>;
   _sales: Map<string, SaleRow>;
   _shifts: Map<string, ShiftRow>;
-  payrollPeriod: { findFirst: jest.Mock; findMany: jest.Mock; create: jest.Mock; update: jest.Mock };
+  payrollPeriod: {
+    findFirst: jest.Mock;
+    findMany: jest.Mock;
+    create: jest.Mock;
+    update: jest.Mock;
+  };
   staff: { findMany: jest.Mock };
   shift: { count: jest.Mock };
   sale: { aggregate: jest.Mock };
-  payroll: { findFirst: jest.Mock; findUnique: jest.Mock; findMany: jest.Mock; upsert: jest.Mock; update: jest.Mock; updateMany: jest.Mock };
-  payrollAdjustment: { create: jest.Mock; findFirst: jest.Mock; delete: jest.Mock };
+  payroll: {
+    findFirst: jest.Mock;
+    findUnique: jest.Mock;
+    findMany: jest.Mock;
+    upsert: jest.Mock;
+    update: jest.Mock;
+    updateMany: jest.Mock;
+  };
+  payrollAdjustment: {
+    create: jest.Mock;
+    findFirst: jest.Mock;
+    delete: jest.Mock;
+  };
   $transaction: jest.Mock;
 } {
-
   const periods = new Map<string, PeriodRow>();
   const staffList = new Map<string, StaffRow>();
   const payrolls = new Map<string, PayrollRow>();
@@ -156,8 +171,10 @@ function makePrismaFake(): {
       update: jest.fn(async ({ where, data }: any) => {
         const p = periods.get(where.id);
         if (!p) throw new Error('not found');
-        if (data.totalAmount !== undefined) p.totalAmount = Number(data.totalAmount);
-        if (data.paidAmount !== undefined) p.paidAmount = Number(data.paidAmount);
+        if (data.totalAmount !== undefined)
+          p.totalAmount = Number(data.totalAmount);
+        if (data.paidAmount !== undefined)
+          p.paidAmount = Number(data.paidAmount);
         if (data.status !== undefined) p.status = data.status;
         return { ...p };
       }),
@@ -173,17 +190,18 @@ function makePrismaFake(): {
       ),
     },
     shift: {
-      count: jest.fn(async ({ where }: any) =>
-        Array.from(shifts.values()).filter((s) => {
-          if (where.staffId && s.staffId !== where.staffId) return false;
-          if (where.status && s.status !== where.status) return false;
-          if (
-            where.openedAt &&
-            !inRange(s.openedAt, where.openedAt.gte, where.openedAt.lt)
-          )
-            return false;
-          return true;
-        }).length,
+      count: jest.fn(
+        async ({ where }: any) =>
+          Array.from(shifts.values()).filter((s) => {
+            if (where.staffId && s.staffId !== where.staffId) return false;
+            if (where.status && s.status !== where.status) return false;
+            if (
+              where.openedAt &&
+              !inRange(s.openedAt, where.openedAt.gte, where.openedAt.lt)
+            )
+              return false;
+            return true;
+          }).length,
       ),
     },
     sale: {
@@ -211,7 +229,10 @@ function makePrismaFake(): {
       findFirst: jest.fn(async ({ where, include }: any) => {
         for (const p of payrolls.values()) {
           if (where.id && p.id !== where.id) continue;
-          if (where.payrollPeriodId && p.payrollPeriodId !== where.payrollPeriodId)
+          if (
+            where.payrollPeriodId &&
+            p.payrollPeriodId !== where.payrollPeriodId
+          )
             continue;
           if (where.staffId && p.staffId !== where.staffId) continue;
           if (include?.adjustments) {
@@ -241,7 +262,9 @@ function makePrismaFake(): {
       }),
       findMany: jest.fn(async ({ where }: any = {}) =>
         Array.from(payrolls.values()).filter(
-          (p) => !where?.payrollPeriodId || p.payrollPeriodId === where.payrollPeriodId,
+          (p) =>
+            !where?.payrollPeriodId ||
+            p.payrollPeriodId === where.payrollPeriodId,
         ),
       ),
       upsert: jest.fn(async ({ where, create, update }: any) => {
@@ -279,7 +302,8 @@ function makePrismaFake(): {
       update: jest.fn(async ({ where, data }: any) => {
         const p = payrolls.get(where.id);
         if (!p) throw new Error('not found');
-        if (data.totalAmount !== undefined) p.totalAmount = Number(data.totalAmount);
+        if (data.totalAmount !== undefined)
+          p.totalAmount = Number(data.totalAmount);
         if (data.isPaid !== undefined) p.isPaid = data.isPaid;
         if (data.paidAt !== undefined) p.paidAt = data.paidAt;
         return { ...p };
@@ -287,7 +311,10 @@ function makePrismaFake(): {
       updateMany: jest.fn(async ({ where, data }: any) => {
         let updated = 0;
         for (const p of payrolls.values()) {
-          if (where.payrollPeriodId && p.payrollPeriodId !== where.payrollPeriodId)
+          if (
+            where.payrollPeriodId &&
+            p.payrollPeriodId !== where.payrollPeriodId
+          )
             continue;
           if (where.isPaid !== undefined && p.isPaid !== where.isPaid) continue;
           Object.assign(p, data);
@@ -315,7 +342,8 @@ function makePrismaFake(): {
           if (where.id && a.id !== where.id) continue;
           if (where.payroll?.payrollPeriodId) {
             const p = payrolls.get(a.payrollId);
-            if (!p || p.payrollPeriodId !== where.payroll.payrollPeriodId) continue;
+            if (!p || p.payrollPeriodId !== where.payroll.payrollPeriodId)
+              continue;
           }
           return { ...a };
         }
@@ -346,10 +374,7 @@ describe('PayrollService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        PayrollService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [PayrollService, { provide: PrismaService, useValue: prisma }],
     }).compile();
     service = moduleRef.get(PayrollService);
   });
@@ -393,7 +418,10 @@ describe('PayrollService', () => {
         openedAt: new Date('2026-04-12T08:00:00Z'),
       });
 
-      const period = await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = await service.calculate('store-A', {
+        month: 4,
+        year: 2026,
+      });
       const pr = (period as any).payrolls[0];
 
       expect(Number(pr.baseSalary)).toBe(1000);
@@ -431,7 +459,10 @@ describe('PayrollService', () => {
         createdAt: new Date(2026, 4, 1, 12, 0, 0), // May 1, local
       });
 
-      const period = await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = await service.calculate('store-A', {
+        month: 4,
+        year: 2026,
+      });
       const pr = (period as any).payrolls[0];
 
       // Only 200 contributed → commission = 200 * 50% = 100
@@ -441,9 +472,17 @@ describe('PayrollService', () => {
 
     it('should not include staff from other stores when calculating a payroll period', async () => {
       seedStaff({ id: 's1', storeId: 'store-A', salary: 100, commission: 0 });
-      seedStaff({ id: 's-leak', storeId: 'store-B', salary: 9999, commission: 0 });
+      seedStaff({
+        id: 's-leak',
+        storeId: 'store-B',
+        salary: 9999,
+        commission: 0,
+      });
 
-      const period = await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = await service.calculate('store-A', {
+        month: 4,
+        year: 2026,
+      });
 
       const ids = (period as any).payrolls.map((p: any) => p.staffId);
       expect(ids).toContain('s1');
