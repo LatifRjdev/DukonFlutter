@@ -5,65 +5,80 @@ import { PayrollService } from './payroll.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AdjustmentType } from './dto/create-adjustment.dto';
 
+type PeriodRow = {
+  id: string;
+  storeId: string;
+  month: number;
+  year: number;
+  status: string;
+  totalAmount: number;
+  paidAmount: number;
+};
+type StaffRow = {
+  id: string;
+  storeId: string;
+  salary: number;
+  commission: number;
+  isActive: boolean;
+  user: { name: string; phone: string; avatar: string | null };
+};
+type PayrollRow = {
+  id: string;
+  payrollPeriodId: string;
+  staffId: string;
+  baseSalary: number;
+  commission: number;
+  commissionRate: number;
+  salesTotal: number;
+  shiftsWorked: number;
+  shiftsExpected: number;
+  totalAmount: number;
+  isPaid: boolean;
+  paidAt: Date | null;
+};
+type AdjRow = {
+  id: string;
+  payrollId: string;
+  type: 'BONUS' | 'DEDUCTION';
+  amount: number;
+  description: string;
+  date: Date;
+};
+type SaleRow = {
+  id: string;
+  storeId: string;
+  staffId: string;
+  total: number;
+  createdAt: Date;
+};
+type ShiftRow = {
+  id: string;
+  staffId: string;
+  status: 'OPEN' | 'CLOSED';
+  openedAt: Date;
+};
+
 // Behavioral fake: Map-backed storage for payroll periods, payrolls,
 // adjustments, staff, sales, and shifts. The fake supports both top-level
 // access (prisma.payroll.x) and the transaction callback form
 // (prisma.$transaction(async (tx) => ...)) by reusing the same maps.
-function makePrismaFake() {
-  type Period = {
-    id: string;
-    storeId: string;
-    month: number;
-    year: number;
-    status: string;
-    totalAmount: number;
-    paidAmount: number;
-  };
-  type StaffRow = {
-    id: string;
-    storeId: string;
-    salary: number;
-    commission: number;
-    isActive: boolean;
-    user: { name: string; phone: string; avatar: string | null };
-  };
-  type PayrollRow = {
-    id: string;
-    payrollPeriodId: string;
-    staffId: string;
-    baseSalary: number;
-    commission: number;
-    commissionRate: number;
-    salesTotal: number;
-    shiftsWorked: number;
-    shiftsExpected: number;
-    totalAmount: number;
-    isPaid: boolean;
-    paidAt: Date | null;
-  };
-  type AdjRow = {
-    id: string;
-    payrollId: string;
-    type: 'BONUS' | 'DEDUCTION';
-    amount: number;
-    description: string;
-    date: Date;
-  };
-  type SaleRow = {
-    id: string;
-    storeId: string;
-    staffId: string;
-    total: number;
-    createdAt: Date;
-  };
-  type ShiftRow = {
-    id: string;
-    staffId: string;
-    status: 'OPEN' | 'CLOSED';
-    openedAt: Date;
-  };
+function makePrismaFake(): {
+  _periods: Map<string, PeriodRow>;
+  _staff: Map<string, StaffRow>;
+  _payrolls: Map<string, PayrollRow>;
+  _adjustments: Map<string, AdjRow>;
+  _sales: Map<string, SaleRow>;
+  _shifts: Map<string, ShiftRow>;
+  payrollPeriod: { findFirst: jest.Mock; findMany: jest.Mock; create: jest.Mock; update: jest.Mock };
+  staff: { findMany: jest.Mock };
+  shift: { count: jest.Mock };
+  sale: { aggregate: jest.Mock };
+  payroll: { findFirst: jest.Mock; findUnique: jest.Mock; findMany: jest.Mock; upsert: jest.Mock; update: jest.Mock; updateMany: jest.Mock };
+  payrollAdjustment: { create: jest.Mock; findFirst: jest.Mock; delete: jest.Mock };
+  $transaction: jest.Mock;
+} {
 
-  const periods = new Map<string, Period>();
+  const periods = new Map<string, PeriodRow>();
   const staffList = new Map<string, StaffRow>();
   const payrolls = new Map<string, PayrollRow>();
   const adjustments = new Map<string, AdjRow>();
@@ -126,7 +141,7 @@ function makePrismaFake() {
       ),
       create: jest.fn(async ({ data }: any) => {
         const id = newId('period');
-        const p: Period = {
+        const p: PeriodRow = {
           id,
           storeId: data.storeId,
           month: data.month,
