@@ -6,6 +6,7 @@ import {
   IsOptional,
   Max,
   Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class UpdateLoyaltySettingsDto {
@@ -40,6 +41,7 @@ export class UpdateLoyaltySettingsDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @ValidateIf((o) => o.birthdayDiscount !== null)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(100)
@@ -47,6 +49,7 @@ export class UpdateLoyaltySettingsDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @ValidateIf((o) => o.pointsExpireDays !== null)
   @IsInt()
   @Min(1)
   pointsExpireDays?: number | null;

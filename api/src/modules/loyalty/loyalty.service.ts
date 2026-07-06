@@ -173,9 +173,9 @@ export class LoyaltyService {
 
     const affectedCustomers = new Set(overdueEarns.map((e) => e.customerId));
 
-    await this.prisma.$transaction(
-      overdueEarns.map((earn) =>
-        this.prisma.loyaltyTransaction.create({
+    await this.prisma.$transaction(async (tx) => {
+      for (const earn of overdueEarns) {
+        await tx.loyaltyTransaction.create({
           data: {
             customerId: earn.customerId,
             storeId: earn.storeId,
@@ -184,19 +184,19 @@ export class LoyaltyService {
             sourceEarnId: earn.id,
             note: `Points from ${earn.createdAt.toISOString()} expired`,
           },
-        }),
-      ),
-    );
+        });
+      }
 
-    for (const customerId of affectedCustomers) {
-      const expiredTotal = overdueEarns
-        .filter((e) => e.customerId === customerId)
-        .reduce((sum, e) => sum + e.points, 0);
-      await this.prisma.customer.update({
-        where: { id: customerId },
-        data: { loyaltyPoints: { decrement: expiredTotal } },
-      });
-    }
+      for (const customerId of affectedCustomers) {
+        const expiredTotal = overdueEarns
+          .filter((e) => e.customerId === customerId)
+          .reduce((sum, e) => sum + e.points, 0);
+        await tx.customer.update({
+          where: { id: customerId },
+          data: { loyaltyPoints: { decrement: expiredTotal } },
+        });
+      }
+    });
 
     return {
       expired: overdueEarns.length,
