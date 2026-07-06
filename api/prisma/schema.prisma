@@ -84,7 +84,8 @@ model Store {
   inventoryCounts  InventoryCount[]
   notifications    Notification[]
   discounts        Discount[]
-  investments      Investment[]
+  investments         Investment[]
+  loyaltyTransactions LoyaltyTransaction[]
 
   @@map("stores")
 }
@@ -190,6 +191,7 @@ model SubscriptionPlanConfig {
   hasInventory   Boolean
   hasZakat       Boolean          @default(false)
   hasInvestments Boolean          @default(false)
+  hasLoyalty     Boolean          @default(false)
 
   @@map("subscription_plan_configs")
 }
@@ -318,9 +320,10 @@ model Sale {
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
 
-  items        SaleItem[]
-  debtPayments DebtPayment[]
-  delivery     Delivery?
+  items               SaleItem[]
+  debtPayments        DebtPayment[]
+  delivery            Delivery?
+  loyaltyTransactions LoyaltyTransaction[]
 
   @@unique([storeId, receiptNo])
   @@index([storeId, createdAt])
@@ -398,7 +401,8 @@ model Customer {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  sales Sale[]
+  sales               Sale[]
+  loyaltyTransactions LoyaltyTransaction[]
 
   @@unique([storeId, phone])
   @@map("customers")
@@ -649,6 +653,26 @@ model LoyaltySettings {
   pointsExpireDays Int?
 
   @@map("loyalty_settings")
+}
+
+model LoyaltyTransaction {
+  id           String        @id @default(uuid())
+  customerId   String
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  storeId      String
+  store        Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  type         LoyaltyTxType
+  points       Int
+  saleId       String?
+  sale         Sale?         @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  expiresAt    DateTime?
+  sourceEarnId String?
+  note         String?
+  createdAt    DateTime      @default(now())
+
+  @@index([customerId, createdAt(sort: Desc)])
+  @@index([expiresAt])
+  @@map("loyalty_transactions")
 }
 
 model Promotion {
@@ -994,6 +1018,13 @@ enum InvestmentStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum LoyaltyTxType {
+  EARN
+  REDEEM
+  EXPIRE
+  ADJUST
 }
 
 model Investment {
