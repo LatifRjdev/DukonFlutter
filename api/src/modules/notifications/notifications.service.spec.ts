@@ -150,7 +150,7 @@ function makePrismaFake() {
     __notifications: notifications,
     __fcmTokens: fcmTokens,
     __stores: stores,
-  } as any;
+  };
 }
 
 function makeConfig(values: Record<string, string | undefined>) {
