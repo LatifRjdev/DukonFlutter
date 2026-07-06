@@ -69,12 +69,6 @@ function makePrismaFake() {
         });
         return all.slice(skip, skip + take);
       }),
-      count: jest.fn(async ({ where }: any = {}) => {
-        return Array.from(rows.values()).filter((r) => {
-          if (where?.storeId && r.storeId !== where.storeId) return false;
-          return true;
-        }).length;
-      }),
       create: jest.fn(async ({ data }: any) => {
         const id = newId();
         const row: ProductRow = {
