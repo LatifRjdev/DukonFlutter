@@ -14,6 +14,7 @@ import { SaleQueryDto } from './dto/sale-query.dto';
 import { RefundSaleDto } from './dto/refund-sale.dto';
 import { Prisma } from '@prisma/client';
 import * as Sentry from '@sentry/nestjs';
+import { LoyaltyService, isBirthday, addDays } from '../loyalty/loyalty.service';
 
 @Injectable()
 export class SalesService {
@@ -24,6 +25,7 @@ export class SalesService {
     private redis: RedisService,
     private audit: AuditLogService,
     private notifications: NotificationsService,
+    private loyaltyService: LoyaltyService,
   ) {}
 
   // F.3 + Deferred #1 (2026-05-11): per-store threshold (in store
@@ -294,6 +296,107 @@ export class SalesService {
           data: updateData,
         });
       }
+
+      // ── LOYALTY INTEGRATION ────────────────────────────────────────
+      if (dto.customerId) {
+        const [sub, loyaltySettings] = await Promise.all([
+          tx.subscription.findUnique({
+            where: { storeId },
+            select: { plan: true },
+          }),
+          tx.loyaltySettings.findUnique({
+            where: { storeId },
+          }),
+        ]);
+
+        if (loyaltySettings?.isEnabled) {
+          const planConfig = sub?.plan
+            ? await tx.subscriptionPlanConfig.findUnique({
+                where: { plan: sub.plan },
+                select: { hasLoyalty: true },
+              })
+            : null;
+
+          if (planConfig?.hasLoyalty) {
+            const customerRow = await tx.customer.findUnique({
+              where: { id: dto.customerId },
+              select: {
+                loyaltyPoints: true,
+                totalSpent: true,
+                birthday: true,
+              },
+            });
+
+            // totalSpent was already incremented by `total` above in this tx,
+            // so subtract to get the pre-sale value for isFirstSale check.
+            const preSaleTotalSpent = new Prisma.Decimal(
+              customerRow?.totalSpent ?? 0,
+            ).sub(total);
+            const isFirstSale = preSaleTotalSpent.lte(0);
+
+            let effectiveTotal = total; // Prisma.Decimal — sale total
+
+            // Birthday discount (auto-applied when today matches birthday)
+            if (
+              loyaltySettings.birthdayDiscount &&
+              customerRow?.birthday &&
+              isBirthday(customerRow.birthday)
+            ) {
+              const factor = new Prisma.Decimal(1).sub(
+                new Prisma.Decimal(loyaltySettings.birthdayDiscount).div(100),
+              );
+              effectiveTotal = effectiveTotal.mul(factor).toDecimalPlaces(2);
+            }
+
+            // Redemption
+            if (dto.redemptionPoints && dto.redemptionPoints > 0) {
+              const currentPoints = customerRow?.loyaltyPoints ?? 0;
+              if (dto.redemptionPoints > currentPoints) {
+                throw new BadRequestException(
+                  `Cannot redeem ${dto.redemptionPoints} points — customer only has ${currentPoints}`,
+                );
+              }
+              const redemptionValue = new Prisma.Decimal(
+                loyaltySettings.pointValue,
+              ).mul(dto.redemptionPoints);
+              effectiveTotal = Prisma.Decimal.max(
+                effectiveTotal.sub(redemptionValue),
+                new Prisma.Decimal(0),
+              );
+              await this.loyaltyService.redeemPoints(tx as any, {
+                customerId: dto.customerId,
+                storeId,
+                saleId: sale.id,
+                points: dto.redemptionPoints,
+              });
+            }
+
+            // Earn points on effectiveTotal
+            const basePoints =
+              Math.floor(
+                effectiveTotal
+                  .div(new Prisma.Decimal(loyaltySettings.amountForPoints))
+                  .toNumber(),
+              ) * loyaltySettings.pointsPerAmount;
+            const bonusPoints = isFirstSale ? loyaltySettings.welcomePoints : 0;
+            const totalEarned = basePoints + bonusPoints;
+
+            if (totalEarned > 0) {
+              const expiresAt = loyaltySettings.pointsExpireDays
+                ? addDays(new Date(), loyaltySettings.pointsExpireDays)
+                : null;
+              await this.loyaltyService.earnPoints(tx as any, {
+                customerId: dto.customerId,
+                storeId,
+                saleId: sale.id,
+                points: totalEarned,
+                expiresAt,
+              });
+            }
+          }
+        }
+      }
+      // ── END LOYALTY ─────────────────────────────────────────────────
 
       return sale;
     });

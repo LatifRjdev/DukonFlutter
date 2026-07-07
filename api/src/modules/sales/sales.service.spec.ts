@@ -7,6 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { RedisService } from '../../redis/redis.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { LoyaltyService } from '../loyalty/loyalty.service';
 
 // Behavioral fake: Map-backed product/sale/saleItem stores, plus a
 // transaction wrapper that just runs the callback against the same fake
@@ -128,6 +129,16 @@ function makePrismaFake() {
     },
     customer: {
       update: jest.fn(async () => ({})),
+      findUnique: jest.fn(async () => null),
+    },
+    subscription: {
+      findUnique: jest.fn(async () => null),
+    },
+    subscriptionPlanConfig: {
+      findUnique: jest.fn(async () => null),
+    },
+    loyaltySettings: {
+      findUnique: jest.fn(async () => null),
     },
   };
 
@@ -190,6 +201,10 @@ describe('SalesService', () => {
         {
           provide: NotificationsService,
           useValue: { sendPush: jest.fn(async () => undefined) },
+        },
+        {
+          provide: LoyaltyService,
+          useValue: { earnPoints: jest.fn(async () => undefined), redeemPoints: jest.fn(async () => undefined) },
         },
       ],
     }).compile();
@@ -383,7 +398,10 @@ function makeUsdSaleFake() {
       })),
     },
     stockMovement: { createMany: jest.fn(async () => ({ count: 1 })) },
-    customer: { update: jest.fn(async () => ({})) },
+    customer: { update: jest.fn(async () => ({})), findUnique: jest.fn(async () => null) },
+    subscription: { findUnique: jest.fn(async () => null) },
+    subscriptionPlanConfig: { findUnique: jest.fn(async () => null) },
+    loyaltySettings: { findUnique: jest.fn(async () => null) },
   };
 
   return {
@@ -417,7 +435,14 @@ describe('SalesService — big-sale notification (USD store)', () => {
         { provide: PrismaService, useValue: makeUsdSaleFake() },
         { provide: RedisService, useValue: fakeRedis() },
         { provide: NotificationsService, useValue: { sendPush: sendPushMock } },
-        { provide: AuditLogService, useValue: { record: jest.fn(async () => undefined) } },
+        {
+          provide: AuditLogService,
+          useValue: { record: jest.fn(async () => undefined) },
+        },
+        {
+          provide: LoyaltyService,
+          useValue: { earnPoints: jest.fn(async () => undefined), redeemPoints: jest.fn(async () => undefined) },
+        },
       ],
     }).compile();
     service = module.get(SalesService);

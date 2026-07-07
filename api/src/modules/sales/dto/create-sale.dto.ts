@@ -9,6 +9,7 @@ import {
   ValidateNested,
   Min,
   IsDateString,
+  IsInt,
 } from 'class-validator';
 
 export enum SalePaymentType {
@@ -107,4 +108,10 @@ export class CreateSaleDto {
   @IsOptional()
   @IsDateString()
   occurredAt?: string;
+
+  @ApiPropertyOptional({ description: 'Loyalty points to redeem (reduces total)' })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  redemptionPoints?: number;
 }
