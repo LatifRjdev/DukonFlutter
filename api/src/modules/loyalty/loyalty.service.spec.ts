@@ -175,8 +175,8 @@ describe('LoyaltyService', () => {
       expect(prisma._customers.get('cust-1').loyaltyPoints).toBe(80);
 
       // EARN transaction created
-      const earnTxs = Array.from(prisma._txs.values()).filter(
-        (t) => t.type === 'EARN',
+      const earnTxs = (Array.from(prisma._txs.values()) as any[]).filter(
+        (t: any) => t.type === 'EARN',
       );
       expect(earnTxs).toHaveLength(1);
       expect(earnTxs[0].points).toBe(30);
@@ -222,8 +222,8 @@ describe('LoyaltyService', () => {
 
       expect(prisma._customers.get('cust-1').loyaltyPoints).toBe(60);
 
-      const redeemTxs = Array.from(prisma._txs.values()).filter(
-        (t) => t.type === 'REDEEM',
+      const redeemTxs = (Array.from(prisma._txs.values()) as any[]).filter(
+        (t: any) => t.type === 'REDEEM',
       );
       expect(redeemTxs).toHaveLength(1);
       expect(redeemTxs[0].points).toBe(-40);
@@ -272,8 +272,8 @@ describe('LoyaltyService', () => {
         expect(prisma._customers.get('cust-1').loyaltyPoints).toBe(0);
 
         // An EXPIRE transaction was created
-        const expireTxs = Array.from(prisma._txs.values()).filter(
-          (t) => t.type === 'EXPIRE',
+        const expireTxs = (Array.from(prisma._txs.values()) as any[]).filter(
+          (t: any) => t.type === 'EXPIRE',
         );
         expect(expireTxs).toHaveLength(1);
         expect(expireTxs[0].sourceEarnId).toBe('earn-1');
