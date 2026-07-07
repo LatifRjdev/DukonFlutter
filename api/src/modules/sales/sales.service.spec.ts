@@ -448,38 +448,31 @@ describe('SalesService', () => {
     });
 
     it('should NOT add welcomePoints on subsequent sale when customer totalSpent is non-zero', async () => {
-      // totalSpent = 500 before the sale — not a first purchase
+      // totalSpent = 500 before the sale — returning customer, welcome bonus must NOT apply
       seedCustomer(prisma, { totalSpent: 500, loyaltyPoints: 0 });
+      // amountForPoints = 10 so p1 (price 10) × 10 items → total = 100
+      // base points = floor(100 / 10) * 1 = 10 — guarantees earnPoints IS called
       prisma._tx.loyaltySettings.findUnique.mockResolvedValue({
         ...LOYALTY_ENABLED_SETTINGS,
-        welcomePoints: 50,
-        // 100 points per 100 TJS so a 200-TJS sale earns 2 base points
+        amountForPoints: new Prisma.Decimal('10'),
         pointsPerAmount: 1,
-        amountForPoints: new Prisma.Decimal('100'),
+        welcomePoints: 50, // would add 50 if first sale — must NOT apply here
       });
       prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
       prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
 
       await service.create('store-A', {
-        items: [
-          { productId: 'p1', quantity: 2 }, // 2*10 = 20
-          { productId: 'p2', quantity: 1 }, // 1*20 = 20 → total = 40
-        ],
+        items: [{ productId: 'p1', quantity: 10 }], // 10 * 10 = 100
         paymentType: 'CASH',
-        paidAmount: 40,
+        paidAmount: 100,
         customerId: 'cust-1',
       } as any);
 
-      // base points = floor(40 / 100) * 1 = 0; no welcome bonus → earnPoints NOT called
-      // (totalEarned = 0, so service skips earnPoints entirely)
-      // OR if base > 0, verify welcome is not included
+      // earnPoints MUST be called (base = floor(100/10)*1 = 10 > 0)
+      expect(loyaltyService.earnPoints).toHaveBeenCalled();
       const call = loyaltyService.earnPoints.mock.calls[0];
-      if (call) {
-        // if called, points must NOT include the 50 welcome bonus
-        expect(call[1].points).not.toBeGreaterThanOrEqual(50);
-      }
-      // Either way, welcome bonus should not have been added — if earnPoints
-      // was called the points should be < 50 (no welcome bonus applied).
+      // Points = 10 (base only) — NOT 60 (base + welcome bonus)
+      expect(call[1].points).toBe(10);
     });
 
     it('should call redeemPoints when dto.redemptionPoints is provided and customer has enough points', async () => {
