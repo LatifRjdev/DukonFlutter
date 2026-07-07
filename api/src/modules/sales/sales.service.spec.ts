@@ -43,6 +43,7 @@ function makePrismaFake() {
 
   const products = new Map<string, ProductRow>();
   const sales = new Map<string, SaleRow>();
+  const customers = new Map<string, any>();
   const stockMovements: any[] = [];
   let saleSeq = 0;
   let saleItemSeq = 0;
@@ -128,25 +129,41 @@ function makePrismaFake() {
       }),
     },
     customer: {
-      update: jest.fn(async () => ({})),
-      findUnique: jest.fn(async () => null),
+      update: jest.fn(async ({ where, data }: any) => {
+        const c = customers.get(where.id);
+        if (c) {
+          if (data.totalSpent?.increment != null) {
+            c.totalSpent = new Prisma.Decimal(c.totalSpent ?? 0).add(data.totalSpent.increment).toNumber();
+          }
+          if (data.debt?.increment != null) {
+            c.debt = new Prisma.Decimal(c.debt ?? 0).add(data.debt.increment).toNumber();
+          }
+        }
+        return c ?? {};
+      }),
+      findUnique: jest.fn(async ({ where }: any) => customers.get(where.id) ?? null),
     },
     subscription: {
-      findUnique: jest.fn(async () => null),
+      findUnique: jest.fn(async () => null) as jest.Mock,
     },
     subscriptionPlanConfig: {
-      findUnique: jest.fn(async () => null),
+      findUnique: jest.fn(async () => null) as jest.Mock,
     },
     loyaltySettings: {
-      findUnique: jest.fn(async () => null),
+      findUnique: jest.fn(async () => null) as jest.Mock,
     },
   };
 
   return {
     _products: products,
     _sales: sales,
+    _customers: customers,
     _stockMovements: stockMovements,
     _tx: tx,
+    customer: {
+      // outer-level customer.findFirst used by SalesService to validate customerId exists
+      findFirst: jest.fn(async ({ where }: any) => customers.get(where.id) ?? null),
+    },
     sale: {
       findFirst: jest.fn(async ({ where }: any) => {
         const s = sales.get(where.id);
@@ -186,9 +203,14 @@ function fakeRedis(): Pick<RedisService, 'incr'> {
 describe('SalesService', () => {
   let service: SalesService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let loyaltyService: { earnPoints: jest.Mock; redeemPoints: jest.Mock };
 
   beforeEach(async () => {
     prisma = makePrismaFake();
+    loyaltyService = {
+      earnPoints: jest.fn(async () => undefined),
+      redeemPoints: jest.fn(async () => undefined),
+    };
     const moduleRef = await Test.createTestingModule({
       providers: [
         SalesService,
@@ -204,7 +226,7 @@ describe('SalesService', () => {
         },
         {
           provide: LoyaltyService,
-          useValue: { earnPoints: jest.fn(async () => undefined), redeemPoints: jest.fn(async () => undefined) },
+          useValue: loyaltyService,
         },
       ],
     }).compile();
@@ -346,6 +368,187 @@ describe('SalesService', () => {
       const result = await service.findAll('store-A', { skip: 0 } as any);
       expect(result.total).toBe(1);
       expect(result.data[0].storeId).toBe('store-A');
+    });
+  });
+
+  // ── Helpers shared by loyalty tests ─────────────────────────────────────
+  function seedCustomer(
+    fake: ReturnType<typeof makePrismaFake>,
+    overrides: Partial<{
+      id: string;
+      loyaltyPoints: number;
+      totalSpent: number;
+      birthday: string | null;
+    }> = {},
+  ) {
+    const c = {
+      id: 'cust-1',
+      loyaltyPoints: 0,
+      totalSpent: 0,
+      birthday: null,
+      debt: 0,
+      ...overrides,
+    };
+    fake._customers.set(c.id, c);
+    return c;
+  }
+
+  const LOYALTY_ENABLED_SETTINGS = {
+    isEnabled: true,
+    pointsPerAmount: 1,
+    amountForPoints: new Prisma.Decimal('100'),
+    pointValue: new Prisma.Decimal('0.01'),
+    welcomePoints: 0,
+    birthdayDiscount: null,
+    pointsExpireDays: null,
+  };
+
+  describe('loyalty integration', () => {
+    it('should call earnPoints when loyalty is enabled and plan has hasLoyalty', async () => {
+      seedCustomer(prisma, { totalSpent: 200 });
+      // Use amountForPoints=10 so a 20-TJS sale earns 2 base points
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue({
+        ...LOYALTY_ENABLED_SETTINGS,
+        amountForPoints: new Prisma.Decimal('10'),
+      });
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await service.create('store-A', {
+        items: [{ productId: 'p2', quantity: 1 }], // total = 20
+        paymentType: 'CASH',
+        paidAmount: 20,
+        customerId: 'cust-1',
+      } as any);
+
+      expect(loyaltyService.earnPoints).toHaveBeenCalled();
+    });
+
+    it('should add welcomePoints on first sale when customer totalSpent was 0', async () => {
+      seedCustomer(prisma, { totalSpent: 0, loyaltyPoints: 0 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue({
+        ...LOYALTY_ENABLED_SETTINGS,
+        welcomePoints: 50,
+      });
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 1 }], // total = 10
+        paymentType: 'CASH',
+        paidAmount: 10,
+        customerId: 'cust-1',
+      } as any);
+
+      // base points = floor(10 / 100) * 1 = 0; welcome = 50 → total = 50
+      expect(loyaltyService.earnPoints).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ points: 50 }),
+      );
+    });
+
+    it('should NOT add welcomePoints on subsequent sale when customer totalSpent is non-zero', async () => {
+      // totalSpent = 500 before the sale — not a first purchase
+      seedCustomer(prisma, { totalSpent: 500, loyaltyPoints: 0 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue({
+        ...LOYALTY_ENABLED_SETTINGS,
+        welcomePoints: 50,
+        // 100 points per 100 TJS so a 200-TJS sale earns 2 base points
+        pointsPerAmount: 1,
+        amountForPoints: new Prisma.Decimal('100'),
+      });
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await service.create('store-A', {
+        items: [
+          { productId: 'p1', quantity: 2 }, // 2*10 = 20
+          { productId: 'p2', quantity: 1 }, // 1*20 = 20 → total = 40
+        ],
+        paymentType: 'CASH',
+        paidAmount: 40,
+        customerId: 'cust-1',
+      } as any);
+
+      // base points = floor(40 / 100) * 1 = 0; no welcome bonus → earnPoints NOT called
+      // (totalEarned = 0, so service skips earnPoints entirely)
+      // OR if base > 0, verify welcome is not included
+      const call = loyaltyService.earnPoints.mock.calls[0];
+      if (call) {
+        // if called, points must NOT include the 50 welcome bonus
+        expect(call[1].points).not.toBeGreaterThanOrEqual(50);
+      }
+      // Either way, welcome bonus should not have been added — if earnPoints
+      // was called the points should be < 50 (no welcome bonus applied).
+    });
+
+    it('should call redeemPoints when dto.redemptionPoints is provided and customer has enough points', async () => {
+      seedCustomer(prisma, { loyaltyPoints: 100, totalSpent: 200 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue(LOYALTY_ENABLED_SETTINGS);
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 1 }],
+        paymentType: 'CASH',
+        paidAmount: 10,
+        customerId: 'cust-1',
+        redemptionPoints: 30,
+      } as any);
+
+      expect(loyaltyService.redeemPoints).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ points: 30 }),
+      );
+    });
+
+    it('should throw BadRequestException when redemptionPoints exceeds customer balance', async () => {
+      seedCustomer(prisma, { loyaltyPoints: 10, totalSpent: 200 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue(LOYALTY_ENABLED_SETTINGS);
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await expect(
+        service.create('store-A', {
+          items: [{ productId: 'p1', quantity: 1 }],
+          paymentType: 'CASH',
+          paidAmount: 10,
+          customerId: 'cust-1',
+          redemptionPoints: 50,
+        } as any),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('should NOT earn points when loyaltySettings isEnabled is false', async () => {
+      seedCustomer(prisma, { totalSpent: 200 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue({ isEnabled: false });
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'BUSINESS' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: true });
+
+      await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 1 }],
+        paymentType: 'CASH',
+        paidAmount: 10,
+        customerId: 'cust-1',
+      } as any);
+
+      expect(loyaltyService.earnPoints).not.toHaveBeenCalled();
+    });
+
+    it('should NOT earn points when plan config has hasLoyalty false', async () => {
+      seedCustomer(prisma, { totalSpent: 200 });
+      prisma._tx.loyaltySettings.findUnique.mockResolvedValue(LOYALTY_ENABLED_SETTINGS);
+      prisma._tx.subscription.findUnique.mockResolvedValue({ plan: 'STARTER' });
+      prisma._tx.subscriptionPlanConfig.findUnique.mockResolvedValue({ hasLoyalty: false });
+
+      await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 1 }],
+        paymentType: 'CASH',
+        paidAmount: 10,
+        customerId: 'cust-1',
+      } as any);
+
+      expect(loyaltyService.earnPoints).not.toHaveBeenCalled();
     });
   });
 });
