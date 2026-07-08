@@ -112,4 +112,10 @@ class ApiEndpoints {
   static String payrollAdjustment(String storeId, String periodId, String adjId) => '/stores/$storeId/payroll/$periodId/adjustments/$adjId';
   static String payrollPay(String storeId, String periodId, String payrollId) => '/stores/$storeId/payroll/$periodId/pay/$payrollId';
   static String payrollPayAll(String storeId, String periodId) => '/stores/$storeId/payroll/$periodId/pay-all';
+
+  // Loyalty
+  static String loyaltySettings(String storeId) =>
+      '/stores/$storeId/loyalty/settings';
+  static String loyaltyCustomerBalance(String storeId, String customerId) =>
+      '/stores/$storeId/loyalty/customers/$customerId/balance';
 }
