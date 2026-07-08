@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../core/constants/api_endpoints.dart';
+import '../../../core/errors/exceptions.dart';
 import '../../../core/network/api_list_response.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/loyalty_transaction.dart';
@@ -21,22 +22,30 @@ class LoyaltyRemoteDatasourceImpl implements LoyaltyRemoteDatasource {
 
   @override
   Future<Map<String, dynamic>> getSettings(String storeId) async {
-    final response = await _dioClient.get(
-      ApiEndpoints.loyaltySettings(storeId),
-    );
-    final json = decodeApiObject(response.data);
-    return json ?? <String, dynamic>{};
+    try {
+      final response = await _dioClient.get(
+        ApiEndpoints.loyaltySettings(storeId),
+      );
+      final json = decodeApiObject(response.data);
+      return json ?? <String, dynamic>{};
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
   }
 
   @override
   Future<Map<String, dynamic>> updateSettings(
       String storeId, Map<String, dynamic> data) async {
-    final response = await _dioClient.put(
-      ApiEndpoints.loyaltySettings(storeId),
-      data: data,
-    );
-    final json = decodeApiObject(response.data);
-    return json ?? <String, dynamic>{};
+    try {
+      final response = await _dioClient.put(
+        ApiEndpoints.loyaltySettings(storeId),
+        data: data,
+      );
+      final json = decodeApiObject(response.data);
+      return json ?? <String, dynamic>{};
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
   }
 
   @override
@@ -57,8 +66,37 @@ class LoyaltyRemoteDatasourceImpl implements LoyaltyRemoteDatasource {
           : <LoyaltyTransaction>[];
       return (points: points, transactions: transactions);
     } on DioException {
-      // 403 = plan not eligible; any HTTP error falls back to empty balance
+      // Intentional fallback: any HTTP error (e.g. 403 = plan not eligible,
+      // 404 = customer has no loyalty record) silently returns zero balance
+      // rather than surfacing an error in the POS UI.
       return (points: 0, transactions: <LoyaltyTransaction>[]);
     }
+  }
+
+  Exception _handleDioError(DioException e) {
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.connectionError) {
+      return const NetworkException();
+    }
+
+    final statusCode = e.response?.statusCode;
+    final rawMessage =
+        (e.response?.data is Map) ? e.response?.data['message'] : null;
+    final String message;
+    if (rawMessage is List) {
+      message = rawMessage.join(', ');
+    } else if (rawMessage is String) {
+      message = rawMessage;
+    } else {
+      message = e.message ?? 'Unknown error';
+    }
+
+    if (statusCode == 401) {
+      return UnauthorizedException(message);
+    }
+
+    return ServerException(message, statusCode: statusCode);
   }
 }
