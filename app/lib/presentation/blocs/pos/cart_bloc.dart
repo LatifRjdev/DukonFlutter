@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/datasources/local/cart_local_datasource.dart';
+import '../../../domain/repositories/loyalty_repository.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 
@@ -10,10 +11,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   // kill mid-cart doesn't lose the cashier's work. Restore happens
   // explicitly via CartRestored — we never auto-restore silently.
   final CartLocalDatasource? _persistence;
+  final LoyaltyRepository? _loyaltyRepository;
   Timer? _persistTimer;
 
-  CartBloc({CartLocalDatasource? persistence})
+  CartBloc({CartLocalDatasource? persistence, LoyaltyRepository? loyaltyRepository})
       : _persistence = persistence,
+        _loyaltyRepository = loyaltyRepository,
         super(const CartState()) {
     on<CartItemAdded>(_onItemAdded);
     on<CartItemRemoved>(_onItemRemoved);
@@ -22,6 +25,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<CartCleared>(_onCleared);
     on<CartCustomerSelected>(_onCustomerSelected);
     on<CartRestored>(_onRestored);
+    on<LoyaltyBalanceLoaded>(_onLoyaltyBalanceLoaded);
+    on<RedemptionPointsChanged>(_onRedemptionPointsChanged);
   }
 
   void _schedulePersist() {
@@ -96,8 +101,58 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     _persistence?.clear();
   }
 
-  void _onCustomerSelected(CartCustomerSelected event, Emitter<CartState> emit) {
-    emit(state.copyWith(customerId: event.customerId, customerName: event.customerName));
+  Future<void> _onCustomerSelected(CartCustomerSelected event, Emitter<CartState> emit) async {
+    if (event.customerId == null) {
+      emit(CartState(
+        items: state.items,
+        discount: state.discount,
+        discountType: state.discountType,
+      ));
+      _schedulePersist();
+      return;
+    }
+    emit(state.copyWith(
+      customerId: event.customerId,
+      customerName: event.customerName,
+      redemptionPoints: 0,
+    ));
+    _schedulePersist();
+
+    final repo = _loyaltyRepository;
+    final storeId = event.storeId;
+    final customerId = event.customerId;
+    if (repo != null && storeId != null && customerId != null) {
+      try {
+        final results = await Future.wait([
+          repo.getCustomerBalance(storeId, customerId),
+          repo.getSettings(storeId),
+        ]);
+        final balance = results[0] as ({int points, List transactions});
+        final settings = results[1] as Map<String, dynamic>;
+        final pointValue = (settings['pointValue'] as num?)?.toDouble() ?? 0.01;
+        if (!isClosed) {
+          add(LoyaltyBalanceLoaded(points: balance.points, pointValue: pointValue));
+        }
+      } catch (_) {
+        // loyalty unavailable — POS continues normally
+      }
+    }
+  }
+
+  void _onLoyaltyBalanceLoaded(LoyaltyBalanceLoaded event, Emitter<CartState> emit) {
+    emit(state.copyWith(
+      customerLoyaltyPoints: event.points,
+      loyaltyPointValue: event.pointValue,
+    ));
+  }
+
+  void _onRedemptionPointsChanged(RedemptionPointsChanged event, Emitter<CartState> emit) {
+    final maxByBalance = state.customerLoyaltyPoints;
+    final maxByTotal = state.loyaltyPointValue > 0
+        ? (state.subtotal - state.discountAmount) ~/ state.loyaltyPointValue
+        : 0;
+    final cap = maxByBalance < maxByTotal ? maxByBalance : maxByTotal;
+    emit(state.copyWith(redemptionPoints: event.points.clamp(0, cap)));
     _schedulePersist();
   }
 

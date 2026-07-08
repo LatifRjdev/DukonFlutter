@@ -120,6 +120,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                           context.read<CartBloc>().add(CartCustomerSelected(
                             customerId: customer.id,
                             customerName: customer.name,
+                            storeId: widget.storeId,
                           ));
                           AppSnackbar.info(context, AppLocalizations.of(context)!.snackCustomerSelectedForSale(customer.name));
                           context.go('/home');

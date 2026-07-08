@@ -40,6 +40,9 @@ class CartState extends Equatable {
   final String discountType;
   final String? customerId;
   final String? customerName;
+  final int customerLoyaltyPoints;
+  final double loyaltyPointValue;
+  final int redemptionPoints;
 
   const CartState({
     this.items = const [],
@@ -47,6 +50,9 @@ class CartState extends Equatable {
     this.discountType = 'FIXED',
     this.customerId,
     this.customerName,
+    this.customerLoyaltyPoints = 0,
+    this.loyaltyPointValue = 0,
+    this.redemptionPoints = 0,
   });
 
   double get subtotal => items.fold(0, (sum, item) => sum + item.total);
@@ -56,7 +62,8 @@ class CartState extends Equatable {
     return discount;
   }
 
-  double get total => subtotal - discountAmount;
+  double get loyaltyRedemptionValue => redemptionPoints * loyaltyPointValue;
+  double get total => subtotal - discountAmount - loyaltyRedemptionValue;
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
   bool get isEmpty => items.isEmpty;
 
@@ -66,6 +73,9 @@ class CartState extends Equatable {
     String? discountType,
     String? customerId,
     String? customerName,
+    int? customerLoyaltyPoints,
+    double? loyaltyPointValue,
+    int? redemptionPoints,
   }) {
     return CartState(
       items: items ?? this.items,
@@ -73,9 +83,20 @@ class CartState extends Equatable {
       discountType: discountType ?? this.discountType,
       customerId: customerId ?? this.customerId,
       customerName: customerName ?? this.customerName,
+      customerLoyaltyPoints: customerLoyaltyPoints ?? this.customerLoyaltyPoints,
+      loyaltyPointValue: loyaltyPointValue ?? this.loyaltyPointValue,
+      redemptionPoints: redemptionPoints ?? this.redemptionPoints,
     );
   }
 
   @override
-  List<Object?> get props => [items, discount, discountType, customerId];
+  List<Object?> get props => [
+        items,
+        discount,
+        discountType,
+        customerId,
+        customerLoyaltyPoints,
+        loyaltyPointValue,
+        redemptionPoints,
+      ];
 }

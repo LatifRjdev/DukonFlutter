@@ -44,9 +44,25 @@ class CartCleared extends CartEvent {}
 class CartCustomerSelected extends CartEvent {
   final String? customerId;
   final String? customerName;
-  const CartCustomerSelected({this.customerId, this.customerName});
+  final String? storeId;
+  const CartCustomerSelected({this.customerId, this.customerName, this.storeId});
   @override
-  List<Object?> get props => [customerId];
+  List<Object?> get props => [customerId, storeId];
+}
+
+class LoyaltyBalanceLoaded extends CartEvent {
+  final int points;
+  final double pointValue;
+  const LoyaltyBalanceLoaded({required this.points, required this.pointValue});
+  @override
+  List<Object?> get props => [points, pointValue];
+}
+
+class RedemptionPointsChanged extends CartEvent {
+  final int points;
+  const RedemptionPointsChanged(this.points);
+  @override
+  List<Object?> get props => [points];
 }
 
 // E.4: emitted when the user accepts the "restore previous cart?"

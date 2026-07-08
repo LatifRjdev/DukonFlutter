@@ -196,6 +196,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                                 this.context.read<CartBloc>().add(CartCustomerSelected(
                                   customerId: customer.id,
                                   customerName: customer.name,
+                                  storeId: _storeId,
                                 ));
                                 Navigator.pop(bottomSheetContext);
                               },

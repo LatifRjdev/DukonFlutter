@@ -401,7 +401,10 @@ Future<void> initDependencies() async {
   );
 
   sl.registerFactory<CartBloc>(
-    () => CartBloc(persistence: sl<CartLocalDatasource>()),
+    () => CartBloc(
+      persistence: sl<CartLocalDatasource>(),
+      loyaltyRepository: sl<LoyaltyRepository>(),
+    ),
   );
 
   sl.registerFactory<DashboardBloc>(
