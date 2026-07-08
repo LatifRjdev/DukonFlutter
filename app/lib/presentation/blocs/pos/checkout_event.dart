@@ -14,6 +14,7 @@ class CheckoutInitiated extends CheckoutEvent {
   final double total;
   final String? customerId;
   final String? customerName;
+  final int redemptionPoints;
   const CheckoutInitiated({
     required this.items,
     required this.subtotal,
@@ -21,9 +22,10 @@ class CheckoutInitiated extends CheckoutEvent {
     required this.total,
     this.customerId,
     this.customerName,
+    this.redemptionPoints = 0,
   });
   @override
-  List<Object?> get props => [items, subtotal, discount, total, customerId];
+  List<Object?> get props => [items, subtotal, discount, total, customerId, redemptionPoints];
 }
 
 class CheckoutPaymentMethodSelected extends CheckoutEvent {

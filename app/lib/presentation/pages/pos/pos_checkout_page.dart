@@ -103,6 +103,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       total: cart.total,
       customerId: cart.customerId,
       customerName: cart.customerName,
+      redemptionPoints: cart.redemptionPoints,
     ));
     context.read<CheckoutBloc>().add(CheckoutPaymentMethodSelected(_selectedPaymentMethod));
 
@@ -655,7 +656,9 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               _paymentMethodButton('MIXED', 'Смешанная', Icons.compare_arrows),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
+          _buildLoyaltyWidget(context, cartState),
+          const SizedBox(height: 4),
           // CTA button using AppButton for gradient rendering
           AppButton(
             text: 'Оформить продажу — ${_formatPrice(cartState.total)}',
@@ -663,6 +666,93 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             height: 50,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLoyaltyWidget(BuildContext context, CartState cart) {
+    if (cart.customerLoyaltyPoints <= 0 || cart.loyaltyPointValue <= 0) {
+      return const SizedBox.shrink();
+    }
+    final redeemValue = (cart.redemptionPoints * cart.loyaltyPointValue).toStringAsFixed(2);
+    return InkWell(
+      onTap: () => _showRedemptionSheet(context, cart),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.card_giftcard_outlined, size: 18),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                cart.redemptionPoints > 0
+                    ? '${cart.redemptionPoints} баллов = -$redeemValue сом'
+                    : '${cart.customerLoyaltyPoints} баллов доступно',
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              ),
+            ),
+            const Icon(Icons.chevron_right, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRedemptionSheet(BuildContext context, CartState cart) {
+    int selected = cart.redemptionPoints;
+    final maxByBalance = cart.customerLoyaltyPoints;
+    final maxByTotal = cart.loyaltyPointValue > 0
+        ? (cart.subtotal - cart.discountAmount) ~/ cart.loyaltyPointValue
+        : 0;
+    final maxRedeemable = maxByBalance < maxByTotal ? maxByBalance : maxByTotal;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setInner) => Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Списать баллы',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text('Доступно: ${cart.customerLoyaltyPoints} баллов'),
+              const SizedBox(height: 16),
+              Slider(
+                value: selected.toDouble(),
+                min: 0,
+                max: maxRedeemable > 0 ? maxRedeemable.toDouble() : 1,
+                divisions: maxRedeemable > 0 ? maxRedeemable : 1,
+                label: '$selected',
+                onChanged: maxRedeemable > 0
+                    ? (v) => setInner(() => selected = v.round())
+                    : null,
+              ),
+              Text(
+                'Скидка: -${(selected * cart.loyaltyPointValue).toStringAsFixed(2)} сом',
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<CartBloc>().add(RedemptionPointsChanged(selected));
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text('Применить'),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

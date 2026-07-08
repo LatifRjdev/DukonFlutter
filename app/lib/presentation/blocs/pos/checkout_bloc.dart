@@ -27,6 +27,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       paidAmount: event.total,
       customerId: event.customerId,
       customerName: event.customerName,
+      redemptionPoints: event.redemptionPoints,
     ));
   }
 
@@ -80,6 +81,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         'paymentType': state.paymentMethod,
         'paidAmount': state.paidAmount,
         if (state.customerId != null) 'customerId': state.customerId,
+        if (state.redemptionPoints > 0) 'redemptionPoints': state.redemptionPoints,
         // localId + occurredAt are accepted by the API and also used by the
         // offline-replay path so the receipt the cashier holds matches the
         // row that eventually lands on the server.
