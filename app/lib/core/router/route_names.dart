@@ -108,4 +108,5 @@ class RouteNames {
   static const String languageSettings = '/settings/language';
   static const String offlineMode = '/settings/offline';
   static const String subscription = '/settings/subscription';
+  static const String loyaltySettings = '/settings/loyalty';
 }

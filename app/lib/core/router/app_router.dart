@@ -59,6 +59,7 @@ import '../../presentation/pages/settings/edit_profile_page.dart';
 import '../../presentation/pages/settings/change_password_page.dart';
 import '../../presentation/pages/settings/my_stores_page.dart';
 import '../../presentation/pages/settings/discounts_page.dart';
+import '../../presentation/pages/settings/loyalty_settings_page.dart';
 import '../../presentation/pages/settings/receipt_template_page.dart';
 import '../../presentation/pages/settings/kkm_settings_page.dart';
 import '../../presentation/pages/settings/scanner_settings_page.dart';
@@ -588,6 +589,13 @@ class AppRouter {
         builder: (context, state) {
           final storeId = state.extra as String? ?? '';
           return DiscountsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.loyaltySettings,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return LoyaltySettingsPage(storeId: storeId);
         },
       ),
       GoRoute(

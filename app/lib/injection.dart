@@ -92,6 +92,10 @@ import 'presentation/blocs/payroll/payroll_bloc.dart';
 import 'presentation/blocs/staff_form/staff_form_bloc.dart';
 import 'presentation/blocs/printer/printer_bloc.dart';
 import 'presentation/blocs/subscription/subscription_bloc.dart';
+import 'data/datasources/remote/loyalty_remote_datasource.dart';
+import 'data/repositories/loyalty_repository_impl.dart';
+import 'domain/repositories/loyalty_repository.dart';
+import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 import 'presentation/blocs/pos/checkout_bloc.dart';
 import 'presentation/blocs/sales/sales_history_bloc.dart';
 import 'presentation/blocs/stock/stock_intake_bloc.dart';
@@ -519,6 +523,18 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<SubscriptionBloc>(
     () => SubscriptionBloc(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<LoyaltyRemoteDatasource>(
+    () => LoyaltyRemoteDatasourceImpl(dioClient: sl<DioClient>()),
+  );
+
+  sl.registerLazySingleton<LoyaltyRepository>(
+    () => LoyaltyRepositoryImpl(remote: sl<LoyaltyRemoteDatasource>()),
+  );
+
+  sl.registerFactory<LoyaltySettingsBloc>(
+    () => LoyaltySettingsBloc(repository: sl<LoyaltyRepository>()),
   );
 }
 
