@@ -4,6 +4,7 @@ import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../core/network/api_list_response.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../domain/entities/loyalty_analytics.dart';
 import '../../../domain/entities/loyalty_transaction.dart';
 
 abstract class LoyaltyRemoteDatasource {
@@ -12,6 +13,8 @@ abstract class LoyaltyRemoteDatasource {
       String storeId, Map<String, dynamic> data);
   Future<({int points, List<LoyaltyTransaction> transactions})>
       getCustomerBalance(String storeId, String customerId);
+  Future<LoyaltyAnalytics> getAnalytics(
+      String storeId, DateTime from, DateTime to);
 }
 
 class LoyaltyRemoteDatasourceImpl implements LoyaltyRemoteDatasource {
@@ -70,6 +73,24 @@ class LoyaltyRemoteDatasourceImpl implements LoyaltyRemoteDatasource {
       // 404 = customer has no loyalty record) silently returns zero balance
       // rather than surfacing an error in the POS UI.
       return (points: 0, transactions: <LoyaltyTransaction>[]);
+    }
+  }
+
+  @override
+  Future<LoyaltyAnalytics> getAnalytics(
+      String storeId, DateTime from, DateTime to) async {
+    try {
+      final response = await _dioClient.get(
+        ApiEndpoints.loyaltyAnalytics(storeId),
+        queryParameters: {
+          'from': from.toIso8601String().substring(0, 10),
+          'to': to.toIso8601String().substring(0, 10),
+        },
+      );
+      final json = decodeApiObject(response.data) ?? <String, dynamic>{};
+      return LoyaltyAnalytics.fromJson(json);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
     }
   }
 

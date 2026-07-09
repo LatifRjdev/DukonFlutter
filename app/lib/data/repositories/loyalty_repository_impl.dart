@@ -1,3 +1,4 @@
+import '../../domain/entities/loyalty_analytics.dart';
 import '../../domain/entities/loyalty_transaction.dart';
 import '../../domain/repositories/loyalty_repository.dart';
 import '../datasources/remote/loyalty_remote_datasource.dart';
@@ -21,4 +22,9 @@ class LoyaltyRepositoryImpl implements LoyaltyRepository {
   Future<({int points, List<LoyaltyTransaction> transactions})>
       getCustomerBalance(String storeId, String customerId) =>
           _remote.getCustomerBalance(storeId, customerId);
+
+  @override
+  Future<LoyaltyAnalytics> getAnalytics(
+          String storeId, DateTime from, DateTime to) =>
+      _remote.getAnalytics(storeId, from, to);
 }
