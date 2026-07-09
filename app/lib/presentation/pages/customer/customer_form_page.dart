@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/api_endpoints.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/network/dio_client.dart';
 import '../../../domain/entities/customer.dart';
+import '../../../injection.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
 import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
@@ -33,6 +36,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _notesController = TextEditingController();
+  final _telegramController = TextEditingController();
 
   bool get _isEditing => widget.customerId != null;
 
@@ -52,6 +56,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
     _nameController.dispose();
     _phoneController.dispose();
     _notesController.dispose();
+    _telegramController.dispose();
     super.dispose();
   }
 
@@ -87,6 +92,15 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
       body: BlocListener<CustomerListBloc, CustomerListState>(
         listener: (context, state) {
           if (state is CustomerFormSuccess) {
+            final tg = _telegramController.text.trim();
+            if (tg.isNotEmpty) {
+              sl<DioClient>()
+                  .put(
+                    ApiEndpoints.customerTelegram(widget.storeId, state.customer.id),
+                    data: {'username': tg},
+                  )
+                  .ignore();
+            }
             // Reload customer detail if editing
             if (_isEditing) {
               context.read<CustomerDetailBloc>().add(
@@ -140,6 +154,13 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                   label: 'Заметки',
                   prefixIcon: Icons.notes_outlined,
                   maxLines: 3,
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                AppTextField(
+                  controller: _telegramController,
+                  label: 'Telegram @username',
+                  hint: '@alisher',
+                  prefixIcon: Icons.telegram_outlined,
                 ),
                 const SizedBox(height: AppConstants.spacingXl),
                 BlocBuilder<CustomerListBloc, CustomerListState>(
