@@ -9,6 +9,7 @@ import {
 import { CustomersService } from './customers.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { TelegramService } from '../telegram/telegram.service';
 
 // Behavioral fake. Tracks customers, sales, and debtPayments in Maps so we
 // can assert debt decrement, scoping (storeId), and the no-go-below-zero
@@ -277,6 +278,7 @@ describe('CustomersService', () => {
         CustomersService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: { record: jest.fn() } },
+        { provide: TelegramService, useValue: { resolveUsername: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(CustomersService);
@@ -376,6 +378,54 @@ describe('CustomersService', () => {
           method: 'CASH',
         } as any),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe('linkTelegram', () => {
+    it('should save chatId on customer when Telegram resolves the username', async () => {
+      const fakeTelegram = {
+        resolveUsername: jest.fn().mockResolvedValue('123456789'),
+      };
+      const mod = await Test.createTestingModule({
+        providers: [
+          CustomersService,
+          { provide: PrismaService, useValue: prisma },
+          { provide: AuditLogService, useValue: { log: jest.fn() } },
+          { provide: TelegramService, useValue: fakeTelegram },
+        ],
+      }).compile();
+      const svc = mod.get(CustomersService);
+
+      prisma.customer.findFirst.mockResolvedValue({ id: 'cust-1', storeId: 'store-1', isActive: true });
+      prisma.customer.update.mockResolvedValue({});
+
+      await svc.linkTelegram('store-1', 'cust-1', '@alisher');
+
+      expect(prisma.customer.update).toHaveBeenCalledWith({
+        where: { id: 'cust-1' },
+        data: { telegramChatId: '123456789' },
+      });
+    });
+
+    it('should throw NotFoundException when resolveUsername returns null', async () => {
+      const fakeTelegram = {
+        resolveUsername: jest.fn().mockResolvedValue(null),
+      };
+      const mod = await Test.createTestingModule({
+        providers: [
+          CustomersService,
+          { provide: PrismaService, useValue: prisma },
+          { provide: AuditLogService, useValue: { log: jest.fn() } },
+          { provide: TelegramService, useValue: fakeTelegram },
+        ],
+      }).compile();
+      const svc = mod.get(CustomersService);
+
+      prisma.customer.findFirst.mockResolvedValue({ id: 'cust-1', storeId: 'store-1', isActive: true });
+
+      await expect(svc.linkTelegram('store-1', 'cust-1', '@nobody')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

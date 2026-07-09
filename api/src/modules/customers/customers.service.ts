@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { TelegramService } from '../telegram/telegram.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CreateCustomerPaymentDto } from './dto/create-payment.dto';
@@ -16,6 +17,7 @@ export class CustomersService {
   constructor(
     private prisma: PrismaService,
     private audit: AuditLogService,
+    private telegram: TelegramService,
   ) {}
 
   async create(storeId: string, dto: CreateCustomerDto) {
@@ -255,6 +257,21 @@ export class CustomersService {
           },
         },
       },
+    });
+  }
+
+  async linkTelegram(storeId: string, customerId: string, username: string): Promise<void> {
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId, storeId, isActive: true },
+    });
+    if (!customer) throw new NotFoundException('Customer not found');
+
+    const chatId = await this.telegram.resolveUsername(username);
+    if (!chatId) throw new NotFoundException('Telegram user not found or account is private');
+
+    await this.prisma.customer.update({
+      where: { id: customerId },
+      data: { telegramChatId: chatId },
     });
   }
 }

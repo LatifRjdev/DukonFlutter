@@ -6,6 +6,7 @@ import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CreateCustomerPaymentDto } from './dto/create-payment.dto';
+import { LinkTelegramDto } from './dto/link-telegram.dto';
 
 @ApiTags('Customers')
 @ApiBearerAuth()
@@ -73,5 +74,15 @@ export class CustomersController {
   @ApiOperation({ summary: 'List customer debt payments' })
   getPayments(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.customersService.getPayments(storeId, id);
+  }
+
+  @Put(':id/telegram')
+  @ApiOperation({ summary: 'Link customer Telegram account by @username' })
+  linkTelegram(
+    @Param('storeId') storeId: string,
+    @Param('id') id: string,
+    @Body() dto: LinkTelegramDto,
+  ) {
+    return this.customersService.linkTelegram(storeId, id, dto.username);
   }
 }
