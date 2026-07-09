@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/router/route_names.dart';
 import '../../blocs/loyalty/loyalty_settings_bloc.dart';
 import '../../blocs/loyalty/loyalty_settings_event.dart';
 import '../../blocs/loyalty/loyalty_settings_state.dart';
@@ -103,6 +105,16 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
             title: const Text('Программа лояльности'),
             backgroundColor: Theme.of(context).colorScheme.surface,
             elevation: 0,
+            actions: [
+              TextButton.icon(
+                icon: const Icon(Icons.bar_chart_outlined),
+                label: const Text('Аналитика'),
+                onPressed: () => context.push(
+                  RouteNames.loyaltyAnalytics,
+                  extra: widget.storeId,
+                ),
+              ),
+            ],
           ),
           body: isLoading
               ? const Center(child: CircularProgressIndicator())

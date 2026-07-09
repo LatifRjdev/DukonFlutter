@@ -95,6 +95,7 @@ import 'presentation/blocs/subscription/subscription_bloc.dart';
 import 'data/datasources/remote/loyalty_remote_datasource.dart';
 import 'data/repositories/loyalty_repository_impl.dart';
 import 'domain/repositories/loyalty_repository.dart';
+import 'presentation/blocs/loyalty/loyalty_analytics_bloc.dart';
 import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 import 'presentation/blocs/pos/checkout_bloc.dart';
 import 'presentation/blocs/sales/sales_history_bloc.dart';
@@ -538,6 +539,9 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<LoyaltySettingsBloc>(
     () => LoyaltySettingsBloc(repository: sl<LoyaltyRepository>()),
+  );
+  sl.registerFactory<LoyaltyAnalyticsBloc>(
+    () => LoyaltyAnalyticsBloc(repository: sl<LoyaltyRepository>()),
   );
 }
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../injection.dart';
+import '../../presentation/blocs/loyalty/loyalty_analytics_bloc.dart';
 import '../../data/datasources/local/auth_local_datasource.dart';
 import '../../domain/repositories/auth_repository.dart';
 
@@ -59,6 +61,7 @@ import '../../presentation/pages/settings/edit_profile_page.dart';
 import '../../presentation/pages/settings/change_password_page.dart';
 import '../../presentation/pages/settings/my_stores_page.dart';
 import '../../presentation/pages/settings/discounts_page.dart';
+import '../../presentation/pages/settings/loyalty_analytics_page.dart';
 import '../../presentation/pages/settings/loyalty_settings_page.dart';
 import '../../presentation/pages/settings/receipt_template_page.dart';
 import '../../presentation/pages/settings/kkm_settings_page.dart';
@@ -596,6 +599,16 @@ class AppRouter {
         builder: (context, state) {
           final storeId = state.extra as String? ?? '';
           return LoyaltySettingsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.loyaltyAnalytics,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return BlocProvider(
+            create: (_) => sl<LoyaltyAnalyticsBloc>(),
+            child: LoyaltyAnalyticsPage(storeId: storeId),
+          );
         },
       ),
       GoRoute(
