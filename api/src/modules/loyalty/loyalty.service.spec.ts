@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { LoyaltyService, isBirthday } from './loyalty.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { TelegramService } from '../telegram/telegram.service';
 
 // ---------------------------------------------------------------------------
 // Map-based Prisma fake
@@ -36,6 +37,9 @@ function makePrismaFake() {
         return c;
       }
       return null;
+    }),
+    findUnique: jest.fn(async ({ where }: any) => {
+      return customers.get(where.id) ?? null;
     }),
     update: jest.fn(async ({ where, data }: any) => {
       const c = customers.get(where.id);
@@ -120,7 +124,11 @@ describe('LoyaltyService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [LoyaltyService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        LoyaltyService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: TelegramService, useValue: { sendMessage: jest.fn().mockResolvedValue(undefined), getStoreChatId: jest.fn().mockResolvedValue(null) } },
+      ],
     }).compile();
     service = moduleRef.get(LoyaltyService);
   });
@@ -202,6 +210,78 @@ describe('LoyaltyService', () => {
 
       expect(prisma._customers.get('cust-1').loyaltyPoints).toBe(50);
       expect(prisma._txs.size).toBe(0);
+    });
+
+    it('should fire Telegram push to customer when telegramChatId is set', async () => {
+      const fakeTelegram = {
+        sendMessage: jest.fn().mockResolvedValue(undefined),
+        getStoreChatId: jest.fn().mockResolvedValue(null),
+      };
+      const mod = await Test.createTestingModule({
+        providers: [
+          LoyaltyService,
+          { provide: PrismaService, useValue: prisma },
+          { provide: TelegramService, useValue: fakeTelegram },
+        ],
+      }).compile();
+      const svc = mod.get(LoyaltyService);
+
+      prisma._customers.set('cust-1', {
+        id: 'cust-1',
+        storeId: 'store-1',
+        loyaltyPoints: 100,
+        telegramChatId: 'tg-123',
+        name: 'Alisher',
+      });
+
+      await svc.earnPoints(prisma as any, {
+        customerId: 'cust-1',
+        storeId: 'store-1',
+        saleId: 'sale-1',
+        points: 50,
+        expiresAt: null,
+      });
+
+      // Allow fire-and-forget microtasks to flush
+      await Promise.resolve();
+
+      expect(fakeTelegram.sendMessage).toHaveBeenCalledWith(
+        'tg-123',
+        expect.stringContaining('+50'),
+      );
+    });
+
+    it('should not throw when Telegram sendMessage rejects', async () => {
+      const fakeTelegram = {
+        sendMessage: jest.fn().mockRejectedValue(new Error('Network error')),
+        getStoreChatId: jest.fn().mockResolvedValue(null),
+      };
+      const mod = await Test.createTestingModule({
+        providers: [
+          LoyaltyService,
+          { provide: PrismaService, useValue: prisma },
+          { provide: TelegramService, useValue: fakeTelegram },
+        ],
+      }).compile();
+      const svc = mod.get(LoyaltyService);
+
+      prisma._customers.set('cust-1', {
+        id: 'cust-1',
+        storeId: 'store-1',
+        loyaltyPoints: 100,
+        telegramChatId: 'tg-123',
+        name: 'Alisher',
+      });
+
+      await expect(
+        svc.earnPoints(prisma as any, {
+          customerId: 'cust-1',
+          storeId: 'store-1',
+          saleId: 'sale-1',
+          points: 50,
+          expiresAt: null,
+        }),
+      ).resolves.not.toThrow();
     });
   });
 

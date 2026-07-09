@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { TelegramService } from '../telegram/telegram.service';
 import { UpdateLoyaltySettingsDto } from './dto/update-loyalty-settings.dto';
 
 export function isBirthday(birthday: Date): boolean {
@@ -25,7 +26,10 @@ type PrismaTx = Omit<
 
 @Injectable()
 export class LoyaltyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private telegram: TelegramService,
+  ) {}
 
   async getSettings(storeId: string) {
     return this.prisma.loyaltySettings.upsert({
@@ -116,6 +120,33 @@ export class LoyaltyService {
       where: { id: opts.customerId },
       data: { loyaltyPoints: { increment: opts.points } },
     });
+
+    // Fire-and-forget Telegram notifications — never throw
+    const customer = await this.prisma.customer.findUnique({
+      where: { id: opts.customerId },
+      select: { telegramChatId: true, name: true, loyaltyPoints: true },
+    });
+    if (customer?.telegramChatId) {
+      this.telegram
+        .sendMessage(
+          customer.telegramChatId,
+          `+${opts.points} баллов начислено за покупку. Баланс: ${customer.loyaltyPoints} баллов 🎉`,
+        )
+        .catch(() => {});
+    }
+    this.telegram
+      .getStoreChatId(opts.storeId)
+      .then((storeChatId) => {
+        if (storeChatId && customer) {
+          this.telegram
+            .sendMessage(
+              storeChatId,
+              `Клиент ${customer.name} получил +${opts.points} баллов`,
+            )
+            .catch(() => {});
+        }
+      })
+      .catch(() => {});
   }
 
   async redeemPoints(
