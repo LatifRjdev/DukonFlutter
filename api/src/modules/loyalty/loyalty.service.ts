@@ -174,6 +174,73 @@ export class LoyaltyService {
     });
   }
 
+  async getAnalytics(storeId: string, from: Date, to: Date) {
+    const dateFilter = { gte: from, lte: to };
+
+    const [earned, redeemed, expired, participants, topCustomers, settings] =
+      await Promise.all([
+        this.prisma.loyaltyTransaction.aggregate({
+          where: { storeId, type: 'EARN', createdAt: dateFilter },
+          _sum: { points: true },
+        }),
+        this.prisma.loyaltyTransaction.aggregate({
+          where: { storeId, type: 'REDEEM', createdAt: dateFilter },
+          _sum: { points: true },
+        }),
+        this.prisma.loyaltyTransaction.aggregate({
+          where: { storeId, type: 'EXPIRE', createdAt: dateFilter },
+          _sum: { points: true },
+        }),
+        this.prisma.customer.count({
+          where: { storeId, loyaltyPoints: { gt: 0 } },
+        }),
+        this.prisma.customer.findMany({
+          where: { storeId, loyaltyPoints: { gt: 0 } },
+          orderBy: { loyaltyPoints: 'desc' },
+          take: 10,
+          select: { id: true, name: true, loyaltyPoints: true },
+        }),
+        this.prisma.loyaltySettings.findUnique({ where: { storeId } }),
+      ]);
+
+    const totalEarned = earned._sum.points ?? 0;
+    const totalRedeemed = Math.abs(redeemed._sum.points ?? 0);
+    const totalExpired = Math.abs(expired._sum.points ?? 0);
+    const pointValue = Number(settings?.pointValue ?? 0);
+
+    const earnedPerCustomer =
+      topCustomers.length > 0
+        ? await this.prisma.loyaltyTransaction.groupBy({
+            by: ['customerId'],
+            where: {
+              storeId,
+              customerId: { in: topCustomers.map((c) => c.id) },
+              type: 'EARN',
+            },
+            _sum: { points: true },
+          })
+        : [];
+
+    const earnMap = new Map(
+      (earnedPerCustomer as any[]).map((r) => [r.customerId, r._sum.points ?? 0]),
+    );
+
+    return {
+      period: { from: from.toISOString(), to: to.toISOString() },
+      totalEarned,
+      totalRedeemed,
+      totalExpired,
+      discountValue: totalRedeemed * pointValue,
+      activeParticipants: participants,
+      topCustomers: topCustomers.map((c) => ({
+        customerId: c.id,
+        name: c.name,
+        balance: c.loyaltyPoints,
+        totalEarned: earnMap.get(c.id) ?? 0,
+      })),
+    };
+  }
+
   @Cron('0 2 * * *')
   async expireOverduePoints(): Promise<{
     expired: number;

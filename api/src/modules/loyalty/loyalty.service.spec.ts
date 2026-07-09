@@ -27,6 +27,7 @@ function makePrismaFake() {
       Object.assign(s, data);
       return s;
     }),
+    findUnique: jest.fn(async ({ where }: any) => settings.get(where.storeId) ?? null),
   };
 
   const customer = {
@@ -40,6 +41,29 @@ function makePrismaFake() {
     }),
     findUnique: jest.fn(async ({ where }: any) => {
       return customers.get(where.id) ?? null;
+    }),
+    count: jest.fn(async ({ where }: any = {}) => {
+      return Array.from(customers.values()).filter((c) => {
+        if (where?.storeId && c.storeId !== where.storeId) return false;
+        if (where?.loyaltyPoints?.gt !== undefined && !(c.loyaltyPoints > where.loyaltyPoints.gt)) return false;
+        return true;
+      }).length;
+    }),
+    findMany: jest.fn(async ({ where, orderBy, take, select }: any = {}) => {
+      let results = Array.from(customers.values()).filter((c) => {
+        if (where?.storeId && c.storeId !== where.storeId) return false;
+        if (where?.loyaltyPoints?.gt !== undefined && !(c.loyaltyPoints > where.loyaltyPoints.gt)) return false;
+        return true;
+      });
+      if (take !== undefined) results = results.slice(0, take);
+      if (select) {
+        results = results.map((c) => {
+          const out: any = {};
+          for (const k of Object.keys(select)) { if (select[k]) out[k] = c[k]; }
+          return out;
+        });
+      }
+      return results;
     }),
     update: jest.fn(async ({ where, data }: any) => {
       const c = customers.get(where.id);
@@ -55,6 +79,8 @@ function makePrismaFake() {
   };
 
   const loyaltyTransaction = {
+    aggregate: jest.fn(async () => ({ _sum: { points: null } })),
+    groupBy: jest.fn(async () => []),
     create: jest.fn(async ({ data }: any) => {
       const id = data.id ?? newId();
       const row = { id, ...data, createdAt: data.createdAt ?? new Date() };
@@ -310,6 +336,62 @@ describe('LoyaltyService', () => {
       );
       expect(redeemTxs).toHaveLength(1);
       expect(redeemTxs[0].points).toBe(-40);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // getAnalytics
+  // -------------------------------------------------------------------------
+  describe('getAnalytics', () => {
+    it('should return correct aggregates for a period with mixed transaction types', async () => {
+      const from = new Date('2026-07-01');
+      const to = new Date('2026-07-31');
+
+      prisma.loyaltyTransaction.aggregate
+        .mockResolvedValueOnce({ _sum: { points: 500 } })
+        .mockResolvedValueOnce({ _sum: { points: -200 } })
+        .mockResolvedValueOnce({ _sum: { points: -50 } });
+
+      prisma.customer.count.mockResolvedValue(12);
+      prisma.customer.findMany.mockResolvedValue([
+        { id: 'cust-1', name: 'Алишер', loyaltyPoints: 300 },
+        { id: 'cust-2', name: 'Бобур', loyaltyPoints: 200 },
+      ]);
+      prisma.loyaltyTransaction.groupBy.mockResolvedValue([
+        { customerId: 'cust-1', _sum: { points: 400 } },
+        { customerId: 'cust-2', _sum: { points: 200 } },
+      ]);
+      prisma.loyaltySettings.findUnique.mockResolvedValue({ pointValue: 0.1 });
+
+      const result = await service.getAnalytics('store-1', from, to);
+
+      expect(result.totalEarned).toBe(500);
+      expect(result.totalRedeemed).toBe(200);
+      expect(result.totalExpired).toBe(50);
+      expect(result.discountValue).toBeCloseTo(20);
+      expect(result.activeParticipants).toBe(12);
+      expect(result.topCustomers).toHaveLength(2);
+      expect(result.topCustomers[0].totalEarned).toBe(400);
+    });
+
+    it('should return zero values when no transactions exist in the period', async () => {
+      const from = new Date('2026-01-01');
+      const to = new Date('2026-01-31');
+
+      prisma.loyaltyTransaction.aggregate.mockResolvedValue({ _sum: { points: null } });
+      prisma.customer.count.mockResolvedValue(0);
+      prisma.customer.findMany.mockResolvedValue([]);
+      prisma.loyaltyTransaction.groupBy.mockResolvedValue([]);
+      prisma.loyaltySettings.findUnique.mockResolvedValue(null);
+
+      const result = await service.getAnalytics('store-1', from, to);
+
+      expect(result.totalEarned).toBe(0);
+      expect(result.totalRedeemed).toBe(0);
+      expect(result.totalExpired).toBe(0);
+      expect(result.discountValue).toBe(0);
+      expect(result.activeParticipants).toBe(0);
+      expect(result.topCustomers).toHaveLength(0);
     });
   });
 

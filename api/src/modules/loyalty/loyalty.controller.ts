@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
@@ -6,6 +6,7 @@ import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { LoyaltyService } from './loyalty.service';
 import { UpdateLoyaltySettingsDto } from './dto/update-loyalty-settings.dto';
+import { LoyaltyAnalyticsQueryDto } from './dto/loyalty-analytics-query.dto';
 
 @ApiTags('Loyalty')
 @ApiBearerAuth()
@@ -39,5 +40,14 @@ export class LoyaltyController {
     @Param('customerId') customerId: string,
   ) {
     return this.loyaltyService.getCustomerBalance(storeId, customerId);
+  }
+
+  @Get('analytics')
+  @ApiOperation({ summary: 'Loyalty analytics: totals, participants, top customers' })
+  getAnalytics(
+    @Param('storeId') storeId: string,
+    @Query() query: LoyaltyAnalyticsQueryDto,
+  ) {
+    return this.loyaltyService.getAnalytics(storeId, new Date(query.from), new Date(query.to));
   }
 }
