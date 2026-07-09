@@ -164,6 +164,8 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
           .map((item) => _mapSaleItem(item as Map<String, dynamic>))
           .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
+      pointsEarned: (json['pointsEarned'] as num?)?.toInt() ?? 0,
+      pointsBalance: (json['pointsBalance'] as num?)?.toInt() ?? 0,
     );
   }
 

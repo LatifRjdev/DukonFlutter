@@ -193,6 +193,18 @@ class ThermalPrinterService {
       ]);
     }
 
+    if (sale.pointsEarned > 0) {
+      bytes += generator.hr(ch: '-');
+      bytes += generator.text(
+        'Начислено баллов: +${sale.pointsEarned}',
+        styles: const PosStyles(align: PosAlign.left),
+      );
+      bytes += generator.text(
+        'Ваш баланс: ${sale.pointsBalance} баллов',
+        styles: const PosStyles(align: PosAlign.left),
+      );
+    }
+
     bytes += generator.feed(1);
     bytes += generator.text('Спасибо за покупку!', styles: const PosStyles(align: PosAlign.center));
     bytes += generator.feed(2);

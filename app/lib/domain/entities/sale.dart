@@ -22,6 +22,8 @@ class Sale extends Equatable {
   final String? notes;
   final List<SaleItem> items;
   final DateTime createdAt;
+  final int pointsEarned;
+  final int pointsBalance;
 
   const Sale({
     required this.id,
@@ -44,6 +46,8 @@ class Sale extends Equatable {
     this.notes,
     this.items = const [],
     required this.createdAt,
+    this.pointsEarned = 0,
+    this.pointsBalance = 0,
   });
 
   @override
