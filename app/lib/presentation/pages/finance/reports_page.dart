@@ -8,14 +8,18 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:excel/excel.dart' as xl;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:dio/dio.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../blocs/subscription/subscription_bloc.dart';
+import '../../blocs/subscription/subscription_state.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -476,10 +480,29 @@ class _ReportsPageState extends State<ReportsPage>
               const SizedBox(height: AppConstants.spacingSm),
               _ExportTile(
                 icon: Icons.table_chart_outlined,
-                label: 'Скачать Excel',
+                label: 'Скачать Excel (локальный)',
                 onTap: () {
                   Navigator.pop(ctx);
                   _exportExcel();
+                },
+              ),
+              BlocBuilder<SubscriptionBloc, SubscriptionState>(
+                builder: (_, sub) {
+                  final hasExport = sub is SubscriptionLoaded && sub.features.hasExport;
+                  if (!hasExport) return const SizedBox.shrink();
+                  return Column(
+                    children: [
+                      const SizedBox(height: AppConstants.spacingSm),
+                      _ExportTile(
+                        icon: Icons.cloud_download_outlined,
+                        label: 'Скачать Excel (все данные)',
+                        onTap: () {
+                          Navigator.pop(ctx);
+                          _showExportTypeSheet();
+                        },
+                      ),
+                    ],
+                  );
                 },
               ),
             ],
@@ -634,6 +657,63 @@ class _ReportsPageState extends State<ReportsPage>
     await file.writeAsBytes(bytes);
     await Share.shareXFiles([XFile(file.path)],
         text: 'Отчёт $tabName');
+  }
+
+  Future<void> _exportServerExcel(String type) async {
+    final storeId = _storeId;
+    if (storeId == null) return;
+
+    try {
+      final response = await _dio.get<List<int>>(
+        ApiEndpoints.reportsExport(storeId, type),
+        options: Options(responseType: ResponseType.bytes),
+      );
+      final bytes = response.data;
+      if (bytes == null) return;
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File(
+          '${dir.path}/export_${type}_${DateTime.now().millisecondsSinceEpoch}.xlsx');
+      await file.writeAsBytes(bytes);
+      if (mounted) {
+        await Share.shareXFiles([XFile(file.path)], text: 'Экспорт $type');
+      }
+    } catch (e) {
+      if (mounted) AppSnackbar.error(context, 'Ошибка экспорта: $e');
+    }
+  }
+
+  void _showExportTypeSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusXxl)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppConstants.spacingMd),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Что экспортировать?',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              const SizedBox(height: AppConstants.spacingMd),
+              for (final entry in [
+                ('Продажи', 'sales'),
+                ('Товары', 'products'),
+                ('Клиенты', 'customers'),
+              ])
+                ListTile(
+                  title: Text(entry.$1),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _exportServerExcel(entry.$2);
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _buildExcelContent(xl.Sheet sheet) {
