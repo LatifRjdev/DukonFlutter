@@ -7,6 +7,9 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/router/route_names.dart';
 import '../../../domain/entities/customer.dart';
+import '../../../domain/entities/loyalty_transaction.dart';
+import '../../../domain/repositories/loyalty_repository.dart';
+import '../../../injection.dart';
 import '../../blocs/customer_detail/customer_detail_bloc.dart';
 import '../../blocs/customer_detail/customer_detail_event.dart';
 import '../../blocs/customer_detail/customer_detail_state.dart';
@@ -32,12 +35,31 @@ class CustomerDetailPage extends StatefulWidget {
 }
 
 class _CustomerDetailPageState extends State<CustomerDetailPage> {
+  List<LoyaltyTransaction> _loyaltyTxs = [];
+  bool _loyaltyLoaded = false;
+
   @override
   void initState() {
     super.initState();
     context.read<CustomerDetailBloc>().add(
       CustomerDetailRequested(storeId: widget.storeId, customerId: widget.customerId),
     );
+    _loadLoyalty();
+  }
+
+  Future<void> _loadLoyalty() async {
+    try {
+      final result = await sl<LoyaltyRepository>()
+          .getCustomerBalance(widget.storeId, widget.customerId);
+      if (mounted) {
+        setState(() {
+          _loyaltyTxs = result.transactions;
+          _loyaltyLoaded = true;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loyaltyLoaded = true);
+    }
   }
 
   @override
@@ -188,6 +210,46 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         'customerName': customer.name,
                       }),
                     ),
+                  if (_loyaltyLoaded && _loyaltyTxs.isNotEmpty) ...[
+                    const SizedBox(height: AppConstants.spacingMd),
+                    ExpansionTile(
+                      tilePadding: EdgeInsets.zero,
+                      title: const Text('История баллов',
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                      children: _loyaltyTxs.take(10).map((tx) {
+                        final sign = tx.points > 0 ? '+' : '';
+                        final color = tx.type == 'EARN'
+                            ? Colors.green
+                            : tx.type == 'REDEEM'
+                                ? Colors.blue
+                                : Colors.grey;
+                        return ListTile(
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(
+                            tx.type == 'EARN'
+                                ? Icons.add_circle_outline
+                                : tx.type == 'REDEEM'
+                                    ? Icons.remove_circle_outline
+                                    : Icons.timer_off_outlined,
+                            color: color,
+                            size: 20,
+                          ),
+                          title: Text('$sign${tx.points} баллов',
+                              style: TextStyle(
+                                  color: color, fontWeight: FontWeight.w600)),
+                          subtitle: Text(_formatDate(tx.createdAt.toIso8601String())),
+                          trailing: tx.expiresAt != null && tx.type == 'EARN'
+                              ? Text(
+                                  'до ${_formatDate(tx.expiresAt!.toIso8601String())}',
+                                  style: const TextStyle(
+                                      fontSize: 11, color: Colors.orange),
+                                )
+                              : null,
+                        );
+                      }).toList(),
+                    ),
+                  ],
                   const SizedBox(height: AppConstants.spacingLg),
 
                   const Text('Последние покупки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
