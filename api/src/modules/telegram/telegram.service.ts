@@ -64,36 +64,37 @@ export class TelegramService {
         ? `+${rawPhone}`
         : `+${rawPhone}`;
 
-      const customer = await this.prisma.customer.findFirst({
-        where: { phone },
-      });
+      // Look up both customer and user in parallel
+      const [customer, user] = await Promise.all([
+        this.prisma.customer.findFirst({ where: { phone } }),
+        this.prisma.user.findUnique({ where: { phone } }),
+      ]);
 
-      if (!customer) {
+      if (!customer && !user) {
         await this.bot.sendMessage(
           chatId,
-          'Клиент с таким номером не найден. Обратитесь к продавцу.',
+          'Номер не найден в системе. Обратитесь к продавцу.',
         );
         return;
       }
 
-      await this.prisma.customer.update({
-        where: { id: customer.id },
-        data: { telegramChatId: String(chatId) },
-      });
+      if (customer) {
+        await this.prisma.customer.update({
+          where: { id: customer.id },
+          data: { telegramChatId: String(chatId) },
+        });
+        await this.bot.sendMessage(
+          chatId,
+          `✅ Номер привязан! Теперь вы будете получать чеки в Telegram, ${customer.name}.`,
+        );
+      }
 
-      await this.bot.sendMessage(
-        chatId,
-        `✅ Номер привязан! Теперь вы будете получать чеки в Telegram, ${customer.name}.`,
-      );
-
-      // Also link store owner (User) if same phone belongs to a User
-      const user = await this.prisma.user.findUnique({ where: { phone } });
       if (user) {
         await this.prisma.user.update({
           where: { id: user.id },
           data: { telegramChatId: String(chatId) },
         });
-        await this.bot!.sendMessage(
+        await this.bot.sendMessage(
           chatId,
           `✅ Telegram привязан к вашему аккаунту владельца магазина.`,
         );
@@ -186,7 +187,11 @@ export class TelegramService {
   /** Generic fire-and-forget message. No-op if bot is not configured. */
   async sendMessage(chatId: string, text: string): Promise<void> {
     if (!this.bot) return;
-    await this.bot.sendMessage(chatId, text);
+    try {
+      await this.bot.sendMessage(chatId, text);
+    } catch (err) {
+      this.logger.error(`Failed to send Telegram message to chatId ${chatId}`, err);
+    }
   }
 
   /**
