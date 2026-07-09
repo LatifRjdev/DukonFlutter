@@ -36,7 +36,12 @@ type NotificationRow = {
   createdAt: Date;
 };
 
-type FcmTokenRow = { id: string; userId: string; token: string; platform: string };
+type FcmTokenRow = {
+  id: string;
+  userId: string;
+  token: string;
+  platform: string;
+};
 
 type StoreRow = { id: string; settings: Record<string, unknown> };
 
@@ -73,9 +78,7 @@ function makePrismaFake() {
     }),
     findMany: jest.fn(async ({ where, skip = 0, take = 20 }: any) => {
       const list = Array.from(notifications.values())
-        .filter(
-          (n) => n.storeId === where.storeId && n.userId === where.userId,
-        )
+        .filter((n) => n.storeId === where.storeId && n.userId === where.userId)
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       return list.slice(skip, skip + take);
     }),
@@ -230,13 +233,7 @@ describe('NotificationsService', () => {
       await service.saveFcmToken('user-1', 'token-AAA', 'ANDROID');
       await service.saveFcmToken('user-1', 'token-BBB', 'IOS');
 
-      await service.sendPush(
-        'user-1',
-        'Hi',
-        'Body',
-        'NEW_SALE',
-        'store-A',
-      );
+      await service.sendPush('user-1', 'Hi', 'Body', 'NEW_SALE', 'store-A');
 
       expect(sendEachForMulticast).toHaveBeenCalledTimes(1);
       const call = sendEachForMulticast.mock.calls[0][0];
@@ -273,7 +270,9 @@ describe('NotificationsService', () => {
     });
 
     it('should skip multicast (and not throw) when FCM is disabled because FIREBASE_SERVICE_ACCOUNT is missing', async () => {
-      const service = await buildService({ FIREBASE_SERVICE_ACCOUNT: undefined });
+      const service = await buildService({
+        FIREBASE_SERVICE_ACCOUNT: undefined,
+      });
 
       await expect(
         service.sendPush('u', 't', 'b', 'NEW_SALE', 'store-A'),
@@ -303,13 +302,7 @@ describe('NotificationsService', () => {
         ),
       }));
 
-      await service.sendPush(
-        'user-1',
-        'Hi',
-        'Body',
-        'NEW_SALE',
-        'store-A',
-      );
+      await service.sendPush('user-1', 'Hi', 'Body', 'NEW_SALE', 'store-A');
 
       const remaining = Array.from(prisma.__fcmTokens.values()).map(
         (t) => t.token,
@@ -321,7 +314,10 @@ describe('NotificationsService', () => {
   describe('markAsRead — storeId scoping', () => {
     it('should throw NotFoundException when notification belongs to another store', async () => {
       const service = await buildService();
-      sendEachForMulticast.mockResolvedValue({ successCount: 0, responses: [] });
+      sendEachForMulticast.mockResolvedValue({
+        successCount: 0,
+        responses: [],
+      });
 
       await service.sendPush('u', 't', 'b', 'NEW_SALE', 'store-A');
       const id = Array.from(prisma.__notifications.values())[0].id;
@@ -333,7 +329,10 @@ describe('NotificationsService', () => {
 
     it('should set read=true when notification belongs to the calling store', async () => {
       const service = await buildService();
-      sendEachForMulticast.mockResolvedValue({ successCount: 0, responses: [] });
+      sendEachForMulticast.mockResolvedValue({
+        successCount: 0,
+        responses: [],
+      });
 
       await service.sendPush('u', 't', 'b', 'NEW_SALE', 'store-A');
       const id = Array.from(prisma.__notifications.values())[0].id;

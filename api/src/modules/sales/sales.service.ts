@@ -14,7 +14,11 @@ import { SaleQueryDto } from './dto/sale-query.dto';
 import { RefundSaleDto } from './dto/refund-sale.dto';
 import { Prisma } from '@prisma/client';
 import * as Sentry from '@sentry/nestjs';
-import { LoyaltyService, isBirthday, addDays } from '../loyalty/loyalty.service';
+import {
+  LoyaltyService,
+  isBirthday,
+  addDays,
+} from '../loyalty/loyalty.service';
 
 @Injectable()
 export class SalesService {

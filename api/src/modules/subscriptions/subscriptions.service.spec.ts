@@ -322,7 +322,10 @@ describe('SubscriptionsService — adminChangePlan field guard', () => {
           provide: NotificationsService,
           useValue: { sendPush: jest.fn(async () => undefined) },
         },
-        { provide: AuditLogService, useValue: { record: jest.fn(async () => undefined) } },
+        {
+          provide: AuditLogService,
+          useValue: { record: jest.fn(async () => undefined) },
+        },
       ],
     }).compile();
     service = moduleRef.get(SubscriptionsService);
@@ -343,7 +346,8 @@ describe('SubscriptionsService — adminChangePlan field guard', () => {
       }),
     );
 
-    const updateArg = (prisma.subscription.update as jest.Mock).mock.calls[0][0];
+    const updateArg = (prisma.subscription.update as jest.Mock).mock
+      .calls[0][0];
     expect(updateArg.data).not.toHaveProperty('currentPeriodEnd');
   });
 });
@@ -368,7 +372,10 @@ describe('SubscriptionsService — checkExpiredSubscriptions', () => {
         SubscriptionsService,
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: sendPushMock } },
-        { provide: AuditLogService, useValue: { record: jest.fn(async () => undefined) } },
+        {
+          provide: AuditLogService,
+          useValue: { record: jest.fn(async () => undefined) },
+        },
       ],
     }).compile();
     service = moduleRef.get(SubscriptionsService);
@@ -403,8 +410,18 @@ describe('SubscriptionsService — checkExpiredSubscriptions', () => {
   it('should send a push for each expired subscription individually', async () => {
     const pastEnd = new Date(Date.now() - 86_400_000);
     prisma.subscription.findMany = jest.fn(async () => [
-      { id: 'sub-a', status: 'ACTIVE', currentPeriodEnd: pastEnd, store: { ownerId: 'o1', id: 's1', name: 'Shop A' } },
-      { id: 'sub-b', status: 'TRIAL', currentPeriodEnd: pastEnd, store: { ownerId: 'o2', id: 's2', name: 'Shop B' } },
+      {
+        id: 'sub-a',
+        status: 'ACTIVE',
+        currentPeriodEnd: pastEnd,
+        store: { ownerId: 'o1', id: 's1', name: 'Shop A' },
+      },
+      {
+        id: 'sub-b',
+        status: 'TRIAL',
+        currentPeriodEnd: pastEnd,
+        store: { ownerId: 'o2', id: 's2', name: 'Shop B' },
+      },
     ]);
 
     await service.checkExpiredSubscriptions();
@@ -414,8 +431,20 @@ describe('SubscriptionsService — checkExpiredSubscriptions', () => {
       data: { status: 'EXPIRED' },
     });
     expect(sendPushMock).toHaveBeenCalledTimes(2);
-    expect(sendPushMock).toHaveBeenCalledWith('o1', expect.any(String), expect.stringContaining('Shop A'), 'SUBSCRIPTION_EXPIRED', 's1');
-    expect(sendPushMock).toHaveBeenCalledWith('o2', expect.any(String), expect.stringContaining('Shop B'), 'SUBSCRIPTION_EXPIRED', 's2');
+    expect(sendPushMock).toHaveBeenCalledWith(
+      'o1',
+      expect.any(String),
+      expect.stringContaining('Shop A'),
+      'SUBSCRIPTION_EXPIRED',
+      's1',
+    );
+    expect(sendPushMock).toHaveBeenCalledWith(
+      'o2',
+      expect.any(String),
+      expect.stringContaining('Shop B'),
+      'SUBSCRIPTION_EXPIRED',
+      's2',
+    );
   });
 
   it('should not call updateMany or sendPush when no subscriptions have expired', async () => {

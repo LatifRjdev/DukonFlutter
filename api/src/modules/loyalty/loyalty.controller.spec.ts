@@ -13,7 +13,10 @@ const passThroughGuard = { canActivate: (_ctx: ExecutionContext) => true };
 
 const mockService = {
   getSettings: jest.fn(async () => ({ storeId: 'store-1', isEnabled: true })),
-  updateSettings: jest.fn(async () => ({ storeId: 'store-1', isEnabled: false })),
+  updateSettings: jest.fn(async () => ({
+    storeId: 'store-1',
+    isEnabled: false,
+  })),
   getCustomerBalance: jest.fn(async () => ({ points: 100, transactions: [] })),
 };
 
@@ -62,7 +65,10 @@ describe('LoyaltyController', () => {
     it('should call loyaltyService.getCustomerBalance with storeId and customerId and return balance', async () => {
       const result = await controller.getCustomerBalance('store-1', 'cust-1');
 
-      expect(mockService.getCustomerBalance).toHaveBeenCalledWith('store-1', 'cust-1');
+      expect(mockService.getCustomerBalance).toHaveBeenCalledWith(
+        'store-1',
+        'cust-1',
+      );
       expect(result).toEqual({ points: 100, transactions: [] });
     });
   });

@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Put,
-  Body,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Put, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
@@ -38,7 +31,9 @@ export class LoyaltyController {
   }
 
   @Get('customers/:customerId/balance')
-  @ApiOperation({ summary: 'Get customer loyalty balance + last 20 transactions' })
+  @ApiOperation({
+    summary: 'Get customer loyalty balance + last 20 transactions',
+  })
   getCustomerBalance(
     @Param('storeId') storeId: string,
     @Param('customerId') customerId: string,

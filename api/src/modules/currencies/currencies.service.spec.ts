@@ -10,10 +10,38 @@ function makePrismaFake() {
   // Seed: two USD rows (today + yesterday) and one RUB row (today)
   // plus a USD row 9 days ago (outside any 7-day window).
   const allRates = [
-    { id: 'r1', currency: 'USD', nbtRate: 10.5, buyRate: 10.4, sellRate: 10.6, date: d(0) },
-    { id: 'r2', currency: 'USD', nbtRate: 10.4, buyRate: 10.3, sellRate: 10.5, date: d(1) },
-    { id: 'r3', currency: 'USD', nbtRate: 10.3, buyRate: 10.2, sellRate: 10.4, date: d(9) },
-    { id: 'r4', currency: 'RUB', nbtRate: 0.11, buyRate: 0.109, sellRate: 0.111, date: d(0) },
+    {
+      id: 'r1',
+      currency: 'USD',
+      nbtRate: 10.5,
+      buyRate: 10.4,
+      sellRate: 10.6,
+      date: d(0),
+    },
+    {
+      id: 'r2',
+      currency: 'USD',
+      nbtRate: 10.4,
+      buyRate: 10.3,
+      sellRate: 10.5,
+      date: d(1),
+    },
+    {
+      id: 'r3',
+      currency: 'USD',
+      nbtRate: 10.3,
+      buyRate: 10.2,
+      sellRate: 10.4,
+      date: d(9),
+    },
+    {
+      id: 'r4',
+      currency: 'RUB',
+      nbtRate: 0.11,
+      buyRate: 0.109,
+      sellRate: 0.111,
+      date: d(0),
+    },
   ];
 
   return {

@@ -154,9 +154,7 @@ export class LoyaltyService {
       where: { type: 'EXPIRE', sourceEarnId: { not: null } },
       select: { sourceEarnId: true },
     });
-    const expiredEarnIds = new Set(
-      alreadyExpired.map((r) => r.sourceEarnId!),
-    );
+    const expiredEarnIds = new Set(alreadyExpired.map((r) => r.sourceEarnId!));
 
     const overdueEarns = await this.prisma.loyaltyTransaction.findMany({
       where: {

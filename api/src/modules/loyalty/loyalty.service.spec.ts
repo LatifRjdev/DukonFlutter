@@ -60,7 +60,8 @@ function makePrismaFake() {
     findMany: jest.fn(async ({ where, take, orderBy }: any = {}) => {
       let results = Array.from(txs.values()).filter((t) => {
         if (where?.type && t.type !== where.type) return false;
-        if (where?.customerId && t.customerId !== where.customerId) return false;
+        if (where?.customerId && t.customerId !== where.customerId)
+          return false;
         if (where?.storeId && t.storeId !== where.storeId) return false;
         if (where?.sourceEarnId?.not === null && t.sourceEarnId == null)
           return false;
@@ -75,7 +76,12 @@ function makePrismaFake() {
   };
 
   // Self-referential api object so $transaction can call tx.loyaltyTransaction etc.
-  const api: any = { loyaltySettings, customer, loyaltyTransaction, $transaction: null };
+  const api: any = {
+    loyaltySettings,
+    customer,
+    loyaltyTransaction,
+    $transaction: null,
+  };
   api.$transaction = jest.fn(async (cb: (tx: any) => Promise<any>) => cb(api));
 
   return {
@@ -114,10 +120,7 @@ describe('LoyaltyService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        LoyaltyService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [LoyaltyService, { provide: PrismaService, useValue: prisma }],
     }).compile();
     service = moduleRef.get(LoyaltyService);
   });

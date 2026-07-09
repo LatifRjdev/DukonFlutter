@@ -109,7 +109,9 @@ export class CreateSaleDto {
   @IsDateString()
   occurredAt?: string;
 
-  @ApiPropertyOptional({ description: 'Loyalty points to redeem (reduces total)' })
+  @ApiPropertyOptional({
+    description: 'Loyalty points to redeem (reduces total)',
+  })
   @IsOptional()
   @IsInt()
   @Min(0)
