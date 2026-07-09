@@ -98,7 +98,17 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                           ),
                         ),
                         const SizedBox(height: AppConstants.spacingSm),
-                        Text(customer.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(customer.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                            if (customer.telegramChatId != null) ...[
+                              const SizedBox(width: 6),
+                              const Icon(Icons.telegram_outlined, color: Color(0xFF26A5E4), size: 20),
+                            ],
+                          ],
+                        ),
                         if (customer.phone != null) ...[
                           const SizedBox(height: 4),
                           Text(customer.phone!, style: TextStyle(color: context.textSecondary)),
