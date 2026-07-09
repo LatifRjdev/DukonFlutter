@@ -118,4 +118,14 @@ class ApiEndpoints {
       '/stores/$storeId/loyalty/settings';
   static String loyaltyCustomerBalance(String storeId, String customerId) =>
       '/stores/$storeId/loyalty/customers/$customerId/balance';
+  static String loyaltyAnalytics(String storeId) =>
+      '/stores/$storeId/loyalty/analytics';
+
+  // Customer Telegram
+  static String customerTelegram(String storeId, String customerId) =>
+      '/stores/$storeId/customers/$customerId/telegram';
+
+  // Reports export
+  static String reportsExport(String storeId, String type) =>
+      '/stores/$storeId/reports/export?type=$type';
 }

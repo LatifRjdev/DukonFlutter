@@ -139,6 +139,7 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
       totalSpent: (json['totalSpent'] as num?)?.toDouble() ?? 0,
       debt: (json['debt'] as num?)?.toDouble() ?? 0,
       isActive: json['isActive'] as bool? ?? true,
+      telegramChatId: json['telegramChatId'] as String?,
     );
   }
 
