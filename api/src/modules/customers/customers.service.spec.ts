@@ -308,9 +308,9 @@ describe('CustomersService', () => {
   describe('findOne (scoping)', () => {
     it('should throw NotFoundException when customer belongs to a different store', async () => {
       seedCustomer({ id: 'cust-A', storeId: 'store-A' });
-      await expect(
-        service.findOne('store-B', 'cust-A'),
-      ).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.findOne('store-B', 'cust-A')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -396,8 +396,12 @@ describe('CustomersService', () => {
       }).compile();
       const svc = mod.get(CustomersService);
 
-      prisma.customer.findFirst.mockResolvedValue({ id: 'cust-1', storeId: 'store-1', isActive: true });
-      prisma.customer.update.mockResolvedValue({});
+      prisma.customer.findFirst.mockResolvedValue({
+        id: 'cust-1',
+        storeId: 'store-1',
+        isActive: true,
+      } as any);
+      prisma.customer.update.mockResolvedValue({} as any);
 
       await svc.linkTelegram('store-1', 'cust-1', '@alisher');
 
@@ -421,11 +425,15 @@ describe('CustomersService', () => {
       }).compile();
       const svc = mod.get(CustomersService);
 
-      prisma.customer.findFirst.mockResolvedValue({ id: 'cust-1', storeId: 'store-1', isActive: true });
+      prisma.customer.findFirst.mockResolvedValue({
+        id: 'cust-1',
+        storeId: 'store-1',
+        isActive: true,
+      } as any);
 
-      await expect(svc.linkTelegram('store-1', 'cust-1', '@nobody')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        svc.linkTelegram('store-1', 'cust-1', '@nobody'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

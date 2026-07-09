@@ -18,10 +18,7 @@ describe('ExportService', () => {
   beforeEach(async () => {
     prisma = makePrisma();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ExportService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [ExportService, { provide: PrismaService, useValue: prisma }],
     }).compile();
     service = module.get(ExportService);
   });
@@ -48,7 +45,7 @@ describe('ExportService', () => {
       );
 
       const wb = new ExcelJS.Workbook();
-      await wb.xlsx.load(buf);
+      await wb.xlsx.load(buf as any);
       const ws = wb.getWorksheet('Sales')!;
 
       expect(ws.columnCount).toBe(8);
@@ -87,11 +84,13 @@ describe('ExportService', () => {
       const buf = await service.exportProducts('store-1');
 
       expect(prisma.product.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { storeId: 'store-1', isActive: true } }),
+        expect.objectContaining({
+          where: { storeId: 'store-1', isActive: true },
+        }),
       );
 
       const wb = new ExcelJS.Workbook();
-      await wb.xlsx.load(buf);
+      await wb.xlsx.load(buf as any);
       const ws = wb.getWorksheet('Products')!;
 
       expect(ws.columnCount).toBe(8);
@@ -113,11 +112,13 @@ describe('ExportService', () => {
       const buf = await service.exportCustomers('store-1');
 
       expect(prisma.customer.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { storeId: 'store-1', isActive: true } }),
+        expect.objectContaining({
+          where: { storeId: 'store-1', isActive: true },
+        }),
       );
 
       const wb = new ExcelJS.Workbook();
-      await wb.xlsx.load(buf);
+      await wb.xlsx.load(buf as any);
       const ws = wb.getWorksheet('Customers')!;
 
       expect(ws.getRow(1).getCell(1).value).toBe('Name');
