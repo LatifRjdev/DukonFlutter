@@ -43,10 +43,15 @@ describe('ExportService', () => {
 
       const buf = await service.exportSales('store-1');
 
+      expect(prisma.sale.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { storeId: 'store-1' } }),
+      );
+
       const wb = new ExcelJS.Workbook();
       await wb.xlsx.load(buf);
       const ws = wb.getWorksheet('Sales')!;
 
+      expect(ws.columnCount).toBe(8);
       expect(ws.getRow(1).getCell(1).value).toBe('Receipt');
       expect(ws.getRow(1).getCell(2).value).toBe('Date');
       expect(ws.getRow(2).getCell(1).value).toBe('R001');
@@ -81,6 +86,10 @@ describe('ExportService', () => {
 
       const buf = await service.exportProducts('store-1');
 
+      expect(prisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { storeId: 'store-1', isActive: true } }),
+      );
+
       const wb = new ExcelJS.Workbook();
       await wb.xlsx.load(buf);
       const ws = wb.getWorksheet('Products')!;
@@ -103,10 +112,15 @@ describe('ExportService', () => {
 
       const buf = await service.exportCustomers('store-1');
 
+      expect(prisma.customer.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { storeId: 'store-1', isActive: true } }),
+      );
+
       const wb = new ExcelJS.Workbook();
       await wb.xlsx.load(buf);
       const ws = wb.getWorksheet('Customers')!;
 
+      expect(ws.getRow(1).getCell(1).value).toBe('Name');
       expect(ws.rowCount).toBe(6); // 1 header + 5 data
     });
   });
