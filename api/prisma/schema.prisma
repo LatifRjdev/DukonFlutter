@@ -23,6 +23,7 @@ model User {
   // timestamp, so a leaked token is invalidated as soon as the
   // user (or admin) rotates the password.
   tokensRevokedAt DateTime?
+  telegramChatId  String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

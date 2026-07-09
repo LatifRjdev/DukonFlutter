@@ -85,6 +85,19 @@ export class TelegramService {
         chatId,
         `✅ Номер привязан! Теперь вы будете получать чеки в Telegram, ${customer.name}.`,
       );
+
+      // Also link store owner (User) if same phone belongs to a User
+      const user = await this.prisma.user.findUnique({ where: { phone } });
+      if (user) {
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: { telegramChatId: String(chatId) },
+        });
+        await this.bot!.sendMessage(
+          chatId,
+          `✅ Telegram привязан к вашему аккаунту владельца магазина.`,
+        );
+      }
       return;
     }
   }
@@ -168,5 +181,35 @@ export class TelegramService {
         err,
       );
     }
+  }
+
+  /** Generic fire-and-forget message. No-op if bot is not configured. */
+  async sendMessage(chatId: string, text: string): Promise<void> {
+    if (!this.bot) return;
+    await this.bot.sendMessage(chatId, text);
+  }
+
+  /**
+   * Resolve a Telegram @username to a numeric chatId string.
+   * Returns null if the bot is not configured or username is not found/private.
+   */
+  async resolveUsername(username: string): Promise<string | null> {
+    if (!this.bot) return null;
+    try {
+      const handle = username.startsWith('@') ? username : `@${username}`;
+      const chat = await this.bot.getChat(handle);
+      return String(chat.id);
+    } catch {
+      return null;
+    }
+  }
+
+  /** Return the store owner's Telegram chatId, or null if not linked. */
+  async getStoreChatId(storeId: string): Promise<string | null> {
+    const store = await this.prisma.store.findUnique({
+      where: { id: storeId },
+      include: { owner: { select: { telegramChatId: true } } },
+    });
+    return store?.owner?.telegramChatId ?? null;
   }
 }
