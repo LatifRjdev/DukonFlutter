@@ -1,0 +1,9 @@
+# Android
+json_key_file("")           # not used — key passed via env var in lanes
+package_name("com.itlsolutions.dukonpro")
+
+# iOS
+apple_id(ENV["APPLE_ID"] || "")
+itc_team_id(ENV["ITC_TEAM_ID"] || "")
+team_id(ENV["TEAM_ID"] || "")
+app_identifier("com.itlsolutions.dukonpro")
