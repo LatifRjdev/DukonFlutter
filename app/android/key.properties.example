@@ -1,0 +1,6 @@
+# Copy this file to key.properties (gitignored) and fill in your values.
+# For CI, these values come from GitHub Secrets — see docs/release/SECRETS.md.
+storePassword=REPLACE
+keyPassword=REPLACE
+keyAlias=upload
+storeFile=upload-keystore.jks
