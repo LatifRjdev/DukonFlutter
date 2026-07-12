@@ -39,3 +39,41 @@ platform :android do
     )
   end
 end
+
+platform :ios do
+  desc "Build release IPA and upload to TestFlight"
+  lane :beta do
+    version_name = parse_version
+    build_number = parse_build_number
+
+    api_key = app_store_connect_api_key(
+      key_id:       ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+      issuer_id:    ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+      key_content:  ENV.fetch("APP_STORE_CONNECT_API_KEY_BASE64"),
+      is_key_content_base64: true,
+      duration:     1200,
+    )
+
+    match(
+      type:     "appstore",
+      readonly: true,
+      api_key:  api_key,
+    )
+
+    sh("flutter build ipa --release " \
+       "--build-name=#{version_name} " \
+       "--build-number=#{build_number} " \
+       "--export-options-plist=ios/ExportOptions.plist",
+       chdir: "..")
+
+    ipa_path = "../build/ios/ipa/dukonpro.ipa"
+    UI.user_error!("IPA not found at #{ipa_path} — flutter build may have failed") unless File.exist?(ipa_path)
+
+    upload_to_testflight(
+      api_key:                           api_key,
+      ipa:                               ipa_path,
+      skip_waiting_for_build_processing: true,
+      notify_external_testers:           false,
+    )
+  end
+end
