@@ -22,9 +22,12 @@ platform :android do
        "--build-number=#{build_number}",
        chdir: "..")
 
+    aab_path = "../build/app/outputs/bundle/release/app-release.aab"
+    UI.user_error!("AAB not found at #{aab_path} — flutter build may have failed") unless File.exist?(aab_path)
+
     upload_to_play_store(
       track: "internal",
-      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      aab: aab_path,
       json_key_data: ENV.fetch("PLAY_SERVICE_ACCOUNT_JSON"),
       package_name: "com.itlsolutions.dukonpro",
       skip_upload_apk: true,
