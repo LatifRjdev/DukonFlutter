@@ -1,5 +1,5 @@
 # Fastfile for Dukon — manages Android (Play) and iOS (TestFlight) releases.
-# Run from the `app/` directory: bundle exec fastlane android beta
+# Run from the `app/` directory: cd app && bundle exec fastlane android beta
 # Version is read from the GITHUB_REF_NAME env var (e.g. "v1.2.3").
 
 def parse_version
