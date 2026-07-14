@@ -6,10 +6,18 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'core/constants/api_endpoints.dart';
 import 'core/network/dio_client.dart';
+import 'core/router/app_router.dart';
 import 'core/sentry.dart';
 import 'injection.dart';
 import 'data/sync/sync_engine.dart';
 import 'core/services/notification_service.dart';
+
+/// FCM requires a top-level function annotated with vm:entry-point.
+/// Called when a push arrives while the app is terminated or backgrounded.
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
 
 void main() async {
   await initSentryAndRun(_runApp);
@@ -55,18 +63,33 @@ Future<void> _runApp() async {
   await sl<NotificationService>().init();
   await sl<NotificationService>().requestPermission();
 
+  // Register background message handler before any other FCM setup.
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   // Register FCM token with backend (non-blocking)
   try {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
+      final platform =
+          defaultTargetPlatform == TargetPlatform.iOS ? 'IOS' : 'ANDROID';
       try {
-        await sl<DioClient>().post('/users/me/fcm-token', data: {'token': fcmToken});
+        await sl<DioClient>().post(
+          '/users/me/fcm-token',
+          data: {'token': fcmToken, 'platform': platform},
+        );
       } catch (_) {
         // Non-blocking — token registration can fail silently
       }
     }
   } catch (_) {
     // Firebase may not be initialized — skip FCM token registration
+  }
+
+  // Wire foreground display, token refresh, and tap navigation.
+  try {
+    await sl<NotificationService>().initFcm(sl<DioClient>(), AppRouter.router);
+  } catch (_) {
+    // Gracefully skip if Firebase is not initialised (e.g., missing config files).
   }
 
   // SyncEngine.start() / dispose() are managed by _AppLifecycleHost so the

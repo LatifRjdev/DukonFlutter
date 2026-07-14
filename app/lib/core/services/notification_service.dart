@@ -1,4 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
+import '../network/dio_client.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
@@ -98,5 +102,38 @@ class NotificationService {
 
   Future<void> cancelAllNotifications() async {
     await _plugin.cancelAll();
+  }
+
+  Future<void> initFcm(DioClient dio, GoRouter router) async {
+    // Foreground: FCM delivers silently when the app is open — show manually.
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final n = message.notification;
+      if (n != null) {
+        showNotification(
+          id: message.hashCode,
+          title: n.title ?? '',
+          body: n.body ?? '',
+        );
+      }
+    });
+
+    // Token refresh: FCM rotates tokens periodically — re-register with backend.
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
+      final platform =
+          defaultTargetPlatform == TargetPlatform.iOS ? 'IOS' : 'ANDROID';
+      try {
+        await dio.post(
+          '/users/me/fcm-token',
+          data: {'token': token, 'platform': platform},
+        );
+      } catch (_) {}
+    });
+
+    // Tap from terminated state (app was killed, user tapped notification).
+    final initial = await FirebaseMessaging.instance.getInitialMessage();
+    if (initial != null) router.go('/notifications');
+
+    // Tap from background state (app was open, user tapped notification).
+    FirebaseMessaging.onMessageOpenedApp.listen((_) => router.go('/notifications'));
   }
 }
