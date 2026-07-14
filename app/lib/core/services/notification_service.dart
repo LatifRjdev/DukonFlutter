@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -7,6 +8,8 @@ import '../network/dio_client.dart';
 class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _initialized = false;
+  bool _fcmInitialized = false;
+  final List<StreamSubscription<dynamic>> _fcmSubscriptions = [];
 
   Future<void> init() async {
     if (_initialized) return;
@@ -105,35 +108,52 @@ class NotificationService {
   }
 
   Future<void> initFcm(DioClient dio, GoRouter router) async {
+    if (_fcmInitialized) return;
+    _fcmInitialized = true;
+
     // Foreground: FCM delivers silently when the app is open — show manually.
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final n = message.notification;
-      if (n != null) {
-        showNotification(
-          id: message.hashCode,
-          title: n.title ?? '',
-          body: n.body ?? '',
-        );
-      }
-    });
+    _fcmSubscriptions.add(
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        final n = message.notification;
+        if (n != null) {
+          showNotification(
+            id: message.hashCode,
+            title: n.title ?? '',
+            body: n.body ?? '',
+          );
+        }
+      }),
+    );
 
     // Token refresh: FCM rotates tokens periodically — re-register with backend.
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
-      final platform =
-          defaultTargetPlatform == TargetPlatform.iOS ? 'IOS' : 'ANDROID';
-      try {
-        await dio.post(
-          '/users/me/fcm-token',
-          data: {'token': token, 'platform': platform},
-        );
-      } catch (_) {}
-    });
+    _fcmSubscriptions.add(
+      FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
+        final platform =
+            defaultTargetPlatform == TargetPlatform.iOS ? 'IOS' : 'ANDROID';
+        try {
+          await dio.post(
+            '/users/me/fcm-token',
+            data: {'token': token, 'platform': platform},
+          );
+        } catch (_) {}
+      }),
+    );
 
     // Tap from terminated state (app was killed, user tapped notification).
     final initial = await FirebaseMessaging.instance.getInitialMessage();
     if (initial != null) router.go('/notifications');
 
     // Tap from background state (app was open, user tapped notification).
-    FirebaseMessaging.onMessageOpenedApp.listen((_) => router.go('/notifications'));
+    _fcmSubscriptions.add(
+      FirebaseMessaging.onMessageOpenedApp.listen((_) => router.go('/notifications')),
+    );
+  }
+
+  Future<void> disposeFcm() async {
+    for (final sub in _fcmSubscriptions) {
+      await sub.cancel();
+    }
+    _fcmSubscriptions.clear();
+    _fcmInitialized = false;
   }
 }
