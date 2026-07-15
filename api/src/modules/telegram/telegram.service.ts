@@ -190,7 +190,10 @@ export class TelegramService {
     try {
       await this.bot.sendMessage(chatId, text);
     } catch (err) {
-      this.logger.error(`Failed to send Telegram message to chatId ${chatId}`, err);
+      this.logger.error(
+        `Failed to send Telegram message to chatId ${chatId}`,
+        err,
+      );
     }
   }
 

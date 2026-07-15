@@ -211,7 +211,11 @@ function fakeRedis(): Pick<RedisService, 'incr'> {
 describe('SalesService', () => {
   let service: SalesService;
   let prisma: ReturnType<typeof makePrismaFake>;
-  let loyaltyService: { earnPoints: jest.Mock; redeemPoints: jest.Mock; notifyLowBalanceIfNeeded: jest.Mock };
+  let loyaltyService: {
+    earnPoints: jest.Mock;
+    redeemPoints: jest.Mock;
+    notifyLowBalanceIfNeeded: jest.Mock;
+  };
 
   beforeEach(async () => {
     prisma = makePrismaFake();

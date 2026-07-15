@@ -228,7 +228,10 @@ export class LoyaltyService {
         : [];
 
     const earnMap = new Map(
-      (earnedPerCustomer as any[]).map((r) => [r.customerId, r._sum.points ?? 0]),
+      (earnedPerCustomer as any[]).map((r) => [
+        r.customerId,
+        r._sum.points ?? 0,
+      ]),
     );
 
     return {

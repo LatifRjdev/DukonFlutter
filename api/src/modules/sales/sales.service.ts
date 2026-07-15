@@ -413,7 +413,10 @@ export class SalesService {
     void this.maybeNotifyBigSale(storeId, result);
 
     if (dto.customerId && dto.redemptionPoints && dto.redemptionPoints > 0) {
-      void this.loyaltyService.notifyLowBalanceIfNeeded(dto.customerId, storeId);
+      void this.loyaltyService.notifyLowBalanceIfNeeded(
+        dto.customerId,
+        storeId,
+      );
     }
 
     return result;

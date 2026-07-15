@@ -35,10 +35,7 @@ function makePrismaFake() {
       let results = Array.from(settings.values()).filter((s) => {
         if (where?.isEnabled !== undefined && s.isEnabled !== where.isEnabled)
           return false;
-        if (
-          where?.birthdayDiscount?.not === null &&
-          s.birthdayDiscount == null
-        )
+        if (where?.birthdayDiscount?.not === null && s.birthdayDiscount == null)
           return false;
         return true;
       });
@@ -295,7 +292,10 @@ describe('LoyaltyService', () => {
           LoyaltyService,
           { provide: PrismaService, useValue: prisma },
           { provide: TelegramService, useValue: fakeTelegram },
-          { provide: NotificationsService, useValue: { sendToStoreUsers: jest.fn() } },
+          {
+            provide: NotificationsService,
+            useValue: { sendToStoreUsers: jest.fn() },
+          },
         ],
       }).compile();
       const svc = mod.get(LoyaltyService);
@@ -335,7 +335,10 @@ describe('LoyaltyService', () => {
           LoyaltyService,
           { provide: PrismaService, useValue: prisma },
           { provide: TelegramService, useValue: fakeTelegram },
-          { provide: NotificationsService, useValue: { sendToStoreUsers: jest.fn() } },
+          {
+            provide: NotificationsService,
+            useValue: { sendToStoreUsers: jest.fn() },
+          },
         ],
       }).compile();
       const svc = mod.get(LoyaltyService);
@@ -509,7 +512,11 @@ describe('LoyaltyService', () => {
     });
 
     it('should call sendToStoreUsers once per store after expiring points', async () => {
-      prisma._customers.set('cust-1', { id: 'cust-1', storeId: 'store-1', loyaltyPoints: 100 });
+      prisma._customers.set('cust-1', {
+        id: 'cust-1',
+        storeId: 'store-1',
+        loyaltyPoints: 100,
+      });
       const earnTx = {
         id: 'earn-1',
         type: 'EARN',
@@ -598,9 +605,7 @@ describe('LoyaltyService', () => {
   describe('sendBirthdayPushes', () => {
     function todayBirthday(): Date {
       const today = new Date();
-      return new Date(
-        Date.UTC(1990, today.getUTCMonth(), today.getUTCDate()),
-      );
+      return new Date(Date.UTC(1990, today.getUTCMonth(), today.getUTCDate()));
     }
 
     function otherDayBirthday(): Date {
