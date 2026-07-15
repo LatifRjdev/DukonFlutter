@@ -134,7 +134,7 @@ export class StoresService {
     const settings = (store.settings as Record<string, any>) ?? {};
     const template =
       settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
-    return { receiptTemplate: template };
+    return template;
   }
 
   async updateReceiptTemplate(storeId: string, dto: ReceiptTemplateDto) {
@@ -158,9 +158,9 @@ export class StoresService {
       select: { settings: true },
     });
 
-    return updated.then((s) => ({
-      receiptTemplate: (s.settings as Record<string, any>)['receiptTemplate'],
-    }));
+    return updated.then(
+      (s) => (s.settings as Record<string, any>)['receiptTemplate'],
+    );
   }
 
   private defaultReceiptTemplate() {

@@ -205,11 +205,12 @@ describe('StoresService', () => {
         name: 'X',
       } as any);
       const result = await service.getReceiptTemplate(created.id);
-      expect(result.receiptTemplate).toMatchObject({
+      expect(result).toMatchObject({
         footer: 'Thank you for your purchase!',
         showLogo: true,
         showBarcode: true,
       });
+      expect((result as any).receiptTemplate).toBeUndefined();
     });
 
     it('should merge new fields with existing template fields when updating receipt template', async () => {
@@ -226,7 +227,7 @@ describe('StoresService', () => {
         header: 'Welcome',
       } as any);
 
-      expect(result.receiptTemplate).toMatchObject({
+      expect(result).toMatchObject({
         header: 'Welcome',
         footer: 'See you soon',
         showLogo: false,
