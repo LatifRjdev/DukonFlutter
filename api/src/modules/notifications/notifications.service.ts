@@ -128,6 +128,39 @@ export class NotificationsService {
     }
   }
 
+  /** Send push to every owner and staff member of a store. Never throws. */
+  async sendToStoreUsers(
+    storeId: string,
+    title: string,
+    body: string,
+    type: string,
+  ): Promise<void> {
+    try {
+      const [store, staff] = await Promise.all([
+        this.prisma.store.findUnique({
+          where: { id: storeId },
+          select: { ownerId: true },
+        }),
+        this.prisma.staff.findMany({
+          where: { storeId },
+          select: { userId: true },
+        }),
+      ]);
+      const userIds = [
+        ...new Set(
+          [store?.ownerId, ...staff.map((s) => s.userId)].filter(
+            (id): id is string => !!id,
+          ),
+        ),
+      ];
+      await Promise.all(
+        userIds.map((uid) => this.sendPush(uid, title, body, type, storeId)),
+      );
+    } catch (err) {
+      this.logger.error(`sendToStoreUsers failed for store ${storeId}`, err);
+    }
+  }
+
   /** Save or update an FCM device token for the current user. */
   async saveFcmToken(
     userId: string,
