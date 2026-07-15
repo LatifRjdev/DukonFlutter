@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
 import { ZakatService } from './zakat.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
