@@ -561,27 +561,16 @@ describe('ZakatService', () => {
       } as any);
     };
 
-    it('rejects when client zakatDue diverges > 0.5% from server calc', async () => {
+    it('should accept any client zakatDue without validation and persist the server-calculated value', async () => {
       await seedAboveNisab();
-      // Server will compute zakatDue ≈ 25; client claims 200.
-      await expect(
-        service.createPayment(
-          'store-A',
-          { amount: 200, zakatDue: 200 } as any,
-          'user-42',
-        ),
-      ).rejects.toBeInstanceOf(BadRequestException);
-    });
-
-    it('accepts when client zakatDue is within 0.5% of server calc', async () => {
-      await seedAboveNisab();
-      // Server: 25.00; client: 25.05 → 0.2% off, within tolerance.
+      // Server computes zakatDue ≈ 25; client sends a wildly different value.
+      // Must NOT throw — server ignores the client claim and stores its own.
       const payment = await service.createPayment(
         'store-A',
-        { amount: 25.05, zakatDue: 25.05 } as any,
+        { amount: 200, zakatDue: 200 } as any,
         'user-42',
       );
-      // Server-trusted zakatDue is what we persist, NOT the client claim.
+      // Server-trusted zakatDue is persisted, NOT the client claim.
       expect(num(payment.zakatDue)).toBeCloseTo(25, 6);
     });
 

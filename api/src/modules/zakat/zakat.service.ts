@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -14,11 +14,6 @@ import * as Sentry from '@sentry/nestjs';
 const HAUL_DAYS = 354;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-// Z-P1-1: max permitted divergence between client-supplied
-// `zakatDue` and server-recomputed value. Allows for the small
-// race window where settings or stock changed between the
-// client's `calculate()` request and its `createPayment()` POST.
-const ZAKAT_DUE_TOLERANCE = new Decimal('0.005'); // 0.5%
 
 @Injectable()
 export class ZakatService {
@@ -227,37 +222,9 @@ export class ZakatService {
     dto: CreateZakatPaymentDto,
     userId: string,
   ) {
-    // Z-P1-1: re-derive zakatDue server-side from the same
-    // calculate() the client used. Client-supplied values are
-    // accepted only as a sanity check — if they diverge by more
-    // than 0.5% from the server we reject, since that signals
-    // either tampering or a bad client.
     const calc = await this.calculate(storeId);
     const serverZakatDue = calc.zakatDue;
     const serverTotalAssets = calc.totalAssets;
-
-    const clientZakatDueRaw = dto.zakatDue ?? dto.amount;
-    const clientZakatDue = new Decimal(clientZakatDueRaw);
-
-    let dueDiff: Decimal;
-    if (serverZakatDue.eq(0)) {
-      // Server says no zakat due. Reject any non-trivial client
-      // claim outright — no tolerance — since 0.5% of 0 is 0.
-      dueDiff = clientZakatDue.abs();
-    } else {
-      dueDiff = clientZakatDue
-        .sub(serverZakatDue)
-        .abs()
-        .div(serverZakatDue.abs());
-    }
-
-    if (dueDiff.gt(ZAKAT_DUE_TOLERANCE)) {
-      throw new BadRequestException(
-        `Client-supplied zakatDue (${clientZakatDue.toString()}) diverges from ` +
-          `server calculation (${serverZakatDue.toString()}) by more than 0.5%. ` +
-          `Re-fetch /calculate before retrying.`,
-      );
-    }
 
     const data: Prisma.ZakatPaymentUncheckedCreateInput = {
       storeId,
