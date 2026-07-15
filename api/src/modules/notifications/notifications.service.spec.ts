@@ -43,7 +43,11 @@ type FcmTokenRow = {
   platform: string;
 };
 
-type StoreRow = { id: string; ownerId?: string; settings: Record<string, unknown> };
+type StoreRow = {
+  id: string;
+  ownerId?: string;
+  settings: Record<string, unknown>;
+};
 
 type StaffRow = { id: string; storeId: string; userId: string };
 
@@ -333,31 +337,63 @@ describe('NotificationsService', () => {
 
   describe('sendToStoreUsers', () => {
     it('should send push to owner and all staff members (no duplicates) when they are distinct users', async () => {
-      sendEachForMulticast.mockResolvedValue({ successCount: 1, responses: [{ success: true }] });
-      prisma.__stores.set('store-X', { id: 'store-X', ownerId: 'owner-1', settings: {} });
-      await prisma.staff.create({ data: { storeId: 'store-X', userId: 'staff-1' } });
-      await prisma.staff.create({ data: { storeId: 'store-X', userId: 'staff-2' } });
+      sendEachForMulticast.mockResolvedValue({
+        successCount: 1,
+        responses: [{ success: true }],
+      });
+      prisma.__stores.set('store-X', {
+        id: 'store-X',
+        ownerId: 'owner-1',
+        settings: {},
+      });
+      await prisma.staff.create({
+        data: { storeId: 'store-X', userId: 'staff-1' },
+      });
+      await prisma.staff.create({
+        data: { storeId: 'store-X', userId: 'staff-2' },
+      });
 
       const service = await buildService();
       await service.saveFcmToken('owner-1', 'tok-o1', 'ANDROID');
       await service.saveFcmToken('staff-1', 'tok-s1', 'ANDROID');
       await service.saveFcmToken('staff-2', 'tok-s2', 'ANDROID');
 
-      await service.sendToStoreUsers('store-X', '🎂 Birthday', 'Alice', 'LOYALTY_BIRTHDAY');
+      await service.sendToStoreUsers(
+        'store-X',
+        '🎂 Birthday',
+        'Alice',
+        'LOYALTY_BIRTHDAY',
+      );
 
-      const recipients = Array.from(prisma.__notifications.values()).map((n) => n.userId).sort();
+      const recipients = Array.from(prisma.__notifications.values())
+        .map((n) => n.userId)
+        .sort();
       expect(recipients).toEqual(['owner-1', 'staff-1', 'staff-2']);
     });
 
     it('should deduplicate when owner is also listed as a staff member', async () => {
-      sendEachForMulticast.mockResolvedValue({ successCount: 1, responses: [{ success: true }] });
-      prisma.__stores.set('store-Y', { id: 'store-Y', ownerId: 'user-A', settings: {} });
-      await prisma.staff.create({ data: { storeId: 'store-Y', userId: 'user-A' } });
+      sendEachForMulticast.mockResolvedValue({
+        successCount: 1,
+        responses: [{ success: true }],
+      });
+      prisma.__stores.set('store-Y', {
+        id: 'store-Y',
+        ownerId: 'user-A',
+        settings: {},
+      });
+      await prisma.staff.create({
+        data: { storeId: 'store-Y', userId: 'user-A' },
+      });
 
       const service = await buildService();
       await service.saveFcmToken('user-A', 'tok-a', 'ANDROID');
 
-      await service.sendToStoreUsers('store-Y', 'Title', 'Body', 'LOYALTY_EXPIRY');
+      await service.sendToStoreUsers(
+        'store-Y',
+        'Title',
+        'Body',
+        'LOYALTY_EXPIRY',
+      );
 
       expect(prisma.__notifications.size).toBe(1);
       const row = Array.from(prisma.__notifications.values())[0];
@@ -365,13 +401,25 @@ describe('NotificationsService', () => {
     });
 
     it('should not throw when store has no registered FCM tokens', async () => {
-      sendEachForMulticast.mockResolvedValue({ successCount: 0, responses: [] });
-      prisma.__stores.set('store-Z', { id: 'store-Z', ownerId: 'owner-Z', settings: {} });
+      sendEachForMulticast.mockResolvedValue({
+        successCount: 0,
+        responses: [],
+      });
+      prisma.__stores.set('store-Z', {
+        id: 'store-Z',
+        ownerId: 'owner-Z',
+        settings: {},
+      });
 
       const service = await buildService();
 
       await expect(
-        service.sendToStoreUsers('store-Z', 'Title', 'Body', 'LOYALTY_LOW_BALANCE'),
+        service.sendToStoreUsers(
+          'store-Z',
+          'Title',
+          'Body',
+          'LOYALTY_LOW_BALANCE',
+        ),
       ).resolves.toBeUndefined();
 
       // Notification row is still persisted even without FCM tokens
@@ -407,6 +455,45 @@ describe('NotificationsService', () => {
 
       await service.markAsRead('store-A', id);
       expect(prisma.__notifications.get(id)!.read).toBe(true);
+    });
+  });
+
+  describe('getNotificationSettings', () => {
+    it('should return all-true defaults when store has no notification settings', async () => {
+      prisma.__stores.set('store-A', { id: 'store-A', settings: {} });
+      const service = await buildService();
+      const result = await service.getNotificationSettings('store-A');
+      expect(result).toEqual({
+        lowStockAlerts: true,
+        newSaleAlerts: true,
+        shiftClosedAlerts: true,
+        deliveryCompletedAlerts: true,
+        debtReminderAlerts: true,
+      });
+    });
+
+    it('should return saved values when notification settings exist in store', async () => {
+      prisma.__stores.set('store-B', {
+        id: 'store-B',
+        settings: {
+          notifications: {
+            lowStockAlerts: false,
+            newSaleAlerts: true,
+            shiftClosedAlerts: false,
+            deliveryCompletedAlerts: true,
+            debtReminderAlerts: false,
+          },
+        },
+      });
+      const service = await buildService();
+      const result = await service.getNotificationSettings('store-B');
+      expect(result).toEqual({
+        lowStockAlerts: false,
+        newSaleAlerts: true,
+        shiftClosedAlerts: false,
+        deliveryCompletedAlerts: true,
+        debtReminderAlerts: false,
+      });
     });
   });
 });

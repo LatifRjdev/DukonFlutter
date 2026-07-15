@@ -216,6 +216,22 @@ export class NotificationsService {
     });
   }
 
+  /** Retrieve current notification preferences for a store, applying all-true defaults. */
+  async getNotificationSettings(storeId: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { id: storeId },
+      select: { settings: true },
+    });
+    const notif = ((store?.settings as any)?.notifications) ?? {};
+    return {
+      lowStockAlerts:          notif.lowStockAlerts          ?? true,
+      newSaleAlerts:           notif.newSaleAlerts            ?? true,
+      shiftClosedAlerts:       notif.shiftClosedAlerts        ?? true,
+      deliveryCompletedAlerts: notif.deliveryCompletedAlerts  ?? true,
+      debtReminderAlerts:      notif.debtReminderAlerts       ?? true,
+    };
+  }
+
   /** Persist notification preferences into store.settings JSON. */
   async saveNotificationSettings(
     storeId: string,

@@ -78,6 +78,16 @@ export class NotificationsController {
   }
 
   /**
+   * Fetch which notification types are enabled for this store.
+   */
+  @Get('stores/:storeId/notifications/settings')
+  @UseGuards(StoreAccessGuard)
+  @ApiOperation({ summary: 'Get notification preferences for store' })
+  getSettings(@Param('storeId') storeId: string) {
+    return this.notificationsService.getNotificationSettings(storeId);
+  }
+
+  /**
    * Save which notification types are enabled for this store.
    * Stored in store.settings.notifications JSON.
    */
