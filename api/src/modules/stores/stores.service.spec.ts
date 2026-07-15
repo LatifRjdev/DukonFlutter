@@ -193,6 +193,10 @@ describe('StoresService', () => {
       const result: any = await service.softDelete(created.id);
       expect(result.isActive).toBe(false);
     });
+
+    it('should throw NotFoundException when store does not exist', async () => {
+      await expect(service.softDelete('nonexistent-id')).rejects.toBeInstanceOf(NotFoundException);
+    });
   });
 
   describe('receipt template settings', () => {

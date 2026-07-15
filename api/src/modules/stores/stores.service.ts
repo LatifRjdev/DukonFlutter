@@ -116,6 +116,8 @@ export class StoresService {
   }
 
   async softDelete(storeId: string) {
+    const store = await this.prisma.store.findUnique({ where: { id: storeId } });
+    if (!store) throw new NotFoundException('Store not found');
     return this.prisma.store.update({
       where: { id: storeId },
       data: { isActive: false },

@@ -68,6 +68,7 @@ export class StoresController {
   @UseGuards(StoreAccessGuard, PermissionsGuard)
   @Permissions('store.manage')
   @ApiOperation({ summary: 'Soft-delete store (sets isActive=false)' })
+  @ApiResponse({ status: 200, type: StoreResponseDto })
   async remove(@Param('storeId') storeId: string) {
     return this.storesService.softDelete(storeId);
   }
