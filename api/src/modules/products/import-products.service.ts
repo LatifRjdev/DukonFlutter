@@ -45,6 +45,9 @@ export class ImportProductsService {
   async parseFile(
     buffer: Buffer,
   ): Promise<{ rows: ParsedRow[]; errors: RowError[] }> {
+    if (!buffer || buffer.length === 0) {
+      throw new BadRequestException('Файл пустой или повреждён');
+    }
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer as any);
 
