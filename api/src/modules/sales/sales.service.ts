@@ -412,6 +412,10 @@ export class SalesService {
     // flag is off and FCM is unavailable.
     void this.maybeNotifyBigSale(storeId, result);
 
+    if (dto.customerId && dto.redemptionPoints && dto.redemptionPoints > 0) {
+      void this.loyaltyService.notifyLowBalanceIfNeeded(dto.customerId, storeId);
+    }
+
     return result;
   }
 

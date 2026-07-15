@@ -211,13 +211,14 @@ function fakeRedis(): Pick<RedisService, 'incr'> {
 describe('SalesService', () => {
   let service: SalesService;
   let prisma: ReturnType<typeof makePrismaFake>;
-  let loyaltyService: { earnPoints: jest.Mock; redeemPoints: jest.Mock };
+  let loyaltyService: { earnPoints: jest.Mock; redeemPoints: jest.Mock; notifyLowBalanceIfNeeded: jest.Mock };
 
   beforeEach(async () => {
     prisma = makePrismaFake();
     loyaltyService = {
       earnPoints: jest.fn(async () => undefined),
       redeemPoints: jest.fn(async () => undefined),
+      notifyLowBalanceIfNeeded: jest.fn(async () => undefined),
     };
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -685,6 +686,7 @@ describe('SalesService — big-sale notification (USD store)', () => {
           useValue: {
             earnPoints: jest.fn(async () => undefined),
             redeemPoints: jest.fn(async () => undefined),
+            notifyLowBalanceIfNeeded: jest.fn(async () => undefined),
           },
         },
       ],

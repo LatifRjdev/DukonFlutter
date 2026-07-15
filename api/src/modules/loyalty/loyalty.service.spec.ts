@@ -507,6 +507,89 @@ describe('LoyaltyService', () => {
 
       expect(result).toEqual({ expired: 0, customersAffected: 0 });
     });
+
+    it('should call sendToStoreUsers once per store after expiring points', async () => {
+      prisma._customers.set('cust-1', { id: 'cust-1', storeId: 'store-1', loyaltyPoints: 100 });
+      const earnTx = {
+        id: 'earn-1',
+        type: 'EARN',
+        points: 100,
+        expiresAt: new Date(Date.now() - 1000),
+        customerId: 'cust-1',
+        storeId: 'store-1',
+        createdAt: new Date(),
+      };
+      prisma._txs.set('earn-1', earnTx);
+      prisma.loyaltyTransaction.findMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([earnTx]);
+
+      await service.expireOverduePoints();
+
+      // Allow fire-and-forget microtasks to flush
+      await Promise.resolve();
+
+      expect(sendToStoreUsers).toHaveBeenCalledWith(
+        'store-1',
+        '⏳ Баллы истекли',
+        expect.stringContaining('1'),
+        'LOYALTY_EXPIRY',
+      );
+    });
+
+    it('should not call sendToStoreUsers when no points expired', async () => {
+      prisma.loyaltyTransaction.findMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([]);
+
+      await service.expireOverduePoints();
+      await Promise.resolve();
+
+      expect(sendToStoreUsers).not.toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // notifyLowBalanceIfNeeded
+  // -------------------------------------------------------------------------
+  describe('notifyLowBalanceIfNeeded', () => {
+    it('should call sendToStoreUsers when customer balance is below threshold', async () => {
+      prisma._customers.set('cust-low', {
+        id: 'cust-low',
+        storeId: 'store-1',
+        name: 'Alice',
+        loyaltyPoints: 30,
+      });
+
+      await service.notifyLowBalanceIfNeeded('cust-low', 'store-1');
+
+      expect(sendToStoreUsers).toHaveBeenCalledWith(
+        'store-1',
+        '📉 Низкий баланс',
+        expect.stringContaining('Alice'),
+        'LOYALTY_LOW_BALANCE',
+      );
+    });
+
+    it('should not call sendToStoreUsers when customer balance is at or above threshold', async () => {
+      prisma._customers.set('cust-ok', {
+        id: 'cust-ok',
+        storeId: 'store-1',
+        name: 'Bob',
+        loyaltyPoints: 50,
+      });
+
+      await service.notifyLowBalanceIfNeeded('cust-ok', 'store-1');
+
+      expect(sendToStoreUsers).not.toHaveBeenCalled();
+    });
+
+    it('should not throw when customer does not exist', async () => {
+      await expect(
+        service.notifyLowBalanceIfNeeded('missing-cust', 'store-1'),
+      ).resolves.toBeUndefined();
+      expect(sendToStoreUsers).not.toHaveBeenCalled();
+    });
   });
 
   // -------------------------------------------------------------------------

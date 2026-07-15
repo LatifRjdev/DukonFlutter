@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -25,8 +25,12 @@ type PrismaTx = Omit<
   '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
 >;
 
+const LOW_BALANCE_THRESHOLD = 50;
+
 @Injectable()
 export class LoyaltyService {
+  private readonly logger = new Logger(LoyaltyService.name);
+
   constructor(
     private prisma: PrismaService,
     private telegram: TelegramService,
@@ -322,9 +326,50 @@ export class LoyaltyService {
       }
     });
 
+    const storeCustomerCounts = new Map<string, Set<string>>();
+    for (const earn of overdueEarns) {
+      if (!storeCustomerCounts.has(earn.storeId)) {
+        storeCustomerCounts.set(earn.storeId, new Set());
+      }
+      storeCustomerCounts.get(earn.storeId)!.add(earn.customerId);
+    }
+    for (const [sid, customerSet] of storeCustomerCounts) {
+      void this.notifications.sendToStoreUsers(
+        sid,
+        '⏳ Баллы истекли',
+        `У ${customerSet.size} клиентов истекли баллы лояльности`,
+        'LOYALTY_EXPIRY',
+      );
+    }
+
     return {
       expired: overdueEarns.length,
       customersAffected: affectedCustomers.size,
     };
+  }
+
+  async notifyLowBalanceIfNeeded(
+    customerId: string,
+    storeId: string,
+  ): Promise<void> {
+    try {
+      const customer = await this.prisma.customer.findUnique({
+        where: { id: customerId },
+        select: { loyaltyPoints: true, name: true },
+      });
+      if (!customer) return;
+      if (customer.loyaltyPoints >= LOW_BALANCE_THRESHOLD) return;
+      void this.notifications.sendToStoreUsers(
+        storeId,
+        '📉 Низкий баланс',
+        `${customer.name}: ${customer.loyaltyPoints} баллов`,
+        'LOYALTY_LOW_BALANCE',
+      );
+    } catch (err) {
+      this.logger.error(
+        `notifyLowBalanceIfNeeded failed for customer ${customerId}`,
+        err,
+      );
+    }
   }
 }
