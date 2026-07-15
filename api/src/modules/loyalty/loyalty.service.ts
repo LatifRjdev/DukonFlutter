@@ -3,6 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { UpdateLoyaltySettingsDto } from './dto/update-loyalty-settings.dto';
 
 export function isBirthday(birthday: Date): boolean {
@@ -29,6 +30,7 @@ export class LoyaltyService {
   constructor(
     private prisma: PrismaService,
     private telegram: TelegramService,
+    private notifications: NotificationsService,
   ) {}
 
   async getSettings(storeId: string) {
@@ -239,6 +241,32 @@ export class LoyaltyService {
         totalEarned: earnMap.get(c.id) ?? 0,
       })),
     };
+  }
+
+  @Cron('0 9 * * *')
+  async sendBirthdayPushes(): Promise<void> {
+    const enabledStores = await this.prisma.loyaltySettings.findMany({
+      where: { isEnabled: true, birthdayDiscount: { not: null } },
+      select: { storeId: true, birthdayDiscount: true },
+    });
+
+    for (const setting of enabledStores) {
+      const allCustomers = await this.prisma.customer.findMany({
+        where: { storeId: setting.storeId, birthday: { not: null } },
+        select: { id: true, name: true, birthday: true },
+      });
+      const birthdayCustomers = allCustomers.filter((c) =>
+        isBirthday(c.birthday!),
+      );
+      for (const c of birthdayCustomers) {
+        void this.notifications.sendToStoreUsers(
+          setting.storeId,
+          '🎂 День рождения',
+          `${c.name} — скидка ${setting.birthdayDiscount}%`,
+          'LOYALTY_BIRTHDAY',
+        );
+      }
+    }
   }
 
   @Cron('0 2 * * *')

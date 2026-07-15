@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { LoyaltyService, isBirthday } from './loyalty.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 // ---------------------------------------------------------------------------
 // Map-based Prisma fake
@@ -27,7 +28,31 @@ function makePrismaFake() {
       Object.assign(s, data);
       return s;
     }),
-    findUnique: jest.fn(async ({ where }: any) => settings.get(where.storeId) ?? null),
+    findUnique: jest.fn(
+      async ({ where }: any) => settings.get(where.storeId) ?? null,
+    ),
+    findMany: jest.fn(async ({ where, select }: any = {}) => {
+      let results = Array.from(settings.values()).filter((s) => {
+        if (where?.isEnabled !== undefined && s.isEnabled !== where.isEnabled)
+          return false;
+        if (
+          where?.birthdayDiscount?.not === null &&
+          s.birthdayDiscount == null
+        )
+          return false;
+        return true;
+      });
+      if (select) {
+        results = results.map((s) => {
+          const out: any = {};
+          for (const k of Object.keys(select)) {
+            if (select[k]) out[k] = s[k];
+          }
+          return out;
+        });
+      }
+      return results;
+    }),
   };
 
   const customer = {
@@ -45,21 +70,31 @@ function makePrismaFake() {
     count: jest.fn(async ({ where }: any = {}) => {
       return Array.from(customers.values()).filter((c) => {
         if (where?.storeId && c.storeId !== where.storeId) return false;
-        if (where?.loyaltyPoints?.gt !== undefined && !(c.loyaltyPoints > where.loyaltyPoints.gt)) return false;
+        if (
+          where?.loyaltyPoints?.gt !== undefined &&
+          !(c.loyaltyPoints > where.loyaltyPoints.gt)
+        )
+          return false;
         return true;
       }).length;
     }),
     findMany: jest.fn(async ({ where, orderBy, take, select }: any = {}) => {
       let results = Array.from(customers.values()).filter((c) => {
         if (where?.storeId && c.storeId !== where.storeId) return false;
-        if (where?.loyaltyPoints?.gt !== undefined && !(c.loyaltyPoints > where.loyaltyPoints.gt)) return false;
+        if (
+          where?.loyaltyPoints?.gt !== undefined &&
+          !(c.loyaltyPoints > where.loyaltyPoints.gt)
+        )
+          return false;
         return true;
       });
       if (take !== undefined) results = results.slice(0, take);
       if (select) {
         results = results.map((c) => {
           const out: any = {};
-          for (const k of Object.keys(select)) { if (select[k]) out[k] = c[k]; }
+          for (const k of Object.keys(select)) {
+            if (select[k]) out[k] = c[k];
+          }
           return out;
         });
       }
@@ -146,14 +181,26 @@ describe('isBirthday (pure helper)', () => {
 describe('LoyaltyService', () => {
   let service: LoyaltyService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let sendToStoreUsers: jest.Mock;
 
   beforeEach(async () => {
     prisma = makePrismaFake();
+    sendToStoreUsers = jest.fn().mockResolvedValue(undefined);
     const moduleRef = await Test.createTestingModule({
       providers: [
         LoyaltyService,
         { provide: PrismaService, useValue: prisma },
-        { provide: TelegramService, useValue: { sendMessage: jest.fn().mockResolvedValue(undefined), getStoreChatId: jest.fn().mockResolvedValue(null) } },
+        {
+          provide: TelegramService,
+          useValue: {
+            sendMessage: jest.fn().mockResolvedValue(undefined),
+            getStoreChatId: jest.fn().mockResolvedValue(null),
+          },
+        },
+        {
+          provide: NotificationsService,
+          useValue: { sendToStoreUsers },
+        },
       ],
     }).compile();
     service = moduleRef.get(LoyaltyService);
@@ -248,6 +295,7 @@ describe('LoyaltyService', () => {
           LoyaltyService,
           { provide: PrismaService, useValue: prisma },
           { provide: TelegramService, useValue: fakeTelegram },
+          { provide: NotificationsService, useValue: { sendToStoreUsers: jest.fn() } },
         ],
       }).compile();
       const svc = mod.get(LoyaltyService);
@@ -287,6 +335,7 @@ describe('LoyaltyService', () => {
           LoyaltyService,
           { provide: PrismaService, useValue: prisma },
           { provide: TelegramService, useValue: fakeTelegram },
+          { provide: NotificationsService, useValue: { sendToStoreUsers: jest.fn() } },
         ],
       }).compile();
       const svc = mod.get(LoyaltyService);
@@ -378,7 +427,9 @@ describe('LoyaltyService', () => {
       const from = new Date('2026-01-01');
       const to = new Date('2026-01-31');
 
-      prisma.loyaltyTransaction.aggregate.mockResolvedValue({ _sum: { points: null } });
+      prisma.loyaltyTransaction.aggregate.mockResolvedValue({
+        _sum: { points: null },
+      });
       prisma.customer.count.mockResolvedValue(0);
       prisma.customer.findMany.mockResolvedValue([]);
       prisma.loyaltyTransaction.groupBy.mockResolvedValue([]);
@@ -455,6 +506,100 @@ describe('LoyaltyService', () => {
       const result = await service.expireOverduePoints();
 
       expect(result).toEqual({ expired: 0, customersAffected: 0 });
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // sendBirthdayPushes
+  // -------------------------------------------------------------------------
+  describe('sendBirthdayPushes', () => {
+    function todayBirthday(): Date {
+      const today = new Date();
+      return new Date(
+        Date.UTC(1990, today.getUTCMonth(), today.getUTCDate()),
+      );
+    }
+
+    function otherDayBirthday(): Date {
+      const today = new Date();
+      const otherMonth = (today.getUTCMonth() + 6) % 12;
+      return new Date(Date.UTC(1990, otherMonth, today.getUTCDate()));
+    }
+
+    it('should call sendToStoreUsers for each customer whose birthday is today', async () => {
+      prisma._settings.set('store-1', {
+        storeId: 'store-1',
+        isEnabled: true,
+        birthdayDiscount: 10,
+      });
+      prisma._customers.set('cust-a', {
+        id: 'cust-a',
+        storeId: 'store-1',
+        name: 'Alice',
+        birthday: todayBirthday(),
+        loyaltyPoints: 0,
+      });
+      prisma._customers.set('cust-b', {
+        id: 'cust-b',
+        storeId: 'store-1',
+        name: 'Bob',
+        birthday: todayBirthday(),
+        loyaltyPoints: 0,
+      });
+
+      await service.sendBirthdayPushes();
+
+      expect(sendToStoreUsers).toHaveBeenCalledTimes(2);
+      expect(sendToStoreUsers).toHaveBeenCalledWith(
+        'store-1',
+        '🎂 День рождения',
+        expect.stringContaining('Alice'),
+        'LOYALTY_BIRTHDAY',
+      );
+      expect(sendToStoreUsers).toHaveBeenCalledWith(
+        'store-1',
+        '🎂 День рождения',
+        expect.stringContaining('Bob'),
+        'LOYALTY_BIRTHDAY',
+      );
+    });
+
+    it('should not call sendToStoreUsers for customers whose birthday is not today', async () => {
+      prisma._settings.set('store-2', {
+        storeId: 'store-2',
+        isEnabled: true,
+        birthdayDiscount: 5,
+      });
+      prisma._customers.set('cust-c', {
+        id: 'cust-c',
+        storeId: 'store-2',
+        name: 'Carol',
+        birthday: otherDayBirthday(),
+        loyaltyPoints: 0,
+      });
+
+      await service.sendBirthdayPushes();
+
+      expect(sendToStoreUsers).not.toHaveBeenCalled();
+    });
+
+    it('should not call sendToStoreUsers for stores where loyalty is disabled', async () => {
+      prisma._settings.set('store-3', {
+        storeId: 'store-3',
+        isEnabled: false,
+        birthdayDiscount: 10,
+      });
+      prisma._customers.set('cust-d', {
+        id: 'cust-d',
+        storeId: 'store-3',
+        name: 'Dave',
+        birthday: todayBirthday(),
+        loyaltyPoints: 0,
+      });
+
+      await service.sendBirthdayPushes();
+
+      expect(sendToStoreUsers).not.toHaveBeenCalled();
     });
   });
 });
