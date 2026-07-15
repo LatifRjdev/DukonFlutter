@@ -187,6 +187,14 @@ describe('StoresService', () => {
     });
   });
 
+  describe('softDelete', () => {
+    it('should set isActive to false when softDelete is called', async () => {
+      const created: any = await service.create('owner-1', { name: 'Shop' } as any);
+      const result: any = await service.softDelete(created.id);
+      expect(result.isActive).toBe(false);
+    });
+  });
+
   describe('receipt template settings', () => {
     it('should return default receipt template when store has no custom template', async () => {
       const created: any = await service.create('owner-1', {

@@ -115,6 +115,13 @@ export class StoresService {
     return result;
   }
 
+  async softDelete(storeId: string) {
+    return this.prisma.store.update({
+      where: { id: storeId },
+      data: { isActive: false },
+    });
+  }
+
   async getReceiptTemplate(storeId: string) {
     const store = await this.prisma.store.findUnique({
       where: { id: storeId },

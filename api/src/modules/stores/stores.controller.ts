@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -61,6 +62,14 @@ export class StoresController {
   @ApiResponse({ status: 200, type: StoreResponseDto })
   async update(@Param('storeId') storeId: string, @Body() dto: UpdateStoreDto) {
     return this.storesService.update(storeId, dto);
+  }
+
+  @Delete(':storeId')
+  @UseGuards(StoreAccessGuard, PermissionsGuard)
+  @Permissions('store.manage')
+  @ApiOperation({ summary: 'Soft-delete store (sets isActive=false)' })
+  async remove(@Param('storeId') storeId: string) {
+    return this.storesService.softDelete(storeId);
   }
 
   @Get(':storeId/receipt-template')
