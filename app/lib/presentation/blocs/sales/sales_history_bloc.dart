@@ -21,9 +21,9 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
   Future<void> _onLoadRequested(
       SalesHistoryLoadRequested event, Emitter<SalesHistoryState> emit) async {
     _storeId = event.storeId;
+    final currentState = state;
     emit(SalesHistoryLoading());
     try {
-      final currentState = state;
       DateTime? dateFrom;
       DateTime? dateTo;
       String? paymentType;

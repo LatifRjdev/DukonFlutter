@@ -265,6 +265,10 @@ class AppRouter {
         builder: (context, state) => const SalesHistoryPage(),
       ),
       GoRoute(
+        path: '/sales/empty',
+        builder: (context, state) => const EmptySalesPage(),
+      ),
+      GoRoute(
         path: '/sales/:id',
         builder: (context, state) {
           final sale = state.extra as Sale;
@@ -277,10 +281,6 @@ class AppRouter {
           final sale = state.extra as Sale;
           return RefundPage(sale: sale);
         },
-      ),
-      GoRoute(
-        path: '/sales/empty',
-        builder: (context, state) => const EmptySalesPage(),
       ),
 
       // Stock
