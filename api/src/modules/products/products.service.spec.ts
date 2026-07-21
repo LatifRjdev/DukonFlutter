@@ -60,15 +60,21 @@ function makePrismaFake() {
         }
         return null;
       }),
-      findMany: jest.fn(async ({ where, skip = 0, take = 20 }: any = {}) => {
-        const all = Array.from(rows.values()).filter((r) => {
-          if (where?.storeId && r.storeId !== where.storeId) return false;
-          if (where?.categoryId && r.categoryId !== where.categoryId)
-            return false;
-          return true;
-        });
-        return all.slice(skip, skip + take);
-      }),
+      findMany: jest.fn(
+        async ({ where, skip = 0, take }: any = {}) => {
+          const all = Array.from(rows.values()).filter((r) => {
+            if (where?.storeId && r.storeId !== where.storeId) return false;
+            if (where?.categoryId && r.categoryId !== where.categoryId)
+              return false;
+            return true;
+          });
+          // take undefined (lowStock path fetches all candidates) means
+          // "return everything from skip onward".
+          return take === undefined
+            ? all.slice(skip)
+            : all.slice(skip, skip + take);
+        },
+      ),
       create: jest.fn(async ({ data }: any) => {
         const id = newId();
         const row: ProductRow = {
@@ -221,6 +227,117 @@ describe('ProductsService', () => {
       expect(page2.data).toHaveLength(2);
       expect(page1.data[0].id).not.toEqual(page2.data[0].id);
       expect(page1.totalPages).toBe(3);
+    });
+
+    describe('lowStock filter', () => {
+      it('should include a product when quantity <= minQuantity and quantity > 0', async () => {
+        const low = await service.create('store-A', {
+          name: 'Low',
+          sellPrice: 1,
+          quantity: 5,
+          minQuantity: 10,
+        } as CreateProductDto);
+
+        const result = await service.findAll('store-A', {
+          lowStock: true,
+          skip: 0,
+        } as any);
+
+        expect(result.data.map((p: any) => p.id)).toContain(low.id);
+      });
+
+      it('should exclude a product when quantity > minQuantity', async () => {
+        const healthy = await service.create('store-A', {
+          name: 'Healthy',
+          sellPrice: 1,
+          quantity: 50,
+          minQuantity: 10,
+        } as CreateProductDto);
+
+        const result = await service.findAll('store-A', {
+          lowStock: true,
+          skip: 0,
+        } as any);
+
+        expect(result.data.map((p: any) => p.id)).not.toContain(healthy.id);
+        expect(result.total).toBe(0);
+      });
+
+      it('should exclude a product when quantity is 0 (out-of-stock is not low-stock)', async () => {
+        const outOfStock = await service.create('store-A', {
+          name: 'OutOfStock',
+          sellPrice: 1,
+          quantity: 0,
+          minQuantity: 10,
+        } as CreateProductDto);
+
+        const result = await service.findAll('store-A', {
+          lowStock: true,
+          skip: 0,
+        } as any);
+
+        expect(result.data.map((p: any) => p.id)).not.toContain(
+          outOfStock.id,
+        );
+        expect(result.total).toBe(0);
+      });
+
+      it('should combine with categoryId filter when both are set', async () => {
+        const lowInCategory = await service.create('store-A', {
+          name: 'LowInCategory',
+          sellPrice: 1,
+          quantity: 2,
+          minQuantity: 10,
+          categoryId: 'cat-1',
+        } as CreateProductDto);
+        await service.create('store-A', {
+          name: 'LowInOtherCategory',
+          sellPrice: 1,
+          quantity: 2,
+          minQuantity: 10,
+          categoryId: 'cat-2',
+        } as CreateProductDto);
+
+        const result = await service.findAll('store-A', {
+          lowStock: true,
+          categoryId: 'cat-1',
+          skip: 0,
+        } as any);
+
+        expect(result.data.map((p: any) => p.id)).toEqual([
+          lowInCategory.id,
+        ]);
+        expect(result.total).toBe(1);
+      });
+
+      it('should compute totalPages from the post-filter count, not the pre-filter candidate count', async () => {
+        for (let i = 0; i < 3; i++) {
+          await service.create('store-A', {
+            name: `Low${i}`,
+            sellPrice: 1,
+            quantity: 1,
+            minQuantity: 10,
+          } as CreateProductDto);
+        }
+        for (let i = 0; i < 5; i++) {
+          await service.create('store-A', {
+            name: `Healthy${i}`,
+            sellPrice: 1,
+            quantity: 50,
+            minQuantity: 10,
+          } as CreateProductDto);
+        }
+
+        const result = await service.findAll('store-A', {
+          lowStock: true,
+          limit: 2,
+          skip: 0,
+        } as any);
+
+        expect(result.total).toBe(3);
+        expect(result.totalPages).toBe(2);
+        expect(result.data).toHaveLength(2);
+      });
     });
   });
 

@@ -84,28 +84,53 @@ export class ProductsService {
     if (query.categoryId) where.categoryId = query.categoryId;
     if (query.inStock === true) where.quantity = { gt: 0 };
     if (query.inStock === false) where.quantity = { lte: 0 };
-    if (query.lowStock) {
-      where.AND = [
-        { quantity: { gt: 0 } },
-        { quantity: { lte: this.prisma.$queryRaw`"minQuantity"` as any } },
-      ];
-      // Simplified: use raw where for lowStock
-      where.AND = undefined;
-      where.quantity = { gt: 0 };
-    }
 
     const orderBy: Prisma.ProductOrderByWithRelationInput = {};
     if (query.sortBy) {
       (orderBy as any)[query.sortBy] = query.sortOrder || 'desc';
+    }
+    const effectiveOrderBy = Object.keys(orderBy).length
+      ? orderBy
+      : { createdAt: 'desc' as const };
+    const limit = query.limit || 20;
+
+    // "Low stock" means quantity <= minQuantity (and quantity > 0, since an
+    // out-of-stock product is a distinct concept handled by inStock=false).
+    // That's a column-vs-column comparison on the same row, which Prisma's
+    // query builder cannot express in `where`. There's no existing
+    // $queryRaw precedent in this module/module set, so rather than bolt on
+    // raw SQL for this one filter, fetch rows matching every other filter
+    // normally, apply the low-stock predicate in application code, and
+    // paginate the filtered result ourselves. Store catalogs are bounded in
+    // size, so loading the filtered set before paginating is fine here.
+    if (query.lowStock) {
+      const candidates = await this.prisma.product.findMany({
+        where,
+        include: { category: { select: { id: true, name: true } } },
+        orderBy: effectiveOrderBy,
+      });
+      const filtered = candidates.filter(
+        (p: any) => p.quantity > 0 && p.quantity <= p.minQuantity,
+      );
+      const total = filtered.length;
+      const data = filtered.slice(query.skip, query.skip + limit);
+
+      return {
+        data,
+        total,
+        page: query.page || 1,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
     }
 
     const [data, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
         include: { category: { select: { id: true, name: true } } },
-        orderBy: Object.keys(orderBy).length ? orderBy : { createdAt: 'desc' },
+        orderBy: effectiveOrderBy,
         skip: query.skip,
-        take: query.limit || 20,
+        take: limit,
       }),
       this.prisma.product.count({ where }),
     ]);
@@ -114,8 +139,8 @@ export class ProductsService {
       data,
       total,
       page: query.page || 1,
-      limit: query.limit || 20,
-      totalPages: Math.ceil(total / (query.limit || 20)),
+      limit,
+      totalPages: Math.ceil(total / limit),
     };
   }
 
