@@ -78,9 +78,35 @@ export function validateEnvBeforeBoot(): void {
           'is a CSRF vector.',
       );
     }
+    checkTelegramWebhookSecret(process.env.TELEGRAM_WEBHOOK_SECRET);
   }
 
   logger.log('Pre-boot config validation OK');
+}
+
+/**
+ * TelegramController.handleWebhook accepts ALL requests when
+ * TELEGRAM_WEBHOOK_SECRET is unset (documented dev-mode fallback — see
+ * telegram.controller.ts). That's fine locally, but in production it means
+ * anyone can POST forged Telegram Update payloads and, e.g., rebind a
+ * customer's or store owner's telegramChatId to an attacker-controlled
+ * chat, silently redirecting future receipts/notifications. Fail closed at
+ * boot instead of failing open per-request.
+ */
+function checkTelegramWebhookSecret(value: string | undefined): void {
+  if (!value || value.trim() === '') {
+    throw new Error(
+      'TELEGRAM_WEBHOOK_SECRET is required in production — without it the ' +
+        '/telegram/webhook endpoint accepts unauthenticated requests. See ' +
+        'api/.env.example. If this deployment does not use the Telegram ' +
+        'integration, unset TELEGRAM_BOT_TOKEN instead and this check will ' +
+        'still apply — set TELEGRAM_WEBHOOK_SECRET to any random value to ' +
+        'satisfy it.',
+    );
+  }
+  if (value.length < 16) {
+    throw new Error('TELEGRAM_WEBHOOK_SECRET must be at least 16 characters.');
+  }
 }
 
 /**
@@ -112,6 +138,9 @@ export function validateBootConfig(configService: ConfigService): void {
           'production.',
       );
     }
+    checkTelegramWebhookSecret(
+      configService.get<string>('TELEGRAM_WEBHOOK_SECRET'),
+    );
   }
 
   logger.log('Boot config validation OK');
