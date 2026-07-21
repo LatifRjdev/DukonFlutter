@@ -58,7 +58,10 @@ function makePrismaFake(opts: {
         return rolePermissions.filter((rp) => {
           if (rp.storeId !== where.storeId) return false;
           if (rp.role !== where.role) return false;
-          if (where.permission?.in && !where.permission.in.includes(rp.permission)) {
+          if (
+            where.permission?.in &&
+            !where.permission.in.includes(rp.permission)
+          ) {
             return false;
           }
           return true;
@@ -103,7 +106,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'wh-1',
+            role: 'WAREHOUSE',
+            isActive: true,
+          },
         ],
         // This is exactly what RolesService.updateRolePermissions writes
         // when an owner calls PUT /stores/store-1/roles/WAREHOUSE/permissions
@@ -137,7 +145,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'cash-1', role: 'CASHIER', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'cash-1',
+            role: 'CASHIER',
+            isActive: true,
+          },
         ],
         rolePermissions: [
           {
@@ -191,7 +204,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'someone-else' }],
         staff: [
-          { storeId: 'store-1', userId: 'owner-staff-1', role: 'OWNER', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'owner-staff-1',
+            role: 'OWNER',
+            isActive: true,
+          },
         ],
       });
       const guard = new PermissionsGuard(reflector, prisma);
@@ -211,7 +229,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'admin-1', role: 'ADMIN', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'admin-1',
+            role: 'ADMIN',
+            isActive: true,
+          },
         ],
         rolePermissions: [],
       });
@@ -230,7 +253,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'wh-1',
+            role: 'WAREHOUSE',
+            isActive: true,
+          },
         ],
         // Only manage_products has an override; suppliers.manage has none.
         rolePermissions: [
@@ -260,7 +288,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'wh-1',
+            role: 'WAREHOUSE',
+            isActive: true,
+          },
         ],
       });
       const guard = new PermissionsGuard(reflector, prisma);

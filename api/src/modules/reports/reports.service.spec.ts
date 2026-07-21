@@ -277,10 +277,7 @@ describe('ReportsService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        ReportsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [ReportsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
     service = moduleRef.get(ReportsService);
   });
@@ -498,9 +495,7 @@ describe('ReportsService', () => {
         to: '2026-04-30',
       });
 
-      const byId = Object.fromEntries(
-        r.byStaff.map((s) => [s.staffId, s]),
-      );
+      const byId = Object.fromEntries(r.byStaff.map((s) => [s.staffId, s]));
       expect(byId['st-1']).toMatchObject({
         salesCount: 2,
         totalRevenue: 300,

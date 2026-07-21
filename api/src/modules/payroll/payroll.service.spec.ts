@@ -411,7 +411,10 @@ function makePrismaFake(): {
       inTx = true;
       const txApi = {
         ...api,
-        payrollPeriod: { ...api.payrollPeriod, findFirst: txPayrollPeriodFindFirst },
+        payrollPeriod: {
+          ...api.payrollPeriod,
+          findFirst: txPayrollPeriodFindFirst,
+        },
       };
       try {
         return await cb(txApi);
@@ -587,9 +590,15 @@ describe('PayrollService', () => {
       const period = Array.from(prisma._periods.values())[0];
       const payroll = Array.from(prisma._payrolls.values())[0];
 
-      const result: any = await service.payOne('store-A', period.id, payroll.id);
+      const result: any = await service.payOne(
+        'store-A',
+        period.id,
+        payroll.id,
+      );
 
-      const returnedPayroll = result.payrolls.find((p: any) => p.id === payroll.id);
+      const returnedPayroll = result.payrolls.find(
+        (p: any) => p.id === payroll.id,
+      );
       expect(returnedPayroll.isPaid).toBe(true);
       expect(returnedPayroll.paidAt).not.toBeNull();
       expect(Number(result.paidAmount)).toBe(800);
@@ -603,9 +612,9 @@ describe('PayrollService', () => {
       await service.calculate('store-A', { month: 4, year: 2026 });
       const period = Array.from(prisma._periods.values())[0];
 
-      await expect(service.payAll('store-OTHER', period.id)).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(
+        service.payAll('store-OTHER', period.id),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     // Regression test mirroring the payOne fix above: payAll() also used to

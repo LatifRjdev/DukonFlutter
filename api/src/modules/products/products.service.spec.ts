@@ -60,21 +60,19 @@ function makePrismaFake() {
         }
         return null;
       }),
-      findMany: jest.fn(
-        async ({ where, skip = 0, take }: any = {}) => {
-          const all = Array.from(rows.values()).filter((r) => {
-            if (where?.storeId && r.storeId !== where.storeId) return false;
-            if (where?.categoryId && r.categoryId !== where.categoryId)
-              return false;
-            return true;
-          });
-          // take undefined (lowStock path fetches all candidates) means
-          // "return everything from skip onward".
-          return take === undefined
-            ? all.slice(skip)
-            : all.slice(skip, skip + take);
-        },
-      ),
+      findMany: jest.fn(async ({ where, skip = 0, take }: any = {}) => {
+        const all = Array.from(rows.values()).filter((r) => {
+          if (where?.storeId && r.storeId !== where.storeId) return false;
+          if (where?.categoryId && r.categoryId !== where.categoryId)
+            return false;
+          return true;
+        });
+        // take undefined (lowStock path fetches all candidates) means
+        // "return everything from skip onward".
+        return take === undefined
+          ? all.slice(skip)
+          : all.slice(skip, skip + take);
+      }),
       create: jest.fn(async ({ data }: any) => {
         const id = newId();
         const row: ProductRow = {
@@ -276,9 +274,7 @@ describe('ProductsService', () => {
           skip: 0,
         } as any);
 
-        expect(result.data.map((p: any) => p.id)).not.toContain(
-          outOfStock.id,
-        );
+        expect(result.data.map((p: any) => p.id)).not.toContain(outOfStock.id);
         expect(result.total).toBe(0);
       });
 
@@ -304,9 +300,7 @@ describe('ProductsService', () => {
           skip: 0,
         } as any);
 
-        expect(result.data.map((p: any) => p.id)).toEqual([
-          lowInCategory.id,
-        ]);
+        expect(result.data.map((p: any) => p.id)).toEqual([lowInCategory.id]);
         expect(result.total).toBe(1);
       });
 
