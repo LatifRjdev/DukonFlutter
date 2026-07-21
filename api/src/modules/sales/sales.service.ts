@@ -540,7 +540,6 @@ export class SalesService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      let isFullRefund = true;
       // F4.2: track total refunded value so we can decrement customer
       // debt + sale.debtAmount + customer.totalSpent in a consistent
       // single transaction with the stock restore.
@@ -552,12 +551,30 @@ export class SalesService {
           throw new BadRequestException(
             `Sale item ${refundItem.saleItemId} not found`,
           );
-        if (refundItem.quantity > saleItem.quantity) {
+
+        // BUG-REFUND-1: re-read the current refundedQuantity from inside
+        // the transaction rather than trusting the pre-transaction `sale`
+        // snapshot. Validating only against the item's original quantity
+        // (with no memory of prior refund calls) allowed the same
+        // saleItemId to be refunded an unbounded number of times as long
+        // as the sale hadn't reached the fully-RETURNED terminal state —
+        // each call re-incremented stock and re-credited customer
+        // debt/totalSpent with no upper bound.
+        const currentItem = await tx.saleItem.findUniqueOrThrow({
+          where: { id: saleItem.id },
+        });
+        const remaining = currentItem.quantity - currentItem.refundedQuantity;
+        if (refundItem.quantity > remaining) {
           throw new BadRequestException(
-            `Refund quantity exceeds sale quantity for ${saleItem.productName}`,
+            `Refund quantity exceeds remaining refundable quantity for ${saleItem.productName} ` +
+              `(requested ${refundItem.quantity}, remaining ${remaining})`,
           );
         }
-        if (refundItem.quantity < saleItem.quantity) isFullRefund = false;
+
+        await tx.saleItem.update({
+          where: { id: saleItem.id },
+          data: { refundedQuantity: { increment: refundItem.quantity } },
+        });
 
         // Restore stock
         await tx.product.update({
@@ -626,14 +643,23 @@ export class SalesService {
         });
       }
 
-      // Check if all items are fully refunded
-      const allItemsRefunded = sale.items.every((saleItem) => {
-        const refundItem = dto.items.find((r) => r.saleItemId === saleItem.id);
-        return refundItem && refundItem.quantity === saleItem.quantity;
+      // BUG-REFUND-2: the old check only looked at whether THIS call's
+      // dto.items fully covered every line item, so a legitimately
+      // full refund spread across multiple calls (e.g. item A refunded
+      // in one call, item B in another) never reached the RETURNED
+      // terminal state. Read the cumulative refundedQuantity for every
+      // line item instead, which is correct regardless of how many
+      // calls it took.
+      const allSaleItems = await tx.saleItem.findMany({
+        where: { saleId },
       });
+      const allItemsFullyRefunded = allSaleItems.every(
+        (item) => item.refundedQuantity >= item.quantity,
+      );
 
-      const newStatus =
-        allItemsRefunded && isFullRefund ? 'RETURNED' : 'PARTIALLY_RETURNED';
+      const newStatus = allItemsFullyRefunded
+        ? 'RETURNED'
+        : 'PARTIALLY_RETURNED';
 
       const updated = await tx.sale.update({
         where: { id: saleId },

@@ -87,6 +87,7 @@ function makePrismaFake() {
         const items = (data.items?.create ?? []).map((it: any) => ({
           id: `si-${++saleItemSeq}`,
           saleId: id,
+          refundedQuantity: 0,
           ...it,
         }));
         const row: SaleRow = {
@@ -126,6 +127,32 @@ function makePrismaFake() {
         const rows = Array.isArray(data) ? data : [data];
         for (const r of rows) stockMovements.push(r);
         return { count: rows.length };
+      }),
+    },
+    saleItem: {
+      findUniqueOrThrow: jest.fn(async ({ where }: any) => {
+        for (const s of sales.values()) {
+          const item = s.items.find((i: any) => i.id === where.id);
+          if (item) return item;
+        }
+        throw new Error('SaleItem not found');
+      }),
+      update: jest.fn(async ({ where, data }: any) => {
+        for (const s of sales.values()) {
+          const item = s.items.find((i: any) => i.id === where.id);
+          if (item) {
+            if (data.refundedQuantity?.increment != null) {
+              item.refundedQuantity =
+                (item.refundedQuantity ?? 0) + data.refundedQuantity.increment;
+            }
+            return item;
+          }
+        }
+        throw new Error('SaleItem not found');
+      }),
+      findMany: jest.fn(async ({ where }: any) => {
+        const s = sales.get(where.saleId);
+        return s ? s.items : [];
       }),
     },
     customer: {
@@ -353,6 +380,98 @@ describe('SalesService', () => {
 
       expect(refunded.status).toBe('RETURNED');
       expect(prisma._products.get('p1')!.quantity).toBe(100);
+    });
+
+    it('should reject resubmitting a refund for a saleItem once its remaining refundable quantity is exhausted (BUG-REFUND-1 regression)', async () => {
+      const sale = await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 2 }],
+        paymentType: 'CASH',
+        paidAmount: 20,
+      } as any);
+      const saleItemId = sale.items[0].id;
+
+      // First refund: legitimate, fully returns the 2 units sold.
+      await service.refund('store-A', sale.id, {
+        items: [{ saleItemId, quantity: 2 }],
+      } as any);
+      expect(prisma._products.get('p1')!.quantity).toBe(100);
+
+      // Resubmitting the exact same refund request must NOT succeed again —
+      // there is nothing left to refund for this line item.
+      await expect(
+        service.refund('store-A', sale.id, {
+          items: [{ saleItemId, quantity: 2 }],
+        } as any),
+      ).rejects.toBeInstanceOf(BadRequestException);
+      // Stock must not have been incremented a second time.
+      expect(prisma._products.get('p1')!.quantity).toBe(100);
+    });
+
+    it('should reject a second partial refund that would exceed the remaining (not original) quantity (BUG-REFUND-1 regression)', async () => {
+      const sale = await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 5 }],
+        paymentType: 'CASH',
+        paidAmount: 50,
+      } as any);
+      const saleItemId = sale.items[0].id;
+
+      // Refund 3 of 5 — partial.
+      const first = await service.refund('store-A', sale.id, {
+        items: [{ saleItemId, quantity: 3 }],
+      } as any);
+      expect(first.status).toBe('PARTIALLY_RETURNED');
+      expect(prisma._products.get('p1')!.quantity).toBe(98);
+
+      // Only 2 remain refundable. Requesting 3 more (which is <= the
+      // original quantity of 5, but > the 2 actually remaining) must fail.
+      await expect(
+        service.refund('store-A', sale.id, {
+          items: [{ saleItemId, quantity: 3 }],
+        } as any),
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(prisma._products.get('p1')!.quantity).toBe(98);
+
+      // Refunding exactly the 2 remaining succeeds and completes the return.
+      const second = await service.refund('store-A', sale.id, {
+        items: [{ saleItemId, quantity: 2 }],
+      } as any);
+      expect(second.status).toBe('RETURNED');
+      expect(prisma._products.get('p1')!.quantity).toBe(100);
+    });
+
+    it('should reach RETURNED once cumulative refunds across separate calls cover every line item (BUG-REFUND-2 regression)', async () => {
+      prisma._products.set('p2', {
+        id: 'p2',
+        storeId: 'store-A',
+        name: 'Widget',
+        sellPrice: new Prisma.Decimal('20'),
+        costPrice: new Prisma.Decimal('10'),
+        quantity: 50,
+      });
+      const sale = await service.create('store-A', {
+        items: [
+          { productId: 'p1', quantity: 2 },
+          { productId: 'p2', quantity: 1 },
+        ],
+        paymentType: 'CASH',
+        paidAmount: 40,
+      } as any);
+      const [itemA, itemB] = sale.items;
+
+      // Call 1: fully refund only item A. The old status logic required
+      // every sale item to appear in the SAME call's dto.items, so this
+      // would incorrectly stay non-terminal forever once item B was later
+      // refunded in a separate call.
+      const afterA = await service.refund('store-A', sale.id, {
+        items: [{ saleItemId: itemA.id, quantity: 2 }],
+      } as any);
+      expect(afterA.status).toBe('PARTIALLY_RETURNED');
+
+      // Call 2: fully refund item B in a separate call.
+      const afterB = await service.refund('store-A', sale.id, {
+        items: [{ saleItemId: itemB.id, quantity: 1 }],
+      } as any);
+      expect(afterB.status).toBe('RETURNED');
     });
   });
 

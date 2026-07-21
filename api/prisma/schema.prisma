@@ -364,6 +364,12 @@ model SaleItem {
   costPrice   Decimal? @db.Decimal(12, 2)
   discount    Decimal  @default(0) @db.Decimal(12, 2)
   total       Decimal  @db.Decimal(12, 2)
+  // Cumulative quantity already refunded across all SalesService.refund()
+  // calls for this line item. Without this, refund() only validated a
+  // request against the original `quantity`, so the same saleItemId could
+  // be re-submitted for refund an unbounded number of times, each call
+  // re-incrementing stock and re-crediting customer debt/totalSpent.
+  refundedQuantity Int @default(0)
 
   @@map("sale_items")
 }
