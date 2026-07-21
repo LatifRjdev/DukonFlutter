@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CalculatePayrollDto } from './dto/calculate-payroll.dto';
 import { CreateAdjustmentDto } from './dto/create-adjustment.dto';
@@ -17,7 +21,14 @@ export class PayrollService {
 
     if (!period) {
       period = await this.prisma.payrollPeriod.create({
-        data: { storeId, month, year, status: 'DRAFT', totalAmount: 0, paidAmount: 0 },
+        data: {
+          storeId,
+          month,
+          year,
+          status: 'DRAFT',
+          totalAmount: 0,
+          paidAmount: 0,
+        },
       });
     }
 
@@ -111,7 +122,10 @@ export class PayrollService {
       where: { payrollPeriodId: period.id },
     });
 
-    const totalAmount = payrolls.reduce((sum, p) => sum + Number(p.totalAmount), 0);
+    const totalAmount = payrolls.reduce(
+      (sum, p) => sum + Number(p.totalAmount),
+      0,
+    );
     const paidAmount = payrolls
       .filter((p) => p.isPaid)
       .reduce((sum, p) => sum + Number(p.totalAmount), 0);
@@ -136,7 +150,20 @@ export class PayrollService {
   }
 
   async findOne(storeId: string, periodId: string) {
-    const period = await this.prisma.payrollPeriod.findFirst({
+    return this.findOneWithClient(this.prisma, storeId, periodId);
+  }
+
+  // Shared query shape for findOne, usable with either the outer `this.prisma`
+  // client or a `tx` transaction client. Using `tx` here (from inside an
+  // active $transaction) ensures the read sees the transaction's own
+  // uncommitted writes instead of a stale pre-mutation snapshot from a
+  // separate connection/context.
+  private async findOneWithClient(
+    client: any,
+    storeId: string,
+    periodId: string,
+  ) {
+    const period = await client.payrollPeriod.findFirst({
       where: { id: periodId, storeId },
       include: {
         payrolls: {
@@ -159,7 +186,11 @@ export class PayrollService {
     return period;
   }
 
-  async addAdjustment(storeId: string, periodId: string, dto: CreateAdjustmentDto) {
+  async addAdjustment(
+    storeId: string,
+    periodId: string,
+    dto: CreateAdjustmentDto,
+  ) {
     const period = await this.prisma.payrollPeriod.findFirst({
       where: { id: periodId, storeId },
     });
@@ -168,7 +199,8 @@ export class PayrollService {
     const payroll = await this.prisma.payroll.findFirst({
       where: { payrollPeriodId: periodId, staffId: dto.staffId },
     });
-    if (!payroll) throw new NotFoundException('Payroll record not found for this staff');
+    if (!payroll)
+      throw new NotFoundException('Payroll record not found for this staff');
 
     return this.prisma.$transaction(async (tx) => {
       const adjustment = await tx.payrollAdjustment.create({
@@ -189,7 +221,11 @@ export class PayrollService {
     });
   }
 
-  async removeAdjustment(storeId: string, periodId: string, adjustmentId: string) {
+  async removeAdjustment(
+    storeId: string,
+    periodId: string,
+    adjustmentId: string,
+  ) {
     const period = await this.prisma.payrollPeriod.findFirst({
       where: { id: periodId, storeId },
     });
@@ -232,7 +268,7 @@ export class PayrollService {
 
       await this.recalculatePeriod(tx, periodId);
 
-      return this.findOne(storeId, periodId);
+      return this.findOneWithClient(tx, storeId, periodId);
     });
   }
 
@@ -252,14 +288,17 @@ export class PayrollService {
         where: { payrollPeriodId: periodId },
       });
 
-      const totalAmount = payrolls.reduce((sum, p) => sum + Number(p.totalAmount), 0);
+      const totalAmount = payrolls.reduce(
+        (sum, p) => sum + Number(p.totalAmount),
+        0,
+      );
 
       await tx.payrollPeriod.update({
         where: { id: periodId },
         data: { paidAmount: totalAmount, status: 'PAID' },
       });
 
-      return this.findOne(storeId, periodId);
+      return this.findOneWithClient(tx, storeId, periodId);
     });
   }
 
@@ -277,7 +316,11 @@ export class PayrollService {
       else deductions += Number(adj.amount);
     }
 
-    const totalAmount = Number(payroll.baseSalary) + Number(payroll.commission) + bonuses - deductions;
+    const totalAmount =
+      Number(payroll.baseSalary) +
+      Number(payroll.commission) +
+      bonuses -
+      deductions;
 
     await tx.payroll.update({
       where: { id: payrollId },
@@ -290,7 +333,10 @@ export class PayrollService {
       where: { payrollPeriodId: periodId },
     });
 
-    const totalAmount = payrolls.reduce((sum: number, p: any) => sum + Number(p.totalAmount), 0);
+    const totalAmount = payrolls.reduce(
+      (sum: number, p: any) => sum + Number(p.totalAmount),
+      0,
+    );
     const paidAmount = payrolls
       .filter((p: any) => p.isPaid)
       .reduce((sum: number, p: any) => sum + Number(p.totalAmount), 0);

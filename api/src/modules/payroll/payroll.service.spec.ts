@@ -116,6 +116,71 @@ function makePrismaFake(): {
     return true;
   };
 
+  // --- Snapshot-isolation simulation -----------------------------------
+  // The real bug this suite guards against only manifests because Postgres
+  // (READ COMMITTED) gives an in-flight `$transaction(async (tx) => ...)`
+  // callback's own `tx`-scoped reads visibility into its own uncommitted
+  // writes, while a read through a *separate* client/connection (the outer
+  // `this.prisma`) does NOT see those writes until commit. A naive fake that
+  // passes the very same object as both the outer `prisma` and the `tx`
+  // callback argument can't reproduce that: both "clients" would share one
+  // mutable Map and always agree. To make a regression test meaningful, we
+  // simulate the staleness: while a transaction is in flight, the OUTER
+  // client's reads of `payrollPeriod` are served from a frozen pre-transaction
+  // snapshot, while the `tx`-scoped client's reads always see live state.
+  let inTx = false;
+  let periodsSnapshot = new Map<string, PeriodRow>();
+  let payrollsSnapshot = new Map<string, PayrollRow>();
+  const clonePeriods = () =>
+    new Map(Array.from(periods.entries()).map(([k, v]) => [k, { ...v }]));
+  const clonePayrolls = () =>
+    new Map(Array.from(payrolls.entries()).map(([k, v]) => [k, { ...v }]));
+
+  const makePayrollPeriodFindFirst = (
+    getPeriods: () => Map<string, PeriodRow>,
+    getPayrolls: () => Map<string, PayrollRow>,
+  ) =>
+    jest.fn(async ({ where, include }: any) => {
+      for (const p of getPeriods().values()) {
+        if (where.id && p.id !== where.id) continue;
+        if (where.storeId && p.storeId !== where.storeId) continue;
+        if (where.month !== undefined && p.month !== where.month) continue;
+        if (where.year !== undefined && p.year !== where.year) continue;
+        if (include?.payrolls) {
+          const prs = Array.from(getPayrolls().values()).filter(
+            (pr) => pr.payrollPeriodId === p.id,
+          );
+          return {
+            ...p,
+            payrolls: prs.map((pr) => ({
+              ...pr,
+              staff: staffList.get(pr.staffId) ?? null,
+              adjustments: Array.from(adjustments.values()).filter(
+                (a) => a.payrollId === pr.id,
+              ),
+            })),
+          };
+        }
+        return { ...p };
+      }
+      return null;
+    });
+
+  // Outer client: while a transaction is in flight, reads the frozen
+  // pre-transaction snapshot (mirrors a separate DB connection under READ
+  // COMMITTED). Otherwise reads live state (no concurrent transaction to be
+  // stale against).
+  const outerPayrollPeriodFindFirst = makePayrollPeriodFindFirst(
+    () => (inTx ? periodsSnapshot : periods),
+    () => (inTx ? payrollsSnapshot : payrolls),
+  );
+  // tx-scoped client: always reads live state, including its own
+  // not-yet-committed writes.
+  const txPayrollPeriodFindFirst = makePayrollPeriodFindFirst(
+    () => periods,
+    () => payrolls,
+  );
+
   const api: any = {
     _periods: periods,
     _staff: staffList,
@@ -124,31 +189,7 @@ function makePrismaFake(): {
     _sales: sales,
     _shifts: shifts,
     payrollPeriod: {
-      findFirst: jest.fn(async ({ where, include }: any) => {
-        for (const p of periods.values()) {
-          if (where.id && p.id !== where.id) continue;
-          if (where.storeId && p.storeId !== where.storeId) continue;
-          if (where.month !== undefined && p.month !== where.month) continue;
-          if (where.year !== undefined && p.year !== where.year) continue;
-          if (include?.payrolls) {
-            const prs = Array.from(payrolls.values()).filter(
-              (pr) => pr.payrollPeriodId === p.id,
-            );
-            return {
-              ...p,
-              payrolls: prs.map((pr) => ({
-                ...pr,
-                staff: staffList.get(pr.staffId) ?? null,
-                adjustments: Array.from(adjustments.values()).filter(
-                  (a) => a.payrollId === pr.id,
-                ),
-              })),
-            };
-          }
-          return { ...p };
-        }
-        return null;
-      }),
+      findFirst: outerPayrollPeriodFindFirst,
       findMany: jest.fn(async ({ where }: any = {}) =>
         Array.from(periods.values())
           .filter((p) => !where?.storeId || p.storeId === where.storeId)
@@ -356,11 +397,27 @@ function makePrismaFake(): {
       }),
     },
     $transaction: jest.fn(async (cb: any) => {
+      if (typeof cb !== 'function') return Promise.all(cb);
       // Service uses `prisma.$transaction(async (tx) => ...)` form for
-      // adjustments / pay flows. Just pass `api` itself as `tx` since both
-      // share the same Map-backed storage.
-      if (typeof cb === 'function') return cb(api);
-      return Promise.all(cb);
+      // adjustments / pay flows. `tx` shares the same underlying Map-backed
+      // storage as the outer client for writes (all model methods besides
+      // payrollPeriod.findFirst mutate/read the live maps directly either
+      // way), but its `payrollPeriod.findFirst` always sees live state —
+      // whereas the outer client's `payrollPeriod.findFirst` is frozen at a
+      // pre-transaction snapshot for the duration of the transaction. See
+      // the snapshot-isolation simulation comment above.
+      periodsSnapshot = clonePeriods();
+      payrollsSnapshot = clonePayrolls();
+      inTx = true;
+      const txApi = {
+        ...api,
+        payrollPeriod: { ...api.payrollPeriod, findFirst: txPayrollPeriodFindFirst },
+      };
+      try {
+        return await cb(txApi);
+      } finally {
+        inTx = false;
+      }
     }),
   };
 
@@ -512,6 +569,62 @@ describe('PayrollService', () => {
       await expect(
         service.payOne('store-OTHER', period.id, payroll.id),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    // Regression test for a HIGH-severity bug: payOne() used to read the
+    // post-mutation state via `this.findOne()`, which queries through the
+    // OUTER `this.prisma` client rather than the `tx` client used for the
+    // writes inside the same `$transaction`. Under Postgres READ COMMITTED,
+    // that outer read cannot see the transaction's own uncommitted writes,
+    // so the HTTP response reflected the PRE-payment snapshot (isPaid:
+    // false, stale paidAmount/status) even though the DB write itself
+    // succeeded. The fix reads via `tx` instead. The fake's $transaction
+    // mock simulates this staleness (see snapshot-isolation comment above)
+    // so this test would fail against the pre-fix code.
+    it('should return the POST-payment state (isPaid true, correct paidAmount/status) in the response, not a stale pre-transaction snapshot', async () => {
+      seedStaff({ id: 's1', salary: 800, commission: 0 });
+      await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = Array.from(prisma._periods.values())[0];
+      const payroll = Array.from(prisma._payrolls.values())[0];
+
+      const result: any = await service.payOne('store-A', period.id, payroll.id);
+
+      const returnedPayroll = result.payrolls.find((p: any) => p.id === payroll.id);
+      expect(returnedPayroll.isPaid).toBe(true);
+      expect(returnedPayroll.paidAt).not.toBeNull();
+      expect(Number(result.paidAmount)).toBe(800);
+      expect(result.status).toBe('PAID');
+    });
+  });
+
+  describe('payAll', () => {
+    it('should throw NotFoundException when the period belongs to another store', async () => {
+      seedStaff({ id: 's1', salary: 100, commission: 0 });
+      await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = Array.from(prisma._periods.values())[0];
+
+      await expect(service.payAll('store-OTHER', period.id)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+    });
+
+    // Regression test mirroring the payOne fix above: payAll() also used to
+    // return `this.findOne(...)` (outer `this.prisma` read) from inside its
+    // own `$transaction`, so the response body reflected stale pre-payment
+    // data (isPaid: false, paidAmount: 0, status: CALCULATED) despite the
+    // DB write succeeding. This asserts the returned response reflects the
+    // POST-mutation state.
+    it('should return the POST-payment state for all payrolls (isPaid true, correct totals, PAID status) in the response', async () => {
+      seedStaff({ id: 's1', salary: 500, commission: 0 });
+      seedStaff({ id: 's2', salary: 300, commission: 0 });
+      await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = Array.from(prisma._periods.values())[0];
+
+      const result: any = await service.payAll('store-A', period.id);
+
+      expect(result.payrolls.every((p: any) => p.isPaid === true)).toBe(true);
+      expect(Number(result.paidAmount)).toBe(800);
+      expect(result.status).toBe('PAID');
     });
   });
 
