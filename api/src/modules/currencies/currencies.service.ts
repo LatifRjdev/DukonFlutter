@@ -83,17 +83,34 @@ export class CurrenciesService {
       const rates: NbtRate[] = [];
 
       // NBT table rows: currency code | buy | sell | nbt (official)
-      // The site renders a table with class .exchange or similar.
-      // We look for any <tr> that starts with a known currency code.
-      $('table tr').each((_i, row) => {
-        const cells = $(row).find('td');
-        if (cells.length < 3) return;
+      // As of 2026, the "official rate" table on nbt.tj/en/ is
+      // `table.currency-rates` and only renders 2 cells per row:
+      // <td><span class="currency-rates__code">USD</span></td>
+      // <td class="currency-rates__value"><span class="currency-rates__num">9.2547</span></td>
+      // There is no separate buy/sell column on this page (those live on
+      // the commercial-bank rates page instead), so we scope to this
+      // table specifically and fall back to plain <tr><td> scanning for
+      // resilience if the markup shifts again.
+      const $rows = $('table.currency-rates tr').length
+        ? $('table.currency-rates tr')
+        : $('table tr');
 
-        const code = $(cells[0]).text().trim().toUpperCase();
+      $rows.each((_i, row) => {
+        const cells = $(row).find('td');
+        if (cells.length < 2) return;
+
+        const codeCell = $(cells[0]);
+        const code = (
+          codeCell.find('.currency-rates__code').text() || codeCell.text()
+        )
+          .trim()
+          .toUpperCase();
         if (!SUPPORTED_CURRENCIES.includes(code)) return;
 
-        const parseNum = (el: ReturnType<typeof $>) =>
-          parseFloat(el.text().replace(/\s/g, '').replace(',', '.')) || 0;
+        const parseNum = (el: ReturnType<typeof $>) => {
+          const raw = el.find('.currency-rates__num').text() || el.text();
+          return parseFloat(raw.replace(/\s/g, '').replace(',', '.')) || 0;
+        };
 
         const nbtRate = parseNum($(cells[1]));
         // Some NBT pages show only nbt rate; buy/sell may differ slightly

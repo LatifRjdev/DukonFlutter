@@ -2,9 +2,103 @@ import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { CurrenciesService } from './currencies.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import * as https from 'https';
+
+jest.mock('https');
 
 const MS_DAY = 86_400_000;
 const d = (daysAgo: number) => new Date(Date.now() - daysAgo * MS_DAY);
+
+/**
+ * Fixture reproducing the ACTUAL live markup of https://nbt.tj/en/'s
+ * official-rate table as of 2026-07-21 (verified via live curl). Each
+ * row is a 2-cell <tr>: code in a nested span, value in a nested span
+ * inside the second <td>. The page also has an unrelated
+ * `currency-gold` table (bar weight / buy / sell price) that must NOT
+ * be picked up as currency rows.
+ */
+const NBT_FIXTURE_HTML = `
+<!doctype html>
+<html>
+<body>
+  <div class="currency-card">
+    <div class="currency-card__body">
+      <div class="currency-table-wrap currency-rates-wrap">
+        <table class="currency-table currency-rates">
+          <thead>
+            <tr>
+              <th class="currency-rates__th-label">Rate</th>
+              <th class="currency-rates__th-value">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="currency-rates__code">USD</span></td>
+              <td class="currency-rates__value"><span class="currency-rates__num">9.2547</span></td>
+            </tr>
+            <tr>
+              <td><span class="currency-rates__code">EUR</span></td>
+              <td class="currency-rates__value"><span class="currency-rates__num">10.5846</span></td>
+            </tr>
+            <tr>
+              <td><span class="currency-rates__code">RUB</span></td>
+              <td class="currency-rates__value"><span class="currency-rates__num">0.1179</span></td>
+            </tr>
+            <tr>
+              <td><span class="currency-rates__code">CNY</span></td>
+              <td class="currency-rates__value"><span class="currency-rates__num">1.3671</span></td>
+            </tr>
+            <tr>
+              <td><span class="currency-rates__code">KZT</span></td>
+              <td class="currency-rates__value"><span class="currency-rates__num">0.1968</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="currency-card">
+    <div class="currency-card__body">
+      <div class="currency-table-wrap currency-gold-wrap">
+        <table class="currency-table currency-gold">
+          <thead>
+            <tr>
+              <th class="currency-gold__th-label">Bars weight, gr</th>
+              <th class="currency-gold__th-value">Selling Price, somoni</th>
+              <th class="currency-gold__th-value">Repurchase Price, somoni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="currency-gold__label">5</strong></td>
+              <td class="currency-gold__value"><span class="currency-gold__cell-value"><span class="currency-gold__num">6175.32</span></span></td>
+              <td class="currency-gold__value"><span class="currency-gold__cell-value"><span class="currency-gold__num">6053.04</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+function mockHttpsGet(html: string, statusCode = 200) {
+  (https.get as unknown as jest.Mock).mockImplementation(
+    (_url: string, _options: any, callback: any) => {
+      const res = {
+        statusCode,
+        on: (event: string, handler: any) => {
+          if (event === 'data') handler(html);
+          if (event === 'end') handler();
+          return res;
+        },
+      };
+      callback(res);
+      return { on: jest.fn() };
+    },
+  );
+}
 
 function makePrismaFake() {
   // Seed: two USD rows (today + yesterday) and one RUB row (today)

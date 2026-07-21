@@ -18,6 +18,7 @@ type SaleItemRow = {
   productName: string;
   quantity: number;
   total: number;
+  costPrice?: number | null;
 };
 
 type ExpenseRow = {
@@ -232,6 +233,25 @@ function makePrismaFake() {
         .reduce((acc, p) => acc + p.quantity * (p.costPrice ?? 0), 0);
       return [{ total_value: total }];
     }
+    if (sql.includes('FROM sale_items')) {
+      const storeId = values[0];
+      const start = values[1] as Date;
+      const end = values[2] as Date;
+      const matchSaleIds = new Set(
+        sales
+          .filter(
+            (s) =>
+              s.storeId === storeId &&
+              s.status === 'COMPLETED' &&
+              inRange(s.createdAt, start, end),
+          )
+          .map((s) => s.id),
+      );
+      const cogs = items
+        .filter((it) => matchSaleIds.has(it.saleId))
+        .reduce((acc, it) => acc + it.quantity * (it.costPrice ?? 0), 0);
+      return [{ cogs }];
+    }
     return [];
   });
 
@@ -274,6 +294,21 @@ describe('ReportsService', () => {
       ...s,
     } as SaleRow;
     prisma.__sales.push(row);
+    return row;
+  };
+
+  const seedItem = (
+    it: Partial<SaleItemRow> & { id: string; saleId: string },
+  ) => {
+    const row: SaleItemRow = {
+      productId: 'p1',
+      productName: 'Product',
+      quantity: 1,
+      total: 0,
+      costPrice: null,
+      ...it,
+    } as SaleItemRow;
+    prisma.__items.push(row);
     return row;
   };
 
@@ -363,6 +398,87 @@ describe('ReportsService', () => {
       expect(r.income).toBe(0);
       expect(r.profit).toBe(-100);
       expect(r.marginPercent).toBe(0);
+    });
+
+    it('should deduct cost of goods sold (SaleItem.costPrice * quantity) from profit', async () => {
+      // 3 sales, revenue 120 total, known COGS 50 -> true margin ~58.33%
+      seedSale({ id: 's1', storeId: 'A', total: 40 });
+      seedSale({ id: 's2', storeId: 'A', total: 40 });
+      seedSale({ id: 's3', storeId: 'A', total: 40 });
+      seedItem({
+        id: 'i1',
+        saleId: 's1',
+        quantity: 2,
+        costPrice: 10, // 20
+      });
+      seedItem({
+        id: 'i2',
+        saleId: 's2',
+        quantity: 1,
+        costPrice: 15, // 15
+      });
+      seedItem({
+        id: 'i3',
+        saleId: 's3',
+        quantity: 3,
+        costPrice: 5, // 15
+      });
+      // total cogs = 20 + 15 + 15 = 50
+
+      const r = await service.getProfitReport('A', {
+        from: '2026-04-01',
+        to: '2026-04-30',
+      });
+
+      expect(r.income).toBe(120);
+      expect(r.cogs).toBe(50);
+      expect(r.grossProfit).toBe(70);
+      expect(r.expenses).toBe(0);
+      expect(r.profit).toBe(70);
+      expect(r.marginPercent).toBe(58.33);
+    });
+
+    it('should subtract both COGS and manual expenses from income for net profit', async () => {
+      seedSale({ id: 's1', storeId: 'A', total: 1000 });
+      seedItem({ id: 'i1', saleId: 's1', quantity: 10, costPrice: 20 }); // cogs 200
+      prisma.__expenses.push({
+        id: 'e1',
+        storeId: 'A',
+        amount: 100,
+        date: new Date('2026-04-10T00:00:00Z'),
+      });
+
+      const r = await service.getProfitReport('A', {
+        from: '2026-04-01',
+        to: '2026-04-30',
+      });
+
+      expect(r.income).toBe(1000);
+      expect(r.cogs).toBe(200);
+      expect(r.grossProfit).toBe(800);
+      expect(r.expenses).toBe(100);
+      expect(r.profit).toBe(700);
+      expect(r.marginPercent).toBe(70);
+    });
+
+    it('should ignore sale items from CANCELLED sales when computing COGS', async () => {
+      seedSale({ id: 's1', storeId: 'A', total: 100 });
+      seedSale({
+        id: 's2',
+        storeId: 'A',
+        total: 999,
+        status: 'CANCELLED',
+      });
+      seedItem({ id: 'i1', saleId: 's1', quantity: 1, costPrice: 10 });
+      seedItem({ id: 'i2', saleId: 's2', quantity: 100, costPrice: 100 }); // excluded
+
+      const r = await service.getProfitReport('A', {
+        from: '2026-04-01',
+        to: '2026-04-30',
+      });
+
+      expect(r.income).toBe(100);
+      expect(r.cogs).toBe(10);
     });
   });
 

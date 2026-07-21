@@ -90,7 +90,7 @@ export class ReportsService {
   async getProfitReport(storeId: string, query: ReportQueryDto) {
     const { startDate, endDate } = this.getDateRange(query);
 
-    const [salesAgg, expensesAgg] = await Promise.all([
+    const [salesAgg, expensesAgg, cogsResult] = await Promise.all([
       this.prisma.sale.aggregate({
         where: {
           storeId,
@@ -106,16 +106,41 @@ export class ReportsService {
         },
         _sum: { amount: true },
       }),
+      // Cost of goods sold: sum(SaleItem.costPrice * quantity) for
+      // completed sales in the period. Same COMPLETED-only scoping as
+      // every other report query in this file (see getSalesReport /
+      // getProductsReport). costPrice is nullable on SaleItem (older
+      // rows / items added before cost tracking); those contribute 0.
+      this.prisma.$queryRaw<{ cogs: number }[]>`
+        SELECT COALESCE(SUM(si.quantity * si."costPrice"), 0)::float as cogs
+        FROM sale_items si
+        JOIN sales s ON s.id = si."saleId"
+        WHERE s."storeId" = ${storeId}
+          AND s.status = 'COMPLETED'
+          AND s."createdAt" >= ${startDate}
+          AND s."createdAt" <= ${endDate}
+      `,
     ]);
 
     const income = Number(salesAgg._sum.total ?? 0);
     const expenses = Number(expensesAgg._sum.amount ?? 0);
-    const profit = income - expenses;
+    const cogs = Number(cogsResult[0]?.cogs ?? 0);
+    // grossProfit: revenue minus cost of the goods actually sold.
+    // profit (net): gross profit minus manually-entered operating
+    // expenses. `profit` previously ignored COGS entirely, which made
+    // margin read as ~100% for any store that didn't log manual
+    // expenses even though it had real cost of goods sold — this is
+    // the fix for that. `profit` now means true net profit; `cogs` and
+    // `grossProfit` are added so consumers can see the breakdown.
+    const grossProfit = income - cogs;
+    const profit = grossProfit - expenses;
     const margin = income > 0 ? (profit / income) * 100 : 0;
 
     return {
       income,
       expenses,
+      cogs,
+      grossProfit,
       profit,
       marginPercent: parseFloat(margin.toFixed(2)),
       from: startDate,
