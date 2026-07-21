@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
-import { hasDefaultPermission } from './permissions-matrix';
+import { hasDefaultPermission, legacyPermissionKeyFor } from './permissions-matrix';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -57,14 +57,33 @@ export class PermissionsGuard implements CanActivate {
     // Check role permissions in the database — DB overrides the default
     // matrix, so a store owner can grant or revoke specific actions per
     // role without touching source.
-    const rolePermissions = await this.prisma.rolePermission.findMany({
-      where: {
-        storeId,
-        role: staffRecord.role,
-        permission: { in: requiredPermissions },
-      },
-      select: { permission: true, isGranted: true },
-    });
+    //
+    // BE-P1-011: RolePermission rows are written by RolesService using a
+    // legacy snake_case vocabulary (`manage_products`, ...), not the
+    // dotted `resource.action` strings required permissions use. Translate
+    // each required permission to its legacy key (where one exists) before
+    // querying, otherwise the DB lookup below always misses and every
+    // override silently no-ops. See permissions-matrix.ts for the alias
+    // table and why some permissions are intentionally left unmapped.
+    const legacyKeyByPermission = new Map<string, string>();
+    for (const perm of requiredPermissions) {
+      const legacyKey = legacyPermissionKeyFor(perm);
+      if (legacyKey) {
+        legacyKeyByPermission.set(perm, legacyKey);
+      }
+    }
+    const dbPermissionKeys = [...new Set(legacyKeyByPermission.values())];
+
+    const rolePermissions = dbPermissionKeys.length
+      ? await this.prisma.rolePermission.findMany({
+          where: {
+            storeId,
+            role: staffRecord.role,
+            permission: { in: dbPermissionKeys },
+          },
+          select: { permission: true, isGranted: true },
+        })
+      : [];
 
     // Build an allow/deny set from DB rows, then fall back to the default
     // matrix for any permission the DB did not mention. Previously this
@@ -79,9 +98,13 @@ export class PermissionsGuard implements CanActivate {
     );
 
     const hasAll = requiredPermissions.every((perm) => {
-      if (dbDeny.has(perm)) return false;
-      if (dbAllow.has(perm)) return true;
-      // Not mentioned in DB → consult the hardcoded default matrix.
+      const legacyKey = legacyKeyByPermission.get(perm);
+      if (legacyKey) {
+        if (dbDeny.has(legacyKey)) return false;
+        if (dbAllow.has(legacyKey)) return true;
+      }
+      // Not mentioned in DB (or not bridged to a legacy key) → consult
+      // the hardcoded default matrix.
       return hasDefaultPermission(staffRecord.role, perm);
     });
 

@@ -87,3 +87,47 @@ export function hasDefaultPermission(
 ): boolean {
   return (DEFAULT_PERMISSIONS[role] ?? []).includes(permission);
 }
+
+/**
+ * BE-P1-011 (QA sweep, 2026-07): RolesService/RolePermission persist staff
+ * role overrides under a legacy snake_case vocabulary
+ * (`manage_products`, `add_expenses`, ...) that predates the dotted
+ * `resource.action` vocabulary PermissionsGuard actually enforces
+ * (`products.manage`, `expenses.write`, ...). The two never intersected,
+ * so revoking/granting a permission via `PUT /stores/:id/roles/:role/permissions`
+ * silently had zero effect on route access — the guard's DB lookup was
+ * always querying for keys that could never match what was stored.
+ *
+ * Rather than rename the legacy vocabulary (RolesService's DTO/API shape
+ * is the roles-management contract and touches other call sites), this
+ * table bridges the two: it maps a dotted permission consulted by
+ * @Permissions(...) to the legacy snake_case key RolesService actually
+ * writes to RolePermission.permission for the same real-world action, so
+ * PermissionsGuard can query the DB the override was actually written to.
+ *
+ * Only include a mapping here when the legacy default (RolesService's
+ * seed DEFAULT_PERMISSIONS) and this file's DEFAULT_PERMISSIONS already
+ * agree for every role — i.e. the two vocabularies describe the exact
+ * same permission. `manage_staff` is deliberately NOT mapped to
+ * `staff.manage`: RolesService seeds ADMIN.manage_staff = false while this
+ * matrix grants ADMIN `staff.manage` = true, a pre-existing disagreement
+ * between the two systems. Bridging it would make the very first
+ * `GET /stores/:id/roles` call silently seed a DB row that revokes
+ * `staff.manage` from every ADMIN, the moment anyone opens the Roles UI —
+ * a behavior change well outside this fix. Left as a follow-up.
+ * `view_sales`, `view_profit`, and `change_prices` also have no guarded
+ * route counterpart today, so they stay unmapped too.
+ */
+export const LEGACY_PERMISSION_ALIASES: Record<string, string> = {
+  'products.manage': 'manage_products',
+  'customers.manage': 'manage_customers',
+  'expenses.write': 'add_expenses',
+  'reports.view': 'view_reports',
+  'sales.manage': 'create_sales',
+  'sales.refund': 'cancel_sales',
+};
+
+/** Legacy snake_case RolePermission key for a dotted permission, if any. */
+export function legacyPermissionKeyFor(permission: string): string | undefined {
+  return LEGACY_PERMISSION_ALIASES[permission];
+}
