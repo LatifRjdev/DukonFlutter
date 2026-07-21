@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 
@@ -28,6 +32,14 @@ export class StockMovementsService {
     if (!product)
       throw new NotFoundException('Product not found in this store');
 
+    if (dto.supplierId) {
+      const supplier = await this.prisma.supplier.findFirst({
+        where: { id: dto.supplierId, storeId },
+      });
+      if (!supplier)
+        throw new NotFoundException('Supplier not found in this store');
+    }
+
     const totalCost = dto.unitCost ? dto.unitCost * dto.quantity : undefined;
 
     return this.prisma.$transaction(async (tx) => {
@@ -55,7 +67,26 @@ export class StockMovementsService {
       }
       // ADJUSTMENT and TRANSFER handled by explicit quantity
 
-      if (quantityChange !== 0) {
+      if (quantityChange < 0) {
+        // BUG-STOCK-1: an unconditional `update` had no floor guard, so
+        // WRITE_OFF/SALE movements could drive quantity arbitrarily
+        // negative (e.g. writing off 1000 units of a 70-in-stock
+        // product succeeded and left quantity at -930). Mirror the
+        // F-RACE-1 conditional-updateMany pattern from sales.service.ts
+        // so the DB enforces the floor atomically.
+        const result = await tx.product.updateMany({
+          where: {
+            id: dto.productId,
+            quantity: { gte: -quantityChange },
+          },
+          data: { quantity: { increment: quantityChange } },
+        });
+        if (result.count === 0) {
+          throw new ConflictException(
+            `Insufficient stock for this movement (${product.name} has fewer than ${-quantityChange} units available).`,
+          );
+        }
+      } else if (quantityChange > 0) {
         await tx.product.update({
           where: { id: dto.productId },
           data: { quantity: { increment: quantityChange } },
@@ -67,6 +98,19 @@ export class StockMovementsService {
         await tx.product.update({
           where: { id: dto.productId },
           data: { costPrice: dto.unitCost },
+        });
+      }
+
+      // BUG-SUPPLIER-1: a supplier-linked PURCHASE never credited what
+      // the store now owes that supplier — `supplier.debt` had no write
+      // path anywhere in the codebase, only decrements (via payments),
+      // which made the "pay down a supplier" feature permanently dead
+      // since debt could never become positive. Credit it here, mirroring
+      // how a DEBT sale increments customer.debt.
+      if (dto.type === 'PURCHASE' && dto.supplierId && totalCost) {
+        await tx.supplier.update({
+          where: { id: dto.supplierId },
+          data: { debt: { increment: totalCost } },
         });
       }
 
