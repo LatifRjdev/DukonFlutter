@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -165,8 +166,21 @@ export class StaffService {
     return staff;
   }
 
-  async update(storeId: string, id: string, dto: UpdateStaffDto) {
+  async update(
+    storeId: string,
+    id: string,
+    dto: UpdateStaffDto,
+    callerUserId?: string,
+  ) {
     const before = await this.findOne(storeId, id);
+
+    // Guard against demoting a store's last remaining OWNER, which would
+    // leave the store with no one able to perform owner-only actions.
+    // (dto.role is typed as StaffRoleEnum, which excludes OWNER — any
+    // accepted value here is inherently a downgrade away from OWNER.)
+    if (dto.role && before.role === 'OWNER') {
+      await this.assertNotLastOwner(storeId, id);
+    }
 
     const updated = await this.prisma.staff.update({
       where: { id },
@@ -185,21 +199,50 @@ export class StaffService {
     // Deferred #2: audit any role change separately from salary tweaks
     // because role escalations carry security weight.
     if (dto.role && before.role !== dto.role) {
-      void this.audit.record('system', 'staff.role_change', 'staff', id, {
-        from: before.role,
-        to: dto.role,
-        storeId,
-      });
+      void this.audit.record(
+        callerUserId ?? 'system',
+        'staff.role_change',
+        'staff',
+        id,
+        { from: before.role, to: dto.role, storeId },
+      );
     }
 
     return updated;
   }
 
-  async remove(storeId: string, id: string) {
-    await this.findOne(storeId, id);
+  async remove(storeId: string, id: string, callerUserId?: string) {
+    const staff = await this.findOne(storeId, id);
+
+    if (callerUserId && staff.userId === callerUserId) {
+      throw new ForbiddenException('You cannot remove your own staff record');
+    }
+
+    // Guard against removing a store's last remaining OWNER, which would
+    // leave the store with no one able to perform owner-only actions.
+    if (staff.role === 'OWNER') {
+      await this.assertNotLastOwner(storeId, id);
+    }
+
     return this.prisma.staff.update({
       where: { id },
       data: { isActive: false },
     });
+  }
+
+  private async assertNotLastOwner(storeId: string, excludeStaffId: string) {
+    const remainingOwners = await this.prisma.staff.count({
+      where: {
+        storeId,
+        role: 'OWNER',
+        isActive: true,
+        id: { not: excludeStaffId },
+      },
+    });
+    if (remainingOwners === 0) {
+      throw new ForbiddenException(
+        'Cannot remove or demote the last remaining owner of this store',
+      );
+    }
   }
 }

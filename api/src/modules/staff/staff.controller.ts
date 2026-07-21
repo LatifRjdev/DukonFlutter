@@ -1,9 +1,25 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
@@ -18,15 +34,24 @@ export class StaffController {
   @Post()
   @Permissions('staff.manage')
   @ApiOperation({ summary: 'Create staff member' })
-  @ApiResponse({ status: 201, description: 'Staff member created successfully' })
-  @ApiResponse({ status: 409, description: 'Staff member already exists in this store' })
+  @ApiResponse({
+    status: 201,
+    description: 'Staff member created successfully',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Staff member already exists in this store',
+  })
   create(@Param('storeId') storeId: string, @Body() dto: CreateStaffDto) {
     return this.staffService.create(storeId, dto);
   }
 
   @Get()
   @ApiOperation({ summary: 'List staff members' })
-  @ApiResponse({ status: 200, description: 'Staff list retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff list retrieved successfully',
+  })
   findAll(
     @Param('storeId') storeId: string,
     @Query('search') search?: string,
@@ -46,14 +71,18 @@ export class StaffController {
   @Put(':id')
   @Permissions('staff.manage')
   @ApiOperation({ summary: 'Update staff member' })
-  @ApiResponse({ status: 200, description: 'Staff member updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff member updated successfully',
+  })
   @ApiResponse({ status: 404, description: 'Staff member not found' })
   update(
     @Param('storeId') storeId: string,
     @Param('id') id: string,
     @Body() dto: UpdateStaffDto,
+    @CurrentUser('id') callerUserId: string,
   ) {
-    return this.staffService.update(storeId, id, dto);
+    return this.staffService.update(storeId, id, dto, callerUserId);
   }
 
   @Delete(':id')
@@ -61,7 +90,11 @@ export class StaffController {
   @ApiOperation({ summary: 'Deactivate staff member' })
   @ApiResponse({ status: 200, description: 'Staff member deactivated' })
   @ApiResponse({ status: 404, description: 'Staff member not found' })
-  remove(@Param('storeId') storeId: string, @Param('id') id: string) {
-    return this.staffService.remove(storeId, id);
+  remove(
+    @Param('storeId') storeId: string,
+    @Param('id') id: string,
+    @CurrentUser('id') callerUserId: string,
+  ) {
+    return this.staffService.remove(storeId, id, callerUserId);
   }
 }
