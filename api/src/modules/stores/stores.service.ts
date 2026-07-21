@@ -116,7 +116,9 @@ export class StoresService {
   }
 
   async softDelete(storeId: string) {
-    const store = await this.prisma.store.findUnique({ where: { id: storeId } });
+    const store = await this.prisma.store.findUnique({
+      where: { id: storeId },
+    });
     if (!store) throw new NotFoundException('Store not found');
     return this.prisma.store.update({
       where: { id: storeId },
@@ -147,12 +149,21 @@ export class StoresService {
     const settings = (store.settings as Record<string, any>) ?? {};
     const existing =
       settings['receiptTemplate'] ?? this.defaultReceiptTemplate();
+    // `dto` is a class-validator DTO instance; with useDefineForClassFields
+    // (implied by target ES2023) every declared-but-unsent field exists as
+    // an own property explicitly set to `undefined`. Spreading it directly
+    // over `existing` would overwrite previously-saved values with
+    // `undefined` on every partial update. Filter those out first so only
+    // fields the caller actually sent can overwrite the existing template.
+    const sentFields = Object.fromEntries(
+      Object.entries(dto).filter(([, v]) => v !== undefined),
+    );
     const updated = this.prisma.store.update({
       where: { id: storeId },
       data: {
         settings: {
           ...settings,
-          receiptTemplate: { ...existing, ...dto },
+          receiptTemplate: { ...existing, ...sentFields },
         },
       },
       select: { settings: true },

@@ -4,6 +4,7 @@ import { Logger, NotFoundException } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { ReceiptTemplateDto } from './dto/receipt-template.dto';
 
 // Behavioral fake of Prisma slice used by StoresService. Stores the relevant
 // bits in Maps so we can assert on persisted shape (trial period setup,
@@ -166,7 +167,7 @@ describe('StoresService', () => {
   });
 
   describe('findAll (ownership scoping)', () => {
-    it('should NOT return another owner\'s stores when listing for an owner', async () => {
+    it("should NOT return another owner's stores when listing for an owner", async () => {
       await service.create('owner-A', { name: 'A1' } as any);
       await service.create('owner-A', { name: 'A2' } as any);
       await service.create('owner-B', { name: 'B1' } as any);
@@ -189,13 +190,17 @@ describe('StoresService', () => {
 
   describe('softDelete', () => {
     it('should set isActive to false when softDelete is called', async () => {
-      const created: any = await service.create('owner-1', { name: 'Shop' } as any);
+      const created: any = await service.create('owner-1', {
+        name: 'Shop',
+      } as any);
       const result: any = await service.softDelete(created.id);
       expect(result.isActive).toBe(false);
     });
 
     it('should throw NotFoundException when store does not exist', async () => {
-      await expect(service.softDelete('nonexistent-id')).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.softDelete('nonexistent-id')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -239,6 +244,73 @@ describe('StoresService', () => {
       await expect(
         service.updateReceiptTemplate('missing-store', { header: 'x' } as any),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    // Regression test for a HIGH-severity data-loss bug: a real
+    // ReceiptTemplateDto instance (as produced by Nest's ValidationPipe
+    // with transform:true) has every declared-but-unsent field present as
+    // an own property explicitly set to `undefined` (useDefineForClassFields,
+    // implied by tsconfig target ES2023). A plain-object literal in a test
+    // (e.g. `{ footer: 'x' } as any`) does NOT reproduce this, since object
+    // literals only have the keys actually assigned — so this must
+    // construct a real class instance to catch the bug.
+    it('should leave unrelated fields untouched when partially updating via a real DTO instance', async () => {
+      const created: any = await service.create('owner-1', {
+        name: 'X',
+      } as any);
+
+      const seed = new ReceiptTemplateDto();
+      seed.storeName = 'Corner Shop';
+      seed.address = '123 Main St';
+      seed.phone = '+992900000000';
+      seed.header = 'Welcome';
+      seed.taxId = 'TIN-12345';
+      seed.footer = 'Original footer';
+      seed.showLogo = true;
+      seed.showBarcode = true;
+      await service.updateReceiptTemplate(created.id, seed);
+
+      // Partial update: only footer + showLogo sent. All other declared
+      // fields exist on the instance but are `undefined` (unsent).
+      const partial = new ReceiptTemplateDto();
+      partial.footer = 'custom footer';
+      partial.showLogo = false;
+      const result: any = await service.updateReceiptTemplate(
+        created.id,
+        partial,
+      );
+
+      expect(result.footer).toBe('custom footer');
+      expect(result.showLogo).toBe(false);
+      // Untouched fields must survive the partial update unchanged.
+      expect(result.storeName).toBe('Corner Shop');
+      expect(result.address).toBe('123 Main St');
+      expect(result.phone).toBe('+992900000000');
+      expect(result.header).toBe('Welcome');
+      expect(result.taxId).toBe('TIN-12345');
+      expect(result.showBarcode).toBe(true);
+    });
+
+    it('should still update an explicitly-set field to a new value via a real DTO instance', async () => {
+      const created: any = await service.create('owner-1', {
+        name: 'X',
+      } as any);
+
+      const seed = new ReceiptTemplateDto();
+      seed.header = 'Old header';
+      seed.taxId = 'TIN-OLD';
+      await service.updateReceiptTemplate(created.id, seed);
+
+      const update = new ReceiptTemplateDto();
+      update.header = 'New header';
+      const result: any = await service.updateReceiptTemplate(
+        created.id,
+        update,
+      );
+
+      expect(result.header).toBe('New header');
+      // Field not present in this second call stays as previously set.
+      expect(result.taxId).toBe('TIN-OLD');
     });
   });
 });
