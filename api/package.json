@@ -42,14 +42,14 @@
     "@prisma/client": "^6.0.0",
     "@sentry/nestjs": "^10.50.0",
     "@sentry/profiling-node": "^10.50.0",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cheerio": "^1.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "exceljs": "^4.4.0",
-    "firebase-admin": "^13.8.0",
+    "firebase-admin": "^14.2.0",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.1",
     "node-telegram-bot-api": "^0.67.0",
@@ -57,8 +57,7 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "uuid": "^10.0.0",
-    "xlsx": "^0.18.5"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
