@@ -1,5 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -34,21 +48,25 @@ export class CategoriesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get category by ID' })
   @ApiResponse({ status: 200, type: CategoryResponseDto })
-  async findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(id);
+  async findOne(@Param('storeId') storeId: string, @Param('id') id: string) {
+    return this.categoriesService.findOne(storeId, id);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update category' })
   @ApiResponse({ status: 200, type: CategoryResponseDto })
-  async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
-    return this.categoriesService.update(id, dto);
+  async update(
+    @Param('storeId') storeId: string,
+    @Param('id') id: string,
+    @Body() dto: UpdateCategoryDto,
+  ) {
+    return this.categoriesService.update(storeId, id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete category' })
   @ApiResponse({ status: 200 })
-  async remove(@Param('id') id: string) {
-    return this.categoriesService.remove(id);
+  async remove(@Param('storeId') storeId: string, @Param('id') id: string) {
+    return this.categoriesService.remove(storeId, id);
   }
 }

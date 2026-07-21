@@ -51,6 +51,12 @@ function makePrismaFake() {
       const c = cats.get(where.id);
       return c ? withCount(c) : null;
     }),
+    findFirst: jest.fn(async ({ where }: any) => {
+      const c = cats.get(where.id);
+      if (!c) return null;
+      if (where.storeId != null && c.storeId !== where.storeId) return null;
+      return withCount(c);
+    }),
     update: jest.fn(async ({ where, data }: any) => {
       const c = cats.get(where.id);
       if (!c) throw new Error('Not found');
@@ -109,7 +115,15 @@ describe('CategoriesService', () => {
 
   describe('findOne', () => {
     it('should throw NotFoundException when category does not exist', async () => {
-      await expect(service.findOne('non-existent')).rejects.toBeInstanceOf(
+      await expect(
+        service.findOne('store-A', 'non-existent'),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('should throw NotFoundException when the category belongs to a different store (BUG-CAT-IDOR regression)', async () => {
+      const cat = await service.create('store-A', { name: 'Drinks' });
+
+      await expect(service.findOne('store-B', cat.id)).rejects.toBeInstanceOf(
         NotFoundException,
       );
     });
@@ -121,7 +135,7 @@ describe('CategoriesService', () => {
       // Simulate products in the category via the fake
       prisma.__cats.get(cat.id).productCount = 3;
 
-      await expect(service.remove(cat.id)).rejects.toBeInstanceOf(
+      await expect(service.remove('store-A', cat.id)).rejects.toBeInstanceOf(
         BadRequestException,
       );
       // Category was NOT deleted
@@ -130,24 +144,43 @@ describe('CategoriesService', () => {
 
     it('should delete category when product count is zero', async () => {
       const cat = await service.create('store-A', { name: 'Empty' });
-      await service.remove(cat.id);
+      await service.remove('store-A', cat.id);
       expect(prisma.__cats.has(cat.id)).toBe(false);
     });
 
     it('should throw NotFoundException when removing a non-existent category', async () => {
-      await expect(service.remove('does-not-exist')).rejects.toBeInstanceOf(
+      await expect(
+        service.remove('store-A', 'does-not-exist'),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it("should throw NotFoundException (not delete) when removing a category via a different store's id (BUG-CAT-IDOR regression)", async () => {
+      const cat = await service.create('store-A', { name: 'Empty' });
+
+      await expect(service.remove('store-B', cat.id)).rejects.toBeInstanceOf(
         NotFoundException,
       );
+      expect(prisma.__cats.has(cat.id)).toBe(true);
     });
   });
 
   describe('update', () => {
     it('should update name and persist sortOrder when provided', async () => {
       const cat = await service.create('store-A', { name: 'Drinks' });
-      const updated = await service.update(cat.id, {
+      const updated = await service.update('store-A', cat.id, {
         name: 'Beverages',
       } as any);
       expect(updated.name).toBe('Beverages');
+    });
+
+    it('should throw NotFoundException (not update) when the category belongs to a different store (BUG-CAT-IDOR regression)', async () => {
+      const cat = await service.create('store-A', { name: 'Drinks' });
+
+      await expect(
+        service.update('store-B', cat.id, { name: 'HACKED' } as any),
+      ).rejects.toBeInstanceOf(NotFoundException);
+      // Untouched — name unchanged.
+      expect(prisma.__cats.get(cat.id)!.name).toBe('Drinks');
     });
   });
 });
