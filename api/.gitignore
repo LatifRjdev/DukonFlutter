@@ -16,6 +16,9 @@ npm-debug.log*
 # Coverage
 coverage/
 
+# Runtime file uploads (receipts, product images, etc.)
+uploads/
+
 # IDE
 .idea/
 .vscode/
