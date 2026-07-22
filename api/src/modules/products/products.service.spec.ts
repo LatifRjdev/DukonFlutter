@@ -738,6 +738,7 @@ describe('ProductsService.findAll — paybackPercent gating', () => {
       findUnique: jest.fn(async () => ({
         storeId: 'store-A',
         plan: 'BUSINESS',
+        status: 'ACTIVE',
       })),
     };
     (prisma as any).subscriptionPlanConfig = {
@@ -802,6 +803,20 @@ describe('ProductsService.findAll — paybackPercent gating', () => {
     (prisma as any).subscriptionPlanConfig.findUnique = jest.fn(async () => ({
       plan: 'START',
       hasBatchProfitability: false,
+    }));
+    const result = await service.findAll('store-A', {} as any, 'admin-1');
+    expect(result.data[0].paybackPercent).toBeNull();
+  });
+
+  it('should omit paybackPercent (null) for a privileged caller on a plan with the flag when the subscription status is PAST_DUE', async () => {
+    // Regression test: a lapsed-but-not-downgraded subscription (plan
+    // untouched, only status changed) must be denied here the same way
+    // SubscriptionGuard denies the dedicated detail endpoint — otherwise
+    // the list response leaks paybackPercent past a lapsed subscription.
+    (prisma as any).subscription.findUnique = jest.fn(async () => ({
+      storeId: 'store-A',
+      plan: 'BUSINESS',
+      status: 'PAST_DUE',
     }));
     const result = await service.findAll('store-A', {} as any, 'admin-1');
     expect(result.data[0].paybackPercent).toBeNull();

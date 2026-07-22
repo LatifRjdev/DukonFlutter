@@ -105,7 +105,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
 
   it('should notify for a product that has not sold in 32 days and still has 67% of its batch left', async () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
     prisma._products.push({
       id: 'p1',
@@ -141,7 +145,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
 
   it('should NOT notify when the product sold recently', async () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
     prisma._products.push({
       id: 'p1',
@@ -170,7 +178,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
 
   it('should NOT notify when remaining quantity is below the 50% threshold', async () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
     prisma._products.push({
       id: 'p1',
@@ -194,7 +206,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
 
   it('should NOT notify for a store whose plan lacks hasBatchProfitability', async () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'START' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'START',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'START', hasBatchProfitability: false });
     prisma._products.push({
       id: 'p1',
@@ -227,7 +243,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
         },
       },
     });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
     prisma._products.push({
       id: 'p1',
@@ -265,7 +285,11 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
         },
       },
     });
-    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+    });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
     prisma._products.push({
       id: 'p1',
@@ -294,6 +318,45 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
     // notification. If the non-numeric values were used as-is instead
     // of being guarded, `cutoff` would be an Invalid Date and this
     // assertion would fail.
+    expect(sendToStoreUsers).not.toHaveBeenCalled();
+  });
+
+  it('should NOT notify for a store whose plan has hasBatchProfitability but whose subscription status is PAST_DUE', async () => {
+    // Regression test: a lapsed-but-not-downgraded subscription (plan
+    // untouched, only status changed) must be denied here the same way
+    // SubscriptionGuard denies the dedicated detail endpoint — otherwise
+    // the daily cron keeps pushing notifications past a lapsed
+    // subscription.
+    prisma._stores.push({ id: 'store-1', isActive: true });
+    prisma._subscriptions.push({
+      storeId: 'store-1',
+      plan: 'BUSINESS',
+      status: 'PAST_DUE',
+    });
+    prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 67,
+      isActive: true,
+    });
+    const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000);
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      createdAt: oldDate,
+    });
+    prisma._saleItems.push({
+      productId: 'p1',
+      saleStoreId: 'store-1',
+      saleCreatedAt: new Date(Date.now() - 32 * 24 * 60 * 60 * 1000),
+    });
+
+    await service.checkSlowMovingStock();
+
     expect(sendToStoreUsers).not.toHaveBeenCalled();
   });
 });
