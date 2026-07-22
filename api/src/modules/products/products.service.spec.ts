@@ -128,6 +128,8 @@ function makePrismaFake() {
         for (const r of rows.values()) {
           if (where.id && r.id !== where.id) continue;
           if (where.storeId && r.storeId !== where.storeId) continue;
+          if (where.isActive !== undefined && r.isActive !== where.isActive)
+            continue;
           return r;
         }
         return null;
@@ -811,6 +813,19 @@ describe('ProductsService.findAll — paybackPercent gating', () => {
     // includeArchived=true would previously fail the whole list response.
     const archived = { ...prisma._rows.get('p1')!, id: 'p2', isActive: false };
     prisma._rows.set('p2', archived);
+    // Seed a real PURCHASE anchor for p2 too, so getBatchProfitability
+    // actually reaches the isActive:true findFirst check (and hits
+    // NotFoundException there) rather than short-circuiting earlier on
+    // the unrelated "no anchor" branch.
+    prisma._stockMovements.push({
+      id: 'mv2',
+      productId: 'p2',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
+    });
 
     const result = await service.findAll(
       'store-A',
