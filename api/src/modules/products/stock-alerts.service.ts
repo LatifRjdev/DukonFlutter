@@ -48,8 +48,14 @@ export class StockAlertsService {
     if (!planHasFlag) return;
 
     const notif = (store.settings as any)?.notifications ?? {};
-    const daysThreshold = notif.daysWithoutSaleThreshold ?? 30;
-    const percentThreshold = notif.remainingPercentThreshold ?? 50;
+    const daysThreshold =
+      typeof notif.daysWithoutSaleThreshold === 'number'
+        ? notif.daysWithoutSaleThreshold
+        : 30;
+    const percentThreshold =
+      typeof notif.remainingPercentThreshold === 'number'
+        ? notif.remainingPercentThreshold
+        : 50;
     const cutoff = new Date(Date.now() - daysThreshold * MS_PER_DAY);
 
     const products = await this.prisma.product.findMany({

@@ -40,7 +40,9 @@ function makePrismaFake() {
           (m) => m.productId === where.productId && m.type === where.type,
         );
         if (orderBy?.createdAt === 'desc') {
-          matches = [...matches].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          matches = [...matches].sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+          );
         }
         return matches[0] ?? null;
       }),
@@ -49,24 +51,35 @@ function makePrismaFake() {
       findFirst: jest.fn(async ({ where, orderBy }: any) => {
         let matches = saleItems.filter((si) => {
           if (si.productId !== where.productId) return false;
-          if (where.sale?.storeId && si.saleStoreId !== where.sale.storeId) return false;
-          if (where.sale?.createdAt?.gte && si.saleCreatedAt < where.sale.createdAt.gte) return false;
+          if (where.sale?.storeId && si.saleStoreId !== where.sale.storeId)
+            return false;
+          if (
+            where.sale?.createdAt?.gte &&
+            si.saleCreatedAt < where.sale.createdAt.gte
+          )
+            return false;
           return true;
         });
         if (orderBy?.sale?.createdAt === 'desc') {
-          matches = [...matches].sort((a, b) => b.saleCreatedAt.getTime() - a.saleCreatedAt.getTime());
+          matches = [...matches].sort(
+            (a, b) => b.saleCreatedAt.getTime() - a.saleCreatedAt.getTime(),
+          );
         }
-        return matches[0] ? { sale: { createdAt: matches[0].saleCreatedAt } } : null;
+        return matches[0]
+          ? { sale: { createdAt: matches[0].saleCreatedAt } }
+          : null;
       }),
     },
     subscription: {
-      findUnique: jest.fn(async ({ where }: any) =>
-        subscriptions.find((s) => s.storeId === where.storeId) ?? null,
+      findUnique: jest.fn(
+        async ({ where }: any) =>
+          subscriptions.find((s) => s.storeId === where.storeId) ?? null,
       ),
     },
     subscriptionPlanConfig: {
-      findUnique: jest.fn(async ({ where }: any) =>
-        planConfigs.find((c) => c.plan === where.plan) ?? null,
+      findUnique: jest.fn(
+        async ({ where }: any) =>
+          planConfigs.find((c) => c.plan === where.plan) ?? null,
       ),
     },
   } as any;
@@ -94,11 +107,24 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
     prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
-    prisma._products.push({ id: 'p1', storeId: 'store-1', name: 'Куртка', quantity: 67, isActive: true });
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 67,
+      isActive: true,
+    });
     const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000);
-    prisma._stockMovements.push({ id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100, createdAt: oldDate });
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      createdAt: oldDate,
+    });
     prisma._saleItems.push({
-      productId: 'p1', saleStoreId: 'store-1',
+      productId: 'p1',
+      saleStoreId: 'store-1',
       saleCreatedAt: new Date(Date.now() - 32 * 24 * 60 * 60 * 1000),
     });
 
@@ -117,13 +143,23 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
     prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
-    prisma._products.push({ id: 'p1', storeId: 'store-1', name: 'Куртка', quantity: 67, isActive: true });
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 67,
+      isActive: true,
+    });
     prisma._stockMovements.push({
-      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
       createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
     });
     prisma._saleItems.push({
-      productId: 'p1', saleStoreId: 'store-1',
+      productId: 'p1',
+      saleStoreId: 'store-1',
       saleCreatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     });
 
@@ -136,9 +172,18 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
     prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
-    prisma._products.push({ id: 'p1', storeId: 'store-1', name: 'Куртка', quantity: 10, isActive: true }); // only 10%
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 10,
+      isActive: true,
+    }); // only 10%
     prisma._stockMovements.push({
-      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
       createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
     });
 
@@ -151,9 +196,18 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
     prisma._stores.push({ id: 'store-1', isActive: true });
     prisma._subscriptions.push({ storeId: 'store-1', plan: 'START' });
     prisma._planConfigs.push({ plan: 'START', hasBatchProfitability: false });
-    prisma._products.push({ id: 'p1', storeId: 'store-1', name: 'Куртка', quantity: 67, isActive: true });
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 67,
+      isActive: true,
+    });
     prisma._stockMovements.push({
-      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
       createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
     });
 
@@ -163,21 +217,83 @@ describe('StockAlertsService.checkSlowMovingStock', () => {
   });
 
   it('should respect a store-configured custom threshold', async () => {
-    prisma._stores.push({ id: 'store-1', isActive: true, settings: { notifications: { daysWithoutSaleThreshold: 10, remainingPercentThreshold: 20 } } });
+    prisma._stores.push({
+      id: 'store-1',
+      isActive: true,
+      settings: {
+        notifications: {
+          daysWithoutSaleThreshold: 10,
+          remainingPercentThreshold: 20,
+        },
+      },
+    });
     prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
     prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
-    prisma._products.push({ id: 'p1', storeId: 'store-1', name: 'Куртка', quantity: 25, isActive: true }); // 25% >= 20%
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 25,
+      isActive: true,
+    }); // 25% >= 20%
     prisma._stockMovements.push({
-      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
       createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
     });
     prisma._saleItems.push({
-      productId: 'p1', saleStoreId: 'store-1',
+      productId: 'p1',
+      saleStoreId: 'store-1',
       saleCreatedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago >= 10-day threshold
     });
 
     await service.checkSlowMovingStock();
 
     expect(sendToStoreUsers).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fall back to default thresholds when stored settings are non-numeric', async () => {
+    prisma._stores.push({
+      id: 'store-1',
+      isActive: true,
+      settings: {
+        notifications: {
+          daysWithoutSaleThreshold: 'not-a-number',
+          remainingPercentThreshold: 'also-not-a-number',
+        },
+      },
+    });
+    prisma._subscriptions.push({ storeId: 'store-1', plan: 'BUSINESS' });
+    prisma._planConfigs.push({ plan: 'BUSINESS', hasBatchProfitability: true });
+    prisma._products.push({
+      id: 'p1',
+      storeId: 'store-1',
+      name: 'Куртка',
+      quantity: 67,
+      isActive: true,
+    });
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
+    });
+    prisma._saleItems.push({
+      productId: 'p1',
+      saleStoreId: 'store-1',
+      saleCreatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago — within the default 30-day threshold
+    });
+
+    await service.checkSlowMovingStock();
+
+    // With malformed settings falling back to the documented defaults
+    // (30 days / 50%), a product sold 2 days ago must NOT trigger a
+    // notification. If the non-numeric values were used as-is instead
+    // of being guarded, `cutoff` would be an Invalid Date and this
+    // assertion would fail.
+    expect(sendToStoreUsers).not.toHaveBeenCalled();
   });
 });
