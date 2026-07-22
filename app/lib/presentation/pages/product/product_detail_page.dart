@@ -797,7 +797,7 @@ class _BatchProfitabilitySectionState
           _InfoRow(
             label: 'Остаток',
             value:
-                '${data['remainingQuantity']} шт. на ${_formatMoney((data['remainingStockValue'] as num?))}',
+                '${(data['remainingQuantity'] as num?)?.round() ?? 0} шт. на ${_formatMoney((data['remainingStockValue'] as num?))}',
           ),
           if (paybackPercent != null) ...[
             const SizedBox(height: 12),
