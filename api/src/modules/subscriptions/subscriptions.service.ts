@@ -55,6 +55,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: false,
         hasZakat: false,
         hasInvestments: false,
+        hasBatchProfitability: false,
       },
       {
         plan: 'BUSINESS' as const,
@@ -70,6 +71,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: true,
         hasZakat: true,
         hasInvestments: true,
+        hasBatchProfitability: true,
       },
       {
         plan: 'PREMIUM' as const,
@@ -85,6 +87,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: true,
         hasZakat: true,
         hasInvestments: true,
+        hasBatchProfitability: true,
       },
     ];
 
@@ -92,7 +95,10 @@ export class SubscriptionsService implements OnModuleInit {
       await this.prisma.subscriptionPlanConfig.upsert({
         where: { plan: config.plan },
         create: config,
-        update: {},
+        // update: {} previously meant existing rows in a running DB never
+        // picked up newly-added flags; patch the field explicitly so
+        // existing rows self-heal on next server boot.
+        update: { hasBatchProfitability: config.hasBatchProfitability },
       });
     }
 

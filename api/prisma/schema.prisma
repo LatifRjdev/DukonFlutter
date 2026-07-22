@@ -193,6 +193,7 @@ model SubscriptionPlanConfig {
   hasZakat       Boolean          @default(false)
   hasInvestments Boolean          @default(false)
   hasLoyalty     Boolean          @default(false)
+  hasBatchProfitability Boolean @default(false)
 
   @@map("subscription_plan_configs")
 }

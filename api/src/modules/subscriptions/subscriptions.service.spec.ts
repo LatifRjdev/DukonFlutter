@@ -53,6 +53,10 @@ function makePrismaFake() {
         if (prices[where.plan] === undefined) return null;
         return { plan: where.plan, price: prices[where.plan] };
       }),
+      upsert: jest.fn(async ({ where, create }: any) => ({
+        plan: where.plan,
+        ...create,
+      })),
     },
   };
 }
@@ -454,5 +458,65 @@ describe('SubscriptionsService — checkExpiredSubscriptions', () => {
 
     expect(prisma.subscription.updateMany).not.toHaveBeenCalled();
     expect(sendPushMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('SubscriptionsService — seedPlanConfigs', () => {
+  it('should seed hasBatchProfitability=false for START and true for BUSINESS/PREMIUM', async () => {
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+    expect(byPlan.START.create.hasBatchProfitability).toBe(false);
+    expect(byPlan.BUSINESS.create.hasBatchProfitability).toBe(true);
+    expect(byPlan.PREMIUM.create.hasBatchProfitability).toBe(true);
+  });
+
+  it('should patch hasBatchProfitability on the update path too, so an existing row self-heals on next boot', async () => {
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+    expect(byPlan.BUSINESS.update).toEqual({ hasBatchProfitability: true });
+    expect(byPlan.PREMIUM.update).toEqual({ hasBatchProfitability: true });
+    expect(byPlan.START.update).toEqual({ hasBatchProfitability: false });
   });
 });
