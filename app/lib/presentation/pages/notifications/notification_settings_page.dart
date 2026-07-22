@@ -24,11 +24,24 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   bool _shiftClosed = true;
   bool _deliveryCompleted = true;
   bool _debtReminder = true;
+  int _daysWithoutSaleThreshold = 30;
+  int _remainingPercentThreshold = 50;
+  late final TextEditingController _daysController;
+  late final TextEditingController _percentController;
 
   @override
   void initState() {
     super.initState();
+    _daysController = TextEditingController();
+    _percentController = TextEditingController();
     _loadSettings();
+  }
+
+  @override
+  void dispose() {
+    _daysController.dispose();
+    _percentController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSettings() async {
@@ -36,11 +49,15 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       final res = await _dioClient.get('/stores/${widget.storeId}/notifications/settings');
       final data = res.data as Map<String, dynamic>? ?? {};
       setState(() {
-        _lowStock = data['lowStock'] as bool? ?? true;
-        _newSale = data['newSale'] as bool? ?? true;
-        _shiftClosed = data['shiftClosed'] as bool? ?? true;
-        _deliveryCompleted = data['deliveryCompleted'] as bool? ?? true;
-        _debtReminder = data['debtReminder'] as bool? ?? true;
+        _lowStock = data['lowStockAlerts'] as bool? ?? true;
+        _newSale = data['newSaleAlerts'] as bool? ?? true;
+        _shiftClosed = data['shiftClosedAlerts'] as bool? ?? true;
+        _deliveryCompleted = data['deliveryCompletedAlerts'] as bool? ?? true;
+        _debtReminder = data['debtReminderAlerts'] as bool? ?? true;
+        _daysWithoutSaleThreshold = data['daysWithoutSaleThreshold'] as int? ?? 30;
+        _remainingPercentThreshold = data['remainingPercentThreshold'] as int? ?? 50;
+        _daysController.text = _daysWithoutSaleThreshold.toString();
+        _percentController.text = _remainingPercentThreshold.toString();
         _loading = false;
       });
     } catch (_) {
@@ -51,11 +68,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Future<void> _saveSettings() async {
     try {
       await _dioClient.put('/stores/${widget.storeId}/notifications/settings', data: {
-        'lowStock': _lowStock,
-        'newSale': _newSale,
-        'shiftClosed': _shiftClosed,
-        'deliveryCompleted': _deliveryCompleted,
-        'debtReminder': _debtReminder,
+        'lowStockAlerts': _lowStock,
+        'newSaleAlerts': _newSale,
+        'shiftClosedAlerts': _shiftClosed,
+        'deliveryCompletedAlerts': _deliveryCompleted,
+        'debtReminderAlerts': _debtReminder,
+        'daysWithoutSaleThreshold': int.tryParse(_daysController.text) ?? 30,
+        'remainingPercentThreshold': int.tryParse(_percentController.text) ?? 50,
       });
       if (mounted) {
         AppSnackbar.success(context, AppLocalizations.of(context)!.snackSettingsSaved);
@@ -124,6 +143,49 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   Icons.warning_amber_outlined,
                   _debtReminder,
                   (v) => setState(() => _debtReminder = v),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                    side: BorderSide(color: context.border),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Залежалый товар',
+                          style: TextStyle(fontWeight: FontWeight.w600, fontFamily: 'Inter'),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Уведомлять, если товар не продаётся N дней и остаток ещё большой',
+                          style: TextStyle(fontSize: 12, color: context.textSecondary),
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: _daysController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Дней без продаж',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: _percentController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Остаток, % от партии',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
                 SizedBox(
