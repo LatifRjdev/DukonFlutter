@@ -310,6 +310,59 @@ describe('PermissionsGuard', () => {
     });
   });
 
+  describe('products.viewProfitability (new permission)', () => {
+    it('allows ADMIN by default-matrix fallback (no DB override needed)', async () => {
+      const prisma = makePrismaFake({
+        stores: [{ id: 'store-1', ownerId: 'owner-1' }],
+        staff: [
+          { storeId: 'store-1', userId: 'admin-1', role: 'ADMIN', isActive: true },
+        ],
+      });
+      const guard = new PermissionsGuard(reflector, prisma);
+      const ctx = makeContext({
+        permissions: ['products.viewProfitability'],
+        userId: 'admin-1',
+        storeId: 'store-1',
+      });
+
+      await expect(guard.canActivate(ctx)).resolves.toBe(true);
+    });
+
+    it('denies WAREHOUSE by default (it has products.manage but not products.viewProfitability)', async () => {
+      const prisma = makePrismaFake({
+        stores: [{ id: 'store-1', ownerId: 'owner-1' }],
+        staff: [
+          { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+        ],
+      });
+      const guard = new PermissionsGuard(reflector, prisma);
+      const ctx = makeContext({
+        permissions: ['products.viewProfitability'],
+        userId: 'wh-1',
+        storeId: 'store-1',
+      });
+
+      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it('denies CASHIER by default', async () => {
+      const prisma = makePrismaFake({
+        stores: [{ id: 'store-1', ownerId: 'owner-1' }],
+        staff: [
+          { storeId: 'store-1', userId: 'cash-1', role: 'CASHIER', isActive: true },
+        ],
+      });
+      const guard = new PermissionsGuard(reflector, prisma);
+      const ctx = makeContext({
+        permissions: ['products.viewProfitability'],
+        userId: 'cash-1',
+        storeId: 'store-1',
+      });
+
+      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+    });
+  });
+
   describe('unauthenticated / no store context', () => {
     it('throws when there is no authenticated user', async () => {
       const prisma = makePrismaFake({});

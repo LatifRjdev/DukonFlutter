@@ -24,6 +24,7 @@ export const DEFAULT_PERMISSIONS: Record<StaffRole, readonly string[]> = {
     'roles.manage',
     'products.manage',
     'products.delete',
+    'products.viewProfitability',
     'categories.manage',
     'customers.manage',
     'suppliers.manage',
