@@ -315,7 +315,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'admin-1', role: 'ADMIN', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'admin-1',
+            role: 'ADMIN',
+            isActive: true,
+          },
         ],
       });
       const guard = new PermissionsGuard(reflector, prisma);
@@ -332,7 +337,12 @@ describe('PermissionsGuard', () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'wh-1',
+            role: 'WAREHOUSE',
+            isActive: true,
+          },
         ],
       });
       const guard = new PermissionsGuard(reflector, prisma);
@@ -342,14 +352,21 @@ describe('PermissionsGuard', () => {
         storeId: 'store-1',
       });
 
-      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
     });
 
     it('denies CASHIER by default', async () => {
       const prisma = makePrismaFake({
         stores: [{ id: 'store-1', ownerId: 'owner-1' }],
         staff: [
-          { storeId: 'store-1', userId: 'cash-1', role: 'CASHIER', isActive: true },
+          {
+            storeId: 'store-1',
+            userId: 'cash-1',
+            role: 'CASHIER',
+            isActive: true,
+          },
         ],
       });
       const guard = new PermissionsGuard(reflector, prisma);
@@ -359,7 +376,9 @@ describe('PermissionsGuard', () => {
         storeId: 'store-1',
       });
 
-      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+      await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
     });
   });
 
