@@ -110,3 +110,6 @@ app/lib/firebase_options.dart
 
 # API env backups
 api/.env.backup
+
+# Local git worktrees (superpowers subagent-driven-development)
+.worktrees/
