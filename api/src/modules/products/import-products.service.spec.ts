@@ -24,9 +24,9 @@ describe('ImportProductsService — parseFile guard', () => {
   });
 
   it('should throw BadRequestException when buffer is null', async () => {
-    await expect(
-      (service as any).parseFile(null),
-    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect((service as any).parseFile(null)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
   });
 
   it('should include a descriptive message in the exception', async () => {

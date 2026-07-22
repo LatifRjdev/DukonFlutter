@@ -14,7 +14,6 @@ import * as Sentry from '@sentry/nestjs';
 const HAUL_DAYS = 354;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-
 @Injectable()
 export class ZakatService {
   constructor(
