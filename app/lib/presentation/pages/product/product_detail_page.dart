@@ -1,15 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:intl/intl.dart';
+import '../../../core/constants/api_endpoints.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/constants/enums.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/product.dart';
 import '../../../injection.dart';
 import '../../blocs/product/product_list_bloc.dart';
@@ -204,6 +207,18 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Batch profitability
+                    _BatchProfitabilitySection(
+                      storeId: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        return storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                      }(),
+                      productId: product.id,
                     ),
                     const SizedBox(height: 20),
 
@@ -652,6 +667,155 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
                 ],
               );
             }),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Batch Profitability ("Окупаемость партии")
+// ---------------------------------------------------------------------------
+
+class _BatchProfitabilitySection extends StatefulWidget {
+  final String storeId;
+  final String productId;
+
+  const _BatchProfitabilitySection({
+    required this.storeId,
+    required this.productId,
+  });
+
+  @override
+  State<_BatchProfitabilitySection> createState() =>
+      _BatchProfitabilitySectionState();
+}
+
+class _BatchProfitabilitySectionState
+    extends State<_BatchProfitabilitySection> {
+  Map<String, dynamic>? _data;
+  bool _loading = true;
+  bool _forbidden = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    if (widget.storeId.isEmpty) {
+      setState(() => _loading = false);
+      return;
+    }
+    try {
+      final resp = await sl<DioClient>().get<Map<String, dynamic>>(
+        ApiEndpoints.productBatchProfitability(widget.storeId, widget.productId),
+      );
+      setState(() {
+        _data = resp.data;
+        _loading = false;
+      });
+    } on DioException catch (e) {
+      // 403 = plan doesn't include this feature, or caller's role can't
+      // view it — both cases just hide the section, no error UI.
+      setState(() {
+        _forbidden = e.response?.statusCode == 403;
+        _loading = false;
+      });
+    } catch (_) {
+      setState(() => _loading = false);
+    }
+  }
+
+  String _formatMoney(num? value) =>
+      value == null ? '—' : Formatters.price(value.toDouble());
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading || _forbidden || _data == null) {
+      return const SizedBox.shrink();
+    }
+    final data = _data!;
+    if (data['hasBatch'] != true) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.surface,
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+          boxShadow: AppShadows.md,
+        ),
+        child: Text(
+          'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.',
+          style: TextStyle(color: context.textSecondary, fontSize: 13),
+        ),
+      );
+    }
+
+    final paybackPercent = (data['paybackPercent'] as num?)?.toDouble();
+    final paybackShortfall = (data['paybackShortfall'] as num?)?.toDouble();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        boxShadow: AppShadows.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Окупаемость партии',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 12),
+          _InfoRow(
+            label: 'Себестоимость партии',
+            value: _formatMoney((data['batchCost'] as num?)),
+          ),
+          const Divider(height: 20),
+          _InfoRow(
+            label: 'Выручка от партии',
+            value: _formatMoney((data['revenue'] as num?)),
+          ),
+          const Divider(height: 20),
+          _InfoRow(
+            label: 'Прибыль заработана',
+            value: _formatMoney((data['profitEarned'] as num?)),
+          ),
+          const Divider(height: 20),
+          _InfoRow(
+            label: 'До окупаемости партии',
+            value: paybackShortfall == null
+                ? '—'
+                : paybackShortfall >= 0
+                    ? 'Партия окупилась'
+                    : _formatMoney(paybackShortfall),
+          ),
+          const Divider(height: 20),
+          _InfoRow(
+            label: 'Остаток',
+            value:
+                '${data['remainingQuantity']} шт. на ${_formatMoney((data['remainingStockValue'] as num?))}',
+          ),
+          if (paybackPercent != null) ...[
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              value: (paybackPercent / 100).clamp(0.0, 1.0),
+              backgroundColor: context.surfaceMuted,
+              color: paybackPercent >= 100
+                  ? AppColors.success
+                  : paybackPercent >= 50
+                      ? AppColors.warning
+                      : AppColors.error,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${paybackPercent.toStringAsFixed(0)}% окупаемости',
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
+            ),
+          ],
         ],
       ),
     );
