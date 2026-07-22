@@ -123,9 +123,7 @@ describe('checkStaffPermission', () => {
     });
 
     await expect(
-      checkStaffPermission(prisma, 'store-1', 'stranger-1', [
-        'products.view',
-      ]),
+      checkStaffPermission(prisma, 'store-1', 'stranger-1', ['products.view']),
     ).resolves.toBe(false);
   });
 
@@ -152,7 +150,12 @@ describe('checkStaffPermission', () => {
     const prisma = makePrismaFake({
       stores: [{ id: 'store-1', ownerId: 'owner-1' }],
       staff: [
-        { storeId: 'store-1', userId: 'cash-1', role: 'CASHIER', isActive: true },
+        {
+          storeId: 'store-1',
+          userId: 'cash-1',
+          role: 'CASHIER',
+          isActive: true,
+        },
       ],
       rolePermissions: [
         {
@@ -174,7 +177,12 @@ describe('checkStaffPermission', () => {
     const prisma = makePrismaFake({
       stores: [{ id: 'store-1', ownerId: 'owner-1' }],
       staff: [
-        { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+        {
+          storeId: 'store-1',
+          userId: 'wh-1',
+          role: 'WAREHOUSE',
+          isActive: true,
+        },
       ],
       rolePermissions: [
         {
@@ -195,7 +203,12 @@ describe('checkStaffPermission', () => {
     const prisma = makePrismaFake({
       stores: [{ id: 'store-1', ownerId: 'owner-1' }],
       staff: [
-        { storeId: 'store-1', userId: 'admin-1', role: 'ADMIN', isActive: true },
+        {
+          storeId: 'store-1',
+          userId: 'admin-1',
+          role: 'ADMIN',
+          isActive: true,
+        },
       ],
       rolePermissions: [],
     });
@@ -211,7 +224,12 @@ describe('checkStaffPermission', () => {
     const prisma = makePrismaFake({
       stores: [{ id: 'store-1', ownerId: 'owner-1' }],
       staff: [
-        { storeId: 'store-1', userId: 'wh-1', role: 'WAREHOUSE', isActive: true },
+        {
+          storeId: 'store-1',
+          userId: 'wh-1',
+          role: 'WAREHOUSE',
+          isActive: true,
+        },
       ],
       rolePermissions: [],
     });
