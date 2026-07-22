@@ -19,6 +19,7 @@ class Product extends Equatable {
   final String? imageUrl;
   final bool isActive;
   final DateTime createdAt;
+  final double? paybackPercent;
 
   const Product({
     required this.id,
@@ -39,6 +40,7 @@ class Product extends Equatable {
     this.imageUrl,
     this.isActive = true,
     required this.createdAt,
+    this.paybackPercent,
   });
 
   bool get isLowStock => quantity > 0 && quantity <= minQuantity;
@@ -49,5 +51,6 @@ class Product extends Equatable {
       : null;
 
   @override
-  List<Object?> get props => [id, storeId, name, sku, barcode, sellPrice, quantity, isActive];
+  List<Object?> get props =>
+      [id, storeId, name, sku, barcode, sellPrice, quantity, isActive, paybackPercent];
 }

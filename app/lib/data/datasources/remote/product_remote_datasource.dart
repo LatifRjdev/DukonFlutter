@@ -224,6 +224,7 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
       imageUrl: json['imageUrl'] as String?,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      paybackPercent: (json['paybackPercent'] as num?)?.toDouble(),
     );
   }
 

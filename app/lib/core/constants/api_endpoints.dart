@@ -46,6 +46,10 @@ class ApiEndpoints {
   static String stockMovements(String storeId, String productId) =>
       '/stores/$storeId/products/$productId/stock-movements';
 
+  // Batch Profitability
+  static String productBatchProfitability(String storeId, String productId) =>
+      '/stores/$storeId/products/$productId/batch-profitability';
+
   // Sales
   static String sales(String storeId) => '/stores/$storeId/sales';
   static String sale(String storeId, String id) => '/stores/$storeId/sales/$id';
