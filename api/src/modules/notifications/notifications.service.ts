@@ -222,15 +222,15 @@ export class NotificationsService {
       where: { id: storeId },
       select: { settings: true },
     });
-    const notif = ((store?.settings as any)?.notifications) ?? {};
+    const notif = (store?.settings as any)?.notifications ?? {};
     return {
-      lowStockAlerts:            notif.lowStockAlerts            ?? true,
-      newSaleAlerts:             notif.newSaleAlerts              ?? true,
-      shiftClosedAlerts:         notif.shiftClosedAlerts          ?? true,
-      deliveryCompletedAlerts:   notif.deliveryCompletedAlerts    ?? true,
-      debtReminderAlerts:        notif.debtReminderAlerts         ?? true,
-      daysWithoutSaleThreshold:  notif.daysWithoutSaleThreshold   ?? 30,
-      remainingPercentThreshold: notif.remainingPercentThreshold  ?? 50,
+      lowStockAlerts: notif.lowStockAlerts ?? true,
+      newSaleAlerts: notif.newSaleAlerts ?? true,
+      shiftClosedAlerts: notif.shiftClosedAlerts ?? true,
+      deliveryCompletedAlerts: notif.deliveryCompletedAlerts ?? true,
+      debtReminderAlerts: notif.debtReminderAlerts ?? true,
+      daysWithoutSaleThreshold: notif.daysWithoutSaleThreshold ?? 30,
+      remainingPercentThreshold: notif.remainingPercentThreshold ?? 50,
     };
   }
 
