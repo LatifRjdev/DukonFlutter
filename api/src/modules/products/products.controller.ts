@@ -19,7 +19,9 @@ import type { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { SubscriptionGuard } from '../../common/guards/subscription.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
+import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ProductsService } from './products.service';
 import { StockMovementsService } from './stock-movements.service';
@@ -135,6 +137,20 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get product details' })
   findOne(@Param('storeId') storeId: string, @Param('id') id: string) {
     return this.productsService.findOne(storeId, id);
+  }
+
+  @Get(':id/batch-profitability')
+  @UseGuards(SubscriptionGuard)
+  @RequiresFeature('hasBatchProfitability')
+  @Permissions('products.viewProfitability')
+  @ApiOperation({
+    summary: 'Get batch (most recent restock) profitability for a product',
+  })
+  getBatchProfitability(
+    @Param('storeId') storeId: string,
+    @Param('id') id: string,
+  ) {
+    return this.productsService.getBatchProfitability(storeId, id);
   }
 
   @Put(':id')
