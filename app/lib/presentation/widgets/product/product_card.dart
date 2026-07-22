@@ -87,7 +87,16 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        _buildQuantityIndicator(context),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildQuantityIndicator(context),
+                            if (product.paybackPercent != null) ...[
+                              const SizedBox(height: 4),
+                              _buildPaybackBadge(context),
+                            ],
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -132,6 +141,35 @@ class ProductCard extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: indicatorColor,
+          fontFamily: 'Inter',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaybackBadge(BuildContext context) {
+    final percent = product.paybackPercent!;
+    Color color;
+    if (percent < 50) {
+      color = context.danger;
+    } else if (percent < 100) {
+      color = context.warning;
+    } else {
+      color = context.success;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      ),
+      child: Text(
+        '${percent.round()}%',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: color,
           fontFamily: 'Inter',
         ),
       ),
