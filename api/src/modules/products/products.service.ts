@@ -184,19 +184,18 @@ export class ProductsService {
   // "the batch") and computes how much of it has sold, for how much
   // revenue and profit, and how far the batch is from cash-payback.
   async getBatchProfitability(storeId: string, id: string) {
-    const product = await this.prisma.product.findFirst({
-      where: { id, storeId, isActive: true },
-    });
+    const [product, anchor] = await Promise.all([
+      this.prisma.product.findFirst({ where: { id, storeId, isActive: true } }),
+      this.prisma.stockMovement.findFirst({
+        where: { productId: id, type: 'PURCHASE' },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
     if (!product) throw new NotFoundException('Product not found');
-
-    const anchor = await this.prisma.stockMovement.findFirst({
-      where: { productId: id, type: 'PURCHASE' },
-      orderBy: { createdAt: 'desc' },
-    });
 
     const remainingQuantity = product.quantity;
     const remainingStockValue = product.costPrice
-      ? Number(product.costPrice) * remainingQuantity
+      ? new Prisma.Decimal(product.costPrice).mul(remainingQuantity).toNumber()
       : null;
 
     if (!anchor || anchor.totalCost == null) {
@@ -224,6 +223,7 @@ export class ProductsService {
         refundedQuantity: true,
         costPrice: true,
         total: true,
+        sale: { select: { discount: true, subtotal: true } },
       },
     });
 
@@ -234,10 +234,22 @@ export class ProductsService {
       const netQty = item.quantity - item.refundedQuantity;
       soldQuantity += netQty;
       // F-RACE-2 pattern (see sales.service.ts refund()): `total` already
-      // nets out any discount for the FULL line, so pro-rate it to the
-      // non-refunded quantity rather than recomputing from unitPrice.
+      // nets out any *line-level* discount, so pro-rate it to the
+      // non-refunded quantity rather than recomputing from unitPrice. But
+      // `total` does NOT reflect the *sale-level* discount (Sale.discount),
+      // which is applied once across the whole sale and never written back
+      // onto individual SaleItem.total rows — so apply that same
+      // proportional ratio here too, exactly as refund() does.
       const perUnitNet = new Prisma.Decimal(item.total).div(item.quantity);
-      const lineRevenue = perUnitNet.mul(netQty);
+      let lineRevenue = perUnitNet.mul(netQty);
+      const saleDiscount = item.sale.discount as unknown as number;
+      const saleSubtotal = item.sale.subtotal as unknown as number;
+      if (saleDiscount > 0 && saleSubtotal > 0) {
+        const ratio = new Prisma.Decimal(1).sub(
+          new Prisma.Decimal(item.sale.discount).div(item.sale.subtotal),
+        );
+        lineRevenue = lineRevenue.mul(ratio);
+      }
       revenue = revenue.add(lineRevenue);
       const costSnapshot =
         item.costPrice != null
@@ -252,6 +264,9 @@ export class ProductsService {
     const paybackPercent = batchCost.gt(0)
       ? revenue.div(batchCost).mul(100).toNumber()
       : null;
+    // Negative = the batch has not yet earned back its full cash cost
+    // (this many TJS still short of payback). Positive or zero = the
+    // batch has fully paid for itself; this is profit beyond payback.
     const paybackShortfall = revenue.sub(batchCost).toNumber();
 
     return {

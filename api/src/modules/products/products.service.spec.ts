@@ -51,6 +51,11 @@ function makePrismaFake() {
     refundedQuantity: number;
     saleStoreId: string;
     saleCreatedAt: Date;
+    // Sale-level discount/subtotal (Sale.discount / Sale.subtotal), for
+    // simulating the F-RACE-2 proportional-ratio case. Default to no
+    // sale-level discount when omitted.
+    saleDiscount?: number;
+    saleSubtotal?: number;
   }> = [];
 
   return {
@@ -74,19 +79,30 @@ function makePrismaFake() {
     },
     saleItem: {
       findMany: jest.fn(async ({ where }: any) => {
-        return saleItems.filter((si) => {
-          if (si.productId !== where.productId) return false;
-          if (where.sale?.storeId && si.saleStoreId !== where.sale.storeId) {
-            return false;
-          }
-          if (
-            where.sale?.createdAt?.gte &&
-            si.saleCreatedAt < where.sale.createdAt.gte
-          ) {
-            return false;
-          }
-          return true;
-        });
+        return saleItems
+          .filter((si) => {
+            if (si.productId !== where.productId) return false;
+            if (where.sale?.storeId && si.saleStoreId !== where.sale.storeId) {
+              return false;
+            }
+            if (
+              where.sale?.createdAt?.gte &&
+              si.saleCreatedAt < where.sale.createdAt.gte
+            ) {
+              return false;
+            }
+            return true;
+          })
+          .map((si) => ({
+            quantity: si.quantity,
+            refundedQuantity: si.refundedQuantity,
+            costPrice: si.costPrice,
+            total: si.total,
+            sale: {
+              discount: si.saleDiscount ?? 0,
+              subtotal: si.saleSubtotal ?? 0,
+            },
+          }));
       }),
     },
     product: {
@@ -548,6 +564,52 @@ describe('ProductsService.getBatchProfitability', () => {
     expect(result.soldQuantity).toBe(6);
     expect(result.revenue).toBe(180);
     expect(result.profitEarned).toBe(120); // 180 - 6*10
+  });
+
+  it('should apply the sale-level discount ratio on top of the line total, not count the pre-discount total as revenue', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 80,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
+    });
+    // Line total (already net of any line-level discount) = 20 * 30 = 600.
+    // Sale-level discount 100 on a sale subtotal of 1000 => ratio 0.9.
+    // Real revenue for this line = 600 * 0.9 = 540, not the raw 600.
+    prisma._saleItems.push({
+      id: 'si1',
+      productId: 'p1',
+      quantity: 20,
+      unitPrice: 30,
+      costPrice: 10,
+      total: 600,
+      refundedQuantity: 0,
+      saleStoreId: 'store-A',
+      saleCreatedAt: new Date('2026-07-15'),
+      saleDiscount: 100,
+      saleSubtotal: 1000,
+    });
+
+    const result = await service.getBatchProfitability('store-A', 'p1');
+
+    expect(result.soldQuantity).toBe(20);
+    expect(result.revenue).toBe(540); // 600 * (1 - 100/1000), not raw 600
+    expect(result.profitEarned).toBe(340); // 540 - 20*10
   });
 
   it('should only count sales on or after the anchor purchase date, not earlier ones', async () => {
