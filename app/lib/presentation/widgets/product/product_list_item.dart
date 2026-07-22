@@ -89,8 +89,18 @@ class ProductListItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppConstants.spacingSm),
-              // Quantity badge
-              _buildQuantityBadge(context),
+              // Quantity + payback badges
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _buildQuantityBadge(context),
+                  if (product.paybackPercent != null) ...[
+                    const SizedBox(height: 4),
+                    _buildPaybackBadge(context),
+                  ],
+                ],
+              ),
             ],
           ),
         ),
@@ -131,6 +141,40 @@ class ProductListItem extends StatelessWidget {
       ),
       child: Text(
         '${product.quantity}',
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: textColor,
+          fontFamily: 'Inter',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaybackBadge(BuildContext context) {
+    final percent = product.paybackPercent!;
+    Color backgroundColor;
+    Color textColor;
+
+    if (percent < 50) {
+      backgroundColor = context.danger.withValues(alpha: 0.1);
+      textColor = context.danger;
+    } else if (percent < 100) {
+      backgroundColor = context.warning.withValues(alpha: 0.1);
+      textColor = context.warning;
+    } else {
+      backgroundColor = context.success.withValues(alpha: 0.1);
+      textColor = context.success;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      ),
+      child: Text(
+        '${percent.round()}%',
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
