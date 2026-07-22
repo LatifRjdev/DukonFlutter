@@ -469,6 +469,8 @@ describe('NotificationsService', () => {
         shiftClosedAlerts: true,
         deliveryCompletedAlerts: true,
         debtReminderAlerts: true,
+        daysWithoutSaleThreshold: 30,
+        remainingPercentThreshold: 50,
       });
     });
 
@@ -493,7 +495,35 @@ describe('NotificationsService', () => {
         shiftClosedAlerts: false,
         deliveryCompletedAlerts: true,
         debtReminderAlerts: false,
+        daysWithoutSaleThreshold: 30,
+        remainingPercentThreshold: 50,
       });
+    });
+  });
+
+  describe('getNotificationSettings — batch profitability thresholds', () => {
+    it('should default daysWithoutSaleThreshold to 30 and remainingPercentThreshold to 50 when unset', async () => {
+      prisma.__stores.set('store-C', { id: 'store-C', settings: {} });
+      const service = await buildService();
+      const result = await service.getNotificationSettings('store-C');
+      expect(result.daysWithoutSaleThreshold).toBe(30);
+      expect(result.remainingPercentThreshold).toBe(50);
+    });
+
+    it('should return the persisted values when previously saved', async () => {
+      prisma.__stores.set('store-D', {
+        id: 'store-D',
+        settings: {
+          notifications: {
+            daysWithoutSaleThreshold: 14,
+            remainingPercentThreshold: 30,
+          },
+        },
+      });
+      const service = await buildService();
+      const result = await service.getNotificationSettings('store-D');
+      expect(result.daysWithoutSaleThreshold).toBe(14);
+      expect(result.remainingPercentThreshold).toBe(30);
     });
   });
 });

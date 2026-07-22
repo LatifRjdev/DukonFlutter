@@ -224,11 +224,13 @@ export class NotificationsService {
     });
     const notif = ((store?.settings as any)?.notifications) ?? {};
     return {
-      lowStockAlerts:          notif.lowStockAlerts          ?? true,
-      newSaleAlerts:           notif.newSaleAlerts            ?? true,
-      shiftClosedAlerts:       notif.shiftClosedAlerts        ?? true,
-      deliveryCompletedAlerts: notif.deliveryCompletedAlerts  ?? true,
-      debtReminderAlerts:      notif.debtReminderAlerts       ?? true,
+      lowStockAlerts:            notif.lowStockAlerts            ?? true,
+      newSaleAlerts:             notif.newSaleAlerts              ?? true,
+      shiftClosedAlerts:         notif.shiftClosedAlerts          ?? true,
+      deliveryCompletedAlerts:   notif.deliveryCompletedAlerts    ?? true,
+      debtReminderAlerts:        notif.debtReminderAlerts         ?? true,
+      daysWithoutSaleThreshold:  notif.daysWithoutSaleThreshold   ?? 30,
+      remainingPercentThreshold: notif.remainingPercentThreshold  ?? 50,
     };
   }
 

@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsBoolean } from 'class-validator';
+import { IsOptional, IsBoolean, IsInt, Min, Max } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class NotificationSettingsDto {
   @ApiPropertyOptional({
@@ -28,4 +29,25 @@ export class NotificationSettingsDto {
   @IsOptional()
   @IsBoolean()
   debtReminderAlerts?: boolean;
+
+  @ApiPropertyOptional({
+    description:
+      'Days without a sale before a product is flagged as slow-moving',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  daysWithoutSaleThreshold?: number;
+
+  @ApiPropertyOptional({
+    description:
+      'Minimum % of the batch still unsold to trigger a slow-moving alert',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  remainingPercentThreshold?: number;
 }
