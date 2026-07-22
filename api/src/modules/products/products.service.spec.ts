@@ -19,6 +19,7 @@ function makePrismaFake() {
     sku?: string | null;
     barcode?: string | null;
     sellPrice: number;
+    costPrice?: number | null;
     quantity: number;
     minQuantity: number;
     unit: string;
@@ -31,8 +32,63 @@ function makePrismaFake() {
   let idSeq = 0;
   const newId = () => `prod-${++idSeq}`;
 
+  const stockMovements: Array<{
+    id: string;
+    productId: string;
+    type: string;
+    quantity: number;
+    unitCost: number | null;
+    totalCost: number | null;
+    createdAt: Date;
+  }> = [];
+  const saleItems: Array<{
+    id: string;
+    productId: string;
+    quantity: number;
+    unitPrice: number;
+    costPrice: number | null;
+    total: number;
+    refundedQuantity: number;
+    saleStoreId: string;
+    saleCreatedAt: Date;
+  }> = [];
+
   return {
     _rows: rows,
+    _stockMovements: stockMovements,
+    _saleItems: saleItems,
+    stockMovement: {
+      findFirst: jest.fn(async ({ where, orderBy }: any) => {
+        let matches = stockMovements.filter(
+          (m) =>
+            m.productId === where.productId &&
+            (!where.type || m.type === where.type),
+        );
+        if (orderBy?.createdAt === 'desc') {
+          matches = [...matches].sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+          );
+        }
+        return matches[0] ?? null;
+      }),
+    },
+    saleItem: {
+      findMany: jest.fn(async ({ where }: any) => {
+        return saleItems.filter((si) => {
+          if (si.productId !== where.productId) return false;
+          if (where.sale?.storeId && si.saleStoreId !== where.sale.storeId) {
+            return false;
+          }
+          if (
+            where.sale?.createdAt?.gte &&
+            si.saleCreatedAt < where.sale.createdAt.gte
+          ) {
+            return false;
+          }
+          return true;
+        });
+      }),
+    },
     product: {
       findUnique: jest.fn(async ({ where }: any) => {
         if (where.storeId_sku) {
@@ -82,6 +138,7 @@ function makePrismaFake() {
           sku: data.sku ?? null,
           barcode: data.barcode ?? null,
           sellPrice: Number(data.sellPrice),
+          costPrice: data.costPrice ?? null,
           quantity: data.quantity ?? 0,
           minQuantity: data.minQuantity ?? 0,
           unit: data.unit ?? 'PCS',
@@ -385,5 +442,200 @@ describe('ProductsService', () => {
         service.findByBarcode('store-A', 'does-not-exist'),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
+  });
+});
+
+describe('ProductsService.getBatchProfitability', () => {
+  let service: ProductsService;
+  let prisma: ReturnType<typeof makePrismaFake>;
+
+  beforeEach(async () => {
+    prisma = makePrismaFake();
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        ProductsService,
+        { provide: PrismaService, useValue: prisma },
+      ],
+    }).compile();
+    service = moduleRef.get(ProductsService);
+  });
+
+  it('should compute the worked example from the design spec (100@10, sold 33@30, 67 remain)', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 67,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
+    });
+    prisma._saleItems.push({
+      id: 'si1',
+      productId: 'p1',
+      quantity: 33,
+      unitPrice: 30,
+      costPrice: 10,
+      total: 990,
+      refundedQuantity: 0,
+      saleStoreId: 'store-A',
+      saleCreatedAt: new Date('2026-07-15'),
+    });
+
+    const result = await service.getBatchProfitability('store-A', 'p1');
+
+    expect(result.hasBatch).toBe(true);
+    expect(result.batchQuantity).toBe(100);
+    expect(result.batchCost).toBe(1000);
+    expect(result.soldQuantity).toBe(33);
+    expect(result.revenue).toBe(990);
+    expect(result.profitEarned).toBe(660);
+    expect(result.remainingQuantity).toBe(67);
+    expect(result.remainingStockValue).toBe(670);
+    expect(result.paybackPercent).toBeCloseTo(99);
+    expect(result.paybackShortfall).toBeCloseTo(-10);
+  });
+
+  it('should net out refunded quantity from sold/revenue/profit', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 90,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+    prisma._stockMovements.push({
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
+    });
+    prisma._saleItems.push({
+      id: 'si1',
+      productId: 'p1',
+      quantity: 10,
+      unitPrice: 30,
+      costPrice: 10,
+      total: 300,
+      refundedQuantity: 4,
+      saleStoreId: 'store-A',
+      saleCreatedAt: new Date('2026-07-15'),
+    });
+
+    const result = await service.getBatchProfitability('store-A', 'p1');
+
+    // 6 net units sold (10 - 4 refunded), pro-rated revenue = 300/10*6=180
+    expect(result.soldQuantity).toBe(6);
+    expect(result.revenue).toBe(180);
+    expect(result.profitEarned).toBe(120); // 180 - 6*10
+  });
+
+  it('should only count sales on or after the anchor purchase date, not earlier ones', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 100,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+    prisma._stockMovements.push({
+      id: 'mv-old',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 50,
+      unitCost: 8,
+      totalCost: 400,
+      createdAt: new Date('2026-06-01'),
+    });
+    prisma._stockMovements.push({
+      id: 'mv-new',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
+    });
+    prisma._saleItems.push({
+      id: 'si-old',
+      productId: 'p1',
+      quantity: 5,
+      unitPrice: 30,
+      costPrice: 8,
+      total: 150,
+      refundedQuantity: 0,
+      saleStoreId: 'store-A',
+      saleCreatedAt: new Date('2026-06-15'), // before the newest purchase — excluded
+    });
+
+    const result = await service.getBatchProfitability('store-A', 'p1');
+
+    expect(result.batchQuantity).toBe(100); // the newest anchor, not 50
+    expect(result.soldQuantity).toBe(0);
+    expect(result.revenue).toBe(0);
+  });
+
+  it('should return hasBatch=false when the product has no PURCHASE stock movement', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 10,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+
+    const result = await service.getBatchProfitability('store-A', 'p1');
+
+    expect(result.hasBatch).toBe(false);
+    expect(result.remainingQuantity).toBe(10);
+  });
+
+  it('should throw NotFoundException for a product in a different store', async () => {
+    prisma._rows.set('p1', {
+      id: 'p1',
+      storeId: 'store-B',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 10,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
+    });
+
+    await expect(
+      service.getBatchProfitability('store-A', 'p1'),
+    ).rejects.toBeInstanceOf(NotFoundException);
   });
 });

@@ -179,4 +179,92 @@ export class ProductsService {
       data: { isActive: false },
     });
   }
+
+  // Finds the product's most recent PURCHASE stock movement ("the anchor" /
+  // "the batch") and computes how much of it has sold, for how much
+  // revenue and profit, and how far the batch is from cash-payback.
+  async getBatchProfitability(storeId: string, id: string) {
+    const product = await this.prisma.product.findFirst({
+      where: { id, storeId, isActive: true },
+    });
+    if (!product) throw new NotFoundException('Product not found');
+
+    const anchor = await this.prisma.stockMovement.findFirst({
+      where: { productId: id, type: 'PURCHASE' },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const remainingQuantity = product.quantity;
+    const remainingStockValue = product.costPrice
+      ? Number(product.costPrice) * remainingQuantity
+      : null;
+
+    if (!anchor || anchor.totalCost == null) {
+      return {
+        hasBatch: false,
+        batchQuantity: null,
+        batchCost: null,
+        soldQuantity: null,
+        revenue: null,
+        profitEarned: null,
+        remainingQuantity,
+        remainingStockValue,
+        paybackPercent: null,
+        paybackShortfall: null,
+      };
+    }
+
+    const soldItems = await this.prisma.saleItem.findMany({
+      where: {
+        productId: id,
+        sale: { storeId, createdAt: { gte: anchor.createdAt } },
+      },
+      select: {
+        quantity: true,
+        refundedQuantity: true,
+        costPrice: true,
+        total: true,
+      },
+    });
+
+    let soldQuantity = 0;
+    let revenue = new Prisma.Decimal(0);
+    let profitEarned = new Prisma.Decimal(0);
+    for (const item of soldItems) {
+      const netQty = item.quantity - item.refundedQuantity;
+      soldQuantity += netQty;
+      // F-RACE-2 pattern (see sales.service.ts refund()): `total` already
+      // nets out any discount for the FULL line, so pro-rate it to the
+      // non-refunded quantity rather than recomputing from unitPrice.
+      const perUnitNet = new Prisma.Decimal(item.total).div(item.quantity);
+      const lineRevenue = perUnitNet.mul(netQty);
+      revenue = revenue.add(lineRevenue);
+      const costSnapshot =
+        item.costPrice != null
+          ? new Prisma.Decimal(item.costPrice)
+          : new Prisma.Decimal(0);
+      profitEarned = profitEarned.add(
+        lineRevenue.sub(costSnapshot.mul(netQty)),
+      );
+    }
+
+    const batchCost = new Prisma.Decimal(anchor.totalCost);
+    const paybackPercent = batchCost.gt(0)
+      ? revenue.div(batchCost).mul(100).toNumber()
+      : null;
+    const paybackShortfall = revenue.sub(batchCost).toNumber();
+
+    return {
+      hasBatch: true,
+      batchQuantity: anchor.quantity,
+      batchCost: batchCost.toNumber(),
+      soldQuantity,
+      revenue: revenue.toNumber(),
+      profitEarned: profitEarned.toNumber(),
+      remainingQuantity,
+      remainingStockValue,
+      paybackPercent,
+      paybackShortfall,
+    };
+  }
 }
