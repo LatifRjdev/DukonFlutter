@@ -52,8 +52,12 @@ export class ProductsController {
 
   @Get()
   @ApiOperation({ summary: 'List products' })
-  findAll(@Param('storeId') storeId: string, @Query() query: ProductQueryDto) {
-    return this.productsService.findAll(storeId, query);
+  findAll(
+    @Param('storeId') storeId: string,
+    @Query() query: ProductQueryDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.productsService.findAll(storeId, query, userId);
   }
 
   @Get('import/template')

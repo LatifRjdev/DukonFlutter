@@ -9,6 +9,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { Prisma } from '@prisma/client';
 import { assertWithinPlanLimit } from '../../common/guards/plan-limit.helper';
+import { checkStaffPermission } from '../../common/guards/permission-check.helper';
+import { hasFeatureFlag } from '../../common/guards/feature-flag.helper';
 
 @Injectable()
 export class ProductsService {
@@ -64,7 +66,11 @@ export class ProductsService {
     });
   }
 
-  async findAll(storeId: string, query: ProductQueryDto) {
+  async findAll(
+    storeId: string,
+    query: ProductQueryDto,
+    requestingUserId?: string,
+  ) {
     // F3.1: soft-deleted (isActive=false) products previously remained
     // visible in list + total count. Default to active-only here; pass
     // `?includeArchived=true` to see archived rows.
@@ -94,6 +100,9 @@ export class ProductsService {
       : { createdAt: 'desc' as const };
     const limit = query.limit || 20;
 
+    let products: any[];
+    let total: number;
+
     // "Low stock" means quantity <= minQuantity (and quantity > 0, since an
     // out-of-stock product is a distinct concept handled by inStock=false).
     // That's a column-vs-column comparison on the same row, which Prisma's
@@ -112,28 +121,51 @@ export class ProductsService {
       const filtered = candidates.filter(
         (p: any) => p.quantity > 0 && p.quantity <= p.minQuantity,
       );
-      const total = filtered.length;
-      const data = filtered.slice(query.skip, query.skip + limit);
-
-      return {
-        data,
-        total,
-        page: query.page || 1,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      };
+      total = filtered.length;
+      products = filtered.slice(query.skip, query.skip + limit);
+    } else {
+      const [data, count] = await Promise.all([
+        this.prisma.product.findMany({
+          where,
+          include: { category: { select: { id: true, name: true } } },
+          orderBy: effectiveOrderBy,
+          skip: query.skip,
+          take: limit,
+        }),
+        this.prisma.product.count({ where }),
+      ]);
+      products = data;
+      total = count;
     }
 
-    const [data, total] = await Promise.all([
-      this.prisma.product.findMany({
-        where,
-        include: { category: { select: { id: true, name: true } } },
-        orderBy: effectiveOrderBy,
-        skip: query.skip,
-        take: limit,
-      }),
-      this.prisma.product.count({ where }),
-    ]);
+    // Field-level gating (not a route guard): the list endpoint stays open
+    // to every role, but `paybackPercent` is only computed/exposed when the
+    // caller both has the `products.viewProfitability` permission AND the
+    // store's plan carries `hasBatchProfitability`. Missing caller id (e.g.
+    // an internal/service call with no authenticated user) fails closed.
+    let canViewProfitability = false;
+    if (requestingUserId) {
+      const [hasPermission, planHasFlag] = await Promise.all([
+        checkStaffPermission(this.prisma, storeId, requestingUserId, [
+          'products.viewProfitability',
+        ]),
+        hasFeatureFlag(this.prisma, storeId, 'hasBatchProfitability'),
+      ]);
+      canViewProfitability = hasPermission && planHasFlag;
+    }
+
+    // Known/deliberate N+1 for v1: computing paybackPercent per row calls
+    // getBatchProfitability once per product. Not batched/cached by design
+    // for this task — out of scope.
+    const data = canViewProfitability
+      ? await Promise.all(
+          products.map(async (p) => ({
+            ...p,
+            paybackPercent: (await this.getBatchProfitability(storeId, p.id))
+              .paybackPercent,
+          })),
+        )
+      : products.map((p) => ({ ...p, paybackPercent: null }));
 
     return {
       data,

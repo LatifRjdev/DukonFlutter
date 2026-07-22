@@ -701,3 +701,67 @@ describe('ProductsService.getBatchProfitability', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
   });
 });
+
+describe('ProductsService.findAll — paybackPercent gating', () => {
+  let service: ProductsService;
+  let prisma: ReturnType<typeof makePrismaFake>;
+
+  beforeEach(async () => {
+    prisma = makePrismaFake();
+    (prisma as any).store = {
+      findUnique: jest.fn(async ({ where }: any) =>
+        where.id === 'store-A' ? { ownerId: 'owner-1' } : null,
+      ),
+    };
+    (prisma as any).staff = {
+      findUnique: jest.fn(async ({ where }: any) => {
+        const { userId } = where.storeId_userId;
+        if (userId === 'admin-1') return { role: 'ADMIN', isActive: true };
+        if (userId === 'cashier-1') return { role: 'CASHIER', isActive: true };
+        return null;
+      }),
+    };
+    (prisma as any).subscription = {
+      findUnique: jest.fn(async () => ({ storeId: 'store-A', plan: 'BUSINESS' })),
+    };
+    (prisma as any).subscriptionPlanConfig = {
+      findUnique: jest.fn(async () => ({ plan: 'BUSINESS', hasBatchProfitability: true })),
+    };
+    const moduleRef = await Test.createTestingModule({
+      providers: [ProductsService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    service = moduleRef.get(ProductsService);
+
+    prisma._rows.set('p1', {
+      id: 'p1', storeId: 'store-A', name: 'Widget', sellPrice: 30, costPrice: 10,
+      quantity: 67, minQuantity: 0, unit: 'PCS', isActive: true, createdAt: new Date(),
+    });
+    prisma._stockMovements.push({
+      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
+      unitCost: 10, totalCost: 1000, createdAt: new Date('2026-07-01'),
+    });
+    prisma._saleItems.push({
+      id: 'si1', productId: 'p1', quantity: 33, unitPrice: 30, costPrice: 10,
+      total: 990, refundedQuantity: 0, saleStoreId: 'store-A',
+      saleCreatedAt: new Date('2026-07-15'),
+    });
+  });
+
+  it('should include paybackPercent for a caller with products.viewProfitability on a plan with the flag', async () => {
+    const result = await service.findAll('store-A', {} as any, 'admin-1');
+    expect(result.data[0].paybackPercent).toBeCloseTo(99);
+  });
+
+  it('should omit paybackPercent (null) for a caller without the permission', async () => {
+    const result = await service.findAll('store-A', {} as any, 'cashier-1');
+    expect(result.data[0].paybackPercent).toBeNull();
+  });
+
+  it('should omit paybackPercent (null) when the store plan lacks hasBatchProfitability, even for a privileged caller', async () => {
+    (prisma as any).subscriptionPlanConfig.findUnique = jest.fn(
+      async () => ({ plan: 'START', hasBatchProfitability: false }),
+    );
+    const result = await service.findAll('store-A', {} as any, 'admin-1');
+    expect(result.data[0].paybackPercent).toBeNull();
+  });
+});
