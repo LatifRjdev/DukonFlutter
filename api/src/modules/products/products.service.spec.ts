@@ -192,6 +192,17 @@ function makePrismaFake() {
     subscriptionPlanConfig: {
       findUnique: jest.fn(async () => null),
     },
+    // checkStaffPermission (used by the paybackPercent gating in findAll)
+    // queries store + staff. Default to "no match" (fail-closed) so
+    // describe blocks that don't care about permission gating are
+    // unaffected; the paybackPercent-gating describe block below
+    // overrides these with role-aware fakes.
+    store: {
+      findUnique: jest.fn(async () => null),
+    },
+    staff: {
+      findUnique: jest.fn(async () => null),
+    },
   };
 }
 
@@ -722,27 +733,55 @@ describe('ProductsService.findAll — paybackPercent gating', () => {
       }),
     };
     (prisma as any).subscription = {
-      findUnique: jest.fn(async () => ({ storeId: 'store-A', plan: 'BUSINESS' })),
+      findUnique: jest.fn(async () => ({
+        storeId: 'store-A',
+        plan: 'BUSINESS',
+      })),
     };
     (prisma as any).subscriptionPlanConfig = {
-      findUnique: jest.fn(async () => ({ plan: 'BUSINESS', hasBatchProfitability: true })),
+      findUnique: jest.fn(async () => ({
+        plan: 'BUSINESS',
+        hasBatchProfitability: true,
+      })),
     };
     const moduleRef = await Test.createTestingModule({
-      providers: [ProductsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        ProductsService,
+        { provide: PrismaService, useValue: prisma },
+      ],
     }).compile();
     service = moduleRef.get(ProductsService);
 
     prisma._rows.set('p1', {
-      id: 'p1', storeId: 'store-A', name: 'Widget', sellPrice: 30, costPrice: 10,
-      quantity: 67, minQuantity: 0, unit: 'PCS', isActive: true, createdAt: new Date(),
+      id: 'p1',
+      storeId: 'store-A',
+      name: 'Widget',
+      sellPrice: 30,
+      costPrice: 10,
+      quantity: 67,
+      minQuantity: 0,
+      unit: 'PCS',
+      isActive: true,
+      createdAt: new Date(),
     });
     prisma._stockMovements.push({
-      id: 'mv1', productId: 'p1', type: 'PURCHASE', quantity: 100,
-      unitCost: 10, totalCost: 1000, createdAt: new Date('2026-07-01'),
+      id: 'mv1',
+      productId: 'p1',
+      type: 'PURCHASE',
+      quantity: 100,
+      unitCost: 10,
+      totalCost: 1000,
+      createdAt: new Date('2026-07-01'),
     });
     prisma._saleItems.push({
-      id: 'si1', productId: 'p1', quantity: 33, unitPrice: 30, costPrice: 10,
-      total: 990, refundedQuantity: 0, saleStoreId: 'store-A',
+      id: 'si1',
+      productId: 'p1',
+      quantity: 33,
+      unitPrice: 30,
+      costPrice: 10,
+      total: 990,
+      refundedQuantity: 0,
+      saleStoreId: 'store-A',
       saleCreatedAt: new Date('2026-07-15'),
     });
   });
@@ -758,10 +797,32 @@ describe('ProductsService.findAll — paybackPercent gating', () => {
   });
 
   it('should omit paybackPercent (null) when the store plan lacks hasBatchProfitability, even for a privileged caller', async () => {
-    (prisma as any).subscriptionPlanConfig.findUnique = jest.fn(
-      async () => ({ plan: 'START', hasBatchProfitability: false }),
-    );
+    (prisma as any).subscriptionPlanConfig.findUnique = jest.fn(async () => ({
+      plan: 'START',
+      hasBatchProfitability: false,
+    }));
     const result = await service.findAll('store-A', {} as any, 'admin-1');
     expect(result.data[0].paybackPercent).toBeNull();
+  });
+
+  it('should degrade paybackPercent to null (not throw) for an archived product when a privileged caller requests includeArchived', async () => {
+    // getBatchProfitability requires isActive:true internally and throws
+    // NotFoundException otherwise — an archived row surfaced via
+    // includeArchived=true would previously fail the whole list response.
+    const archived = { ...prisma._rows.get('p1')!, id: 'p2', isActive: false };
+    prisma._rows.set('p2', archived);
+
+    const result = await service.findAll(
+      'store-A',
+      { includeArchived: true } as any,
+      'admin-1',
+    );
+
+    const archivedRow = result.data.find((p: any) => p.id === 'p2');
+    expect(archivedRow).toBeDefined();
+    expect(archivedRow.paybackPercent).toBeNull();
+    // Sanity: the active row on the same page is unaffected.
+    const activeRow = result.data.find((p: any) => p.id === 'p1');
+    expect(activeRow.paybackPercent).toBeCloseTo(99);
   });
 });

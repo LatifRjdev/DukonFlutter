@@ -157,13 +157,30 @@ export class ProductsService {
     // Known/deliberate N+1 for v1: computing paybackPercent per row calls
     // getBatchProfitability once per product. Not batched/cached by design
     // for this task — out of scope.
+    //
+    // getBatchProfitability internally requires isActive:true and throws
+    // NotFoundException otherwise. Since `products` here can include
+    // archived (isActive=false) rows when the caller passed
+    // ?includeArchived=true, that throw is expected for archived rows, not
+    // a genuine "unknown id" — degrade to paybackPercent: null for that row
+    // instead of letting the rejection fail the whole page. Any other
+    // error still propagates.
     const data = canViewProfitability
       ? await Promise.all(
-          products.map(async (p) => ({
-            ...p,
-            paybackPercent: (await this.getBatchProfitability(storeId, p.id))
-              .paybackPercent,
-          })),
+          products.map(async (p) => {
+            try {
+              const { paybackPercent } = await this.getBatchProfitability(
+                storeId,
+                p.id,
+              );
+              return { ...p, paybackPercent };
+            } catch (err) {
+              if (err instanceof NotFoundException) {
+                return { ...p, paybackPercent: null };
+              }
+              throw err;
+            }
+          }),
         )
       : products.map((p) => ({ ...p, paybackPercent: null }));
 
