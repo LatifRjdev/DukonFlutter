@@ -338,4 +338,26 @@ describe('UsersPage — manual user creation', () => {
 
     await waitFor(() => expect(toastError).toHaveBeenCalled());
   });
+
+  it('clears the form when "Отмена" is clicked, not just on Escape/overlay close', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    await user.type(screen.getByLabelText(/имя/i), 'Забытый Черновик');
+    await user.click(screen.getByRole('switch', { name: /ввести самому/i }));
+    await user.type(screen.getByLabelText(/^пароль$/i), 'ShouldNotLinger9');
+
+    await user.click(screen.getByRole('button', { name: /^отмена$/i }));
+
+    // Reopen the dialog — stale name/password must not be pre-filled.
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    expect(screen.getByLabelText(/имя/i)).toHaveValue('');
+    // Password mode must also reset to "generate", hiding the password field
+    // (and with it, any lingering manually-typed password).
+    expect(screen.queryByLabelText(/^пароль$/i)).not.toBeInTheDocument();
+  });
 });

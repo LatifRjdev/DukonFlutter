@@ -380,7 +380,13 @@ export default function UsersPage() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateOpen(false);
+                resetCreateForm();
+              }}
+            >
               Отмена
             </Button>
             <Button onClick={handleCreateSubmit} disabled={createUserMutation.isPending}>
