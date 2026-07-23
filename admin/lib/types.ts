@@ -9,6 +9,31 @@ export interface User {
   _count?: { ownedStores: number };
 }
 
+export interface CreateUserByAdminInput {
+  name: string;
+  phone: string;
+  email?: string;
+  password?: string;
+  createStore?: boolean;
+  storeName?: string;
+  storeCategory?: string;
+  storeCurrency?: string;
+  storeAddress?: string;
+  storePhone?: string;
+}
+
+export interface CreateUserByAdminResult {
+  user: {
+    id: string;
+    phone: string;
+    name: string;
+    email: string | null;
+    isAdmin: boolean;
+  };
+  store: { id: string; name: string } | null;
+  generatedPassword: string | null;
+}
+
 export interface Store {
   id: string;
   name: string;
