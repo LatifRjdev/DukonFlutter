@@ -35,7 +35,9 @@ export class AdminUsersController {
 
   @Post()
   @Throttle({ default: { limit: 30, ttl: 60000 } })
-  @ApiOperation({ summary: 'Manually create a user account (optionally with a first store)' })
+  @ApiOperation({
+    summary: 'Manually create a user account (optionally with a first store)',
+  })
   createUser(@Body() dto: CreateUserByAdminDto) {
     return this.adminService.createUserManually(dto);
   }
