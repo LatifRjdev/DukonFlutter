@@ -7,10 +7,11 @@ import { AdminPlansController } from './admin-plans.controller';
 import { AdminAnnouncementsController } from './admin-announcements.controller';
 import { AdminAuditLogController } from './admin-audit-log.controller';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { StoresModule } from '../stores/stores.module';
 import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
 
 @Module({
-  imports: [NotificationsModule],
+  imports: [NotificationsModule, StoresModule],
   controllers: [
     AdminUsersController,
     AdminStoresController,

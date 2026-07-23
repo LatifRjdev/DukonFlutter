@@ -2,7 +2,10 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
@@ -12,7 +15,9 @@ import { UpdatePlanDto } from './dto/update-plan.dto';
 import { AdminAuditLogQueryDto } from './dto/admin-audit-log-query.dto';
 import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
 import { AnnouncementsQueryDto } from './dto/announcements-query.dto';
+import { CreateUserByAdminDto } from './dto/create-user-by-admin.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { StoresService } from '../stores/stores.service';
 import { Prisma, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
 import { renderTemplate, AnnouncementVars } from './announcements-template';
 
@@ -21,6 +26,7 @@ export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    private readonly storesService: StoresService,
   ) {}
 
   // ============ USERS ============
@@ -62,6 +68,79 @@ export class AdminService {
     ]);
 
     return { data, total, page, limit };
+  }
+
+  async createUserManually(dto: CreateUserByAdminDto) {
+    const existing = await this.prisma.user.findUnique({
+      where: { phone: dto.phone },
+    });
+    if (existing) {
+      throw new ConflictException('User with this phone already exists');
+    }
+
+    const passwordWasGenerated = !dto.password;
+    const rawPassword = dto.password ?? this.generateRandomPassword();
+    const hashedPassword = await bcrypt.hash(rawPassword, 12);
+
+    const { user, store } = await this.prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: {
+          phone: dto.phone,
+          password: hashedPassword,
+          name: dto.name,
+          email: dto.email,
+        },
+      });
+
+      let createdStore: { id: string; name: string } | null = null;
+      if (dto.createStore) {
+        const storeResult = await this.storesService.create(
+          createdUser.id,
+          {
+            name: dto.storeName!,
+            category: dto.storeCategory!,
+            currency: dto.storeCurrency,
+            address: dto.storeAddress,
+            phone: dto.storePhone,
+          },
+          tx,
+        );
+        createdStore = { id: storeResult.id, name: storeResult.name };
+      }
+
+      return { user: createdUser, store: createdStore };
+    });
+
+    return {
+      user: {
+        id: user.id,
+        phone: user.phone,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+      store,
+      generatedPassword: passwordWasGenerated ? rawPassword : null,
+    };
+  }
+
+  // Used only when the admin leaves the password field blank — generates
+  // a password that trivially satisfies IsStrongPassword (length >= 8,
+  // not a common password, doesn't match phone/email) without needing
+  // any coordination with that validator. 16 chars from a mixed
+  // alphanumeric+symbol set is far above the minimum bar on purpose:
+  // this password is shown to the admin once and handed to the end user,
+  // it's never chosen or memorized by a human, so there's no usability
+  // cost to making it long.
+  private generateRandomPassword(): string {
+    const chars =
+      'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+    const bytes = crypto.randomBytes(16);
+    let password = '';
+    for (let i = 0; i < 16; i++) {
+      password += chars[bytes[i] % chars.length];
+    }
+    return password;
   }
 
   async getUserDetail(id: string) {

@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { StoresService } from '../stores/stores.service';
 
 // Minimal prisma fake — only the models AdminService announcement
 // methods actually touch. Other AdminService methods are covered by
@@ -34,6 +35,7 @@ describe('AdminService — announcements (Spec C)', () => {
         AdminService,
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: notifications },
+        { provide: StoresService, useValue: { create: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);
