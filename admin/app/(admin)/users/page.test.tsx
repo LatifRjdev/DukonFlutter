@@ -182,3 +182,160 @@ describe('UsersPage — destructive action: revoke admin role', () => {
     expect(toastSuccess).toHaveBeenCalledWith('Роль пользователя обновлена');
   });
 });
+
+interface CreateUserRequestBody {
+  name: string;
+  phone: string;
+  email?: string;
+  password?: string;
+  createStore?: boolean;
+  storeName?: string;
+  storeCategory?: string;
+}
+
+describe('UsersPage — manual user creation', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('opens the create-user dialog, submits a manual password, and shows a success toast (no password dialog)', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    const createCalls: CreateUserRequestBody[] = [];
+    server.use(
+      http.post(`${API_URL}/admin/users`, async ({ request }) => {
+        const body = (await request.json()) as CreateUserRequestBody;
+        createCalls.push(body);
+        return HttpResponse.json({
+          user: { id: 'u-new', phone: body.phone, name: body.name, email: null, isAdmin: false },
+          store: null,
+          generatedPassword: null,
+        });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+
+    await user.type(screen.getByLabelText(/имя/i), 'Новый Пользователь');
+    await user.type(screen.getByLabelText(/телефон/i), '+992901112233');
+
+    // Switch to manual password entry and type a password.
+    await user.click(screen.getByRole('switch', { name: /ввести самому/i }));
+    await user.type(screen.getByLabelText(/^пароль$/i), 'CorrectHorseBatteryStaple8');
+
+    await user.click(screen.getByRole('button', { name: /^создать$/i }));
+
+    await waitFor(() => expect(createCalls).toHaveLength(1));
+    expect(createCalls[0]).toMatchObject({
+      name: 'Новый Пользователь',
+      phone: '+992901112233',
+      password: 'CorrectHorseBatteryStaple8',
+    });
+    await waitFor(() =>
+      expect(toastSuccess).toHaveBeenCalledWith('Пользователь создан'),
+    );
+    // No password-reveal dialog when the admin typed the password themselves.
+    expect(screen.queryByText(/скопируйте/i)).not.toBeInTheDocument();
+  });
+
+  it('shows a one-time password dialog with a copy button when the server generates the password', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    server.use(
+      http.post(`${API_URL}/admin/users`, async ({ request }) => {
+        const body = (await request.json()) as CreateUserRequestBody;
+        return HttpResponse.json({
+          user: { id: 'u-new', phone: body.phone, name: body.name, email: null, isAdmin: false },
+          store: null,
+          generatedPassword: 'gEnErAt3d!Pass9xYz',
+        });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    await user.type(screen.getByLabelText(/имя/i), 'Сгенерированный');
+    await user.type(screen.getByLabelText(/телефон/i), '+992901112244');
+    // Password mode defaults to "generate" — submit without touching the switch.
+    await user.click(screen.getByRole('button', { name: /^создать$/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText('gEnErAt3d!Pass9xYz')).toBeInTheDocument(),
+    );
+    expect(screen.getByText(/больше не будет показан/i)).toBeInTheDocument();
+  });
+
+  it('reveals store fields when "Создать магазин сразу" is toggled on, and sends them on submit', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    const createCalls: CreateUserRequestBody[] = [];
+    server.use(
+      http.post(`${API_URL}/admin/users`, async ({ request }) => {
+        const body = (await request.json()) as CreateUserRequestBody;
+        createCalls.push(body);
+        return HttpResponse.json({
+          user: { id: 'u-new', phone: body.phone, name: body.name, email: null, isAdmin: false },
+          store: { id: 'store-new', name: body.storeName },
+          generatedPassword: null,
+        });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    await user.type(screen.getByLabelText(/имя/i), 'Владелец');
+    await user.type(screen.getByLabelText(/телефон/i), '+992901112255');
+    await user.click(screen.getByRole('switch', { name: /ввести самому/i }));
+    await user.type(screen.getByLabelText(/^пароль$/i), 'CorrectHorseBatteryStaple8');
+
+    // Store fields must not be visible before the toggle.
+    expect(screen.queryByLabelText(/название магазина/i)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('switch', { name: /создать магазин сразу/i }));
+    expect(screen.getByLabelText(/название магазина/i)).toBeInTheDocument();
+    await user.type(screen.getByLabelText(/название магазина/i), 'Магазин Алиевых');
+
+    await user.click(screen.getByRole('button', { name: /^создать$/i }));
+
+    await waitFor(() => expect(createCalls).toHaveLength(1));
+    expect(createCalls[0]).toMatchObject({
+      createStore: true,
+      storeName: 'Магазин Алиевых',
+    });
+  });
+
+  it('shows an error toast when the phone is already taken (409)', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    server.use(
+      http.post(`${API_URL}/admin/users`, () =>
+        HttpResponse.json({ message: 'User with this phone already exists' }, { status: 409 }),
+      ),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    await user.type(screen.getByLabelText(/имя/i), 'Дубликат');
+    await user.type(screen.getByLabelText(/телефон/i), '+992900000001');
+    await user.click(screen.getByRole('switch', { name: /ввести самому/i }));
+    await user.type(screen.getByLabelText(/^пароль$/i), 'CorrectHorseBatteryStaple8');
+
+    await user.click(screen.getByRole('button', { name: /^создать$/i }));
+
+    await waitFor(() => expect(toastError).toHaveBeenCalled());
+  });
+});

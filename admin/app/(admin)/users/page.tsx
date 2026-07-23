@@ -13,9 +13,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import { DataTable, Column } from '@/components/data-table';
 import { api } from '@/lib/api';
-import { User } from '@/lib/types';
+import { User, CreateUserByAdminInput, CreateUserByAdminResult } from '@/lib/types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -50,6 +66,66 @@ export default function UsersPage() {
     },
     onError: () => toast.error('Ошибка обновления статуса'),
   });
+
+  const STORE_CATEGORIES = [
+    { value: 'GROCERY', label: 'Продукты' },
+    { value: 'CLOTHING', label: 'Одежда' },
+    { value: 'ELECTRONICS', label: 'Электроника' },
+    { value: 'HARDWARE', label: 'Хозтовары' },
+    { value: 'PHARMACY', label: 'Аптека' },
+    { value: 'OTHER', label: 'Другое' },
+  ];
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createName, setCreateName] = useState('');
+  const [createPhone, setCreatePhone] = useState('');
+  const [createEmail, setCreateEmail] = useState('');
+  const [manualPassword, setManualPassword] = useState(false);
+  const [createPassword, setCreatePassword] = useState('');
+  const [createStore, setCreateStore] = useState(false);
+  const [storeName, setStoreName] = useState('');
+  const [storeCategory, setStoreCategory] = useState('');
+  const [revealedPassword, setRevealedPassword] = useState<string | null>(null);
+
+  const resetCreateForm = () => {
+    setCreateName('');
+    setCreatePhone('');
+    setCreateEmail('');
+    setManualPassword(false);
+    setCreatePassword('');
+    setCreateStore(false);
+    setStoreName('');
+    setStoreCategory('');
+  };
+
+  const createUserMutation = useMutation({
+    mutationFn: (input: CreateUserByAdminInput) =>
+      api.post('/admin/users', input) as Promise<CreateUserByAdminResult>,
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setCreateOpen(false);
+      resetCreateForm();
+      if (result.generatedPassword) {
+        setRevealedPassword(result.generatedPassword);
+      } else {
+        toast.success('Пользователь создан');
+      }
+    },
+    onError: (error: Error) => toast.error(error.message || 'Ошибка создания пользователя'),
+  });
+
+  const handleCreateSubmit = () => {
+    const input: CreateUserByAdminInput = {
+      name: createName,
+      phone: createPhone,
+      email: createEmail || undefined,
+      password: manualPassword ? createPassword : undefined,
+      createStore,
+      storeName: createStore ? storeName : undefined,
+      storeCategory: createStore ? storeCategory : undefined,
+    };
+    createUserMutation.mutate(input);
+  };
 
   const filtered = users.filter((u) => {
     const matchesSearch =
@@ -160,11 +236,14 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Пользователи</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {users.length} пользователей всего
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Пользователи</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {users.length} пользователей всего
+          </p>
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>Создать пользователя</Button>
       </div>
 
       <div className="flex items-center gap-3">
@@ -198,6 +277,151 @@ export default function UsersPage() {
         onRowClick={(u) => router.push(`/users/${u.id}`)}
         emptyMessage="Пользователи не найдены"
       />
+
+      {/* Create User Dialog */}
+      <Dialog
+        open={createOpen}
+        onOpenChange={(open) => {
+          setCreateOpen(open);
+          if (!open) resetCreateForm();
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Создать пользователя</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="create-name">Имя</Label>
+              <Input
+                id="create-name"
+                value={createName}
+                onChange={(e) => setCreateName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-phone">Телефон</Label>
+              <Input
+                id="create-phone"
+                placeholder="+992XXXXXXXXX"
+                value={createPhone}
+                onChange={(e) => setCreatePhone(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-email">Email</Label>
+              <Input
+                id="create-email"
+                type="email"
+                value={createEmail}
+                onChange={(e) => setCreateEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="manual-password-switch">Ввести самому</Label>
+              <Switch
+                id="manual-password-switch"
+                checked={manualPassword}
+                onCheckedChange={(checked) => setManualPassword(checked as boolean)}
+              />
+            </div>
+            {manualPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="create-password">Пароль</Label>
+                <Input
+                  id="create-password"
+                  type="text"
+                  value={createPassword}
+                  onChange={(e) => setCreatePassword(e.target.value)}
+                />
+              </div>
+            )}
+            {!manualPassword && (
+              <p className="text-sm text-muted-foreground">
+                Пароль будет сгенерирован автоматически и показан один раз после создания.
+              </p>
+            )}
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="create-store-switch">Создать магазин сразу</Label>
+              <Switch
+                id="create-store-switch"
+                checked={createStore}
+                onCheckedChange={(checked) => setCreateStore(checked as boolean)}
+              />
+            </div>
+            {createStore && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="store-name">Название магазина</Label>
+                  <Input
+                    id="store-name"
+                    value={storeName}
+                    onChange={(e) => setStoreName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Категория</Label>
+                  <Select value={storeCategory} onValueChange={(v) => v != null && setStoreCategory(v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите категорию" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STORE_CATEGORIES.map((c) => (
+                        <SelectItem key={c.value} value={c.value}>
+                          {c.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={handleCreateSubmit} disabled={createUserMutation.isPending}>
+              Создать
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* One-time generated password reveal */}
+      <Dialog open={!!revealedPassword} onOpenChange={() => setRevealedPassword(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Пользователь создан</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Сохраните этот пароль — больше не будет показан.
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 rounded-lg border border-input bg-transparent px-2.5 py-1.5 font-mono text-sm break-all">
+                {revealedPassword}
+              </code>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (revealedPassword) {
+                    navigator.clipboard.writeText(revealedPassword);
+                    toast.success('Пароль скопирован');
+                  }
+                }}
+              >
+                Копировать
+              </Button>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setRevealedPassword(null)}>Готово</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
