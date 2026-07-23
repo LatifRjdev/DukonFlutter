@@ -1,10 +1,12 @@
 import {
   Controller,
   Get,
+  Post,
   Put,
   Delete,
   Param,
   Query,
+  Body,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import { AdminGuard } from '../../common/guards/admin.guard';
 import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
 import { AdminService } from './admin.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
+import { CreateUserByAdminDto } from './dto/create-user-by-admin.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -28,6 +31,13 @@ export class AdminUsersController {
   @ApiOperation({ summary: 'List all users with pagination and filters' })
   listUsers(@Query() query: AdminUsersQueryDto) {
     return this.adminService.listUsers(query);
+  }
+
+  @Post()
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  @ApiOperation({ summary: 'Manually create a user account (optionally with a first store)' })
+  createUser(@Body() dto: CreateUserByAdminDto) {
+    return this.adminService.createUserManually(dto);
   }
 
   @Get(':id')
