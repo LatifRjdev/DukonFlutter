@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { AuditInterceptor } from './audit.interceptor';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -38,7 +38,7 @@ describe('AuditInterceptor — sensitive field redaction', () => {
     interceptor = new AuditInterceptor(prisma as unknown as PrismaService);
   });
 
-  it('should redact a password field before writing to the audit log', (done) => {
+  it('should redact a password field before writing to the audit log', async () => {
     const ctx = makeContext({
       method: 'POST',
       url: '/admin/users',
@@ -47,18 +47,30 @@ describe('AuditInterceptor — sensitive field redaction', () => {
       body: { name: 'Али', phone: '+992901234567', password: 'SuperSecret123' },
     });
 
-    interceptor.intercept(ctx, makeCallHandler()).subscribe(() => {
-      setImmediate(() => {
-        const call = prisma.auditLog.create.mock.calls[0][0];
-        expect(call.data.details.password).toBe('[REDACTED]');
-        expect(call.data.details.name).toBe('Али');
-        expect(call.data.details.phone).toBe('+992901234567');
-        done();
-      });
-    });
+    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
+
+    const call = prisma.auditLog.create.mock.calls[0][0];
+    expect(call.data.details.password).toBe('[REDACTED]');
+    expect(call.data.details.name).toBe('Али');
+    expect(call.data.details.phone).toBe('+992901234567');
   });
 
-  it('should leave a body with no sensitive fields untouched', (done) => {
+  it('should redact a newPassword field before writing to the audit log', async () => {
+    const ctx = makeContext({
+      method: 'PATCH',
+      url: '/admin/users/u1/password',
+      routePath: '/admin/users/:id/password',
+      userId: 'admin-1',
+      body: { newPassword: 'AnotherSecret456' },
+    });
+
+    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
+
+    const call = prisma.auditLog.create.mock.calls[0][0];
+    expect(call.data.details.newPassword).toBe('[REDACTED]');
+  });
+
+  it('should leave a body with no sensitive fields untouched', async () => {
     const ctx = makeContext({
       method: 'PUT',
       url: '/admin/subscriptions/sub-1/extend',
@@ -67,16 +79,13 @@ describe('AuditInterceptor — sensitive field redaction', () => {
       body: { days: 30 },
     });
 
-    interceptor.intercept(ctx, makeCallHandler()).subscribe(() => {
-      setImmediate(() => {
-        const call = prisma.auditLog.create.mock.calls[0][0];
-        expect(call.data.details).toEqual({ days: 30 });
-        done();
-      });
-    });
+    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
+
+    const call = prisma.auditLog.create.mock.calls[0][0];
+    expect(call.data.details).toEqual({ days: 30 });
   });
 
-  it('should pass through a null body unchanged', (done) => {
+  it('should pass through a null body unchanged', async () => {
     const ctx = makeContext({
       method: 'DELETE',
       url: '/admin/users/u1',
@@ -84,12 +93,9 @@ describe('AuditInterceptor — sensitive field redaction', () => {
       userId: 'admin-1',
     });
 
-    interceptor.intercept(ctx, makeCallHandler()).subscribe(() => {
-      setImmediate(() => {
-        const call = prisma.auditLog.create.mock.calls[0][0];
-        expect(call.data.details).toBeNull();
-        done();
-      });
-    });
+    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
+
+    const call = prisma.auditLog.create.mock.calls[0][0];
+    expect(call.data.details).toBeNull();
   });
 });

@@ -14,6 +14,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 // than adding per-route special-casing if a new sensitive field shows up.
 const SENSITIVE_FIELDS = new Set([
   'password',
+  'newPassword',
+  'currentPassword',
+  'oldPassword',
   'token',
   'accessToken',
   'refreshToken',
@@ -71,9 +74,11 @@ export class AuditInterceptor implements NestInterceptor {
   // Shallow-clones the request body and replaces any top-level sensitive
   // field with a fixed marker, so the audit trail records that a value
   // was present without persisting the value itself.
-  private redact(body: any): any {
+  private redact(body: unknown): any {
     if (!body || typeof body !== 'object') return body;
-    const clone: Record<string, unknown> = { ...(body as Record<string, unknown>) };
+    const clone: Record<string, unknown> = {
+      ...(body as Record<string, unknown>),
+    };
     for (const key of Object.keys(clone)) {
       if (SENSITIVE_FIELDS.has(key)) {
         clone[key] = '[REDACTED]';
