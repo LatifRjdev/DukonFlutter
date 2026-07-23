@@ -3,6 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { CreateStoreDto } from './dto/create-store.dto';
@@ -16,11 +17,16 @@ export class StoresService {
     private audit: AuditLogService,
   ) {}
 
-  async create(ownerId: string, dto: CreateStoreDto) {
+  async create(
+    ownerId: string,
+    dto: CreateStoreDto,
+    tx?: Prisma.TransactionClient,
+  ) {
+    const client = tx ?? this.prisma;
     const now = new Date();
     const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-    return this.prisma.store.create({
+    return client.store.create({
       data: {
         owner: { connect: { id: ownerId } },
         name: dto.name,

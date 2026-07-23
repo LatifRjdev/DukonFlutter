@@ -164,6 +164,32 @@ describe('StoresService', () => {
       } as any);
       expect(result.currency).toBe('TJS');
     });
+
+    it('should use the provided transaction client instead of the default prisma client when one is passed', async () => {
+      const txStoreCreate = jest.fn(async ({ data }: any) => ({
+        id: 'tx-store-1',
+        ownerId: data.owner.connect.id,
+        name: data.name,
+        category: data.category,
+        currency: data.currency ?? 'TJS',
+        address: data.address ?? null,
+        phone: data.phone ?? null,
+        isActive: true,
+        settings: null,
+        createdAt: new Date(),
+        subscription: null,
+      }));
+      const fakeTx = { store: { create: txStoreCreate } };
+
+      const dto = { name: 'Tx Store', category: 'GROCERY' } as any;
+      const result = await service.create('owner-1', dto, fakeTx as any);
+
+      expect(txStoreCreate).toHaveBeenCalledTimes(1);
+      expect(result.id).toBe('tx-store-1');
+      // The default prisma fake's store.create must NOT have been called —
+      // proves the tx client was actually used, not just accepted and ignored.
+      expect(prisma.store.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('findAll (ownership scoping)', () => {
