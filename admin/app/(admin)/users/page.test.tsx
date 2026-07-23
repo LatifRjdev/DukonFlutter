@@ -273,6 +273,50 @@ describe('UsersPage — manual user creation', () => {
     expect(screen.getByText(/больше не будет показан/i)).toBeInTheDocument();
   });
 
+  it('shows an error toast (not a false success toast) when clipboard copy fails', async () => {
+    mockSingleUser({ name: 'Existing User' });
+
+    server.use(
+      http.post(`${API_URL}/admin/users`, async ({ request }) => {
+        const body = (await request.json()) as CreateUserRequestBody;
+        return HttpResponse.json({
+          user: { id: 'u-new', phone: body.phone, name: body.name, email: null, isAdmin: false },
+          store: null,
+          generatedPassword: 'gEnErAt3d!Pass9xYz',
+        });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => screen.getByText('Existing User'));
+
+    await user.click(screen.getByRole('button', { name: /создать пользователя/i }));
+    await user.type(screen.getByLabelText(/имя/i), 'Сгенерированный');
+    await user.type(screen.getByLabelText(/телефон/i), '+992901112266');
+    await user.click(screen.getByRole('button', { name: /^создать$/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText('gEnErAt3d!Pass9xYz')).toBeInTheDocument(),
+    );
+
+    // userEvent.setup() installs its own Clipboard stub on navigator.clipboard
+    // (a jsdom-friendly in-memory implementation) — spy on *its* writeText
+    // method rather than replacing navigator.clipboard outright, since the
+    // latter gets clobbered by userEvent's own defineProperty getter.
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockRejectedValue(new Error('Document is not focused'));
+
+    await user.click(screen.getByRole('button', { name: /копировать/i }));
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith('gEnErAt3d!Pass9xYz'));
+    await waitFor(() =>
+      expect(toastError).toHaveBeenCalledWith('Не удалось скопировать — скопируйте вручную'),
+    );
+    expect(toastSuccess).not.toHaveBeenCalledWith('Пароль скопирован');
+  });
+
   it('reveals store fields when "Создать магазин сразу" is toggled on, and sends them on submit', async () => {
     mockSingleUser({ name: 'Existing User' });
 

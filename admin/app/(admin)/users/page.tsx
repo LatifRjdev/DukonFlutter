@@ -37,6 +37,15 @@ import { format } from 'date-fns';
 
 type Filter = 'all' | 'admin' | 'blocked';
 
+const STORE_CATEGORIES = [
+  { value: 'GROCERY', label: 'Продукты' },
+  { value: 'CLOTHING', label: 'Одежда' },
+  { value: 'ELECTRONICS', label: 'Электроника' },
+  { value: 'HARDWARE', label: 'Хозтовары' },
+  { value: 'PHARMACY', label: 'Аптека' },
+  { value: 'OTHER', label: 'Другое' },
+];
+
 export default function UsersPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -66,15 +75,6 @@ export default function UsersPage() {
     },
     onError: () => toast.error('Ошибка обновления статуса'),
   });
-
-  const STORE_CATEGORIES = [
-    { value: 'GROCERY', label: 'Продукты' },
-    { value: 'CLOTHING', label: 'Одежда' },
-    { value: 'ELECTRONICS', label: 'Электроника' },
-    { value: 'HARDWARE', label: 'Хозтовары' },
-    { value: 'PHARMACY', label: 'Аптека' },
-    { value: 'OTHER', label: 'Другое' },
-  ];
 
   const [createOpen, setCreateOpen] = useState(false);
   const [createName, setCreateName] = useState('');
@@ -323,7 +323,7 @@ export default function UsersPage() {
               <Switch
                 id="manual-password-switch"
                 checked={manualPassword}
-                onCheckedChange={(checked) => setManualPassword(checked as boolean)}
+                onCheckedChange={(checked) => setManualPassword(checked)}
               />
             </div>
             {manualPassword && (
@@ -334,6 +334,7 @@ export default function UsersPage() {
                   type="text"
                   value={createPassword}
                   onChange={(e) => setCreatePassword(e.target.value)}
+                  data-sentry-mask
                 />
               </div>
             )}
@@ -348,7 +349,7 @@ export default function UsersPage() {
               <Switch
                 id="create-store-switch"
                 checked={createStore}
-                onCheckedChange={(checked) => setCreateStore(checked as boolean)}
+                onCheckedChange={(checked) => setCreateStore(checked)}
               />
             </div>
             {createStore && (
@@ -407,16 +408,24 @@ export default function UsersPage() {
               Сохраните этот пароль — больше не будет показан.
             </p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 rounded-lg border border-input bg-transparent px-2.5 py-1.5 font-mono text-sm break-all">
+              <code
+                className="flex-1 rounded-lg border border-input bg-transparent px-2.5 py-1.5 font-mono text-sm break-all"
+                data-sentry-mask
+              >
                 {revealedPassword}
               </code>
               <Button
                 variant="outline"
                 onClick={() => {
-                  if (revealedPassword) {
-                    navigator.clipboard.writeText(revealedPassword);
-                    toast.success('Пароль скопирован');
+                  if (!revealedPassword) return;
+                  if (!navigator.clipboard) {
+                    toast.error('Не удалось скопировать — скопируйте вручную');
+                    return;
                   }
+                  navigator.clipboard
+                    .writeText(revealedPassword)
+                    .then(() => toast.success('Пароль скопирован'))
+                    .catch(() => toast.error('Не удалось скопировать — скопируйте вручную'));
                 }}
               >
                 Копировать
