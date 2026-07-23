@@ -8,6 +8,17 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PrismaService } from '../../prisma/prisma.service';
 
+// Field names redacted from audit_log.details before persisting. Keyed by
+// exact property name (not path) — request bodies in this app are shallow
+// DTOs, so a top-level check is sufficient today. Extend this set rather
+// than adding per-route special-casing if a new sensitive field shows up.
+const SENSITIVE_FIELDS = new Set([
+  'password',
+  'token',
+  'accessToken',
+  'refreshToken',
+]);
+
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
   constructor(private readonly prisma: PrismaService) {}
@@ -46,7 +57,7 @@ export class AuditInterceptor implements NestInterceptor {
               action,
               entityType,
               entityId,
-              details: request.body ?? null,
+              details: this.redact(request.body) ?? null,
               ip,
             },
           })
@@ -55,6 +66,20 @@ export class AuditInterceptor implements NestInterceptor {
           });
       }),
     );
+  }
+
+  // Shallow-clones the request body and replaces any top-level sensitive
+  // field with a fixed marker, so the audit trail records that a value
+  // was present without persisting the value itself.
+  private redact(body: any): any {
+    if (!body || typeof body !== 'object') return body;
+    const clone: Record<string, unknown> = { ...(body as Record<string, unknown>) };
+    for (const key of Object.keys(clone)) {
+      if (SENSITIVE_FIELDS.has(key)) {
+        clone[key] = '[REDACTED]';
+      }
+    }
+    return clone;
   }
 
   private deriveAction(routePath: string, method: string): string {
