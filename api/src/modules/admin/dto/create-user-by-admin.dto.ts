@@ -51,8 +51,7 @@ export class CreateUserByAdminDto {
   password?: string;
 
   @ApiPropertyOptional({
-    description:
-      'Also create a first store for this user in the same request.',
+    description: 'Also create a first store for this user in the same request.',
   })
   @IsOptional()
   @IsBoolean()
