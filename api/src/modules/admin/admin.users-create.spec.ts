@@ -15,7 +15,9 @@ function makePrismaFake() {
     user: {
       findUnique: jest.fn(async ({ where }: any) => {
         if (where.phone) {
-          return [...users.values()].find((u) => u.phone === where.phone) ?? null;
+          return (
+            [...users.values()].find((u) => u.phone === where.phone) ?? null
+          );
         }
         return users.get(where.id) ?? null;
       }),
@@ -35,25 +37,27 @@ function makePrismaFake() {
         return row;
       }),
     },
-    $transaction: jest.fn(async (fn: any) => fn({
-      user: {
-        create: jest.fn(async ({ data }: any) => {
-          const id = `user-${++userSeq}`;
-          const row = {
-            id,
-            phone: data.phone,
-            name: data.name,
-            email: data.email ?? null,
-            isAdmin: false,
-            isActive: true,
-            password: data.password,
-            createdAt: new Date(),
-          };
-          users.set(id, row);
-          return row;
-        }),
-      },
-    })),
+    $transaction: jest.fn(async (fn: any) =>
+      fn({
+        user: {
+          create: jest.fn(async ({ data }: any) => {
+            const id = `user-${++userSeq}`;
+            const row = {
+              id,
+              phone: data.phone,
+              name: data.name,
+              email: data.email ?? null,
+              isAdmin: false,
+              isActive: true,
+              password: data.password,
+              createdAt: new Date(),
+            };
+            users.set(id, row);
+            return row;
+          }),
+        },
+      }),
+    ),
   } as any;
 }
 
