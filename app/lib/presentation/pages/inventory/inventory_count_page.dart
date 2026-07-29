@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 
@@ -100,7 +101,7 @@ class _InvCubit extends Cubit<_InvState> {
 
       emit(_InvCounting(countId: countId, products: products));
     } catch (e) {
-      emit(_InvError(e.toString(), previous: _InvInitial()));
+      emit(_InvError(mapErrorToUserMessage(e), previous: _InvInitial()));
     }
   }
 
@@ -117,7 +118,7 @@ class _InvCubit extends Cubit<_InvState> {
       );
       emit(_InvDiff(countId: countId, products: products));
     } catch (e) {
-      emit(_InvError(e.toString(),
+      emit(_InvError(mapErrorToUserMessage(e),
           previous: _InvCounting(countId: countId, products: products)));
     }
   }
@@ -128,7 +129,7 @@ class _InvCubit extends Cubit<_InvState> {
       await _client.post('/stores/$storeId/inventory-counts/$countId/apply');
       emit(_InvDone());
     } catch (e) {
-      emit(_InvError(e.toString(),
+      emit(_InvError(mapErrorToUserMessage(e),
           previous: _InvDiff(countId: countId, products: products)));
     }
   }

@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -71,7 +72,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
     } catch (e) {
       if (mounted) {
         setState(() => _syncing = false);
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackSyncError(e.toString()));
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackSyncError(mapErrorToUserMessage(e)));
       }
     }
   }
@@ -119,7 +120,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     }
   }

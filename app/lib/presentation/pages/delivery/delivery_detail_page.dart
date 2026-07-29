@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 
 // ─── Models ──────────────────────────────────────────────────────────────────
@@ -105,7 +106,7 @@ class _DetailCubit extends Cubit<_DetailState> {
       final resp = await _client.get('/stores/$storeId/deliveries/$deliveryId');
       emit(_DetailLoaded(_DeliveryDetail.fromJson(resp.data as Map<String, dynamic>)));
     } catch (e) {
-      emit(_DetailError(e.toString()));
+      emit(_DetailError(mapErrorToUserMessage(e)));
     }
   }
 
@@ -120,7 +121,7 @@ class _DetailCubit extends Cubit<_DetailState> {
       );
       await load();
     } catch (e) {
-      emit(_DetailError(e.toString()));
+      emit(_DetailError(mapErrorToUserMessage(e)));
     }
   }
 }

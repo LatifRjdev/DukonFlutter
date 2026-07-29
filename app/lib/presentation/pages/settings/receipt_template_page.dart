@@ -3,6 +3,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -82,7 +83,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _saving = false);

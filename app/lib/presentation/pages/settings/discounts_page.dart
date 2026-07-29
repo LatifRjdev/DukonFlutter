@@ -3,6 +3,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -38,7 +39,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
         setState(() => _discounts = List<Map<String, dynamic>>.from(data['data'] as List));
       }
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _error = mapErrorToUserMessage(e));
     } finally {
       setState(() => _loading = false);
     }
@@ -51,7 +52,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     }
   }
@@ -62,7 +63,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     }
   }
@@ -158,7 +159,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                       name: nameCtrl.text.trim(),
                       type: type,
                       value: double.tryParse(valueCtrl.text) ?? 0,
-                      condition: double.tryParse(conditionCtrl.text),
+                      minTotal: double.tryParse(conditionCtrl.text),
                     );
                   },
                   child: Text(isEdit ? 'Сохранить' : 'Создать',
@@ -177,14 +178,16 @@ class _DiscountsPageState extends State<DiscountsPage> {
     required String name,
     required String type,
     required double value,
-    double? condition,
+    double? minTotal,
   }) async {
     try {
       final payload = {
         'name': name,
-        'type': type,
+        'type': type == 'percent' ? 'PERCENTAGE' : 'FIXED',
         'value': value,
-        'condition': ?condition,
+        'condition': 'CART',
+        'startDate': DateTime.now().toUtc().toIso8601String(),
+        'minTotal': ?minTotal,
       };
       if (id != null) {
         await _dioClient.put('/stores/${widget.storeId}/discounts/$id', data: payload);
@@ -194,7 +197,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     }
   }

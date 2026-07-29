@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -127,7 +128,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
       });
     } catch (e) {
       setState(() {
-        _error = e.toString();
+        _error = mapErrorToUserMessage(e);
         _loading = false;
       });
     }

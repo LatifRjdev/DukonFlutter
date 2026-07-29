@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/services/receipt_share_service.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../domain/entities/sale.dart';
@@ -30,7 +31,7 @@ class ReceiptPreviewPage extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(e.toString()));
+      AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(mapErrorToUserMessage(e)));
     }
   }
 

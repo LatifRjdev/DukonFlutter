@@ -14,6 +14,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -398,7 +399,7 @@ class _ReportsPageState extends State<ReportsPage>
     }
   }
 
-  String _errMsg(Object e) => e.toString().replaceFirst('Exception: ', '');
+  String _errMsg(Object e) => mapErrorToUserMessage(e);
 
   String _catLabel(String key) => const {
         'PURCHASE': 'Закупка',

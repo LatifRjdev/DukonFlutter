@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -69,7 +70,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackConnectionError(e.toString()));
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackConnectionError(mapErrorToUserMessage(e)));
       }
     }
   }
@@ -92,7 +93,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintErrorDetails(e.toString()));
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintErrorDetails(mapErrorToUserMessage(e)));
       }
     } finally {
       if (mounted) setState(() => _isPrinting = false);

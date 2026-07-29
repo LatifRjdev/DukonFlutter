@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -99,7 +100,7 @@ class _CreateCubit extends Cubit<_CreateState> {
       _staff = staffList.map((e) => _StaffMember.fromJson(e as Map<String, dynamic>)).toList();
       emit(_CreateRefsLoaded(sales: _sales, staff: _staff));
     } catch (e) {
-      emit(_CreateError(message: e.toString(), sales: _sales, staff: _staff));
+      emit(_CreateError(message: mapErrorToUserMessage(e), sales: _sales, staff: _staff));
     }
   }
 
@@ -122,7 +123,7 @@ class _CreateCubit extends Cubit<_CreateState> {
       );
       emit(_CreateSuccess());
     } catch (e) {
-      emit(_CreateError(message: e.toString(), sales: _sales, staff: _staff));
+      emit(_CreateError(message: mapErrorToUserMessage(e), sales: _sales, staff: _staff));
     }
   }
 }

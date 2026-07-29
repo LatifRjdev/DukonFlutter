@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
@@ -41,7 +42,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
         setState(() => _stores = List<Map<String, dynamic>>.from(data['data'] as List));
       }
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _error = mapErrorToUserMessage(e));
     } finally {
       setState(() => _loading = false);
     }
@@ -173,7 +174,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
       context.read<StoreBloc>().add(StoreLoadRequested());
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, e.toString());
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
     }
   }

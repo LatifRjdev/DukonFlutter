@@ -3,6 +3,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -58,7 +59,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(e.toString()));
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(mapErrorToUserMessage(e)));
       }
     } finally {
       if (mounted) setState(() => _sendingTest = false);

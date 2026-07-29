@@ -7,6 +7,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/glass_card.dart';
@@ -119,7 +120,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
       });
     } catch (e) {
       setState(() {
-        _error = e.toString();
+        _error = mapErrorToUserMessage(e);
         _loading = false;
       });
     }
@@ -506,7 +507,7 @@ class _CreditCardState extends State<_CreditCard> {
                         } catch (e) {
                           setDialogState(() {
                             submitting = false;
-                            dialogError = 'Ошибка: ${e.toString()}';
+                            dialogError = mapErrorToUserMessage(e);
                           });
                         }
                       },

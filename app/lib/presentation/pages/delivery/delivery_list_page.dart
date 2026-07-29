@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 
 // ─── Minimal in-page model ───────────────────────────────────────────────────
@@ -99,7 +100,7 @@ class _DeliveryListCubit extends Cubit<_DeliveryListState> {
       }
       emit(_DeliveryListLoaded(list.map((e) => _Delivery.fromJson(e as Map<String, dynamic>)).toList()));
     } catch (e) {
-      emit(_DeliveryListError(e.toString()));
+      emit(_DeliveryListError(mapErrorToUserMessage(e)));
     }
   }
 }

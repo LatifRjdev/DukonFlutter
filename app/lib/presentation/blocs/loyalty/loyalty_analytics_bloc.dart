@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/loyalty_repository.dart';
 import 'loyalty_analytics_event.dart';
 import 'loyalty_analytics_state.dart';
@@ -26,7 +27,7 @@ class LoyaltyAnalyticsBloc
       );
       emit(LoyaltyAnalyticsLoaded(data));
     } catch (e) {
-      emit(LoyaltyAnalyticsError(e.toString()));
+      emit(LoyaltyAnalyticsError(mapErrorToUserMessage(e)));
     }
   }
 }
