@@ -3,7 +3,7 @@
 import { use, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Package, Users, TrendingUp, Clock, Ban, UserCheck } from 'lucide-react';
+import { ArrowLeft, Package, Users, TrendingUp, Clock, Ban, UserCheck, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { StatsCard } from '@/components/stats-card';
 import { api } from '@/lib/api';
 import { Store, Subscription } from '@/lib/types';
@@ -49,6 +50,9 @@ export default function StoreDetailPage({
   const queryClient = useQueryClient();
   const [transferDialog, setTransferDialog] = useState(false);
   const [newOwnerId, setNewOwnerId] = useState('');
+  const [messageDialog, setMessageDialog] = useState(false);
+  const [msgTitle, setMsgTitle] = useState('');
+  const [msgBody, setMsgBody] = useState('');
 
   const { data: store, isLoading } = useQuery<Store>({
     queryKey: ['store', id],
@@ -80,6 +84,18 @@ export default function StoreDetailPage({
       toast.success('Владелец магазина изменён');
     },
     onError: () => toast.error('Ошибка передачи магазина'),
+  });
+
+  const sendMessageMutation = useMutation({
+    mutationFn: () =>
+      api.post('/admin/notifications/direct', { storeId: id, title: msgTitle, body: msgBody }),
+    onSuccess: () => {
+      setMessageDialog(false);
+      setMsgTitle('');
+      setMsgBody('');
+      toast.success('Сообщение отправлено');
+    },
+    onError: () => toast.error('Ошибка отправки сообщения'),
   });
 
   if (isLoading) {
@@ -164,6 +180,10 @@ export default function StoreDetailPage({
             </Button>
             <Button variant="outline" onClick={() => setTransferDialog(true)}>
               Передать владение
+            </Button>
+            <Button variant="outline" onClick={() => setMessageDialog(true)}>
+              <Send className="mr-2 h-4 w-4" />
+              Отправить сообщение
             </Button>
           </div>
         </CardContent>
@@ -260,6 +280,37 @@ export default function StoreDetailPage({
               disabled={!newOwnerId || transferMutation.isPending}
             >
               Передать
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Send Message Dialog */}
+      <Dialog open={messageDialog} onOpenChange={setMessageDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Отправить сообщение магазину</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Заголовок</Label>
+              <Input value={msgTitle} onChange={(e) => setMsgTitle(e.target.value)} maxLength={200} />
+            </div>
+            <div className="space-y-2">
+              <Label>Текст</Label>
+              <Textarea value={msgBody} onChange={(e) => setMsgBody(e.target.value)} rows={4} maxLength={1000} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMessageDialog(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() => sendMessageMutation.mutate()}
+              disabled={!msgTitle.trim() || !msgBody.trim() || sendMessageMutation.isPending}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Отправить
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,14 +1,24 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Store, ShieldCheck, ShieldOff, Ban, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Store, ShieldCheck, ShieldOff, Ban, CheckCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/lib/api';
 import { User, Store as StoreType } from '@/lib/types';
 import { toast } from 'sonner';
@@ -50,6 +60,22 @@ export default function UserDetailPage({
       toast.success('Статус пользователя обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
+  });
+
+  const [messageDialog, setMessageDialog] = useState(false);
+  const [msgTitle, setMsgTitle] = useState('');
+  const [msgBody, setMsgBody] = useState('');
+
+  const sendMessageMutation = useMutation({
+    mutationFn: () =>
+      api.post('/admin/notifications/direct', { userId: id, title: msgTitle, body: msgBody }),
+    onSuccess: () => {
+      setMessageDialog(false);
+      setMsgTitle('');
+      setMsgBody('');
+      toast.success('Сообщение отправлено');
+    },
+    onError: () => toast.error('Ошибка отправки сообщения'),
   });
 
   if (isLoading) {
@@ -173,6 +199,10 @@ export default function UserDetailPage({
                 </>
               )}
             </Button>
+            <Button variant="outline" onClick={() => setMessageDialog(true)}>
+              <Send className="mr-2 h-4 w-4" />
+              Отправить сообщение
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -224,6 +254,36 @@ export default function UserDetailPage({
           </div>
         )}
       </div>
+
+      <Dialog open={messageDialog} onOpenChange={setMessageDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Отправить сообщение пользователю</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Заголовок</Label>
+              <Input value={msgTitle} onChange={(e) => setMsgTitle(e.target.value)} maxLength={200} />
+            </div>
+            <div className="space-y-2">
+              <Label>Текст</Label>
+              <Textarea value={msgBody} onChange={(e) => setMsgBody(e.target.value)} rows={4} maxLength={1000} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMessageDialog(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() => sendMessageMutation.mutate()}
+              disabled={!msgTitle.trim() || !msgBody.trim() || sendMessageMutation.isPending}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Отправить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
