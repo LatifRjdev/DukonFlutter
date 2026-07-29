@@ -35,6 +35,22 @@ class CheckoutPaymentMethodSelected extends CheckoutEvent {
   List<Object?> get props => [paymentMethod];
 }
 
+class CheckoutCustomerSelected extends CheckoutEvent {
+  final String? customerId;
+  final String? customerName;
+  const CheckoutCustomerSelected({this.customerId, this.customerName});
+  @override
+  List<Object?> get props => [customerId, customerName];
+}
+
+class CheckoutDebtDetailsChanged extends CheckoutEvent {
+  final DateTime? dueDate;
+  final String? notes;
+  const CheckoutDebtDetailsChanged({this.dueDate, this.notes});
+  @override
+  List<Object?> get props => [dueDate, notes];
+}
+
 class CheckoutDiscountApplied extends CheckoutEvent {
   final double discount;
   final String discountType;

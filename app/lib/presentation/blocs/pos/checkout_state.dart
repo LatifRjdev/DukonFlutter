@@ -13,6 +13,8 @@ class CheckoutState extends Equatable {
   final String? customerId;
   final String? customerName;
   final int redemptionPoints;
+  final DateTime? dueDate;
+  final String? notes;
   final bool isProcessing;
   final Sale? saleResult;
   final String? error;
@@ -28,6 +30,8 @@ class CheckoutState extends Equatable {
     this.customerId,
     this.customerName,
     this.redemptionPoints = 0,
+    this.dueDate,
+    this.notes,
     this.isProcessing = false,
     this.saleResult,
     this.error,
@@ -47,6 +51,8 @@ class CheckoutState extends Equatable {
     String? customerId,
     String? customerName,
     int? redemptionPoints,
+    DateTime? dueDate,
+    String? notes,
     bool? isProcessing,
     Sale? saleResult,
     String? error,
@@ -62,6 +68,8 @@ class CheckoutState extends Equatable {
       customerId: customerId ?? this.customerId,
       customerName: customerName ?? this.customerName,
       redemptionPoints: redemptionPoints ?? this.redemptionPoints,
+      dueDate: dueDate ?? this.dueDate,
+      notes: notes ?? this.notes,
       isProcessing: isProcessing ?? this.isProcessing,
       saleResult: saleResult,
       error: error,
@@ -79,6 +87,8 @@ class CheckoutState extends Equatable {
         paidAmount,
         customerId,
         redemptionPoints,
+        dueDate,
+        notes,
         isProcessing,
         saleResult,
         error,

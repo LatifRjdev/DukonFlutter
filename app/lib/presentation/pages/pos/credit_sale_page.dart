@@ -9,6 +9,9 @@ import '../../blocs/pos/cart_state.dart';
 import '../../blocs/pos/checkout_bloc.dart';
 import '../../blocs/pos/checkout_event.dart';
 import '../../blocs/pos/checkout_state.dart';
+import '../../blocs/customer/customer_list_bloc.dart';
+import '../../blocs/customer/customer_list_event.dart';
+import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
@@ -69,90 +72,137 @@ class _CreditSalePageState extends State<CreditSalePage> {
   }
 
   void _selectCustomer() {
+    final storeState = context.read<StoreBloc>().state;
+    final storeId =
+        storeState is StoreLoaded ? storeState.selectedStore?.id : null;
+    if (storeId == null) return;
+
+    context.read<CustomerListBloc>().add(CustomerListLoadRequested(storeId: storeId));
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingLg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Выберите клиента',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 16),
-            Center(
-              child: Text('Список клиентов пуст',
-                  style: TextStyle(color: ctx.textSecondary)),
-            ),
-            const SizedBox(height: 16),
-            AppButton(
-              text: 'Создать нового клиента',
-              icon: Icons.person_add_outlined,
-              type: AppButtonType.outlined,
-              onPressed: () {
-                Navigator.pop(ctx);
-                _showCreateCustomerDialog();
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+      builder: (bottomSheetContext) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (sheetContext, scrollController) {
+            return Padding(
+              padding: const EdgeInsets.all(AppConstants.spacingLg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Выберите клиента',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: BlocBuilder<CustomerListBloc, CustomerListState>(
+                      builder: (context, state) {
+                        if (state is CustomerListLoading) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (state is CustomerListLoaded) {
+                          if (state.customers.isEmpty) {
+                            return Center(
+                              child: Text('Список клиентов пуст',
+                                  style: TextStyle(color: sheetContext.textSecondary)),
+                            );
+                          }
+                          return ListView.separated(
+                            controller: scrollController,
+                            itemCount: state.customers.length,
+                            separatorBuilder: (_, _) => const Divider(height: 1),
+                            itemBuilder: (context, index) {
+                              final customer = state.customers[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      AppColors.primary.withValues(alpha: 0.1),
+                                  child: Text(
+                                    customer.name.isNotEmpty
+                                        ? customer.name[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                title: Text(customer.name,
+                                    maxLines: 1, overflow: TextOverflow.ellipsis),
+                                subtitle: customer.phone != null
+                                    ? Text(customer.phone!,
+                                        maxLines: 1, overflow: TextOverflow.ellipsis)
+                                    : null,
+                                onTap: () {
+                                  this.context.read<CheckoutBloc>().add(
+                                        CheckoutCustomerSelected(
+                                          customerId: customer.id,
+                                          customerName: customer.name,
+                                        ),
+                                      );
+                                  setState(() {
+                                    _selectedCustomerId = customer.id;
+                                    _selectedCustomerName = customer.name;
+                                  });
+                                  Navigator.pop(bottomSheetContext);
+                                },
+                              );
+                            },
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  AppButton(
+                    text: 'Создать нового клиента',
+                    icon: Icons.person_add_outlined,
+                    type: AppButtonType.outlined,
+                    onPressed: () {
+                      Navigator.pop(bottomSheetContext);
+                      _showCreateCustomerDialog(storeId);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
-  void _showCreateCustomerDialog() {
-    final nameController = TextEditingController();
-    final phoneController = TextEditingController();
-
+  void _showCreateCustomerDialog(String storeId) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Новый клиент'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppTextField(
-              controller: nameController,
-              label: 'Имя',
-              prefixIcon: Icons.person_outline,
-            ),
-            const SizedBox(height: 12),
-            AppTextField(
-              controller: phoneController,
-              label: 'Телефон',
-              prefixIcon: Icons.phone_outlined,
-              keyboardType: TextInputType.phone,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                setState(() {
-                  _selectedCustomerId = 'new';
-                  _selectedCustomerName = nameController.text.trim();
-                });
-                Navigator.pop(ctx);
-              }
-            },
-            child: const Text('Создать'),
-          ),
-        ],
+      builder: (ctx) => BlocListener<CustomerListBloc, CustomerListState>(
+        listener: (listenerContext, state) {
+          if (state is CustomerFormSuccess) {
+            listenerContext.read<CheckoutBloc>().add(
+                  CheckoutCustomerSelected(
+                    customerId: state.customer.id,
+                    customerName: state.customer.name,
+                  ),
+                );
+            setState(() {
+              _selectedCustomerId = state.customer.id;
+              _selectedCustomerName = state.customer.name;
+            });
+            Navigator.pop(ctx);
+          } else if (state is CustomerFormError) {
+            AppSnackbar.error(listenerContext, state.message);
+          }
+        },
+        child: _CreateCustomerDialogContent(storeId: storeId),
       ),
-    ).whenComplete(() {
-      // Dispose both dialog-scoped controllers together (FE-P1-004).
-      nameController.dispose();
-      phoneController.dispose();
-    });
+    );
   }
 
   void _confirm(double total) {
@@ -166,6 +216,12 @@ class _CreditSalePageState extends State<CreditSalePage> {
     context.read<CheckoutBloc>()
       ..add(CheckoutPaymentMethodSelected('DEBT'))
       ..add(CheckoutPaidAmountChanged(0))
+      ..add(CheckoutDebtDetailsChanged(
+        dueDate: _dueDate,
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      ))
       ..add(CheckoutProcessPayment(storeId: storeId));
   }
 
@@ -328,6 +384,89 @@ class _CreditSalePageState extends State<CreditSalePage> {
           },
         ),
       ),
+    );
+  }
+}
+
+/// Owns the name/phone controllers itself so their lifecycle is tied to this
+/// widget's own State, independent of the surrounding BlocListener's
+/// rebuild/pop timing (avoids "TextEditingController used after being
+/// disposed" when the create-customer request resolves).
+class _CreateCustomerDialogContent extends StatefulWidget {
+  final String storeId;
+  const _CreateCustomerDialogContent({required this.storeId});
+
+  @override
+  State<_CreateCustomerDialogContent> createState() =>
+      _CreateCustomerDialogContentState();
+}
+
+class _CreateCustomerDialogContentState
+    extends State<_CreateCustomerDialogContent> {
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isSaving =
+        context.watch<CustomerListBloc>().state is CustomerFormLoading;
+    return AlertDialog(
+      title: const Text('Новый клиент'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppTextField(
+            controller: _nameController,
+            label: 'Имя',
+            prefixIcon: Icons.person_outline,
+          ),
+          const SizedBox(height: 12),
+          AppTextField(
+            controller: _phoneController,
+            label: 'Телефон',
+            prefixIcon: Icons.phone_outlined,
+            keyboardType: TextInputType.phone,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: isSaving ? null : () => Navigator.pop(context),
+          child: const Text('Отмена'),
+        ),
+        TextButton(
+          onPressed: isSaving
+              ? null
+              : () {
+                  final name = _nameController.text.trim();
+                  if (name.isEmpty) return;
+                  final phone = _phoneController.text.trim();
+                  context.read<CustomerListBloc>().add(
+                        CustomerCreateRequested(
+                          storeId: widget.storeId,
+                          data: {
+                            'name': name,
+                            if (phone.isNotEmpty) 'phone': phone,
+                          },
+                        ),
+                      );
+                },
+          child: isSaving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Создать'),
+        ),
+      ],
     );
   }
 }

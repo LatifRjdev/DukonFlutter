@@ -13,6 +13,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         super(const CheckoutState()) {
     on<CheckoutInitiated>(_onInitiated);
     on<CheckoutPaymentMethodSelected>(_onPaymentMethodSelected);
+    on<CheckoutCustomerSelected>(_onCustomerSelected);
+    on<CheckoutDebtDetailsChanged>(_onDebtDetailsChanged);
     on<CheckoutDiscountApplied>(_onDiscountApplied);
     on<CheckoutPaidAmountChanged>(_onPaidAmountChanged);
     on<CheckoutProcessPayment>(_onProcessPayment);
@@ -34,6 +36,24 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   void _onPaymentMethodSelected(
       CheckoutPaymentMethodSelected event, Emitter<CheckoutState> emit) {
     emit(state.copyWith(paymentMethod: event.paymentMethod, error: null));
+  }
+
+  void _onCustomerSelected(
+      CheckoutCustomerSelected event, Emitter<CheckoutState> emit) {
+    emit(state.copyWith(
+      customerId: event.customerId,
+      customerName: event.customerName,
+      error: null,
+    ));
+  }
+
+  void _onDebtDetailsChanged(
+      CheckoutDebtDetailsChanged event, Emitter<CheckoutState> emit) {
+    emit(state.copyWith(
+      dueDate: event.dueDate,
+      notes: event.notes,
+      error: null,
+    ));
   }
 
   void _onDiscountApplied(CheckoutDiscountApplied event, Emitter<CheckoutState> emit) {
@@ -82,6 +102,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         'paidAmount': state.paidAmount,
         if (state.customerId != null) 'customerId': state.customerId,
         if (state.redemptionPoints > 0) 'redemptionPoints': state.redemptionPoints,
+        if (state.dueDate != null) 'dueDate': state.dueDate!.toUtc().toIso8601String(),
+        if (state.notes != null && state.notes!.isNotEmpty) 'notes': state.notes,
         // localId + occurredAt are accepted by the API and also used by the
         // offline-replay path so the receipt the cashier holds matches the
         // row that eventually lands on the server.
