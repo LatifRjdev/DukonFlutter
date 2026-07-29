@@ -16,6 +16,7 @@ import { AdminAuditLogQueryDto } from './dto/admin-audit-log-query.dto';
 import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
 import { AnnouncementsQueryDto } from './dto/announcements-query.dto';
 import { CreateUserByAdminDto } from './dto/create-user-by-admin.dto';
+import { SendDirectNotificationDto } from './dto/send-direct-notification.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
 import { Prisma, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
@@ -664,6 +665,39 @@ export class AdminService {
     ]);
 
     return { data, total, page, limit };
+  }
+
+  // ============ DIRECT NOTIFICATIONS ============
+
+  async sendDirectNotification(dto: SendDirectNotificationDto): Promise<void> {
+    if (dto.storeId) {
+      await this.notifications.sendToStoreUsers(
+        dto.storeId,
+        dto.title,
+        dto.body,
+        'ADMIN_DIRECT',
+      );
+      return;
+    }
+
+    const store = await this.prisma.store.findFirst({
+      where: { ownerId: dto.userId },
+      select: { id: true },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (!store) {
+      throw new NotFoundException(
+        'User has no store to associate the notification with',
+      );
+    }
+
+    await this.notifications.sendPush(
+      dto.userId!,
+      dto.title,
+      dto.body,
+      'ADMIN_DIRECT',
+      store.id,
+    );
   }
 
   // ============ AUDIT LOGS ============
