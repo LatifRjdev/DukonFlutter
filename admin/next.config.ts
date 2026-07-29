@@ -5,17 +5,22 @@ const apiOrigin = new URL(apiBase).origin;
 
 // Content Security Policy.
 // - default-src 'self' locks down loads to same-origin by default.
-// - script-src allows inline for Next.js runtime hydration; unsafe-eval
-//   is omitted so React dev-mode eval is blocked (OK in production).
+// - script-src allows inline for Next.js runtime hydration. unsafe-eval is
+//   omitted in production, where it's genuinely unnecessary — but `next dev`
+//   itself relies on eval() for Fast Refresh / dev-mode stack-trace
+//   reconstruction, so blocking it there breaks the dev server's own client
+//   bootstrap (observed as an infinite reload loop in the browser, even
+//   though the server-rendered HTML looks fine to a non-JS client like curl).
 // - style-src permits inline for shadcn/Tailwind runtime styles.
 // - img-src allows https: + data: so uploaded receipts and avatar URLs
 //   from any backend bucket render.
 // - connect-src includes the API origin and the Sentry ingest host so
 //   fetch() + error reports work.
 // - frame-ancestors 'none' prevents clickjacking.
+const isDev = process.env.NODE_ENV !== 'production';
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
