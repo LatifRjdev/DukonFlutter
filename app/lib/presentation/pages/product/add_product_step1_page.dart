@@ -116,7 +116,6 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
           'categoryId': _selectedCategoryId,
           'description': _descriptionController.text,
           if (_isEditing && _editingProduct != null) 'productId': _editingProduct!.id,
-          'isEditing': _isEditing,
         },
       ));
       context.push('/products/add/step2');

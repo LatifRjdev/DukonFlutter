@@ -59,7 +59,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
       context.read<ProductFormBloc>().add(ProductFormSaveStep(
         step: 2,
         data: {
-          'initialQuantity': int.tryParse(_quantityController.text) ?? 0,
+          'quantity': int.tryParse(_quantityController.text) ?? 0,
           'minQuantity': int.tryParse(_minQuantityController.text) ?? 0,
           'supplierId': _selectedSupplierId,
         },

@@ -77,10 +77,10 @@ class StockIntakeBloc extends Bloc<StockIntakeEvent, StockIntakeState> {
     emit(state.copyWith(isSubmitting: true, error: null));
     try {
       final data = <String, dynamic>{
+        'productId': state.selectedProduct!.id,
         'type': 'PURCHASE',
         'quantity': state.quantity,
         'unitCost': state.unitCost,
-        'totalCost': state.totalCost,
         if (state.supplier != null) 'supplierId': state.supplier!.id,
         if (state.notes.isNotEmpty) 'notes': state.notes,
       };
