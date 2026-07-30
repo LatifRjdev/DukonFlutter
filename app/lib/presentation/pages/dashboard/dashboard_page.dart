@@ -18,6 +18,7 @@ import '../../widgets/common/gradient_header.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/home/active_banner.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
 
@@ -99,6 +100,8 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             // Gradient Header
             _buildHeader(),
+            // Active in-app banner (admin-targeted by plan/status), if any
+            _buildActiveBanner(),
             // Period tabs
             _buildPeriodTabs(),
             // Content
@@ -216,6 +219,17 @@ class _DashboardPageState extends State<DashboardPage> {
               ? () => _showStoreSelector(stores, selectedStoreId)
               : null,
         );
+      },
+    );
+  }
+
+  Widget _buildActiveBanner() {
+    return BlocBuilder<StoreBloc, StoreState>(
+      builder: (context, state) {
+        final storeId =
+            state is StoreLoaded ? state.selectedStore?.id : null;
+        if (storeId == null) return const SizedBox.shrink();
+        return ActiveBanner(storeId: storeId);
       },
     );
   }
