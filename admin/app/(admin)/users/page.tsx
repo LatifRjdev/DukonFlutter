@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, Search } from 'lucide-react';
+import { MoreHorizontal, Search, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -268,6 +268,19 @@ export default function UsersPage() {
             </Button>
           ))}
         </div>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const params = new URLSearchParams();
+            if (search) params.set('search', search);
+            if (filter === 'admin') params.set('isAdmin', 'true');
+            if (filter === 'blocked') params.set('isActive', 'false');
+            window.location.href = `/api/proxy/admin/users/export?${params.toString()}`;
+          }}
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Экспорт
+        </Button>
       </div>
 
       <DataTable

@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { MoreHorizontal, CheckCircle, XCircle, Image as ImageIcon } from 'lucide-react';
+import { MoreHorizontal, CheckCircle, XCircle, Image as ImageIcon, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -324,6 +324,19 @@ function SubscriptionsContent() {
                 сбросить
               </button>
             )}
+            <Button
+              variant="outline"
+              size="sm"
+              className="ml-auto"
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (statusFilter !== 'all') params.set('status', statusFilter);
+                window.location.href = `/api/proxy/admin/subscriptions/export?${params.toString()}`;
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Экспорт
+            </Button>
           </div>
           <DataTable
             data={

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, Search } from 'lucide-react';
+import { MoreHorizontal, Search, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -251,6 +251,23 @@ export default function StoresPage() {
             <SelectItem value="EXPIRED">Истекла</SelectItem>
           </SelectContent>
         </Select>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const params = new URLSearchParams();
+            if (search) params.set('search', search);
+            if (categoryFilter !== 'all') params.set('category', categoryFilter);
+            if (planFilter !== 'all') params.set('plan', planFilter);
+            // The admin list DTO only supports filtering by isActive, not by
+            // subscription status — SUSPENDED is the one statusFilter value
+            // that maps onto it directly.
+            if (statusFilter === 'SUSPENDED') params.set('isActive', 'false');
+            window.location.href = `/api/proxy/admin/stores/export?${params.toString()}`;
+          }}
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Экспорт
+        </Button>
       </div>
 
       <DataTable
