@@ -35,6 +35,7 @@ import { LoyaltyModule } from './modules/loyalty/loyalty.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { InvestmentsModule } from './modules/investments/investments.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { BannersModule } from './modules/banners/banners.module';
 import { HealthModule } from './modules/health/health.module';
 
 @Module({
@@ -78,6 +79,7 @@ import { HealthModule } from './modules/health/health.module';
     SubscriptionsModule,
     InvestmentsModule,
     AdminModule,
+    BannersModule,
     HealthModule,
   ],
   providers: [

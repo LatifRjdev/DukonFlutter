@@ -11,6 +11,7 @@ import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
+import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
 import { AdminAuditLogQueryDto } from './dto/admin-audit-log-query.dto';
 import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
@@ -510,14 +511,15 @@ export class AdminService {
 
   // ============ ANNOUNCEMENTS ============
 
-  // Spec C: shared audience resolver — used by both preview and
-  // create. Returns one record per recipient with userId, primary
-  // storeId (for sendPush), and pre-built vars (for renderTemplate).
-  // Dedupes by userId in case a user owns multiple stores matching
-  // the filter.
-  private async _resolveAnnouncementAudience(
-    dto: CreateAnnouncementDto,
-  ): Promise<
+  // Spec C: shared audience resolver — used by announcements
+  // (preview + create) and banners. Returns one record per
+  // recipient with userId, primary storeId (for sendPush), and
+  // pre-built vars (for renderTemplate). Dedupes by userId in case
+  // a user owns multiple stores matching the filter.
+  private async _resolveAudience(filter: {
+    targetPlan?: SubscriptionPlan;
+    targetStatus?: SubscriptionStatus;
+  }): Promise<
     Array<{
       userId: string;
       storeId: string;
@@ -528,11 +530,11 @@ export class AdminService {
       where: {
         isActive: true,
         owner: { isActive: true, isAdmin: false },
-        ...(dto.targetPlan || dto.targetStatus
+        ...(filter.targetPlan || filter.targetStatus
           ? {
               subscription: {
-                ...(dto.targetPlan && { plan: dto.targetPlan }),
-                ...(dto.targetStatus && { status: dto.targetStatus }),
+                ...(filter.targetPlan && { plan: filter.targetPlan }),
+                ...(filter.targetStatus && { status: filter.targetStatus }),
               },
             }
           : {}),
@@ -598,7 +600,7 @@ export class AdminService {
     // Each recipient gets THEIR rendered title/body via FCM. The
     // raw template is stored on Announcement so the row mirrors
     // what the admin typed (not the personalized expansion).
-    const audience = await this._resolveAnnouncementAudience(dto);
+    const audience = await this._resolveAudience(dto);
 
     await Promise.allSettled(
       audience.map(({ userId, storeId, vars }) => {
@@ -628,7 +630,7 @@ export class AdminService {
 
   async previewAnnouncement(dto: CreateAnnouncementDto) {
     // Spec C: real audience resolver + template expansion.
-    const audience = await this._resolveAnnouncementAudience(dto);
+    const audience = await this._resolveAudience(dto);
     const sample = audience[0]?.vars ?? this._fakeVarsForEmptyAudience();
 
     const renderedTitle = renderTemplate(dto.title, sample);
@@ -665,6 +667,29 @@ export class AdminService {
     ]);
 
     return { data, total, page, limit };
+  }
+
+  // ============ BANNERS ============
+
+  async createBanner(dto: CreateBannerDto) {
+    return this.prisma.banner.create({
+      data: {
+        title: dto.title,
+        body: dto.body,
+        targetPlan: dto.targetPlan,
+        targetStatus: dto.targetStatus,
+        startDate: new Date(dto.startDate),
+        endDate: new Date(dto.endDate),
+      },
+    });
+  }
+
+  async listBanners() {
+    return this.prisma.banner.findMany({ orderBy: { createdAt: 'desc' } });
+  }
+
+  async setBannerActive(id: string, active: boolean) {
+    return this.prisma.banner.update({ where: { id }, data: { active } });
   }
 
   // ============ DIRECT NOTIFICATIONS ============

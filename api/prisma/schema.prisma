@@ -935,6 +935,20 @@ model Announcement {
   @@map("announcements")
 }
 
+model Banner {
+  id           String               @id @default(uuid())
+  title        String
+  body         String
+  targetPlan   SubscriptionPlan?
+  targetStatus SubscriptionStatus?
+  startDate    DateTime
+  endDate      DateTime
+  active       Boolean              @default(true)
+  createdAt    DateTime             @default(now())
+
+  @@map("banners")
+}
+
 model AuditLog {
   id         String   @id @default(uuid())
   userId     String
