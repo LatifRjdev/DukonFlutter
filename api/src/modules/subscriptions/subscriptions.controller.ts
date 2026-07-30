@@ -32,6 +32,7 @@ import { SubscriptionsService } from './subscriptions.service';
 import { AdminExportService } from '../admin/admin-export.service';
 import { RequestChangeDto } from './dto/request-change.dto';
 import { AdminSubscriptionQueryDto } from './dto/admin-subscription-query.dto';
+import { AdminSubscriptionExportQueryDto } from './dto/admin-subscription-export-query.dto';
 import { RejectPaymentDto } from './dto/reject-payment.dto';
 import { ChangePlanDto } from './dto/change-plan.dto';
 import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
@@ -158,14 +159,10 @@ export class AdminSubscriptionsController {
     summary: 'Export the current filtered subscription list as .xlsx',
   })
   async exportSubscriptions(
-    @Query('plan') plan: string | undefined,
-    @Query('status') status: string | undefined,
+    @Query() query: AdminSubscriptionExportQueryDto,
     @Res() res: Response,
   ) {
-    const buffer = await this.exportService.exportSubscriptions({
-      plan,
-      status,
-    });
+    const buffer = await this.exportService.exportSubscriptions(query);
     res.set({
       'Content-Type':
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

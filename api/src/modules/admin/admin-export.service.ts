@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
-import { Prisma } from '@prisma/client';
+import { Prisma, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
@@ -124,12 +124,12 @@ export class AdminExportService {
   }
 
   async exportSubscriptions(filters: {
-    plan?: string;
-    status?: string;
+    plan?: SubscriptionPlan;
+    status?: SubscriptionStatus;
   }): Promise<Buffer> {
     const where: Prisma.SubscriptionWhereInput = {};
-    if (filters.plan) where.plan = filters.plan as any;
-    if (filters.status) where.status = filters.status as any;
+    if (filters.plan) where.plan = filters.plan;
+    if (filters.status) where.status = filters.status;
 
     const subs = await this.prisma.subscription.findMany({
       where,
