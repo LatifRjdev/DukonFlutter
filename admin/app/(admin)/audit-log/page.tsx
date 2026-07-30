@@ -33,11 +33,76 @@ const ACTION_COLORS: Record<string, string> = {
 
 const ACTIONS = ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'APPROVE', 'REJECT', 'SUSPEND', 'BLOCK', 'UNBLOCK'];
 
+function getChangedKeys(
+  before: Record<string, unknown> | null,
+  after: Record<string, unknown> | null,
+): string[] {
+  const keys = new Set([
+    ...Object.keys(before ?? {}),
+    ...Object.keys(after ?? {}),
+  ]);
+  const changed: string[] = [];
+  for (const key of keys) {
+    if (JSON.stringify(before?.[key]) !== JSON.stringify(after?.[key])) {
+      changed.push(key);
+    }
+  }
+  return changed;
+}
+
+function formatValue(value: unknown): string {
+  if (value == null) return '—';
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+}
+
 function ExpandableDetails({ details }: { details?: unknown }) {
   const [expanded, setExpanded] = useState(false);
   if (details == null) return <span className="text-muted-foreground text-xs">—</span>;
-  const text =
-    typeof details === 'string' ? details : JSON.stringify(details, null, 2);
+
+  const isDiffShape =
+    typeof details === 'object' &&
+    details !== null &&
+    ('before' in (details as object) || 'after' in (details as object));
+
+  if (isDiffShape) {
+    const { before, after } = details as {
+      before: Record<string, unknown> | null;
+      after: Record<string, unknown> | null;
+    };
+    const changedKeys = getChangedKeys(before, after);
+
+    if (changedKeys.length === 0) {
+      return <span className="text-muted-foreground text-xs">Без изменений</span>;
+    }
+
+    return (
+      <div className="max-w-xs">
+        <button
+          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          className="flex items-start gap-1 text-xs text-muted-foreground hover:text-foreground"
+        >
+          {expanded ? <ChevronDown className="h-3 w-3 mt-0.5 shrink-0" /> : <ChevronRight className="h-3 w-3 mt-0.5 shrink-0" />}
+          {!expanded && <span>{changedKeys.length} изм.</span>}
+        </button>
+        {expanded && (
+          <div className="mt-1 space-y-1 font-mono text-xs">
+            {changedKeys.map((key) => (
+              <div key={key} className="flex flex-wrap gap-1">
+                <span className="text-muted-foreground">{key}:</span>
+                <span className="text-red-600 line-through">{formatValue(before?.[key])}</span>
+                <span>→</span>
+                <span className="text-green-700">{formatValue(after?.[key])}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Legacy flat format — records written before this feature shipped
+  const text = typeof details === 'string' ? details : JSON.stringify(details, null, 2);
   if (!text) return <span className="text-muted-foreground text-xs">—</span>;
   const short = text.length > 60 ? text.slice(0, 60) + '...' : text;
 
