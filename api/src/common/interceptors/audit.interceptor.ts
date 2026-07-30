@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
@@ -37,6 +38,8 @@ const ENTITY_MODELS: Record<string, { model: string; pkField: string }> = {
 
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(AuditInterceptor.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -89,8 +92,12 @@ export class AuditInterceptor implements NestInterceptor {
               },
             }),
           )
-          .catch(() => {
-            // silently ignore audit write errors
+          .catch((err) => {
+            // Non-fatal — never block the response — but log so a broken
+            // audit pipeline doesn't fail silently forever.
+            this.logger.warn(
+              `Failed to write audit log entry for ${action} ${entityType}${entityId ? `/${entityId}` : ''}: ${err}`,
+            );
           });
       }),
     );
@@ -107,7 +114,10 @@ export class AuditInterceptor implements NestInterceptor {
       return await delegate.findUnique({
         where: { [config.pkField]: entityId },
       });
-    } catch {
+    } catch (err) {
+      this.logger.warn(
+        `Failed to capture audit snapshot for ${entityType}/${entityId}: ${err}`,
+      );
       return null;
     }
   }
