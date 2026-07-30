@@ -94,6 +94,18 @@ export interface Announcement {
   sentBy: string;
 }
 
+export interface Banner {
+  id: string;
+  title: string;
+  body: string;
+  targetPlan?: string;
+  targetStatus?: string;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  createdAt: string;
+}
+
 export interface AuditLog {
   id: string;
   createdAt: string;

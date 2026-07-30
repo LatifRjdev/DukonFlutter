@@ -9,6 +9,7 @@ import {
   CreditCard,
   Settings,
   Megaphone,
+  Flag,
   ScrollText,
   LogOut,
 } from 'lucide-react';
@@ -22,6 +23,7 @@ const navItems = [
   { href: '/subscriptions', label: 'Подписки', icon: CreditCard },
   { href: '/subscriptions/plans', label: 'Тарифы', icon: Settings },
   { href: '/announcements', label: 'Объявления', icon: Megaphone },
+  { href: '/banners', label: 'Баннеры', icon: Flag },
   { href: '/audit-log', label: 'Журнал аудита', icon: ScrollText },
 ];
 
