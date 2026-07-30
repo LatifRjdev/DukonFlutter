@@ -104,7 +104,9 @@ export class AuditInterceptor implements NestInterceptor {
     if (!config || !entityId) return null;
     try {
       const delegate = (this.prisma as any)[config.model];
-      return await delegate.findUnique({ where: { [config.pkField]: entityId } });
+      return await delegate.findUnique({
+        where: { [config.pkField]: entityId },
+      });
     } catch {
       return null;
     }

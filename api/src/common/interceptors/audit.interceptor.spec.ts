@@ -32,7 +32,11 @@ function makeCallHandler(response: any): CallHandler {
 }
 
 describe('AuditInterceptor — before/after diff', () => {
-  let prisma: { user: any; subscriptionPlanConfig: any; auditLog: { create: jest.Mock } };
+  let prisma: {
+    user: any;
+    subscriptionPlanConfig: any;
+    auditLog: { create: jest.Mock };
+  };
   let interceptor: AuditInterceptor;
 
   beforeEach(() => {
@@ -57,23 +61,25 @@ describe('AuditInterceptor — before/after diff', () => {
       user: { id: 'admin-1' },
     });
 
-    interceptor.intercept(context, makeCallHandler({ id: 'u1', isAdmin: true })).subscribe({
-      complete: () => {
-        setImmediate(() => {
-          expect(prisma.auditLog.create).toHaveBeenCalledWith(
-            expect.objectContaining({
-              data: expect.objectContaining({
-                details: {
-                  before: { id: 'u1', isAdmin: false },
-                  after: { id: 'u1', isAdmin: true },
-                },
+    interceptor
+      .intercept(context, makeCallHandler({ id: 'u1', isAdmin: true }))
+      .subscribe({
+        complete: () => {
+          setImmediate(() => {
+            expect(prisma.auditLog.create).toHaveBeenCalledWith(
+              expect.objectContaining({
+                data: expect.objectContaining({
+                  details: {
+                    before: { id: 'u1', isAdmin: false },
+                    after: { id: 'u1', isAdmin: true },
+                  },
+                }),
               }),
-            }),
-          );
-          done();
-        });
-      },
-    });
+            );
+            done();
+          });
+        },
+      });
   });
 
   it('uses the plan config pkField "plan" (not "id") when capturing subscription-plan snapshots', (done) => {
@@ -89,26 +95,30 @@ describe('AuditInterceptor — before/after diff', () => {
       user: { id: 'admin-1' },
     });
 
-    interceptor.intercept(context, makeCallHandler({ plan: 'START', maxProducts: 600 })).subscribe({
-      complete: () => {
-        setImmediate(() => {
-          expect(prisma.subscriptionPlanConfig.findUnique).toHaveBeenCalledWith({
-            where: { plan: 'START' },
-          });
-          expect(prisma.auditLog.create).toHaveBeenCalledWith(
-            expect.objectContaining({
-              data: expect.objectContaining({
-                details: {
-                  before: { plan: 'START', maxProducts: 500 },
-                  after: { plan: 'START', maxProducts: 600 },
-                },
+    interceptor
+      .intercept(context, makeCallHandler({ plan: 'START', maxProducts: 600 }))
+      .subscribe({
+        complete: () => {
+          setImmediate(() => {
+            expect(
+              prisma.subscriptionPlanConfig.findUnique,
+            ).toHaveBeenCalledWith({
+              where: { plan: 'START' },
+            });
+            expect(prisma.auditLog.create).toHaveBeenCalledWith(
+              expect.objectContaining({
+                data: expect.objectContaining({
+                  details: {
+                    before: { plan: 'START', maxProducts: 500 },
+                    after: { plan: 'START', maxProducts: 600 },
+                  },
+                }),
               }),
-            }),
-          );
-          done();
-        });
-      },
-    });
+            );
+            done();
+          });
+        },
+      });
   });
 
   it('falls back to the response body as "after" (and null "before") for CREATE routes with no entityId', (done) => {
