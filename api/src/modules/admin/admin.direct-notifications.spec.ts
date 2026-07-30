@@ -1,10 +1,13 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { SendDirectNotificationDto } from './dto/send-direct-notification.dto';
 
 function makePrismaFake() {
   return {
@@ -87,5 +90,55 @@ describe('AdminService — sendDirectNotification', () => {
         body: 'Текст',
       } as any),
     ).rejects.toThrow(NotFoundException);
+  });
+});
+
+describe('SendDirectNotificationDto validation', () => {
+  it('fails validation when neither userId nor storeId is set', async () => {
+    const dto = plainToInstance(SendDirectNotificationDto, {
+      title: 'Заголовок',
+      body: 'Текст',
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors.length).toBeGreaterThan(0);
+  });
+
+  it('fails validation when both userId and storeId are set', async () => {
+    const dto = plainToInstance(SendDirectNotificationDto, {
+      userId: 'u1',
+      storeId: 's1',
+      title: 'Заголовок',
+      body: 'Текст',
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors.length).toBeGreaterThan(0);
+  });
+
+  it('passes validation when only userId is set', async () => {
+    const dto = plainToInstance(SendDirectNotificationDto, {
+      userId: 'u1',
+      title: 'Заголовок',
+      body: 'Текст',
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors).toHaveLength(0);
+  });
+
+  it('passes validation when only storeId is set', async () => {
+    const dto = plainToInstance(SendDirectNotificationDto, {
+      storeId: 's1',
+      title: 'Заголовок',
+      body: 'Текст',
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors).toHaveLength(0);
   });
 });
