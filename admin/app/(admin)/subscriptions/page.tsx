@@ -78,6 +78,11 @@ function SubscriptionsContent() {
   const [rejectReason, setRejectReason] = useState('');
   const [changePlanStore, setChangePlanStore] = useState<Subscription | null>(null);
   const [newPlan, setNewPlan] = useState('');
+  const [manualPaymentDialog, setManualPaymentDialog] = useState<Subscription | null>(null);
+  const [manualAmount, setManualAmount] = useState('');
+  const [manualMethod, setManualMethod] = useState('CASH');
+  const [manualPeriodDays, setManualPeriodDays] = useState('30');
+  const [manualNotes, setManualNotes] = useState('');
 
   const { data: subscriptions = [], isLoading: subLoading } = useQuery<Subscription[]>({
     queryKey: ['subscriptions'],
@@ -120,6 +125,34 @@ function SubscriptionsContent() {
       toast.success('Скидка установлена');
     },
     onError: () => toast.error('Ошибка установки скидки'),
+  });
+
+  const manualPaymentMutation = useMutation({
+    mutationFn: ({
+      id,
+      amount,
+      method,
+      periodDays,
+      notes,
+    }: {
+      id: string;
+      amount: number;
+      method: string;
+      periodDays: number;
+      notes?: string;
+    }) =>
+      api.post(`/admin/subscriptions/${id}/manual-payment`, {
+        amount,
+        method,
+        periodDays,
+        notes,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      setManualPaymentDialog(null);
+      toast.success('Платёж внесён, подписка продлена');
+    },
+    onError: () => toast.error('Ошибка внесения платежа'),
   });
 
   const cancelMutation = useMutation({
@@ -218,6 +251,17 @@ function SubscriptionsContent() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => { setDiscountDialog(s); setDiscount(String(s.adminDiscount || '')); }}>
               Установить скидку
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setManualPaymentDialog(s);
+                setManualAmount('');
+                setManualMethod('CASH');
+                setManualPeriodDays('30');
+                setManualNotes('');
+              }}
+            >
+              Внести платёж вручную
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-600"
@@ -473,6 +517,85 @@ function SubscriptionsContent() {
               disabled={discount === '' || discountMutation.isPending}
             >
               Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manual Payment Dialog */}
+      <Dialog open={!!manualPaymentDialog} onOpenChange={() => setManualPaymentDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Внести платёж вручную</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Магазин: <strong>{manualPaymentDialog?.store?.name || '—'}</strong>
+            </p>
+            <div className="space-y-2">
+              <Label>Сумма</Label>
+              <Input
+                type="number"
+                min="0"
+                value={manualAmount}
+                onChange={(e) => setManualAmount(e.target.value)}
+                placeholder="Например: 400"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Способ оплаты</Label>
+              <Select value={manualMethod} onValueChange={(v) => v && setManualMethod(v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CASH">Наличные</SelectItem>
+                  <SelectItem value="CARD">Карта</SelectItem>
+                  <SelectItem value="MOBILE_TRANSFER">Мобильный перевод</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Период продления в днях</Label>
+              <Input
+                type="number"
+                min="1"
+                value={manualPeriodDays}
+                onChange={(e) => setManualPeriodDays(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Примечание</Label>
+              <Textarea
+                value={manualNotes}
+                onChange={(e) => setManualNotes(e.target.value)}
+                placeholder="Необязательно"
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setManualPaymentDialog(null)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() =>
+                manualPaymentDialog &&
+                manualPaymentMutation.mutate({
+                  id: manualPaymentDialog.id,
+                  amount: Number(manualAmount),
+                  method: manualMethod,
+                  periodDays: Number(manualPeriodDays),
+                  notes: manualNotes || undefined,
+                })
+              }
+              disabled={
+                manualAmount === '' ||
+                manualPeriodDays === '' ||
+                manualPaymentMutation.isPending
+              }
+            >
+              Внести платёж
             </Button>
           </DialogFooter>
         </DialogContent>
