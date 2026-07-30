@@ -10,6 +10,7 @@ import { AdminAuditLogController } from './admin-audit-log.controller';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { StoresModule } from '../stores/stores.module';
 import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
+import { AdminExportService } from './admin-export.service';
 
 @Module({
   imports: [NotificationsModule, StoresModule],
@@ -22,7 +23,7 @@ import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
     AdminNotificationsController,
     AdminAuditLogController,
   ],
-  providers: [AdminService, AuditInterceptor],
-  exports: [AdminService],
+  providers: [AdminService, AuditInterceptor, AdminExportService],
+  exports: [AdminService, AdminExportService],
 })
 export class AdminModule {}

@@ -6,9 +6,10 @@ import {
 } from './subscriptions.controller';
 import { SubscriptionsService } from './subscriptions.service';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
-  imports: [NotificationsModule],
+  imports: [NotificationsModule, AdminModule],
   controllers: [
     SubscriptionPlansController,
     SubscriptionsController,

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { AdminSubscriptionsController } from './subscriptions.controller';
 import { SubscriptionsService } from './subscriptions.service';
+import { AdminExportService } from '../admin/admin-export.service';
 
 // We mock the service to a bare object — the controller is a thin
 // delegator, so we only care that the two manual-trigger endpoints
@@ -22,9 +23,16 @@ describe('AdminSubscriptionsController — manual cron triggers (F-3)', () => {
       sendExpiryReminders: jest.fn(async () => undefined),
     };
 
+    const fakeExportService = {
+      exportSubscriptions: jest.fn(async () => Buffer.from('')),
+    };
+
     const moduleRef = await Test.createTestingModule({
       controllers: [AdminSubscriptionsController],
-      providers: [{ provide: SubscriptionsService, useValue: fakeService }],
+      providers: [
+        { provide: SubscriptionsService, useValue: fakeService },
+        { provide: AdminExportService, useValue: fakeExportService },
+      ],
     }).compile();
 
     controller = moduleRef.get(AdminSubscriptionsController);

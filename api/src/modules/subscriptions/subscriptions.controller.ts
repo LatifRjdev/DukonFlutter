@@ -6,11 +6,13 @@ import {
   Body,
   Param,
   Query,
+  Res,
   UseGuards,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -27,6 +29,7 @@ import { AdminGuard } from '../../common/guards/admin.guard';
 import { SkipThrottle } from '@nestjs/throttler';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SubscriptionsService } from './subscriptions.service';
+import { AdminExportService } from '../admin/admin-export.service';
 import { RequestChangeDto } from './dto/request-change.dto';
 import { AdminSubscriptionQueryDto } from './dto/admin-subscription-query.dto';
 import { RejectPaymentDto } from './dto/reject-payment.dto';
@@ -137,7 +140,10 @@ export class SubscriptionsController {
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin/subscriptions')
 export class AdminSubscriptionsController {
-  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+  constructor(
+    private readonly subscriptionsService: SubscriptionsService,
+    private readonly exportService: AdminExportService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -145,6 +151,27 @@ export class AdminSubscriptionsController {
   })
   getAll(@Query() query: AdminSubscriptionQueryDto) {
     return this.subscriptionsService.adminGetAll(query);
+  }
+
+  @Get('export')
+  @ApiOperation({
+    summary: 'Export the current filtered subscription list as .xlsx',
+  })
+  async exportSubscriptions(
+    @Query('plan') plan: string | undefined,
+    @Query('status') status: string | undefined,
+    @Res() res: Response,
+  ) {
+    const buffer = await this.exportService.exportSubscriptions({
+      plan,
+      status,
+    });
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="dukonpro-subscriptions-${new Date().toISOString().slice(0, 10)}.xlsx"`,
+    });
+    res.send(buffer);
   }
 
   @Get('pending-payments')
