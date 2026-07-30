@@ -1,101 +1,169 @@
 import 'reflect-metadata';
-import { firstValueFrom, of } from 'rxjs';
-import { CallHandler, ExecutionContext } from '@nestjs/common';
+import { of } from 'rxjs';
 import { AuditInterceptor } from './audit.interceptor';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 
-function makeContext(opts: {
+function makeContext(overrides: {
   method: string;
   url: string;
-  body?: Record<string, unknown>;
   routePath?: string;
-  userId?: string;
+  params?: Record<string, string>;
+  body?: any;
+  user?: { id: string };
 }): ExecutionContext {
   const request = {
-    method: opts.method,
-    url: opts.url,
-    body: opts.body,
-    route: { path: opts.routePath ?? opts.url },
-    params: {},
-    user: opts.userId ? { id: opts.userId } : undefined,
+    method: overrides.method,
+    url: overrides.url,
+    route: { path: overrides.routePath ?? overrides.url },
+    params: overrides.params ?? {},
+    body: overrides.body ?? {},
+    user: overrides.user,
+    ip: '127.0.0.1',
     headers: {},
   };
   return {
     switchToHttp: () => ({ getRequest: () => request }),
-  } as unknown as ExecutionContext;
+  } as any;
 }
 
-function makeCallHandler(): CallHandler {
-  return { handle: () => of({ ok: true }) };
+function makeCallHandler(response: any): CallHandler {
+  return { handle: () => of(response) };
 }
 
-describe('AuditInterceptor — sensitive field redaction', () => {
-  let prisma: { auditLog: { create: jest.Mock } };
+describe('AuditInterceptor — before/after diff', () => {
+  let prisma: { user: any; subscriptionPlanConfig: any; auditLog: { create: jest.Mock } };
   let interceptor: AuditInterceptor;
 
   beforeEach(() => {
-    prisma = { auditLog: { create: jest.fn(async () => ({})) } };
+    prisma = {
+      user: { findUnique: jest.fn() },
+      subscriptionPlanConfig: { findUnique: jest.fn() },
+      auditLog: { create: jest.fn(async () => undefined) },
+    };
     interceptor = new AuditInterceptor(prisma as unknown as PrismaService);
   });
 
-  it('should redact a password field before writing to the audit log', async () => {
-    const ctx = makeContext({
+  it('captures before and after snapshots for an UPDATE on a known entity', (done) => {
+    (prisma.user.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: false })
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: true });
+
+    const context = makeContext({
+      method: 'PUT',
+      url: '/admin/users/u1/toggle-admin',
+      routePath: '/admin/users/:id/toggle-admin',
+      params: { id: 'u1' },
+      user: { id: 'admin-1' },
+    });
+
+    interceptor.intercept(context, makeCallHandler({ id: 'u1', isAdmin: true })).subscribe({
+      complete: () => {
+        setImmediate(() => {
+          expect(prisma.auditLog.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: expect.objectContaining({
+                details: {
+                  before: { id: 'u1', isAdmin: false },
+                  after: { id: 'u1', isAdmin: true },
+                },
+              }),
+            }),
+          );
+          done();
+        });
+      },
+    });
+  });
+
+  it('uses the plan config pkField "plan" (not "id") when capturing subscription-plan snapshots', (done) => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ plan: 'START', maxProducts: 500 })
+      .mockResolvedValueOnce({ plan: 'START', maxProducts: 600 });
+
+    const context = makeContext({
+      method: 'PUT',
+      url: '/admin/plans/START',
+      routePath: '/admin/plans/:plan',
+      params: { plan: 'START' },
+      user: { id: 'admin-1' },
+    });
+
+    interceptor.intercept(context, makeCallHandler({ plan: 'START', maxProducts: 600 })).subscribe({
+      complete: () => {
+        setImmediate(() => {
+          expect(prisma.subscriptionPlanConfig.findUnique).toHaveBeenCalledWith({
+            where: { plan: 'START' },
+          });
+          expect(prisma.auditLog.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: expect.objectContaining({
+                details: {
+                  before: { plan: 'START', maxProducts: 500 },
+                  after: { plan: 'START', maxProducts: 600 },
+                },
+              }),
+            }),
+          );
+          done();
+        });
+      },
+    });
+  });
+
+  it('falls back to the response body as "after" (and null "before") for CREATE routes with no entityId', (done) => {
+    const context = makeContext({
       method: 'POST',
       url: '/admin/users',
       routePath: '/admin/users',
-      userId: 'admin-1',
-      body: { name: 'Али', phone: '+992901234567', password: 'SuperSecret123' },
+      params: {},
+      body: { name: 'Новый', phone: '+992900000009' },
+      user: { id: 'admin-1' },
     });
 
-    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
+    const responseBody = { id: 'u-new', name: 'Новый' };
 
-    const call = prisma.auditLog.create.mock.calls[0][0];
-    expect(call.data.details.password).toBe('[REDACTED]');
-    expect(call.data.details.name).toBe('Али');
-    expect(call.data.details.phone).toBe('+992901234567');
-  });
-
-  it('should redact a newPassword field before writing to the audit log', async () => {
-    const ctx = makeContext({
-      method: 'PATCH',
-      url: '/admin/users/u1/password',
-      routePath: '/admin/users/:id/password',
-      userId: 'admin-1',
-      body: { newPassword: 'AnotherSecret456' },
+    interceptor.intercept(context, makeCallHandler(responseBody)).subscribe({
+      complete: () => {
+        setImmediate(() => {
+          expect(prisma.auditLog.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: expect.objectContaining({
+                details: {
+                  before: null,
+                  after: responseBody,
+                },
+              }),
+            }),
+          );
+          done();
+        });
+      },
     });
-
-    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
-
-    const call = prisma.auditLog.create.mock.calls[0][0];
-    expect(call.data.details.newPassword).toBe('[REDACTED]');
   });
 
-  it('should leave a body with no sensitive fields untouched', async () => {
-    const ctx = makeContext({
+  it('redacts sensitive fields inside both before and after', (done) => {
+    (prisma.user.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ id: 'u1', password: 'old-hash' })
+      .mockResolvedValueOnce({ id: 'u1', password: 'new-hash' });
+
+    const context = makeContext({
       method: 'PUT',
-      url: '/admin/subscriptions/sub-1/extend',
-      routePath: '/admin/subscriptions/:id/extend',
-      userId: 'admin-1',
-      body: { days: 30 },
+      url: '/admin/users/u1/block',
+      routePath: '/admin/users/:id/block',
+      params: { id: 'u1' },
+      user: { id: 'admin-1' },
     });
 
-    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
-
-    const call = prisma.auditLog.create.mock.calls[0][0];
-    expect(call.data.details).toEqual({ days: 30 });
-  });
-
-  it('should pass through a null body unchanged', async () => {
-    const ctx = makeContext({
-      method: 'DELETE',
-      url: '/admin/users/u1',
-      routePath: '/admin/users/:id',
-      userId: 'admin-1',
+    interceptor.intercept(context, makeCallHandler({ id: 'u1' })).subscribe({
+      complete: () => {
+        setImmediate(() => {
+          const call = (prisma.auditLog.create as jest.Mock).mock.calls[0][0];
+          expect(call.data.details.before.password).toBe('[REDACTED]');
+          expect(call.data.details.after.password).toBe('[REDACTED]');
+          done();
+        });
+      },
     });
-
-    await firstValueFrom(interceptor.intercept(ctx, makeCallHandler()));
-
-    const call = prisma.auditLog.create.mock.calls[0][0];
-    expect(call.data.details).toBeNull();
   });
 });
