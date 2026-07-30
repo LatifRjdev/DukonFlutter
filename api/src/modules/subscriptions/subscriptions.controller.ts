@@ -33,6 +33,7 @@ import { RejectPaymentDto } from './dto/reject-payment.dto';
 import { ChangePlanDto } from './dto/change-plan.dto';
 import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
 import { SetDiscountDto } from './dto/set-discount.dto';
+import { AdminManualPaymentDto } from './dto/admin-manual-payment.dto';
 
 // ─── User endpoints ────────────────────────────────────────────────────────────
 
@@ -180,6 +181,20 @@ export class AdminSubscriptionsController {
       dto,
       userId,
     );
+  }
+
+  @SkipThrottle()
+  @Post(':id/manual-payment')
+  @ApiOperation({
+    summary:
+      'Admin: record a manual payment (cash/transfer received outside the app) and extend the subscription',
+  })
+  manualPayment(
+    @Param('id') id: string,
+    @Body() dto: AdminManualPaymentDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.subscriptionsService.adminCreateManualPayment(id, dto, userId);
   }
 
   @Put(':id/extend')

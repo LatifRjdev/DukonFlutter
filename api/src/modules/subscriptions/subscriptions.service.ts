@@ -15,6 +15,7 @@ import { RejectPaymentDto } from './dto/reject-payment.dto';
 import { ChangePlanDto } from './dto/change-plan.dto';
 import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
 import { SetDiscountDto } from './dto/set-discount.dto';
+import { AdminManualPaymentDto } from './dto/admin-manual-payment.dto';
 import * as Sentry from '@sentry/nestjs';
 
 const PLAN_HIERARCHY: Record<string, number> = {
@@ -358,6 +359,87 @@ export class SubscriptionsService implements OnModuleInit {
     );
 
     return { payment: updatedPayment, subscription: updatedSubscription };
+  }
+
+  async adminCreateManualPayment(
+    subscriptionId: string,
+    dto: AdminManualPaymentDto,
+    reviewedBy: string,
+  ) {
+    Sentry.addBreadcrumb({
+      category: 'subscriptions',
+      message: 'subscription.manual-payment',
+      data: { subId: subscriptionId, recordedBy: reviewedBy },
+    });
+
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException('Subscription not found');
+    }
+
+    const now = new Date();
+
+    // Extend from currentPeriodEnd if still in future, else from now
+    const base =
+      subscription.currentPeriodEnd > now ? subscription.currentPeriodEnd : now;
+    const newPeriodEnd = new Date(base);
+    newPeriodEnd.setDate(newPeriodEnd.getDate() + dto.periodDays);
+
+    const [payment, updatedSubscription] = await this.prisma.$transaction([
+      this.prisma.payment.create({
+        data: {
+          subscriptionId,
+          amount: dto.amount,
+          currency: 'TJS',
+          method: dto.method,
+          status: 'APPROVED',
+          note: dto.notes,
+          reviewedAt: now,
+          reviewedBy,
+        },
+      }),
+      this.prisma.subscription.update({
+        where: { id: subscriptionId },
+        data: {
+          status: 'ACTIVE',
+          currentPeriodEnd: newPeriodEnd,
+          currentPeriodStart: now,
+        },
+      }),
+    ]);
+
+    // Notify store owner
+    const store = await this.prisma.store.findUnique({
+      where: { id: updatedSubscription.storeId },
+      select: { ownerId: true, name: true },
+    });
+
+    if (store) {
+      await this.notificationsService.sendPush(
+        store.ownerId,
+        'Подписка продлена',
+        `Платёж внесён администратором. Подписка активна до ${newPeriodEnd.toLocaleDateString('ru-RU')}.`,
+        'SUBSCRIPTION_MANUAL_PAYMENT',
+        updatedSubscription.storeId,
+      );
+    }
+
+    void this.audit.record(
+      reviewedBy,
+      'subscription.manual-payment',
+      'subscription',
+      updatedSubscription.id,
+      {
+        paymentId: payment.id,
+        amount: dto.amount,
+        periodDays: dto.periodDays,
+      },
+    );
+
+    return { payment, subscription: updatedSubscription };
   }
 
   async adminRejectPayment(
