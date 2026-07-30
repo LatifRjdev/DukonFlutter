@@ -8,7 +8,15 @@ function makePrismaFake() {
   return {
     user: {
       findMany: jest.fn(async () => [
-        { id: 'u1', name: 'Алишер', phone: '+992900000001', email: null, isAdmin: false, isActive: true, createdAt: new Date('2026-01-01') },
+        {
+          id: 'u1',
+          name: 'Алишер',
+          phone: '+992900000001',
+          email: null,
+          isAdmin: false,
+          isActive: true,
+          createdAt: new Date('2026-01-01'),
+        },
       ]),
     },
     store: {
@@ -24,7 +32,10 @@ describe('AdminExportService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [AdminExportService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        AdminExportService,
+        { provide: PrismaService, useValue: prisma },
+      ],
     }).compile();
     service = moduleRef.get(AdminExportService);
   });

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -11,10 +11,12 @@ vi.mock('next/navigation', () => ({
 
 const toastSuccess = vi.fn();
 const toastError = vi.fn();
+const toastWarning = vi.fn();
 vi.mock('sonner', () => ({
   toast: {
     success: (msg: string) => toastSuccess(msg),
     error: (msg: string) => toastError(msg),
+    warning: (msg: string) => toastWarning(msg),
   },
 }));
 
@@ -115,5 +117,79 @@ describe('StoresPage — destructive action: suspend / activate', () => {
 
     await waitFor(() => expect(calls).toContain('unsuspend'));
     expect(toastSuccess).toHaveBeenCalledWith('Статус магазина обновлён');
+  });
+});
+
+describe('StoresPage — Экспорт button vs. subscription-status filter', () => {
+  const originalLocation = window.location;
+
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+    toastWarning.mockReset();
+    mockSingleStore(true);
+    // jsdom throws "Not implemented: navigation" on a real assignment to
+    // window.location.href — stub it out so we can just assert on the
+    // value the component tried to navigate to. `origin` is preserved
+    // because lib/api.ts's apiFetch reads window.location.origin to build
+    // the proxy URL the initial store list is fetched from.
+    // @ts-expect-error - intentionally replacing the read-only jsdom Location
+    delete window.location;
+    // @ts-expect-error - minimal stand-in, only `origin`/`href` are used
+    window.location = { origin: originalLocation.origin, href: '' };
+  });
+
+  afterEach(() => {
+    // @ts-expect-error - restoring the real jsdom Location object
+    window.location = originalLocation;
+  });
+
+  it('warns and exports ALL stores (no isActive param) when statusFilter is an unsupported subscription status', async () => {
+    const user = userEvent.setup();
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => screen.getByText('Active Mart'));
+
+    const statusTrigger = screen.getAllByRole('combobox')[2];
+    await user.click(statusTrigger);
+    const trialOption = await screen.findByRole('option', { name: 'Trial' });
+    await user.click(trialOption);
+
+    const exportButton = screen.getByRole('button', { name: /Экспорт/ });
+    await user.click(exportButton);
+
+    expect(toastWarning).toHaveBeenCalledWith(
+      'Экспорт по статусу подписки пока не поддерживается — будут выгружены все магазины',
+    );
+    expect(window.location.href).toContain('/api/proxy/admin/stores/export?');
+    expect(window.location.href).not.toContain('isActive');
+  });
+
+  it('does not warn and maps SUSPENDED to isActive=false in the export link', async () => {
+    const user = userEvent.setup();
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => screen.getByText('Active Mart'));
+
+    const statusTrigger = screen.getAllByRole('combobox')[2];
+    await user.click(statusTrigger);
+    const suspendedOption = await screen.findByRole('option', { name: 'Приостановлен' });
+    await user.click(suspendedOption);
+
+    const exportButton = screen.getByRole('button', { name: /Экспорт/ });
+    await user.click(exportButton);
+
+    expect(toastWarning).not.toHaveBeenCalled();
+    expect(window.location.href).toContain('isActive=false');
+  });
+
+  it('does not warn when statusFilter is left at "all"', async () => {
+    const user = userEvent.setup();
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => screen.getByText('Active Mart'));
+
+    const exportButton = screen.getByRole('button', { name: /Экспорт/ });
+    await user.click(exportButton);
+
+    expect(toastWarning).not.toHaveBeenCalled();
+    expect(window.location.href).toContain('/api/proxy/admin/stores/export?');
   });
 });

@@ -142,7 +142,10 @@ export class AdminExportService {
         currentPeriodEnd: true,
         createdAt: true,
         store: {
-          select: { name: true, owner: { select: { name: true, phone: true } } },
+          select: {
+            name: true,
+            owner: { select: { name: true, phone: true } },
+          },
         },
       },
     });

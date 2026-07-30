@@ -55,6 +55,12 @@ const SUB_STATUS_LABELS: Record<string, string> = {
   EXPIRED: 'Истекла',
 };
 
+// Statuses the on-screen filter supports that the export endpoint cannot
+// express as a query param (AdminStoresQueryDto only supports `isActive`,
+// not subscription status). SUSPENDED is excluded here because it maps
+// onto `isActive=false` directly.
+const UNSUPPORTED_EXPORT_STATUSES = new Set(['ACTIVE', 'TRIAL', 'PAST_DUE', 'EXPIRED']);
+
 export default function StoresPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -260,8 +266,18 @@ export default function StoresPage() {
             if (planFilter !== 'all') params.set('plan', planFilter);
             // The admin list DTO only supports filtering by isActive, not by
             // subscription status — SUSPENDED is the one statusFilter value
-            // that maps onto it directly.
-            if (statusFilter === 'SUSPENDED') params.set('isActive', 'false');
+            // that maps onto it directly. The remaining subscription-status
+            // values (ACTIVE/TRIAL/PAST_DUE/EXPIRED) can't be expressed as an
+            // export query param, so warn the admin their export will include
+            // stores outside the on-screen filter instead of silently
+            // returning a mismatched file.
+            if (UNSUPPORTED_EXPORT_STATUSES.has(statusFilter)) {
+              toast.warning(
+                'Экспорт по статусу подписки пока не поддерживается — будут выгружены все магазины',
+              );
+            } else if (statusFilter === 'SUSPENDED') {
+              params.set('isActive', 'false');
+            }
             window.location.href = `/api/proxy/admin/stores/export?${params.toString()}`;
           }}
         >

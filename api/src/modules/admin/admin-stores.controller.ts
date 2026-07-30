@@ -39,7 +39,10 @@ export class AdminStoresController {
 
   @Get('export')
   @ApiOperation({ summary: 'Export the current filtered store list as .xlsx' })
-  async exportStores(@Query() query: AdminStoresQueryDto, @Res() res: Response) {
+  async exportStores(
+    @Query() query: AdminStoresQueryDto,
+    @Res() res: Response,
+  ) {
     const buffer = await this.exportService.exportStores(query);
     res.set({
       'Content-Type':
