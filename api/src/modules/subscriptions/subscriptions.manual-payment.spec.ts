@@ -1,10 +1,13 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { SubscriptionsService } from './subscriptions.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { AdminManualPaymentDto } from './dto/admin-manual-payment.dto';
 
 function makePrismaFake() {
   return {
@@ -57,7 +60,11 @@ describe('SubscriptionsService — adminCreateManualPayment', () => {
 
   it('extends currentPeriodEnd by periodDays from the later of now/currentPeriodEnd, and notifies the owner', async () => {
     const currentPeriodEnd = new Date('2099-01-01');
-    const foundSubscription = { id: 'sub-1', storeId: 'store-1', currentPeriodEnd };
+    const foundSubscription = {
+      id: 'sub-1',
+      storeId: 'store-1',
+      currentPeriodEnd,
+    };
     (prisma.subscription.findUnique as jest.Mock).mockResolvedValue(
       foundSubscription,
     );
@@ -73,14 +80,21 @@ describe('SubscriptionsService — adminCreateManualPayment', () => {
 
     const result = await service.adminCreateManualPayment(
       'sub-1',
-      { amount: 400, method: 'CASH', periodDays: 30, notes: 'Наличные в офисе' } as any,
+      {
+        amount: 400,
+        method: 'CASH',
+        periodDays: 30,
+        notes: 'Наличные в офисе',
+      } as any,
       'admin-1',
     );
 
     const expectedEnd = new Date(currentPeriodEnd);
     expectedEnd.setDate(expectedEnd.getDate() + 30);
 
-    expect((result.subscription as any).currentPeriodEnd.getTime()).toBe(expectedEnd.getTime());
+    expect((result.subscription as any).currentPeriodEnd.getTime()).toBe(
+      expectedEnd.getTime(),
+    );
     expect(notifications.sendPush).toHaveBeenCalledWith(
       'owner-1',
       expect.any(String),
@@ -95,5 +109,44 @@ describe('SubscriptionsService — adminCreateManualPayment', () => {
       'sub-1',
       expect.objectContaining({ amount: 400, periodDays: 30 }),
     );
+  });
+});
+
+describe('AdminManualPaymentDto validation', () => {
+  it('passes validation for a well-formed payload', async () => {
+    const dto = plainToInstance(AdminManualPaymentDto, {
+      amount: 400,
+      method: 'CASH',
+      periodDays: 30,
+      notes: 'Наличные в офисе',
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors).toHaveLength(0);
+  });
+
+  it('fails validation when amount exceeds the sanity ceiling (e.g. a fat-fingered extra digit)', async () => {
+    const dto = plainToInstance(AdminManualPaymentDto, {
+      amount: 4_000_000,
+      method: 'CASH',
+      periodDays: 30,
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors.some((e) => e.property === 'amount')).toBe(true);
+  });
+
+  it('fails validation when periodDays is not an integer', async () => {
+    const dto = plainToInstance(AdminManualPaymentDto, {
+      amount: 400,
+      method: 'CASH',
+      periodDays: 1.5,
+    });
+
+    const errors = await validate(dto);
+
+    expect(errors.some((e) => e.property === 'periodDays')).toBe(true);
   });
 });
