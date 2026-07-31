@@ -229,7 +229,11 @@ class _DashboardPageState extends State<DashboardPage> {
         final storeId =
             state is StoreLoaded ? state.selectedStore?.id : null;
         if (storeId == null) return const SizedBox.shrink();
-        return ActiveBanner(storeId: storeId);
+        // Keyed by storeId so switching stores (without a full app
+        // relaunch, via _showStoreSelector) forces a fresh mount —
+        // otherwise Flutter reuses the existing State and keeps
+        // showing the previous store's banner.
+        return ActiveBanner(key: ValueKey(storeId), storeId: storeId);
       },
     );
   }

@@ -47,6 +47,39 @@ describe('BannersService — getActiveBanner', () => {
     expect(result).toBeNull();
   });
 
+  it('does not show a plan-targeted banner to a store with no subscription row', async () => {
+    (prisma.store.findUnique as jest.Mock).mockResolvedValue({
+      subscription: null,
+    });
+    (prisma.banner.findMany as jest.Mock).mockImplementation(
+      async ({ where }: any) => {
+        const all = [
+          {
+            id: 'plan-targeted',
+            title: 'Premium only',
+            targetPlan: 'PREMIUM',
+            createdAt: new Date('2026-07-02'),
+          },
+          {
+            id: 'wildcard',
+            title: 'Everyone',
+            targetPlan: null,
+            createdAt: new Date('2026-07-01'),
+          },
+        ];
+        // Mirror Prisma's OR semantics for the fake so the test actually
+        // exercises the query shape, not just the in-memory filter.
+        return all.filter((b) =>
+          where.OR.some((clause: any) => clause.targetPlan === b.targetPlan),
+        );
+      },
+    );
+
+    const result = await service.getActiveBanner('store-1');
+
+    expect(result?.id).toBe('wildcard');
+  });
+
   it('filters out banners whose targetStatus does not match the store subscription status', async () => {
     (prisma.store.findUnique as jest.Mock).mockResolvedValue({
       subscription: { plan: 'PREMIUM', status: 'ACTIVE' },

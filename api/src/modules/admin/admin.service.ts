@@ -512,8 +512,13 @@ export class AdminService {
   // ============ ANNOUNCEMENTS ============
 
   // Spec C: shared audience resolver — used by announcements
-  // (preview + create) and banners. Returns one record per
-  // recipient with userId, primary storeId (for sendPush), and
+  // (preview + create) only. Answers "which users match filter F"
+  // for push-notification fan-out. NOT used by BannersService —
+  // that's a differently-shaped problem ("does store X match
+  // banner Y" for a single store on demand) with its own query in
+  // banners.service.ts. Keep the plan/status-matching semantics of
+  // the two in sync by hand if either changes. Returns one record
+  // per recipient with userId, primary storeId (for sendPush), and
   // pre-built vars (for renderTemplate). Dedupes by userId in case
   // a user owns multiple stores matching the filter.
   private async _resolveAudience(filter: {
@@ -689,6 +694,8 @@ export class AdminService {
   }
 
   async setBannerActive(id: string, active: boolean) {
+    const banner = await this.prisma.banner.findUnique({ where: { id } });
+    if (!banner) throw new NotFoundException('Banner not found');
     return this.prisma.banner.update({ where: { id }, data: { active } });
   }
 

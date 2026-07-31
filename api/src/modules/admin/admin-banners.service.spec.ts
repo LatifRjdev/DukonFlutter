@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -10,6 +11,7 @@ function makePrismaFake() {
     banner: {
       create: jest.fn(async ({ data }: any) => ({ id: 'b1', ...data })),
       findMany: jest.fn(async () => [] as any[]),
+      findUnique: jest.fn(async ({ where }: any) => ({ id: where.id })),
       update: jest.fn(async ({ where, data }: any) => ({
         id: where.id,
         ...data,
@@ -67,10 +69,22 @@ describe('AdminService — banners', () => {
   it('setBannerActive toggles the active flag', async () => {
     const result = await service.setBannerActive('b1', false);
 
+    expect(prisma.banner.findUnique).toHaveBeenCalledWith({
+      where: { id: 'b1' },
+    });
     expect(prisma.banner.update).toHaveBeenCalledWith({
       where: { id: 'b1' },
       data: { active: false },
     });
     expect((result as any).active).toBe(false);
+  });
+
+  it('setBannerActive throws NotFoundException for a missing id', async () => {
+    (prisma.banner.findUnique as jest.Mock).mockResolvedValue(null);
+
+    await expect(service.setBannerActive('missing', true)).rejects.toThrow(
+      NotFoundException,
+    );
+    expect(prisma.banner.update).not.toHaveBeenCalled();
   });
 });

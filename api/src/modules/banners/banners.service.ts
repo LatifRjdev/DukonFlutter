@@ -13,14 +13,18 @@ export class BannersService {
     if (!store) return null;
 
     const now = new Date();
+    // A store without a subscription row only matches wildcard (no
+    // targetPlan) banners — it must NOT fall through to "no plan
+    // filter applied", which would incorrectly show plan-targeted
+    // banners to every unsubscribed store.
     const candidates = await this.prisma.banner.findMany({
       where: {
         active: true,
         startDate: { lte: now },
         endDate: { gte: now },
-        ...(store.subscription?.plan && {
-          OR: [{ targetPlan: null }, { targetPlan: store.subscription.plan }],
-        }),
+        OR: store.subscription?.plan
+          ? [{ targetPlan: null }, { targetPlan: store.subscription.plan }]
+          : [{ targetPlan: null }],
       },
       orderBy: { createdAt: 'desc' },
     });
