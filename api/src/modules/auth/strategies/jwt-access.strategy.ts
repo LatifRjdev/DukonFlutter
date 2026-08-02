@@ -59,9 +59,15 @@ export class JwtAccessStrategy extends PassportStrategy(
       isAdmin: user.isAdmin,
       // Surfaced only when the presented access token was minted by
       // ImpersonationService.issueToken() — see impersonation.service.ts.
-      // AuditInterceptor tags any mutating admin-route request carrying
-      // this claim as viaImpersonation so support access to a real
-      // account is always distinguishable in the audit trail.
+      // AuditInterceptor tags any mutating request to an Admin*Controller
+      // carrying this claim as viaImpersonation — but note: an impersonated
+      // session's user is always non-admin (admin targets are rejected at
+      // request time, see ImpersonationService.request()), so it can never
+      // pass AdminGuard and therefore never reaches an AuditInterceptor-
+      // covered route in practice. Actions performed by an admin WHILE
+      // impersonating a customer (ordinary /stores/:storeId/* routes) are
+      // currently NOT tagged as impersonated in AuditLogService — this is a
+      // known gap, tracked separately, not full session accountability yet.
       ...(payload.impersonatedBy && {
         impersonatedBy: payload.impersonatedBy,
         impersonationRequestId: payload.impersonationRequestId,

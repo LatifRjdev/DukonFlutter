@@ -26,6 +26,7 @@ import {
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { AdminGuard } from '../../common/guards/admin.guard';
+import { AuditInterceptor } from '../../common/interceptors/audit.interceptor';
 import { SkipThrottle } from '@nestjs/throttler';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SubscriptionsService } from './subscriptions.service';
@@ -139,6 +140,7 @@ export class SubscriptionsController {
 @ApiTags('Admin - Subscriptions')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, AdminGuard)
+@UseInterceptors(AuditInterceptor)
 @Controller('admin/subscriptions')
 export class AdminSubscriptionsController {
   constructor(

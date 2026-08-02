@@ -34,6 +34,13 @@ const ENTITY_MODELS: Record<string, { model: string; pkField: string }> = {
   stores: { model: 'store', pkField: 'id' },
   subscriptions: { model: 'subscription', pkField: 'id' },
   plans: { model: 'subscriptionPlanConfig', pkField: 'plan' },
+  banners: { model: 'banner', pkField: 'id' },
+  // Covers POST /admin/impersonation/:id/end (deriveEntityType resolves
+  // "admin/impersonation/:id/end" -> "impersonation"). See deriveEntityType()
+  // for the special-cased POST /admin/users/:id/impersonate route, which
+  // would otherwise resolve to "users" despite creating an
+  // ImpersonationRequest rather than mutating the target User.
+  impersonation: { model: 'impersonationRequest', pkField: 'id' },
 };
 
 @Injectable()
@@ -62,7 +69,20 @@ export class AuditInterceptor implements NestInterceptor {
     const entityId: string | undefined =
       request.params?.id ?? request.params?.plan ?? undefined;
 
-    const beforeSnapshot = this.captureSnapshot(entityType, entityId);
+    // POST /admin/users/:id/impersonate is a CREATE — it mints a brand new
+    // ImpersonationRequest — but its :id param is the *target user's* id,
+    // not the created request's id. Snapshotting ENTITY_MODELS.impersonation
+    // by that id would look up a row that doesn't exist (wrong pk), so this
+    // route is treated the same as any other bodyless CREATE with no usable
+    // entityId: null "before", response body as "after". This is what
+    // actually gets the created ImpersonationRequest into the audit trail,
+    // rather than a misleading null/null "no changes" diff.
+    const isImpersonationCreateRoute =
+      method === 'POST' && routePath.endsWith('/impersonate');
+
+    const beforeSnapshot = isImpersonationCreateRoute
+      ? Promise.resolve(null)
+      : this.captureSnapshot(entityType, entityId);
 
     return next.handle().pipe(
       tap((response) => {
@@ -70,11 +90,23 @@ export class AuditInterceptor implements NestInterceptor {
         const action = this.deriveAction(routePath, method);
         const ip: string =
           request.ip ?? request.headers?.['x-forwarded-for'] ?? undefined;
+        // NOTE: this interceptor only runs on Admin*Controller routes
+        // (@UseInterceptors(AuditInterceptor) is applied per-controller,
+        // never globally). An impersonated session's user is always
+        // non-admin, so it can never pass AdminGuard and never reaches a
+        // route where this tagging applies. It therefore covers only
+        // admin-panel-initiated actions (e.g. an admin ending someone
+        // else's session), not the ordinary /stores/:storeId/* routes an
+        // impersonated session actually hits — those go through the
+        // separate AuditLogService, which does not yet know about
+        // impersonatedBy/impersonationRequestId. Known gap, tracked
+        // separately.
         const viaImpersonation: boolean = !!request.user?.impersonatedBy;
 
-        const afterSnapshot = entityId
-          ? this.captureSnapshot(entityType, entityId)
-          : Promise.resolve(response ?? request.body);
+        const afterSnapshot =
+          entityId && !isImpersonationCreateRoute
+            ? this.captureSnapshot(entityType, entityId)
+            : Promise.resolve(response ?? request.body);
 
         // Fire-and-forget — never block the response
         Promise.all([beforeSnapshot, afterSnapshot])
@@ -153,6 +185,14 @@ export class AuditInterceptor implements NestInterceptor {
   }
 
   private deriveEntityType(routePath: string): string {
+    // POST /admin/users/:id/impersonate creates an ImpersonationRequest, not
+    // a User mutation — but its URL shape places "users" at parts[1], which
+    // would otherwise misclassify it. Special-case it ahead of the generic
+    // segment-based derivation so both the persisted AuditLog.entityType and
+    // the ENTITY_MODELS lookup reflect what's actually being created.
+    if (routePath.endsWith('/impersonate')) {
+      return 'impersonation';
+    }
     const parts = routePath.split('/').filter(Boolean);
     // admin/users/:id -> users, admin/stores/:id/suspend -> stores
     return parts[1] ?? parts[0] ?? 'unknown';
