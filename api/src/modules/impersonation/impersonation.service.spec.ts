@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Test } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { ImpersonationService } from './impersonation.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -105,7 +105,7 @@ describe('ImpersonationService', () => {
       expiresAt: new Date(Date.now() + 60000),
     });
 
-    await expect(service.issueToken('req-1')).rejects.toThrow(
+    await expect(service.issueToken('req-1', 'admin-1')).rejects.toThrow(
       BadRequestException,
     );
   });
@@ -118,9 +118,24 @@ describe('ImpersonationService', () => {
       expiresAt: new Date(Date.now() - 60000),
     });
 
-    await expect(service.issueToken('req-1')).rejects.toThrow(
+    await expect(service.issueToken('req-1', 'admin-1')).rejects.toThrow(
       BadRequestException,
     );
+  });
+
+  it('issueToken() throws when a different admin than the requester tries to pull the token', async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+      expiresAt: new Date(Date.now() + 60000),
+    });
+
+    await expect(
+      service.issueToken('req-1', 'someone-else-admin'),
+    ).rejects.toThrow(ForbiddenException);
+    expect(jwt.sign).not.toHaveBeenCalled();
   });
 
   it('issueToken() signs a JWT carrying impersonatedBy and the impersonation request id', async () => {
@@ -132,7 +147,7 @@ describe('ImpersonationService', () => {
       expiresAt: new Date(Date.now() + 60000),
     });
 
-    const token = await service.issueToken('req-1');
+    const token = await service.issueToken('req-1', 'admin-1');
 
     expect(jwt.sign).toHaveBeenCalledWith(
       expect.objectContaining({

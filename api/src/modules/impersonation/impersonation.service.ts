@@ -1,6 +1,7 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -97,7 +98,17 @@ export class ImpersonationService {
     });
   }
 
-  async issueToken(requestId: string): Promise<string> {
+  /**
+   * @param callingAdminId The admin making THIS request (from the verified
+   *   JWT via @CurrentUser, not a client-supplied value) — must match
+   *   request.adminId. Without this check, any admin account could pull
+   *   the token for a request another admin initiated (request ids are
+   *   UUIDs, not secrets, and are visible in this admin's own audit-log
+   *   entries), silently gaining a live session as the target user while
+   *   the audit trail's viaImpersonation record still points at the
+   *   original requester.
+   */
+  async issueToken(requestId: string, callingAdminId: string): Promise<string> {
     const request = await this.prisma.impersonationRequest.findUnique({
       where: { id: requestId },
     });
@@ -109,6 +120,11 @@ export class ImpersonationService {
     if (!request.expiresAt || request.expiresAt < new Date()) {
       throw new BadRequestException(
         'Approval has expired — request access again',
+      );
+    }
+    if (request.adminId !== callingAdminId) {
+      throw new ForbiddenException(
+        'This impersonation request was not created by you',
       );
     }
 
@@ -133,6 +149,18 @@ export class ImpersonationService {
     );
   }
 
+  /**
+   * Marks the request ENDED, which stops any *future* issueToken() call
+   * for this request (status is no longer APPROVED). It does NOT revoke a
+   * JWT that was already handed out before end() was called — JwtAuthGuard
+   * / JwtAccessStrategy never re-checks ImpersonationRequest.status on
+   * subsequent requests, so an already-issued token keeps working until
+   * its own `exp` (max 30 minutes from when it was signed). Deliberately
+   * left open to any admin, not just request.adminId — as a purely
+   * protective action (it can only reduce access, never grant it) an
+   * emergency "kill this session" should not be gated behind "were you
+   * the one who started it".
+   */
   async end(requestId: string) {
     const request = await this.prisma.impersonationRequest.findUnique({
       where: { id: requestId },

@@ -44,9 +44,9 @@ export class ImpersonationAdminController {
   @ApiOperation({
     summary: 'Fetch the impersonation token once the request has been approved',
   })
-  getToken(@Param('id') id: string) {
+  getToken(@Param('id') id: string, @CurrentUser('id') adminId: string) {
     return this.impersonationService
-      .issueToken(id)
+      .issueToken(id, adminId)
       .then((token) => ({ token }));
   }
 
