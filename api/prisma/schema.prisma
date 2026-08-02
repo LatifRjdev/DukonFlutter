@@ -949,6 +949,20 @@ model Banner {
   @@map("banners")
 }
 
+model ImpersonationRequest {
+  id           String    @id @default(uuid())
+  adminId      String
+  targetUserId String
+  status       String    @default("PENDING") // PENDING | APPROVED | REJECTED | EXPIRED | ENDED
+  requestedAt  DateTime  @default(now())
+  respondedAt  DateTime?
+  expiresAt    DateTime?
+  endedAt      DateTime?
+
+  @@index([targetUserId])
+  @@map("impersonation_requests")
+}
+
 model AuditLog {
   id         String   @id @default(uuid())
   userId     String

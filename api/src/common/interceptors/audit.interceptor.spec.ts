@@ -10,7 +10,7 @@ function makeContext(overrides: {
   routePath?: string;
   params?: Record<string, string>;
   body?: any;
-  user?: { id: string };
+  user?: { id: string; impersonatedBy?: string };
 }): ExecutionContext {
   const request = {
     method: overrides.method,
@@ -175,5 +175,57 @@ describe('AuditInterceptor — before/after diff', () => {
         });
       },
     });
+  });
+
+  it('tags the audit entry with viaImpersonation: true when the request was made via an impersonation token', (done) => {
+    (prisma.user.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: false })
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: true });
+
+    const context = makeContext({
+      method: 'PUT',
+      url: '/admin/users/u1/toggle-admin',
+      routePath: '/admin/users/:id/toggle-admin',
+      params: { id: 'u1' },
+      user: { id: 'target-1', impersonatedBy: 'admin-1' },
+    });
+
+    interceptor
+      .intercept(context, makeCallHandler({ id: 'u1', isAdmin: true }))
+      .subscribe({
+        complete: () => {
+          setImmediate(() => {
+            const call = (prisma.auditLog.create as jest.Mock).mock.calls[0][0];
+            expect(call.data.details.viaImpersonation).toBe(true);
+            done();
+          });
+        },
+      });
+  });
+
+  it('omits viaImpersonation when the request was not made via impersonation', (done) => {
+    (prisma.user.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: false })
+      .mockResolvedValueOnce({ id: 'u1', isAdmin: true });
+
+    const context = makeContext({
+      method: 'PUT',
+      url: '/admin/users/u1/toggle-admin',
+      routePath: '/admin/users/:id/toggle-admin',
+      params: { id: 'u1' },
+      user: { id: 'admin-1' },
+    });
+
+    interceptor
+      .intercept(context, makeCallHandler({ id: 'u1', isAdmin: true }))
+      .subscribe({
+        complete: () => {
+          setImmediate(() => {
+            const call = (prisma.auditLog.create as jest.Mock).mock.calls[0][0];
+            expect(call.data.details.viaImpersonation).toBeUndefined();
+            done();
+          });
+        },
+      });
   });
 });

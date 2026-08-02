@@ -70,6 +70,7 @@ export class AuditInterceptor implements NestInterceptor {
         const action = this.deriveAction(routePath, method);
         const ip: string =
           request.ip ?? request.headers?.['x-forwarded-for'] ?? undefined;
+        const viaImpersonation: boolean = !!request.user?.impersonatedBy;
 
         const afterSnapshot = entityId
           ? this.captureSnapshot(entityType, entityId)
@@ -87,6 +88,7 @@ export class AuditInterceptor implements NestInterceptor {
                 details: {
                   before: this.redactObject(before),
                   after: this.redactObject(after),
+                  ...(viaImpersonation && { viaImpersonation: true }),
                 },
                 ip,
               },

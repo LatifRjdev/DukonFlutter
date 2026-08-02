@@ -20,7 +20,13 @@ export class JwtAccessStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: { sub: string; phone: string; iat?: number }) {
+  async validate(payload: {
+    sub: string;
+    phone: string;
+    iat?: number;
+    impersonatedBy?: string;
+    impersonationRequestId?: string;
+  }) {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
       select: {
@@ -42,9 +48,7 @@ export class JwtAccessStrategy extends PassportStrategy(
     if (user.tokensRevokedAt && payload.iat) {
       const revokedAtSec = Math.floor(user.tokensRevokedAt.getTime() / 1000);
       if (payload.iat <= revokedAtSec) {
-        throw new UnauthorizedException(
-          'Token revoked. Please sign in again.',
-        );
+        throw new UnauthorizedException('Token revoked. Please sign in again.');
       }
     }
 
@@ -53,6 +57,15 @@ export class JwtAccessStrategy extends PassportStrategy(
       phone: user.phone,
       name: user.name,
       isAdmin: user.isAdmin,
+      // Surfaced only when the presented access token was minted by
+      // ImpersonationService.issueToken() — see impersonation.service.ts.
+      // AuditInterceptor tags any mutating admin-route request carrying
+      // this claim as viaImpersonation so support access to a real
+      // account is always distinguishable in the audit trail.
+      ...(payload.impersonatedBy && {
+        impersonatedBy: payload.impersonatedBy,
+        impersonationRequestId: payload.impersonationRequestId,
+      }),
     };
   }
 }

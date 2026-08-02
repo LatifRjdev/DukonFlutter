@@ -36,6 +36,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { InvestmentsModule } from './modules/investments/investments.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { BannersModule } from './modules/banners/banners.module';
+import { ImpersonationModule } from './modules/impersonation/impersonation.module';
 import { HealthModule } from './modules/health/health.module';
 
 @Module({
@@ -80,6 +81,7 @@ import { HealthModule } from './modules/health/health.module';
     InvestmentsModule,
     AdminModule,
     BannersModule,
+    ImpersonationModule,
     HealthModule,
   ],
   providers: [
