@@ -23,6 +23,18 @@ abstract class AuthLocalDatasource {
   /// or no token is stored, or the token can't be decoded. Caller should
   /// treat any of these as "needs refresh or login".
   Future<bool> isAccessTokenExpired();
+
+  /// Returns the `impersonationRequestId` claim from the stored access
+  /// token, or null for a normal (non-impersonation) session, no stored
+  /// token, or an undecodable token. See ImpersonationService.issueToken()
+  /// on the backend — impersonation tokens carry `impersonatedBy` +
+  /// `impersonationRequestId` claims in addition to the usual `sub`.
+  ///
+  /// There is currently no deep-link handler in this app that writes an
+  /// impersonation token into storage via saveTokens() — see
+  /// ImpersonationBanner's doc comment for why this is still built as the
+  /// display-layer half of that feature.
+  Future<String?> getImpersonationRequestId();
 }
 
 class AuthLocalDatasourceImpl implements AuthLocalDatasource {
@@ -138,13 +150,23 @@ class AuthLocalDatasourceImpl implements AuthLocalDatasource {
   Future<bool> isAccessTokenExpired() async {
     final token = await getAccessToken();
     if (token == null || token.isEmpty) return true;
-    final exp = _decodeJwtExp(token);
-    if (exp == null) return true;
+    final payload = _decodeJwtPayload(token);
+    final exp = payload?['exp'];
+    if (exp is! int) return true;
     final nowSec = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     return nowSec >= exp;
   }
 
-  static int? _decodeJwtExp(String jwt) {
+  @override
+  Future<String?> getImpersonationRequestId() async {
+    final token = await getAccessToken();
+    if (token == null || token.isEmpty) return null;
+    final payload = _decodeJwtPayload(token);
+    final id = payload?['impersonationRequestId'];
+    return id is String ? id : null;
+  }
+
+  static Map<String, dynamic>? _decodeJwtPayload(String jwt) {
     try {
       final parts = jwt.split('.');
       if (parts.length != 3) return null;
@@ -158,9 +180,7 @@ class AuthLocalDatasourceImpl implements AuthLocalDatasource {
           break;
       }
       final decoded = utf8.decode(base64.decode(payload));
-      final json = jsonDecode(decoded) as Map<String, dynamic>;
-      final exp = json['exp'];
-      return exp is int ? exp : null;
+      return jsonDecode(decoded) as Map<String, dynamic>;
     } catch (_) {
       return null;
     }

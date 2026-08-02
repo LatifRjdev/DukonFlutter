@@ -15,7 +15,7 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 // Models
 // ---------------------------------------------------------------------------
 
-enum _NotifType { bell, warning, cart, truck }
+enum _NotifType { bell, warning, cart, truck, impersonationRequest }
 
 class _AppNotification {
   final String id;
@@ -46,6 +46,9 @@ class _AppNotification {
         break;
       case 'delivery':
         type = _NotifType.truck;
+        break;
+      case 'IMPERSONATION_REQUEST':
+        type = _NotifType.impersonationRequest;
         break;
       default:
         type = _NotifType.bell;
@@ -92,6 +95,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   bool _hasMore = true;
   bool _loadingMore = false;
   final ScrollController _scrollController = ScrollController();
+
+  // Impersonation-request consent: notification.id -> action-in-flight /
+  // already-responded, so buttons disable/disappear immediately without
+  // needing a full list reload.
+  final Set<String> _impersonationRespondingIds = {};
+  final Set<String> _impersonationRespondedIds = {};
 
   String get _storeId {
     if (widget.storeId.isNotEmpty) return widget.storeId;
@@ -193,6 +202,61 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
+  // The Notification record carries no structured data field, so a tapped
+  // IMPERSONATION_REQUEST notification alone doesn't tell us which
+  // ImpersonationRequest to respond to — look the caller's own pending
+  // request up via GET /impersonation-requests/pending, then respond to
+  // that id. See ImpersonationController.findPending() on the backend.
+  Future<void> _respondToImpersonation(
+    _AppNotification notif,
+    String decision,
+  ) async {
+    if (_impersonationRespondingIds.contains(notif.id)) return;
+    setState(() => _impersonationRespondingIds.add(notif.id));
+
+    try {
+      final pendingResp = await sl<DioClient>()
+          .get<Map<String, dynamic>>('/impersonation-requests/pending');
+      final pending = pendingResp.data;
+      final requestId = pending?['id'] as String?;
+      if (requestId == null) {
+        throw Exception('no pending request');
+      }
+
+      await sl<DioClient>().put<void>(
+        '/impersonation-requests/$requestId/respond',
+        data: {'decision': decision},
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _impersonationRespondingIds.remove(notif.id);
+        _impersonationRespondedIds.add(notif.id);
+      });
+      final idx = _notifications.indexWhere((n) => n.id == notif.id);
+      if (idx != -1) await _markRead(idx);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            decision == 'APPROVED' ? 'Доступ предоставлен' : 'Запрос отклонён',
+          ),
+        ),
+      );
+    } catch (_) {
+      if (mounted) {
+        setState(() => _impersonationRespondingIds.remove(notif.id));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Не удалось обработать запрос — возможно, он уже неактивен',
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   String _timeAgo(DateTime dt) {
     final diff = DateTime.now().difference(dt);
     if (diff.inSeconds < 60) return 'только что';
@@ -210,6 +274,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return Icons.shopping_cart_outlined;
       case _NotifType.truck:
         return Icons.local_shipping_outlined;
+      case _NotifType.impersonationRequest:
+        return Icons.support_agent;
       case _NotifType.bell:
         return Icons.notifications_outlined;
     }
@@ -223,6 +289,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return AppColors.primary;
       case _NotifType.truck:
         return AppColors.info;
+      case _NotifType.impersonationRequest:
+        return AppColors.warning;
       case _NotifType.bell:
         return ctx.textSecondary;
     }
@@ -276,12 +344,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               );
                             }
                             final n = _notifications[i];
+                            final isImpersonation =
+                                n.type == _NotifType.impersonationRequest;
                             return _NotificationCard(
                               notification: n,
                               icon: _typeIcon(n.type),
                               iconColor: _typeColor(n.type, context),
                               timeAgo: _timeAgo(n.createdAt),
                               onTap: () => _markRead(i),
+                              showImpersonationActions: isImpersonation &&
+                                  !_impersonationRespondedIds.contains(n.id),
+                              impersonationActionInFlight:
+                                  _impersonationRespondingIds.contains(n.id),
+                              onApproveImpersonation: isImpersonation
+                                  ? () =>
+                                      _respondToImpersonation(n, 'APPROVED')
+                                  : null,
+                              onRejectImpersonation: isImpersonation
+                                  ? () =>
+                                      _respondToImpersonation(n, 'REJECTED')
+                                  : null,
                             );
                           },
                         ),
@@ -336,6 +418,10 @@ class _NotificationCard extends StatelessWidget {
   final Color iconColor;
   final String timeAgo;
   final VoidCallback onTap;
+  final bool showImpersonationActions;
+  final bool impersonationActionInFlight;
+  final VoidCallback? onApproveImpersonation;
+  final VoidCallback? onRejectImpersonation;
 
   const _NotificationCard({
     required this.notification,
@@ -343,6 +429,10 @@ class _NotificationCard extends StatelessWidget {
     required this.iconColor,
     required this.timeAgo,
     required this.onTap,
+    this.showImpersonationActions = false,
+    this.impersonationActionInFlight = false,
+    this.onApproveImpersonation,
+    this.onRejectImpersonation,
   });
 
   @override
@@ -420,6 +510,43 @@ class _NotificationCard extends StatelessWidget {
                         color: context.textMuted,
                       ),
                     ),
+                    if (showImpersonationActions) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: impersonationActionInFlight
+                                  ? null
+                                  : onRejectImpersonation,
+                              child: const Text('Отклонить'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: impersonationActionInFlight
+                                  ? null
+                                  : onApproveImpersonation,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: impersonationActionInFlight
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text('Разрешить'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

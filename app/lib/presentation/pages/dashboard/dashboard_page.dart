@@ -19,6 +19,7 @@ import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/home/active_banner.dart';
+import '../../widgets/home/impersonation_banner.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
 
@@ -98,6 +99,9 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: context.bg,
         body: Column(
           children: [
+            // Active support-impersonation session, if any (see
+            // ImpersonationBanner doc comment re: deep-link limitations)
+            const ImpersonationBanner(),
             // Gradient Header
             _buildHeader(),
             // Active in-app banner (admin-targeted by plan/status), if any

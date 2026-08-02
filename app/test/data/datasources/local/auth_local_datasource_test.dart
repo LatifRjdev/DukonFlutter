@@ -56,6 +56,11 @@ String _jwtWithExp(int expSec) {
   return '$header.$payload.signature_not_verified';
 }
 
+String _jwtWithPayload(Map<String, dynamic> payload) {
+  final header = _b64Url('{"alg":"HS256","typ":"JWT"}');
+  return '$header.${_b64Url(jsonEncode(payload))}.signature_not_verified';
+}
+
 void main() {
   late _InMemoryStorage storage;
   late AuthLocalDatasourceImpl ds;
@@ -108,6 +113,35 @@ void main() {
       // exercised by the future-exp test above.
       await storage.write(key: 'access_token', value: _jwtWithExp(futureSec));
       expect(await ds.isAccessTokenExpired(), isFalse);
+    });
+  });
+
+  group('getImpersonationRequestId', () {
+    test('returns null when no token is stored', () async {
+      expect(await ds.getImpersonationRequestId(), isNull);
+    });
+
+    test('returns null for a normal (non-impersonation) session token',
+        () async {
+      final token = _jwtWithPayload({'sub': 'user-1', 'phone': '+992900000000'});
+      await storage.write(key: 'access_token', value: token);
+      expect(await ds.getImpersonationRequestId(), isNull);
+    });
+
+    test('returns the claim when the token is impersonation-flavored',
+        () async {
+      final token = _jwtWithPayload({
+        'sub': 'target-1',
+        'impersonatedBy': 'admin-1',
+        'impersonationRequestId': 'req-1',
+      });
+      await storage.write(key: 'access_token', value: token);
+      expect(await ds.getImpersonationRequestId(), 'req-1');
+    });
+
+    test('returns null when the token is malformed', () async {
+      await storage.write(key: 'access_token', value: 'garbage');
+      expect(await ds.getImpersonationRequestId(), isNull);
     });
   });
 
