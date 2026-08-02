@@ -150,13 +150,28 @@ export class ImpersonationService {
   }
 
   /**
-   * Marks the request ENDED, which stops any *future* issueToken() call
-   * for this request (status is no longer APPROVED). It does NOT revoke a
-   * JWT that was already handed out before end() was called — JwtAuthGuard
-   * / JwtAccessStrategy never re-checks ImpersonationRequest.status on
-   * subsequent requests, so an already-issued token keeps working until
-   * its own `exp` (max 30 minutes from when it was signed). Deliberately
-   * left open to any admin, not just request.adminId — as a purely
+   * Marks the request ENDED (blocking any *future* issueToken() call for
+   * it — status is no longer APPROVED) AND immediately revokes the
+   * target user's already-issued access token by bumping
+   * User.tokensRevokedAt. This is the same mechanism used for password
+   * changes (see UsersService.changePassword) and checked on every
+   * request by JwtAccessStrategy.validate() ("F.1: reject any token
+   * issued before the user's tokensRevokedAt") and JwtRefreshStrategy —
+   * an already-proven, already-tested codepath, not a new one. Because
+   * the impersonation token is signed with `sub: request.targetUserId`,
+   * this causes the very next request made with it to be rejected.
+   *
+   * Tradeoff, intentional: bumping tokensRevokedAt for the target user
+   * also invalidates THEIR OWN legitimate sessions (their real phone,
+   * any other logged-in device) — they'll need to log back in. This is
+   * accepted as correct, not worked around: ending an impersonation
+   * session is a deliberate, security-conscious action (the support
+   * agent clicking "end", or someone force-ending a session for safety),
+   * and forcing a fresh re-login afterwards is a clean "everything is
+   * revoked, please confirm you're back in control" boundary — exactly
+   * the same UX this mechanism already produces after a password change.
+   *
+   * Left open to any admin, not just request.adminId — as a purely
    * protective action (it can only reduce access, never grant it) an
    * emergency "kill this session" should not be gated behind "were you
    * the one who started it".
@@ -168,9 +183,17 @@ export class ImpersonationService {
     if (!request)
       throw new NotFoundException('Impersonation request not found');
 
-    return this.prisma.impersonationRequest.update({
-      where: { id: requestId },
-      data: { status: 'ENDED', endedAt: new Date() },
-    });
+    const [updatedRequest] = await this.prisma.$transaction([
+      this.prisma.impersonationRequest.update({
+        where: { id: requestId },
+        data: { status: 'ENDED', endedAt: new Date() },
+      }),
+      this.prisma.user.update({
+        where: { id: request.targetUserId },
+        data: { tokensRevokedAt: new Date() },
+      }),
+    ]);
+
+    return updatedRequest;
   }
 }

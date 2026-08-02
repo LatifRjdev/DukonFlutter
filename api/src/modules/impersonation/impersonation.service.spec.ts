@@ -22,8 +22,19 @@ function makePrismaFake() {
         ...data,
       })),
     },
-    user: { findUnique: jest.fn(async () => ({ id: 'target-1' })) },
+    user: {
+      findUnique: jest.fn(async () => ({ id: 'target-1' })),
+      update: jest.fn(async ({ where, data }: any) => ({
+        id: where.id,
+        ...data,
+      })),
+    },
     store: { findFirst: jest.fn(async () => ({ id: 'store-1' })) },
+    // Fake ops are already-invoked promises by the time $transaction
+    // receives them (each mock above resolves eagerly), so this just
+    // needs to await the array — matching Prisma's array-form
+    // $transaction([...]) API used by end().
+    $transaction: jest.fn(async (ops: any[]) => Promise.all(ops)),
   };
 }
 
@@ -161,6 +172,37 @@ describe('ImpersonationService', () => {
       }),
     );
     expect(token).toBe('signed-token');
+  });
+
+  it("end() marks the request ENDED and bumps the target user's tokensRevokedAt so their live access token is immediately rejected on its next use", async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+    });
+
+    const before = new Date();
+    const result = await service.end('req-1');
+    const after = new Date();
+
+    expect(prisma.impersonationRequest.update).toHaveBeenCalledWith({
+      where: { id: 'req-1' },
+      data: { status: 'ENDED', endedAt: expect.any(Date) },
+    });
+
+    const userUpdateCall = (prisma.user.update as jest.Mock).mock.calls[0][0];
+    expect(userUpdateCall.where).toEqual({ id: 'target-1' });
+    expect(userUpdateCall.data.tokensRevokedAt).toBeInstanceOf(Date);
+    expect(
+      userUpdateCall.data.tokensRevokedAt.getTime(),
+    ).toBeGreaterThanOrEqual(before.getTime());
+    expect(userUpdateCall.data.tokensRevokedAt.getTime()).toBeLessThanOrEqual(
+      after.getTime(),
+    );
+
+    expect(prisma.$transaction).toHaveBeenCalled();
+    expect((result as any).status).toBe('ENDED');
   });
 
   it('findPendingForUser() looks up the most recent PENDING request scoped to that user', async () => {
