@@ -23,7 +23,7 @@ function makePrismaFake() {
       })),
     },
     user: {
-      findUnique: jest.fn(async () => ({ id: 'target-1' })),
+      findUnique: jest.fn(async () => ({ id: 'target-1', isAdmin: false })),
       update: jest.fn(async ({ where, data }: any) => ({
         id: where.id,
         ...data,
@@ -74,6 +74,19 @@ describe('ImpersonationService', () => {
     });
     expect(notifications.sendPush).toHaveBeenCalled();
     expect((result as any).status).toBe('PENDING');
+  });
+
+  it('request() throws and never creates a request when the target user is an admin', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+      id: 'admin-target',
+      isAdmin: true,
+    });
+
+    await expect(service.request('admin-1', 'admin-target')).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(prisma.impersonationRequest.create).not.toHaveBeenCalled();
+    expect(notifications.sendPush).not.toHaveBeenCalled();
   });
 
   it('respond("APPROVED") sets status, respondedAt, and a 30-minute expiresAt', async () => {
@@ -167,11 +180,57 @@ describe('ImpersonationService', () => {
         impersonationRequestId: 'req-1',
       }),
       expect.objectContaining({
-        expiresIn: '30m',
         secret: 'test-access-secret',
       }),
     );
+    // Payload approved with ~60s left on the approval window — the
+    // signed token's own TTL must be clamped to that, not a flat 30m.
+    const signOptions = (jwt.sign as jest.Mock).mock.calls[0][1];
+    expect(signOptions.expiresIn).toMatch(/^\d+s$/);
+    const seconds = parseInt(signOptions.expiresIn, 10);
+    expect(seconds).toBeGreaterThan(0);
+    expect(seconds).toBeLessThanOrEqual(60);
     expect(token).toBe('signed-token');
+  });
+
+  it("issueToken() clamps the JWT's TTL to whatever remains of the approval window instead of a flat 30m — CRITICAL: the 'expires in 30 minutes, in any case' guarantee", async () => {
+    // Only ~5 seconds left of the 30-minute approval window (e.g. the
+    // admin fetched the token late). A flat '30m' here would silently
+    // extend total access to ~30 minutes past this call — nearly double
+    // the promised window from the moment the customer approved.
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+      expiresAt: new Date(Date.now() + 5000),
+    });
+
+    await service.issueToken('req-1', 'admin-1');
+
+    const signOptions = (jwt.sign as jest.Mock).mock.calls[0][1];
+    expect(signOptions.expiresIn).not.toBe('30m');
+    expect(signOptions.expiresIn).toMatch(/^\d+s$/);
+    const seconds = parseInt(signOptions.expiresIn, 10);
+    expect(seconds).toBeGreaterThan(0);
+    expect(seconds).toBeLessThanOrEqual(5);
+  });
+
+  it('issueToken() never signs a zero-or-negative-TTL token even if expiresAt is a hair in the future', async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+      expiresAt: new Date(Date.now() + 1),
+    });
+
+    await service.issueToken('req-1', 'admin-1');
+
+    const signOptions = (jwt.sign as jest.Mock).mock.calls[0][1];
+    // Math.max(1, ...) floor — never 0s/negative, which some JWT
+    // libraries would reject or treat as "already expired".
+    expect(signOptions.expiresIn).toBe('1s');
   });
 
   it("end() marks the request ENDED and bumps the target user's tokensRevokedAt so their live access token is immediately rejected on its next use", async () => {
@@ -222,6 +281,66 @@ describe('ImpersonationService', () => {
       expect(prisma.$transaction).not.toHaveBeenCalled();
     },
   );
+
+  it('endSelf() revokes when the caller is the target user presenting a token for this exact request', async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+    });
+
+    const result = await service.endSelf('req-1', 'target-1', 'req-1');
+
+    const userUpdateCall = (prisma.user.update as jest.Mock).mock.calls[0][0];
+    expect(userUpdateCall.where).toEqual({ id: 'target-1' });
+    expect(userUpdateCall.data.tokensRevokedAt).toBeInstanceOf(Date);
+    expect((result as any).status).toBe('ENDED');
+  });
+
+  it("endSelf() throws and revokes nothing when the caller is not the request's target user", async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+    });
+
+    await expect(
+      service.endSelf('req-1', 'someone-else', 'req-1'),
+    ).rejects.toThrow(ForbiddenException);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it("endSelf() throws when the presented token's impersonationRequestId claim does not match the request being ended", async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'APPROVED',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+    });
+
+    await expect(
+      service.endSelf('req-1', 'target-1', 'some-other-request-id'),
+    ).rejects.toThrow(ForbiddenException);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('endSelf() throws when the request was never approved', async () => {
+    (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'PENDING',
+      adminId: 'admin-1',
+      targetUserId: 'target-1',
+    });
+
+    await expect(service.endSelf('req-1', 'target-1', 'req-1')).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
 
   it('findPendingForUser() looks up the most recent PENDING request scoped to that user', async () => {
     (prisma.impersonationRequest.findFirst as jest.Mock).mockResolvedValue({
