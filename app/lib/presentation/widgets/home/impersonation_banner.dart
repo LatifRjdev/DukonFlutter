@@ -63,7 +63,15 @@ class _ImpersonationBannerState extends State<ImpersonationBanner> {
     if (id == null || _ending) return;
     setState(() => _ending = true);
     try {
-      await sl<DioClient>().post('/admin/impersonation/$id/end');
+      // NOT /admin/impersonation/:id/end — that route is AdminGuard-only,
+      // and this banner runs on an impersonation-flavored token whose
+      // `sub` is the TARGET user (an ordinary customer in the realistic
+      // support scenario, not an admin), so AdminGuard would reject it
+      // every time. This is the target-facing self-service counterpart —
+      // see ImpersonationController.endSelf() on the backend, guarded only
+      // by JwtAuthGuard and verified by matching the caller's own user id
+      // and the token's impersonationRequestId claim to this request.
+      await sl<DioClient>().post('/impersonation-requests/$id/end');
     } catch (_) {
       // Even if the backend call fails, still log the device out locally —
       // the whole point of this button is "get me out of this session now".

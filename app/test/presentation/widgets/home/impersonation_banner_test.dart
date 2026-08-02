@@ -104,7 +104,7 @@ void main() {
         (tester) async {
       when(() => authLocal.getImpersonationRequestId())
           .thenAnswer((_) async => 'req-1');
-      when(() => dioClient.post<dynamic>('/admin/impersonation/req-1/end'))
+      when(() => dioClient.post<dynamic>('/impersonation-requests/req-1/end'))
           .thenAnswer((_) async => resp<dynamic>(null));
 
       await tester.pumpWidget(wrap(const ImpersonationBanner()));
@@ -121,7 +121,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
 
       verify(
-        () => dioClient.post<dynamic>('/admin/impersonation/req-1/end'),
+        () => dioClient.post<dynamic>('/impersonation-requests/req-1/end'),
       ).called(1);
       verify(() => authBloc.add(any(that: isA<AuthLogoutRequested>())))
           .called(1);
@@ -132,7 +132,7 @@ void main() {
         (tester) async {
       when(() => authLocal.getImpersonationRequestId())
           .thenAnswer((_) async => 'req-1');
-      when(() => dioClient.post<dynamic>('/admin/impersonation/req-1/end'))
+      when(() => dioClient.post<dynamic>('/impersonation-requests/req-1/end'))
           .thenThrow(Exception('network unavailable'));
 
       await tester.pumpWidget(wrap(const ImpersonationBanner()));
