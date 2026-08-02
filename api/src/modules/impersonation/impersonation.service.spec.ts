@@ -16,6 +16,7 @@ function makePrismaFake() {
         ...data,
       })),
       findUnique: jest.fn(async () => null as any),
+      findFirst: jest.fn(async () => null as any),
       update: jest.fn(async ({ where, data }: any) => ({
         id: where.id,
         ...data,
@@ -145,5 +146,21 @@ describe('ImpersonationService', () => {
       }),
     );
     expect(token).toBe('signed-token');
+  });
+
+  it('findPendingForUser() looks up the most recent PENDING request scoped to that user', async () => {
+    (prisma.impersonationRequest.findFirst as jest.Mock).mockResolvedValue({
+      id: 'req-1',
+      status: 'PENDING',
+      targetUserId: 'target-1',
+    });
+
+    const result = await service.findPendingForUser('target-1');
+
+    expect(prisma.impersonationRequest.findFirst).toHaveBeenCalledWith({
+      where: { targetUserId: 'target-1', status: 'PENDING' },
+      orderBy: { requestedAt: 'desc' },
+    });
+    expect((result as any).id).toBe('req-1');
   });
 });

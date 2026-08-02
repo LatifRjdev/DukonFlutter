@@ -1,4 +1,4 @@
-import { Controller, Put, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Param, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -11,6 +11,15 @@ import { RespondImpersonationDto } from './dto/respond-impersonation.dto';
 @Controller('impersonation-requests')
 export class ImpersonationController {
   constructor(private readonly impersonationService: ImpersonationService) {}
+
+  @Get('pending')
+  @ApiOperation({
+    summary:
+      "Get the current user's pending impersonation request, if any (used by the mobile consent screen, since the notification itself carries no request id)",
+  })
+  findPending(@CurrentUser('id') userId: string) {
+    return this.impersonationService.findPendingForUser(userId);
+  }
 
   @Put(':id/respond')
   @ApiOperation({

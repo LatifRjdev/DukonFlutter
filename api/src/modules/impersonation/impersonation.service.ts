@@ -47,6 +47,21 @@ export class ImpersonationService {
     return request;
   }
 
+  /**
+   * The Notification record created by request() carries only
+   * { type: 'IMPERSONATION_REQUEST', title, body } — there's no
+   * structured-data field on the Notification model to smuggle the
+   * request id through the push/notifications-list payload. So the
+   * mobile consent flow looks the pending request up directly by the
+   * responding user's own id instead of needing an id passed in.
+   */
+  async findPendingForUser(targetUserId: string) {
+    return this.prisma.impersonationRequest.findFirst({
+      where: { targetUserId, status: 'PENDING' },
+      orderBy: { requestedAt: 'desc' },
+    });
+  }
+
   async respond(
     requestId: string,
     respondingUserId: string,
