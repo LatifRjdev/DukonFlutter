@@ -205,6 +205,24 @@ describe('ImpersonationService', () => {
     expect((result as any).status).toBe('ENDED');
   });
 
+  it.each(['PENDING', 'REJECTED'])(
+    'end() on a %s request throws and does not touch tokensRevokedAt — a request that was never approved never granted access',
+    async (status) => {
+      (prisma.impersonationRequest.findUnique as jest.Mock).mockResolvedValue({
+        id: 'req-1',
+        status,
+        adminId: 'admin-1',
+        targetUserId: 'target-1',
+      });
+
+      await expect(service.end('req-1')).rejects.toThrow(BadRequestException);
+
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      expect(prisma.impersonationRequest.update).not.toHaveBeenCalled();
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    },
+  );
+
   it('findPendingForUser() looks up the most recent PENDING request scoped to that user', async () => {
     (prisma.impersonationRequest.findFirst as jest.Mock).mockResolvedValue({
       id: 'req-1',

@@ -175,6 +175,15 @@ export class ImpersonationService {
    * protective action (it can only reduce access, never grant it) an
    * emergency "kill this session" should not be gated behind "were you
    * the one who started it".
+   *
+   * Guarded on request.status === 'APPROVED': without this, any admin
+   * could POST /admin/users/:id/impersonate (creates a PENDING request —
+   * no consent needed to create one) and immediately
+   * POST /admin/impersonation/:id/end, force-revoking every live session
+   * of an arbitrary target user who never approved anything. end() is
+   * "stop an active session", not "force-logout any user via a request
+   * they haven't responded to" — a PENDING or REJECTED request never
+   * granted access in the first place, so there is nothing to revoke.
    */
   async end(requestId: string) {
     const request = await this.prisma.impersonationRequest.findUnique({
@@ -182,6 +191,11 @@ export class ImpersonationService {
     });
     if (!request)
       throw new NotFoundException('Impersonation request not found');
+    if (request.status !== 'APPROVED') {
+      throw new BadRequestException(
+        'This request was never approved — nothing to end',
+      );
+    }
 
     const [updatedRequest] = await this.prisma.$transaction([
       this.prisma.impersonationRequest.update({
