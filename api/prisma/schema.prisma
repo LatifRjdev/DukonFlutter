@@ -65,28 +65,30 @@ model Store {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
-  subscription     Subscription?
-  products         Product[]
-  categories       Category[]
-  sales            Sale[]
-  expenses         Expense[]
-  customers        Customer[]
-  suppliers        Supplier[]
-  staff            Staff[]
-  shifts           Shift[]
-  inventories      Inventory[]
-  syncLogs         SyncLog[]
-  zakatSettings    ZakatSettings?
-  zakatPayments    ZakatPayment[]
-  supplierPayments SupplierPayment[]
-  rolePermissions  RolePermission[]
-  payrollPeriods   PayrollPeriod[]
-  deliveries       Delivery[]
-  inventoryCounts  InventoryCount[]
-  notifications    Notification[]
-  discounts        Discount[]
-  investments         Investment[]
-  loyaltyTransactions LoyaltyTransaction[]
+  subscription            Subscription?
+  products                Product[]
+  categories              Category[]
+  sales                   Sale[]
+  expenses                Expense[]
+  customers               Customer[]
+  suppliers               Supplier[]
+  staff                   Staff[]
+  shifts                  Shift[]
+  inventories             Inventory[]
+  syncLogs                SyncLog[]
+  zakatSettings           ZakatSettings?
+  zakatPayments           ZakatPayment[]
+  supplierPayments        SupplierPayment[]
+  rolePermissions         RolePermission[]
+  payrollPeriods          PayrollPeriod[]
+  deliveries              Delivery[]
+  inventoryCounts         InventoryCount[]
+  notifications           Notification[]
+  discounts               Discount[]
+  investments             Investment[]
+  loyaltyTransactions     LoyaltyTransaction[]
+  ecommerceIntegration    EcommerceIntegration?
+  externalProductMappings ExternalProductMapping[]
 
   @@map("stores")
 }
@@ -178,22 +180,55 @@ enum PaymentStatus {
   REFUNDED
 }
 
+model EcommerceIntegration {
+  id                 String   @id @default(uuid())
+  storeId            String   @unique
+  store              Store    @relation(fields: [storeId], references: [id])
+  apiKey             String   @unique
+  outboundWebhookUrl String?
+  enabled            Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("ecommerce_integrations")
+}
+
+model ExternalProductMapping {
+  id                String   @id @default(uuid())
+  storeId           String
+  store             Store    @relation(fields: [storeId], references: [id])
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  externalProductId String
+  createdAt         DateTime @default(now())
+
+  @@unique([storeId, externalProductId])
+  @@index([productId])
+  @@map("external_product_mappings")
+}
+
+enum SalesChannel {
+  IN_STORE
+  ONLINE
+}
+
 model SubscriptionPlanConfig {
-  plan           SubscriptionPlan @id
-  price          Decimal          @db.Decimal(12, 2)
-  maxProducts    Int
-  maxStaff       Int
-  maxDiscounts   Int
-  hasReportsAll  Boolean
-  hasExport      Boolean
-  hasTelegram    Boolean
-  hasAllPush     Boolean
-  hasDelivery    Boolean
-  hasInventory   Boolean
-  hasZakat       Boolean          @default(false)
-  hasInvestments Boolean          @default(false)
-  hasLoyalty     Boolean          @default(false)
-  hasBatchProfitability Boolean @default(false)
+  plan                    SubscriptionPlan @id
+  price                   Decimal          @db.Decimal(12, 2)
+  maxProducts             Int
+  maxStaff                Int
+  maxDiscounts            Int
+  hasReportsAll           Boolean
+  hasExport               Boolean
+  hasTelegram             Boolean
+  hasAllPush              Boolean
+  hasDelivery             Boolean
+  hasInventory            Boolean
+  hasZakat                Boolean          @default(false)
+  hasInvestments          Boolean          @default(false)
+  hasLoyalty              Boolean          @default(false)
+  hasBatchProfitability   Boolean          @default(false)
+  hasEcommerceIntegration Boolean          @default(false)
 
   @@map("subscription_plan_configs")
 }
@@ -246,6 +281,7 @@ model Product {
   stockMovements      StockMovement[]
   inventoryItems      InventoryItem[]
   inventoryCountItems InventoryCountItem[]
+  externalMappings    ExternalProductMapping[]
 
   @@unique([storeId, sku])
   @@unique([storeId, barcode])
@@ -296,31 +332,33 @@ enum MovementType {
 // ============ SALES ============
 
 model Sale {
-  id           String          @id @default(uuid())
-  storeId      String
-  store        Store           @relation(fields: [storeId], references: [id])
-  customerId   String?
-  customer     Customer?       @relation(fields: [customerId], references: [id])
-  staffId      String?
-  staff        Staff?          @relation(fields: [staffId], references: [id])
-  shiftId      String?
-  shift        Shift?          @relation(fields: [shiftId], references: [id])
-  receiptNo    String
-  subtotal     Decimal         @db.Decimal(12, 2)
-  discount     Decimal         @default(0) @db.Decimal(12, 2)
-  discountType DiscountType?
-  total        Decimal         @db.Decimal(12, 2)
-  paymentType  SalePaymentType
-  paidAmount   Decimal         @db.Decimal(12, 2)
-  change       Decimal         @default(0) @db.Decimal(12, 2)
-  debtAmount   Decimal         @default(0) @db.Decimal(12, 2)
-  dueDate      DateTime?
-  status       SaleStatus      @default(COMPLETED)
-  notes        String?
-  localId      String?
-  syncedAt     DateTime?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  id              String          @id @default(uuid())
+  storeId         String
+  store           Store           @relation(fields: [storeId], references: [id])
+  customerId      String?
+  customer        Customer?       @relation(fields: [customerId], references: [id])
+  staffId         String?
+  staff           Staff?          @relation(fields: [staffId], references: [id])
+  shiftId         String?
+  shift           Shift?          @relation(fields: [shiftId], references: [id])
+  receiptNo       String
+  subtotal        Decimal         @db.Decimal(12, 2)
+  discount        Decimal         @default(0) @db.Decimal(12, 2)
+  discountType    DiscountType?
+  total           Decimal         @db.Decimal(12, 2)
+  paymentType     SalePaymentType
+  paidAmount      Decimal         @db.Decimal(12, 2)
+  change          Decimal         @default(0) @db.Decimal(12, 2)
+  debtAmount      Decimal         @default(0) @db.Decimal(12, 2)
+  dueDate         DateTime?
+  status          SaleStatus      @default(COMPLETED)
+  channel         SalesChannel    @default(IN_STORE)
+  externalOrderId String?
+  notes           String?
+  localId         String?
+  syncedAt        DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
   items               SaleItem[]
   debtPayments        DebtPayment[]
@@ -328,6 +366,7 @@ model Sale {
   loyaltyTransactions LoyaltyTransaction[]
 
   @@unique([storeId, receiptNo])
+  @@unique([storeId, externalOrderId])
   @@index([storeId, createdAt])
   @@index([customerId])
   @@map("sales")
@@ -354,23 +393,23 @@ enum SaleStatus {
 }
 
 model SaleItem {
-  id          String   @id @default(uuid())
-  saleId      String
-  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id])
-  productName String
-  quantity    Int
-  unitPrice   Decimal  @db.Decimal(12, 2)
-  costPrice   Decimal? @db.Decimal(12, 2)
-  discount    Decimal  @default(0) @db.Decimal(12, 2)
-  total       Decimal  @db.Decimal(12, 2)
+  id               String   @id @default(uuid())
+  saleId           String
+  sale             Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id])
+  productName      String
+  quantity         Int
+  unitPrice        Decimal  @db.Decimal(12, 2)
+  costPrice        Decimal? @db.Decimal(12, 2)
+  discount         Decimal  @default(0) @db.Decimal(12, 2)
+  total            Decimal  @db.Decimal(12, 2)
   // Cumulative quantity already refunded across all SalesService.refund()
   // calls for this line item. Without this, refund() only validated a
   // request against the original `quantity`, so the same saleItemId could
   // be re-submitted for refund an unbounded number of times, each call
   // re-incrementing stock and re-crediting customer debt/totalSpent.
-  refundedQuantity Int @default(0)
+  refundedQuantity Int      @default(0)
 
   @@map("sale_items")
 }
@@ -936,15 +975,15 @@ model Announcement {
 }
 
 model Banner {
-  id           String               @id @default(uuid())
+  id           String              @id @default(uuid())
   title        String
   body         String
   targetPlan   SubscriptionPlan?
   targetStatus SubscriptionStatus?
   startDate    DateTime
   endDate      DateTime
-  active       Boolean              @default(true)
-  createdAt    DateTime             @default(now())
+  active       Boolean             @default(true)
+  createdAt    DateTime            @default(now())
 
   @@map("banners")
 }
