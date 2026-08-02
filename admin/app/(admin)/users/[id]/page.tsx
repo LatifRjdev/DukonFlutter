@@ -3,7 +3,17 @@
 import { use, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Store, ShieldCheck, ShieldOff, Ban, CheckCircle, Send } from 'lucide-react';
+import {
+  ArrowLeft,
+  Store,
+  ShieldCheck,
+  ShieldOff,
+  Ban,
+  CheckCircle,
+  Send,
+  UserCog,
+} from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -76,6 +86,48 @@ export default function UserDetailPage({
       toast.success('Сообщение отправлено');
     },
     onError: () => toast.error('Ошибка отправки сообщения'),
+  });
+
+  // Consent-gated impersonation: requesting access only creates a PENDING
+  // request — the target user must approve it in-app before a token
+  // exists. We poll GET /admin/impersonation/:id/token, which itself
+  // throws a 4xx while the request is still PENDING/REJECTED; the query
+  // treats any failure as "not ready yet" and keeps polling every 4s
+  // (see refetchInterval below) rather than adding a separate status
+  // endpoint.
+  const [impersonationRequestId, setImpersonationRequestId] = useState<string | null>(null);
+  const [impersonateDialog, setImpersonateDialog] = useState(false);
+
+  const impersonateMutation = useMutation({
+    mutationFn: () => api.post(`/admin/users/${id}/impersonate`, {}),
+    onSuccess: (data: { id: string }) => {
+      setImpersonationRequestId(data.id);
+      setImpersonateDialog(true);
+      toast.success('Запрос отправлен пользователю, ожидаем подтверждения');
+    },
+    onError: () => toast.error('Не удалось отправить запрос'),
+  });
+
+  const { data: tokenData } = useQuery<{ token: string }>({
+    queryKey: ['impersonation-token', impersonationRequestId],
+    queryFn: () => api.get(`/admin/impersonation/${impersonationRequestId}/token`),
+    enabled: !!impersonationRequestId && impersonateDialog,
+    refetchInterval: (query) => (query.state.data ? false : 4000),
+    retry: false,
+  });
+
+  const deepLink = tokenData?.token
+    ? `dukonpro://impersonate?token=${tokenData.token}`
+    : '';
+
+  const endImpersonationMutation = useMutation({
+    mutationFn: () => api.post(`/admin/impersonation/${impersonationRequestId}/end`, {}),
+    onSuccess: () => {
+      setImpersonateDialog(false);
+      setImpersonationRequestId(null);
+      toast.success('Сессия поддержки завершена');
+    },
+    onError: () => toast.error('Не удалось завершить сессию'),
   });
 
   if (isLoading) {
@@ -203,6 +255,14 @@ export default function UserDetailPage({
               <Send className="mr-2 h-4 w-4" />
               Отправить сообщение
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => impersonateMutation.mutate()}
+              disabled={impersonateMutation.isPending}
+            >
+              <UserCog className="mr-2 h-4 w-4" />
+              Войти как пользователь
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -280,6 +340,60 @@ export default function UserDetailPage({
             >
               <Send className="mr-2 h-4 w-4" />
               Отправить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={impersonateDialog}
+        onOpenChange={(open) => {
+          setImpersonateDialog(open);
+          if (!open) setImpersonationRequestId(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Вход от имени пользователя</DialogTitle>
+          </DialogHeader>
+          {tokenData?.token ? (
+            <div className="space-y-4 py-2 text-center">
+              <p className="text-sm text-muted-foreground">
+                Доступ подтверждён. Отсканируйте QR-код в мобильном приложении
+                поддержки или используйте ссылку ниже. Сессия действует 30 минут.
+              </p>
+              <div className="flex justify-center">
+                <QRCodeSVG value={deepLink} size={200} />
+              </div>
+              <p className="break-all rounded bg-slate-100 p-2 text-xs font-mono">
+                {deepLink}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 py-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Ожидаем подтверждения от пользователя в приложении…
+              </p>
+            </div>
+          )}
+          <DialogFooter>
+            {tokenData?.token && (
+              <Button
+                variant="destructive"
+                onClick={() => endImpersonationMutation.mutate()}
+                disabled={endImpersonationMutation.isPending}
+              >
+                Завершить сессию
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setImpersonateDialog(false);
+                setImpersonationRequestId(null);
+              }}
+            >
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>
