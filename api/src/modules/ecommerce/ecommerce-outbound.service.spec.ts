@@ -112,6 +112,32 @@ describe('EcommerceOutboundService', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
+  it('genuinely waits for the backoff delay before retrying — does not retry early', async () => {
+    jest.useFakeTimers();
+    (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
+      { externalProductId: 'sku-1' },
+    ]);
+    (prisma.ecommerceIntegration.findUnique as jest.Mock).mockResolvedValue({
+      enabled: true,
+      outboundWebhookUrl: 'https://example.com/webhook',
+    });
+    fetchMock
+      .mockRejectedValueOnce(new Error('network down'))
+      .mockResolvedValueOnce({ ok: true, status: 200 });
+
+    const pushPromise = service.pushStockUpdate('p1', 'store-1');
+
+    // Let the first (failing) attempt run, but advance LESS than the full
+    // 1000ms backoff delay — the retry must not have fired yet.
+    await jest.advanceTimersByTimeAsync(999);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    // Now cross the 1000ms threshold — the retry should fire.
+    await jest.advanceTimersByTimeAsync(1);
+    await pushPromise;
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it('gives up after 3 failed attempts and notifies the store owner once', async () => {
     jest.useFakeTimers();
     (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
