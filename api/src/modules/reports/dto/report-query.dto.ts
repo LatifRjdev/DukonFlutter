@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class ReportQueryDto {
   @ApiPropertyOptional({
@@ -17,4 +17,9 @@ export class ReportQueryDto {
   @IsOptional()
   @IsString()
   to?: string;
+
+  @ApiPropertyOptional({ enum: ['IN_STORE', 'ONLINE'] })
+  @IsOptional()
+  @IsIn(['IN_STORE', 'ONLINE'])
+  channel?: 'IN_STORE' | 'ONLINE';
 }

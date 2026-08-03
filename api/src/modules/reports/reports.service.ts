@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ReportQueryDto } from './dto/report-query.dto';
 
@@ -22,10 +23,11 @@ export class ReportsService {
   async getSalesReport(storeId: string, query: ReportQueryDto) {
     const { startDate, endDate } = this.getDateRange(query);
 
-    const [salesByDate, topProducts, totals] = await Promise.all([
-      this.prisma.$queryRaw<
-        { date: Date; count: bigint; revenue: number; avg_check: number }[]
-      >`
+    const [salesByDate, topProducts, totals, channelBreakdownRaw] =
+      await Promise.all([
+        this.prisma.$queryRaw<
+          { date: Date; count: bigint; revenue: number; avg_check: number }[]
+        >`
         SELECT
           DATE("createdAt") as date,
           COUNT(*)::bigint as count,
@@ -36,35 +38,49 @@ export class ReportsService {
           AND status = 'COMPLETED'
           AND "createdAt" >= ${startDate}
           AND "createdAt" <= ${endDate}
+          ${query.channel ? Prisma.sql`AND channel = ${query.channel}::"SalesChannel"` : Prisma.empty}
         GROUP BY DATE("createdAt")
         ORDER BY date ASC
       `,
 
-      this.prisma.saleItem.groupBy({
-        by: ['productId', 'productName'],
-        where: {
-          sale: {
+        this.prisma.saleItem.groupBy({
+          by: ['productId', 'productName'],
+          where: {
+            sale: {
+              storeId,
+              status: 'COMPLETED',
+              createdAt: { gte: startDate, lte: endDate },
+              ...(query.channel && { channel: query.channel }),
+            },
+          },
+          _sum: { quantity: true, total: true },
+          orderBy: { _sum: { total: 'desc' } },
+          take: 5,
+        }),
+
+        this.prisma.sale.aggregate({
+          where: {
+            storeId,
+            status: 'COMPLETED',
+            createdAt: { gte: startDate, lte: endDate },
+            ...(query.channel && { channel: query.channel }),
+          },
+          _sum: { total: true },
+          _avg: { total: true },
+          _count: true,
+        }),
+
+        this.prisma.sale.groupBy({
+          by: ['channel'],
+          where: {
             storeId,
             status: 'COMPLETED',
             createdAt: { gte: startDate, lte: endDate },
           },
-        },
-        _sum: { quantity: true, total: true },
-        orderBy: { _sum: { total: 'desc' } },
-        take: 5,
-      }),
-
-      this.prisma.sale.aggregate({
-        where: {
-          storeId,
-          status: 'COMPLETED',
-          createdAt: { gte: startDate, lte: endDate },
-        },
-        _sum: { total: true },
-        _avg: { total: true },
-        _count: true,
-      }),
-    ]);
+          _sum: { total: true },
+          _count: true,
+        }),
+      ]);
 
     return {
       byDate: salesByDate.map((row) => ({
@@ -82,6 +98,11 @@ export class ReportsService {
       totalRevenue: Number(totals._sum.total ?? 0),
       totalCount: totals._count,
       avgCheck: Number(totals._avg.total ?? 0),
+      channelBreakdown: channelBreakdownRaw.map((row) => ({
+        channel: row.channel,
+        revenue: Number(row._sum.total ?? 0),
+        count: row._count,
+      })),
       from: startDate,
       to: endDate,
     };

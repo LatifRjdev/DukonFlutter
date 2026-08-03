@@ -358,6 +358,25 @@ describe('ReportsService', () => {
       expect(r.totalRevenue).toBe(100);
       expect(r.totalCount).toBe(1);
     });
+
+    it('filters by channel when provided and always includes a channel breakdown', async () => {
+      (prisma.sale.groupBy as jest.Mock).mockResolvedValue([
+        { channel: 'IN_STORE', _sum: { total: 800 }, _count: 4 },
+        { channel: 'ONLINE', _sum: { total: 200 }, _count: 1 },
+      ]);
+
+      const result = await service.getSalesReport('A', {
+        channel: 'ONLINE',
+      } as any);
+
+      expect(prisma.sale.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({ by: ['channel'] }),
+      );
+      expect(result.channelBreakdown).toEqual([
+        { channel: 'IN_STORE', revenue: 800, count: 4 },
+        { channel: 'ONLINE', revenue: 200, count: 1 },
+      ]);
+    });
   });
 
   describe('getProfitReport — profit and margin math', () => {
