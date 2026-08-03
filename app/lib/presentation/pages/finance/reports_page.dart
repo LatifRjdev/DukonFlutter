@@ -168,6 +168,7 @@ class _ReportsPageState extends State<ReportsPage>
 
   late DateTime _from;
   late DateTime _to;
+  String? _selectedChannel;
 
   // Per-tab state
   bool _salesLoading = false;
@@ -253,7 +254,11 @@ class _ReportsPageState extends State<ReportsPage>
     try {
       final resp = await _dio.get<Map<String, dynamic>>(
         '/stores/$id/reports/sales',
-        queryParameters: {'from': _fmt(_from), 'to': _fmt(_to)},
+        queryParameters: {
+          'from': _fmt(_from),
+          'to': _fmt(_to),
+          if (_selectedChannel != null) 'channel': _selectedChannel,
+        },
       );
       final body = resp.data ?? {};
       final rowsJson = (body['rows'] as List?)?.cast<Map<String, dynamic>>() ?? [];
@@ -856,6 +861,7 @@ class _ReportsPageState extends State<ReportsPage>
         children: [
           // Period selector
           _buildPeriodBar(),
+          if (_tabController.index == 0) _buildChannelFilterBar(),
           // Tab content
           Expanded(
             child: TabBarView(
@@ -969,6 +975,45 @@ class _ReportsPageState extends State<ReportsPage>
             onPressed: _loadCurrentTab,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChannelFilterBar() {
+    return Container(
+      color: context.surfaceMuted,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingMd,
+        vertical: AppConstants.spacingSm,
+      ),
+      child: Wrap(
+        spacing: 8,
+        children: [
+          ChoiceChip(
+            label: const Text('Все каналы'),
+            selected: _selectedChannel == null,
+            onSelected: (_) {
+              setState(() => _selectedChannel = null);
+              _loadSales();
+            },
+          ),
+          ChoiceChip(
+            label: const Text('В магазине'),
+            selected: _selectedChannel == 'IN_STORE',
+            onSelected: (_) {
+              setState(() => _selectedChannel = 'IN_STORE');
+              _loadSales();
+            },
+          ),
+          ChoiceChip(
+            label: const Text('Онлайн'),
+            selected: _selectedChannel == 'ONLINE',
+            onSelected: (_) {
+              setState(() => _selectedChannel = 'ONLINE');
+              _loadSales();
+            },
           ),
         ],
       ),
