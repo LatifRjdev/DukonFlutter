@@ -147,3 +147,47 @@ describe('AdminService — announcements (Spec C)', () => {
     expect(preview.renderedBody).toBe('plan START');
   });
 });
+
+describe('AdminService — updatePlan', () => {
+  let service: AdminService;
+  let prisma: {
+    subscriptionPlanConfig: { findUnique: jest.Mock; update: jest.Mock };
+  };
+
+  beforeEach(async () => {
+    prisma = {
+      subscriptionPlanConfig: {
+        findUnique: jest.fn(),
+        update: jest.fn(),
+      },
+    };
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        AdminService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
+        { provide: StoresService, useValue: { create: jest.fn() } },
+      ],
+    }).compile();
+    service = moduleRef.get(AdminService);
+  });
+
+  it('updates hasEcommerceIntegration when provided', async () => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock).mockResolvedValue({
+      plan: 'PREMIUM',
+    });
+    (prisma.subscriptionPlanConfig.update as jest.Mock).mockImplementation(
+      async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
+    );
+
+    const result = await service.updatePlan('PREMIUM' as any, {
+      hasEcommerceIntegration: true,
+    } as any);
+
+    expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
+      where: { plan: 'PREMIUM' },
+      data: { hasEcommerceIntegration: true },
+    });
+    expect((result as any).hasEcommerceIntegration).toBe(true);
+  });
+});

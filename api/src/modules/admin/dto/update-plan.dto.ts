@@ -61,4 +61,9 @@ export class UpdatePlanDto {
   @IsOptional()
   @IsBoolean()
   hasInventory?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasEcommerceIntegration?: boolean;
 }

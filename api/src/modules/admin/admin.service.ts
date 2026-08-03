@@ -502,6 +502,8 @@ export class AdminService {
     if (dto.hasDelivery !== undefined) updateData.hasDelivery = dto.hasDelivery;
     if (dto.hasInventory !== undefined)
       updateData.hasInventory = dto.hasInventory;
+    if (dto.hasEcommerceIntegration !== undefined)
+      updateData.hasEcommerceIntegration = dto.hasEcommerceIntegration;
 
     return this.prisma.subscriptionPlanConfig.update({
       where: { plan },
