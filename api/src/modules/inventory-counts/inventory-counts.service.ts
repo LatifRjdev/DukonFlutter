@@ -6,12 +6,14 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { UpdateCountItemsDto } from './dto/update-count-items.dto';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 @Injectable()
 export class InventoryCountsService {
   constructor(
     private prisma: PrismaService,
     private audit: AuditLogService,
+    private ecommerceOutbound: EcommerceOutboundService,
   ) {}
 
   async create(storeId: string) {
@@ -171,6 +173,14 @@ export class InventoryCountsService {
       storeId,
       itemCount: inventoryCount.items.length,
     });
+
+    // Notify the merchant's e-commerce site of the recounted stock levels
+    // for every product this session touched. Fire-and-forget — an
+    // outbound push failure or slowness must never block or delay the
+    // inventory count apply itself.
+    for (const item of itemsWithActual) {
+      void this.ecommerceOutbound.pushStockUpdate(item.productId, storeId);
+    }
 
     return this.findOne(storeId, id);
   }

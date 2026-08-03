@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InventoryCountsService } from './inventory-counts.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 type ProductRow = {
   id: string;
@@ -154,14 +155,19 @@ function makePrismaFake() {
 describe('InventoryCountsService', () => {
   let service: InventoryCountsService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let moduleRef: any;
 
   beforeEach(async () => {
     prisma = makePrismaFake();
-    const moduleRef = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         InventoryCountsService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: { record: jest.fn() } },
+        {
+          provide: EcommerceOutboundService,
+          useValue: { pushStockUpdate: jest.fn() },
+        },
       ],
     }).compile();
     service = moduleRef.get(InventoryCountsService);
@@ -298,6 +304,26 @@ describe('InventoryCountsService', () => {
       );
       // Ensure product wasn't touched
       expect(prisma.__products.get('p1')!.quantity).toBe(10);
+    });
+
+    it('pushes an outbound stock update for every counted item after a successful apply', async () => {
+      seedProduct({ id: 'p1', storeId: 'store-A', quantity: 50 });
+      seedProduct({ id: 'p2', storeId: 'store-A', quantity: 10 });
+      const created = await service.create('store-A');
+      await service.updateItems('store-A', created.id, {
+        items: [
+          { productId: 'p1', actualQty: 47 },
+          { productId: 'p2', actualQty: 13 },
+        ],
+      });
+
+      const outbound = moduleRef.get(EcommerceOutboundService) as any;
+      await service.apply('store-A', created.id);
+      // pushStockUpdate is fire-and-forget — flush pending microtasks.
+      await new Promise<void>((resolve) => setImmediate(resolve));
+
+      expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p1', 'store-A');
+      expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p2', 'store-A');
     });
   });
 });
