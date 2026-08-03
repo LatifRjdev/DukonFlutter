@@ -18,8 +18,7 @@ function makePrismaFake() {
     externalProductMapping: {
       findMany: jest.fn(async () => [] as any[]),
       upsert: jest.fn(async ({ create }: any) => ({ id: 'm-1', ...create })),
-      delete: jest.fn(async () => undefined),
-      findUnique: jest.fn(async () => null as any),
+      deleteMany: jest.fn(async () => ({ count: 1 })),
     },
   };
 }
@@ -112,14 +111,24 @@ describe('EcommerceIntegrationService', () => {
   });
 
   it('upsertMapping deletes any existing mapping for the product when externalProductId is empty', async () => {
-    (prisma.externalProductMapping.findUnique as jest.Mock).mockResolvedValue({
-      id: 'm-1',
-      storeId: 'store-1',
-      productId: 'product-1',
-    });
-
     await service.upsertMapping('store-1', 'product-1', '');
 
-    expect(prisma.externalProductMapping.delete).toHaveBeenCalled();
+    expect(prisma.externalProductMapping.deleteMany).toHaveBeenCalledWith({
+      where: { storeId: 'store-1', productId: 'product-1' },
+    });
+  });
+
+  it('upsertSettings allows explicitly clearing outboundWebhookUrl by passing null', async () => {
+    await service.upsertSettings('store-1', {
+      outboundWebhookUrl: null,
+    });
+
+    expect(prisma.ecommerceIntegration.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({
+          outboundWebhookUrl: null,
+        }),
+      }),
+    );
   });
 });

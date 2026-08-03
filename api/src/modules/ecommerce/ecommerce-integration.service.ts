@@ -61,14 +61,9 @@ export class EcommerceIntegrationService {
     externalProductId?: string,
   ) {
     if (!externalProductId) {
-      const existing = await this.prisma.externalProductMapping.findUnique({
-        where: { storeId_productId: { storeId, productId } },
+      await this.prisma.externalProductMapping.deleteMany({
+        where: { storeId, productId },
       });
-      if (existing) {
-        await this.prisma.externalProductMapping.delete({
-          where: { id: existing.id },
-        });
-      }
       return null;
     }
 
