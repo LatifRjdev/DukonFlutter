@@ -138,6 +138,25 @@ describe('EcommerceOutboundService', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
+  it('retries and eventually gives up when the endpoint responds with a non-2xx status (no thrown exception)', async () => {
+    jest.useFakeTimers();
+    (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
+      { externalProductId: 'sku-1' },
+    ]);
+    (prisma.ecommerceIntegration.findUnique as jest.Mock).mockResolvedValue({
+      enabled: true,
+      outboundWebhookUrl: 'https://example.com/webhook',
+    });
+    fetchMock.mockResolvedValue({ ok: false, status: 500 });
+
+    const pushPromise = service.pushStockUpdate('p1', 'store-1');
+    await jest.advanceTimersByTimeAsync(1000 + 4000 + 16000);
+    await pushPromise;
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(notifications.sendToStoreUsers).toHaveBeenCalledTimes(1);
+  });
+
   it('gives up after 3 failed attempts and notifies the store owner once', async () => {
     jest.useFakeTimers();
     (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
