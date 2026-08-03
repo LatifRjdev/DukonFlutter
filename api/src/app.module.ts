@@ -38,6 +38,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { ImpersonationModule } from './modules/impersonation/impersonation.module';
 import { HealthModule } from './modules/health/health.module';
+import { EcommerceModule } from './modules/ecommerce/ecommerce.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { HealthModule } from './modules/health/health.module';
     BannersModule,
     ImpersonationModule,
     HealthModule,
+    EcommerceModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: QueryCounterInterceptor },
