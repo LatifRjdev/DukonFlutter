@@ -853,7 +853,7 @@ export class EcommerceIntegrationService {
   async upsertMapping(storeId: string, productId: string, externalProductId?: string) {
     if (!externalProductId) {
       const existing = await this.prisma.externalProductMapping.findUnique({
-        where: { storeId_productId: { storeId, productId } } as any,
+        where: { storeId_productId: { storeId, productId } },
       });
       if (existing) {
         await this.prisma.externalProductMapping.delete({ where: { id: existing.id } });
@@ -872,13 +872,7 @@ export class EcommerceIntegrationService {
 }
 ```
 
-**Before running the tests:** the `upsertMapping` deletion branch above looks up an existing mapping by a `storeId_productId` compound key, but Task 1's schema only declared `@@unique([storeId, externalProductId])` on `ExternalProductMapping` — there is no `storeId_productId` unique key, so `findUnique({ where: { storeId_productId: ... } })` will not compile against the generated Prisma client. Fix this before proceeding: change that lookup to `findFirst({ where: { storeId, productId } })` instead (a plain filter, not a unique-key lookup — one product should only ever have zero or one mapping row in practice via this service's own upsert logic, but `findFirst` doesn't require a matching `@@unique` to exist). Update the code above to:
-```typescript
-      const existing = await this.prisma.externalProductMapping.findFirst({
-        where: { storeId, productId },
-      });
-```
-(This correction is deliberately left as a step here rather than baked into Step 4's code, because working through *why* the naive version doesn't compile — and confirming that against the real generated Prisma client types — is exactly the kind of thing this plan wants you to verify against the actual schema rather than copy blindly.)
+(The `storeId_productId` compound key used above relies on `@@unique([storeId, productId])` on `ExternalProductMapping` — this was added as a Task 1 follow-up fix, in `api/prisma/migrations/20260803010000_add_ecommerce_mapping_product_unique/`, after code review caught that the original schema only had `@@unique([storeId, externalProductId])`, which doesn't stop the same product from being mapped to multiple external IDs. If you're implementing this task after that fix landed, `findUnique` here compiles cleanly and is real-uniqueness-backed, not just an application-level assumption. If for some reason that migration isn't present when you reach this step, stop and check with the coordinator rather than silently working around it with `findFirst` — that was tried once already and is exactly the gap the follow-up fix closed.)
 
 - [ ] **Step 5: Run the tests to verify they pass**
 
