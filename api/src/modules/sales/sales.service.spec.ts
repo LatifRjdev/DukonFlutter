@@ -8,6 +8,7 @@ import { RedisService } from '../../redis/redis.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { LoyaltyService } from '../loyalty/loyalty.service';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 // Behavioral fake: Map-backed product/sale/saleItem stores, plus a
 // transaction wrapper that just runs the callback against the same fake
@@ -238,6 +239,7 @@ function fakeRedis(): Pick<RedisService, 'incr'> {
 describe('SalesService', () => {
   let service: SalesService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let moduleRef: any;
   let loyaltyService: {
     earnPoints: jest.Mock;
     redeemPoints: jest.Mock;
@@ -251,7 +253,7 @@ describe('SalesService', () => {
       redeemPoints: jest.fn(async () => undefined),
       notifyLowBalanceIfNeeded: jest.fn(async () => undefined),
     };
-    const moduleRef = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         SalesService,
         { provide: PrismaService, useValue: prisma },
@@ -267,6 +269,10 @@ describe('SalesService', () => {
         {
           provide: LoyaltyService,
           useValue: loyaltyService,
+        },
+        {
+          provide: EcommerceOutboundService,
+          useValue: { pushStockUpdate: jest.fn() },
         },
       ],
     }).compile();
@@ -360,6 +366,19 @@ describe('SalesService', () => {
           paidAmount: 0,
         } as any),
       ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('pushes an outbound stock update for every sold product after a successful sale', async () => {
+      const outbound = moduleRef.get(EcommerceOutboundService) as any;
+      await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 1 }],
+        paymentType: 'CASH',
+        paidAmount: 100,
+      } as any);
+      // pushStockUpdate is fire-and-forget (void, never awaited by the
+      // service) — flush pending microtasks before asserting.
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p1', 'store-A');
     });
   });
 
@@ -472,6 +491,25 @@ describe('SalesService', () => {
         items: [{ saleItemId: itemB.id, quantity: 1 }],
       } as any);
       expect(afterB.status).toBe('RETURNED');
+    });
+
+    it('pushes an outbound stock update for every refunded product after a successful refund', async () => {
+      const sale = await service.create('store-A', {
+        items: [{ productId: 'p1', quantity: 2 }],
+        paymentType: 'CASH',
+        paidAmount: 20,
+      } as any);
+      const outbound = moduleRef.get(EcommerceOutboundService) as any;
+      outbound.pushStockUpdate.mockClear(); // drop the create()-triggered call
+
+      const saleItemId = sale.items[0].id;
+      await service.refund('store-A', sale.id, {
+        items: [{ saleItemId, quantity: 2 }],
+        reason: 'damaged',
+      } as any);
+      // pushStockUpdate is fire-and-forget — flush pending microtasks.
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p1', 'store-A');
     });
   });
 
@@ -811,6 +849,10 @@ describe('SalesService — big-sale notification (USD store)', () => {
             redeemPoints: jest.fn(async () => undefined),
             notifyLowBalanceIfNeeded: jest.fn(async () => undefined),
           },
+        },
+        {
+          provide: EcommerceOutboundService,
+          useValue: { pushStockUpdate: jest.fn() },
         },
       ],
     }).compile();

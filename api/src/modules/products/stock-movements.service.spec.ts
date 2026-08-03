@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { StockMovementsService } from './stock-movements.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 type ProductRow = {
   id: string;
@@ -102,6 +103,7 @@ function makePrismaFake() {
 describe('StockMovementsService', () => {
   let service: StockMovementsService;
   let prisma: ReturnType<typeof makePrismaFake>;
+  let moduleRef: any;
 
   const seedProduct = (overrides: Partial<ProductRow> = {}): ProductRow => {
     const row: ProductRow = {
@@ -118,10 +120,14 @@ describe('StockMovementsService', () => {
 
   beforeEach(async () => {
     prisma = makePrismaFake();
-    const moduleRef = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         StockMovementsService,
         { provide: PrismaService, useValue: prisma },
+        {
+          provide: EcommerceOutboundService,
+          useValue: { pushStockUpdate: jest.fn() },
+        },
       ],
     }).compile();
     service = moduleRef.get(StockMovementsService);
@@ -347,6 +353,21 @@ describe('StockMovementsService', () => {
       expect(second.id).toBe(first.id);
       // Quantity only applied once.
       expect(prisma._products.get('p1')!.quantity).toBe(60);
+    });
+  });
+
+  describe('create — e-commerce outbound push', () => {
+    it('pushes an outbound stock update after successfully recording a movement', async () => {
+      seedProduct({ quantity: 50 });
+      const outbound = moduleRef.get(EcommerceOutboundService) as any;
+      await service.create('store-A', {
+        productId: 'p1',
+        type: 'PURCHASE',
+        quantity: 10,
+      } as any);
+      // pushStockUpdate is fire-and-forget — flush pending microtasks.
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p1', 'store-A');
     });
   });
 });

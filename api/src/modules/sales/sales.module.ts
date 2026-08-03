@@ -3,9 +3,10 @@ import { SalesController } from './sales.controller';
 import { SalesService } from './sales.service';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { LoyaltyModule } from '../loyalty/loyalty.module';
+import { EcommerceModule } from '../ecommerce/ecommerce.module';
 
 @Module({
-  imports: [NotificationsModule, LoyaltyModule],
+  imports: [NotificationsModule, LoyaltyModule, EcommerceModule],
   controllers: [SalesController],
   providers: [SalesService],
   exports: [SalesService],

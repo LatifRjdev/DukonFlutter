@@ -19,6 +19,7 @@ import {
   isBirthday,
   addDays,
 } from '../loyalty/loyalty.service';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 @Injectable()
 export class SalesService {
@@ -30,6 +31,7 @@ export class SalesService {
     private audit: AuditLogService,
     private notifications: NotificationsService,
     private loyaltyService: LoyaltyService,
+    private ecommerceOutbound: EcommerceOutboundService,
   ) {}
 
   // F.3 + Deferred #1 (2026-05-11): per-store threshold (in store
@@ -412,6 +414,13 @@ export class SalesService {
     // flag is off and FCM is unavailable.
     void this.maybeNotifyBigSale(storeId, result);
 
+    // Notify the merchant's e-commerce site of the new stock levels for
+    // every product this sale touched. Fire-and-forget — an outbound push
+    // failure or slowness must never block or delay the sale itself.
+    for (const item of dto.items) {
+      void this.ecommerceOutbound.pushStockUpdate(item.productId, storeId);
+    }
+
     if (dto.customerId && dto.redemptionPoints && dto.redemptionPoints > 0) {
       void this.loyaltyService.notifyLowBalanceIfNeeded(
         dto.customerId,
@@ -539,7 +548,7 @@ export class SalesService {
       throw new BadRequestException('Sale is already returned or cancelled');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       // F4.2: track total refunded value so we can decrement customer
       // debt + sale.debtAmount + customer.totalSpent in a consistent
       // single transaction with the stock restore.
@@ -688,6 +697,15 @@ export class SalesService {
 
       return updated;
     });
+
+    // Notify the merchant's e-commerce site of the restored stock levels
+    // for every refunded product. Fire-and-forget, same as create() above.
+    for (const refundItem of dto.items) {
+      const saleItem = sale.items.find((i) => i.id === refundItem.saleItemId)!;
+      void this.ecommerceOutbound.pushStockUpdate(saleItem.productId, storeId);
+    }
+
+    return result;
   }
 
   private async generateReceiptNo(storeId: string): Promise<string> {

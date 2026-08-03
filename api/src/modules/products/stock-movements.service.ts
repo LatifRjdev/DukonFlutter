@@ -5,10 +5,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
+import { EcommerceOutboundService } from '../ecommerce/ecommerce-outbound.service';
 
 @Injectable()
 export class StockMovementsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private ecommerceOutbound: EcommerceOutboundService,
+  ) {}
 
   async create(
     storeId: string,
@@ -42,7 +46,7 @@ export class StockMovementsService {
 
     const totalCost = dto.unitCost ? dto.unitCost * dto.quantity : undefined;
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const movement = await tx.stockMovement.create({
         data: {
           productId: dto.productId,
@@ -116,6 +120,13 @@ export class StockMovementsService {
 
       return movement;
     });
+
+    // Notify the merchant's e-commerce site of the new stock level.
+    // Fire-and-forget — an outbound push failure or slowness must never
+    // block or delay recording the movement itself.
+    void this.ecommerceOutbound.pushStockUpdate(dto.productId, storeId);
+
+    return result;
   }
 
   async findAll(storeId: string, productId?: string, page = 1, limit = 20) {
