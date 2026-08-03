@@ -203,6 +203,7 @@ model ExternalProductMapping {
   createdAt         DateTime @default(now())
 
   @@unique([storeId, externalProductId])
+  @@unique([storeId, productId])
   @@index([productId])
   @@map("external_product_mappings")
 }
