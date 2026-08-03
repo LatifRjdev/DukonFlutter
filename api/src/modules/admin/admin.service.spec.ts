@@ -180,9 +180,12 @@ describe('AdminService — updatePlan', () => {
       async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
     );
 
-    const result = await service.updatePlan('PREMIUM' as any, {
-      hasEcommerceIntegration: true,
-    } as any);
+    const result = await service.updatePlan(
+      'PREMIUM' as any,
+      {
+        hasEcommerceIntegration: true,
+      } as any,
+    );
 
     expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
       where: { plan: 'PREMIUM' },
