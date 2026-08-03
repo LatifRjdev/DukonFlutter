@@ -81,6 +81,7 @@ export interface Plan {
   hasAllPush: boolean;
   hasDelivery: boolean;
   hasInventory: boolean;
+  hasEcommerceIntegration: boolean;
 }
 
 export interface Announcement {

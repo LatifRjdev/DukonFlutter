@@ -26,6 +26,7 @@ const FEATURE_LABELS: Record<string, string> = {
   hasAllPush: 'Push-уведомления',
   hasDelivery: 'Доставка',
   hasInventory: 'Инвентаризация',
+  hasEcommerceIntegration: 'Интернет-магазин',
 };
 
 function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
@@ -152,6 +153,7 @@ export default function PlansPage() {
           hasAllPush: i > 1,
           hasDelivery: i > 1,
           hasInventory: i === 2,
+          hasEcommerceIntegration: i === 2,
         }));
 
   return (
