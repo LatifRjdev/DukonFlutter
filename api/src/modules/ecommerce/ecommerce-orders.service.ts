@@ -10,6 +10,19 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { EcommerceOutboundService } from './ecommerce-outbound.service';
 import { EcommerceWebhookDto } from './dto/ecommerce-webhook.dto';
 
+// Distinguishable marker thrown from inside the $transaction callback when
+// the atomic updateMany() stock guard loses a race with a concurrent
+// in-store sale (see the comment at the throw site below). Never sent to a
+// client directly — createOrder() catches it once the transaction has
+// unwound, fires the owner notification (outside the now-rolled-back
+// transaction), and re-throws the same UnprocessableEntityException the
+// other two rejection paths use.
+class StockConflictError extends Error {
+  constructor(public readonly productId: string) {
+    super(`Stock for product ${productId} changed concurrently`);
+  }
+}
+
 @Injectable()
 export class EcommerceOrdersService {
   constructor(
@@ -135,96 +148,125 @@ export class EcommerceOrdersService {
       where: { plan: subscription!.plan },
     });
 
-    const sale = await this.prisma.$transaction(async (tx) => {
-      const customer = await tx.customer.upsert({
-        where: { storeId_phone: { storeId, phone: dto.customer!.phone } },
-        create: {
-          storeId,
-          name: dto.customer!.name,
-          phone: dto.customer!.phone,
-        },
-        update: { name: dto.customer!.name },
-      });
-
-      const saleItemsData = items.map((item) => {
-        const productId = mappingByExternalId.get(
-          item.externalProductId,
-        )!.productId;
-        const product = productById.get(productId)!;
-        const unitPrice = item.price ?? Number(product.sellPrice);
-        return {
-          productId,
-          productName: product.name,
-          quantity: item.quantity,
-          unitPrice,
-          costPrice: product.costPrice ?? undefined,
-          total: unitPrice * item.quantity,
-        };
-      });
-
-      const createdSale = await tx.sale.create({
-        data: {
-          storeId,
-          customerId: customer.id,
-          channel: 'ONLINE',
-          // Deliberately not SalesService's generateReceiptNo() sequence
-          // (that's for in-store cash-register receipts). externalOrderId
-          // is already unique per store (Task 1's @@unique constraint),
-          // so this derived value automatically satisfies Sale's own
-          // @@unique([storeId, receiptNo]) with no extra query needed.
-          receiptNo: `ONLINE-${dto.externalOrderId}`,
-          subtotal: dto.totalAmount!,
-          total: dto.totalAmount!,
-          paymentType: 'CARD',
-          paidAmount: dto.totalAmount!,
-          status: 'COMPLETED',
-          externalOrderId: dto.externalOrderId,
-          items: { create: saleItemsData },
-        },
-        include: { items: true },
-      });
-
-      for (const item of items) {
-        const productId = mappingByExternalId.get(
-          item.externalProductId,
-        )!.productId;
-        const result = await tx.product.updateMany({
-          where: { id: productId, quantity: { gte: item.quantity } },
-          data: { quantity: { decrement: item.quantity } },
+    let sale;
+    try {
+      sale = await this.prisma.$transaction(async (tx) => {
+        const customer = await tx.customer.upsert({
+          where: { storeId_phone: { storeId, phone: dto.customer!.phone } },
+          create: {
+            storeId,
+            name: dto.customer!.name,
+            phone: dto.customer!.phone,
+          },
+          update: { name: dto.customer!.name },
         });
-        if (result.count === 0) {
-          // Stock changed between the pre-transaction check above and
-          // this write (race with an in-store sale) — abort the whole
-          // transaction; the site should retry the webhook per the
-          // design spec's data-integrity contract.
-          throw new UnprocessableEntityException(
-            `Stock for product ${productId} changed concurrently — retry the webhook`,
-          );
-        }
-      }
 
-      await tx.stockMovement.createMany({
-        data: items.map((item) => ({
-          productId: mappingByExternalId.get(item.externalProductId)!.productId,
-          type: 'SALE' as const,
-          quantity: item.quantity,
-          reference: dto.externalOrderId,
-        })),
-      });
+        const saleItemsData = items.map((item) => {
+          const productId = mappingByExternalId.get(
+            item.externalProductId,
+          )!.productId;
+          const product = productById.get(productId)!;
+          const unitPrice = item.price ?? Number(product.sellPrice);
+          return {
+            productId,
+            productName: product.name,
+            quantity: item.quantity,
+            unitPrice,
+            costPrice: product.costPrice ?? undefined,
+            total: unitPrice * item.quantity,
+          };
+        });
 
-      if (planConfig?.hasDelivery && dto.customer?.address) {
-        await tx.delivery.create({
+        const createdSale = await tx.sale.create({
           data: {
             storeId,
-            saleId: createdSale.id,
-            address: dto.customer.address,
-            status: 'NEW',
+            customerId: customer.id,
+            channel: 'ONLINE',
+            // Deliberately not SalesService's generateReceiptNo() sequence
+            // (that's for in-store cash-register receipts). externalOrderId
+            // is already unique per store (Task 1's @@unique constraint),
+            // so this derived value automatically satisfies Sale's own
+            // @@unique([storeId, receiptNo]) with no extra query needed.
+            receiptNo: `ONLINE-${dto.externalOrderId}`,
+            subtotal: dto.totalAmount!,
+            total: dto.totalAmount!,
+            paymentType: 'CARD',
+            paidAmount: dto.totalAmount!,
+            status: 'COMPLETED',
+            externalOrderId: dto.externalOrderId,
+            items: { create: saleItemsData },
           },
+          include: { items: true },
         });
-      }
 
-      return createdSale;
-    });
+        for (const item of items) {
+          const productId = mappingByExternalId.get(
+            item.externalProductId,
+          )!.productId;
+          const result = await tx.product.updateMany({
+            where: { id: productId, quantity: { gte: item.quantity } },
+            data: { quantity: { decrement: item.quantity } },
+          });
+          if (result.count === 0) {
+            // Stock changed between the pre-transaction check above and
+            // this write (race with an in-store sale) — abort the whole
+            // transaction; the site should retry the webhook per the
+            // design spec's data-integrity contract.
+            //
+            // Throw a distinguishable marker instead of
+            // UnprocessableEntityException directly: notifications.
+            // sendToStoreUsers must NOT be called from inside a transaction
+            // that's about to roll back (unlike the two pre-transaction
+            // rejection paths above, which notify before the transaction
+            // even starts). createOrder() below catches this marker once
+            // $transaction has unwound and fires the notification there.
+            throw new StockConflictError(productId);
+          }
+        }
+
+        await tx.stockMovement.createMany({
+          data: items.map((item) => ({
+            productId: mappingByExternalId.get(item.externalProductId)!
+              .productId,
+            type: 'SALE' as const,
+            quantity: item.quantity,
+            reference: dto.externalOrderId,
+          })),
+        });
+
+        if (planConfig?.hasDelivery && dto.customer?.address) {
+          await tx.delivery.create({
+            data: {
+              storeId,
+              saleId: createdSale.id,
+              address: dto.customer.address,
+              status: 'NEW',
+            },
+          });
+        }
+
+        return createdSale;
+      });
+    } catch (err) {
+      if (err instanceof StockConflictError) {
+        // Outside the transaction now (it has already rolled back), so
+        // this is safe to fire without holding anything open. Matches
+        // this codebase's established fire-and-forget notification
+        // pattern (see the `void this.outbound.pushStockUpdate(...)`
+        // calls below) rather than awaiting — the request is already
+        // headed for a 422, so there's nothing further to gate on it.
+        void this.notifications.sendToStoreUsers(
+          storeId,
+          'Заказ с сайта отклонён',
+          `Заказ ${dto.externalOrderId} отклонён — остаток товара изменился во время обработки заказа (конкурентная продажа в магазине). Повторите попытку.`,
+          'ECOMMERCE_ORDER_REJECTED',
+        );
+        throw new UnprocessableEntityException(
+          `Stock for product ${err.productId} changed concurrently — retry the webhook`,
+        );
+      }
+      throw err;
+    }
 
     // Fire-and-forget per the design spec's data-integrity section: the
     // merchant's own webhook endpoint being slow or unreachable must

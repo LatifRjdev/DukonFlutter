@@ -237,6 +237,31 @@ describe('EcommerceOrdersService', () => {
     expect(notifications.sendToStoreUsers).toHaveBeenCalled();
   });
 
+  // Whole-branch review finding: the atomic updateMany() stock guard
+  // catches a genuine race with a concurrent in-store sale (the
+  // pre-transaction check passed, but stock changed by the time the
+  // transaction actually wrote), and the transaction rolls back entirely
+  // — no Sale row is ever created. Unlike the missing-mapping and
+  // insufficient-stock rejection paths above, this one previously fired
+  // no owner notification at all, so a real online order could vanish
+  // silently if the merchant's site never retries the webhook.
+  it('rejects the whole order (422) and notifies the owner when the atomic stock guard detects a concurrent race', async () => {
+    (prisma.__tx.product.updateMany as jest.Mock).mockResolvedValue({
+      count: 0,
+    });
+
+    await expect(
+      service.handleWebhook('store-1', 'valid-key', makeOrderCreatedDto()),
+    ).rejects.toThrow();
+    expect(prisma.__tx.sale.create).toHaveBeenCalled(); // sale.create ran, then the transaction rolled back
+    expect(notifications.sendToStoreUsers).toHaveBeenCalledWith(
+      'store-1',
+      expect.any(String),
+      expect.stringContaining('site-order-1'),
+      'ECOMMERCE_ORDER_REJECTED',
+    );
+  });
+
   it('is idempotent: replaying the same externalOrderId returns the existing sale without reprocessing', async () => {
     (prisma.sale.findUnique as jest.Mock).mockResolvedValue({
       id: 'sale-existing',
