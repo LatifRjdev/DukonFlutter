@@ -2,6 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
+// Delay before each RETRY (not before the initial attempt). Design spec
+// ("Исходящий поток"): "до 3 повторов с экспоненциальной задержкой
+// (1s/4s/16s)" — 3 RETRIES on top of the initial attempt, i.e. 4 total
+// attempts. postWithRetry below therefore loops
+// RETRY_DELAYS_MS.length + 1 times; RETRY_DELAYS_MS[i] is the delay before
+// attempt i+2 (previously the loop only ran RETRY_DELAYS_MS.length times
+// with delay index `attempt - 1`, so the last entry, 16000, was
+// unreachable and real behavior was only 3 total attempts over ~5s, not
+// the ~21s spread the spec describes).
 const RETRY_DELAYS_MS = [1000, 4000, 16000];
 const FAILURE_NOTIFICATION_COOLDOWN_MS = 15 * 60 * 1000;
 
@@ -80,7 +89,8 @@ export class EcommerceOutboundService {
     url: string,
     body: { externalProductId: string; quantity: number },
   ): Promise<boolean> {
-    for (let attempt = 0; attempt < RETRY_DELAYS_MS.length; attempt++) {
+    const totalAttempts = RETRY_DELAYS_MS.length + 1; // 1 initial + 3 retries
+    for (let attempt = 0; attempt < totalAttempts; attempt++) {
       if (attempt > 0) {
         await this.sleep(RETRY_DELAYS_MS[attempt - 1]);
       }
@@ -92,11 +102,11 @@ export class EcommerceOutboundService {
         });
         if (res.ok) return true;
         this.logger.warn(
-          `Outbound stock push to ${url} returned ${res.status} (attempt ${attempt + 1}/${RETRY_DELAYS_MS.length})`,
+          `Outbound stock push to ${url} returned ${res.status} (attempt ${attempt + 1}/${totalAttempts})`,
         );
       } catch (err) {
         this.logger.warn(
-          `Outbound stock push to ${url} failed (attempt ${attempt + 1}/${RETRY_DELAYS_MS.length}): ${err}`,
+          `Outbound stock push to ${url} failed (attempt ${attempt + 1}/${totalAttempts}): ${err}`,
         );
       }
     }
