@@ -4,14 +4,23 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { StoreAccessGuard } from '../../common/guards/store-access.guard';
 import { SubscriptionGuard } from '../../common/guards/subscription.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { RequiresFeature } from '../../common/decorators/requires-feature.decorator';
 import { EcommerceIntegrationService } from './ecommerce-integration.service';
 import { UpsertEcommerceIntegrationDto } from './dto/upsert-ecommerce-integration.dto';
 import { UpsertProductMappingDto } from './dto/upsert-product-mapping.dto';
 
+// The apiKey exposed by GET/PUT integration is plaintext and the outbound
+// webhook URL controls where live stock data is sent, so these routes are
+// gated the same way as other store.manage settings (see
+// stores.controller.ts's receipt-template routes) — not just any active
+// staff member should be able to view/regenerate the key or repoint the
+// webhook.
 @ApiTags('Ecommerce')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard)
+@UseGuards(JwtAuthGuard, StoreAccessGuard, SubscriptionGuard, PermissionsGuard)
+@Permissions('store.manage')
 @RequiresFeature('hasEcommerceIntegration')
 @Controller('stores/:storeId/ecommerce')
 export class EcommerceIntegrationController {
