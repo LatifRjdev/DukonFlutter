@@ -158,6 +158,7 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
                 const SizedBox(height: 6),
                 TextField(
                   controller: _webhookUrlController,
+                  keyboardType: TextInputType.url,
                   decoration: const InputDecoration(
                     hintText: 'https://your-shop.example.com/dukon-webhook',
                     border: OutlineInputBorder(),

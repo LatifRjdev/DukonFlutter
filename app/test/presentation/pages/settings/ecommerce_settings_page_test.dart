@@ -61,6 +61,32 @@ void main() {
     });
 
     testWidgets(
+        'initial load failure shows an error snackbar instead of getting '
+        'stuck on the spinner', (tester) async {
+      // Reject via a real Future (not a synchronous thenThrow) so the
+      // failure surfaces after an await, matching how a real DioException
+      // would arrive — and so the catch/setState/SnackBar dispatch happens
+      // on a later frame rather than synchronously inside initState.
+      when(() => dioClient
+              .get<dynamic>('/stores/store-1/ecommerce/integration'))
+          .thenAnswer((_) async => throw Exception('network unavailable'));
+
+      await tester
+          .pumpWidget(wrap(const EcommerceSettingsPage(storeId: 'store-1')));
+      // Deliberately avoid pumpAndSettle: the error SnackBar auto-dismisses
+      // after AppConstants.snackbarDuration (3s), and pumpAndSettle pumps
+      // through the entire display+dismiss animation before returning, so
+      // by the time it settles the SnackBar text would already be gone.
+      // A couple of bounded pumps is enough to flush the failed load and
+      // render the SnackBar while it's still on screen.
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.text('Не удалось выполнить операцию'), findsOneWidget);
+    });
+
+    testWidgets(
         'not-yet-configured state shows a placeholder instead of an API key',
         (tester) async {
       when(() => dioClient

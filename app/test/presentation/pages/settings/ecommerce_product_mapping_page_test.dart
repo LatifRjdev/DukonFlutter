@@ -121,5 +121,23 @@ void main() {
           )).captured.single as Map<String, dynamic>;
       expect(captured['externalProductId'], 'ext-2');
     });
+
+    testWidgets('a failed save shows an error snackbar', (tester) async {
+      stubHappyPath();
+      when(() => dioClient.put<dynamic>(
+            '/stores/store-1/ecommerce/mappings/p2',
+            data: any(named: 'data'),
+          )).thenThrow(Exception('network unavailable'));
+
+      await tester.pumpWidget(
+          wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField).at(1), 'ext-2');
+      await tester.tap(find.byIcon(Icons.check).at(1));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Не удалось выполнить операцию'), findsOneWidget);
+    });
   });
 }
