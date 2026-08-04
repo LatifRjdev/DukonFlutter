@@ -186,6 +186,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildDivider(),
                           _buildTile(Icons.qr_code_scanner_outlined, 'Сканер',
                             onTap: () => context.push(RouteNames.scannerSettings)),
+                          _buildDivider(),
+                          _buildTile(Icons.storefront_outlined, 'Интернет-магазин',
+                            onTap: () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())),
                         ]),
                         const SizedBox(height: 20),
 

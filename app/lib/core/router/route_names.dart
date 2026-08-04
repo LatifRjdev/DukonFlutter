@@ -105,6 +105,8 @@ class RouteNames {
   static const String kkmSettings = '/settings/kkm';
   static const String scannerSettings = '/settings/scanner';
   static const String telegramBot = '/settings/telegram-bot';
+  static const String ecommerceSettings = '/settings/ecommerce';
+  static const String ecommerceProductMapping = '/settings/ecommerce/mappings';
   static const String languageSettings = '/settings/language';
   static const String offlineMode = '/settings/offline';
   static const String subscription = '/settings/subscription';

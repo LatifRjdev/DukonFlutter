@@ -67,6 +67,8 @@ import '../../presentation/pages/settings/receipt_template_page.dart';
 import '../../presentation/pages/settings/kkm_settings_page.dart';
 import '../../presentation/pages/settings/scanner_settings_page.dart';
 import '../../presentation/pages/settings/telegram_bot_settings_page.dart';
+import '../../presentation/pages/settings/ecommerce_settings_page.dart';
+import '../../presentation/pages/settings/ecommerce_product_mapping_page.dart';
 import '../../presentation/pages/settings/language_settings_page.dart';
 import '../../presentation/pages/settings/offline_mode_page.dart';
 import '../../presentation/pages/settings/subscription_page.dart';
@@ -631,6 +633,20 @@ class AppRouter {
         builder: (context, state) {
           final storeId = state.extra as String? ?? '';
           return TelegramBotSettingsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.ecommerceSettings,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return EcommerceSettingsPage(storeId: storeId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.ecommerceProductMapping,
+        builder: (context, state) {
+          final storeId = state.extra as String? ?? '';
+          return EcommerceProductMappingPage(storeId: storeId);
         },
       ),
       GoRoute(
