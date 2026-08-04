@@ -420,9 +420,24 @@ describe('ReportsService', () => {
       // Two IN_STORE sales + one ONLINE sale, each with its own item, so
       // filtered vs. unfiltered results are provably different (not just
       // differently-labeled copies of the same numbers).
-      seedSale({ id: 's-instore-1', storeId: 'A', total: 100, channel: 'IN_STORE' });
-      seedSale({ id: 's-instore-2', storeId: 'A', total: 200, channel: 'IN_STORE' });
-      seedSale({ id: 's-online-1', storeId: 'A', total: 50, channel: 'ONLINE' });
+      seedSale({
+        id: 's-instore-1',
+        storeId: 'A',
+        total: 100,
+        channel: 'IN_STORE',
+      });
+      seedSale({
+        id: 's-instore-2',
+        storeId: 'A',
+        total: 200,
+        channel: 'IN_STORE',
+      });
+      seedSale({
+        id: 's-online-1',
+        storeId: 'A',
+        total: 50,
+        channel: 'ONLINE',
+      });
       seedItem({
         id: 'i-instore-1',
         saleId: 's-instore-1',
@@ -457,7 +472,9 @@ describe('ReportsService', () => {
         'p-instore',
         'p-online',
       ]);
-      expect(unfiltered.byDate.reduce((sum, d) => sum + d.revenue, 0)).toBe(350);
+      expect(unfiltered.byDate.reduce((sum, d) => sum + d.revenue, 0)).toBe(
+        350,
+      );
 
       // channel: 'ONLINE' narrows totals (sale.aggregate), topProducts
       // (saleItem.groupBy), and byDate (the raw-SQL query) — not just the
