@@ -9,6 +9,7 @@ type SaleRow = {
   staffId: string | null;
   total: number;
   createdAt: Date;
+  channel: 'IN_STORE' | 'ONLINE';
 };
 
 type SaleItemRow = {
@@ -63,7 +64,8 @@ function makePrismaFake() {
       (s) =>
         s.storeId === where.storeId &&
         s.status === where.status &&
-        inRange(s.createdAt, where.createdAt?.gte, where.createdAt?.lte),
+        inRange(s.createdAt, where.createdAt?.gte, where.createdAt?.lte) &&
+        (where.channel === undefined || s.channel === where.channel),
     );
     const sum = filtered.reduce((acc, s) => acc + s.total, 0);
     const avg = filtered.length === 0 ? 0 : sum / filtered.length;
@@ -74,14 +76,38 @@ function makePrismaFake() {
     };
   });
 
-  const saleGroupBy = jest.fn(async ({ where }: any) => {
-    const filtered = sales.filter(
+  const saleGroupBy = jest.fn(async ({ by, where }: any) => {
+    const baseFiltered = sales.filter(
       (s) =>
         s.storeId === where.storeId &&
         s.status === where.status &&
-        s.staffId !== null &&
-        inRange(s.createdAt, where.createdAt?.gte, where.createdAt?.lte),
+        inRange(s.createdAt, where.createdAt?.gte, where.createdAt?.lte) &&
+        (where.channel === undefined || s.channel === where.channel),
     );
+
+    if (by.includes('channel')) {
+      const byChannel = new Map<
+        string,
+        { channel: string; total: number; count: number }
+      >();
+      for (const s of baseFiltered) {
+        const existing = byChannel.get(s.channel) ?? {
+          channel: s.channel,
+          total: 0,
+          count: 0,
+        };
+        existing.total += s.total;
+        existing.count += 1;
+        byChannel.set(s.channel, existing);
+      }
+      return Array.from(byChannel.values()).map((v) => ({
+        channel: v.channel,
+        _sum: { total: v.total },
+        _count: v.count,
+      }));
+    }
+
+    const filtered = baseFiltered.filter((s) => s.staffId !== null);
     const byStaff = new Map<
       string,
       { staffId: string; total: number; count: number }
@@ -115,7 +141,9 @@ function makePrismaFake() {
               s.createdAt,
               where.sale.createdAt?.gte,
               where.sale.createdAt?.lte,
-            ),
+            ) &&
+            (where.sale.channel === undefined ||
+              s.channel === where.sale.channel),
         )
         .map((s) => s.id),
     );
@@ -203,11 +231,20 @@ function makePrismaFake() {
       const storeId = values[0];
       const start = values[1] as Date;
       const end = values[2] as Date;
+      // The 4th interpolated value is the conditional channel fragment
+      // (Prisma.sql`AND channel = ...` or Prisma.empty). Both are `Sql`
+      // instances with a `.values` array — non-empty only when a real
+      // channel filter fragment was interpolated.
+      const channelFragment = values[3] as { values?: unknown[] } | undefined;
+      const channel = channelFragment?.values?.length
+        ? (channelFragment.values[0] as string)
+        : undefined;
       const filtered = sales.filter(
         (s) =>
           s.storeId === storeId &&
           s.status === 'COMPLETED' &&
-          inRange(s.createdAt, start, end),
+          inRange(s.createdAt, start, end) &&
+          (channel === undefined || s.channel === channel),
       );
       const byDate = new Map<string, { count: number; revenue: number }>();
       for (const s of filtered) {
@@ -288,6 +325,7 @@ describe('ReportsService', () => {
       staffId: null,
       total: 100,
       createdAt: new Date('2026-04-15T10:00:00Z'),
+      channel: 'IN_STORE',
       ...s,
     } as SaleRow;
     prisma.__sales.push(row);
@@ -376,6 +414,89 @@ describe('ReportsService', () => {
         { channel: 'IN_STORE', revenue: 800, count: 4 },
         { channel: 'ONLINE', revenue: 200, count: 1 },
       ]);
+    });
+
+    it('narrows byDate, topProducts, and totals to the requested channel — while channelBreakdown always covers every channel, filtered or not', async () => {
+      // Two IN_STORE sales + one ONLINE sale, each with its own item, so
+      // filtered vs. unfiltered results are provably different (not just
+      // differently-labeled copies of the same numbers).
+      seedSale({ id: 's-instore-1', storeId: 'A', total: 100, channel: 'IN_STORE' });
+      seedSale({ id: 's-instore-2', storeId: 'A', total: 200, channel: 'IN_STORE' });
+      seedSale({ id: 's-online-1', storeId: 'A', total: 50, channel: 'ONLINE' });
+      seedItem({
+        id: 'i-instore-1',
+        saleId: 's-instore-1',
+        productId: 'p-instore',
+        productName: 'In-store product',
+        quantity: 1,
+        total: 100,
+      });
+      seedItem({
+        id: 'i-online-1',
+        saleId: 's-online-1',
+        productId: 'p-online',
+        productName: 'Online product',
+        quantity: 1,
+        total: 50,
+      });
+
+      const unfiltered = await service.getSalesReport('A', {
+        from: '2026-04-01',
+        to: '2026-04-30',
+      });
+      const onlineOnly = await service.getSalesReport('A', {
+        from: '2026-04-01',
+        to: '2026-04-30',
+        channel: 'ONLINE',
+      } as any);
+
+      // Unfiltered: all 3 sales / both products.
+      expect(unfiltered.totalRevenue).toBe(350);
+      expect(unfiltered.totalCount).toBe(3);
+      expect(unfiltered.topProducts.map((p) => p.productId).sort()).toEqual([
+        'p-instore',
+        'p-online',
+      ]);
+      expect(unfiltered.byDate.reduce((sum, d) => sum + d.revenue, 0)).toBe(350);
+
+      // channel: 'ONLINE' narrows totals (sale.aggregate), topProducts
+      // (saleItem.groupBy), and byDate (the raw-SQL query) — not just the
+      // unconditional channelBreakdown query.
+      expect(onlineOnly.totalRevenue).toBe(50);
+      expect(onlineOnly.totalCount).toBe(1);
+      expect(onlineOnly.topProducts).toEqual([
+        expect.objectContaining({ productId: 'p-online', totalRevenue: 50 }),
+      ]);
+      expect(onlineOnly.byDate.reduce((sum, d) => sum + d.revenue, 0)).toBe(50);
+
+      // channelBreakdown is the unconditional 4th query: it reports the
+      // full IN_STORE/ONLINE split regardless of whether `channel` was
+      // set on this same call.
+      const breakdownFiltered = Object.fromEntries(
+        onlineOnly.channelBreakdown.map((c) => [c.channel, c]),
+      );
+      expect(breakdownFiltered['IN_STORE']).toMatchObject({
+        revenue: 300,
+        count: 2,
+      });
+      expect(breakdownFiltered['ONLINE']).toMatchObject({
+        revenue: 50,
+        count: 1,
+      });
+
+      // ...and the same full breakdown is present on the unfiltered call
+      // too — confirms the unfiltered case isn't missing channelBreakdown.
+      const breakdownUnfiltered = Object.fromEntries(
+        unfiltered.channelBreakdown.map((c) => [c.channel, c]),
+      );
+      expect(breakdownUnfiltered['IN_STORE']).toMatchObject({
+        revenue: 300,
+        count: 2,
+      });
+      expect(breakdownUnfiltered['ONLINE']).toMatchObject({
+        revenue: 50,
+        count: 1,
+      });
     });
   });
 
