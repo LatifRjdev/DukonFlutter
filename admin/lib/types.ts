@@ -82,6 +82,10 @@ export interface Plan {
   hasDelivery: boolean;
   hasInventory: boolean;
   hasEcommerceIntegration: boolean;
+  hasZakat: boolean;
+  hasInvestments: boolean;
+  hasLoyalty: boolean;
+  hasBatchProfitability: boolean;
 }
 
 export interface Announcement {

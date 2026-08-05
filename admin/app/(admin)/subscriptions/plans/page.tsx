@@ -27,6 +27,10 @@ const FEATURE_LABELS: Record<string, string> = {
   hasDelivery: 'Доставка',
   hasInventory: 'Инвентаризация',
   hasEcommerceIntegration: 'Интернет-магазин',
+  hasZakat: 'Закят',
+  hasInvestments: 'Инвестиции',
+  hasLoyalty: 'Программа лояльности',
+  hasBatchProfitability: 'Прибыльность по партиям',
 };
 
 function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
@@ -154,6 +158,10 @@ export default function PlansPage() {
           hasDelivery: i > 1,
           hasInventory: i === 2,
           hasEcommerceIntegration: i === 2,
+          hasZakat: i === 2,
+          hasInvestments: i === 2,
+          hasLoyalty: i === 2,
+          hasBatchProfitability: i === 2,
         }));
 
   return (
