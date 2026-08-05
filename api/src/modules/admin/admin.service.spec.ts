@@ -193,4 +193,80 @@ describe('AdminService — updatePlan', () => {
     });
     expect((result as any).hasEcommerceIntegration).toBe(true);
   });
+
+  it('updates hasZakat when provided', async () => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock).mockResolvedValue({
+      plan: 'PREMIUM',
+    });
+    (prisma.subscriptionPlanConfig.update as jest.Mock).mockImplementation(
+      async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
+    );
+
+    const result = await service.updatePlan('PREMIUM' as any, {
+      hasZakat: true,
+    } as any);
+
+    expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
+      where: { plan: 'PREMIUM' },
+      data: { hasZakat: true },
+    });
+    expect((result as any).hasZakat).toBe(true);
+  });
+
+  it('updates hasInvestments when provided', async () => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock).mockResolvedValue({
+      plan: 'PREMIUM',
+    });
+    (prisma.subscriptionPlanConfig.update as jest.Mock).mockImplementation(
+      async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
+    );
+
+    const result = await service.updatePlan('PREMIUM' as any, {
+      hasInvestments: true,
+    } as any);
+
+    expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
+      where: { plan: 'PREMIUM' },
+      data: { hasInvestments: true },
+    });
+    expect((result as any).hasInvestments).toBe(true);
+  });
+
+  it('updates hasLoyalty when provided', async () => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock).mockResolvedValue({
+      plan: 'PREMIUM',
+    });
+    (prisma.subscriptionPlanConfig.update as jest.Mock).mockImplementation(
+      async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
+    );
+
+    const result = await service.updatePlan('PREMIUM' as any, {
+      hasLoyalty: true,
+    } as any);
+
+    expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
+      where: { plan: 'PREMIUM' },
+      data: { hasLoyalty: true },
+    });
+    expect((result as any).hasLoyalty).toBe(true);
+  });
+
+  it('updates hasBatchProfitability when provided', async () => {
+    (prisma.subscriptionPlanConfig.findUnique as jest.Mock).mockResolvedValue({
+      plan: 'PREMIUM',
+    });
+    (prisma.subscriptionPlanConfig.update as jest.Mock).mockImplementation(
+      async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
+    );
+
+    const result = await service.updatePlan('PREMIUM' as any, {
+      hasBatchProfitability: true,
+    } as any);
+
+    expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
+      where: { plan: 'PREMIUM' },
+      data: { hasBatchProfitability: true },
+    });
+    expect((result as any).hasBatchProfitability).toBe(true);
+  });
 });

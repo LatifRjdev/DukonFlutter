@@ -504,6 +504,12 @@ export class AdminService {
       updateData.hasInventory = dto.hasInventory;
     if (dto.hasEcommerceIntegration !== undefined)
       updateData.hasEcommerceIntegration = dto.hasEcommerceIntegration;
+    if (dto.hasZakat !== undefined) updateData.hasZakat = dto.hasZakat;
+    if (dto.hasInvestments !== undefined)
+      updateData.hasInvestments = dto.hasInvestments;
+    if (dto.hasLoyalty !== undefined) updateData.hasLoyalty = dto.hasLoyalty;
+    if (dto.hasBatchProfitability !== undefined)
+      updateData.hasBatchProfitability = dto.hasBatchProfitability;
 
     return this.prisma.subscriptionPlanConfig.update({
       where: { plan },

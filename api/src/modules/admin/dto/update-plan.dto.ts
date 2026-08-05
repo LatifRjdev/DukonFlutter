@@ -66,4 +66,24 @@ export class UpdatePlanDto {
   @IsOptional()
   @IsBoolean()
   hasEcommerceIntegration?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasZakat?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasInvestments?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasLoyalty?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasBatchProfitability?: boolean;
 }
