@@ -51,15 +51,36 @@ class _TopProduct {
   final double revenue;
   const _TopProduct({required this.name, required this.revenue});
   factory _TopProduct.fromJson(Map<String, dynamic> j) => _TopProduct(
-        name: j['name'] as String? ?? '',
+        name: j['productName'] as String? ?? '',
+        revenue: (j['totalRevenue'] as num?)?.toDouble() ?? 0,
+      );
+}
+
+class _ChannelRevenue {
+  final String channel;
+  final double revenue;
+  final int count;
+  const _ChannelRevenue({
+    required this.channel,
+    required this.revenue,
+    required this.count,
+  });
+  factory _ChannelRevenue.fromJson(Map<String, dynamic> j) => _ChannelRevenue(
+        channel: j['channel'] as String? ?? '',
         revenue: (j['revenue'] as num?)?.toDouble() ?? 0,
+        count: (j['count'] as num?)?.toInt() ?? 0,
       );
 }
 
 class _SalesData {
   final List<_SalesRow> rows;
   final List<_TopProduct> top5;
-  const _SalesData({required this.rows, required this.top5});
+  final List<_ChannelRevenue> channelBreakdown;
+  const _SalesData({
+    required this.rows,
+    required this.top5,
+    required this.channelBreakdown,
+  });
 }
 
 class _ExpenseCategory {
@@ -261,12 +282,14 @@ class _ReportsPageState extends State<ReportsPage>
         },
       );
       final body = resp.data ?? {};
-      final rowsJson = (body['rows'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-      final topJson = (body['top5'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final rowsJson = (body['byDate'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final topJson = (body['topProducts'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final channelJson = (body['channelBreakdown'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       setState(() {
         _salesData = _SalesData(
           rows: rowsJson.map(_SalesRow.fromJson).toList(),
           top5: topJson.map(_TopProduct.fromJson).toList(),
+          channelBreakdown: channelJson.map(_ChannelRevenue.fromJson).toList(),
         );
       });
     } catch (e) {
@@ -1208,6 +1231,35 @@ class _SalesTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
+        Builder(builder: (context) {
+          final breakdown = d.channelBreakdown;
+          double revenueFor(String channel) => breakdown
+              .firstWhere(
+                (c) => c.channel == channel,
+                orElse: () => const _ChannelRevenue(channel: '', revenue: 0, count: 0),
+              )
+              .revenue;
+          return Row(
+            children: [
+              Expanded(
+                child: _KpiCard(
+                  label: 'В магазине',
+                  value: fmtPrice(revenueFor('IN_STORE')),
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: AppConstants.spacingSm),
+              Expanded(
+                child: _KpiCard(
+                  label: 'Онлайн',
+                  value: fmtPrice(revenueFor('ONLINE')),
+                  color: context.success,
+                ),
+              ),
+            ],
+          );
+        }),
+        const SizedBox(height: AppConstants.spacingSm),
         // Data table
         _SectionCard(
           title: 'Данные по продажам',
