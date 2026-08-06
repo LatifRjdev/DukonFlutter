@@ -111,7 +111,8 @@ void main() {
           wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(2), 'ext-2');
+      await tester.enterText(
+          find.byKey(const ValueKey('mapping-external-id-p2')), 'ext-2');
       await tester.tap(find.byIcon(Icons.check).at(1));
       await tester.pumpAndSettle();
 
@@ -133,7 +134,8 @@ void main() {
           wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(2), 'ext-2');
+      await tester.enterText(
+          find.byKey(const ValueKey('mapping-external-id-p2')), 'ext-2');
       await tester.tap(find.byIcon(Icons.check).at(1));
       await tester.pumpAndSettle();
 
@@ -151,10 +153,49 @@ void main() {
       expect(find.text('Товар 1'), findsOneWidget);
       expect(find.text('Товар 2'), findsOneWidget);
 
-      await tester.enterText(find.byType(TextField).first, 'товар 1');
+      await tester.enterText(
+          find.byKey(const Key('mapping-search-field')), 'товар 1');
       await tester.pump();
 
       expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsNothing);
+    });
+
+    testWidgets('clearing the search restores the full list', (tester) async {
+      stubHappyPath();
+
+      await tester.pumpWidget(
+          wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+          find.byKey(const Key('mapping-search-field')), 'товар 1');
+      await tester.pump();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsNothing);
+
+      await tester.enterText(find.byKey(const Key('mapping-search-field')), '');
+      await tester.pump();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsOneWidget);
+    });
+
+    testWidgets('shows the empty search state when nothing matches',
+        (tester) async {
+      stubHappyPath();
+
+      await tester.pumpWidget(
+          wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+          find.byKey(const Key('mapping-search-field')), 'нет такого товара');
+      await tester.pump();
+
+      expect(find.text('Ничего не найдено'), findsOneWidget);
+      expect(find.text('Товар 1'), findsNothing);
       expect(find.text('Товар 2'), findsNothing);
     });
   });

@@ -23,7 +23,6 @@ class _EcommerceProductMappingPageState
   List<Map<String, dynamic>> _products = [];
   final Map<String, TextEditingController> _controllers = {};
   final _searchController = TextEditingController();
-  String _query = '';
 
   @override
   void initState() {
@@ -97,12 +96,12 @@ class _EcommerceProductMappingPageState
 
   @override
   Widget build(BuildContext context) {
-    final filtered = _query.isEmpty
+    final query = _searchController.text.trim().toLowerCase();
+    final filtered = query.isEmpty
         ? _products
         : _products
-            .where((p) => (p['name'] as String? ?? '')
-                .toLowerCase()
-                .contains(_query.toLowerCase()))
+            .where((p) =>
+                (p['name'] as String? ?? '').toLowerCase().contains(query))
             .toList();
 
     return Scaffold(
@@ -119,6 +118,7 @@ class _EcommerceProductMappingPageState
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextField(
+                    key: const Key('mapping-search-field'),
                     controller: _searchController,
                     decoration: const InputDecoration(
                       hintText: 'Поиск по названию товара',
@@ -126,14 +126,14 @@ class _EcommerceProductMappingPageState
                       isDense: true,
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (v) => setState(() => _query = v),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 Expanded(
                   child: filtered.isEmpty
                       ? Center(
                           child: Text(
-                            _query.isEmpty ? 'Нет товаров' : 'Ничего не найдено',
+                            query.isEmpty ? 'Нет товаров' : 'Ничего не найдено',
                             style: TextStyle(color: context.textSecondary),
                           ),
                         )
@@ -164,6 +164,7 @@ class _EcommerceProductMappingPageState
                                   Expanded(
                                     flex: 2,
                                     child: TextField(
+                                      key: ValueKey('mapping-external-id-$id'),
                                       controller: _controllers[id],
                                       decoration: const InputDecoration(
                                         hintText: 'Внешний ID',
