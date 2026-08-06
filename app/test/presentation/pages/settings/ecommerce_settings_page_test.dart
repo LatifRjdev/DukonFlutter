@@ -140,6 +140,13 @@ void main() {
       // so it shows the reveal toggle rather than the raw key text.
       expect(find.text('generated-key-123'), findsNothing);
       expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+
+      // Reveal it to confirm the *specific* key from the save response was
+      // actually stored and displayed, not just that some masked value is
+      // showing (a stale/wrong key would look identical while masked).
+      await tester.tap(find.byIcon(Icons.visibility_outlined));
+      await tester.pump();
+      expect(find.text('generated-key-123'), findsOneWidget);
     });
 
     testWidgets('copying the API key writes it to the clipboard',
