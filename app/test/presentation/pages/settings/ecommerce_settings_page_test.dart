@@ -135,9 +135,11 @@ void main() {
       expect(captured['outboundWebhookUrl'], 'https://shop.example.com/hook');
       expect(captured['enabled'], true);
 
-      // The API key returned by the save response should now be displayed
-      // and copyable.
-      expect(find.text('generated-key-123'), findsOneWidget);
+      // The API key returned by the save response should now be present and
+      // copyable — masked by default (see the dedicated masking test below),
+      // so it shows the reveal toggle rather than the raw key text.
+      expect(find.text('generated-key-123'), findsNothing);
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
     });
 
     testWidgets('copying the API key writes it to the clipboard',
@@ -174,6 +176,32 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(copiedText, 'existing-key-456');
+    });
+
+    testWidgets('API key is masked by default and reveals on tap',
+        (tester) async {
+      when(() => dioClient
+              .get<dynamic>('/stores/store-1/ecommerce/integration'))
+          .thenAnswer(
+        (_) async => resp<dynamic>({
+          'apiKey': 'super-secret-key-value',
+          'outboundWebhookUrl': null,
+          'enabled': true,
+        }),
+      );
+
+      await tester
+          .pumpWidget(wrap(const EcommerceSettingsPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('super-secret-key-value'), findsNothing);
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.visibility_outlined));
+      await tester.pump();
+
+      expect(find.text('super-secret-key-value'), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
     });
   });
 }

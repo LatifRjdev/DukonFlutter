@@ -143,6 +143,7 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
                       ? (_apiKey ?? '—')
                       : 'Сохраните настройки, чтобы создать ключ',
                   onCopy: _apiKey == null ? null : () => _copy(_apiKey!, 'Ключ'),
+                  obscure: _configured && _apiKey != null,
                 ),
                 if (_configured) ...[
                   const SizedBox(height: 8),
@@ -203,10 +204,30 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
   }
 }
 
-class _CopyableField extends StatelessWidget {
+class _CopyableField extends StatefulWidget {
   final String value;
   final VoidCallback? onCopy;
-  const _CopyableField({required this.value, required this.onCopy});
+  final bool obscure;
+  const _CopyableField({
+    required this.value,
+    required this.onCopy,
+    this.obscure = false,
+  });
+
+  @override
+  State<_CopyableField> createState() => _CopyableFieldState();
+}
+
+class _CopyableFieldState extends State<_CopyableField> {
+  bool _revealed = false;
+
+  String get _displayValue {
+    if (!widget.obscure || _revealed) return widget.value;
+    // Mask everything except keep the string length roughly indicative —
+    // a fixed-width mask avoids leaking the real key's length exactly,
+    // while still visually reading as "there's a secret here".
+    return '•' * 24;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,13 +240,24 @@ class _CopyableField extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(value,
+            child: Text(_displayValue,
                 style: const TextStyle(fontFamily: 'monospace', fontSize: 13)),
           ),
-          if (onCopy != null)
+          if (widget.obscure)
+            IconButton(
+              icon: Icon(
+                  _revealed
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  size: 18),
+              onPressed: () => setState(() => _revealed = !_revealed),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          if (widget.onCopy != null)
             IconButton(
               icon: const Icon(Icons.copy_outlined, size: 18),
-              onPressed: onCopy,
+              onPressed: widget.onCopy,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
