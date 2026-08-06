@@ -13,6 +13,9 @@ import '../../blocs/settings/settings_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../blocs/subscription/subscription_bloc.dart';
+import '../../blocs/subscription/subscription_event.dart';
+import '../../blocs/subscription/subscription_state.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -31,6 +34,10 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     context.read<SettingsBloc>().add(SettingsProfileRequested());
+    final storeId = _getStoreId();
+    if (storeId.isNotEmpty) {
+      context.read<SubscriptionBloc>().add(SubscriptionLoadRequested(storeId: storeId));
+    }
   }
 
   String _getStoreId() {
@@ -57,6 +64,31 @@ class _SettingsPageState extends State<SettingsPage> {
               context.go('/login');
             },
             child: const Text('Выйти', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPremiumUpsellDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Доступно на тарифе PREMIUM'),
+        content: const Text(
+          'Интеграция с интернет-магазином доступна на тарифе PREMIUM. Перейдите на PREMIUM, чтобы синхронизировать остатки и заказы с вашим сайтом.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Позже'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.push(RouteNames.subscription);
+            },
+            child: const Text('Перейти к тарифам'),
           ),
         ],
       ),
@@ -187,8 +219,21 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildTile(Icons.qr_code_scanner_outlined, 'Сканер',
                             onTap: () => context.push(RouteNames.scannerSettings)),
                           _buildDivider(),
-                          _buildTile(Icons.storefront_outlined, 'Интернет-магазин',
-                            onTap: () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())),
+                          BlocBuilder<SubscriptionBloc, SubscriptionState>(
+                            builder: (_, sub) {
+                              final hasEcommerce = sub is SubscriptionLoaded &&
+                                  sub.features.hasEcommerceIntegration;
+                              return _buildTile(
+                                Icons.storefront_outlined,
+                                'Интернет-магазин',
+                                badge: hasEcommerce ? null : 'PREMIUM',
+                                badgeColor: hasEcommerce ? null : AppColors.warning,
+                                onTap: hasEcommerce
+                                    ? () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())
+                                    : _showPremiumUpsellDialog,
+                              );
+                            },
+                          ),
                         ]),
                         const SizedBox(height: 20),
 

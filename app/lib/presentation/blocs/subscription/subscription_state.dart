@@ -41,6 +41,7 @@ class SubscriptionFeatures extends Equatable {
   final bool hasAllPush;
   final bool hasDelivery;
   final bool hasInventory;
+  final bool hasEcommerceIntegration;
 
   const SubscriptionFeatures({
     required this.hasReportsAll,
@@ -49,6 +50,7 @@ class SubscriptionFeatures extends Equatable {
     required this.hasAllPush,
     required this.hasDelivery,
     required this.hasInventory,
+    required this.hasEcommerceIntegration,
   });
 
   factory SubscriptionFeatures.fromJson(Map<String, dynamic> json) =>
@@ -59,6 +61,8 @@ class SubscriptionFeatures extends Equatable {
         hasAllPush: json['hasAllPush'] as bool? ?? false,
         hasDelivery: json['hasDelivery'] as bool? ?? false,
         hasInventory: json['hasInventory'] as bool? ?? false,
+        hasEcommerceIntegration:
+            json['hasEcommerceIntegration'] as bool? ?? false,
       );
 
   factory SubscriptionFeatures.defaults() => const SubscriptionFeatures(
@@ -68,6 +72,7 @@ class SubscriptionFeatures extends Equatable {
         hasAllPush: false,
         hasDelivery: false,
         hasInventory: false,
+        hasEcommerceIntegration: false,
       );
 
   bool hasFeature(String key) {
@@ -84,6 +89,8 @@ class SubscriptionFeatures extends Equatable {
         return hasDelivery;
       case 'hasInventory':
         return hasInventory;
+      case 'hasEcommerceIntegration':
+        return hasEcommerceIntegration;
       default:
         return true;
     }
@@ -97,6 +104,7 @@ class SubscriptionFeatures extends Equatable {
         hasAllPush,
         hasDelivery,
         hasInventory,
+        hasEcommerceIntegration,
       ];
 }
 

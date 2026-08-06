@@ -10,6 +10,9 @@ import 'package:dukonpro/presentation/blocs/settings/settings_bloc.dart';
 import 'package:dukonpro/presentation/blocs/settings/settings_event.dart';
 import 'package:dukonpro/presentation/blocs/settings/settings_state.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_bloc.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_event.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_state.dart';
 import 'package:dukonpro/presentation/pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +28,31 @@ class _MockAuthBloc extends MockBloc<AuthEvent, AuthState>
 
 class _MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
+
+class _MockSubscriptionBloc
+    extends MockBloc<SubscriptionEvent, SubscriptionState>
+    implements SubscriptionBloc {}
+
+SubscriptionLoaded _fakeNonPremiumSubscription() => SubscriptionLoaded(
+      plan: 'BUSINESS',
+      status: 'ACTIVE',
+      limits: const SubscriptionLimits(
+        maxStores: 3,
+        maxProducts: 2000,
+        maxStaff: 10,
+        maxDiscounts: 5,
+      ),
+      features: const SubscriptionFeatures(
+        hasReportsAll: true,
+        hasExport: false,
+        hasTelegram: true,
+        hasAllPush: false,
+        hasDelivery: true,
+        hasInventory: true,
+        hasEcommerceIntegration: false,
+      ),
+      payments: const [],
+    );
 
 class _FakeDioClient extends Fake implements DioClient {
   @override
@@ -49,6 +77,7 @@ void main() {
   late _MockAuthBloc authBloc;
   late _MockSettingsBloc settingsBloc;
   late MockStoreBloc storeBloc;
+  late _MockSubscriptionBloc subscriptionBloc;
 
   final fakeUser = User(
     id: 'test-user-id',
@@ -62,12 +91,15 @@ void main() {
     authBloc = _MockAuthBloc();
     settingsBloc = _MockSettingsBloc();
     storeBloc = MockStoreBloc();
+    subscriptionBloc = _MockSubscriptionBloc();
 
     when(() => authBloc.state).thenReturn(AuthInitial());
     when(() => settingsBloc.state).thenReturn(
       SettingsLoaded(fakeUser, themeMode: ThemeMode.light),
     );
     when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
+    when(() => subscriptionBloc.state)
+        .thenReturn(_fakeNonPremiumSubscription());
 
     if (!sl.isRegistered<DioClient>()) {
       sl.registerSingleton<DioClient>(_FakeDioClient());
@@ -78,6 +110,7 @@ void main() {
     authBloc.close();
     settingsBloc.close();
     storeBloc.close();
+    subscriptionBloc.close();
     if (sl.isRegistered<DioClient>()) {
       sl.unregister<DioClient>();
     }
@@ -88,6 +121,7 @@ void main() {
           BlocProvider<AuthBloc>.value(value: authBloc),
           BlocProvider<SettingsBloc>.value(value: settingsBloc),
           BlocProvider<StoreBloc>.value(value: storeBloc),
+          BlocProvider<SubscriptionBloc>.value(value: subscriptionBloc),
         ],
         child: child,
       );

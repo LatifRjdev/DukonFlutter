@@ -34,6 +34,7 @@ SubscriptionLoaded _fakeLoaded() => SubscriptionLoaded(
         hasAllPush: false,
         hasDelivery: true,
         hasInventory: true,
+        hasEcommerceIntegration: false,
       ),
       payments: const [],
     );
