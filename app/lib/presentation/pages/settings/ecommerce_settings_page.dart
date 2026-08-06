@@ -221,6 +221,14 @@ class _CopyableField extends StatefulWidget {
 class _CopyableFieldState extends State<_CopyableField> {
   bool _revealed = false;
 
+  @override
+  void didUpdateWidget(covariant _CopyableField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.obscure && widget.value != oldWidget.value) {
+      _revealed = false;
+    }
+  }
+
   String get _displayValue {
     if (!widget.obscure || _revealed) return widget.value;
     // Mask everything except keep the string length roughly indicative —

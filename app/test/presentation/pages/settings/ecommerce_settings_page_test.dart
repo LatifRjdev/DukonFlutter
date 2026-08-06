@@ -210,5 +210,49 @@ void main() {
       expect(find.text('super-secret-key-value'), findsOneWidget);
       expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
     });
+
+    testWidgets(
+        'reveal state resets to masked when the key changes via regenerate',
+        (tester) async {
+      when(() => dioClient
+              .get<dynamic>('/stores/store-1/ecommerce/integration'))
+          .thenAnswer(
+        (_) async => resp<dynamic>({
+          'apiKey': 'old-key-111',
+          'outboundWebhookUrl': null,
+          'enabled': true,
+        }),
+      );
+      when(() => dioClient.post<dynamic>(
+            '/stores/store-1/ecommerce/integration/regenerate-key',
+          )).thenAnswer(
+        (_) async => resp<dynamic>({'apiKey': 'new-key-222'}),
+      );
+
+      await tester
+          .pumpWidget(wrap(const EcommerceSettingsPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      // Reveal the old key first.
+      await tester.tap(find.byIcon(Icons.visibility_outlined));
+      await tester.pump();
+      expect(find.text('old-key-111'), findsOneWidget);
+
+      // Regenerate while revealed — the freshly issued key must not be
+      // displayed in the clear just because the field was left revealed
+      // for the previous key.
+      await tester.tap(find.text('Перегенерировать ключ'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('new-key-222'), findsNothing);
+      expect(find.text('old-key-111'), findsNothing);
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+
+      // Sanity check: the new key is genuinely the one stored and shown
+      // once explicitly revealed again.
+      await tester.tap(find.byIcon(Icons.visibility_outlined));
+      await tester.pump();
+      expect(find.text('new-key-222'), findsOneWidget);
+    });
   });
 }
