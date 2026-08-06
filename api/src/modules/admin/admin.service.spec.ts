@@ -202,9 +202,12 @@ describe('AdminService — updatePlan', () => {
       async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
     );
 
-    const result = await service.updatePlan('PREMIUM' as any, {
-      hasZakat: true,
-    } as any);
+    const result = await service.updatePlan(
+      'PREMIUM' as any,
+      {
+        hasZakat: true,
+      } as any,
+    );
 
     expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
       where: { plan: 'PREMIUM' },
@@ -221,9 +224,12 @@ describe('AdminService — updatePlan', () => {
       async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
     );
 
-    const result = await service.updatePlan('PREMIUM' as any, {
-      hasInvestments: true,
-    } as any);
+    const result = await service.updatePlan(
+      'PREMIUM' as any,
+      {
+        hasInvestments: true,
+      } as any,
+    );
 
     expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
       where: { plan: 'PREMIUM' },
@@ -240,9 +246,12 @@ describe('AdminService — updatePlan', () => {
       async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
     );
 
-    const result = await service.updatePlan('PREMIUM' as any, {
-      hasLoyalty: true,
-    } as any);
+    const result = await service.updatePlan(
+      'PREMIUM' as any,
+      {
+        hasLoyalty: true,
+      } as any,
+    );
 
     expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
       where: { plan: 'PREMIUM' },
@@ -259,9 +268,12 @@ describe('AdminService — updatePlan', () => {
       async ({ data }: any) => ({ plan: 'PREMIUM', ...data }),
     );
 
-    const result = await service.updatePlan('PREMIUM' as any, {
-      hasBatchProfitability: true,
-    } as any);
+    const result = await service.updatePlan(
+      'PREMIUM' as any,
+      {
+        hasBatchProfitability: true,
+      } as any,
+    );
 
     expect(prisma.subscriptionPlanConfig.update).toHaveBeenCalledWith({
       where: { plan: 'PREMIUM' },
