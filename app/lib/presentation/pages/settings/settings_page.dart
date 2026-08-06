@@ -221,16 +221,21 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildDivider(),
                           BlocBuilder<SubscriptionBloc, SubscriptionState>(
                             builder: (_, sub) {
+                              final stillLoading = sub is SubscriptionInitial ||
+                                  sub is SubscriptionLoading;
                               final hasEcommerce = sub is SubscriptionLoaded &&
                                   sub.features.hasEcommerceIntegration;
+                              final confirmedIneligible = !stillLoading && !hasEcommerce;
                               return _buildTile(
                                 Icons.storefront_outlined,
                                 'Интернет-магазин',
-                                badge: hasEcommerce ? null : 'PREMIUM',
-                                badgeColor: hasEcommerce ? null : AppColors.warning,
-                                onTap: hasEcommerce
-                                    ? () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())
-                                    : _showPremiumUpsellDialog,
+                                badge: confirmedIneligible ? 'PREMIUM' : null,
+                                badgeColor: confirmedIneligible ? AppColors.warning : null,
+                                onTap: stillLoading
+                                    ? null
+                                    : (hasEcommerce
+                                        ? () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())
+                                        : _showPremiumUpsellDialog),
                               );
                             },
                           ),

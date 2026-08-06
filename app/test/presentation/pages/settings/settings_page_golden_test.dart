@@ -152,5 +152,19 @@ void main() {
       tester.takeException();
       await screenMatchesGolden(tester, 'settings_dark');
     });
+
+    testGoldens('light theme — subscription still loading shows no PREMIUM badge',
+        (tester) async {
+      when(() => subscriptionBloc.state).thenReturn(SubscriptionInitial());
+      await pumpPageWithTheme(
+        tester,
+        page(),
+        brightness: Brightness.light,
+        wrap: wrapWithBlocs,
+        size: const Size(412, 900),
+      );
+      tester.takeException();
+      await screenMatchesGolden(tester, 'settings_subscription_loading_light');
+    });
   });
 }
