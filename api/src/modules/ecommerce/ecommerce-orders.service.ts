@@ -141,6 +141,35 @@ export class EcommerceOrdersService {
       }
     }
 
+    // Cross-check the external site's claimed totalAmount against what
+    // Dukon itself computes from the mapped products' prices and the
+    // order's line-item quantities. dto.totalAmount is only ever trusted
+    // input from the external site — without this check a compromised or
+    // buggy site could report an artificially low total and Dukon would
+    // record the sale (and decrement stock) at that wrong value.
+    const TOTAL_AMOUNT_TOLERANCE = 0.01;
+    const computedTotal = items.reduce((sum, item) => {
+      const productId = mappingByExternalId.get(
+        item.externalProductId,
+      )!.productId;
+      const product = productById.get(productId)!;
+      const unitPrice = item.price ?? Number(product.sellPrice);
+      return sum + unitPrice * item.quantity;
+    }, 0);
+    if (
+      Math.abs(computedTotal - dto.totalAmount!) > TOTAL_AMOUNT_TOLERANCE
+    ) {
+      await this.notifications.sendToStoreUsers(
+        storeId,
+        'Заказ с сайта отклонён',
+        `Заказ ${dto.externalOrderId} отклонён — переданная сумма заказа (${dto.totalAmount}) не совпадает с суммой по товарам (${computedTotal.toFixed(2)}).`,
+        'ECOMMERCE_ORDER_REJECTED',
+      );
+      throw new UnprocessableEntityException(
+        `totalAmount (${dto.totalAmount}) does not match computed item sum (${computedTotal.toFixed(2)})`,
+      );
+    }
+
     const subscription = await this.prisma.subscription.findUnique({
       where: { storeId },
     });

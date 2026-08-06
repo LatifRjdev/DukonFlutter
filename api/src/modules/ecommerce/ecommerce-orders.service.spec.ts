@@ -318,6 +318,53 @@ describe('EcommerceOrdersService', () => {
     await service.handleWebhook('store-1', 'valid-key', makeOrderCreatedDto());
     expect(outbound.pushStockUpdate).toHaveBeenCalledWith('p1', 'store-1');
   });
+
+  it('rejects the whole order (422), notifies the owner, and never creates the sale when totalAmount does not match the computed item sum', async () => {
+    // Fixture: item price 150 x quantity 2 = computed total 300. Declaring
+    // a wildly different totalAmount should be caught before any writes.
+    const dto = makeOrderCreatedDto({ totalAmount: 100 });
+
+    await expect(
+      service.handleWebhook('store-1', 'valid-key', dto),
+    ).rejects.toThrow();
+    expect(prisma.__tx.sale.create).not.toHaveBeenCalled();
+    expect(notifications.sendToStoreUsers).toHaveBeenCalledWith(
+      'store-1',
+      expect.any(String),
+      expect.stringContaining('300.00'),
+      'ECOMMERCE_ORDER_REJECTED',
+    );
+  });
+
+  it('accepts an order and creates the sale when totalAmount exactly matches the computed item sum', async () => {
+    const dto = makeOrderCreatedDto({ totalAmount: 300 });
+
+    const result = await service.handleWebhook('store-1', 'valid-key', dto);
+
+    expect(prisma.__tx.sale.create).toHaveBeenCalled();
+    expect((result as any).id).toBe('sale-1');
+  });
+
+  it('accepts an order when totalAmount is off from the computed item sum by less than the tolerance', async () => {
+    // Computed total is 300; 300.005 is within the 0.01 tolerance.
+    const dto = makeOrderCreatedDto({ totalAmount: 300.005 });
+
+    const result = await service.handleWebhook('store-1', 'valid-key', dto);
+
+    expect(prisma.__tx.sale.create).toHaveBeenCalled();
+    expect((result as any).id).toBe('sale-1');
+  });
+
+  it('rejects the order when totalAmount is off from the computed item sum by more than the tolerance', async () => {
+    // Computed total is 300; 300.02 is just outside the 0.01 tolerance.
+    const dto = makeOrderCreatedDto({ totalAmount: 300.02 });
+
+    await expect(
+      service.handleWebhook('store-1', 'valid-key', dto),
+    ).rejects.toThrow();
+    expect(prisma.__tx.sale.create).not.toHaveBeenCalled();
+    expect(notifications.sendToStoreUsers).toHaveBeenCalled();
+  });
 });
 
 describe('EcommerceOrdersService — end-to-end scenario (real EcommerceOutboundService)', () => {
