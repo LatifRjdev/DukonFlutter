@@ -22,6 +22,8 @@ class _EcommerceProductMappingPageState
   bool _loading = true;
   List<Map<String, dynamic>> _products = [];
   final Map<String, TextEditingController> _controllers = {};
+  final _searchController = TextEditingController();
+  String _query = '';
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _EcommerceProductMappingPageState
     for (final c in _controllers.values) {
       c.dispose();
     }
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -94,6 +97,14 @@ class _EcommerceProductMappingPageState
 
   @override
   Widget build(BuildContext context) {
+    final filtered = _query.isEmpty
+        ? _products
+        : _products
+            .where((p) => (p['name'] as String? ?? '')
+                .toLowerCase()
+                .contains(_query.toLowerCase()))
+            .toList();
+
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
@@ -103,47 +114,76 @@ class _EcommerceProductMappingPageState
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: _products.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final product = _products[index];
-                final id = product['id'] as String;
-                final name = product['name'] as String? ?? '';
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Поиск по названию товара',
+                      prefixIcon: Icon(Icons.search),
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (v) => setState(() => _query = v),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(name, style: const TextStyle(fontSize: 14)),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: TextField(
-                          controller: _controllers[id],
-                          decoration: const InputDecoration(
-                            hintText: 'Внешний ID',
-                            isDense: true,
-                            border: OutlineInputBorder(),
+                ),
+                Expanded(
+                  child: filtered.isEmpty
+                      ? Center(
+                          child: Text(
+                            _query.isEmpty ? 'Нет товаров' : 'Ничего не найдено',
+                            style: TextStyle(color: context.textSecondary),
                           ),
-                          onSubmitted: (_) => _saveMapping(id),
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          itemCount: filtered.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 10),
+                          itemBuilder: (context, index) {
+                            final product = filtered[index];
+                            final id = product['id'] as String;
+                            final name = product['name'] as String? ?? '';
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius:
+                                    BorderRadius.circular(AppConstants.radiusLg),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(name,
+                                        style: const TextStyle(fontSize: 14)),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: TextField(
+                                      controller: _controllers[id],
+                                      decoration: const InputDecoration(
+                                        hintText: 'Внешний ID',
+                                        isDense: true,
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      onSubmitted: (_) => _saveMapping(id),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.check, size: 20),
+                                    onPressed: () => _saveMapping(id),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.check, size: 20),
-                        onPressed: () => _saveMapping(id),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                ),
+              ],
             ),
     );
   }

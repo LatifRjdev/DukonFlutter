@@ -111,7 +111,7 @@ void main() {
           wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(1), 'ext-2');
+      await tester.enterText(find.byType(TextField).at(2), 'ext-2');
       await tester.tap(find.byIcon(Icons.check).at(1));
       await tester.pumpAndSettle();
 
@@ -133,11 +133,29 @@ void main() {
           wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(1), 'ext-2');
+      await tester.enterText(find.byType(TextField).at(2), 'ext-2');
       await tester.tap(find.byIcon(Icons.check).at(1));
       await tester.pumpAndSettle();
 
       expect(find.text('Не удалось выполнить операцию'), findsOneWidget);
+    });
+
+    testWidgets('typing in the search field filters the product list by name',
+        (tester) async {
+      stubHappyPath();
+
+      await tester.pumpWidget(
+          wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField).first, 'товар 1');
+      await tester.pump();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsNothing);
     });
   });
 }
