@@ -134,9 +134,37 @@ export class SubscriptionsService implements OnModuleInit {
     const basePrice = planConfig ? Number(planConfig.price) : 0;
     const calculatedPrice = basePrice * (1 - discount / 100);
 
+    // Mobile's SubscriptionBloc reads top-level `features`/`limits` objects
+    // (see app/lib/presentation/blocs/subscription/subscription_bloc.dart),
+    // not the nested `planConfig` shape — without this, every feature gate
+    // on the client silently falls back to SubscriptionFeatures.defaults()
+    // (all false), even for paying PREMIUM merchants. Keep `planConfig`
+    // too since other consumers may already depend on the flat shape.
+    const features = planConfig
+      ? {
+          hasReportsAll: planConfig.hasReportsAll,
+          hasExport: planConfig.hasExport,
+          hasTelegram: planConfig.hasTelegram,
+          hasAllPush: planConfig.hasAllPush,
+          hasDelivery: planConfig.hasDelivery,
+          hasInventory: planConfig.hasInventory,
+          hasEcommerceIntegration: planConfig.hasEcommerceIntegration,
+        }
+      : undefined;
+
+    const limits = planConfig
+      ? {
+          maxProducts: planConfig.maxProducts,
+          maxStaff: planConfig.maxStaff,
+          maxDiscounts: planConfig.maxDiscounts,
+        }
+      : undefined;
+
     return {
       ...subscription,
       planConfig,
+      features,
+      limits,
       calculatedPrice: Math.round(calculatedPrice * 100) / 100,
     };
   }

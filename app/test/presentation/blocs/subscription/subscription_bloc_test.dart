@@ -157,6 +157,43 @@ void main() {
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
+        // Regression test for a real production bug: the backend used to
+        // nest feature flags under `planConfig` (e.g.
+        // planConfig.hasEcommerceIntegration) while this bloc only ever
+        // read a top-level `features` object, so every gate silently fell
+        // back to SubscriptionFeatures.defaults() (all false) even for
+        // paying PREMIUM merchants. This fixture matches the now-fixed
+        // backend response shape from SubscriptionsService.getSubscription().
+        'parses hasEcommerceIntegration correctly from a realistic /subscription response shape',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'PREMIUM',
+          'status': 'ACTIVE',
+          'features': {
+            'hasReportsAll': true,
+            'hasExport': true,
+            'hasTelegram': true,
+            'hasAllPush': true,
+            'hasDelivery': true,
+            'hasInventory': true,
+            'hasEcommerceIntegration': true,
+          },
+          'limits': {'maxProducts': -1, 'maxStaff': -1, 'maxDiscounts': -1},
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>()
+              .having((s) => s.plan, 'plan', 'PREMIUM')
+              .having(
+                (s) => s.features.hasEcommerceIntegration,
+                'features.hasEcommerceIntegration',
+                true,
+              ),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
         'should mark state as expired-not-active when status is EXPIRED',
         setUp: () => mockGet(<String, dynamic>{'status': 'EXPIRED'}),
         build: () => SubscriptionBloc(dioClient: dioClient),

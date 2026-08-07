@@ -45,13 +45,54 @@ function makePrismaFake() {
     },
     subscriptionPlanConfig: {
       findUnique: jest.fn(async ({ where }: any) => {
-        const prices: Record<string, number> = {
-          START: 200,
-          BUSINESS: 400,
-          PREMIUM: 600,
+        // Full per-plan config rows, including the boolean feature flags
+        // and numeric limits that getSubscription() now surfaces as
+        // top-level `features`/`limits` objects for the mobile client.
+        const configs: Record<string, any> = {
+          START: {
+            plan: 'START',
+            price: 200,
+            maxProducts: 500,
+            maxStaff: 2,
+            maxDiscounts: 0,
+            hasReportsAll: false,
+            hasExport: false,
+            hasTelegram: false,
+            hasAllPush: false,
+            hasDelivery: false,
+            hasInventory: false,
+            hasEcommerceIntegration: false,
+          },
+          BUSINESS: {
+            plan: 'BUSINESS',
+            price: 400,
+            maxProducts: 2000,
+            maxStaff: 10,
+            maxDiscounts: 5,
+            hasReportsAll: true,
+            hasExport: false,
+            hasTelegram: true,
+            hasAllPush: true,
+            hasDelivery: true,
+            hasInventory: true,
+            hasEcommerceIntegration: false,
+          },
+          PREMIUM: {
+            plan: 'PREMIUM',
+            price: 600,
+            maxProducts: -1,
+            maxStaff: -1,
+            maxDiscounts: -1,
+            hasReportsAll: true,
+            hasExport: true,
+            hasTelegram: true,
+            hasAllPush: true,
+            hasDelivery: true,
+            hasInventory: true,
+            hasEcommerceIntegration: true,
+          },
         };
-        if (prices[where.plan] === undefined) return null;
-        return { plan: where.plan, price: prices[where.plan] };
+        return configs[where.plan] ?? null;
       }),
       upsert: jest.fn(async ({ where, create }: any) => ({
         plan: where.plan,
@@ -113,6 +154,75 @@ describe('SubscriptionsService — read paths', () => {
       await expect(
         service.getSubscription('ghost-store'),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('should include features and limits objects derived from planConfig when a subscription exists', async () => {
+      const now = new Date();
+      const in30 = new Date(now);
+      in30.setDate(in30.getDate() + 30);
+
+      const sub = {
+        id: 'sub-premium',
+        storeId: 'store-premium',
+        plan: 'PREMIUM',
+        status: 'ACTIVE',
+        currentPeriodStart: now,
+        currentPeriodEnd: in30,
+        adminDiscount: null,
+        createdAt: now,
+        updatedAt: now,
+      };
+      prisma._subsByStore.set('store-premium', sub);
+      prisma._subsById.set('sub-premium', sub);
+
+      const result = await service.getSubscription('store-premium');
+
+      // The field the real-world bug hinged on: mobile's client-side gate
+      // reads result.features.hasEcommerceIntegration, not
+      // result.planConfig.hasEcommerceIntegration.
+      expect(result.features).toEqual({
+        hasReportsAll: true,
+        hasExport: true,
+        hasTelegram: true,
+        hasAllPush: true,
+        hasDelivery: true,
+        hasInventory: true,
+        hasEcommerceIntegration: true,
+      });
+      expect(result.limits).toEqual({
+        maxProducts: -1,
+        maxStaff: -1,
+        maxDiscounts: -1,
+      });
+      // planConfig stays present too — additive change, not a replacement.
+      expect(result.planConfig).toBeTruthy();
+    });
+
+    it('should leave features and limits undefined when the subscription plan has no seeded planConfig row', async () => {
+      const now = new Date();
+      const in30 = new Date(now);
+      in30.setDate(in30.getDate() + 30);
+
+      const sub = {
+        id: 'sub-orphan',
+        storeId: 'store-orphan',
+        plan: 'UNSEEDED_PLAN',
+        status: 'ACTIVE',
+        currentPeriodStart: now,
+        currentPeriodEnd: in30,
+        adminDiscount: null,
+        createdAt: now,
+        updatedAt: now,
+      };
+      prisma._subsByStore.set('store-orphan', sub);
+      prisma._subsById.set('sub-orphan', sub);
+
+      const result = await service.getSubscription('store-orphan');
+
+      expect(result.planConfig).toBeNull();
+      expect(result.features).toBeUndefined();
+      expect(result.limits).toBeUndefined();
+      expect(result.calculatedPrice).toBe(0);
     });
 
     it('should compute remaining days correctly when subscription is active in the future', async () => {
