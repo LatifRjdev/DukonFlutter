@@ -365,6 +365,95 @@ describe('EcommerceOrdersService', () => {
     expect(prisma.__tx.sale.create).not.toHaveBeenCalled();
     expect(notifications.sendToStoreUsers).toHaveBeenCalled();
   });
+
+  it('accepts a multi-line order when totalAmount matches the sum across all line items, not just one', async () => {
+    // Two distinct products at distinct prices/quantities: this exercises
+    // the reduce() accumulator, which a single-item order can't — with one
+    // item, "sum + x" and "x" are indistinguishable.
+    (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
+      { externalProductId: 'sku-1', productId: 'p1' },
+      { externalProductId: 'sku-2', productId: 'p2' },
+    ]);
+    (prisma.product.findMany as jest.Mock).mockResolvedValue([
+      {
+        id: 'p1',
+        name: 'Товар 1',
+        quantity: 10,
+        sellPrice: 150,
+        costPrice: 100,
+      },
+      {
+        id: 'p2',
+        name: 'Товар 2',
+        quantity: 10,
+        sellPrice: 200,
+        costPrice: 120,
+      },
+    ]);
+    const dto = makeOrderCreatedDto({
+      items: [
+        { externalProductId: 'sku-1', quantity: 2, price: 150 }, // 300
+        { externalProductId: 'sku-2', quantity: 3, price: 200 }, // 600
+      ],
+      totalAmount: 900, // full sum across both lines
+    });
+
+    const result = await service.handleWebhook('store-1', 'valid-key', dto);
+
+    expect(prisma.__tx.sale.create).toHaveBeenCalled();
+    expect((result as any).id).toBe('sale-1');
+  });
+
+  it('rejects a multi-line order when totalAmount only matches one of the line items, not the full sum', async () => {
+    (prisma.externalProductMapping.findMany as jest.Mock).mockResolvedValue([
+      { externalProductId: 'sku-1', productId: 'p1' },
+      { externalProductId: 'sku-2', productId: 'p2' },
+    ]);
+    (prisma.product.findMany as jest.Mock).mockResolvedValue([
+      {
+        id: 'p1',
+        name: 'Товар 1',
+        quantity: 10,
+        sellPrice: 150,
+        costPrice: 100,
+      },
+      {
+        id: 'p2',
+        name: 'Товар 2',
+        quantity: 10,
+        sellPrice: 200,
+        costPrice: 120,
+      },
+    ]);
+    const dto = makeOrderCreatedDto({
+      items: [
+        { externalProductId: 'sku-1', quantity: 2, price: 150 }, // 300
+        { externalProductId: 'sku-2', quantity: 3, price: 200 }, // 600
+      ],
+      totalAmount: 300, // only the first line, not the full 900 sum
+    });
+
+    await expect(
+      service.handleWebhook('store-1', 'valid-key', dto),
+    ).rejects.toThrow();
+    expect(prisma.__tx.sale.create).not.toHaveBeenCalled();
+    expect(notifications.sendToStoreUsers).toHaveBeenCalled();
+  });
+
+  it('accepts an order and prices the line using the mapped product sellPrice when the item omits its own price', async () => {
+    // No item.price override here, so this exercises the
+    // `item.price ?? Number(product.sellPrice)` fallback — every other
+    // totalAmount test sets item.price, which would mask a broken fallback.
+    const dto = makeOrderCreatedDto({
+      items: [{ externalProductId: 'sku-1', quantity: 2 }], // no price field
+      totalAmount: 300, // 2 x product.sellPrice (150)
+    });
+
+    const result = await service.handleWebhook('store-1', 'valid-key', dto);
+
+    expect(prisma.__tx.sale.create).toHaveBeenCalled();
+    expect((result as any).id).toBe('sale-1');
+  });
 });
 
 describe('EcommerceOrdersService — end-to-end scenario (real EcommerceOutboundService)', () => {

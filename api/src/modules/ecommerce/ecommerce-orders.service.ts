@@ -156,7 +156,13 @@ export class EcommerceOrdersService {
       const unitPrice = item.price ?? Number(product.sellPrice);
       return sum + unitPrice * item.quantity;
     }, 0);
+    // !Number.isFinite guards the failure mode explicitly rather than
+    // relying solely on the DTO's upstream class-validator requirement:
+    // Math.abs(computedTotal - undefined) is NaN, and NaN > tolerance is
+    // false, so a missing/non-numeric totalAmount would otherwise silently
+    // pass this check if that upstream guarantee ever changed.
     if (
+      !Number.isFinite(dto.totalAmount) ||
       Math.abs(computedTotal - dto.totalAmount!) > TOTAL_AMOUNT_TOLERANCE
     ) {
       await this.notifications.sendToStoreUsers(
@@ -217,10 +223,15 @@ export class EcommerceOrdersService {
             // so this derived value automatically satisfies Sale's own
             // @@unique([storeId, receiptNo]) with no extra query needed.
             receiptNo: `ONLINE-${dto.externalOrderId}`,
-            subtotal: dto.totalAmount!,
-            total: dto.totalAmount!,
+            // Persist Dukon's own computedTotal, not the site's
+            // dto.totalAmount — it's already been proven consistent with
+            // it (within TOTAL_AMOUNT_TOLERANCE) above, and using it here
+            // keeps Sale.total exactly equal to SUM(SaleItem.total) instead
+            // of allowing up to a 0.01 reporting mismatch between them.
+            subtotal: computedTotal,
+            total: computedTotal,
             paymentType: 'CARD',
-            paidAmount: dto.totalAmount!,
+            paidAmount: computedTotal,
             status: 'COMPLETED',
             externalOrderId: dto.externalOrderId,
             items: { create: saleItemsData },
