@@ -226,8 +226,11 @@ export class EcommerceOrdersService {
             // Persist Dukon's own computedTotal, not the site's
             // dto.totalAmount — it's already been proven consistent with
             // it (within TOTAL_AMOUNT_TOLERANCE) above, and using it here
-            // keeps Sale.total exactly equal to SUM(SaleItem.total) instead
-            // of allowing up to a 0.01 reporting mismatch between them.
+            // keeps Sale.total consistent with the line items it was
+            // derived from, rather than the site's independently-rounded
+            // figure (which can still diverge slightly on >2dp item
+            // prices, since the DTO's item.price has no decimal-places
+            // constraint).
             subtotal: computedTotal,
             total: computedTotal,
             paymentType: 'CARD',

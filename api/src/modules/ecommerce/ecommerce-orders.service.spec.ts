@@ -345,13 +345,25 @@ describe('EcommerceOrdersService', () => {
     expect((result as any).id).toBe('sale-1');
   });
 
-  it('accepts an order when totalAmount is off from the computed item sum by less than the tolerance', async () => {
-    // Computed total is 300; 300.005 is within the 0.01 tolerance.
+  it('accepts an order when totalAmount is off from the computed item sum by less than the tolerance, and persists the computed total rather than the site figure', async () => {
+    // Computed total is 300; 300.005 is within the 0.01 tolerance. This is
+    // the one case in the file where the site's number and computedTotal
+    // actually differ, so it's the only spot that can prove the sale
+    // persists Dukon's own computedTotal (300) instead of the site's
+    // slightly-off dto.totalAmount (300.005).
     const dto = makeOrderCreatedDto({ totalAmount: 300.005 });
 
     const result = await service.handleWebhook('store-1', 'valid-key', dto);
 
-    expect(prisma.__tx.sale.create).toHaveBeenCalled();
+    expect(prisma.__tx.sale.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          subtotal: 300,
+          total: 300,
+          paidAmount: 300,
+        }),
+      }),
+    );
     expect((result as any).id).toBe('sale-1');
   });
 
