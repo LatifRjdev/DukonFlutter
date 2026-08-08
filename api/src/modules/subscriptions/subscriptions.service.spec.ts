@@ -654,9 +654,13 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     const byPlan = Object.fromEntries(
       upsertCalls.map((c) => [c.where.plan, c]),
     );
+    // BUSINESS/START have no hasEcommerceIntegration field on their plan
+    // literals, so it resolves to undefined here; Prisma treats undefined
+    // as "field not provided" and skips the write, leaving any admin
+    // override of the flag on those plans untouched.
     expect(byPlan.BUSINESS.update).toEqual({
       hasBatchProfitability: true,
-      hasEcommerceIntegration: false,
+      hasEcommerceIntegration: undefined,
     });
     expect(byPlan.PREMIUM.update).toEqual({
       hasBatchProfitability: true,
@@ -664,7 +668,7 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     });
     expect(byPlan.START.update).toEqual({
       hasBatchProfitability: false,
-      hasEcommerceIntegration: false,
+      hasEcommerceIntegration: undefined,
     });
   });
 

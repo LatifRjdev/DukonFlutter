@@ -57,7 +57,6 @@ export class SubscriptionsService implements OnModuleInit {
         hasZakat: false,
         hasInvestments: false,
         hasBatchProfitability: false,
-        hasEcommerceIntegration: false,
       },
       {
         plan: 'BUSINESS' as const,
@@ -74,7 +73,6 @@ export class SubscriptionsService implements OnModuleInit {
         hasZakat: true,
         hasInvestments: true,
         hasBatchProfitability: true,
-        hasEcommerceIntegration: false,
       },
       {
         plan: 'PREMIUM' as const,
@@ -102,6 +100,12 @@ export class SubscriptionsService implements OnModuleInit {
         // update: {} previously meant existing rows in a running DB never
         // picked up newly-added flags; patch the field explicitly so
         // existing rows self-heal on next server boot.
+        // hasEcommerceIntegration is only set on the PREMIUM literal above
+        // (omitted, not `false`, on START/BUSINESS) so that here it resolves
+        // to `undefined` for those two plans — Prisma treats `undefined` as
+        // "field not provided" and skips the write, so this self-heal never
+        // clobbers an admin's manual override of the flag on START/BUSINESS
+        // via the plan-config UI.
         update: {
           hasBatchProfitability: config.hasBatchProfitability,
           hasEcommerceIntegration: config.hasEcommerceIntegration,
