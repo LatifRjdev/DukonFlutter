@@ -34,6 +34,9 @@ class SubscriptionLimits extends Equatable {
   List<Object?> get props => [maxStores, maxProducts, maxStaff, maxDiscounts];
 }
 
+// Keep in sync with SubscriptionsService.getSubscription()'s `features` object
+// (api/src/modules/subscriptions/subscriptions.service.ts) — the backend hand-maintains
+// this same 7-key list, so a new flag added to one side needs the other updated too.
 class SubscriptionFeatures extends Equatable {
   final bool hasReportsAll;
   final bool hasExport;

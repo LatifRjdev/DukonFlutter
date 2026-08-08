@@ -43,6 +43,8 @@ export class SubscriptionsService implements OnModuleInit {
   private async seedPlanConfigs() {
     const plans = [
       {
+        // hasEcommerceIntegration deliberately omitted (not `false`) — see
+        // the update: clause below.
         plan: 'START' as const,
         price: 200,
         maxProducts: 500,
@@ -59,6 +61,8 @@ export class SubscriptionsService implements OnModuleInit {
         hasBatchProfitability: false,
       },
       {
+        // hasEcommerceIntegration deliberately omitted (not `false`) — see
+        // the update: clause below.
         plan: 'BUSINESS' as const,
         price: 400,
         maxProducts: 2000,
@@ -106,6 +110,11 @@ export class SubscriptionsService implements OnModuleInit {
         // "field not provided" and skips the write, so this self-heal never
         // clobbers an admin's manual override of the flag on START/BUSINESS
         // via the plan-config UI.
+        // NOTE: unlike hasBatchProfitability above, hasEcommerceIntegration
+        // is intentionally NOT force-written for every plan — see comments
+        // on the START/BUSINESS literals. hasZakat/hasInvestments/hasLoyalty
+        // are seeded on create only and never self-heal here at all — this
+        // update: block is an ad-hoc list, not a general policy.
         update: {
           hasBatchProfitability: config.hasBatchProfitability,
           hasEcommerceIntegration: config.hasEcommerceIntegration,

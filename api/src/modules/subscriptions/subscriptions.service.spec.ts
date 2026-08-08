@@ -626,8 +626,8 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
       upsertCalls.map((c) => [c.where.plan, c]),
     );
     expect(byPlan.PREMIUM.create.hasEcommerceIntegration).toBe(true);
-    expect(byPlan.START.create.hasEcommerceIntegration).not.toBe(true);
-    expect(byPlan.BUSINESS.create.hasEcommerceIntegration).not.toBe(true);
+    expect(byPlan.START.create.hasEcommerceIntegration).toBeUndefined();
+    expect(byPlan.BUSINESS.create.hasEcommerceIntegration).toBeUndefined();
   });
 
   it('should patch hasBatchProfitability on the update path too, so an existing row self-heals on next boot', async () => {
@@ -697,7 +697,7 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
       upsertCalls.map((c) => [c.where.plan, c]),
     );
     expect(byPlan.PREMIUM.update.hasEcommerceIntegration).toBe(true);
-    expect(byPlan.START.update.hasEcommerceIntegration).not.toBe(true);
-    expect(byPlan.BUSINESS.update.hasEcommerceIntegration).not.toBe(true);
+    expect(byPlan.START.update.hasEcommerceIntegration).toBeUndefined();
+    expect(byPlan.BUSINESS.update.hasEcommerceIntegration).toBeUndefined();
   });
 });
