@@ -601,6 +601,35 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     expect(byPlan.PREMIUM.create.hasBatchProfitability).toBe(true);
   });
 
+  it('should seed hasEcommerceIntegration=true for PREMIUM only, not START or BUSINESS', async () => {
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+    expect(byPlan.PREMIUM.create.hasEcommerceIntegration).toBe(true);
+    expect(byPlan.START.create.hasEcommerceIntegration).not.toBe(true);
+    expect(byPlan.BUSINESS.create.hasEcommerceIntegration).not.toBe(true);
+  });
+
   it('should patch hasBatchProfitability on the update path too, so an existing row self-heals on next boot', async () => {
     const prisma = makePrismaFake();
     const upsertCalls: any[] = [];
@@ -625,8 +654,46 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     const byPlan = Object.fromEntries(
       upsertCalls.map((c) => [c.where.plan, c]),
     );
-    expect(byPlan.BUSINESS.update).toEqual({ hasBatchProfitability: true });
-    expect(byPlan.PREMIUM.update).toEqual({ hasBatchProfitability: true });
-    expect(byPlan.START.update).toEqual({ hasBatchProfitability: false });
+    expect(byPlan.BUSINESS.update).toEqual({
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: false,
+    });
+    expect(byPlan.PREMIUM.update).toEqual({
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: true,
+    });
+    expect(byPlan.START.update).toEqual({
+      hasBatchProfitability: false,
+      hasEcommerceIntegration: false,
+    });
+  });
+
+  it('should patch hasEcommerceIntegration=true on the update path for PREMIUM, so existing PREMIUM rows self-heal on next boot', async () => {
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+    expect(byPlan.PREMIUM.update.hasEcommerceIntegration).toBe(true);
+    expect(byPlan.START.update.hasEcommerceIntegration).not.toBe(true);
+    expect(byPlan.BUSINESS.update.hasEcommerceIntegration).not.toBe(true);
   });
 });

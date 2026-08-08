@@ -57,6 +57,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasZakat: false,
         hasInvestments: false,
         hasBatchProfitability: false,
+        hasEcommerceIntegration: false,
       },
       {
         plan: 'BUSINESS' as const,
@@ -73,6 +74,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasZakat: true,
         hasInvestments: true,
         hasBatchProfitability: true,
+        hasEcommerceIntegration: false,
       },
       {
         plan: 'PREMIUM' as const,
@@ -89,6 +91,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasZakat: true,
         hasInvestments: true,
         hasBatchProfitability: true,
+        hasEcommerceIntegration: true,
       },
     ];
 
@@ -99,7 +102,10 @@ export class SubscriptionsService implements OnModuleInit {
         // update: {} previously meant existing rows in a running DB never
         // picked up newly-added flags; patch the field explicitly so
         // existing rows self-heal on next server boot.
-        update: { hasBatchProfitability: config.hasBatchProfitability },
+        update: {
+          hasBatchProfitability: config.hasBatchProfitability,
+          hasEcommerceIntegration: config.hasEcommerceIntegration,
+        },
       });
     }
 
