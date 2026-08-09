@@ -596,7 +596,7 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     const byPlan = Object.fromEntries(
       upsertCalls.map((c) => [c.where.plan, c]),
     );
-    expect(byPlan.START.create.hasBatchProfitability).toBe(false);
+    expect(byPlan.START.create.hasBatchProfitability).toBeUndefined();
     expect(byPlan.BUSINESS.create.hasBatchProfitability).toBe(true);
     expect(byPlan.PREMIUM.create.hasBatchProfitability).toBe(true);
   });
@@ -667,7 +667,7 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
       hasEcommerceIntegration: true,
     });
     expect(byPlan.START.update).toEqual({
-      hasBatchProfitability: false,
+      hasBatchProfitability: undefined,
       hasEcommerceIntegration: undefined,
     });
   });
@@ -699,5 +699,36 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     expect(byPlan.PREMIUM.update.hasEcommerceIntegration).toBe(true);
     expect(byPlan.START.update.hasEcommerceIntegration).toBeUndefined();
     expect(byPlan.BUSINESS.update.hasEcommerceIntegration).toBeUndefined();
+  });
+
+  it('should not include hasBatchProfitability in the update payload for START, so an admin override on START self-heals safely', async () => {
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+
+    expect(byPlan.START.update.hasBatchProfitability).toBeUndefined();
+    // BUSINESS/PREMIUM keep the existing forced-true self-heal — unchanged behavior.
+    expect(byPlan.BUSINESS.update.hasBatchProfitability).toBe(true);
+    expect(byPlan.PREMIUM.update.hasBatchProfitability).toBe(true);
   });
 });

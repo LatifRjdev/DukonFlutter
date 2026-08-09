@@ -43,6 +43,10 @@ export class SubscriptionsService implements OnModuleInit {
   private async seedPlanConfigs() {
     const plans = [
       {
+        // hasBatchProfitability deliberately omitted (not `false`) — same
+        // reasoning as hasEcommerceIntegration above: forcing it explicitly
+        // would make the self-heal below clobber an admin's manual
+        // override of this flag on START via the plan-config editor.
         // hasEcommerceIntegration deliberately omitted (not `false`) — see
         // the update: clause below.
         plan: 'START' as const,
@@ -58,7 +62,6 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: false,
         hasZakat: false,
         hasInvestments: false,
-        hasBatchProfitability: false,
       },
       {
         // hasEcommerceIntegration deliberately omitted (not `false`) — see
@@ -104,17 +107,26 @@ export class SubscriptionsService implements OnModuleInit {
         // update: {} previously meant existing rows in a running DB never
         // picked up newly-added flags; patch the field explicitly so
         // existing rows self-heal on next server boot.
+        //
         // hasEcommerceIntegration is only set on the PREMIUM literal above
-        // (omitted, not `false`, on START/BUSINESS) so that here it resolves
-        // to `undefined` for those two plans — Prisma treats `undefined` as
-        // "field not provided" and skips the write, so this self-heal never
-        // clobbers an admin's manual override of the flag on START/BUSINESS
-        // via the plan-config UI.
-        // NOTE: unlike hasBatchProfitability above, hasEcommerceIntegration
-        // is intentionally NOT force-written for every plan — see comments
-        // on the START/BUSINESS literals. hasZakat/hasInvestments/hasLoyalty
-        // are seeded on create only and never self-heal here at all — this
-        // update: block is an ad-hoc list, not a general policy.
+        // (omitted, not `false`, on START/BUSINESS), and hasBatchProfitability
+        // is only set as `false` on BUSINESS/PREMIUM (omitted on START) — so
+        // both resolve to `undefined` for the plans where forcing a write
+        // isn't needed to fix a missing "should be true" default. Prisma
+        // treats `undefined` as "field not provided" and skips the write,
+        // so this self-heal can correct a plan missing its true value but
+        // can never clobber an admin's manual override toward `false` on
+        // START via the plan-config editor.
+        //
+        // hasZakat/hasInvestments/hasLoyalty are NOT listed here at all —
+        // unlike hasEcommerceIntegration, both already have their own
+        // one-time backfill migrations from when their columns were added
+        // (20260516000000_g2_zakat_tier_flag, 20260516160000_investments_hardening,
+        // 20260706000001_loyalty_plan_flags), so there's no live data gap
+        // for them to self-heal. This update: block is an ad-hoc list of
+        // fields that specifically needed this treatment, not a general
+        // policy — don't add a new flag here without checking whether it
+        // actually has the same gap first.
         update: {
           hasBatchProfitability: config.hasBatchProfitability,
           hasEcommerceIntegration: config.hasEcommerceIntegration,
