@@ -263,7 +263,7 @@ Currently:
 ```
 Change to:
 ```typescript
-    const computedTotal = resolved.reduce(
+    const computedTotal = priced.reduce(
       (sum, { item, unitPrice }) => sum + unitPrice * item.quantity,
       0,
     );
