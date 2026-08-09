@@ -123,11 +123,22 @@ export class EcommerceOrdersService {
     });
     const productById = new Map(products.map((p) => [p.id, p]));
 
-    for (const item of items) {
+    // Single source of truth for each item's mapped productId + product
+    // record, reused below instead of re-deriving mappingByExternalId →
+    // productById independently at each call site. Deliberately does NOT
+    // resolve unitPrice yet, and deliberately does not `!`-assert product
+    // is defined — a product can legitimately be missing here (deleted
+    // after being externally mapped), and that has to fail gracefully via
+    // the stock-sufficiency check right below, not crash here.
+    const resolved = items.map((item) => {
       const productId = mappingByExternalId.get(
         item.externalProductId,
       )!.productId;
       const product = productById.get(productId);
+      return { item, productId, product };
+    });
+
+    for (const { item, productId, product } of resolved) {
       if (!product || product.quantity < item.quantity) {
         await this.notifications.sendToStoreUsers(
           storeId,
@@ -141,6 +152,16 @@ export class EcommerceOrdersService {
       }
     }
 
+    // Only reachable once the loop above has confirmed every item's
+    // product exists and has sufficient stock — safe to assert non-null
+    // here, unlike in `resolved` above.
+    const priced = resolved.map(({ item, productId, product }) => ({
+      item,
+      productId,
+      product: product!,
+      unitPrice: item.price ?? Number(product!.sellPrice),
+    }));
+
     // Cross-check the external site's claimed totalAmount against what
     // Dukon itself computes from the mapped products' prices and the
     // order's line-item quantities. dto.totalAmount is only ever trusted
@@ -148,14 +169,10 @@ export class EcommerceOrdersService {
     // buggy site could report an artificially low total and Dukon would
     // record the sale (and decrement stock) at that wrong value.
     const TOTAL_AMOUNT_TOLERANCE = 0.01;
-    const computedTotal = items.reduce((sum, item) => {
-      const productId = mappingByExternalId.get(
-        item.externalProductId,
-      )!.productId;
-      const product = productById.get(productId)!;
-      const unitPrice = item.price ?? Number(product.sellPrice);
-      return sum + unitPrice * item.quantity;
-    }, 0);
+    const computedTotal = priced.reduce(
+      (sum, { item, unitPrice }) => sum + unitPrice * item.quantity,
+      0,
+    );
     // !Number.isFinite guards the failure mode explicitly rather than
     // relying solely on the DTO's upstream class-validator requirement:
     // Math.abs(computedTotal - undefined) is NaN, and NaN > tolerance is
@@ -196,21 +213,16 @@ export class EcommerceOrdersService {
           update: { name: dto.customer!.name },
         });
 
-        const saleItemsData = items.map((item) => {
-          const productId = mappingByExternalId.get(
-            item.externalProductId,
-          )!.productId;
-          const product = productById.get(productId)!;
-          const unitPrice = item.price ?? Number(product.sellPrice);
-          return {
+        const saleItemsData = priced.map(
+          ({ item, productId, product, unitPrice }) => ({
             productId,
             productName: product.name,
             quantity: item.quantity,
             unitPrice,
             costPrice: product.costPrice ?? undefined,
             total: unitPrice * item.quantity,
-          };
-        });
+          }),
+        );
 
         const createdSale = await tx.sale.create({
           data: {
@@ -242,10 +254,7 @@ export class EcommerceOrdersService {
           include: { items: true },
         });
 
-        for (const item of items) {
-          const productId = mappingByExternalId.get(
-            item.externalProductId,
-          )!.productId;
+        for (const { item, productId } of priced) {
           const result = await tx.product.updateMany({
             where: { id: productId, quantity: { gte: item.quantity } },
             data: { quantity: { decrement: item.quantity } },
@@ -268,9 +277,8 @@ export class EcommerceOrdersService {
         }
 
         await tx.stockMovement.createMany({
-          data: items.map((item) => ({
-            productId: mappingByExternalId.get(item.externalProductId)!
-              .productId,
+          data: priced.map(({ item, productId }) => ({
+            productId,
             type: 'SALE' as const,
             quantity: item.quantity,
             reference: dto.externalOrderId,
@@ -316,10 +324,7 @@ export class EcommerceOrdersService {
     // never block or delay Dukon's own webhook response. pushStockUpdate
     // never throws (see EcommerceOutboundService) and retries internally
     // with its own backoff, so it's safe to let it run in the background.
-    for (const item of items) {
-      const productId = mappingByExternalId.get(
-        item.externalProductId,
-      )!.productId;
+    for (const { productId } of priced) {
       void this.outbound.pushStockUpdate(productId, storeId);
     }
 
