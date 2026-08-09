@@ -308,7 +308,7 @@ Both of these currently re-derive `productId` via `mappingByExternalId.get(item.
 - [ ] **Step 8: Search for any remaining occurrences**
 
 Run: `grep -n "mappingByExternalId.get" api/src/modules/ecommerce/ecommerce-orders.service.ts`
-Confirm the only remaining occurrence is inside the `resolved` construction itself (Step 2) — every other call site should now read from `resolved` (for the stock-sufficiency loop only) or `priced` (everywhere else).
+Expect exactly 2 remaining occurrences: the `productIds` bootstrap line (used to build the `product.findMany` query that `productById` — and therefore `resolved` — depends on; it structurally cannot read from `resolved`, since `resolved` doesn't exist yet at that point), and the one inside `resolved`'s own construction (Step 2). Every other call site should now read from `resolved` (stock-sufficiency loop only) or `priced` (everywhere else). (Corrected after implementation: an earlier version of this step said "the only remaining occurrence," which undercounted the legitimate bootstrap line by one — confirmed via spec review.)
 
 - [ ] **Step 9: Run the full test suite**
 
