@@ -154,7 +154,11 @@ export class EcommerceOrdersService {
 
     // Only reachable once the loop above has confirmed every item's
     // product exists and has sufficient stock — safe to assert non-null
-    // here, unlike in `resolved` above.
+    // here, unlike in `resolved` above. NOTE: no test covers the
+    // missing-product path (it requires a product deleted post-mapping AND
+    // an item that omits its own price, since item.price short-circuits the
+    // sellPrice read), so collapsing these two arrays back into one will
+    // NOT fail the suite — it will fail in production.
     const priced = resolved.map(({ item, productId, product }) => ({
       item,
       productId,
