@@ -44,7 +44,7 @@ export class SubscriptionsService implements OnModuleInit {
     const plans = [
       {
         // hasBatchProfitability deliberately omitted (not `false`) — same
-        // reasoning as hasEcommerceIntegration above: forcing it explicitly
+        // reasoning as hasEcommerceIntegration below: forcing it explicitly
         // would make the self-heal below clobber an admin's manual
         // override of this flag on START via the plan-config editor.
         // hasEcommerceIntegration deliberately omitted (not `false`) — see
@@ -110,7 +110,7 @@ export class SubscriptionsService implements OnModuleInit {
         //
         // hasEcommerceIntegration is only set on the PREMIUM literal above
         // (omitted, not `false`, on START/BUSINESS), and hasBatchProfitability
-        // is only set as `false` on BUSINESS/PREMIUM (omitted on START) — so
+        // is only set as `true` on BUSINESS/PREMIUM (omitted on START) — so
         // both resolve to `undefined` for the plans where forcing a write
         // isn't needed to fix a missing "should be true" default. Prisma
         // treats `undefined` as "field not provided" and skips the write,
@@ -119,7 +119,7 @@ export class SubscriptionsService implements OnModuleInit {
         // START via the plan-config editor.
         //
         // hasZakat/hasInvestments/hasLoyalty are NOT listed here at all —
-        // unlike hasEcommerceIntegration, both already have their own
+        // unlike hasEcommerceIntegration, all three already have their own
         // one-time backfill migrations from when their columns were added
         // (20260516000000_g2_zakat_tier_flag, 20260516160000_investments_hardening,
         // 20260706000001_loyalty_plan_flags), so there's no live data gap

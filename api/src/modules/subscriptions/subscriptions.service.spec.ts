@@ -572,7 +572,7 @@ describe('SubscriptionsService — checkExpiredSubscriptions', () => {
 });
 
 describe('SubscriptionsService — seedPlanConfigs', () => {
-  it('should seed hasBatchProfitability=false for START and true for BUSINESS/PREMIUM', async () => {
+  it('should seed hasBatchProfitability=undefined (omitted) for START and true for BUSINESS/PREMIUM', async () => {
     const prisma = makePrismaFake();
     const upsertCalls: any[] = [];
     prisma.subscriptionPlanConfig.upsert = jest.fn(
