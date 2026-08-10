@@ -1,5 +1,6 @@
 import {
   Injectable,
+  ConflictException,
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
@@ -15,8 +16,9 @@ import { EcommerceWebhookDto } from './dto/ecommerce-webhook.dto';
 // in-store sale (see the comment at the throw site below). Never sent to a
 // client directly — createOrder() catches it once the transaction has
 // unwound, fires the owner notification (outside the now-rolled-back
-// transaction), and re-throws the same UnprocessableEntityException the
-// other two rejection paths use.
+// transaction), and re-throws as a ConflictException (409) — unlike the
+// other two rejection paths, which throw UnprocessableEntityException
+// (422), because this condition is transient and safe to retry.
 class StockConflictError extends Error {
   constructor(public readonly productId: string) {
     super(`Stock for product ${productId} changed concurrently`);
@@ -309,14 +311,14 @@ export class EcommerceOrdersService {
         // this codebase's established fire-and-forget notification
         // pattern (see the `void this.outbound.pushStockUpdate(...)`
         // calls below) rather than awaiting — the request is already
-        // headed for a 422, so there's nothing further to gate on it.
+        // headed for a 409, so there's nothing further to gate on it.
         void this.notifications.sendToStoreUsers(
           storeId,
           'Заказ с сайта отклонён',
           `Заказ ${dto.externalOrderId} отклонён — остаток товара изменился во время обработки заказа (конкурентная продажа в магазине). Повторите попытку.`,
           'ECOMMERCE_ORDER_REJECTED',
         );
-        throw new UnprocessableEntityException(
+        throw new ConflictException(
           `Stock for product ${err.productId} changed concurrently — retry the webhook`,
         );
       }

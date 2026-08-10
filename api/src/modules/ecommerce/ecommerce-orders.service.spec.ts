@@ -245,14 +245,14 @@ describe('EcommerceOrdersService', () => {
   // insufficient-stock rejection paths above, this one previously fired
   // no owner notification at all, so a real online order could vanish
   // silently if the merchant's site never retries the webhook.
-  it('rejects the whole order (422) and notifies the owner when the atomic stock guard detects a concurrent race', async () => {
+  it('rejects the whole order (409, retryable) and notifies the owner when the atomic stock guard detects a concurrent race', async () => {
     (prisma.__tx.product.updateMany as jest.Mock).mockResolvedValue({
       count: 0,
     });
 
     await expect(
       service.handleWebhook('store-1', 'valid-key', makeOrderCreatedDto()),
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ status: 409 });
     expect(prisma.__tx.sale.create).toHaveBeenCalled(); // sale.create ran, then the transaction rolled back
     expect(notifications.sendToStoreUsers).toHaveBeenCalledWith(
       'store-1',
