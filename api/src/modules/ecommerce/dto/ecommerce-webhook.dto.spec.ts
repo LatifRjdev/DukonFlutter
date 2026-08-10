@@ -86,4 +86,22 @@ describe('EcommerceWebhookDto validation', () => {
     );
     expect(nestedPhoneError).toBeDefined();
   });
+
+  it('should reject an item price with more than 2 decimal places', async () => {
+    const errors = await validateDto(
+      validPayload({
+        items: [{ externalProductId: 'sku-1', quantity: 2, price: 19.999 }],
+      }),
+    );
+    expect(errors).not.toHaveLength(0);
+  });
+
+  it('should accept an item price with exactly 2 decimal places', async () => {
+    const errors = await validateDto(
+      validPayload({
+        items: [{ externalProductId: 'sku-1', quantity: 2, price: 19.99 }],
+      }),
+    );
+    expect(errors).toHaveLength(0);
+  });
 });
