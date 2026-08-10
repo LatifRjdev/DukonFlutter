@@ -87,13 +87,24 @@ describe('EcommerceWebhookDto validation', () => {
     expect(nestedPhoneError).toBeDefined();
   });
 
+  // Sale.total is now computed as one summed value (computedTotal), while
+  // each SaleItem.total is rounded independently by Postgres's
+  // Decimal(12,2) column. An item price with more than 2 decimal places
+  // (e.g. from an external site) lets those two roundings diverge by a
+  // cent or two, so maxDecimalPlaces on the DTO closes this at the
+  // validation boundary instead of downstream in the DB.
   it('should reject an item price with more than 2 decimal places', async () => {
     const errors = await validateDto(
       validPayload({
         items: [{ externalProductId: 'sku-1', quantity: 2, price: 19.999 }],
       }),
     );
-    expect(errors).not.toHaveLength(0);
+    expect(errors.length).toBeGreaterThan(0);
+    const itemsError = errors.find((e) => e.property === 'items');
+    const priceError = itemsError?.children?.[0]?.children?.find(
+      (c) => c.property === 'price',
+    );
+    expect(priceError?.constraints).toHaveProperty('isNumber');
   });
 
   it('should accept an item price with exactly 2 decimal places', async () => {
