@@ -272,7 +272,7 @@ export class EcommerceOrdersService {
             // design spec's data-integrity contract.
             //
             // Throw a distinguishable marker instead of
-            // UnprocessableEntityException directly: notifications.
+            // ConflictException directly: notifications.
             // sendToStoreUsers must NOT be called from inside a transaction
             // that's about to roll back (unlike the two pre-transaction
             // rejection paths above, which notify before the transaction
