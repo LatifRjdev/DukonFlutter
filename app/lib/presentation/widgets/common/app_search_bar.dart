@@ -49,6 +49,9 @@ class _AppSearchBarState extends State<AppSearchBar> {
 
   void _clear() {
     _controller.clear();
+    // TextField.onChanged only fires on user input, not programmatic
+    // changes — controller.clear() alone won't notify callers, so fire
+    // it manually.
     widget.onChanged?.call('');
   }
 

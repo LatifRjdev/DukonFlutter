@@ -8,6 +8,7 @@ void main() {
         'shows a clear button once text is entered and it clears the field on tap',
         (tester) async {
       final controller = TextEditingController();
+      addTearDown(controller.dispose);
       String? lastOnChanged;
 
       await tester.pumpWidget(
@@ -37,13 +38,10 @@ void main() {
 
     testWidgets('never shows a clear button when onScanTap is provided',
         (tester) async {
-      final controller = TextEditingController();
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AppSearchBar(
-              controller: controller,
               onScanTap: () {},
             ),
           ),
