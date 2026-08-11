@@ -5,6 +5,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_search_bar.dart';
 import '../../widgets/common/app_snackbar.dart';
 
 class EcommerceProductMappingPage extends StatefulWidget {
@@ -117,15 +118,10 @@ class _EcommerceProductMappingPageState
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: TextField(
+                  child: AppSearchBar(
                     key: const Key('mapping-search-field'),
                     controller: _searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Поиск по названию товара',
-                      prefixIcon: Icon(Icons.search),
-                      isDense: true,
-                      border: OutlineInputBorder(),
-                    ),
+                    hint: 'Поиск по названию товара',
                     onChanged: (_) => setState(() {}),
                   ),
                 ),

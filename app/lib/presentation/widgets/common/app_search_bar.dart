@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 
-class AppSearchBar extends StatelessWidget {
+class AppSearchBar extends StatefulWidget {
   final TextEditingController? controller;
   final String hint;
   final ValueChanged<String>? onChanged;
@@ -17,9 +17,46 @@ class AppSearchBar extends StatelessWidget {
   });
 
   @override
+  State<AppSearchBar> createState() => _AppSearchBarState();
+}
+
+class _AppSearchBarState extends State<AppSearchBar> {
+  late final TextEditingController _controller;
+  bool _ownsController = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller != null) {
+      _controller = widget.controller!;
+    } else {
+      _controller = TextEditingController();
+      _ownsController = true;
+    }
+    _controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() => setState(() {});
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    if (_ownsController) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _clear() {
+    _controller.clear();
+    widget.onChanged?.call('');
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final showClear = widget.onScanTap == null && _controller.text.isNotEmpty;
 
     return Container(
       decoration: BoxDecoration(
@@ -29,17 +66,22 @@ class AppSearchBar extends StatelessWidget {
         border: isDark ? Border.all(color: theme.colorScheme.outline) : null,
       ),
       child: TextField(
-        controller: controller,
-        onChanged: onChanged,
+        controller: _controller,
+        onChanged: widget.onChanged,
         decoration: InputDecoration(
-          hintText: hint,
+          hintText: widget.hint,
           prefixIcon: Icon(Icons.search, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
-          suffixIcon: onScanTap != null
+          suffixIcon: widget.onScanTap != null
               ? IconButton(
                   icon: Icon(Icons.qr_code_scanner, color: theme.colorScheme.primary),
-                  onPressed: onScanTap,
+                  onPressed: widget.onScanTap,
                 )
-              : null,
+              : (showClear
+                  ? IconButton(
+                      icon: Icon(Icons.close, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                      onPressed: _clear,
+                    )
+                  : null),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,

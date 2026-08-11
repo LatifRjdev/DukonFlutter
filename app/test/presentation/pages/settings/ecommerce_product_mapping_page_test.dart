@@ -182,6 +182,29 @@ void main() {
       expect(find.text('Товар 2'), findsOneWidget);
     });
 
+    testWidgets(
+        'clear button on the search field restores the full unfiltered list',
+        (tester) async {
+      stubHappyPath();
+
+      await tester.pumpWidget(
+          wrap(const EcommerceProductMappingPage(storeId: 'store-1')));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+          find.byKey(const Key('mapping-search-field')), 'товар 1');
+      await tester.pump();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsNothing);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
+
+      expect(find.text('Товар 1'), findsOneWidget);
+      expect(find.text('Товар 2'), findsOneWidget);
+    });
+
     testWidgets('shows the empty search state when nothing matches',
         (tester) async {
       stubHappyPath();
