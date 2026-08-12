@@ -43,14 +43,11 @@ class _DashboardPageState extends State<DashboardPage> {
   String _selectedPeriod = 'today';
   DateTimeRange? _customDateRange;
 
-  List<Map<String, String>> get _periods {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      {'key': 'today', 'label': l10n.dashboardPeriodToday},
-      {'key': 'week', 'label': l10n.week},
-      {'key': 'month', 'label': l10n.month},
-    ];
-  }
+  List<Map<String, String>> _periods(AppLocalizations l10n) => [
+        {'key': 'today', 'label': l10n.today},
+        {'key': 'week', 'label': l10n.week},
+        {'key': 'month', 'label': l10n.month},
+      ];
 
   @override
   void initState() {
@@ -207,7 +204,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
         final l10n = AppLocalizations.of(context)!;
-        String storeName = 'DukonPro';
+        String storeName = l10n.appTitle;
         List stores = [];
         String? selectedStoreId;
 
@@ -292,7 +289,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       child: Row(
         children: [
-          ..._periods.map((p) {
+          ..._periods(l10n).map((p) {
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: AppChip(

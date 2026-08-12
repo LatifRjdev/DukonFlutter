@@ -281,8 +281,6 @@
   "offline": "Нет подключения к интернету. Работаем офлайн.",
   "@offline": { "description": "Offline mode message" },
 
-  "dashboardPeriodToday": "Сегодня",
-  "@dashboardPeriodToday": { "description": "Dashboard period tab: today" },
   "dashboardGreeting": "Салом 👋",
   "@dashboardGreeting": { "description": "Dashboard header greeting" },
   "dashboardStoreFallback": "Магазин",
@@ -386,6 +384,7 @@
   "topProducts": "Топ товары",
   "period": "Период",
   "day": "День",
+  "today": "Сегодня",
   "week": "Неделя",
   "month": "Месяц",
   "year": "Год",

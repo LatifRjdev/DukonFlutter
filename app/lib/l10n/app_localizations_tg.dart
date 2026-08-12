@@ -418,9 +418,6 @@ class AppLocalizationsTg extends AppLocalizations {
   String get offline => 'Пайвасти интернет нест. Офлайн кор мекунем.';
 
   @override
-  String get dashboardPeriodToday => 'Сегодня';
-
-  @override
   String get dashboardGreeting => 'Салом 👋';
 
   @override
@@ -570,6 +567,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get day => 'Рӯз';
+
+  @override
+  String get today => 'Сегодня';
 
   @override
   String get week => 'Ҳафта';

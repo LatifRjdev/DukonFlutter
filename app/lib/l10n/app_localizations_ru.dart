@@ -417,9 +417,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get offline => 'Нет подключения к интернету. Работаем офлайн.';
 
   @override
-  String get dashboardPeriodToday => 'Сегодня';
-
-  @override
   String get dashboardGreeting => 'Салом 👋';
 
   @override
@@ -569,6 +566,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get day => 'День';
+
+  @override
+  String get today => 'Сегодня';
 
   @override
   String get week => 'Неделя';

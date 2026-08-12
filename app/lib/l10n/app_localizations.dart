@@ -910,12 +910,6 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
-  /// Dashboard period tab: today
-  ///
-  /// In ru, this message translates to:
-  /// **'Сегодня'**
-  String get dashboardPeriodToday;
-
   /// Dashboard header greeting
   ///
   /// In ru, this message translates to:
@@ -1197,6 +1191,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'День'**
   String get day;
+
+  /// No description provided for @today.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get today;
 
   /// No description provided for @week.
   ///
