@@ -1,6 +1,5 @@
 import {
   Injectable,
-  ConflictException,
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
@@ -10,6 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EcommerceOutboundService } from './ecommerce-outbound.service';
 import { EcommerceWebhookDto } from './dto/ecommerce-webhook.dto';
+import { RetryableConflictException } from '../../common/exceptions/retryable-conflict.exception';
 
 // Distinguishable marker thrown from inside the $transaction callback when
 // the atomic updateMany() stock guard loses a race with a concurrent
@@ -318,7 +318,7 @@ export class EcommerceOrdersService {
           `Заказ ${dto.externalOrderId} отклонён — остаток товара изменился во время обработки заказа (конкурентная продажа в магазине). Повторите попытку.`,
           'ECOMMERCE_ORDER_REJECTED',
         );
-        throw new ConflictException(
+        throw new RetryableConflictException(
           `Stock for product ${err.productId} changed concurrently — retry the webhook`,
         );
       }

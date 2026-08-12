@@ -1,5 +1,11 @@
-import { ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  ConflictException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AllExceptionsFilter } from './http-exception.filter';
+import { RetryableConflictException } from '../exceptions/retryable-conflict.exception';
 
 // Regression tests for BE-P0-004: the filter previously copied raw
 // exception messages into 5xx responses (leaking Prisma column names and
@@ -8,17 +14,26 @@ import { AllExceptionsFilter } from './http-exception.filter';
 
 function makeHost(): {
   host: ArgumentsHost;
-  response: { statusCode: number; body: unknown };
+  response: {
+    statusCode: number;
+    body: unknown;
+    headers: Record<string, string>;
+  };
   request: { method: string; url: string };
 } {
   const response = {
     statusCode: 0,
     body: undefined as unknown,
+    headers: {} as Record<string, string>,
   };
   const request = { method: 'GET', url: '/api/test' };
   const mockResponse = {
     status(code: number) {
       response.statusCode = code;
+      return this;
+    },
+    setHeader(name: string, value: string) {
+      response.headers[name] = value;
       return this;
     },
     json(body: unknown) {
@@ -152,5 +167,22 @@ describe('AllExceptionsFilter', () => {
       expect(typeof body.timestamp).toBe('string');
       expect(body.path).toBe('/api/test');
     });
+  });
+
+  it('should set a Retry-After header when a RetryableConflictException is thrown', () => {
+    const { host, response } = makeHost();
+    filter.catch(
+      new RetryableConflictException('Stock changed concurrently', 7),
+      host,
+    );
+    expect(response.headers['Retry-After']).toBe('7');
+    expect(response.statusCode).toBe(409);
+  });
+
+  it('should NOT set a Retry-After header for a plain ConflictException', () => {
+    const { host, response } = makeHost();
+    filter.catch(new ConflictException('Staff member already exists'), host);
+    expect(response.headers['Retry-After']).toBeUndefined();
+    expect(response.statusCode).toBe(409);
   });
 });

@@ -9,6 +9,7 @@ import { EcommerceOrdersService } from './ecommerce-orders.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EcommerceOutboundService } from './ecommerce-outbound.service';
+import { RetryableConflictException } from '../../common/exceptions/retryable-conflict.exception';
 
 // pushStockUpdate is deliberately fire-and-forget (void, not awaited) in
 // EcommerceOrdersService — per the design spec, the merchant's own webhook
@@ -252,7 +253,10 @@ describe('EcommerceOrdersService', () => {
 
     await expect(
       service.handleWebhook('store-1', 'valid-key', makeOrderCreatedDto()),
-    ).rejects.toMatchObject({ status: 409 });
+    ).rejects.toMatchObject({
+      status: 409,
+      retryAfterSeconds: 5,
+    });
     expect(prisma.__tx.sale.create).toHaveBeenCalled(); // sale.create ran, then the transaction rolled back
     expect(notifications.sendToStoreUsers).toHaveBeenCalledWith(
       'store-1',

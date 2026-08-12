@@ -7,7 +7,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { EcommerceOrdersService } from './ecommerce-orders.service';
 import { EcommerceWebhookDto } from './dto/ecommerce-webhook.dto';
@@ -29,6 +29,18 @@ export class EcommerceOrdersController {
     summary:
       'Inbound order.created / order.cancelled webhook from the merchant site',
   })
+  @ApiResponse({ status: 200, description: 'Order processed successfully (created or cancelled)' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'Transient stock conflict — a concurrent in-store sale claimed the stock first. Safe to retry; see the Retry-After header for the suggested delay in seconds.',
+  })
+  @ApiResponse({
+    status: 422,
+    description:
+      'Permanent rejection — no product mapping, insufficient stock, or totalAmount mismatch. Fix the underlying issue before retrying; retrying an unchanged payload will fail again.',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid or disabled X-API-Key' })
   handleWebhook(
     @Param('storeId') storeId: string,
     @Headers('x-api-key') apiKey: string,

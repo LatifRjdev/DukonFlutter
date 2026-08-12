@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { RetryableConflictException } from '../exceptions/retryable-conflict.exception';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -50,6 +51,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : Array.isArray(message)
           ? message
           : [message];
+
+    if (exception instanceof RetryableConflictException) {
+      response.setHeader('Retry-After', String(exception.retryAfterSeconds));
+    }
 
     response.status(status).json({
       statusCode: status,
