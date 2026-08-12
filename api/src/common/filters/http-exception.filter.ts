@@ -36,7 +36,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // Always log server-side. Include stack only off-production so prod logs
     // stay terse and ops-friendly without dropping the info entirely in dev.
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
-      const stack = exception instanceof Error ? exception.stack : String(exception);
+      const stack =
+        exception instanceof Error ? exception.stack : String(exception);
       this.logger.error(
         `${request.method} ${request.url} -> ${status}`,
         this.isProduction ? undefined : stack,
