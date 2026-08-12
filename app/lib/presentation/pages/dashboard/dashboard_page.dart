@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -42,11 +43,14 @@ class _DashboardPageState extends State<DashboardPage> {
   String _selectedPeriod = 'today';
   DateTimeRange? _customDateRange;
 
-  static const _periods = [
-    {'key': 'today', 'label': 'Сегодня'},
-    {'key': 'week', 'label': 'Неделя'},
-    {'key': 'month', 'label': 'Месяц'},
-  ];
+  List<Map<String, String>> get _periods {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {'key': 'today', 'label': l10n.dashboardPeriodToday},
+      {'key': 'week', 'label': l10n.week},
+      {'key': 'month', 'label': l10n.month},
+    ];
+  }
 
   @override
   void initState() {
@@ -89,6 +93,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreLoaded && !_loaded) {
@@ -191,8 +196,8 @@ class _DashboardPageState extends State<DashboardPage> {
           backgroundColor: AppColors.primary,
           foregroundColor: context.onPrimary,
           icon: const Icon(Icons.add),
-          label: const Text('Новая продажа',
-            style: TextStyle(fontWeight: FontWeight.w600)),
+          label: Text(l10n.newSale,
+            style: const TextStyle(fontWeight: FontWeight.w600)),
         ),
       ),
     );
@@ -201,18 +206,19 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildHeader() {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         String storeName = 'DukonPro';
         List stores = [];
         String? selectedStoreId;
 
         if (state is StoreLoaded) {
           stores = state.stores;
-          storeName = state.selectedStore?.name ?? 'Магазин';
+          storeName = state.selectedStore?.name ?? l10n.dashboardStoreFallback;
           selectedStoreId = state.selectedStore?.id;
         }
 
         return GradientHeader(
-          greeting: 'Салом 👋',
+          greeting: l10n.dashboardGreeting,
           userName: storeName,
           storeName: storeName,
           onNotificationTap: () {
@@ -243,6 +249,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _showStoreSelector(List stores, String? selectedId) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -254,8 +261,8 @@ class _DashboardPageState extends State<DashboardPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Выберите магазин',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.dashboardSelectStoreTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 12),
             ...stores.map((store) => ListTile(
               leading: Icon(
@@ -280,6 +287,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildPeriodTabs() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       child: Row(
@@ -295,7 +303,7 @@ class _DashboardPageState extends State<DashboardPage> {
             );
           }),
           Semantics(
-            label: 'Выбрать период',
+            label: l10n.a11ySelectPeriod,
             button: true,
             child: GestureDetector(
               onTap: () async {
@@ -343,13 +351,14 @@ class _DashboardPageState extends State<DashboardPage> {
   /// 3-up metric row: Прибыль (green) · Себестоимость (neutral) · Расходы (red).
   /// Revenue lives in the hero card above; avg check is shown inside the hero.
   Widget _build3UpMetrics(DashboardStats stats) {
+    final l10n = AppLocalizations.of(context)!;
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
           child: _MetricTile(
-            label: 'Прибыль',
+            label: l10n.profit,
             value: _formatPrice(stats.todayProfit),
             accent: AppColors.success,
           ),
@@ -357,7 +366,7 @@ class _DashboardPageState extends State<DashboardPage> {
         const SizedBox(width: 10),
         Expanded(
           child: _MetricTile(
-            label: 'Себестоимость',
+            label: l10n.dashboardCost,
             value: _formatPrice(stats.todayCost),
             accent: AppColors.info,
           ),
@@ -365,7 +374,7 @@ class _DashboardPageState extends State<DashboardPage> {
         const SizedBox(width: 10),
         Expanded(
           child: _MetricTile(
-            label: 'Расходы',
+            label: l10n.expenses,
             value: _formatPrice(stats.todayExpenses),
             accent: AppColors.error,
           ),
@@ -379,24 +388,26 @@ class _DashboardPageState extends State<DashboardPage> {
   /// and a right-aligned value or chevron. Much more scannable than the
   /// previous horizontal strip of tiny cards.
   Widget _buildActionTiles(DashboardStats stats) {
+    final l10n = AppLocalizations.of(context)!;
     final hasCustomerDebt = stats.customerDebtsTotal > 0;
     final hasSupplierDebt = stats.supplierDebtsTotal > 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 10),
-          child: Text('Операции',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 10),
+          child: Text(l10n.dashboardOperationsTitle,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
         ),
         _ActionTile(
           icon: Icons.inventory_2_outlined,
           accent: AppColors.primary,
-          title: 'Остатки на складе',
+          title: l10n.dashboardStockTitle,
           subtitle: stats.lowStockProducts > 0
-              ? '${stats.totalProducts} товаров · ${stats.lowStockProducts} мало'
-              : '${stats.totalProducts} товаров',
+              ? l10n.dashboardStockSubtitleLow(
+                  '${stats.totalProducts}', '${stats.lowStockProducts}')
+              : l10n.dashboardStockSubtitle('${stats.totalProducts}'),
           subtitleColor: stats.lowStockProducts > 0
               ? AppColors.warning
               : context.textSecondary,
@@ -406,10 +417,10 @@ class _DashboardPageState extends State<DashboardPage> {
         _ActionTile(
           icon: Icons.arrow_downward_rounded,
           accent: AppColors.success,
-          title: 'Вам должны',
+          title: l10n.dashboardCustomerOwedTitle,
           subtitle: hasCustomerDebt
-              ? 'Долги клиентов по продажам'
-              : 'Нет активных долгов',
+              ? l10n.dashboardCustomerOwedSubtitle
+              : l10n.noDebts,
           trailingValue: hasCustomerDebt
               ? _formatPrice(stats.customerDebtsTotal)
               : null,
@@ -428,10 +439,10 @@ class _DashboardPageState extends State<DashboardPage> {
         _ActionTile(
           icon: Icons.arrow_upward_rounded,
           accent: AppColors.error,
-          title: 'Вы должны',
+          title: l10n.dashboardSupplierOwedTitle,
           subtitle: hasSupplierDebt
-              ? 'Долги поставщикам'
-              : 'Нет активных долгов',
+              ? l10n.dashboardSupplierOwedSubtitle
+              : l10n.noDebts,
           trailingValue: hasSupplierDebt
               ? _formatPrice(stats.supplierDebtsTotal)
               : null,
@@ -446,8 +457,8 @@ class _DashboardPageState extends State<DashboardPage> {
         _ActionTile(
           icon: Icons.fact_check_outlined,
           accent: AppColors.info,
-          title: 'Инвентаризация',
-          subtitle: 'Проверить фактические остатки',
+          title: l10n.dashboardInventoryTitle,
+          subtitle: l10n.dashboardInventorySubtitle,
           onTap: () => context.push(RouteNames.inventoryCount, extra: _getStoreId()),
         ),
       ],
@@ -456,22 +467,23 @@ class _DashboardPageState extends State<DashboardPage> {
 
   /// Recent sales — 2 cards + "Все продажи >"
   Widget _buildRecentSalesSection(DashboardStats stats) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Последние продажи',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(l10n.dashboardRecentSalesTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             if (stats.recentSales.isNotEmpty)
               GestureDetector(
                 onTap: () => context.push('/sales/history', extra: _getStoreId()),
                 child: Container(
                   constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   alignment: Alignment.center,
-                  child: const Text('Все продажи >',
-                    style: TextStyle(
+                  child: Text(l10n.dashboardAllSalesLink,
+                    style: const TextStyle(
                       fontSize: 13,
                       color: AppColors.primary,
                       fontWeight: FontWeight.w500,
@@ -490,7 +502,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     Icon(Icons.receipt_long, size: 48, color: AppColors.disabled),
                     const SizedBox(height: 8),
-                    Text('Пока нет продаж',
+                    Text(l10n.dashboardNoSalesYet,
                       style: TextStyle(color: context.textSecondary)),
                   ],
                 ),
@@ -522,21 +534,22 @@ class _HeroRevenueCard extends StatelessWidget {
     this.onTap,
   });
 
-  String get _periodLabel {
+  String _periodLabel(AppLocalizations l10n) {
     switch (period) {
       case 'week':
-        return 'Выручка за неделю';
+        return l10n.dashboardRevenueWeek;
       case 'month':
-        return 'Выручка за месяц';
+        return l10n.dashboardRevenueMonth;
       case 'custom':
-        return 'Выручка за период';
+        return l10n.dashboardRevenuePeriod;
       default:
-        return 'Выручка сегодня';
+        return l10n.dashboardRevenueToday;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final avgCheck = stats.todaySalesCount > 0
         ? stats.todayRevenue / stats.todaySalesCount
         : 0.0;
@@ -560,7 +573,7 @@ class _HeroRevenueCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    _periodLabel,
+                    _periodLabel(l10n),
                     style: const TextStyle(
                       color: Color(0xCCFFFFFF),
                       fontSize: 13,
@@ -593,12 +606,12 @@ class _HeroRevenueCard extends StatelessWidget {
                 children: [
                   _HeroMeta(
                     icon: Icons.receipt_long_outlined,
-                    label: '${stats.todaySalesCount} продаж',
+                    label: l10n.dashboardSalesCountLabel('${stats.todaySalesCount}'),
                   ),
                   const SizedBox(width: 16),
                   _HeroMeta(
                     icon: Icons.payments_outlined,
-                    label: 'Средний чек ${formatPrice(avgCheck)}',
+                    label: l10n.dashboardAvgCheckLabel(formatPrice(avgCheck)),
                   ),
                 ],
               ),
@@ -817,13 +830,14 @@ class _SaleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final timeFormat = DateFormat('HH:mm');
     final formatter = NumberFormat('#,##0', 'ru');
 
     final paymentLabel = switch (sale.paymentType) {
-      'CASH' => 'Наличные',
-      'CARD' => 'Карта',
-      'DEBT' => 'В долг',
+      'CASH' => l10n.cash,
+      'CARD' => l10n.card,
+      'DEBT' => l10n.debt,
       _ => sale.paymentType,
     };
 
@@ -848,7 +862,7 @@ class _SaleCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Чек #${sale.receiptNo}',
+                Text(l10n.dashboardSaleReceiptLabel(sale.receiptNo),
                   style: const TextStyle(
                     fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: 2),

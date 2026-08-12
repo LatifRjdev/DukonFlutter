@@ -418,6 +418,91 @@ class AppLocalizationsTg extends AppLocalizations {
   String get offline => 'Пайвасти интернет нест. Офлайн кор мекунем.';
 
   @override
+  String get dashboardPeriodToday => 'Сегодня';
+
+  @override
+  String get dashboardGreeting => 'Салом 👋';
+
+  @override
+  String get dashboardStoreFallback => 'Магазин';
+
+  @override
+  String get dashboardSelectStoreTitle => 'Выберите магазин';
+
+  @override
+  String get dashboardCost => 'Себестоимость';
+
+  @override
+  String get dashboardOperationsTitle => 'Операции';
+
+  @override
+  String get dashboardStockTitle => 'Остатки на складе';
+
+  @override
+  String dashboardStockSubtitle(String count) {
+    return '$count товаров';
+  }
+
+  @override
+  String dashboardStockSubtitleLow(String count, String lowCount) {
+    return '$count товаров · $lowCount мало';
+  }
+
+  @override
+  String get dashboardCustomerOwedTitle => 'Вам должны';
+
+  @override
+  String get dashboardCustomerOwedSubtitle => 'Долги клиентов по продажам';
+
+  @override
+  String get dashboardSupplierOwedTitle => 'Вы должны';
+
+  @override
+  String get dashboardSupplierOwedSubtitle => 'Долги поставщикам';
+
+  @override
+  String get dashboardInventoryTitle => 'Инвентаризация';
+
+  @override
+  String get dashboardInventorySubtitle => 'Проверить фактические остатки';
+
+  @override
+  String get dashboardRecentSalesTitle => 'Последние продажи';
+
+  @override
+  String get dashboardAllSalesLink => 'Все продажи >';
+
+  @override
+  String get dashboardNoSalesYet => 'Пока нет продаж';
+
+  @override
+  String get dashboardRevenueToday => 'Выручка сегодня';
+
+  @override
+  String get dashboardRevenueWeek => 'Выручка за неделю';
+
+  @override
+  String get dashboardRevenueMonth => 'Выручка за месяц';
+
+  @override
+  String get dashboardRevenuePeriod => 'Выручка за период';
+
+  @override
+  String dashboardSalesCountLabel(String count) {
+    return '$count продаж';
+  }
+
+  @override
+  String dashboardAvgCheckLabel(String value) {
+    return 'Средний чек $value';
+  }
+
+  @override
+  String dashboardSaleReceiptLabel(String receiptNo) {
+    return 'Чек #$receiptNo';
+  }
+
+  @override
   String get customers => 'Харидорон';
 
   @override

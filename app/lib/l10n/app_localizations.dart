@@ -910,6 +910,156 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
+  /// Dashboard period tab: today
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get dashboardPeriodToday;
+
+  /// Dashboard header greeting
+  ///
+  /// In ru, this message translates to:
+  /// **'Салом 👋'**
+  String get dashboardGreeting;
+
+  /// Fallback store name shown before a store is selected
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин'**
+  String get dashboardStoreFallback;
+
+  /// Store selector bottom sheet title
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите магазин'**
+  String get dashboardSelectStoreTitle;
+
+  /// Cost-of-goods metric tile label
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость'**
+  String get dashboardCost;
+
+  /// Dashboard action tiles section title
+  ///
+  /// In ru, this message translates to:
+  /// **'Операции'**
+  String get dashboardOperationsTitle;
+
+  /// Stock levels action tile title
+  ///
+  /// In ru, this message translates to:
+  /// **'Остатки на складе'**
+  String get dashboardStockTitle;
+
+  /// Stock levels action tile subtitle (no low-stock items)
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} товаров'**
+  String dashboardStockSubtitle(String count);
+
+  /// Stock levels action tile subtitle (with low-stock items)
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} товаров · {lowCount} мало'**
+  String dashboardStockSubtitleLow(String count, String lowCount);
+
+  /// Customer debts action tile title
+  ///
+  /// In ru, this message translates to:
+  /// **'Вам должны'**
+  String get dashboardCustomerOwedTitle;
+
+  /// Customer debts action tile subtitle (active debts)
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги клиентов по продажам'**
+  String get dashboardCustomerOwedSubtitle;
+
+  /// Supplier debts action tile title
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы должны'**
+  String get dashboardSupplierOwedTitle;
+
+  /// Supplier debts action tile subtitle (active debts)
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги поставщикам'**
+  String get dashboardSupplierOwedSubtitle;
+
+  /// Inventory count action tile title
+  ///
+  /// In ru, this message translates to:
+  /// **'Инвентаризация'**
+  String get dashboardInventoryTitle;
+
+  /// Inventory count action tile subtitle
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверить фактические остатки'**
+  String get dashboardInventorySubtitle;
+
+  /// Recent sales section title
+  ///
+  /// In ru, this message translates to:
+  /// **'Последние продажи'**
+  String get dashboardRecentSalesTitle;
+
+  /// Link to full sales history
+  ///
+  /// In ru, this message translates to:
+  /// **'Все продажи >'**
+  String get dashboardAllSalesLink;
+
+  /// Empty state when there are no sales yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет продаж'**
+  String get dashboardNoSalesYet;
+
+  /// Hero revenue card label, today period
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка сегодня'**
+  String get dashboardRevenueToday;
+
+  /// Hero revenue card label, week period
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка за неделю'**
+  String get dashboardRevenueWeek;
+
+  /// Hero revenue card label, month period
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка за месяц'**
+  String get dashboardRevenueMonth;
+
+  /// Hero revenue card label, custom period
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка за период'**
+  String get dashboardRevenuePeriod;
+
+  /// Hero revenue card sales count meta
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String dashboardSalesCountLabel(String count);
+
+  /// Hero revenue card average check meta
+  ///
+  /// In ru, this message translates to:
+  /// **'Средний чек {value}'**
+  String dashboardAvgCheckLabel(String value);
+
+  /// Recent sale card receipt number label
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек #{receiptNo}'**
+  String dashboardSaleReceiptLabel(String receiptNo);
+
   /// Customers section
   ///
   /// In ru, this message translates to:
