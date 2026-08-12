@@ -29,7 +29,10 @@ export class EcommerceOrdersController {
     summary:
       'Inbound order.created / order.cancelled webhook from the merchant site',
   })
-  @ApiResponse({ status: 200, description: 'Order processed successfully (created or cancelled)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Order processed successfully (created or cancelled)',
+  })
   @ApiResponse({
     status: 409,
     description:
