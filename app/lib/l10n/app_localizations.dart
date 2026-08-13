@@ -784,6 +784,12 @@ abstract class AppLocalizations {
   /// **'Смешанная оплата'**
   String get mixed;
 
+  /// Bank transfer payment method option (distinct from the POS cash/card/debt/mixed payment methods)
+  ///
+  /// In ru, this message translates to:
+  /// **'Перевод'**
+  String get transfer;
+
   /// Paid amount label
   ///
   /// In ru, this message translates to:
@@ -1444,6 +1450,12 @@ abstract class AppLocalizations {
   /// **'Сумма'**
   String get amount;
 
+  /// Generic 'Amount (TJS)' field label with currency suffix — distinct from bare `amount` ("Сумма"); this exact literal also recurs verbatim on other payment-amount fields (e.g. the payroll adjustment screen)
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма (TJS)'**
+  String get amountTjs;
+
   /// No description provided for @description.
   ///
   /// In ru, this message translates to:
@@ -1467,6 +1479,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Долги'**
   String get debts;
+
+  /// Credits/loans feature name — used as the credits screen's AppBar title; the same word also labels this feature's entry on the finance dashboard
+  ///
+  /// In ru, this message translates to:
+  /// **'Кредиты'**
+  String get credits;
 
   /// No description provided for @weOwe.
   ///
@@ -1527,6 +1545,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Оплата записана'**
   String get paymentRecorded;
+
+  /// Credits screen — shown in a receivables/payables tab when there are no items
+  ///
+  /// In ru, this message translates to:
+  /// **'Записей нет'**
+  String get creditsEmptyState;
+
+  /// Credits screen — summary card label on the receivables tab (total owed to the store)
+  ///
+  /// In ru, this message translates to:
+  /// **'Общий долг нам'**
+  String get creditsTotalReceivableLabel;
+
+  /// Credits screen — summary card label on the payables tab (total the store owes suppliers)
+  ///
+  /// In ru, this message translates to:
+  /// **'Общий долг поставщикам'**
+  String get creditsTotalPayableLabel;
+
+  /// Credits screen — summary card badge showing how many counterparties make up the total (count-first, abbreviated 'people')
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} чел.'**
+  String creditsPersonCountLabel(String count);
+
+  /// Credits screen — abbreviated 'last [payment]: {date}' shown on a credit card (date already pre-formatted, or '—' if there was no payment yet)
+  ///
+  /// In ru, this message translates to:
+  /// **'посл. {date}'**
+  String creditsLastPaymentLabel(String date);
+
+  /// Credits screen — button label and payment dialog title on the receivables tab (accepting a payment owed to the store)
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять платёж'**
+  String get creditsAcceptPayment;
+
+  /// Credits screen — button label and payment dialog title on the payables tab (the store paying a supplier)
+  ///
+  /// In ru, this message translates to:
+  /// **'Внести платёж'**
+  String get creditsMakePayment;
+
+  /// Credits screen — payment dialog dropdown label. Wording differs slightly from the existing `paymentMethod` ("Способ оплаты") key; kept as-is to preserve this screen's original text rather than silently changing displayed copy
+  ///
+  /// In ru, this message translates to:
+  /// **'Метод оплаты'**
+  String get creditsPaymentMethodLabel;
+
+  /// Credits screen — payment dialog validation error when the entered amount is missing or not positive
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите корректную сумму'**
+  String get creditsInvalidAmountError;
 
   /// No description provided for @zakat.
   ///

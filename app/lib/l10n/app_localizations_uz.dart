@@ -372,6 +372,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get mixed => 'Aralash to\'lov';
 
   @override
+  String get transfer => 'Перевод';
+
+  @override
   String get paidAmount => 'To\'langan';
 
   @override
@@ -715,6 +718,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get amount => 'Summa';
 
   @override
+  String get amountTjs => 'Сумма (TJS)';
+
+  @override
   String get description => 'Tavsif';
 
   @override
@@ -725,6 +731,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get debts => 'Qarzlar';
+
+  @override
+  String get credits => 'Кредиты';
 
   @override
   String get weOwe => 'Biz qarzdormiz';
@@ -755,6 +764,37 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get paymentRecorded => 'To\'lov qayd qilindi';
+
+  @override
+  String get creditsEmptyState => 'Записей нет';
+
+  @override
+  String get creditsTotalReceivableLabel => 'Общий долг нам';
+
+  @override
+  String get creditsTotalPayableLabel => 'Общий долг поставщикам';
+
+  @override
+  String creditsPersonCountLabel(String count) {
+    return '$count чел.';
+  }
+
+  @override
+  String creditsLastPaymentLabel(String date) {
+    return 'посл. $date';
+  }
+
+  @override
+  String get creditsAcceptPayment => 'Принять платёж';
+
+  @override
+  String get creditsMakePayment => 'Внести платёж';
+
+  @override
+  String get creditsPaymentMethodLabel => 'Метод оплаты';
+
+  @override
+  String get creditsInvalidAmountError => 'Введите корректную сумму';
 
   @override
   String get zakat => 'Zakot';

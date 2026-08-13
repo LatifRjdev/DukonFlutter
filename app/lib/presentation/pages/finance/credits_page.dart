@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -142,10 +143,11 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Кредиты'),
+        title: Text(l10n.credits),
         backgroundColor: context.surface,
         foregroundColor: context.textPrimary,
         elevation: 0,
@@ -154,29 +156,29 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
           labelColor: AppColors.primary,
           unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Нам должны'),
-            Tab(text: 'Мы должны'),
+          tabs: [
+            Tab(text: l10n.theyOwe),
+            Tab(text: l10n.weOwe),
           ],
         ),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? _buildError()
+              ? _buildError(l10n)
               : _data == null
                   ? const Center(child: CircularProgressIndicator())
                   : TabBarView(
                       controller: _tabController,
                       children: [
-                        _buildTab(_data!.receivables, isReceivable: true),
-                        _buildTab(_data!.payables, isReceivable: false),
+                        _buildTab(_data!.receivables, l10n, isReceivable: true),
+                        _buildTab(_data!.payables, l10n, isReceivable: false),
                       ],
                     ),
     );
   }
 
-  Widget _buildError() {
+  Widget _buildError(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -185,13 +187,13 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
           const SizedBox(height: AppConstants.spacingMd),
           Text(_error!, style: TextStyle(color: context.textSecondary), textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
-          TextButton(onPressed: _load, child: const Text('Повторить')),
+          TextButton(onPressed: _load, child: Text(l10n.retry)),
         ],
       ),
     );
   }
 
-  Widget _buildTab(_CreditGroup group, {required bool isReceivable}) {
+  Widget _buildTab(_CreditGroup group, AppLocalizations l10n, {required bool isReceivable}) {
     return RefreshIndicator(
       onRefresh: _load,
       child: group.items.isEmpty
@@ -204,7 +206,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
                     children: [
                       const Icon(Icons.credit_card_off_outlined, size: 56, color: AppColors.disabled),
                       const SizedBox(height: AppConstants.spacingMd),
-                      Text('Записей нет', style: TextStyle(color: context.textSecondary, fontSize: 16)),
+                      Text(l10n.creditsEmptyState, style: TextStyle(color: context.textSecondary, fontSize: 16)),
                     ],
                   ),
                 ),
@@ -215,7 +217,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
               padding: const EdgeInsets.all(AppConstants.spacingMd),
               children: [
                 // Total summary card
-                _buildTotalCard(group, isReceivable: isReceivable),
+                _buildTotalCard(group, l10n, isReceivable: isReceivable),
                 const SizedBox(height: AppConstants.spacingMd),
                 // Item cards
                 for (final item in group.items) ...[
@@ -235,7 +237,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
     );
   }
 
-  Widget _buildTotalCard(_CreditGroup group, {required bool isReceivable}) {
+  Widget _buildTotalCard(_CreditGroup group, AppLocalizations l10n, {required bool isReceivable}) {
     final color = isReceivable ? AppColors.success : AppColors.error;
     return Container(
       padding: const EdgeInsets.all(16),
@@ -251,7 +253,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                isReceivable ? 'Общий долг нам' : 'Общий долг поставщикам',
+                isReceivable ? l10n.creditsTotalReceivableLabel : l10n.creditsTotalPayableLabel,
                 style: TextStyle(fontSize: 13, color: context.textSecondary),
               ),
               const SizedBox(height: 4),
@@ -268,7 +270,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
               borderRadius: BorderRadius.circular(AppConstants.radiusRound),
             ),
             child: Text(
-              '${group.count} чел.',
+              l10n.creditsPersonCountLabel('${group.count}'),
               style: TextStyle(fontWeight: FontWeight.w600, color: color, fontSize: 13),
             ),
           ),
@@ -308,6 +310,7 @@ class _CreditCardState extends State<_CreditCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = widget.isReceivable ? AppColors.success : AppColors.error;
     final item = widget.item;
 
@@ -357,7 +360,7 @@ class _CreditCardState extends State<_CreditCard> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'посл. ${widget.formatDate(item.lastPayment)}',
+                      l10n.creditsLastPaymentLabel(widget.formatDate(item.lastPayment)),
                       style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ],
@@ -390,7 +393,7 @@ class _CreditCardState extends State<_CreditCard> {
                     widget.isReceivable ? Icons.payments_outlined : Icons.payment_outlined,
                     size: 18,
                   ),
-                  label: Text(widget.isReceivable ? 'Принять платёж' : 'Внести платёж'),
+                  label: Text(widget.isReceivable ? l10n.creditsAcceptPayment : l10n.creditsMakePayment),
                   onPressed: () => _showPaymentDialog(context),
                 ),
               ),
@@ -402,6 +405,7 @@ class _CreditCardState extends State<_CreditCard> {
   }
 
   Future<void> _showPaymentDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final amountCtrl = TextEditingController();
     String selectedMethod = 'cash';
     bool submitting = false;
@@ -416,7 +420,7 @@ class _CreditCardState extends State<_CreditCard> {
               borderRadius: BorderRadius.circular(AppConstants.radiusLg),
             ),
             title: Text(
-              widget.isReceivable ? 'Принять платёж' : 'Внести платёж',
+              widget.isReceivable ? l10n.creditsAcceptPayment : l10n.creditsMakePayment,
               style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
             ),
             content: Column(
@@ -433,7 +437,7 @@ class _CreditCardState extends State<_CreditCard> {
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
                   decoration: InputDecoration(
-                    labelText: 'Сумма (TJS)',
+                    labelText: l10n.amountTjs,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
@@ -445,15 +449,15 @@ class _CreditCardState extends State<_CreditCard> {
                 DropdownButtonFormField<String>(
                   initialValue: selectedMethod,
                   decoration: InputDecoration(
-                    labelText: 'Метод оплаты',
+                    labelText: l10n.creditsPaymentMethodLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'cash', child: Text('Наличные')),
-                    DropdownMenuItem(value: 'card', child: Text('Карта')),
-                    DropdownMenuItem(value: 'transfer', child: Text('Перевод')),
+                  items: [
+                    DropdownMenuItem(value: 'cash', child: Text(l10n.cash)),
+                    DropdownMenuItem(value: 'card', child: Text(l10n.card)),
+                    DropdownMenuItem(value: 'transfer', child: Text(l10n.transfer)),
                   ],
                   onChanged: (v) => setDialogState(() => selectedMethod = v ?? 'cash'),
                 ),
@@ -466,7 +470,7 @@ class _CreditCardState extends State<_CreditCard> {
             actions: [
               TextButton(
                 onPressed: submitting ? null : () => Navigator.of(dialogCtx).pop(),
-                child: const Text('Отмена'),
+                child: Text(l10n.cancel),
               ),
               FilledButton(
                 style: FilledButton.styleFrom(
@@ -481,7 +485,7 @@ class _CreditCardState extends State<_CreditCard> {
                         final raw = amountCtrl.text.trim();
                         final amount = double.tryParse(raw);
                         if (amount == null || amount <= 0) {
-                          setDialogState(() => dialogError = 'Введите корректную сумму');
+                          setDialogState(() => dialogError = l10n.creditsInvalidAmountError);
                           return;
                         }
                         setDialogState(() {
@@ -513,7 +517,7 @@ class _CreditCardState extends State<_CreditCard> {
                       },
                 child: submitting
                     ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Подтвердить'),
+                    : Text(l10n.confirm),
               ),
             ],
           );
