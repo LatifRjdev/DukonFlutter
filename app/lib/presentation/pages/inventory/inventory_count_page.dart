@@ -174,7 +174,7 @@ class _InventoryView extends StatelessWidget {
         String title;
 
         if (state is _InvInitial || state is _InvLoading) {
-          title = l10n.dashboardInventoryTitle;
+          title = l10n.inventoryTitle;
           body = _StartScreen(isLoading: state is _InvLoading);
         } else if (state is _InvCounting || state is _InvSaving) {
           title = l10n.inventoryCountingTitle;
@@ -217,7 +217,7 @@ class _InventoryView extends StatelessWidget {
             ),
           );
         } else {
-          title = l10n.dashboardInventoryTitle;
+          title = l10n.inventoryTitle;
           body = const SizedBox.shrink();
         }
 
@@ -264,7 +264,7 @@ class _StartScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppConstants.spacingLg),
             Text(
-              l10n.dashboardInventoryTitle,
+              l10n.inventoryTitle,
               style: const TextStyle(
                   fontFamily: 'Inter', fontSize: 22, fontWeight: FontWeight.w700),
             ),

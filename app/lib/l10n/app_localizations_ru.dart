@@ -472,7 +472,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dashboardSupplierOwedSubtitle => 'Долги поставщикам';
 
   @override
-  String get dashboardInventoryTitle => 'Инвентаризация';
+  String get inventoryTitle => 'Инвентаризация';
 
   @override
   String get dashboardInventorySubtitle => 'Проверить фактические остатки';

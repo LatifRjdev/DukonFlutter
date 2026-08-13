@@ -454,7 +454,7 @@ class _DashboardPageState extends State<DashboardPage> {
         _ActionTile(
           icon: Icons.fact_check_outlined,
           accent: AppColors.info,
-          title: l10n.dashboardInventoryTitle,
+          title: l10n.inventoryTitle,
           subtitle: l10n.dashboardInventorySubtitle,
           onTap: () => context.push(RouteNames.inventoryCount, extra: _getStoreId()),
         ),

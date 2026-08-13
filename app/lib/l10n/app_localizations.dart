@@ -1012,11 +1012,11 @@ abstract class AppLocalizations {
   /// **'Долги поставщикам'**
   String get dashboardSupplierOwedSubtitle;
 
-  /// Inventory count action tile title
+  /// Inventory count feature name — used both as the dashboard tile title and the inventory count screen's own AppBar title
   ///
   /// In ru, this message translates to:
   /// **'Инвентаризация'**
-  String get dashboardInventoryTitle;
+  String get inventoryTitle;
 
   /// Inventory count action tile subtitle
   ///
