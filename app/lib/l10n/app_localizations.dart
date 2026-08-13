@@ -154,6 +154,12 @@ abstract class AppLocalizations {
   /// **'Готово'**
   String get done;
 
+  /// Share action button (distinct from a11yShare, which is a tooltip/semantic label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться'**
+  String get share;
+
   /// Close button
   ///
   /// In ru, this message translates to:
@@ -1785,6 +1791,90 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Топ товары по продажам'**
   String get topProductsSold;
+
+  /// No description provided for @zReportHeaderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Z-ОТЧЁТ'**
+  String get zReportHeaderTitle;
+
+  /// No description provided for @zReportSalesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество продаж'**
+  String get zReportSalesCount;
+
+  /// No description provided for @zReportTotalSales.
+  ///
+  /// In ru, this message translates to:
+  /// **'Итого продаж'**
+  String get zReportTotalSales;
+
+  /// No description provided for @zReportReturnsCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество возвратов'**
+  String get zReportReturnsCount;
+
+  /// No description provided for @zReportReturnsAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возвратов'**
+  String get zReportReturnsAmount;
+
+  /// No description provided for @zReportOpeningAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начальная сумма'**
+  String get zReportOpeningAmount;
+
+  /// No description provided for @zReportCashSalesLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи (нал.)'**
+  String get zReportCashSalesLabel;
+
+  /// No description provided for @zReportCashReturnsLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвраты (нал.)'**
+  String get zReportCashReturnsLabel;
+
+  /// No description provided for @zReportExpectedAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидаемая сумма'**
+  String get zReportExpectedAmount;
+
+  /// No description provided for @zReportActualAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фактическая сумма'**
+  String get zReportActualAmount;
+
+  /// No description provided for @zReportPrintButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать Z-отчёта'**
+  String get zReportPrintButton;
+
+  /// Z-report PDF receipt: sales/returns count summary line
+  ///
+  /// In ru, this message translates to:
+  /// **'Продаж: {sales}  Возвратов: {returns}'**
+  String zReportPdfSalesReturnsLine(String sales, String returns);
+
+  /// Z-report PDF receipt: debt total line
+  ///
+  /// In ru, this message translates to:
+  /// **'Долг: {debt}'**
+  String zReportPdfDebtLine(String debt);
+
+  /// Z-report PDF receipt: grand total line
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО: {total} сом.'**
+  String zReportPdfTotalLine(String total);
 
   /// No description provided for @payroll.
   ///

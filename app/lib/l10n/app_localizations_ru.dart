@@ -36,6 +36,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get done => 'Готово';
 
   @override
+  String get share => 'Поделиться';
+
+  @override
   String get close => 'Закрыть';
 
   @override
@@ -863,6 +866,54 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get topProductsSold => 'Топ товары по продажам';
+
+  @override
+  String get zReportHeaderTitle => 'Z-ОТЧЁТ';
+
+  @override
+  String get zReportSalesCount => 'Количество продаж';
+
+  @override
+  String get zReportTotalSales => 'Итого продаж';
+
+  @override
+  String get zReportReturnsCount => 'Количество возвратов';
+
+  @override
+  String get zReportReturnsAmount => 'Сумма возвратов';
+
+  @override
+  String get zReportOpeningAmount => 'Начальная сумма';
+
+  @override
+  String get zReportCashSalesLabel => 'Продажи (нал.)';
+
+  @override
+  String get zReportCashReturnsLabel => 'Возвраты (нал.)';
+
+  @override
+  String get zReportExpectedAmount => 'Ожидаемая сумма';
+
+  @override
+  String get zReportActualAmount => 'Фактическая сумма';
+
+  @override
+  String get zReportPrintButton => 'Печать Z-отчёта';
+
+  @override
+  String zReportPdfSalesReturnsLine(String sales, String returns) {
+    return 'Продаж: $sales  Возвратов: $returns';
+  }
+
+  @override
+  String zReportPdfDebtLine(String debt) {
+    return 'Долг: $debt';
+  }
+
+  @override
+  String zReportPdfTotalLine(String total) {
+    return 'ИТОГО: $total сом.';
+  }
 
   @override
   String get payroll => 'Зарплата';

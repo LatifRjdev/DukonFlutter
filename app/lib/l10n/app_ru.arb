@@ -20,6 +20,8 @@
   "@next": { "description": "Next button" },
   "done": "Готово",
   "@done": { "description": "Done button" },
+  "share": "Поделиться",
+  "@share": { "description": "Share action button (distinct from a11yShare, which is a tooltip/semantic label)" },
   "close": "Закрыть",
   "@close": { "description": "Close button" },
   "confirm": "Подтвердить",
@@ -486,6 +488,32 @@
   "cashDrawer": "Денежный ящик",
   "withdrawals": "Изъятия",
   "topProductsSold": "Топ товары по продажам",
+  "zReportHeaderTitle": "Z-ОТЧЁТ",
+  "zReportSalesCount": "Количество продаж",
+  "zReportTotalSales": "Итого продаж",
+  "zReportReturnsCount": "Количество возвратов",
+  "zReportReturnsAmount": "Сумма возвратов",
+  "zReportOpeningAmount": "Начальная сумма",
+  "zReportCashSalesLabel": "Продажи (нал.)",
+  "zReportCashReturnsLabel": "Возвраты (нал.)",
+  "zReportExpectedAmount": "Ожидаемая сумма",
+  "zReportActualAmount": "Фактическая сумма",
+  "zReportPrintButton": "Печать Z-отчёта",
+  "zReportPdfSalesReturnsLine": "Продаж: {sales}  Возвратов: {returns}",
+  "@zReportPdfSalesReturnsLine": {
+    "description": "Z-report PDF receipt: sales/returns count summary line",
+    "placeholders": { "sales": { "type": "String" }, "returns": { "type": "String" } }
+  },
+  "zReportPdfDebtLine": "Долг: {debt}",
+  "@zReportPdfDebtLine": {
+    "description": "Z-report PDF receipt: debt total line",
+    "placeholders": { "debt": { "type": "String" } }
+  },
+  "zReportPdfTotalLine": "ИТОГО: {total} сом.",
+  "@zReportPdfTotalLine": {
+    "description": "Z-report PDF receipt: grand total line",
+    "placeholders": { "total": { "type": "String" } }
+  },
 
   "payroll": "Зарплата",
   "calculatePayroll": "Рассчитать зарплату",
