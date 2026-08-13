@@ -490,6 +490,12 @@ abstract class AppLocalizations {
   /// **'Название товара'**
   String get productName;
 
+  /// Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment name) — distinct from `name` ("Имя", a person's name) and `productName` ("Название товара", the fuller product-specific label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Название'**
+  String get itemName;
+
   /// Barcode field
   ///
   /// In ru, this message translates to:
@@ -508,11 +514,23 @@ abstract class AppLocalizations {
   /// **'Цена продажи'**
   String get sellPrice;
 
+  /// Generic bare 'Price' column/field label — distinct from `costPrice` ("Цена закупки") and `sellPrice` ("Цена продажи")
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена'**
+  String get price;
+
   /// Quantity field
   ///
   /// In ru, this message translates to:
   /// **'Количество'**
   String get quantity;
+
+  /// Abbreviated 'Qty' column/label for space-constrained UI (e.g. table columns) — distinct from `quantity` ("Количество", the full word)
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол-во'**
+  String get quantityShort;
 
   /// Category label
   ///
@@ -591,6 +609,78 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Импорт товаров'**
   String get importProducts;
+
+  /// Import products screen — instructions shown before a file is picked
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузите список товаров из Excel или CSV файла.\nСкачайте шаблон для правильного формата.'**
+  String get importProductsSubtitle;
+
+  /// Import products screen — button to open the file picker
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать файл'**
+  String get importProductsSelectFile;
+
+  /// Import products screen — button to download the import template file
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать шаблон'**
+  String get importProductsDownloadTemplate;
+
+  /// Import products preview — summary bar showing how many rows were parsed from the file
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} товаров найдено'**
+  String importProductsFoundCount(String count);
+
+  /// Import products preview — compact badge showing the error count (count-first phrasing). Distinct from `importProductsErrorsSummary` ("Ошибки: {count}", label-first phrasing used in the completion dialog)
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} ошибок'**
+  String importProductsErrorsBadge(String count);
+
+  /// Import products — one row-level validation error, used both in the preview error list and the completion dialog's error list
+  ///
+  /// In ru, this message translates to:
+  /// **'Строка {row}: {message}'**
+  String importProductsRowError(String row, String message);
+
+  /// Import products preview — button to confirm the import of the parsed rows
+  ///
+  /// In ru, this message translates to:
+  /// **'Импортировать {count} товаров'**
+  String importProductsConfirmButton(String count);
+
+  /// Title of the dialog shown after an import finishes
+  ///
+  /// In ru, this message translates to:
+  /// **'Импорт завершён'**
+  String get importProductsCompleted;
+
+  /// Import completion dialog — number of products created
+  ///
+  /// In ru, this message translates to:
+  /// **'Создано: {count}'**
+  String importProductsCreatedCount(String count);
+
+  /// Import completion dialog — number of rows skipped
+  ///
+  /// In ru, this message translates to:
+  /// **'Пропущено: {count}'**
+  String importProductsSkippedCount(String count);
+
+  /// Import completion dialog — label-first error count summary line. Distinct from `importProductsErrorsBadge` ("{count} ошибок", count-first phrasing used in the preview badge)
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибки: {count}'**
+  String importProductsErrorsSummary(String count);
+
+  /// Import completion dialog — shown when there are more errors than fit in the visible list
+  ///
+  /// In ru, this message translates to:
+  /// **'...и ещё {count}'**
+  String importProductsMoreErrorsCount(String count);
 
   /// Scan barcode action
   ///

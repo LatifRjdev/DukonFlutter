@@ -136,14 +136,20 @@
   "@editProduct": { "description": "Edit product action" },
   "productName": "Название товара",
   "@productName": { "description": "Product name field" },
+  "itemName": "Название",
+  "@itemName": { "description": "Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment name) — distinct from `name` (\"Имя\", a person's name) and `productName` (\"Название товара\", the fuller product-specific label)" },
   "barcode": "Штрихкод",
   "@barcode": { "description": "Barcode field" },
   "costPrice": "Цена закупки",
   "@costPrice": { "description": "Cost/purchase price" },
   "sellPrice": "Цена продажи",
   "@sellPrice": { "description": "Selling price" },
+  "price": "Цена",
+  "@price": { "description": "Generic bare 'Price' column/field label — distinct from `costPrice` (\"Цена закупки\") and `sellPrice` (\"Цена продажи\")" },
   "quantity": "Количество",
   "@quantity": { "description": "Quantity field" },
+  "quantityShort": "Кол-во",
+  "@quantityShort": { "description": "Abbreviated 'Qty' column/label for space-constrained UI (e.g. table columns) — distinct from `quantity` (\"Количество\", the full word)" },
   "category": "Категория",
   "@category": { "description": "Category label" },
   "categories": "Категории",
@@ -170,6 +176,54 @@
   "@lowStock": { "description": "Low stock warning" },
   "importProducts": "Импорт товаров",
   "@importProducts": { "description": "Import products action" },
+  "importProductsSubtitle": "Загрузите список товаров из Excel или CSV файла.\nСкачайте шаблон для правильного формата.",
+  "@importProductsSubtitle": { "description": "Import products screen — instructions shown before a file is picked" },
+  "importProductsSelectFile": "Выбрать файл",
+  "@importProductsSelectFile": { "description": "Import products screen — button to open the file picker" },
+  "importProductsDownloadTemplate": "Скачать шаблон",
+  "@importProductsDownloadTemplate": { "description": "Import products screen — button to download the import template file" },
+  "importProductsFoundCount": "{count} товаров найдено",
+  "@importProductsFoundCount": {
+    "description": "Import products preview — summary bar showing how many rows were parsed from the file",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsErrorsBadge": "{count} ошибок",
+  "@importProductsErrorsBadge": {
+    "description": "Import products preview — compact badge showing the error count (count-first phrasing). Distinct from `importProductsErrorsSummary` (\"Ошибки: {count}\", label-first phrasing used in the completion dialog)",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsRowError": "Строка {row}: {message}",
+  "@importProductsRowError": {
+    "description": "Import products — one row-level validation error, used both in the preview error list and the completion dialog's error list",
+    "placeholders": { "row": { "type": "String" }, "message": { "type": "String" } }
+  },
+  "importProductsConfirmButton": "Импортировать {count} товаров",
+  "@importProductsConfirmButton": {
+    "description": "Import products preview — button to confirm the import of the parsed rows",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsCompleted": "Импорт завершён",
+  "@importProductsCompleted": { "description": "Title of the dialog shown after an import finishes" },
+  "importProductsCreatedCount": "Создано: {count}",
+  "@importProductsCreatedCount": {
+    "description": "Import completion dialog — number of products created",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsSkippedCount": "Пропущено: {count}",
+  "@importProductsSkippedCount": {
+    "description": "Import completion dialog — number of rows skipped",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsErrorsSummary": "Ошибки: {count}",
+  "@importProductsErrorsSummary": {
+    "description": "Import completion dialog — label-first error count summary line. Distinct from `importProductsErrorsBadge` (\"{count} ошибок\", count-first phrasing used in the preview badge)",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "importProductsMoreErrorsCount": "...и ещё {count}",
+  "@importProductsMoreErrorsCount": {
+    "description": "Import completion dialog — shown when there are more errors than fit in the visible list",
+    "placeholders": { "count": { "type": "String" } }
+  },
   "scanBarcode": "Сканировать штрихкод",
   "@scanBarcode": { "description": "Scan barcode action" },
   "step1BasicInfo": "Основная информация",

@@ -207,6 +207,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get productName => 'Название товара';
 
   @override
+  String get itemName => 'Название';
+
+  @override
   String get barcode => 'Штрихкод';
 
   @override
@@ -216,7 +219,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sellPrice => 'Цена продажи';
 
   @override
+  String get price => 'Цена';
+
+  @override
   String get quantity => 'Количество';
+
+  @override
+  String get quantityShort => 'Кол-во';
 
   @override
   String get category => 'Категория';
@@ -256,6 +265,59 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get importProducts => 'Импорт товаров';
+
+  @override
+  String get importProductsSubtitle =>
+      'Загрузите список товаров из Excel или CSV файла.\nСкачайте шаблон для правильного формата.';
+
+  @override
+  String get importProductsSelectFile => 'Выбрать файл';
+
+  @override
+  String get importProductsDownloadTemplate => 'Скачать шаблон';
+
+  @override
+  String importProductsFoundCount(String count) {
+    return '$count товаров найдено';
+  }
+
+  @override
+  String importProductsErrorsBadge(String count) {
+    return '$count ошибок';
+  }
+
+  @override
+  String importProductsRowError(String row, String message) {
+    return 'Строка $row: $message';
+  }
+
+  @override
+  String importProductsConfirmButton(String count) {
+    return 'Импортировать $count товаров';
+  }
+
+  @override
+  String get importProductsCompleted => 'Импорт завершён';
+
+  @override
+  String importProductsCreatedCount(String count) {
+    return 'Создано: $count';
+  }
+
+  @override
+  String importProductsSkippedCount(String count) {
+    return 'Пропущено: $count';
+  }
+
+  @override
+  String importProductsErrorsSummary(String count) {
+    return 'Ошибки: $count';
+  }
+
+  @override
+  String importProductsMoreErrorsCount(String count) {
+    return '...и ещё $count';
+  }
 
   @override
   String get scanBarcode => 'Сканировать штрихкод';

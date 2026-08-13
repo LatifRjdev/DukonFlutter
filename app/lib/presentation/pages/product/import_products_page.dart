@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,9 +54,10 @@ class _ImportProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Импорт товаров'),
+        title: Text(l10n.importProducts),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -65,7 +67,7 @@ class _ImportProductsView extends StatelessWidget {
         child: BlocConsumer<ImportBloc, ImportState>(
           listener: (context, state) {
             if (state is ImportSuccess) {
-              _showSuccessDialog(context, state);
+              _showSuccessDialog(context, l10n, state);
             } else if (state is ImportError) {
               AppSnackbar.error(context, state.message);
             } else if (state is ImportTemplateDownloaded) {
@@ -92,12 +94,13 @@ class _ImportProductsView extends StatelessWidget {
     );
   }
 
-  void _showSuccessDialog(BuildContext context, ImportSuccess state) {
+  void _showSuccessDialog(
+      BuildContext context, AppLocalizations l10n, ImportSuccess state) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Импорт завершён'),
+        title: Text(l10n.importProductsCompleted),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,18 +108,18 @@ class _ImportProductsView extends StatelessWidget {
             _ResultRow(
               icon: Icons.check_circle,
               color: AppColors.success,
-              text: 'Создано: ${state.created}',
+              text: l10n.importProductsCreatedCount('${state.created}'),
             ),
             if (state.skipped > 0)
               _ResultRow(
                 icon: Icons.skip_next,
                 color: AppColors.warning,
-                text: 'Пропущено: ${state.skipped}',
+                text: l10n.importProductsSkippedCount('${state.skipped}'),
               ),
             if (state.errors.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'Ошибки: ${state.errors.length}',
+                l10n.importProductsErrorsSummary('${state.errors.length}'),
                 style: const TextStyle(
                   color: AppColors.error,
                   fontWeight: FontWeight.w600,
@@ -125,7 +128,8 @@ class _ImportProductsView extends StatelessWidget {
               const SizedBox(height: 4),
               ...state.errors.take(5).map(
                     (e) => Text(
-                      'Строка ${e['row']}: ${e['message']}',
+                      l10n.importProductsRowError(
+                          '${e['row']}', '${e['message']}'),
                       style: TextStyle(
                         fontSize: 12,
                         color: context.textSecondary,
@@ -134,7 +138,8 @@ class _ImportProductsView extends StatelessWidget {
                   ),
               if (state.errors.length > 5)
                 Text(
-                  '...и ещё ${state.errors.length - 5}',
+                  l10n.importProductsMoreErrorsCount(
+                      '${state.errors.length - 5}'),
                   style: TextStyle(
                     fontSize: 12,
                     color: context.textSecondary,
@@ -149,7 +154,7 @@ class _ImportProductsView extends StatelessWidget {
               Navigator.of(dialogContext).pop();
               context.pop();
             },
-            child: const Text('Готово'),
+            child: Text(l10n.done),
           ),
         ],
       ),
@@ -194,6 +199,7 @@ class _InitialView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppConstants.spacingLg),
       child: Column(
@@ -209,14 +215,13 @@ class _InitialView extends StatelessWidget {
             child: const Icon(Icons.upload_file, size: 48, color: AppColors.primary),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Импорт товаров',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          Text(
+            l10n.importProducts,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           Text(
-            'Загрузите список товаров из Excel или CSV файла.\n'
-            'Скачайте шаблон для правильного формата.',
+            l10n.importProductsSubtitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -230,7 +235,7 @@ class _InitialView extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onPickFile,
               icon: const Icon(Icons.file_upload),
-              label: const Text('Выбрать файл'),
+              label: Text(l10n.importProductsSelectFile),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: context.onPrimary,
@@ -247,7 +252,7 @@ class _InitialView extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: onDownloadTemplate,
               icon: const Icon(Icons.download),
-              label: const Text('Скачать шаблон'),
+              label: Text(l10n.importProductsDownloadTemplate),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
@@ -272,6 +277,7 @@ class _PreviewView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         // Summary bar
@@ -284,7 +290,7 @@ class _PreviewView extends StatelessWidget {
               const Icon(Icons.table_chart, color: AppColors.primary),
               const SizedBox(width: 12),
               Text(
-                '${state.totalRows} товаров найдено',
+                l10n.importProductsFoundCount('${state.totalRows}'),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -299,7 +305,7 @@ class _PreviewView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                   ),
                   child: Text(
-                    '${state.errors.length} ошибок',
+                    l10n.importProductsErrorsBadge('${state.errors.length}'),
                     style: const TextStyle(
                       color: AppColors.error,
                       fontSize: 12,
@@ -324,7 +330,7 @@ class _PreviewView extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: Text(
-                    'Строка ${e['row']}: ${e['message']}',
+                    l10n.importProductsRowError('${e['row']}', '${e['message']}'),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.error,
@@ -345,12 +351,12 @@ class _PreviewView extends StatelessWidget {
                   AppColors.primary.withValues(alpha: 0.05),
                 ),
                 columnSpacing: 16,
-                columns: const [
-                  DataColumn(label: Text('Название', style: TextStyle(fontWeight: FontWeight.w600))),
-                  DataColumn(label: Text('Штрихкод', style: TextStyle(fontWeight: FontWeight.w600))),
-                  DataColumn(label: Text('Категория', style: TextStyle(fontWeight: FontWeight.w600))),
-                  DataColumn(label: Text('Цена', style: TextStyle(fontWeight: FontWeight.w600)), numeric: true),
-                  DataColumn(label: Text('Кол-во', style: TextStyle(fontWeight: FontWeight.w600)), numeric: true),
+                columns: [
+                  DataColumn(label: Text(l10n.itemName, style: const TextStyle(fontWeight: FontWeight.w600))),
+                  DataColumn(label: Text(l10n.barcode, style: const TextStyle(fontWeight: FontWeight.w600))),
+                  DataColumn(label: Text(l10n.category, style: const TextStyle(fontWeight: FontWeight.w600))),
+                  DataColumn(label: Text(l10n.price, style: const TextStyle(fontWeight: FontWeight.w600)), numeric: true),
+                  DataColumn(label: Text(l10n.quantityShort, style: const TextStyle(fontWeight: FontWeight.w600)), numeric: true),
                 ],
                 rows: state.rows.map((row) {
                   return DataRow(cells: [
@@ -393,7 +399,7 @@ class _PreviewView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
             ),
-            child: Text('Импортировать ${state.totalRows} товаров'),
+            child: Text(l10n.importProductsConfirmButton('${state.totalRows}')),
           ),
         ),
       ],
