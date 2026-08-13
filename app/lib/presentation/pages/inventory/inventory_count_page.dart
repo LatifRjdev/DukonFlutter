@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -168,14 +169,15 @@ class _InventoryView extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         Widget body;
         String title;
 
         if (state is _InvInitial || state is _InvLoading) {
-          title = 'Инвентаризация';
+          title = l10n.dashboardInventoryTitle;
           body = _StartScreen(isLoading: state is _InvLoading);
         } else if (state is _InvCounting || state is _InvSaving) {
-          title = 'Подсчёт';
+          title = l10n.inventoryCountingTitle;
           final countId =
               state is _InvCounting ? state.countId : (state as _InvSaving).countId;
           final products =
@@ -186,7 +188,7 @@ class _InventoryView extends StatelessWidget {
             isSaving: state is _InvSaving,
           );
         } else if (state is _InvDiff || state is _InvApplying) {
-          title = 'Результаты';
+          title = l10n.inventoryResultsTitle;
           final countId =
               state is _InvDiff ? state.countId : (state as _InvApplying).countId;
           final products =
@@ -197,10 +199,10 @@ class _InventoryView extends StatelessWidget {
             isApplying: state is _InvApplying,
           );
         } else if (state is _InvDone) {
-          title = 'Готово';
+          title = l10n.done;
           body = const _DoneScreen();
         } else if (state is _InvError) {
-          title = 'Ошибка';
+          title = l10n.error;
           body = Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -209,13 +211,13 @@ class _InventoryView extends StatelessWidget {
                 const SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () => context.read<_InvCubit>().retry(state.previous),
-                  child: const Text('Назад'),
+                  child: Text(l10n.back),
                 ),
               ],
             ),
           );
         } else {
-          title = 'Инвентаризация';
+          title = l10n.dashboardInventoryTitle;
           body = const SizedBox.shrink();
         }
 
@@ -243,6 +245,7 @@ class _StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingXl),
@@ -260,14 +263,14 @@ class _StartScreen extends StatelessWidget {
                   size: 48, color: AppColors.primary),
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            const Text(
-              'Инвентаризация',
-              style: TextStyle(
+            Text(
+              l10n.dashboardInventoryTitle,
+              style: const TextStyle(
                   fontFamily: 'Inter', fontSize: 22, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: AppConstants.spacingSm),
             Text(
-              'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.',
+              l10n.inventoryCountIntro,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: 'Inter',
@@ -294,9 +297,9 @@ class _StartScreen extends StatelessWidget {
                         height: 22,
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: AppColors.onPrimary))
-                    : const Text(
-                        'Начать инвентаризацию',
-                        style: TextStyle(
+                    : Text(
+                        l10n.inventoryCountStart,
+                        style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                             fontSize: 16),
@@ -347,11 +350,11 @@ class _CountScreenState extends State<_CountScreen> {
     super.dispose();
   }
 
-  void _onBarcodeScanned(String barcode) {
+  void _onBarcodeScanned(String barcode, AppLocalizations l10n) {
     final idx = widget.products.indexWhere((p) => p.id == barcode || p.name == barcode);
     if (idx == -1) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Товар не найден')));
+          .showSnackBar(SnackBar(content: Text(l10n.productNotFound)));
       return;
     }
     _scrollCtrl.animateTo(
@@ -373,6 +376,7 @@ class _CountScreenState extends State<_CountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final fmt = NumberFormat('#,##0.##', 'ru');
 
     return Column(
@@ -385,7 +389,7 @@ class _CountScreenState extends State<_CountScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Text('Нажмите на строку для редактирования',
+                child: Text(l10n.inventoryCountEditHint,
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -393,9 +397,9 @@ class _CountScreenState extends State<_CountScreen> {
               ),
               IconButton(
                 icon: const Icon(Icons.qr_code_scanner, color: AppColors.primary),
-                tooltip: 'Сканировать штрихкод',
+                tooltip: l10n.scanBarcode,
                 onPressed: () => BarcodeScannerSheet.show(context,
-                    onScanned: _onBarcodeScanned),
+                    onScanned: (code) => _onBarcodeScanned(code, l10n)),
               ),
             ],
           ),
@@ -429,7 +433,7 @@ class _CountScreenState extends State<_CountScreen> {
                               style: const TextStyle(
                                   fontFamily: 'Inter', fontWeight: FontWeight.w500)),
                           const SizedBox(height: 2),
-                          Text('Ожидается: ${fmt.format(product.expected)}',
+                          Text(l10n.inventoryExpectedLine(fmt.format(product.expected)),
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 12,
@@ -505,8 +509,8 @@ class _CountScreenState extends State<_CountScreen> {
                         height: 22,
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: AppColors.onPrimary))
-                    : const Text('Сохранить',
-                        style: TextStyle(
+                    : Text(l10n.save,
+                        style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                             fontSize: 16)),
@@ -534,6 +538,7 @@ class _DiffScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final fmt = NumberFormat('#,##0.##', 'ru');
 
     return Column(
@@ -563,7 +568,7 @@ class _DiffScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 3,
-                          child: Text('Товар',
+                          child: Text(l10n.product,
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
@@ -572,7 +577,7 @@ class _DiffScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 60,
-                          child: Text('Ожидалось',
+                          child: Text(l10n.inventoryExpectedColumn,
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
@@ -582,7 +587,7 @@ class _DiffScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 50,
-                          child: Text('Факт',
+                          child: Text(l10n.inventoryActualColumn,
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
@@ -592,7 +597,7 @@ class _DiffScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 60,
-                          child: Text('Разница',
+                          child: Text(l10n.difference,
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
@@ -640,8 +645,8 @@ class _DiffScreen extends StatelessWidget {
                         height: 22,
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: AppColors.onPrimary))
-                    : const Text('Применить',
-                        style: TextStyle(
+                    : Text(l10n.apply,
+                        style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                             fontSize: 16)),
@@ -727,6 +732,7 @@ class _DoneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingXl),
@@ -744,15 +750,15 @@ class _DoneScreen extends StatelessWidget {
                   size: 56, color: AppColors.success),
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            const Text(
-              'Инвентаризация завершена',
-              style: TextStyle(
+            Text(
+              l10n.inventoryCountCompleted,
+              style: const TextStyle(
                   fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppConstants.spacingSm),
             Text(
-              'Остатки товаров успешно обновлены.',
+              l10n.inventoryCountUpdated,
               style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
@@ -772,8 +778,8 @@ class _DoneScreen extends StatelessWidget {
                       borderRadius:
                           BorderRadius.circular(AppConstants.radiusLg)),
                 ),
-                child: const Text('Готово',
-                    style: TextStyle(
+                child: Text(l10n.done,
+                    style: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
                         fontSize: 16)),

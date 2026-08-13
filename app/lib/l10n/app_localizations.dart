@@ -172,6 +172,12 @@ abstract class AppLocalizations {
   /// **'Подтвердить'**
   String get confirm;
 
+  /// Apply button (e.g. apply filters, apply inventory count results)
+  ///
+  /// In ru, this message translates to:
+  /// **'Применить'**
+  String get apply;
+
   /// Retry button
   ///
   /// In ru, this message translates to:
@@ -213,6 +219,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Список пуст'**
   String get emptyList;
+
+  /// Generic singular 'product' label, e.g. a table column header
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар'**
+  String get product;
+
+  /// Shown when a scanned/looked-up product cannot be matched
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар не найден'**
+  String get productNotFound;
+
+  /// Generic 'difference' label (e.g. expected vs actual quantity), distinct from cashDifference which is specifically a cash-amount context
+  ///
+  /// In ru, this message translates to:
+  /// **'Разница'**
+  String get difference;
 
   /// Login button
   ///
@@ -999,6 +1023,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Проверить фактические остатки'**
   String get dashboardInventorySubtitle;
+
+  /// Inventory count start screen description
+  ///
+  /// In ru, this message translates to:
+  /// **'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.'**
+  String get inventoryCountIntro;
+
+  /// Button to begin an inventory count
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать инвентаризацию'**
+  String get inventoryCountStart;
+
+  /// AppBar title during the inventory count entry step
+  ///
+  /// In ru, this message translates to:
+  /// **'Подсчёт'**
+  String get inventoryCountingTitle;
+
+  /// Hint shown above the inventory count product list
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите на строку для редактирования'**
+  String get inventoryCountEditHint;
+
+  /// Expected quantity shown under a product row during inventory count
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидается: {expected}'**
+  String inventoryExpectedLine(String expected);
+
+  /// AppBar title on the inventory count diff/results step
+  ///
+  /// In ru, this message translates to:
+  /// **'Результаты'**
+  String get inventoryResultsTitle;
+
+  /// Inventory count diff table column header for expected quantity
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидалось'**
+  String get inventoryExpectedColumn;
+
+  /// Inventory count diff table column header for actual counted quantity
+  ///
+  /// In ru, this message translates to:
+  /// **'Факт'**
+  String get inventoryActualColumn;
+
+  /// Heading shown once an inventory count has been applied
+  ///
+  /// In ru, this message translates to:
+  /// **'Инвентаризация завершена'**
+  String get inventoryCountCompleted;
+
+  /// Subtitle shown once an inventory count has been applied
+  ///
+  /// In ru, this message translates to:
+  /// **'Остатки товаров успешно обновлены.'**
+  String get inventoryCountUpdated;
 
   /// Recent sales section title
   ///

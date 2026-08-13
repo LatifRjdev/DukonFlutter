@@ -45,6 +45,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get confirm => 'Тасдиқ кардан';
 
   @override
+  String get apply => 'Применить';
+
+  @override
   String get retry => 'Аз нав кӯшиш кардан';
 
   @override
@@ -64,6 +67,15 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get emptyList => 'Рӯйхат холӣ аст';
+
+  @override
+  String get product => 'Товар';
+
+  @override
+  String get productNotFound => 'Товар не найден';
+
+  @override
+  String get difference => 'Разница';
 
   @override
   String get login => 'Даромадан';
@@ -465,6 +477,39 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get dashboardInventorySubtitle => 'Проверить фактические остатки';
+
+  @override
+  String get inventoryCountIntro =>
+      'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.';
+
+  @override
+  String get inventoryCountStart => 'Начать инвентаризацию';
+
+  @override
+  String get inventoryCountingTitle => 'Подсчёт';
+
+  @override
+  String get inventoryCountEditHint => 'Нажмите на строку для редактирования';
+
+  @override
+  String inventoryExpectedLine(String expected) {
+    return 'Ожидается: $expected';
+  }
+
+  @override
+  String get inventoryResultsTitle => 'Результаты';
+
+  @override
+  String get inventoryExpectedColumn => 'Ожидалось';
+
+  @override
+  String get inventoryActualColumn => 'Факт';
+
+  @override
+  String get inventoryCountCompleted => 'Инвентаризация завершена';
+
+  @override
+  String get inventoryCountUpdated => 'Остатки товаров успешно обновлены.';
 
   @override
   String get dashboardRecentSalesTitle => 'Последние продажи';
