@@ -535,43 +535,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get dashboardSupplierOwedSubtitle => 'Долги поставщикам';
 
   @override
-  String get inventoryTitle => 'Инвентаризация';
-
-  @override
   String get dashboardInventorySubtitle => 'Проверить фактические остатки';
-
-  @override
-  String get inventoryCountIntro =>
-      'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.';
-
-  @override
-  String get inventoryCountStart => 'Начать инвентаризацию';
-
-  @override
-  String get inventoryCountingTitle => 'Подсчёт';
-
-  @override
-  String get inventoryCountEditHint => 'Нажмите на строку для редактирования';
-
-  @override
-  String inventoryExpectedLine(String expected) {
-    return 'Ожидается: $expected';
-  }
-
-  @override
-  String get inventoryResultsTitle => 'Результаты';
-
-  @override
-  String get inventoryExpectedColumn => 'Ожидалось';
-
-  @override
-  String get inventoryActualColumn => 'Факт';
-
-  @override
-  String get inventoryCountCompleted => 'Инвентаризация завершена';
-
-  @override
-  String get inventoryCountUpdated => 'Остатки товаров успешно обновлены.';
 
   @override
   String get dashboardRecentSalesTitle => 'Последние продажи';
@@ -608,6 +572,42 @@ class AppLocalizationsTg extends AppLocalizations {
   String dashboardSaleReceiptLabel(String receiptNo) {
     return 'Чек #$receiptNo';
   }
+
+  @override
+  String get inventoryTitle => 'Инвентаризация';
+
+  @override
+  String get inventoryCountIntro =>
+      'Запустите инвентаризацию, чтобы сверить фактические остатки товаров с ожидаемыми.';
+
+  @override
+  String get inventoryCountStart => 'Начать инвентаризацию';
+
+  @override
+  String get inventoryCountingTitle => 'Подсчёт';
+
+  @override
+  String get inventoryCountEditHint => 'Нажмите на строку для редактирования';
+
+  @override
+  String inventoryExpectedLine(String expected) {
+    return 'Ожидается: $expected';
+  }
+
+  @override
+  String get inventoryResultsTitle => 'Результаты';
+
+  @override
+  String get inventoryExpectedColumn => 'Ожидалось';
+
+  @override
+  String get inventoryActualColumn => 'Факт';
+
+  @override
+  String get inventoryCountCompleted => 'Инвентаризация завершена';
+
+  @override
+  String get inventoryCountUpdated => 'Остатки товаров успешно обновлены.';
 
   @override
   String get customers => 'Харидорон';

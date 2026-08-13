@@ -1,0 +1,11 @@
+# Mobile L10n (AppLocalizations) Conventions
+
+- Source of truth is `app/lib/l10n/app_ru.arb` (Russian, the template locale) — `app_tg.arb`/`app_uz.arb` are translated separately; never hand-edit the generated `app_localizations*.dart` files, they come from `flutter gen-l10n`
+- Keys are grouped in contiguous prefix blocks by feature (`dashboard*`, `zReport*`, `inventory*`, `importProducts*`, `a11y*`, `snack*`, etc.) — a key's prefix determines which block it physically lives in
+- **If you rename or re-scope a key's prefix, move it to the matching block in the same commit** — a key whose prefix disagrees with its physical location is a bug in the file's organization, not just cosmetic
+- Only mint a feature-prefixed key for copy that's genuinely specific to that screen; reuse or add an unprefixed generic key (`save`, `cancel`, `today`, `price`, etc.) for anything that plausibly belongs elsewhere too — the discriminator is the string's *meaning*, never *where it currently renders*
+- Before adding any new key, check for an existing one with the same or equivalent value — grep the `.arb` first
+- When rendered output is `label + separator + value` (e.g. "Долг: 500"), use one full-sentence placeholder key rather than reusing a bare label key via manual string interpolation — keeps the separator translatable
+- Add an `@key` description for any key whose meaning isn't obvious, especially near-duplicates of an existing key (state explicitly how they differ)
+- Interpolated placeholders are typed `String` (pre-format the value, then interpolate) — not `int`/`num`, no ICU `plural`/`select`, to keep extraction diffs behavior-preserving
+- `l10n.yaml` sets `untranslated-messages-file: l10n_untranslated.json` — run `flutter gen-l10n` and check this file to see the current tg/uz translation backlog; it's a tracked, reviewable artifact, not a build byproduct to ignore

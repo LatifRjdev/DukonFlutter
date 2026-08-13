@@ -88,6 +88,11 @@ void main() {
 
     expect(find.text('3 товаров найдено'),
         findsOneWidget); // new importProductsFoundCount
+    // TODO(i18n): "1 ошибок" is grammatically incorrect Russian (should be
+    // "1 ошибка") — faithfully preserved from the pre-extraction literal,
+    // not introduced here. Fixing the plural form requires switching this
+    // placeholder from String to ICU plural, which is out of scope for a
+    // byte-preserving extraction. Update this assertion if that ever lands.
     expect(
         find.text('1 ошибок'), findsOneWidget); // new importProductsErrorsBadge
     expect(find.text('Строка 2: Отсутствует штрихкод'),
