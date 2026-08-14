@@ -204,6 +204,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editProduct => 'Редактировать товар';
 
   @override
+  String get newProductTitle => 'Новый товар';
+
+  @override
+  String get addProductStepBasic => 'Основное';
+
+  @override
+  String get addProductStepPrices => 'Цены';
+
+  @override
+  String get addProductStepStock => 'Склад';
+
+  @override
   String get productName => 'Название товара';
 
   @override
@@ -220,6 +232,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get price => 'Цена';
+
+  @override
+  String get wholesalePrice => 'Оптовая цена';
+
+  @override
+  String get costPriceRequiredLabel => 'Себестоимость *';
+
+  @override
+  String get sellPriceRequiredLabel => 'Цена продажи *';
+
+  @override
+  String get costPriceRequiredError => 'Введите себестоимость';
+
+  @override
+  String get sellPriceRequiredError => 'Введите цену продажи';
+
+  @override
+  String get invalidFormatError => 'Неверный формат';
 
   @override
   String get quantity => 'Количество';
@@ -253,6 +283,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pack => 'уп';
+
+  @override
+  String get unitPiece => 'Штука';
+
+  @override
+  String get unitKilogram => 'Килограмм';
+
+  @override
+  String get unitLiter => 'Литр';
+
+  @override
+  String get unitMeter => 'Метр';
+
+  @override
+  String get unitBox => 'Коробка';
+
+  @override
+  String get unitPack => 'Упаковка';
 
   @override
   String get inStock => 'В наличии';

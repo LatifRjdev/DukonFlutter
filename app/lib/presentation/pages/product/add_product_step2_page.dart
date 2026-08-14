@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -24,14 +25,14 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
   final _wholesalePriceController = TextEditingController();
   String _selectedUnit = 'PCS';
 
-  static const _units = [
-    {'value': 'PCS', 'label': 'Штука'},
-    {'value': 'KG', 'label': 'Килограмм'},
-    {'value': 'L', 'label': 'Литр'},
-    {'value': 'M', 'label': 'Метр'},
-    {'value': 'BOX', 'label': 'Коробка'},
-    {'value': 'PACK', 'label': 'Упаковка'},
-  ];
+  static List<Map<String, String>> _units(AppLocalizations l10n) => [
+        {'value': 'PCS', 'label': l10n.unitPiece},
+        {'value': 'KG', 'label': l10n.unitKilogram},
+        {'value': 'L', 'label': l10n.unitLiter},
+        {'value': 'M', 'label': l10n.unitMeter},
+        {'value': 'BOX', 'label': l10n.unitBox},
+        {'value': 'PACK', 'label': l10n.unitPack},
+      ];
 
   @override
   void dispose() {
@@ -58,9 +59,10 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Новый товар'),
+        title: Text(l10n.newProductTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -75,11 +77,11 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                   horizontal: AppConstants.spacingLg, vertical: AppConstants.spacingMd),
               child: Row(
                 children: [
-                  _StepDot(index: 1, label: 'Основное', isActive: false, isCompleted: true),
+                  _StepDot(index: 1, label: l10n.addProductStepBasic, isActive: false, isCompleted: true),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 2, label: 'Цены', isActive: true, isCompleted: false),
+                  _StepDot(index: 2, label: l10n.addProductStepPrices, isActive: true, isCompleted: false),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 3, label: 'Склад', isActive: false, isCompleted: false),
+                  _StepDot(index: 3, label: l10n.addProductStepStock, isActive: false, isCompleted: false),
                 ],
               ),
             ),
@@ -93,7 +95,7 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                     children: [
                       AppTextField(
                         controller: _costPriceController,
-                        label: 'Себестоимость *',
+                        label: l10n.costPriceRequiredLabel,
                         hint: '0.00',
                         prefixIcon: Icons.money_outlined,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -101,15 +103,15 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                           FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                         ],
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Введите себестоимость';
-                          if (double.tryParse(v) == null) return 'Неверный формат';
+                          if (v == null || v.trim().isEmpty) return l10n.costPriceRequiredError;
+                          if (double.tryParse(v) == null) return l10n.invalidFormatError;
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _sellPriceController,
-                        label: 'Цена продажи *',
+                        label: l10n.sellPriceRequiredLabel,
                         hint: '0.00',
                         prefixIcon: Icons.sell_outlined,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -117,15 +119,15 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                           FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                         ],
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Введите цену продажи';
-                          if (double.tryParse(v) == null) return 'Неверный формат';
+                          if (v == null || v.trim().isEmpty) return l10n.sellPriceRequiredError;
+                          if (double.tryParse(v) == null) return l10n.invalidFormatError;
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _wholesalePriceController,
-                        label: 'Оптовая цена',
+                        label: l10n.wholesalePrice,
                         hint: '0.00',
                         prefixIcon: Icons.price_change_outlined,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -134,13 +136,13 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      const Text('Единица измерения',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text(l10n.unit,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: _units.map((u) {
+                        children: _units(l10n).map((u) {
                           final isSelected = _selectedUnit == u['value'];
                           return ChoiceChip(
                             label: Text(u['label']!),
@@ -166,7 +168,7 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                 children: [
                   Expanded(
                     child: AppButton(
-                      text: 'Назад',
+                      text: l10n.back,
                       type: AppButtonType.outlined,
                       onPressed: () => context.pop(),
                     ),
@@ -174,7 +176,7 @@ class _AddProductStep2PageState extends State<AddProductStep2Page> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
-                      text: 'Далее',
+                      text: l10n.next,
                       icon: Icons.arrow_forward,
                       onPressed: _next,
                     ),

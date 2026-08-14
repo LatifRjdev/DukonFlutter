@@ -205,6 +205,18 @@ class AppLocalizationsUz extends AppLocalizations {
   String get editProduct => 'Tovarni tahrirlash';
 
   @override
+  String get newProductTitle => 'Новый товар';
+
+  @override
+  String get addProductStepBasic => 'Основное';
+
+  @override
+  String get addProductStepPrices => 'Цены';
+
+  @override
+  String get addProductStepStock => 'Склад';
+
+  @override
   String get productName => 'Tovar nomi';
 
   @override
@@ -221,6 +233,24 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get price => 'Цена';
+
+  @override
+  String get wholesalePrice => 'Оптовая цена';
+
+  @override
+  String get costPriceRequiredLabel => 'Себестоимость *';
+
+  @override
+  String get sellPriceRequiredLabel => 'Цена продажи *';
+
+  @override
+  String get costPriceRequiredError => 'Введите себестоимость';
+
+  @override
+  String get sellPriceRequiredError => 'Введите цену продажи';
+
+  @override
+  String get invalidFormatError => 'Неверный формат';
 
   @override
   String get quantity => 'Miqdor';
@@ -254,6 +284,24 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get pack => 'qad';
+
+  @override
+  String get unitPiece => 'Штука';
+
+  @override
+  String get unitKilogram => 'Килограмм';
+
+  @override
+  String get unitLiter => 'Литр';
+
+  @override
+  String get unitMeter => 'Метр';
+
+  @override
+  String get unitBox => 'Коробка';
+
+  @override
+  String get unitPack => 'Упаковка';
 
   @override
   String get inStock => 'Mavjud';

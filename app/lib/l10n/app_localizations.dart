@@ -484,6 +484,30 @@ abstract class AppLocalizations {
   /// **'Редактировать товар'**
   String get editProduct;
 
+  /// Add-product wizard app bar title (shown on all 3 wizard steps) — distinct from `addProduct` ("Добавить товар", the action button) and `editProduct` ("Редактировать товар", shown instead when editing an existing product)
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый товар'**
+  String get newProductTitle;
+
+  /// Add-product wizard step indicator label — step 1 (basic info)
+  ///
+  /// In ru, this message translates to:
+  /// **'Основное'**
+  String get addProductStepBasic;
+
+  /// Add-product wizard step indicator label — step 2 (prices)
+  ///
+  /// In ru, this message translates to:
+  /// **'Цены'**
+  String get addProductStepPrices;
+
+  /// Add-product wizard step indicator label — step 3 (stock)
+  ///
+  /// In ru, this message translates to:
+  /// **'Склад'**
+  String get addProductStepStock;
+
   /// Product name field
   ///
   /// In ru, this message translates to:
@@ -519,6 +543,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Цена'**
   String get price;
+
+  /// Wholesale price form field label
+  ///
+  /// In ru, this message translates to:
+  /// **'Оптовая цена'**
+  String get wholesalePrice;
+
+  /// Add-product step 2 — cost price form field label with a required-field asterisk; distinct from `dashboardCost` ("Себестоимость", the dashboard metric tile label, no asterisk) and `costPrice` ("Цена закупки", a differently-worded purchase-price label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость *'**
+  String get costPriceRequiredLabel;
+
+  /// Add-product step 2 — sell price form field label with a required-field asterisk; distinct from `sellPrice` ("Цена продажи", no asterisk)
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена продажи *'**
+  String get sellPriceRequiredLabel;
+
+  /// Validation error shown when a cost price field is left empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите себестоимость'**
+  String get costPriceRequiredError;
+
+  /// Validation error shown when a sell price field is left empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите цену продажи'**
+  String get sellPriceRequiredError;
+
+  /// Generic validation error for a malformed numeric field value
+  ///
+  /// In ru, this message translates to:
+  /// **'Неверный формат'**
+  String get invalidFormatError;
 
   /// Quantity field
   ///
@@ -585,6 +645,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'уп'**
   String get pack;
+
+  /// Full-word 'Piece' unit label (unit picker) — distinct from `pcs` ("шт", the abbreviated symbol)
+  ///
+  /// In ru, this message translates to:
+  /// **'Штука'**
+  String get unitPiece;
+
+  /// Full-word 'Kilogram' unit label (unit picker) — distinct from `kg` ("кг", the abbreviated symbol)
+  ///
+  /// In ru, this message translates to:
+  /// **'Килограмм'**
+  String get unitKilogram;
+
+  /// Full-word 'Liter' unit label (unit picker) — distinct from `liter` ("л", the abbreviated symbol)
+  ///
+  /// In ru, this message translates to:
+  /// **'Литр'**
+  String get unitLiter;
+
+  /// Full-word 'Meter' unit label (unit picker)
+  ///
+  /// In ru, this message translates to:
+  /// **'Метр'**
+  String get unitMeter;
+
+  /// Full-word 'Box' unit label (unit picker)
+  ///
+  /// In ru, this message translates to:
+  /// **'Коробка'**
+  String get unitBox;
+
+  /// Full-word 'Pack' unit label (unit picker) — distinct from `pack` ("уп", the abbreviated symbol)
+  ///
+  /// In ru, this message translates to:
+  /// **'Упаковка'**
+  String get unitPack;
 
   /// In stock status
   ///
