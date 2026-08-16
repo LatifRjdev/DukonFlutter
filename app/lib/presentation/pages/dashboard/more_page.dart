@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -21,97 +22,98 @@ class MorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ещё'),
+        title: Text(l10n.more),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          _SectionHeader(title: 'Продажи и Финансы'),
+          _SectionHeader(title: l10n.moreSalesFinanceTitle),
           _MenuItem(
             icon: Icons.receipt_long,
-            label: 'История продаж',
+            label: l10n.salesHistory,
             color: AppColors.info,
             onTap: () => context.push('/sales/history', extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.analytics_outlined,
-            label: 'Финансы',
+            label: l10n.finances,
             color: AppColors.primary,
             onTap: () => context.push(RouteNames.financeDashboard, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.money_off_outlined,
-            label: 'Расходы',
+            label: l10n.expenses,
             color: AppColors.error,
             onTap: () => context.push(RouteNames.expenses, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.account_balance_outlined,
-            label: 'Долги',
+            label: l10n.debts,
             color: AppColors.warning,
             onTap: () => context.push(RouteNames.debtsOverview, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.volunteer_activism_outlined,
-            label: 'Закят',
+            label: l10n.zakat,
             color: AppColors.success,
             onTap: () => context.push(RouteNames.zakatCalculator, extra: _getStoreId(context)),
           ),
           const Divider(height: 24),
-          _SectionHeader(title: 'Персонал'),
+          _SectionHeader(title: l10n.moreStaffTitle),
           _MenuItem(
             icon: Icons.people_outlined,
-            label: 'Сотрудники',
+            label: l10n.employees,
             color: AppColors.info,
             onTap: () => context.push(RouteNames.staffList, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.access_time_outlined,
-            label: 'Смены',
+            label: l10n.shifts,
             color: AppColors.primary,
             onTap: () => context.push(RouteNames.shifts, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.payments_outlined,
-            label: 'Зарплата',
+            label: l10n.payroll,
             color: AppColors.success,
             onTap: () => context.push(RouteNames.payroll, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.admin_panel_settings_outlined,
-            label: 'Роли и права',
+            label: l10n.moreRolesAndPermissions,
             color: AppColors.warning,
             onTap: () => context.push(RouteNames.roles, extra: _getStoreId(context)),
           ),
           const Divider(height: 24),
-          _SectionHeader(title: 'Контрагенты'),
+          _SectionHeader(title: l10n.moreCounterpartiesTitle),
           _MenuItem(
             icon: Icons.people_outlined,
-            label: 'Клиенты',
+            label: l10n.moreClients,
             color: AppColors.primary,
             onTap: () => context.push(RouteNames.customerList, extra: _getStoreId(context)),
           ),
           _MenuItem(
             icon: Icons.local_shipping_outlined,
-            label: 'Поставщики',
+            label: l10n.suppliers,
             color: AppColors.primary,
             onTap: () => context.push(RouteNames.supplierList, extra: _getStoreId(context)),
           ),
           const Divider(height: 24),
-          _SectionHeader(title: 'Магазин'),
+          _SectionHeader(title: l10n.moreStoreTitle),
           _MenuItem(
             icon: Icons.store_outlined,
-            label: 'Мои магазины',
+            label: l10n.moreMyStores,
             color: AppColors.primary,
             onTap: () => context.push(RouteNames.myStores),
           ),
           const Divider(height: 24),
-          _SectionHeader(title: 'Настройки'),
+          _SectionHeader(title: l10n.settings),
           _MenuItem(
             icon: Icons.settings_outlined,
-            label: 'Настройки',
+            label: l10n.settings,
             color: context.textSecondary,
             onTap: () => context.push(RouteNames.settings),
           ),

@@ -552,6 +552,27 @@ class AppLocalizationsTg extends AppLocalizations {
   String get more => 'Бештар';
 
   @override
+  String get moreSalesFinanceTitle => 'Продажи и Финансы';
+
+  @override
+  String get moreStaffTitle => 'Персонал';
+
+  @override
+  String get moreRolesAndPermissions => 'Роли и права';
+
+  @override
+  String get moreCounterpartiesTitle => 'Контрагенты';
+
+  @override
+  String get moreClients => 'Клиенты';
+
+  @override
+  String get moreStoreTitle => 'Магазин';
+
+  @override
+  String get moreMyStores => 'Мои магазины';
+
+  @override
   String get offline => 'Пайвасти интернет нест. Офлайн кор мекунем.';
 
   @override

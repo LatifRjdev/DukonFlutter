@@ -552,6 +552,27 @@ class AppLocalizationsUz extends AppLocalizations {
   String get more => 'Ko\'proq';
 
   @override
+  String get moreSalesFinanceTitle => 'Продажи и Финансы';
+
+  @override
+  String get moreStaffTitle => 'Персонал';
+
+  @override
+  String get moreRolesAndPermissions => 'Роли и права';
+
+  @override
+  String get moreCounterpartiesTitle => 'Контрагенты';
+
+  @override
+  String get moreClients => 'Клиенты';
+
+  @override
+  String get moreStoreTitle => 'Магазин';
+
+  @override
+  String get moreMyStores => 'Мои магазины';
+
+  @override
   String get offline => 'Internet aloqasi yo\'q. Oflayn rejimda ishlaymiz.';
 
   @override

@@ -551,6 +551,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get more => 'Ещё';
 
   @override
+  String get moreSalesFinanceTitle => 'Продажи и Финансы';
+
+  @override
+  String get moreStaffTitle => 'Персонал';
+
+  @override
+  String get moreRolesAndPermissions => 'Роли и права';
+
+  @override
+  String get moreCounterpartiesTitle => 'Контрагенты';
+
+  @override
+  String get moreClients => 'Клиенты';
+
+  @override
+  String get moreStoreTitle => 'Магазин';
+
+  @override
+  String get moreMyStores => 'Мои магазины';
+
+  @override
   String get offline => 'Нет подключения к интернету. Работаем офлайн.';
 
   @override

@@ -1144,6 +1144,48 @@ abstract class AppLocalizations {
   /// **'Ещё'**
   String get more;
 
+  /// More page — sales/finance section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи и Финансы'**
+  String get moreSalesFinanceTitle;
+
+  /// More page — staff section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Персонал'**
+  String get moreStaffTitle;
+
+  /// More page — menu item linking to the roles & permissions screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Роли и права'**
+  String get moreRolesAndPermissions;
+
+  /// More page — counterparties (customers/suppliers) section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Контрагенты'**
+  String get moreCounterpartiesTitle;
+
+  /// More page — menu item linking to the customer list
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиенты'**
+  String get moreClients;
+
+  /// More page — store section header. Distinct from `dashboardStoreFallback` ("Магазин" used as a placeholder store name before one is selected)
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин'**
+  String get moreStoreTitle;
+
+  /// More page — menu item linking to the user's store list
+  ///
+  /// In ru, this message translates to:
+  /// **'Мои магазины'**
+  String get moreMyStores;
+
   /// Offline mode message
   ///
   /// In ru, this message translates to:
