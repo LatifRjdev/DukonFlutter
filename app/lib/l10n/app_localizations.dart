@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// **'Редактировать'**
   String get edit;
 
+  /// Generic 'Create' button — often toggled with `save` in the same slot (e.g. "Сохранить" when editing, "Создать" when adding new)
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать'**
+  String get create;
+
   /// Search action/label
   ///
   /// In ru, this message translates to:
@@ -189,6 +195,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Загрузка...'**
   String get loading;
+
+  /// Generic in-progress button label shown while a submit action is running — distinct from `loading` ("Загрузка...", used for page/data loading states)
+  ///
+  /// In ru, this message translates to:
+  /// **'Обработка...'**
+  String get processing;
 
   /// Generic error label
   ///
@@ -261,6 +273,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Номер телефона'**
   String get phone;
+
+  /// Short bare 'Phone' field label (no "number") — distinct from `phone` ("Номер телефона"); this shorter wording recurs verbatim on other contact-info forms (e.g. the add-staff screen)
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон'**
+  String get phoneLabel;
 
   /// Password field label
   ///
@@ -1378,6 +1396,18 @@ abstract class AppLocalizations {
   /// **'Покупатель'**
   String get customer;
 
+  /// Prompt shown on a customer-picker sheet/field, and used as the placeholder text before a customer is chosen — uses "клиент" (client), the wording this app's customer-list feature uses, distinct from the bare `customer` ("Покупатель") label
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите клиента'**
+  String get selectCustomer;
+
+  /// Title for creating a new customer (dialog/screen), or the fallback title when a customer form isn't in edit mode
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый клиент'**
+  String get newCustomer;
+
   /// Settings section
   ///
   /// In ru, this message translates to:
@@ -1695,6 +1725,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Введите корректную сумму'**
   String get creditsInvalidAmountError;
+
+  /// Credit-sale screen — app bar title. Distinct from `debtSales` ("Продажи в долг", plural, the Z-report category label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа в долг'**
+  String get creditSaleTitle;
+
+  /// Credit-sale screen — the formatted debt total with currency suffix, shown below the `debtAmount` ("Сумма долга") heading label
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} сом.'**
+  String creditSaleAmountLabel(String amount);
+
+  /// Credit-sale screen — required-field section label above the customer picker
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент *'**
+  String get creditSaleCustomerRequiredLabel;
+
+  /// Credit-sale screen — section label above the due-date picker
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок оплаты'**
+  String get creditSaleDueDateLabel;
+
+  /// Credit-sale screen — section label above the optional note field. Distinct from `notes` ("Заметки", a different generic list-of-notes label)
+  ///
+  /// In ru, this message translates to:
+  /// **'Примечание'**
+  String get creditSaleNoteLabel;
+
+  /// Credit-sale screen — hint text inside the empty note field
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте примечание (необязательно)'**
+  String get creditSaleNoteHint;
+
+  /// Credit-sale screen — button on the customer picker sheet to open the new-customer dialog
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать нового клиента'**
+  String get creditSaleCreateCustomerButton;
+
+  /// Credit-sale screen — primary button to submit the credit sale (shows `processing` instead while the request is in flight)
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформить в долг'**
+  String get creditSaleConfirmButton;
+
+  /// Credit-sale screen — shown on the customer picker sheet when the store has no customers yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Список клиентов пуст'**
+  String get creditSaleCustomerListEmpty;
 
   /// No description provided for @zakat.
   ///

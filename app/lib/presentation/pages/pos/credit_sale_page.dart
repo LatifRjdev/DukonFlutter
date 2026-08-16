@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -92,13 +93,14 @@ class _CreditSalePageState extends State<CreditSalePage> {
           maxChildSize: 0.9,
           expand: false,
           builder: (sheetContext, scrollController) {
+            final l10n = AppLocalizations.of(sheetContext)!;
             return Padding(
               padding: const EdgeInsets.all(AppConstants.spacingLg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Выберите клиента',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.selectCustomer,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 16),
                   Expanded(
                     child: BlocBuilder<CustomerListBloc, CustomerListState>(
@@ -109,7 +111,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                         if (state is CustomerListLoaded) {
                           if (state.customers.isEmpty) {
                             return Center(
-                              child: Text('Список клиентов пуст',
+                              child: Text(AppLocalizations.of(context)!.creditSaleCustomerListEmpty,
                                   style: TextStyle(color: sheetContext.textSecondary)),
                             );
                           }
@@ -161,7 +163,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                   ),
                   const SizedBox(height: 16),
                   AppButton(
-                    text: 'Создать нового клиента',
+                    text: l10n.creditSaleCreateCustomerButton,
                     icon: Icons.person_add_outlined,
                     type: AppButtonType.outlined,
                     onPressed: () {
@@ -233,6 +235,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
         if (state.saleResult != null) {
@@ -246,15 +249,16 @@ class _CreditSalePageState extends State<CreditSalePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Продажа в долг'),
+          title: Text(l10n.creditSaleTitle),
           leading: IconButton(
-            tooltip: 'Назад',
+            tooltip: l10n.back,
             icon: const Icon(Icons.arrow_back),
             onPressed: () => context.pop(),
           ),
         ),
         body: BlocBuilder<CartBloc, CartState>(
           builder: (context, cart) {
+            final l10n = AppLocalizations.of(context)!;
             final total = cart.total;
             final isProcessing = context.watch<CheckoutBloc>().state.isProcessing;
 
@@ -271,13 +275,13 @@ class _CreditSalePageState extends State<CreditSalePage> {
                             color: AppColors.warning.withValues(alpha: 0.08),
                             child: Column(
                               children: [
-                                Text('Сумма долга',
+                                Text(l10n.debtAmount,
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: context.textSecondary)),
                                 const SizedBox(height: 8),
                                 Text(
-                                  '${total.toStringAsFixed(2)} сом.',
+                                  l10n.creditSaleAmountLabel(total.toStringAsFixed(2)),
                                   style: const TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.w700,
@@ -288,8 +292,8 @@ class _CreditSalePageState extends State<CreditSalePage> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          const Text('Клиент *',
-                              style: TextStyle(
+                          Text(l10n.creditSaleCustomerRequiredLabel,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           AppCard(
@@ -314,7 +318,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    _selectedCustomerName ?? 'Выберите клиента',
+                                    _selectedCustomerName ?? l10n.selectCustomer,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: _selectedCustomerId != null
@@ -332,8 +336,8 @@ class _CreditSalePageState extends State<CreditSalePage> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text('Срок оплаты',
-                              style: TextStyle(
+                          Text(l10n.creditSaleDueDateLabel,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           AppCard(
@@ -355,13 +359,13 @@ class _CreditSalePageState extends State<CreditSalePage> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text('Примечание',
-                              style: TextStyle(
+                          Text(l10n.creditSaleNoteLabel,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           AppTextField(
                             controller: _notesController,
-                            hint: 'Добавьте примечание (необязательно)',
+                            hint: l10n.creditSaleNoteHint,
                             maxLines: 3,
                           ),
                         ],
@@ -371,7 +375,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                   Padding(
                     padding: const EdgeInsets.all(AppConstants.spacingLg),
                     child: AppButton(
-                      text: isProcessing ? 'Обработка...' : 'Оформить в долг',
+                      text: isProcessing ? l10n.processing : l10n.creditSaleConfirmButton,
                       icon: Icons.check,
                       onPressed: !isProcessing && _selectedCustomerId != null
                           ? () => _confirm(total)
@@ -415,22 +419,23 @@ class _CreateCustomerDialogContentState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isSaving =
         context.watch<CustomerListBloc>().state is CustomerFormLoading;
     return AlertDialog(
-      title: const Text('Новый клиент'),
+      title: Text(l10n.newCustomer),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           AppTextField(
             controller: _nameController,
-            label: 'Имя',
+            label: l10n.name,
             prefixIcon: Icons.person_outline,
           ),
           const SizedBox(height: 12),
           AppTextField(
             controller: _phoneController,
-            label: 'Телефон',
+            label: l10n.phoneLabel,
             prefixIcon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
           ),
@@ -439,7 +444,7 @@ class _CreateCustomerDialogContentState
       actions: [
         TextButton(
           onPressed: isSaving ? null : () => Navigator.pop(context),
-          child: const Text('Отмена'),
+          child: Text(l10n.cancel),
         ),
         TextButton(
           onPressed: isSaving
@@ -464,7 +469,7 @@ class _CreateCustomerDialogContentState
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('Создать'),
+              : Text(l10n.create),
         ),
       ],
     );

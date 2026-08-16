@@ -24,6 +24,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get edit => 'Редактировать';
 
   @override
+  String get create => 'Создать';
+
+  @override
   String get search => 'Поиск';
 
   @override
@@ -52,6 +55,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get loading => 'Загрузка...';
+
+  @override
+  String get processing => 'Обработка...';
 
   @override
   String get error => 'Ошибка';
@@ -88,6 +94,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get phone => 'Номер телефона';
+
+  @override
+  String get phoneLabel => 'Телефон';
 
   @override
   String get password => 'Пароль';
@@ -681,6 +690,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customer => 'Покупатель';
 
   @override
+  String get selectCustomer => 'Выберите клиента';
+
+  @override
+  String get newCustomer => 'Новый клиент';
+
+  @override
   String get settings => 'Настройки';
 
   @override
@@ -842,6 +857,35 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get creditsInvalidAmountError => 'Введите корректную сумму';
+
+  @override
+  String get creditSaleTitle => 'Продажа в долг';
+
+  @override
+  String creditSaleAmountLabel(String amount) {
+    return '$amount сом.';
+  }
+
+  @override
+  String get creditSaleCustomerRequiredLabel => 'Клиент *';
+
+  @override
+  String get creditSaleDueDateLabel => 'Срок оплаты';
+
+  @override
+  String get creditSaleNoteLabel => 'Примечание';
+
+  @override
+  String get creditSaleNoteHint => 'Добавьте примечание (необязательно)';
+
+  @override
+  String get creditSaleCreateCustomerButton => 'Создать нового клиента';
+
+  @override
+  String get creditSaleConfirmButton => 'Оформить в долг';
+
+  @override
+  String get creditSaleCustomerListEmpty => 'Список клиентов пуст';
 
   @override
   String get zakat => 'Закят';
