@@ -111,7 +111,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
                         if (state is CustomerListLoaded) {
                           if (state.customers.isEmpty) {
                             return Center(
-                              child: Text(AppLocalizations.of(context)!.creditSaleCustomerListEmpty,
+                              child: Text(l10n.creditSaleCustomerListEmpty,
                                   style: TextStyle(color: sheetContext.textSecondary)),
                             );
                           }
@@ -258,7 +258,6 @@ class _CreditSalePageState extends State<CreditSalePage> {
         ),
         body: BlocBuilder<CartBloc, CartState>(
           builder: (context, cart) {
-            final l10n = AppLocalizations.of(context)!;
             final total = cart.total;
             final isProcessing = context.watch<CheckoutBloc>().state.isProcessing;
 
