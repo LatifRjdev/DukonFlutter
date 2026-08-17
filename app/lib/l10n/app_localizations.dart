@@ -250,6 +250,12 @@ abstract class AppLocalizations {
   /// **'Разница'**
   String get difference;
 
+  /// Generic 'All' filter option, e.g. the first chip in a category filter list
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get all;
+
   /// Login button
   ///
   /// In ru, this message translates to:
@@ -1576,6 +1582,12 @@ abstract class AppLocalizations {
   /// **'Сегодня'**
   String get today;
 
+  /// No description provided for @yesterday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вчера'**
+  String get yesterday;
+
   /// No description provided for @week.
   ///
   /// In ru, this message translates to:
@@ -2019,6 +2031,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Расход удалён'**
   String get expenseDeleted;
+
+  /// Expense list summary card: label for the total-spend-in-period stat, paired above the 'today' stat
+  ///
+  /// In ru, this message translates to:
+  /// **'За период'**
+  String get expenseListForPeriod;
+
+  /// Expense list empty-state subtitle shown when there are no expenses yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первый расход, чтобы видеть финансовую картину'**
+  String get expenseListEmptySubtitle;
 
   /// No description provided for @noPurchases.
   ///

@@ -84,6 +84,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get difference => 'Разница';
 
   @override
+  String get all => 'Все';
+
+  @override
   String get login => 'Даромадан';
 
   @override
@@ -781,6 +784,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get today => 'Сегодня';
 
   @override
+  String get yesterday => 'Вчера';
+
+  @override
   String get week => 'Ҳафта';
 
   @override
@@ -1007,6 +1013,13 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get expenseDeleted => 'Хароҷот нест шуд';
+
+  @override
+  String get expenseListForPeriod => 'За период';
+
+  @override
+  String get expenseListEmptySubtitle =>
+      'Добавьте первый расход, чтобы видеть финансовую картину';
 
   @override
   String get noPurchases => 'Харидорӣ нест';

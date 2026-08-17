@@ -12,7 +12,7 @@ import '../../blocs/expense/expense_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/finance/expense_card.dart';
-
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class ExpenseListPage extends StatefulWidget {
   final String storeId;
@@ -29,35 +29,35 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
     return '${formatter.format(value)} TJS';
   }
 
-  String _formatDateHeader(DateTime date) {
+  String _formatDateHeader(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final expenseDay = DateTime(date.year, date.month, date.day);
 
-    if (expenseDay == today) return 'Сегодня';
-    if (expenseDay == yesterday) return 'Вчера';
+    if (expenseDay == today) return l10n.today;
+    if (expenseDay == yesterday) return l10n.yesterday;
     return DateFormat('dd.MM.yyyy').format(date);
   }
 
-  Map<String, List<Expense>> _groupExpensesByDate(List<Expense> expenses) {
+  Map<String, List<Expense>> _groupExpensesByDate(List<Expense> expenses, AppLocalizations l10n) {
     final grouped = <String, List<Expense>>{};
     for (final expense in expenses) {
-      final key = _formatDateHeader(expense.date);
+      final key = _formatDateHeader(expense.date, l10n);
       grouped.putIfAbsent(key, () => []).add(expense);
     }
     return grouped;
   }
 
-  final _categories = [
-    (null, 'Все'),
-    ('PURCHASE', 'Закупка'),
-    ('RENT', 'Аренда'),
-    ('SALARY', 'Зарплата'),
-    ('UTILITIES', 'Коммунальные'),
-    ('TRANSPORT', 'Транспорт'),
-    ('MARKETING', 'Маркетинг'),
-    ('OTHER', 'Другое'),
+  List<(String?, String)> _categoryOptions(AppLocalizations l10n) => [
+    (null, l10n.all),
+    ('PURCHASE', l10n.purchase),
+    ('RENT', l10n.rent),
+    ('SALARY', l10n.salary),
+    ('UTILITIES', l10n.utilities),
+    ('TRANSPORT', l10n.transport),
+    ('MARKETING', l10n.marketing),
+    ('OTHER', l10n.other),
   ];
 
   @override
@@ -75,8 +75,10 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final categoryOptions = _categoryOptions(l10n);
     return Scaffold(
-      appBar: AppBar(title: const Text('Расходы')),
+      appBar: AppBar(title: Text(l10n.expenses)),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
@@ -89,10 +91,10 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
-              itemCount: _categories.length,
+              itemCount: categoryOptions.length,
               separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
-                final cat = _categories[index];
+                final cat = categoryOptions[index];
                 final isSelected = cat.$1 == _selectedCategory;
                 return GestureDetector(
                   onTap: () {
@@ -132,9 +134,9 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   if (state.expenses.isEmpty) {
                     return AppEmptyState(
                       icon: Icons.receipt_long_outlined,
-                      title: 'Расходов пока нет',
-                      subtitle: 'Добавьте первый расход, чтобы видеть финансовую картину',
-                      buttonText: 'Добавить расход',
+                      title: l10n.noExpenses,
+                      subtitle: l10n.expenseListEmptySubtitle,
+                      buttonText: l10n.addExpense,
                       onButtonPressed: () => context.push('/finance/expenses/add', extra: widget.storeId),
                     );
                   }
@@ -145,7 +147,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   final todayAmount = expenses
                       .where((e) => DateTime(e.date.year, e.date.month, e.date.day) == today)
                       .fold<double>(0, (sum, e) => sum + e.amount);
-                  final grouped = _groupExpensesByDate(expenses);
+                  final grouped = _groupExpensesByDate(expenses, l10n);
                   final dateKeys = grouped.keys.toList();
 
                   return RefreshIndicator(
@@ -165,7 +167,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                             children: [
                               Column(
                                 children: [
-                                  Text('Сегодня', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                                  Text(l10n.today, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(todayAmount)}',
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
@@ -174,7 +176,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                               Container(width: 1, height: 40, color: context.border),
                               Column(
                                 children: [
-                                  Text('За период', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                                  Text(l10n.expenseListForPeriod, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   const SizedBox(height: 4),
                                   Text('-${_formatPrice(totalAmount)}',
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.danger)),
