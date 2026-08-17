@@ -262,6 +262,18 @@ class AppLocalizationsUz extends AppLocalizations {
   String get invalidFormatError => 'Неверный формат';
 
   @override
+  String get enterName => 'Введите имя';
+
+  @override
+  String get invalidAmount => 'Некорректная сумма';
+
+  @override
+  String get invalidValue => 'Некорректное значение';
+
+  @override
+  String get percentRangeError => 'От 0 до 100';
+
+  @override
   String get quantity => 'Miqdor';
 
   @override
@@ -1030,10 +1042,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get employeeDetail => 'Xodim profili';
 
   @override
+  String get staffFormNameLabel => 'Имя сотрудника';
+
+  @override
   String get role => 'Lavozim';
 
   @override
   String get admin => 'Administrator';
+
+  @override
+  String get adminRoleShort => 'Админ';
 
   @override
   String get cashier => 'Kassir';
@@ -1054,7 +1072,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get commissionPercent => 'Komissiya %';
 
   @override
+  String get commissionPercentField => 'Комиссия (%)';
+
+  @override
   String get baseSalary => 'Oylik maosh';
+
+  @override
+  String get baseSalaryTjs => 'Оклад (TJS)';
 
   @override
   String get isOnShift => 'Smenada';
@@ -1271,6 +1295,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get employeeCreated => 'Xodim yaratildi';
+
+  @override
+  String get employeeAdded => 'Сотрудник добавлен';
 
   @override
   String get employeeUpdated => 'Xodim yangilandi';

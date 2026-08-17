@@ -20,6 +20,10 @@
     "costPriceRequiredError",
     "sellPriceRequiredError",
     "invalidFormatError",
+    "enterName",
+    "invalidAmount",
+    "invalidValue",
+    "percentRangeError",
     "quantityShort",
     "unitPiece",
     "unitKilogram",
@@ -104,6 +108,10 @@
     "creditSaleCreateCustomerButton",
     "creditSaleConfirmButton",
     "creditSaleCustomerListEmpty",
+    "staffFormNameLabel",
+    "adminRoleShort",
+    "commissionPercentField",
+    "baseSalaryTjs",
     "zReportHeaderTitle",
     "zReportSalesCount",
     "zReportTotalSales",
@@ -117,7 +125,8 @@
     "zReportPrintButton",
     "zReportPdfSalesReturnsLine",
     "zReportPdfDebtLine",
-    "zReportPdfTotalLine"
+    "zReportPdfTotalLine",
+    "employeeAdded"
   ],
 
   "uz": [
@@ -141,6 +150,10 @@
     "costPriceRequiredError",
     "sellPriceRequiredError",
     "invalidFormatError",
+    "enterName",
+    "invalidAmount",
+    "invalidValue",
+    "percentRangeError",
     "quantityShort",
     "unitPiece",
     "unitKilogram",
@@ -225,6 +238,10 @@
     "creditSaleCreateCustomerButton",
     "creditSaleConfirmButton",
     "creditSaleCustomerListEmpty",
+    "staffFormNameLabel",
+    "adminRoleShort",
+    "commissionPercentField",
+    "baseSalaryTjs",
     "zReportHeaderTitle",
     "zReportSalesCount",
     "zReportTotalSales",
@@ -238,6 +255,7 @@
     "zReportPrintButton",
     "zReportPdfSalesReturnsLine",
     "zReportPdfDebtLine",
-    "zReportPdfTotalLine"
+    "zReportPdfTotalLine",
+    "employeeAdded"
   ]
 }

@@ -598,6 +598,30 @@ abstract class AppLocalizations {
   /// **'Неверный формат'**
   String get invalidFormatError;
 
+  /// Generic 'name is required' validation error, used across multiple forms with a name field
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите имя'**
+  String get enterName;
+
+  /// Generic 'invalid amount' validation error, used across multiple forms with a monetary/numeric amount field
+  ///
+  /// In ru, this message translates to:
+  /// **'Некорректная сумма'**
+  String get invalidAmount;
+
+  /// Generic 'invalid value' validation error for a numeric field that isn't specifically an amount
+  ///
+  /// In ru, this message translates to:
+  /// **'Некорректное значение'**
+  String get invalidValue;
+
+  /// Validation error shown when a percentage field's value falls outside the 0-100 range
+  ///
+  /// In ru, this message translates to:
+  /// **'От 0 до 100'**
+  String get percentRangeError;
+
   /// Quantity field
   ///
   /// In ru, this message translates to:
@@ -2062,6 +2086,12 @@ abstract class AppLocalizations {
   /// **'Профиль сотрудника'**
   String get employeeDetail;
 
+  /// Staff name field label on the add/edit staff form — distinct from bare `name` ("Имя")
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя сотрудника'**
+  String get staffFormNameLabel;
+
   /// No description provided for @role.
   ///
   /// In ru, this message translates to:
@@ -2073,6 +2103,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Администратор'**
   String get admin;
+
+  /// Short 'Admin' role label — distinct from `admin` ("Администратор", the full form); used in role pickers/chips where space is limited, recurs verbatim across several staff/role screens
+  ///
+  /// In ru, this message translates to:
+  /// **'Админ'**
+  String get adminRoleShort;
 
   /// No description provided for @cashier.
   ///
@@ -2110,11 +2146,23 @@ abstract class AppLocalizations {
   /// **'Комиссия %'**
   String get commissionPercent;
 
+  /// Commission form field label with parenthesized percent sign — distinct from `commissionPercent` ("Комиссия %", no parentheses)
+  ///
+  /// In ru, this message translates to:
+  /// **'Комиссия (%)'**
+  String get commissionPercentField;
+
   /// No description provided for @baseSalary.
   ///
   /// In ru, this message translates to:
   /// **'Оклад'**
   String get baseSalary;
+
+  /// Base salary form field label with currency suffix — distinct from bare `baseSalary` ("Оклад"), same pattern as `amountTjs`
+  ///
+  /// In ru, this message translates to:
+  /// **'Оклад (TJS)'**
+  String get baseSalaryTjs;
 
   /// No description provided for @isOnShift.
   ///
@@ -2535,6 +2583,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сотрудник создан'**
   String get employeeCreated;
+
+  /// Success message shown on the add-staff form after creating a staff member — distinct from `employeeCreated` ("Сотрудник создан"), different wording used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Сотрудник добавлен'**
+  String get employeeAdded;
 
   /// No description provided for @employeeUpdated.
   ///

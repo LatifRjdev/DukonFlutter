@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/staff_member.dart';
@@ -33,11 +34,11 @@ class _AddStaffPageState extends State<AddStaffPage> {
 
   bool get _isEditing => widget.staffMember != null;
 
-  final _roleOptions = [
-    ('ADMIN', 'Админ'),
-    ('CASHIER', 'Кассир'),
-    ('WAREHOUSE', 'Складовщик'),
-  ];
+  List<(String, String)> _roleOptions(AppLocalizations l10n) => [
+        ('ADMIN', l10n.adminRoleShort),
+        ('CASHIER', l10n.cashier),
+        ('WAREHOUSE', l10n.warehouse),
+      ];
 
   @override
   void initState() {
@@ -83,9 +84,10 @@ class _AddStaffPageState extends State<AddStaffPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактировать сотрудника' : 'Добавить сотрудника'),
+        title: Text(_isEditing ? l10n.editEmployee : l10n.addEmployee),
       ),
       body: BlocListener<StaffFormBloc, StaffFormState>(
         listener: (context, state) {
@@ -93,11 +95,11 @@ class _AddStaffPageState extends State<AddStaffPage> {
             context.read<StaffBloc>().add(LoadStaff(storeId: widget.storeId));
             AppSnackbar.success(
               context,
-              _isEditing ? 'Сотрудник обновлён' : 'Сотрудник добавлен',
+              _isEditing ? l10n.employeeUpdated : l10n.employeeAdded,
             );
             context.pop();
           } else if (state is StaffFormError) {
-            AppSnackbar.error(context, state.errorMessage ?? 'Ошибка');
+            AppSnackbar.error(context, state.errorMessage ?? l10n.error);
           }
         },
         child: SingleChildScrollView(
@@ -109,22 +111,22 @@ class _AddStaffPageState extends State<AddStaffPage> {
               children: [
                 AppTextField(
                   controller: _nameController,
-                  label: 'Имя сотрудника',
+                  label: l10n.staffFormNameLabel,
                   prefixIcon: Icons.person,
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Введите имя';
+                    if (v == null || v.trim().isEmpty) return l10n.enterName;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _phoneController,
-                  label: 'Телефон',
+                  label: l10n.phoneLabel,
                   prefixIcon: Icons.phone,
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
-                const Text('Роль', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                Text(l10n.role, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: AppConstants.spacingSm),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -136,7 +138,7 @@ class _AddStaffPageState extends State<AddStaffPage> {
                     child: DropdownButton<String>(
                       value: _role,
                       isExpanded: true,
-                      items: _roleOptions.map((r) => DropdownMenuItem(
+                      items: _roleOptions(l10n).map((r) => DropdownMenuItem(
                         value: r.$1,
                         child: Text(r.$2),
                       )).toList(),
@@ -149,12 +151,12 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _salaryController,
-                  label: 'Оклад (TJS)',
+                  label: l10n.baseSalaryTjs,
                   prefixIcon: Icons.attach_money,
                   keyboardType: TextInputType.number,
                   validator: (v) {
                     if (v != null && v.isNotEmpty && double.tryParse(v) == null) {
-                      return 'Некорректная сумма';
+                      return l10n.invalidAmount;
                     }
                     return null;
                   },
@@ -162,14 +164,14 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _commissionController,
-                  label: 'Комиссия (%)',
+                  label: l10n.commissionPercentField,
                   prefixIcon: Icons.percent,
                   keyboardType: TextInputType.number,
                   validator: (v) {
                     if (v != null && v.isNotEmpty) {
                       final val = double.tryParse(v);
-                      if (val == null) return 'Некорректное значение';
-                      if (val < 0 || val > 100) return 'От 0 до 100';
+                      if (val == null) return l10n.invalidValue;
+                      if (val < 0 || val > 100) return l10n.percentRangeError;
                     }
                     return null;
                   },
@@ -178,7 +180,7 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 BlocBuilder<StaffFormBloc, StaffFormState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Сохранить',
+                      text: l10n.save,
                       isLoading: state is StaffFormLoading,
                       onPressed: _submit,
                     );

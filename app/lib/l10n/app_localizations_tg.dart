@@ -262,6 +262,18 @@ class AppLocalizationsTg extends AppLocalizations {
   String get invalidFormatError => 'Неверный формат';
 
   @override
+  String get enterName => 'Введите имя';
+
+  @override
+  String get invalidAmount => 'Некорректная сумма';
+
+  @override
+  String get invalidValue => 'Некорректное значение';
+
+  @override
+  String get percentRangeError => 'От 0 до 100';
+
+  @override
   String get quantity => 'Миқдор';
 
   @override
@@ -1030,10 +1042,16 @@ class AppLocalizationsTg extends AppLocalizations {
   String get employeeDetail => 'Профили корманд';
 
   @override
+  String get staffFormNameLabel => 'Имя сотрудника';
+
+  @override
   String get role => 'Вазифа';
 
   @override
   String get admin => 'Администратор';
+
+  @override
+  String get adminRoleShort => 'Админ';
 
   @override
   String get cashier => 'Кассир';
@@ -1054,7 +1072,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get commissionPercent => 'Комиссия %';
 
   @override
+  String get commissionPercentField => 'Комиссия (%)';
+
+  @override
   String get baseSalary => 'Маоши доимӣ';
+
+  @override
+  String get baseSalaryTjs => 'Оклад (TJS)';
 
   @override
   String get isOnShift => 'Дар навбат';
@@ -1271,6 +1295,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get employeeCreated => 'Корманд сохта шуд';
+
+  @override
+  String get employeeAdded => 'Сотрудник добавлен';
 
   @override
   String get employeeUpdated => 'Корманд навсозӣ шуд';

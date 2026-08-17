@@ -261,6 +261,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invalidFormatError => 'Неверный формат';
 
   @override
+  String get enterName => 'Введите имя';
+
+  @override
+  String get invalidAmount => 'Некорректная сумма';
+
+  @override
+  String get invalidValue => 'Некорректное значение';
+
+  @override
+  String get percentRangeError => 'От 0 до 100';
+
+  @override
   String get quantity => 'Количество';
 
   @override
@@ -1029,10 +1041,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get employeeDetail => 'Профиль сотрудника';
 
   @override
+  String get staffFormNameLabel => 'Имя сотрудника';
+
+  @override
   String get role => 'Роль';
 
   @override
   String get admin => 'Администратор';
+
+  @override
+  String get adminRoleShort => 'Админ';
 
   @override
   String get cashier => 'Кассир';
@@ -1053,7 +1071,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commissionPercent => 'Комиссия %';
 
   @override
+  String get commissionPercentField => 'Комиссия (%)';
+
+  @override
   String get baseSalary => 'Оклад';
+
+  @override
+  String get baseSalaryTjs => 'Оклад (TJS)';
 
   @override
   String get isOnShift => 'На смене';
@@ -1270,6 +1294,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get employeeCreated => 'Сотрудник создан';
+
+  @override
+  String get employeeAdded => 'Сотрудник добавлен';
 
   @override
   String get employeeUpdated => 'Сотрудник обновлён';
