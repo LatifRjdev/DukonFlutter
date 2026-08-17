@@ -760,10 +760,31 @@ class AppLocalizationsUz extends AppLocalizations {
   String get financeDashboard => 'Moliyaviy boshqaruv paneli';
 
   @override
+  String get balance => 'Баланс';
+
+  @override
+  String get currentBalance => 'Текущий баланс';
+
+  @override
+  String get dynamics => 'Динамика';
+
+  @override
+  String get transactions => 'Транзакции';
+
+  @override
+  String get noTransactions => 'Транзакций нет';
+
+  @override
   String get income => 'Daromad';
 
   @override
+  String get incomes => 'Доходы';
+
+  @override
   String get expenses => 'Xarajatlar';
+
+  @override
+  String get expense => 'Расход';
 
   @override
   String get salesCount => 'Sotuvlar soni';

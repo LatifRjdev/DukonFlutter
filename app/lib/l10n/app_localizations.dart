@@ -1534,17 +1534,59 @@ abstract class AppLocalizations {
   /// **'Финансовый дашборд'**
   String get financeDashboard;
 
+  /// Generic 'Balance' label — used as the balance screen's AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Баланс'**
+  String get balance;
+
+  /// Generic 'Current balance' label shown above the balance figure
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий баланс'**
+  String get currentBalance;
+
+  /// Generic chart/trend section title ('Dynamics') above an income/expense line chart
+  ///
+  /// In ru, this message translates to:
+  /// **'Динамика'**
+  String get dynamics;
+
+  /// Generic 'Transactions' list section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Транзакции'**
+  String get transactions;
+
+  /// Empty state shown when a transactions list has no items
+  ///
+  /// In ru, this message translates to:
+  /// **'Транзакций нет'**
+  String get noTransactions;
+
   /// No description provided for @income.
   ///
   /// In ru, this message translates to:
   /// **'Доход'**
   String get income;
 
+  /// Plural 'Incomes' label used where it's paired with `expenses` ("Расходы") in a legend/summary — distinct from singular `income` ("Доход") used as a bare dashboard stat label
+  ///
+  /// In ru, this message translates to:
+  /// **'Доходы'**
+  String get incomes;
+
   /// No description provided for @expenses.
   ///
   /// In ru, this message translates to:
   /// **'Расходы'**
   String get expenses;
+
+  /// Singular 'Expense' label — e.g. a transaction-type fallback description when no other text is available — distinct from plural `expenses` ("Расходы")
+  ///
+  /// In ru, this message translates to:
+  /// **'Расход'**
+  String get expense;
 
   /// No description provided for @salesCount.
   ///

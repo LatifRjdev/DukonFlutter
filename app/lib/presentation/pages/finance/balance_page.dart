@@ -12,6 +12,7 @@ import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Models
@@ -170,7 +171,7 @@ class _BalancePageState extends State<BalancePage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Баланс'),
+        title: Text(AppLocalizations.of(context)!.balance),
         backgroundColor: context.surface,
         foregroundColor: context.textPrimary,
         elevation: 0,
@@ -197,7 +198,7 @@ class _BalancePageState extends State<BalancePage> {
           const SizedBox(height: AppConstants.spacingMd),
           Text(_error!, style: TextStyle(color: context.textSecondary), textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
-          TextButton(onPressed: _load, child: const Text('Повторить')),
+          TextButton(onPressed: _load, child: Text(AppLocalizations.of(context)!.retry)),
         ],
       ),
     );
@@ -205,6 +206,7 @@ class _BalancePageState extends State<BalancePage> {
 
   Widget _buildContent() {
     final d = _data!;
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -222,19 +224,19 @@ class _BalancePageState extends State<BalancePage> {
               scrollDirection: Axis.horizontal,
               children: [
                 AppChip(
-                  label: 'Неделя',
+                  label: l10n.week,
                   isSelected: _period == 'week',
                   onTap: () => _changePeriod('week'),
                 ),
                 const SizedBox(width: 8),
                 AppChip(
-                  label: 'Месяц',
+                  label: l10n.month,
                   isSelected: _period == 'month',
                   onTap: () => _changePeriod('month'),
                 ),
                 const SizedBox(width: 8),
                 AppChip(
-                  label: 'Год',
+                  label: l10n.year,
                   isSelected: _period == 'year',
                   onTap: () => _changePeriod('year'),
                 ),
@@ -251,7 +253,7 @@ class _BalancePageState extends State<BalancePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Динамика',
+                    l10n.dynamics,
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                   ),
                   const SizedBox(height: 12),
@@ -271,7 +273,7 @@ class _BalancePageState extends State<BalancePage> {
           // Transactions
           if (d.transactions.isNotEmpty) ...[
             Text(
-              'Транзакции',
+              l10n.transactions,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary),
             ),
             const SizedBox(height: 8),
@@ -280,7 +282,7 @@ class _BalancePageState extends State<BalancePage> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32),
-                child: Text('Транзакций нет', style: TextStyle(color: context.textSecondary)),
+                child: Text(l10n.noTransactions, style: TextStyle(color: context.textSecondary)),
               ),
             ),
           const SizedBox(height: 80),
@@ -303,7 +305,7 @@ class _BalancePageState extends State<BalancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Текущий баланс', style: TextStyle(fontSize: 13, color: context.textSecondary)),
+          Text(AppLocalizations.of(context)!.currentBalance, style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 8),
           Text(
             _formatPrice(d.balance),
@@ -315,11 +317,12 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Widget _buildLegend() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
-        _LegendDot(color: AppColors.success, label: 'Доходы'),
+        _LegendDot(color: AppColors.success, label: l10n.incomes),
         const SizedBox(width: 16),
-        _LegendDot(color: AppColors.error, label: 'Расходы'),
+        _LegendDot(color: AppColors.error, label: l10n.expenses),
       ],
     );
   }
@@ -407,13 +410,14 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Widget _buildSummaryRow(_BalanceData d) {
+    final l10n = AppLocalizations.of(context)!;
     return GlassCard(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       child: Row(
         children: [
           Expanded(
             child: _SummaryCell(
-              label: 'Доходы',
+              label: l10n.incomes,
               value: _formatPrice(d.income),
               color: AppColors.success,
             ),
@@ -421,7 +425,7 @@ class _BalancePageState extends State<BalancePage> {
           Container(width: 1, height: 40, color: context.border),
           Expanded(
             child: _SummaryCell(
-              label: 'Расходы',
+              label: l10n.expenses,
               value: _formatPrice(d.expenses),
               color: AppColors.error,
             ),
@@ -429,7 +433,7 @@ class _BalancePageState extends State<BalancePage> {
           Container(width: 1, height: 40, color: context.border),
           Expanded(
             child: _SummaryCell(
-              label: 'Прибыль',
+              label: l10n.profit,
               value: _formatPrice(d.profit),
               color: d.profit >= 0 ? AppColors.primary : AppColors.error,
             ),
@@ -457,6 +461,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Widget _buildTransactionRow(_Transaction tx) {
+    final l10n = AppLocalizations.of(context)!;
     final isSale = tx.type == 'sale';
     final color = isSale ? AppColors.success : AppColors.error;
     final icon = isSale ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded;
@@ -481,7 +486,7 @@ class _BalancePageState extends State<BalancePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx.description.isNotEmpty ? tx.description : (isSale ? 'Продажа' : 'Расход'),
+                  tx.description.isNotEmpty ? tx.description : (isSale ? l10n.sale : l10n.expense),
                   style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

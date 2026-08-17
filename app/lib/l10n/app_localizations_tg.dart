@@ -760,10 +760,31 @@ class AppLocalizationsTg extends AppLocalizations {
   String get financeDashboard => 'Дашборди молиявӣ';
 
   @override
+  String get balance => 'Баланс';
+
+  @override
+  String get currentBalance => 'Текущий баланс';
+
+  @override
+  String get dynamics => 'Динамика';
+
+  @override
+  String get transactions => 'Транзакции';
+
+  @override
+  String get noTransactions => 'Транзакций нет';
+
+  @override
   String get income => 'Даромад';
 
   @override
+  String get incomes => 'Доходы';
+
+  @override
   String get expenses => 'Хароҷот';
+
+  @override
+  String get expense => 'Расход';
 
   @override
   String get salesCount => 'Шумораи фурӯш';
