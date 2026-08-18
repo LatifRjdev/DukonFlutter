@@ -2314,6 +2314,84 @@ abstract class AppLocalizations {
   /// **'Топ клиентов'**
   String get loyaltyAnalyticsTopCustomersTitle;
 
+  /// Printer settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки принтера'**
+  String get printerSettingsTitle;
+
+  /// Printer settings screen — connection status label shown when a printer is connected
+  ///
+  /// In ru, this message translates to:
+  /// **'Подключён'**
+  String get printerSettingsConnected;
+
+  /// Printer settings screen — connection status label shown when no printer is connected; distinct from `snackPrinterNotConnected`, which is a full sentence with instructions
+  ///
+  /// In ru, this message translates to:
+  /// **'Не подключён'**
+  String get printerSettingsNotConnected;
+
+  /// Printer settings screen — button to disconnect the currently connected printer
+  ///
+  /// In ru, this message translates to:
+  /// **'Отключить'**
+  String get printerSettingsDisconnectButton;
+
+  /// Printer settings screen — section header above the saved default printer name
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер по умолчанию'**
+  String get printerSettingsDefaultPrinterLabel;
+
+  /// Printer settings screen — button to start scanning for nearby Bluetooth printers
+  ///
+  /// In ru, this message translates to:
+  /// **'Найти принтеры'**
+  String get printerSettingsScanButton;
+
+  /// Printer settings screen — scan button label while a scan is in progress
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск...'**
+  String get printerSettingsScanningButton;
+
+  /// Printer settings screen — section header above the list of discovered Bluetooth devices
+  ///
+  /// In ru, this message translates to:
+  /// **'Найденные устройства'**
+  String get printerSettingsFoundDevicesTitle;
+
+  /// Printer settings screen — button to send a test print to the connected printer
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовая печать'**
+  String get printerSettingsTestPrintButton;
+
+  /// Printer settings screen — test print button label while printing is in progress
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать...'**
+  String get printerSettingsPrintingButton;
+
+  /// Printer settings screen — badge shown on a discovered device tile when it's the saved default printer; distinct from `printerSettingsDefaultPrinterLabel` (a section header) and `printerSettingsSetDefaultButton` (an action)
+  ///
+  /// In ru, this message translates to:
+  /// **'По умолчанию'**
+  String get printerSettingsDefaultBadge;
+
+  /// Printer settings screen — button on a device tile to connect to that printer
+  ///
+  /// In ru, this message translates to:
+  /// **'Подключить'**
+  String get printerSettingsConnectButton;
+
+  /// Printer settings screen — abbreviated button on a connected device tile to set it as the default printer
+  ///
+  /// In ru, this message translates to:
+  /// **'По умолч.'**
+  String get printerSettingsSetDefaultButton;
+
   /// No description provided for @employees.
   ///
   /// In ru, this message translates to:

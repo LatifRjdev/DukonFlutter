@@ -9,6 +9,7 @@ import '../../blocs/printer/printer_event.dart';
 import '../../blocs/printer/printer_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class PrinterSettingsPage extends StatefulWidget {
   const PrinterSettingsPage({super.key});
@@ -26,8 +27,9 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Настройки принтера')),
+      appBar: AppBar(title: Text(l10n.printerSettingsTitle)),
       body: BlocConsumer<PrinterBloc, PrinterState>(
         listener: (context, state) {
           if (state.error != null) {
@@ -69,7 +71,9 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              state.connectedDevice != null ? 'Подключён' : 'Не подключён',
+                              state.connectedDevice != null
+                                  ? l10n.printerSettingsConnected
+                                  : l10n.printerSettingsNotConnected,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -87,7 +91,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                       if (state.connectedDevice != null)
                         TextButton(
                           onPressed: () => context.read<PrinterBloc>().add(PrinterDisconnectRequested()),
-                          child: const Text('Отключить', style: TextStyle(color: AppColors.error)),
+                          child: Text(l10n.printerSettingsDisconnectButton, style: const TextStyle(color: AppColors.error)),
                         ),
                     ],
                   ),
@@ -96,7 +100,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 
                 // Default printer
                 if (state.defaultPrinterName != null) ...[
-                  Text('Принтер по умолчанию',
+                  Text(l10n.printerSettingsDefaultPrinterLabel,
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary)),
                   const SizedBox(height: 8),
                   Container(
@@ -113,7 +117,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 
                 // Scan button
                 AppButton(
-                  text: state.isScanning ? 'Поиск...' : 'Найти принтеры',
+                  text: state.isScanning ? l10n.printerSettingsScanningButton : l10n.printerSettingsScanButton,
                   icon: Icons.search,
                   type: AppButtonType.outlined,
                   onPressed: state.isScanning
@@ -127,7 +131,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
 
                 // Device list
                 if (state.devices.isNotEmpty) ...[
-                  const Text('Найденные устройства', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(l10n.printerSettingsFoundDevicesTitle, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 12),
                   ...state.devices.map((device) => _DeviceTile(
                         device: device,
@@ -146,7 +150,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
                   const Divider(),
                   const SizedBox(height: 16),
                   AppButton(
-                    text: state.isPrinting ? 'Печать...' : 'Тестовая печать',
+                    text: state.isPrinting ? l10n.printerSettingsPrintingButton : l10n.printerSettingsTestPrintButton,
                     icon: Icons.print,
                     onPressed: state.isPrinting
                         ? null
@@ -179,6 +183,7 @@ class _DeviceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(AppConstants.spacingSm),
@@ -210,8 +215,8 @@ class _DeviceTile extends StatelessWidget {
                           color: AppColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppConstants.radiusXs),
                         ),
-                        child: const Text('По умолчанию',
-                            style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                        child: Text(l10n.printerSettingsDefaultBadge,
+                            style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ],
@@ -221,9 +226,12 @@ class _DeviceTile extends StatelessWidget {
             ),
           ),
           if (!isConnected)
-            TextButton(onPressed: onConnect, child: const Text('Подключить')),
+            TextButton(onPressed: onConnect, child: Text(l10n.printerSettingsConnectButton)),
           if (isConnected && !isDefault)
-            TextButton(onPressed: onSetDefault, child: const Text('По умолч.', style: TextStyle(fontSize: 12))),
+            TextButton(
+              onPressed: onSetDefault,
+              child: Text(l10n.printerSettingsSetDefaultButton, style: const TextStyle(fontSize: 12)),
+            ),
         ],
       ),
     );

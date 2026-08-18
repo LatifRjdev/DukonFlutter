@@ -1166,6 +1166,45 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loyaltyAnalyticsTopCustomersTitle => 'Топ клиентов';
 
   @override
+  String get printerSettingsTitle => 'Настройки принтера';
+
+  @override
+  String get printerSettingsConnected => 'Подключён';
+
+  @override
+  String get printerSettingsNotConnected => 'Не подключён';
+
+  @override
+  String get printerSettingsDisconnectButton => 'Отключить';
+
+  @override
+  String get printerSettingsDefaultPrinterLabel => 'Принтер по умолчанию';
+
+  @override
+  String get printerSettingsScanButton => 'Найти принтеры';
+
+  @override
+  String get printerSettingsScanningButton => 'Поиск...';
+
+  @override
+  String get printerSettingsFoundDevicesTitle => 'Найденные устройства';
+
+  @override
+  String get printerSettingsTestPrintButton => 'Тестовая печать';
+
+  @override
+  String get printerSettingsPrintingButton => 'Печать...';
+
+  @override
+  String get printerSettingsDefaultBadge => 'По умолчанию';
+
+  @override
+  String get printerSettingsConnectButton => 'Подключить';
+
+  @override
+  String get printerSettingsSetDefaultButton => 'По умолч.';
+
+  @override
   String get employees => 'Сотрудники';
 
   @override
