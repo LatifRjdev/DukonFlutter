@@ -7,6 +7,7 @@ import '../../../domain/entities/loyalty_analytics.dart';
 import '../../blocs/loyalty/loyalty_analytics_bloc.dart';
 import '../../blocs/loyalty/loyalty_analytics_event.dart';
 import '../../blocs/loyalty/loyalty_analytics_state.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 enum _Period { week, month, year }
 
@@ -42,8 +43,9 @@ class _LoyaltyAnalyticsPageState extends State<LoyaltyAnalyticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Аналитика баллов')),
+      appBar: AppBar(title: Text(l10n.loyaltyAnalyticsTitle)),
       body: Column(
         children: [
           _PeriodChips(
@@ -82,15 +84,16 @@ class _PeriodChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
       child: Row(
         children: [
           for (final (label, p) in [
-            ('Неделя', _Period.week),
-            ('Месяц', _Period.month),
-            ('Год', _Period.year),
+            (l10n.week, _Period.week),
+            (l10n.month, _Period.month),
+            (l10n.year, _Period.year),
           ])
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -112,6 +115,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
@@ -123,22 +127,34 @@ class _Body extends StatelessWidget {
           crossAxisSpacing: 8,
           childAspectRatio: 2.2,
           children: [
-            _StatCard(label: 'Начислено', value: '${data.totalEarned} баллов'),
-            _StatCard(label: 'Списано', value: '${data.totalRedeemed} баллов'),
-            _StatCard(label: 'Сгорело', value: '${data.totalExpired} баллов'),
             _StatCard(
-                label: 'Экономия',
-                value: '${data.discountValue.toStringAsFixed(0)} сом'),
+                label: l10n.loyaltyAnalyticsEarnedLabel,
+                value: l10n.loyaltyAnalyticsPointsValue(
+                    '${data.totalEarned}')),
+            _StatCard(
+                label: l10n.loyaltyAnalyticsRedeemedLabel,
+                value: l10n.loyaltyAnalyticsPointsValue(
+                    '${data.totalRedeemed}')),
+            _StatCard(
+                label: l10n.loyaltyAnalyticsExpiredLabel,
+                value: l10n.loyaltyAnalyticsPointsValue(
+                    '${data.totalExpired}')),
+            _StatCard(
+                label: l10n.loyaltyAnalyticsSavingsLabel,
+                value: l10n.loyaltyAnalyticsSavingsValue(
+                    data.discountValue.toStringAsFixed(0))),
           ],
         ),
         const SizedBox(height: AppConstants.spacingMd),
-        Text('Активных участников: ${data.activeParticipants}',
+        Text(
+            l10n.loyaltyAnalyticsActiveParticipantsLabel(
+                '${data.activeParticipants}'),
             style:
                 const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
         const SizedBox(height: AppConstants.spacingMd),
         if (data.topCustomers.isNotEmpty) ...[
-          const Text('Топ клиентов',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          Text(l10n.loyaltyAnalyticsTopCustomersTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
           const SizedBox(height: AppConstants.spacingSm),
           ...data.topCustomers.map((c) {
             final maxBalance = data.topCustomers.first.balance
@@ -156,7 +172,7 @@ class _Body extends StatelessWidget {
                       Text(c.name,
                           style:
                               const TextStyle(fontWeight: FontWeight.w600)),
-                      Text('${c.balance} баллов',
+                      Text(l10n.loyaltyAnalyticsPointsValue('${c.balance}'),
                           style:
                               const TextStyle(color: AppColors.primary)),
                     ],

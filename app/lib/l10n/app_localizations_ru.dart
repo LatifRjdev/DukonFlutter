@@ -1106,6 +1106,39 @@ class AppLocalizationsRu extends AppLocalizations {
       'Оставьте пустым — баллы не сгорают';
 
   @override
+  String get loyaltyAnalyticsTitle => 'Аналитика баллов';
+
+  @override
+  String get loyaltyAnalyticsEarnedLabel => 'Начислено';
+
+  @override
+  String get loyaltyAnalyticsRedeemedLabel => 'Списано';
+
+  @override
+  String get loyaltyAnalyticsExpiredLabel => 'Сгорело';
+
+  @override
+  String get loyaltyAnalyticsSavingsLabel => 'Экономия';
+
+  @override
+  String loyaltyAnalyticsPointsValue(String value) {
+    return '$value баллов';
+  }
+
+  @override
+  String loyaltyAnalyticsSavingsValue(String value) {
+    return '$value сом';
+  }
+
+  @override
+  String loyaltyAnalyticsActiveParticipantsLabel(String value) {
+    return 'Активных участников: $value';
+  }
+
+  @override
+  String get loyaltyAnalyticsTopCustomersTitle => 'Топ клиентов';
+
+  @override
   String get employees => 'Сотрудники';
 
   @override

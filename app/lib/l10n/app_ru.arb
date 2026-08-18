@@ -696,6 +696,33 @@
   "@loyaltySettingsPointsExpireDaysLabel": { "description": "Loyalty settings screen — field label for the number of days before points expire" },
   "loyaltySettingsPointsExpireDaysHint": "Оставьте пустым — баллы не сгорают",
   "@loyaltySettingsPointsExpireDaysHint": { "description": "Loyalty settings screen — hint for the optional points-expiry field, distinct from `loyaltySettingsBirthdayDiscountHint`" },
+  "loyaltyAnalyticsTitle": "Аналитика баллов",
+  "@loyaltyAnalyticsTitle": { "description": "Loyalty analytics screen — AppBar title" },
+  "loyaltyAnalyticsEarnedLabel": "Начислено",
+  "@loyaltyAnalyticsEarnedLabel": { "description": "Loyalty analytics screen — stat card label for total points earned in the selected period" },
+  "loyaltyAnalyticsRedeemedLabel": "Списано",
+  "@loyaltyAnalyticsRedeemedLabel": { "description": "Loyalty analytics screen — stat card label for total points redeemed in the selected period" },
+  "loyaltyAnalyticsExpiredLabel": "Сгорело",
+  "@loyaltyAnalyticsExpiredLabel": { "description": "Loyalty analytics screen — stat card label for total points expired in the selected period" },
+  "loyaltyAnalyticsSavingsLabel": "Экономия",
+  "@loyaltyAnalyticsSavingsLabel": { "description": "Loyalty analytics screen — stat card label for the monetary discount value granted via points redemption" },
+  "loyaltyAnalyticsPointsValue": "{value} баллов",
+  "@loyaltyAnalyticsPointsValue": {
+    "description": "Loyalty analytics screen — a points count formatted as '<n> points'; used for the earned/redeemed/expired stat card values and each top customer's balance",
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "loyaltyAnalyticsSavingsValue": "{value} сом",
+  "@loyaltyAnalyticsSavingsValue": {
+    "description": "Loyalty analytics screen — the savings stat card value, a monetary amount in somoni",
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "loyaltyAnalyticsActiveParticipantsLabel": "Активных участников: {value}",
+  "@loyaltyAnalyticsActiveParticipantsLabel": {
+    "description": "Loyalty analytics screen — count of customers with loyalty activity in the selected period",
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "loyaltyAnalyticsTopCustomersTitle": "Топ клиентов",
+  "@loyaltyAnalyticsTopCustomersTitle": { "description": "Loyalty analytics screen — section header above the top-customers-by-balance list" },
 
   "employees": "Сотрудники",
   "addEmployee": "Добавить сотрудника",

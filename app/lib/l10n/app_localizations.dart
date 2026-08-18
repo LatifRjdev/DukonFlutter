@@ -2206,6 +2206,60 @@ abstract class AppLocalizations {
   /// **'Оставьте пустым — баллы не сгорают'**
   String get loyaltySettingsPointsExpireDaysHint;
 
+  /// Loyalty analytics screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Аналитика баллов'**
+  String get loyaltyAnalyticsTitle;
+
+  /// Loyalty analytics screen — stat card label for total points earned in the selected period
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено'**
+  String get loyaltyAnalyticsEarnedLabel;
+
+  /// Loyalty analytics screen — stat card label for total points redeemed in the selected period
+  ///
+  /// In ru, this message translates to:
+  /// **'Списано'**
+  String get loyaltyAnalyticsRedeemedLabel;
+
+  /// Loyalty analytics screen — stat card label for total points expired in the selected period
+  ///
+  /// In ru, this message translates to:
+  /// **'Сгорело'**
+  String get loyaltyAnalyticsExpiredLabel;
+
+  /// Loyalty analytics screen — stat card label for the monetary discount value granted via points redemption
+  ///
+  /// In ru, this message translates to:
+  /// **'Экономия'**
+  String get loyaltyAnalyticsSavingsLabel;
+
+  /// Loyalty analytics screen — a points count formatted as '<n> points'; used for the earned/redeemed/expired stat card values and each top customer's balance
+  ///
+  /// In ru, this message translates to:
+  /// **'{value} баллов'**
+  String loyaltyAnalyticsPointsValue(String value);
+
+  /// Loyalty analytics screen — the savings stat card value, a monetary amount in somoni
+  ///
+  /// In ru, this message translates to:
+  /// **'{value} сом'**
+  String loyaltyAnalyticsSavingsValue(String value);
+
+  /// Loyalty analytics screen — count of customers with loyalty activity in the selected period
+  ///
+  /// In ru, this message translates to:
+  /// **'Активных участников: {value}'**
+  String loyaltyAnalyticsActiveParticipantsLabel(String value);
+
+  /// Loyalty analytics screen — section header above the top-customers-by-balance list
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ клиентов'**
+  String get loyaltyAnalyticsTopCustomersTitle;
+
   /// No description provided for @employees.
   ///
   /// In ru, this message translates to:
