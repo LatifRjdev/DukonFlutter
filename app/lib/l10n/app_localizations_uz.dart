@@ -1064,6 +1064,49 @@ class AppLocalizationsUz extends AppLocalizations {
   String get noDeliveryData => 'Yetkazib berish haqida ma\'lumot yo\'q';
 
   @override
+  String get loyaltySettingsTitle => 'Программа лояльности';
+
+  @override
+  String get loyaltySettingsAnalytics => 'Аналитика';
+
+  @override
+  String get loyaltySettingsActive => 'Активна';
+
+  @override
+  String get loyaltySettingsAccrualSection => 'Начисление баллов';
+
+  @override
+  String get loyaltySettingsAmountForPointsLabel => 'За каждые __ сом';
+
+  @override
+  String get loyaltySettingsPointsPerAmountLabel => 'Начислять __ баллов';
+
+  @override
+  String get loyaltySettingsPointValueLabel => '1 балл = __ сом';
+
+  @override
+  String get loyaltySettingsBonusSection => 'Бонусы';
+
+  @override
+  String get loyaltySettingsWelcomePointsLabel => 'Приветственные баллы';
+
+  @override
+  String get loyaltySettingsBirthdayDiscountLabel =>
+      'Скидка в день рождения, %';
+
+  @override
+  String get loyaltySettingsBirthdayDiscountHint =>
+      'Оставьте пустым, если не нужно';
+
+  @override
+  String get loyaltySettingsPointsExpireDaysLabel =>
+      'Срок действия баллов, дней';
+
+  @override
+  String get loyaltySettingsPointsExpireDaysHint =>
+      'Оставьте пустым — баллы не сгорают';
+
+  @override
   String get employees => 'Xodimlar';
 
   @override

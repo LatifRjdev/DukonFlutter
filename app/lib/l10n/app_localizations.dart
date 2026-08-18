@@ -2128,6 +2128,84 @@ abstract class AppLocalizations {
   /// **'Нет данных о поставках'**
   String get noDeliveryData;
 
+  /// Loyalty settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Программа лояльности'**
+  String get loyaltySettingsTitle;
+
+  /// Loyalty settings screen — AppBar action button navigating to loyalty analytics
+  ///
+  /// In ru, this message translates to:
+  /// **'Аналитика'**
+  String get loyaltySettingsAnalytics;
+
+  /// Loyalty settings screen — label next to the enable/disable toggle
+  ///
+  /// In ru, this message translates to:
+  /// **'Активна'**
+  String get loyaltySettingsActive;
+
+  /// Loyalty settings screen — section header for the points-accrual fields
+  ///
+  /// In ru, this message translates to:
+  /// **'Начисление баллов'**
+  String get loyaltySettingsAccrualSection;
+
+  /// Loyalty settings screen — field label for the spend amount that earns points
+  ///
+  /// In ru, this message translates to:
+  /// **'За каждые __ сом'**
+  String get loyaltySettingsAmountForPointsLabel;
+
+  /// Loyalty settings screen — field label for how many points are awarded per the configured amount
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислять __ баллов'**
+  String get loyaltySettingsPointsPerAmountLabel;
+
+  /// Loyalty settings screen — field label for the monetary value of one point
+  ///
+  /// In ru, this message translates to:
+  /// **'1 балл = __ сом'**
+  String get loyaltySettingsPointValueLabel;
+
+  /// Loyalty settings screen — section header for the bonus fields (welcome points, birthday discount, points expiry)
+  ///
+  /// In ru, this message translates to:
+  /// **'Бонусы'**
+  String get loyaltySettingsBonusSection;
+
+  /// Loyalty settings screen — field label for points granted to new customers
+  ///
+  /// In ru, this message translates to:
+  /// **'Приветственные баллы'**
+  String get loyaltySettingsWelcomePointsLabel;
+
+  /// Loyalty settings screen — field label for the birthday discount percentage
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка в день рождения, %'**
+  String get loyaltySettingsBirthdayDiscountLabel;
+
+  /// Loyalty settings screen — hint for the optional birthday discount field
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставьте пустым, если не нужно'**
+  String get loyaltySettingsBirthdayDiscountHint;
+
+  /// Loyalty settings screen — field label for the number of days before points expire
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок действия баллов, дней'**
+  String get loyaltySettingsPointsExpireDaysLabel;
+
+  /// Loyalty settings screen — hint for the optional points-expiry field, distinct from `loyaltySettingsBirthdayDiscountHint`
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставьте пустым — баллы не сгорают'**
+  String get loyaltySettingsPointsExpireDaysHint;
+
   /// No description provided for @employees.
   ///
   /// In ru, this message translates to:

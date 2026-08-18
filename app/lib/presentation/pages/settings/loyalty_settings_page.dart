@@ -8,6 +8,7 @@ import '../../blocs/loyalty/loyalty_settings_bloc.dart';
 import '../../blocs/loyalty/loyalty_settings_event.dart';
 import '../../blocs/loyalty/loyalty_settings_state.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class LoyaltySettingsPage extends StatefulWidget {
   final String storeId;
@@ -85,6 +86,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<LoyaltySettingsBloc, LoyaltySettingsState>(
       listener: (context, state) {
         if (state is LoyaltySettingsLoaded) {
@@ -92,7 +94,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
         }
         if (state is LoyaltySettingsSaved) {
           _populate(state.settings);
-          AppSnackbar.success(context, 'Настройки сохранены');
+          AppSnackbar.success(context, l10n.snackSettingsSaved);
         }
         if (state is LoyaltySettingsError) {
           AppSnackbar.error(context, state.message);
@@ -102,13 +104,13 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
         final isLoading = state is LoyaltySettingsLoading;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Программа лояльности'),
+            title: Text(l10n.loyaltySettingsTitle),
             backgroundColor: Theme.of(context).colorScheme.surface,
             elevation: 0,
             actions: [
               TextButton.icon(
                 icon: const Icon(Icons.bar_chart_outlined),
-                label: const Text('Аналитика'),
+                label: Text(l10n.loyaltySettingsAnalytics),
                 onPressed: () => context.push(
                   RouteNames.loyaltyAnalytics,
                   extra: widget.storeId,
@@ -136,7 +138,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Активна',
+                                l10n.loyaltySettingsActive,
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500),
@@ -154,7 +156,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                       const SizedBox(height: 16),
 
                       // Accrual settings card
-                      _buildSectionLabel('Начисление баллов'),
+                      _buildSectionLabel(l10n.loyaltySettingsAccrualSection),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.all(14),
@@ -167,7 +169,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                           children: [
                             _buildTextField(
                               controller: _amountCtrl,
-                              label: 'За каждые __ сом',
+                              label: l10n.loyaltySettingsAmountForPointsLabel,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
@@ -175,7 +177,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                             const SizedBox(height: 12),
                             _buildTextField(
                               controller: _pointsPerAmountCtrl,
-                              label: 'Начислять __ баллов',
+                              label: l10n.loyaltySettingsPointsPerAmountLabel,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
@@ -183,7 +185,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                             const SizedBox(height: 12),
                             _buildTextField(
                               controller: _pointValueCtrl,
-                              label: '1 балл = __ сом',
+                              label: l10n.loyaltySettingsPointValueLabel,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
@@ -194,7 +196,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                       const SizedBox(height: 16),
 
                       // Bonus settings card
-                      _buildSectionLabel('Бонусы'),
+                      _buildSectionLabel(l10n.loyaltySettingsBonusSection),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.all(14),
@@ -207,14 +209,14 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                           children: [
                             _buildTextField(
                               controller: _welcomePointsCtrl,
-                              label: 'Приветственные баллы',
+                              label: l10n.loyaltySettingsWelcomePointsLabel,
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: 12),
                             _buildTextField(
                               controller: _birthdayDiscountCtrl,
-                              label: 'Скидка в день рождения, %',
-                              hint: 'Оставьте пустым, если не нужно',
+                              label: l10n.loyaltySettingsBirthdayDiscountLabel,
+                              hint: l10n.loyaltySettingsBirthdayDiscountHint,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: true),
@@ -222,8 +224,8 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                             const SizedBox(height: 12),
                             _buildTextField(
                               controller: _pointsExpireDaysCtrl,
-                              label: 'Срок действия баллов, дней',
-                              hint: 'Оставьте пустым — баллы не сгорают',
+                              label: l10n.loyaltySettingsPointsExpireDaysLabel,
+                              hint: l10n.loyaltySettingsPointsExpireDaysHint,
                               keyboardType: TextInputType.number,
                             ),
                           ],
@@ -245,9 +247,9 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                             ),
                           ),
                           onPressed: isLoading ? null : _onSave,
-                          child: const Text(
-                            'Сохранить',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.save,
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
