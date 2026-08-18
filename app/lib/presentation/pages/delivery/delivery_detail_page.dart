@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Models ──────────────────────────────────────────────────────────────────
 
@@ -150,11 +151,12 @@ class _DetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Детали доставки',
-            style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+        title: Text(l10n.deliveryDetailTitle,
+            style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
         backgroundColor: Colors.white,
         foregroundColor: context.textPrimary,
         elevation: 0,
@@ -173,7 +175,7 @@ class _DetailView extends StatelessWidget {
                   const SizedBox(height: 12),
                   TextButton(
                       onPressed: () => context.read<_DetailCubit>().load(),
-                      child: const Text('Повторить')),
+                      child: Text(l10n.retry)),
                 ],
               ),
             );
@@ -198,14 +200,14 @@ class _DetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoRow(label: 'Заказ', value: delivery.orderNumber),
+                      _InfoRow(label: l10n.deliveryDetailOrderLabel, value: delivery.orderNumber),
                       const Divider(height: 20),
-                      _InfoRow(label: 'Клиент', value: delivery.customerName),
+                      _InfoRow(label: l10n.deliveryDetailCustomerLabel, value: delivery.customerName),
                       const Divider(height: 20),
-                      _InfoRow(label: 'Адрес', value: delivery.address),
+                      _InfoRow(label: l10n.deliveryDetailAddressLabel, value: delivery.address),
                       const Divider(height: 20),
                       _InfoRow(
-                          label: 'Дата',
+                          label: l10n.date,
                           value: DateFormat('dd.MM.yyyy HH:mm').format(delivery.createdAt)),
                     ],
                   ),
@@ -214,8 +216,8 @@ class _DetailView extends StatelessWidget {
 
                 // Items
                 if (delivery.items.isNotEmpty) ...[
-                  const Text('Товары',
-                      style: TextStyle(
+                  Text(l10n.products,
+                      style: const TextStyle(
                           fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 16)),
                   const SizedBox(height: AppConstants.spacingSm),
                   _SectionCard(
@@ -230,7 +232,7 @@ class _DetailView extends StatelessWidget {
                                 Expanded(
                                     child: Text(delivery.items[i].name,
                                         style: const TextStyle(fontFamily: 'Inter', fontSize: 14))),
-                                Text('${delivery.items[i].qty} шт',
+                                Text('${delivery.items[i].qty} ${l10n.pcs}',
                                     style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 13,
@@ -248,9 +250,9 @@ class _DetailView extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 12),
                           child: Row(
                             children: [
-                              const Expanded(
-                                  child: Text('Итого',
-                                      style: TextStyle(
+                              Expanded(
+                                  child: Text(l10n.total,
+                                      style: const TextStyle(
                                           fontFamily: 'Inter', fontWeight: FontWeight.w700))),
                               Text(_formatPrice(delivery.total),
                                   style: const TextStyle(
@@ -294,8 +296,8 @@ class _DetailView extends StatelessWidget {
                                   strokeWidth: 2, color: AppColors.onPrimary))
                           : Text(
                               delivery.status == _DeliveryStatus.newOrder
-                                  ? 'Забрал'
-                                  : 'Доставлено',
+                                  ? l10n.deliveryDetailPickedUpButton
+                                  : l10n.deliveryDetailDeliveredButton,
                               style: const TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w600,
@@ -322,10 +324,11 @@ class _StatusStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final steps = [
-      (label: 'Создан', status: _DeliveryStatus.newOrder),
-      (label: 'В пути', status: _DeliveryStatus.inTransit),
-      (label: 'Доставлен', status: _DeliveryStatus.delivered),
+      (label: l10n.deliveryDetailStepCreated, status: _DeliveryStatus.newOrder),
+      (label: l10n.deliveryDetailStepInTransit, status: _DeliveryStatus.inTransit),
+      (label: l10n.deliveryDetailStepDelivered, status: _DeliveryStatus.delivered),
     ];
 
     final currentIndex = steps.indexWhere((s) => s.status == status);

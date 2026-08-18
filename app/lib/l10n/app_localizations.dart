@@ -2128,6 +2128,60 @@ abstract class AppLocalizations {
   /// **'Нет данных о поставках'**
   String get noDeliveryData;
 
+  /// Delivery detail screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Детали доставки'**
+  String get deliveryDetailTitle;
+
+  /// Delivery detail screen — info row label for the order number
+  ///
+  /// In ru, this message translates to:
+  /// **'Заказ'**
+  String get deliveryDetailOrderLabel;
+
+  /// Delivery detail screen — info row label for the customer name; distinct from `customer` ("Покупатель"), used verbatim as "Клиент" on this screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент'**
+  String get deliveryDetailCustomerLabel;
+
+  /// Delivery detail screen — info row label for the delivery address
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес'**
+  String get deliveryDetailAddressLabel;
+
+  /// Delivery detail screen — action button shown for a new order, marks it picked up / in transit
+  ///
+  /// In ru, this message translates to:
+  /// **'Забрал'**
+  String get deliveryDetailPickedUpButton;
+
+  /// Delivery detail screen — action button shown for an in-transit order, marks it delivered
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставлено'**
+  String get deliveryDetailDeliveredButton;
+
+  /// Delivery detail screen — status stepper label for the 'created' step
+  ///
+  /// In ru, this message translates to:
+  /// **'Создан'**
+  String get deliveryDetailStepCreated;
+
+  /// Delivery detail screen — status stepper label for the 'in transit' step
+  ///
+  /// In ru, this message translates to:
+  /// **'В пути'**
+  String get deliveryDetailStepInTransit;
+
+  /// Delivery detail screen — status stepper label for the 'delivered' step; distinct grammatical form from `deliveryDetailDeliveredButton` ("Доставлено")
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставлен'**
+  String get deliveryDetailStepDelivered;
+
   /// Loyalty settings screen — AppBar title
   ///
   /// In ru, this message translates to:
