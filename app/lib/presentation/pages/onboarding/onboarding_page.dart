@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -16,28 +17,28 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final _pageController = PageController();
   int _currentPage = 0;
 
-  final _slides = const [
-    _OnboardingSlide(
-      icon: Icons.point_of_sale,
-      title: 'Быстрые продажи',
-      description: 'Проводите продажи за секунды через удобный POS-интерфейс',
-    ),
-    _OnboardingSlide(
-      icon: Icons.inventory_2,
-      title: 'Учёт товаров',
-      description: 'Полный контроль склада: приход, расход, остатки в реальном времени',
-    ),
-    _OnboardingSlide(
-      icon: Icons.analytics,
-      title: 'Аналитика',
-      description: 'Выручка, прибыль и статистика продаж на одном экране',
-    ),
-    _OnboardingSlide(
-      icon: Icons.cloud_sync,
-      title: 'Работает офлайн',
-      description: 'Продавайте без интернета — данные синхронизируются автоматически',
-    ),
-  ];
+  List<_OnboardingSlide> _buildSlides(AppLocalizations l10n) => [
+        _OnboardingSlide(
+          icon: Icons.point_of_sale,
+          title: l10n.onboardingTitle2,
+          description: l10n.onboardingSalesDesc,
+        ),
+        _OnboardingSlide(
+          icon: Icons.inventory_2,
+          title: l10n.onboardingTitle3,
+          description: l10n.onboardingInventoryDesc,
+        ),
+        _OnboardingSlide(
+          icon: Icons.analytics,
+          title: l10n.onboardingTitle4,
+          description: l10n.onboardingAnalyticsDesc,
+        ),
+        _OnboardingSlide(
+          icon: Icons.cloud_sync,
+          title: l10n.onboardingOfflineTitle,
+          description: l10n.onboardingOfflineDesc,
+        ),
+      ];
 
   @override
   void dispose() {
@@ -47,6 +48,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final slides = _buildSlides(l10n);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -55,8 +58,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _currentPage = i),
-                itemCount: _slides.length,
-                itemBuilder: (_, i) => _slides[i],
+                itemCount: slides.length,
+                itemBuilder: (_, i) => slides[i],
               ),
             ),
             Padding(
@@ -66,7 +69,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      _slides.length,
+                      slides.length,
                       (i) => AnimatedContainer(
                         duration: AppConstants.animationFast,
                         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -81,9 +84,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   const SizedBox(height: 32),
                   AppButton(
-                    text: _currentPage == _slides.length - 1 ? 'Начать' : 'Далее',
+                    text: _currentPage == slides.length - 1 ? l10n.getStarted : l10n.onboardingNext,
                     onPressed: () {
-                      if (_currentPage == _slides.length - 1) {
+                      if (_currentPage == slides.length - 1) {
                         context.go('/login');
                       } else {
                         _pageController.nextPage(
@@ -94,10 +97,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     },
                   ),
                   const SizedBox(height: 12),
-                  if (_currentPage < _slides.length - 1)
+                  if (_currentPage < slides.length - 1)
                     TextButton(
                       onPressed: () => context.go('/login'),
-                      child: const Text('Пропустить'),
+                      child: Text(l10n.skip),
                     ),
                 ],
               ),

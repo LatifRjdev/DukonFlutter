@@ -424,6 +424,42 @@ abstract class AppLocalizations {
   /// **'Подробные отчёты о выручке, прибыли и продажах'**
   String get onboardingDesc4;
 
+  /// Onboarding sales-slide description, paired with the reused onboardingTitle2 title; wording differs from the stale, currently-unused onboardingDesc2
+  ///
+  /// In ru, this message translates to:
+  /// **'Проводите продажи за секунды через удобный POS-интерфейс'**
+  String get onboardingSalesDesc;
+
+  /// Onboarding inventory-slide description, paired with the reused onboardingTitle3 title; wording differs from the stale, currently-unused onboardingDesc3
+  ///
+  /// In ru, this message translates to:
+  /// **'Полный контроль склада: приход, расход, остатки в реальном времени'**
+  String get onboardingInventoryDesc;
+
+  /// Onboarding analytics-slide description, paired with the reused onboardingTitle4 title; wording differs from the stale, currently-unused onboardingDesc4
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка, прибыль и статистика продаж на одном экране'**
+  String get onboardingAnalyticsDesc;
+
+  /// Onboarding slide title for the offline-support feature (4th slide on the onboarding page)
+  ///
+  /// In ru, this message translates to:
+  /// **'Работает офлайн'**
+  String get onboardingOfflineTitle;
+
+  /// Onboarding slide description for the offline-support feature
+  ///
+  /// In ru, this message translates to:
+  /// **'Продавайте без интернета — данные синхронизируются автоматически'**
+  String get onboardingOfflineDesc;
+
+  /// Next button on onboarding, shown on every slide except the last (distinct from getStarted, which is shown on the last slide)
+  ///
+  /// In ru, this message translates to:
+  /// **'Далее'**
+  String get onboardingNext;
+
   /// Skip button on onboarding
   ///
   /// In ru, this message translates to:

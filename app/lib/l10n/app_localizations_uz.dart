@@ -175,6 +175,28 @@ class AppLocalizationsUz extends AppLocalizations {
       'Daromad, foyda va savdo bo\'yicha batafsil hisobotlar';
 
   @override
+  String get onboardingSalesDesc =>
+      'Проводите продажи за секунды через удобный POS-интерфейс';
+
+  @override
+  String get onboardingInventoryDesc =>
+      'Полный контроль склада: приход, расход, остатки в реальном времени';
+
+  @override
+  String get onboardingAnalyticsDesc =>
+      'Выручка, прибыль и статистика продаж на одном экране';
+
+  @override
+  String get onboardingOfflineTitle => 'Работает офлайн';
+
+  @override
+  String get onboardingOfflineDesc =>
+      'Продавайте без интернета — данные синхронизируются автоматически';
+
+  @override
+  String get onboardingNext => 'Далее';
+
+  @override
   String get skip => 'O\'tkazib yuborish';
 
   @override
