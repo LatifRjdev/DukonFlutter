@@ -141,6 +141,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get hasAccount => 'Akkauntingiz bormi?';
 
   @override
+  String get registerTitle => 'Регистрация';
+
+  @override
+  String get registerSubtitle => 'Создайте аккаунт для управления магазином';
+
+  @override
   String get onboardingTitle1 => 'Do\'koningizni boshqaring';
 
   @override
@@ -266,6 +272,15 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get enterName => 'Введите имя';
+
+  @override
+  String get phoneRequired => 'Введите номер телефона';
+
+  @override
+  String get passwordMinLength => 'Минимум 6 символов';
+
+  @override
+  String get passwordsDoNotMatch => 'Пароли не совпадают';
 
   @override
   String get invalidAmount => 'Некорректная сумма';

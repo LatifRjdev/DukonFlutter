@@ -364,6 +364,18 @@ abstract class AppLocalizations {
   /// **'Уже есть аккаунт?'**
   String get hasAccount;
 
+  /// Register screen heading — distinct from `registerWelcome` ("Создайте аккаунт"), a different piece of copy
+  ///
+  /// In ru, this message translates to:
+  /// **'Регистрация'**
+  String get registerTitle;
+
+  /// Register screen subtitle shown under the heading
+  ///
+  /// In ru, this message translates to:
+  /// **'Создайте аккаунт для управления магазином'**
+  String get registerSubtitle;
+
   /// Onboarding slide 1 title
   ///
   /// In ru, this message translates to:
@@ -609,6 +621,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Введите имя'**
   String get enterName;
+
+  /// Generic 'phone number is required' validation error, used across multiple auth/contact forms
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите номер телефона'**
+  String get phoneRequired;
+
+  /// Generic password-too-short validation error, used across multiple password forms
+  ///
+  /// In ru, this message translates to:
+  /// **'Минимум 6 символов'**
+  String get passwordMinLength;
+
+  /// Generic 'passwords do not match' validation error, used across multiple password-confirmation forms
+  ///
+  /// In ru, this message translates to:
+  /// **'Пароли не совпадают'**
+  String get passwordsDoNotMatch;
 
   /// Generic 'invalid amount' validation error, used across multiple forms with a monetary/numeric amount field
   ///

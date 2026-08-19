@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -46,6 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(leading: const BackButton()),
       body: BlocListener<AuthBloc, AuthState>(
@@ -63,45 +65,45 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Регистрация',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                Text(l10n.registerTitle,
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
-                Text('Создайте аккаунт для управления магазином',
+                Text(l10n.registerSubtitle,
                   style: TextStyle(color: context.textSecondary, fontSize: 16)),
                 const SizedBox(height: 32),
                 AppTextField(
                   controller: _nameController,
-                  label: 'Имя',
+                  label: l10n.name,
                   prefixIcon: Icons.person_outline,
-                  validator: (v) => v == null || v.isEmpty ? 'Введите имя' : null,
+                  validator: (v) => v == null || v.isEmpty ? l10n.enterName : null,
                 ),
                 const SizedBox(height: 16),
                 PhoneInputField(
                   controller: _phoneController,
                   validator: (v) {
-                    if (v == null || v.length < 9) return 'Введите номер телефона';
+                    if (v == null || v.length < 9) return l10n.phoneRequired;
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _passwordController,
-                  label: 'Пароль',
+                  label: l10n.password,
                   obscureText: true,
                   prefixIcon: Icons.lock_outline,
                   validator: (v) {
-                    if (v == null || v.length < 6) return 'Минимум 6 символов';
+                    if (v == null || v.length < 6) return l10n.passwordMinLength;
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _confirmController,
-                  label: 'Подтвердите пароль',
+                  label: l10n.confirmPassword,
                   obscureText: true,
                   prefixIcon: Icons.lock_outline,
                   validator: (v) {
-                    if (v != _passwordController.text) return 'Пароли не совпадают';
+                    if (v != _passwordController.text) return l10n.passwordsDoNotMatch;
                     return null;
                   },
                 ),
@@ -109,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Зарегистрироваться',
+                      text: l10n.register,
                       onPressed: _submit,
                       isLoading: state is AuthLoading,
                     );
@@ -119,10 +121,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Уже есть аккаунт?'),
+                    Text(l10n.hasAccount),
                     TextButton(
                       onPressed: () => context.go('/login'),
-                      child: const Text('Войти'),
+                      child: Text(l10n.login),
                     ),
                   ],
                 ),
