@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/pages/settings/ecommerce_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +39,11 @@ void main() {
     }
   });
 
-  Widget wrap(Widget child) => MaterialApp(home: child);
+  Widget wrap(Widget child) => MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: child,
+      );
 
   group('EcommerceSettingsPage', () {
     testWidgets('shows a loading indicator while fetching settings',

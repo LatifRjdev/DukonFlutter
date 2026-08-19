@@ -10,6 +10,7 @@ import '../../../core/errors/error_messages.dart';
 import '../../../core/router/route_names.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class EcommerceSettingsPage extends StatefulWidget {
   final String storeId;
@@ -67,7 +68,7 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
     }
   }
 
-  Future<void> _save() async {
+  Future<void> _save(AppLocalizations l10n) async {
     try {
       final res = await _dioClient.put(
         '/stores/${widget.storeId}/ecommerce/integration',
@@ -84,14 +85,14 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
           _configured = true;
           _apiKey = data?['apiKey'] as String? ?? _apiKey;
         });
-        AppSnackbar.success(context, 'Настройки сохранены');
+        AppSnackbar.success(context, l10n.snackSettingsSaved);
       }
     } catch (e) {
       if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
     }
   }
 
-  Future<void> _regenerateKey() async {
+  Future<void> _regenerateKey(AppLocalizations l10n) async {
     try {
       final res = await _dioClient.post(
         '/stores/${widget.storeId}/ecommerce/integration/regenerate-key',
@@ -99,24 +100,25 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
       final data = res.data as Map<String, dynamic>?;
       if (mounted) {
         setState(() => _apiKey = data?['apiKey'] as String?);
-        AppSnackbar.success(context, 'Ключ перегенерирован');
+        AppSnackbar.success(context, l10n.ecommerceSettingsKeyRegenerated);
       }
     } catch (e) {
       if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
     }
   }
 
-  void _copy(String text, String label) {
+  void _copy(AppLocalizations l10n, String text, String label) {
     Clipboard.setData(ClipboardData(text: text));
-    AppSnackbar.info(context, '$label скопирован(о)');
+    AppSnackbar.info(context, l10n.ecommerceSettingsCopiedMessage(label));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Интернет-магазин'),
+        title: Text(l10n.ecommerceSettingsTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -125,35 +127,37 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Text('URL для входящих заказов',
+                Text(l10n.ecommerceSettingsInboundUrlLabel,
                     style:
                         TextStyle(fontSize: 13, color: context.textSecondary)),
                 const SizedBox(height: 6),
                 _CopyableField(
                   value: _inboundWebhookUrl,
-                  onCopy: () => _copy(_inboundWebhookUrl, 'URL'),
+                  onCopy: () => _copy(l10n, _inboundWebhookUrl, 'URL'),
                 ),
                 const SizedBox(height: 16),
-                Text('API-ключ',
+                Text(l10n.ecommerceSettingsApiKeyLabel,
                     style:
                         TextStyle(fontSize: 13, color: context.textSecondary)),
                 const SizedBox(height: 6),
                 _CopyableField(
                   value: _configured
                       ? (_apiKey ?? '—')
-                      : 'Сохраните настройки, чтобы создать ключ',
-                  onCopy: _apiKey == null ? null : () => _copy(_apiKey!, 'Ключ'),
+                      : l10n.ecommerceSettingsSaveToCreateKey,
+                  onCopy: _apiKey == null
+                      ? null
+                      : () => _copy(l10n, _apiKey!, l10n.ecommerceSettingsKeyLabel),
                   obscure: _configured && _apiKey != null,
                 ),
                 if (_configured) ...[
                   const SizedBox(height: 8),
                   TextButton(
-                    onPressed: _regenerateKey,
-                    child: const Text('Перегенерировать ключ'),
+                    onPressed: () => _regenerateKey(l10n),
+                    child: Text(l10n.ecommerceSettingsRegenerateKeyButton),
                   ),
                 ],
                 const SizedBox(height: 16),
-                Text('URL вебхука вашего сайта',
+                Text(l10n.ecommerceSettingsOutboundUrlLabel,
                     style:
                         TextStyle(fontSize: 13, color: context.textSecondary)),
                 const SizedBox(height: 6),
@@ -168,7 +172,7 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
                 const SizedBox(height: 16),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Интеграция активна'),
+                  title: Text(l10n.ecommerceSettingsIntegrationActiveLabel),
                   value: _enabled,
                   onChanged: (v) => setState(() => _enabled = v),
                   activeThumbColor: AppColors.primary,
@@ -185,9 +189,9 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
                           borderRadius:
                               BorderRadius.circular(AppConstants.radiusLg)),
                     ),
-                    onPressed: _save,
-                    child: const Text('Сохранить',
-                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    onPressed: () => _save(l10n),
+                    child: Text(l10n.save,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -196,7 +200,7 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
                     RouteNames.ecommerceProductMapping,
                     extra: widget.storeId,
                   ),
-                  child: const Text('Сопоставление товаров'),
+                  child: Text(l10n.ecommerceSettingsProductMappingButton),
                 ),
               ],
             ),

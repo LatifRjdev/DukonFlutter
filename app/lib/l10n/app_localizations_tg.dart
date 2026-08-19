@@ -1206,6 +1206,42 @@ class AppLocalizationsTg extends AppLocalizations {
   String get printerSettingsSetDefaultButton => 'По умолч.';
 
   @override
+  String get ecommerceSettingsTitle => 'Интернет-магазин';
+
+  @override
+  String get ecommerceSettingsInboundUrlLabel => 'URL для входящих заказов';
+
+  @override
+  String get ecommerceSettingsApiKeyLabel => 'API-ключ';
+
+  @override
+  String get ecommerceSettingsSaveToCreateKey =>
+      'Сохраните настройки, чтобы создать ключ';
+
+  @override
+  String get ecommerceSettingsKeyLabel => 'Ключ';
+
+  @override
+  String get ecommerceSettingsRegenerateKeyButton => 'Перегенерировать ключ';
+
+  @override
+  String get ecommerceSettingsOutboundUrlLabel => 'URL вебхука вашего сайта';
+
+  @override
+  String get ecommerceSettingsIntegrationActiveLabel => 'Интеграция активна';
+
+  @override
+  String get ecommerceSettingsProductMappingButton => 'Сопоставление товаров';
+
+  @override
+  String get ecommerceSettingsKeyRegenerated => 'Ключ перегенерирован';
+
+  @override
+  String ecommerceSettingsCopiedMessage(String label) {
+    return '$label скопирован(о)';
+  }
+
+  @override
   String get employees => 'Кормандон';
 
   @override

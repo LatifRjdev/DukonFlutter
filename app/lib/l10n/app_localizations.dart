@@ -2392,6 +2392,72 @@ abstract class AppLocalizations {
   /// **'По умолч.'**
   String get printerSettingsSetDefaultButton;
 
+  /// Ecommerce settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Интернет-магазин'**
+  String get ecommerceSettingsTitle;
+
+  /// Ecommerce settings screen — field label above the read-only inbound webhook URL that the storefront should send orders to
+  ///
+  /// In ru, this message translates to:
+  /// **'URL для входящих заказов'**
+  String get ecommerceSettingsInboundUrlLabel;
+
+  /// Ecommerce settings screen — field label above the API key value; distinct from `ecommerceSettingsKeyLabel`, the short noun used in the copied-to-clipboard snackbar
+  ///
+  /// In ru, this message translates to:
+  /// **'API-ключ'**
+  String get ecommerceSettingsApiKeyLabel;
+
+  /// Ecommerce settings screen — placeholder shown in the API key field before the integration has been configured/saved
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохраните настройки, чтобы создать ключ'**
+  String get ecommerceSettingsSaveToCreateKey;
+
+  /// Ecommerce settings screen — short noun for the API key, used as the {label} in `ecommerceSettingsCopiedMessage` when the key is copied to clipboard
+  ///
+  /// In ru, this message translates to:
+  /// **'Ключ'**
+  String get ecommerceSettingsKeyLabel;
+
+  /// Ecommerce settings screen — button to regenerate the API key
+  ///
+  /// In ru, this message translates to:
+  /// **'Перегенерировать ключ'**
+  String get ecommerceSettingsRegenerateKeyButton;
+
+  /// Ecommerce settings screen — field label above the outbound webhook URL text field, where the store owner enters their storefront's webhook endpoint
+  ///
+  /// In ru, this message translates to:
+  /// **'URL вебхука вашего сайта'**
+  String get ecommerceSettingsOutboundUrlLabel;
+
+  /// Ecommerce settings screen — label next to the enable/disable toggle
+  ///
+  /// In ru, this message translates to:
+  /// **'Интеграция активна'**
+  String get ecommerceSettingsIntegrationActiveLabel;
+
+  /// Ecommerce settings screen — button navigating to the product mapping screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сопоставление товаров'**
+  String get ecommerceSettingsProductMappingButton;
+
+  /// Ecommerce settings screen — snackbar shown after successfully regenerating the API key
+  ///
+  /// In ru, this message translates to:
+  /// **'Ключ перегенерирован'**
+  String get ecommerceSettingsKeyRegenerated;
+
+  /// Ecommerce settings screen — snackbar shown after copying the inbound URL or API key to the clipboard; label is `URL` or `ecommerceSettingsKeyLabel`
+  ///
+  /// In ru, this message translates to:
+  /// **'{label} скопирован(о)'**
+  String ecommerceSettingsCopiedMessage(String label);
+
   /// No description provided for @employees.
   ///
   /// In ru, this message translates to:
