@@ -190,6 +190,42 @@ abstract class AppLocalizations {
   /// **'Повторить'**
   String get retry;
 
+  /// Generic 'Clear' action button (e.g. dismiss/discard something without confirming) — distinct from `clearCart` ("Очистить корзину"), which is a full-sentence cart-clearing label
+  ///
+  /// In ru, this message translates to:
+  /// **'Очистить'**
+  String get clear;
+
+  /// Generic 'Restore' action button (e.g. restoring a previously saved/persisted state)
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановить'**
+  String get restore;
+
+  /// Relative time — event happened less than a minute ago
+  ///
+  /// In ru, this message translates to:
+  /// **'только что'**
+  String get justNow;
+
+  /// Relative time — N minutes ago; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'{minutes} мин назад'**
+  String minutesAgo(String minutes);
+
+  /// Relative time — N hours ago; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'{hours} ч назад'**
+  String hoursAgo(String hours);
+
+  /// Relative time — N days ago; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'{days} дн назад'**
+  String daysAgo(String days);
+
   /// Loading indicator text
   ///
   /// In ru, this message translates to:
@@ -1029,6 +1065,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Очистить корзину'**
   String get clearCart;
+
+  /// Cart restore prompt — dialog title asking whether to restore a previously persisted POS cart on cold start
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановить корзину?'**
+  String get cartRestoreDialogTitle;
+
+  /// Cart restore prompt — dialog body. {time} is a pre-formatted relative-time string (see justNow/minutesAgo/hoursAgo/daysAgo), {count} is the pre-formatted saved-cart item count
+  ///
+  /// In ru, this message translates to:
+  /// **'Найдена сохранённая корзина ({time}, {count} товаров).'**
+  String cartRestoreDialogMessage(String time, String count);
 
   /// Sale success message
   ///

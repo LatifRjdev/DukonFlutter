@@ -32,6 +32,27 @@
   "@apply": { "description": "Apply button (e.g. apply filters, apply inventory count results)" },
   "retry": "Повторить",
   "@retry": { "description": "Retry button" },
+  "clear": "Очистить",
+  "@clear": { "description": "Generic 'Clear' action button (e.g. dismiss/discard something without confirming) — distinct from `clearCart` (\"Очистить корзину\"), which is a full-sentence cart-clearing label" },
+  "restore": "Восстановить",
+  "@restore": { "description": "Generic 'Restore' action button (e.g. restoring a previously saved/persisted state)" },
+  "justNow": "только что",
+  "@justNow": { "description": "Relative time — event happened less than a minute ago" },
+  "minutesAgo": "{minutes} мин назад",
+  "@minutesAgo": {
+    "description": "Relative time — N minutes ago; placeholder is a pre-formatted String",
+    "placeholders": { "minutes": { "type": "String" } }
+  },
+  "hoursAgo": "{hours} ч назад",
+  "@hoursAgo": {
+    "description": "Relative time — N hours ago; placeholder is a pre-formatted String",
+    "placeholders": { "hours": { "type": "String" } }
+  },
+  "daysAgo": "{days} дн назад",
+  "@daysAgo": {
+    "description": "Relative time — N days ago; placeholder is a pre-formatted String",
+    "placeholders": { "days": { "type": "String" } }
+  },
   "loading": "Загрузка...",
   "@loading": { "description": "Loading indicator text" },
   "processing": "Обработка...",
@@ -341,6 +362,13 @@
   "@removeFromCart": { "description": "Remove from cart action" },
   "clearCart": "Очистить корзину",
   "@clearCart": { "description": "Clear cart action" },
+  "cartRestoreDialogTitle": "Восстановить корзину?",
+  "@cartRestoreDialogTitle": { "description": "Cart restore prompt — dialog title asking whether to restore a previously persisted POS cart on cold start" },
+  "cartRestoreDialogMessage": "Найдена сохранённая корзина ({time}, {count} товаров).",
+  "@cartRestoreDialogMessage": {
+    "description": "Cart restore prompt — dialog body. {time} is a pre-formatted relative-time string (see justNow/minutesAgo/hoursAgo/daysAgo), {count} is the pre-formatted saved-cart item count",
+    "placeholders": { "time": { "type": "String" }, "count": { "type": "String" } }
+  },
   "saleSuccess": "Продажа оформлена",
   "@saleSuccess": { "description": "Sale success message" },
   "receiptNo": "Чек №",

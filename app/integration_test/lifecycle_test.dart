@@ -36,6 +36,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dukonpro/data/datasources/local/cart_local_datasource.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/pos/cart_bloc.dart';
 import 'package:dukonpro/presentation/pages/dashboard/cart_restore_prompt.dart';
 
@@ -241,6 +242,9 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('ru'),
       home: BlocProvider<CartBloc>.value(
         value: cartBloc,
         child: const _TestHomeStub(),

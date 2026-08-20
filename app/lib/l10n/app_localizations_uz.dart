@@ -54,6 +54,30 @@ class AppLocalizationsUz extends AppLocalizations {
   String get retry => 'Qayta urinish';
 
   @override
+  String get clear => 'Очистить';
+
+  @override
+  String get restore => 'Восстановить';
+
+  @override
+  String get justNow => 'только что';
+
+  @override
+  String minutesAgo(String minutes) {
+    return '$minutes мин назад';
+  }
+
+  @override
+  String hoursAgo(String hours) {
+    return '$hours ч назад';
+  }
+
+  @override
+  String daysAgo(String days) {
+    return '$days дн назад';
+  }
+
+  @override
   String get loading => 'Yuklanmoqda...';
 
   @override
@@ -497,6 +521,14 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get clearCart => 'Savatni tozalash';
+
+  @override
+  String get cartRestoreDialogTitle => 'Восстановить корзину?';
+
+  @override
+  String cartRestoreDialogMessage(String time, String count) {
+    return 'Найдена сохранённая корзина ($time, $count товаров).';
+  }
 
   @override
   String get saleSuccess => 'Savdo rasmiylashtirildi';
