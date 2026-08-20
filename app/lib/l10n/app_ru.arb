@@ -122,8 +122,6 @@
   "@onboardingOfflineTitle": { "description": "Onboarding slide title for the offline-support feature (4th slide on the onboarding page)" },
   "onboardingOfflineDesc": "Продавайте без интернета — данные синхронизируются автоматически",
   "@onboardingOfflineDesc": { "description": "Onboarding slide description for the offline-support feature" },
-  "onboardingNext": "Далее",
-  "@onboardingNext": { "description": "Next button on onboarding, shown on every slide except the last (distinct from getStarted, which is shown on the last slide)" },
   "skip": "Пропустить",
   "@skip": { "description": "Skip button on onboarding" },
   "getStarted": "Начать",

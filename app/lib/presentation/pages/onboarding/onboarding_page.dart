@@ -84,7 +84,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   const SizedBox(height: 32),
                   AppButton(
-                    text: _currentPage == slides.length - 1 ? l10n.getStarted : l10n.onboardingNext,
+                    text: _currentPage == slides.length - 1 ? l10n.getStarted : l10n.next,
                     onPressed: () {
                       if (_currentPage == slides.length - 1) {
                         context.go('/login');

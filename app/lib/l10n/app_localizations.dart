@@ -454,12 +454,6 @@ abstract class AppLocalizations {
   /// **'Продавайте без интернета — данные синхронизируются автоматически'**
   String get onboardingOfflineDesc;
 
-  /// Next button on onboarding, shown on every slide except the last (distinct from getStarted, which is shown on the last slide)
-  ///
-  /// In ru, this message translates to:
-  /// **'Далее'**
-  String get onboardingNext;
-
   /// Skip button on onboarding
   ///
   /// In ru, this message translates to:

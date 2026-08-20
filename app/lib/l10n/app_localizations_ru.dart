@@ -193,9 +193,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Продавайте без интернета — данные синхронизируются автоматически';
 
   @override
-  String get onboardingNext => 'Далее';
-
-  @override
   String get skip => 'Пропустить';
 
   @override
