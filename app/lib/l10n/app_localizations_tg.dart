@@ -230,10 +230,19 @@ class AppLocalizationsTg extends AppLocalizations {
   String get storeName => 'Номи магазин';
 
   @override
+  String get createStoreNameRequiredError => 'Введите название';
+
+  @override
   String get storeCategory => 'Навъи магазин';
 
   @override
   String get storeAddress => 'Суроғаи магазин';
+
+  @override
+  String get createStoreAddressLabel => 'Адрес (необязательно)';
+
+  @override
+  String get createStorePhoneLabel => 'Телефон магазина (необязательно)';
 
   @override
   String get grocery => 'Хӯрокворӣ';

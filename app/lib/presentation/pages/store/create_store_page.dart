@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/enums.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -48,8 +49,9 @@ class _CreateStorePageState extends State<CreateStorePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Создать магазин')),
+      appBar: AppBar(title: Text(l10n.createStore)),
       body: BlocListener<StoreBloc, StoreState>(
         listener: (context, state) {
           if (state is StoreLoaded && state.selectedStore != null) {
@@ -65,8 +67,8 @@ class _CreateStorePageState extends State<CreateStorePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Тип магазина',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(l10n.storeCategory,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
@@ -80,26 +82,26 @@ class _CreateStorePageState extends State<CreateStorePage> {
                 const SizedBox(height: 24),
                 AppTextField(
                   controller: _nameController,
-                  label: 'Название магазина',
+                  label: l10n.storeName,
                   prefixIcon: Icons.store,
-                  validator: (v) => v == null || v.isEmpty ? 'Введите название' : null,
+                  validator: (v) => v == null || v.isEmpty ? l10n.createStoreNameRequiredError : null,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _addressController,
-                  label: 'Адрес (необязательно)',
+                  label: l10n.createStoreAddressLabel,
                   prefixIcon: Icons.location_on_outlined,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   controller: _phoneController,
-                  label: 'Телефон магазина (необязательно)',
+                  label: l10n.createStorePhoneLabel,
                   prefixIcon: Icons.phone_outlined,
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 24),
-                const Text('Валюта',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(l10n.currency,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
@@ -113,7 +115,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                 BlocBuilder<StoreBloc, StoreState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Создать магазин',
+                      text: l10n.createStore,
                       onPressed: _submit,
                       isLoading: state is StoreLoading,
                     );

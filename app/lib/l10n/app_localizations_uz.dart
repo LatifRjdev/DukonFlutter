@@ -230,10 +230,19 @@ class AppLocalizationsUz extends AppLocalizations {
   String get storeName => 'Do\'kon nomi';
 
   @override
+  String get createStoreNameRequiredError => 'Введите название';
+
+  @override
   String get storeCategory => 'Do\'kon turi';
 
   @override
   String get storeAddress => 'Do\'kon manzili';
+
+  @override
+  String get createStoreAddressLabel => 'Адрес (необязательно)';
+
+  @override
+  String get createStorePhoneLabel => 'Телефон магазина (необязательно)';
 
   @override
   String get grocery => 'Oziq-ovqat';

@@ -514,6 +514,12 @@ abstract class AppLocalizations {
   /// **'Название магазина'**
   String get storeName;
 
+  /// Validation error shown on the create-store form when the store name field is left empty; distinct from `enterName` ("Введите имя"), which asks for a person's name
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите название'**
+  String get createStoreNameRequiredError;
+
   /// Store category field
   ///
   /// In ru, this message translates to:
@@ -525,6 +531,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Адрес магазина'**
   String get storeAddress;
+
+  /// Create-store form's optional address field label; distinct from `storeAddress` ("Адрес магазина"), a differently-worded label used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес (необязательно)'**
+  String get createStoreAddressLabel;
+
+  /// Create-store form's optional phone field label
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон магазина (необязательно)'**
+  String get createStorePhoneLabel;
 
   /// Grocery store type
   ///

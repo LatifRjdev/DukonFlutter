@@ -229,10 +229,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get storeName => 'Название магазина';
 
   @override
+  String get createStoreNameRequiredError => 'Введите название';
+
+  @override
   String get storeCategory => 'Тип магазина';
 
   @override
   String get storeAddress => 'Адрес магазина';
+
+  @override
+  String get createStoreAddressLabel => 'Адрес (необязательно)';
+
+  @override
+  String get createStorePhoneLabel => 'Телефон магазина (необязательно)';
 
   @override
   String get grocery => 'Продуктовый';
