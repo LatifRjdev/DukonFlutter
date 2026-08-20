@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/settings/settings_bloc.dart';
@@ -40,8 +41,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Сменить пароль')),
+      appBar: AppBar(title: Text(l10n.changePassword)),
       body: BlocListener<SettingsBloc, SettingsState>(
         listener: (context, state) {
           if (state is SettingsActionSuccess) {
@@ -63,35 +65,35 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 const SizedBox(height: AppConstants.spacingLg),
                 AppTextField(
                   controller: _currentPasswordController,
-                  label: 'Текущий пароль',
+                  label: l10n.currentPassword,
                   obscureText: true,
                   prefixIcon: Icons.lock,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Введите текущий пароль';
+                    if (v == null || v.isEmpty) return l10n.currentPasswordRequired;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _newPasswordController,
-                  label: 'Новый пароль',
+                  label: l10n.newPassword,
                   obscureText: true,
                   prefixIcon: Icons.lock_outline,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Введите новый пароль';
-                    if (v.length < 6) return 'Минимум 6 символов';
+                    if (v == null || v.isEmpty) return l10n.newPasswordRequired;
+                    if (v.length < 6) return l10n.passwordMinLength;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _confirmPasswordController,
-                  label: 'Подтвердите пароль',
+                  label: l10n.confirmPassword,
                   obscureText: true,
                   prefixIcon: Icons.lock_outline,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Подтвердите пароль';
-                    if (v != _newPasswordController.text) return 'Пароли не совпадают';
+                    if (v == null || v.isEmpty) return l10n.confirmPassword;
+                    if (v != _newPasswordController.text) return l10n.passwordsDoNotMatch;
                     return null;
                   },
                 ),
@@ -99,7 +101,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 BlocBuilder<SettingsBloc, SettingsState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Сменить пароль',
+                      text: l10n.changePassword,
                       isLoading: state is SettingsLoading,
                       onPressed: _save,
                     );

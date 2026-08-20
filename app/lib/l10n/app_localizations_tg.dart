@@ -1055,6 +1055,12 @@ class AppLocalizationsTg extends AppLocalizations {
   String get newPassword => 'Пароли нав';
 
   @override
+  String get currentPasswordRequired => 'Введите текущий пароль';
+
+  @override
+  String get newPasswordRequired => 'Введите новый пароль';
+
+  @override
   String get passwordChanged => 'Парол бомуваффақият иваз шуд';
 
   @override

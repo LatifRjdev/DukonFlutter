@@ -1054,6 +1054,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newPassword => 'Новый пароль';
 
   @override
+  String get currentPasswordRequired => 'Введите текущий пароль';
+
+  @override
+  String get newPasswordRequired => 'Введите новый пароль';
+
+  @override
   String get passwordChanged => 'Пароль успешно изменён';
 
   @override

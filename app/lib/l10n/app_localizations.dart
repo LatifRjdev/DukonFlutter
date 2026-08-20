@@ -2104,6 +2104,18 @@ abstract class AppLocalizations {
   /// **'Новый пароль'**
   String get newPassword;
 
+  /// Generic 'current password is required' validation error, used across password-change forms
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите текущий пароль'**
+  String get currentPasswordRequired;
+
+  /// Generic 'new password is required' validation error, used across password-change forms
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите новый пароль'**
+  String get newPasswordRequired;
+
   /// No description provided for @passwordChanged.
   ///
   /// In ru, this message translates to:
