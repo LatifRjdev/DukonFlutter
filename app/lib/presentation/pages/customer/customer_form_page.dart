@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
@@ -85,9 +86,10 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактировать клиента' : 'Новый клиент'),
+        title: Text(_isEditing ? l10n.editCustomer : l10n.newCustomer),
       ),
       body: BlocListener<CustomerListBloc, CustomerListState>(
         listener: (context, state) {
@@ -110,7 +112,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                 ),
               );
             }
-            AppSnackbar.success(context, _isEditing ? 'Клиент обновлён' : 'Клиент добавлен');
+            AppSnackbar.success(context, _isEditing ? l10n.customerUpdated : l10n.customerAdded);
             context.pop();
           } else if (state is CustomerFormError) {
             AppSnackbar.error(context, state.message);
@@ -125,24 +127,24 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
               children: [
                 AppTextField(
                   controller: _nameController,
-                  label: 'Имя',
+                  label: l10n.name,
                   prefixIcon: Icons.person_outline,
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Введите имя';
+                    if (v == null || v.trim().isEmpty) return l10n.enterName;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _phoneController,
-                  label: 'Телефон (+992)',
+                  label: l10n.customerFormPhoneLabel,
                   prefixIcon: Icons.phone_outlined,
                   keyboardType: TextInputType.phone,
                   validator: (v) {
                     if (v != null && v.trim().isNotEmpty) {
                       final cleaned = v.trim();
                       if (!cleaned.startsWith('+992') && !cleaned.startsWith('992')) {
-                        return 'Введите номер с кодом +992';
+                        return l10n.customerFormPhoneCodeError;
                       }
                     }
                     return null;
@@ -151,7 +153,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _notesController,
-                  label: 'Заметки',
+                  label: l10n.notes,
                   prefixIcon: Icons.notes_outlined,
                   maxLines: 3,
                 ),
@@ -166,7 +168,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                 BlocBuilder<CustomerListBloc, CustomerListState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Сохранить',
+                      text: l10n.save,
                       isLoading: state is CustomerFormLoading,
                       onPressed: _submit,
                     );

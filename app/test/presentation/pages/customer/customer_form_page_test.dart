@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dukonpro/domain/entities/customer.dart';
 import 'package:dukonpro/domain/repositories/customer_repository.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/customer/customer_list_bloc.dart';
 import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_bloc.dart';
 import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_event.dart';
@@ -78,6 +79,8 @@ Widget buildTestWidget({
       BlocProvider<CustomerDetailBloc>.value(value: customerDetailBloc),
     ],
     child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: CustomerFormPage(
         storeId: storeId,
         customerId: customerId,

@@ -1540,6 +1540,36 @@ abstract class AppLocalizations {
   /// **'Новый клиент'**
   String get newCustomer;
 
+  /// Title for editing an existing customer (dialog/screen) — pairs with `newCustomer` as the alternate title when a customer form is in edit mode
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать клиента'**
+  String get editCustomer;
+
+  /// Success message shown after a customer is created
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент добавлен'**
+  String get customerAdded;
+
+  /// Success message shown after a customer is updated
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент обновлён'**
+  String get customerUpdated;
+
+  /// Phone field label with inline country-code hint, specific to the customer create/edit form — distinct from the bare `phoneLabel` ("Телефон") used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон (+992)'**
+  String get customerFormPhoneLabel;
+
+  /// Validation error shown on the customer form's phone field when the entered number doesn't start with the +992/992 country code — distinct from `phoneRequired` ("Введите номер телефона"), which just checks the field isn't empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите номер с кодом +992'**
+  String get customerFormPhoneCodeError;
+
   /// Settings section
   ///
   /// In ru, this message translates to:

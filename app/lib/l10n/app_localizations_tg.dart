@@ -767,6 +767,21 @@ class AppLocalizationsTg extends AppLocalizations {
   String get newCustomer => 'Новый клиент';
 
   @override
+  String get editCustomer => 'Редактировать клиента';
+
+  @override
+  String get customerAdded => 'Клиент добавлен';
+
+  @override
+  String get customerUpdated => 'Клиент обновлён';
+
+  @override
+  String get customerFormPhoneLabel => 'Телефон (+992)';
+
+  @override
+  String get customerFormPhoneCodeError => 'Введите номер с кодом +992';
+
+  @override
   String get settings => 'Танзимот';
 
   @override
