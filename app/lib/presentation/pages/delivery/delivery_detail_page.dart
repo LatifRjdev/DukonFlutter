@@ -200,7 +200,7 @@ class _DetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoRow(label: l10n.deliveryDetailOrderLabel, value: delivery.orderNumber),
+                      _InfoRow(label: l10n.order, value: delivery.orderNumber),
                       const Divider(height: 20),
                       _InfoRow(label: l10n.deliveryDetailCustomerLabel, value: delivery.customerName),
                       const Divider(height: 20),

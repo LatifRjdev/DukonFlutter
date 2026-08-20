@@ -2170,6 +2170,24 @@ abstract class AppLocalizations {
   /// **'Последние покупки'**
   String get recentPurchases;
 
+  /// Call action button label — used on contact-detail screens' action-button row (e.g. supplier detail), opens the phone dialer
+  ///
+  /// In ru, this message translates to:
+  /// **'Звонок'**
+  String get call;
+
+  /// SMS action button label — used on contact-detail screens' action-button row (e.g. supplier detail), opens the SMS composer
+  ///
+  /// In ru, this message translates to:
+  /// **'СМС'**
+  String get sms;
+
+  /// Generic 'Order' label — delivery detail screen's info row label for the order number, and supplier detail screen's place-order action button caption (formerly `deliveryDetailOrderLabel`, renamed/generalized when reused on a second screen)
+  ///
+  /// In ru, this message translates to:
+  /// **'Заказ'**
+  String get order;
+
   /// No description provided for @ourDebt.
   ///
   /// In ru, this message translates to:
@@ -2193,12 +2211,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Детали доставки'**
   String get deliveryDetailTitle;
-
-  /// Delivery detail screen — info row label for the order number
-  ///
-  /// In ru, this message translates to:
-  /// **'Заказ'**
-  String get deliveryDetailOrderLabel;
 
   /// Delivery detail screen — info row label for the customer name; distinct from `customer` ("Покупатель"), used verbatim as "Клиент" on this screen
   ///

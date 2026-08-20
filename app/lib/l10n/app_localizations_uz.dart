@@ -1089,6 +1089,15 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recentPurchases => 'Oxirgi xaridlar';
 
   @override
+  String get call => 'Звонок';
+
+  @override
+  String get sms => 'СМС';
+
+  @override
+  String get order => 'Заказ';
+
+  @override
   String get ourDebt => 'Bizning qarzimiz';
 
   @override
@@ -1099,9 +1108,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get deliveryDetailTitle => 'Детали доставки';
-
-  @override
-  String get deliveryDetailOrderLabel => 'Заказ';
 
   @override
   String get deliveryDetailCustomerLabel => 'Клиент';

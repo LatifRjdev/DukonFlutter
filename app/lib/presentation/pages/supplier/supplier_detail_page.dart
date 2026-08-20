@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -42,15 +43,16 @@ class _SupplierDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SupplierDetailBloc, SupplierDetailState>(
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         if (state is SupplierDetailLoading || state is SupplierDetailInitial) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Поставщик')),
+            appBar: AppBar(title: Text(l10n.supplier)),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         if (state is SupplierDetailError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Поставщик')),
+            appBar: AppBar(title: Text(l10n.supplier)),
             body: Center(child: Text(state.message)),
           );
         }
@@ -116,21 +118,21 @@ class _SupplierDetailView extends StatelessWidget {
                       if (supplier.phone != null && supplier.phone!.isNotEmpty)
                         _ActionButton(
                           icon: Icons.phone_outlined,
-                          label: 'Звонок',
+                          label: l10n.call,
                           color: AppColors.success,
                           onTap: () => _launchPhone(supplier.phone!),
                         ),
                       if (supplier.phone != null && supplier.phone!.isNotEmpty)
                         _ActionButton(
                           icon: Icons.message_outlined,
-                          label: 'СМС',
+                          label: l10n.sms,
                           color: AppColors.info,
                           onTap: () => _launchSms(supplier.phone!),
                         ),
                       if (supplier.debt > 0)
                         _ActionButton(
                           icon: Icons.payment_outlined,
-                          label: 'Оплата',
+                          label: l10n.payment,
                           color: AppColors.warning,
                           onTap: () => context.push('/debts/supplier', extra: {
                             'storeId': storeId,
@@ -140,7 +142,7 @@ class _SupplierDetailView extends StatelessWidget {
                         ),
                       _ActionButton(
                         icon: Icons.add_shopping_cart_outlined,
-                        label: 'Заказ',
+                        label: l10n.order,
                         color: AppColors.primary,
                         onTap: () => context.push('/stock/intake'),
                       ),
@@ -152,7 +154,7 @@ class _SupplierDetailView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Наш долг', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        Text(l10n.ourDebt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                         Text(
                           '${supplier.debt.toStringAsFixed(2)} TJS',
                           style: TextStyle(
@@ -168,7 +170,7 @@ class _SupplierDetailView extends StatelessWidget {
 
                   if (supplier.debt > 0)
                     AppButton(
-                      text: 'Записать оплату',
+                      text: l10n.recordPayment,
                       icon: Icons.payment,
                       onPressed: () => context.push('/debts/supplier', extra: {
                         'storeId': storeId,
@@ -184,8 +186,8 @@ class _SupplierDetailView extends StatelessWidget {
 
         // Fallback
         return Scaffold(
-          appBar: AppBar(title: const Text('Поставщик')),
-          body: const Center(child: Text('Данные не найдены')),
+          appBar: AppBar(title: Text(l10n.supplier)),
+          body: Center(child: Text(l10n.noData)),
         );
       },
     );

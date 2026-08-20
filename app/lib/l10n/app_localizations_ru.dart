@@ -1088,6 +1088,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recentPurchases => 'Последние покупки';
 
   @override
+  String get call => 'Звонок';
+
+  @override
+  String get sms => 'СМС';
+
+  @override
+  String get order => 'Заказ';
+
+  @override
   String get ourDebt => 'Наш долг';
 
   @override
@@ -1098,9 +1107,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deliveryDetailTitle => 'Детали доставки';
-
-  @override
-  String get deliveryDetailOrderLabel => 'Заказ';
 
   @override
   String get deliveryDetailCustomerLabel => 'Клиент';
