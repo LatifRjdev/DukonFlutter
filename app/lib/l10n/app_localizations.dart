@@ -2266,6 +2266,36 @@ abstract class AppLocalizations {
   /// **'Доставлен'**
   String get deliveryDetailStepDelivered;
 
+  /// Delivery list screen — AppBar title; distinct from `deliveryDetailTitle` ("Детали доставки")
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставки'**
+  String get deliveryListTitle;
+
+  /// Delivery list screen — filter tab label for orders not yet in transit (plural adjective, distinct from `deliveryListStatusNew` which is singular)
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые'**
+  String get deliveryListTabNew;
+
+  /// Delivery list screen — filter tab label for delivered orders (plural, distinct from `deliveryDetailStepDelivered` "Доставлен" which is singular)
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставлены'**
+  String get deliveryListTabDelivered;
+
+  /// Delivery list screen — empty-state message shown when there are no deliveries; distinct from `noDeliveryData` ("Нет данных о поставках"), which is the supplier-deliveries empty state
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставок пока нет'**
+  String get deliveryListEmptyState;
+
+  /// Delivery list screen — status badge label on a delivery card for a newly created order
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый'**
+  String get deliveryListStatusNew;
+
   /// Loyalty settings screen — AppBar title
   ///
   /// In ru, this message translates to:

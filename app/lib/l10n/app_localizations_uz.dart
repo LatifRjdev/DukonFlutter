@@ -1137,6 +1137,21 @@ class AppLocalizationsUz extends AppLocalizations {
   String get deliveryDetailStepDelivered => 'Доставлен';
 
   @override
+  String get deliveryListTitle => 'Доставки';
+
+  @override
+  String get deliveryListTabNew => 'Новые';
+
+  @override
+  String get deliveryListTabDelivered => 'Доставлены';
+
+  @override
+  String get deliveryListEmptyState => 'Доставок пока нет';
+
+  @override
+  String get deliveryListStatusNew => 'Новый';
+
+  @override
   String get loyaltySettingsTitle => 'Программа лояльности';
 
   @override

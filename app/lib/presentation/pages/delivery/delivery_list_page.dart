@@ -8,6 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Minimal in-page model ───────────────────────────────────────────────────
 
@@ -132,20 +133,22 @@ class _DeliveryListView extends StatefulWidget {
 class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
-  static const _tabs = [
-    (label: 'Все', status: null),
-    (label: 'Новые', status: 'NEW'),
-    (label: 'В пути', status: 'IN_TRANSIT'),
-    (label: 'Доставлены', status: 'DELIVERED'),
-  ];
+  static const _tabStatuses = [null, 'NEW', 'IN_TRANSIT', 'DELIVERED'];
+
+  List<String> _tabLabels(AppLocalizations l10n) => [
+        l10n.all,
+        l10n.deliveryListTabNew,
+        l10n.deliveryDetailStepInTransit,
+        l10n.deliveryListTabDelivered,
+      ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(length: _tabStatuses.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        _reload(_tabs[_tabController.index].status);
+        _reload(_tabStatuses[_tabController.index]);
       }
     });
   }
@@ -166,10 +169,12 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final tabLabels = _tabLabels(l10n);
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Доставки', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+        title: Text(l10n.deliveryListTitle, style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
         backgroundColor: Colors.white,
         foregroundColor: context.textPrimary,
         elevation: 0,
@@ -179,7 +184,7 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
           unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
           labelStyle: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 13),
-          tabs: _tabs.map((t) => Tab(text: t.label)).toList(),
+          tabs: [for (final label in tabLabels) Tab(text: label)],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -200,8 +205,8 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
                   Text(state.message, style: const TextStyle(color: AppColors.error)),
                   const SizedBox(height: 12),
                   TextButton(
-                    onPressed: () => _reload(_tabs[_tabController.index].status),
-                    child: const Text('Повторить'),
+                    onPressed: () => _reload(_tabStatuses[_tabController.index]),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),
@@ -215,14 +220,14 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
                   children: [
                     Icon(Icons.local_shipping_outlined, size: 64, color: AppColors.disabled),
                     const SizedBox(height: AppConstants.spacingMd),
-                    Text('Доставок пока нет',
+                    Text(l10n.deliveryListEmptyState,
                         style: TextStyle(fontFamily: 'Inter', color: context.textSecondary, fontSize: 16)),
                   ],
                 ),
               );
             }
             return RefreshIndicator(
-              onRefresh: () async => _reload(_tabs[_tabController.index].status),
+              onRefresh: () async => _reload(_tabStatuses[_tabController.index]),
               child: ListView.separated(
                 padding: const EdgeInsets.all(AppConstants.spacingMd),
                 itemCount: state.deliveries.length,
@@ -272,19 +277,20 @@ class _DeliveryCard extends StatelessWidget {
     }
   }
 
-  String get _statusLabel {
+  String _statusLabel(AppLocalizations l10n) {
     switch (delivery.status) {
       case DeliveryStatus.newOrder:
-        return 'Новый';
+        return l10n.deliveryListStatusNew;
       case DeliveryStatus.inTransit:
-        return 'В пути';
+        return l10n.deliveryDetailStepInTransit;
       case DeliveryStatus.delivered:
-        return 'Доставлен';
+        return l10n.deliveryDetailStepDelivered;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -308,7 +314,7 @@ class _DeliveryCard extends StatelessWidget {
                     color: _statusColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppConstants.radiusRound),
                   ),
-                  child: Text(_statusLabel,
+                  child: Text(_statusLabel(l10n),
                       style: TextStyle(
                           fontFamily: 'Inter', color: _statusColor, fontSize: 12, fontWeight: FontWeight.w600)),
                 ),
