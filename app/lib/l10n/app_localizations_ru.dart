@@ -153,6 +153,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginWelcome => 'Добро пожаловать!';
 
   @override
+  String get loginSubtitle => 'Управление магазином';
+
+  @override
   String get registerWelcome => 'Создайте аккаунт';
 
   @override

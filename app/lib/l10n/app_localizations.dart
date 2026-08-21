@@ -376,6 +376,12 @@ abstract class AppLocalizations {
   /// **'Добро пожаловать!'**
   String get loginWelcome;
 
+  /// Login screen header subtitle under the app name, distinct from `loginWelcome` ("Добро пожаловать!")
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление магазином'**
+  String get loginSubtitle;
+
   /// Register screen welcome message
   ///
   /// In ru, this message translates to:

@@ -153,6 +153,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get loginWelcome => 'Хуш омадед!';
 
   @override
+  String get loginSubtitle => 'Управление магазином';
+
+  @override
   String get registerWelcome => 'Аккаунт созед';
 
   @override

@@ -153,6 +153,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginWelcome => 'Xush kelibsiz!';
 
   @override
+  String get loginSubtitle => 'Управление магазином';
+
+  @override
   String get registerWelcome => 'Akkaunt yarating';
 
   @override

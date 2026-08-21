@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -66,11 +68,11 @@ class _LoginPageState extends State<LoginPage> {
                       bottomRight: Radius.circular(32),
                     ),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
-                      Text('DukonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
-                      SizedBox(height: 8),
-                      Text('Управление магазином', style: TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
+                      const Text('DukonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 8),
+                      Text(l10n.loginSubtitle, style: const TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
                     ],
                   ),
                 ),
@@ -83,18 +85,18 @@ class _LoginPageState extends State<LoginPage> {
                       PhoneInputField(
                         controller: _phoneController,
                         validator: (v) {
-                          if (v == null || v.length < 9) return 'Введите номер телефона';
+                          if (v == null || v.length < 9) return l10n.phoneRequired;
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _passwordController,
-                        label: 'Пароль',
+                        label: l10n.password,
                         obscureText: true,
                         prefixIcon: Icons.lock_outline,
                         validator: (v) {
-                          if (v == null || v.length < 6) return 'Минимум 6 символов';
+                          if (v == null || v.length < 6) return l10n.passwordMinLength;
                           return null;
                         },
                       ),
@@ -103,14 +105,14 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () => context.push('/forgot-password'),
-                          child: const Text('Забыли пароль?'),
+                          child: Text(l10n.forgotPassword),
                         ),
                       ),
                       const SizedBox(height: 24),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
                           return AppButton(
-                            text: 'Войти',
+                            text: l10n.login,
                             onPressed: _submit,
                             isLoading: state is AuthLoading,
                           );
@@ -120,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Нет аккаунта?'),
+                          Text(l10n.noAccount),
                           TextButton(
                             onPressed: () => context.go('/register'),
-                            child: const Text('Зарегистрироваться'),
+                            child: Text(l10n.register),
                           ),
                         ],
                       ),

@@ -104,6 +104,8 @@
   "@phoneHint": { "description": "Phone number input hint" },
   "loginWelcome": "Добро пожаловать!",
   "@loginWelcome": { "description": "Login screen welcome message" },
+  "loginSubtitle": "Управление магазином",
+  "@loginSubtitle": { "description": "Login screen header subtitle under the app name, distinct from `loginWelcome` (\"Добро пожаловать!\")" },
   "registerWelcome": "Создайте аккаунт",
   "@registerWelcome": { "description": "Register screen welcome message" },
   "confirmPassword": "Подтвердите пароль",
