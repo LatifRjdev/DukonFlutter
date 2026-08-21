@@ -90,6 +90,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get success => 'Успешно';
 
   @override
+  String get saved => 'Сохранено';
+
+  @override
   String get noData => 'Нет данных';
 
   @override
@@ -1376,6 +1379,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String ecommerceSettingsCopiedMessage(String label) {
     return '$label скопирован(о)';
   }
+
+  @override
+  String get ecommerceMappingSearchHint => 'Поиск по названию товара';
+
+  @override
+  String get ecommerceMappingExternalIdHint => 'Внешний ID';
 
   @override
   String get employees => 'Сотрудники';

@@ -250,6 +250,12 @@ abstract class AppLocalizations {
   /// **'Успешно'**
   String get success;
 
+  /// Generic short past-tense confirmation snackbar shown after a save action completes — distinct from `snackSettingsSaved` ("Настройки сохранены"), which is specifically about settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранено'**
+  String get saved;
+
   /// No data available
   ///
   /// In ru, this message translates to:
@@ -2703,6 +2709,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{label} скопирован(о)'**
   String ecommerceSettingsCopiedMessage(String label);
+
+  /// Ecommerce product mapping screen — hint text on the search field for filtering the product list by name
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск по названию товара'**
+  String get ecommerceMappingSearchHint;
+
+  /// Ecommerce product mapping screen — hint text on the text field where the store owner enters the storefront's external product id for a given local product
+  ///
+  /// In ru, this message translates to:
+  /// **'Внешний ID'**
+  String get ecommerceMappingExternalIdHint;
 
   /// No description provided for @employees.
   ///

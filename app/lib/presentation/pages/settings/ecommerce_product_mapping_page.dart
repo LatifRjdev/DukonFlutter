@@ -7,6 +7,7 @@ import '../../../core/errors/error_messages.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_search_bar.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class EcommerceProductMappingPage extends StatefulWidget {
   final String storeId;
@@ -50,8 +51,9 @@ class _EcommerceProductMappingPageState
         ApiEndpoints.products(widget.storeId),
         queryParameters: {'limit': 1000},
       );
-      final mappingsRes = await _dioClient
-          .get('/stores/${widget.storeId}/ecommerce/mappings');
+      final mappingsRes = await _dioClient.get(
+        '/stores/${widget.storeId}/ecommerce/mappings',
+      );
 
       // GET /stores/:storeId/products returns {data, total, page, limit,
       // totalPages} (see ProductsService.findAll), never a bare list — the
@@ -68,8 +70,9 @@ class _EcommerceProductMappingPageState
 
       for (final p in productsJson.cast<Map<String, dynamic>>()) {
         final id = p['id'] as String;
-        _controllers[id] =
-            TextEditingController(text: mappingByProductId[id] ?? '');
+        _controllers[id] = TextEditingController(
+          text: mappingByProductId[id] ?? '',
+        );
       }
 
       setState(() {
@@ -82,14 +85,14 @@ class _EcommerceProductMappingPageState
     }
   }
 
-  Future<void> _saveMapping(String productId) async {
+  Future<void> _saveMapping(AppLocalizations l10n, String productId) async {
     final value = _controllers[productId]?.text.trim() ?? '';
     try {
       await _dioClient.put(
         '/stores/${widget.storeId}/ecommerce/mappings/$productId',
         data: {'externalProductId': value.isEmpty ? null : value},
       );
-      if (mounted) AppSnackbar.success(context, 'Сохранено');
+      if (mounted) AppSnackbar.success(context, l10n.saved);
     } catch (e) {
       if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
     }
@@ -97,18 +100,21 @@ class _EcommerceProductMappingPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final query = _searchController.text.trim().toLowerCase();
     final filtered = query.isEmpty
         ? _products
         : _products
-            .where((p) =>
-                (p['name'] as String? ?? '').toLowerCase().contains(query))
-            .toList();
+              .where(
+                (p) =>
+                    (p['name'] as String? ?? '').toLowerCase().contains(query),
+              )
+              .toList();
 
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Сопоставление товаров'),
+        title: Text(l10n.ecommerceSettingsProductMappingButton),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -121,7 +127,7 @@ class _EcommerceProductMappingPageState
                   child: AppSearchBar(
                     key: const Key('mapping-search-field'),
                     controller: _searchController,
-                    hint: 'Поиск по названию товара',
+                    hint: l10n.ecommerceMappingSearchHint,
                     onChanged: (_) => setState(() {}),
                   ),
                 ),
@@ -129,7 +135,7 @@ class _EcommerceProductMappingPageState
                   child: filtered.isEmpty
                       ? Center(
                           child: Text(
-                            query.isEmpty ? 'Нет товаров' : 'Ничего не найдено',
+                            query.isEmpty ? l10n.noProducts : l10n.noResults,
                             style: TextStyle(color: context.textSecondary),
                           ),
                         )
@@ -144,35 +150,42 @@ class _EcommerceProductMappingPageState
                             final name = product['name'] as String? ?? '';
                             return Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.surface,
-                                borderRadius:
-                                    BorderRadius.circular(AppConstants.radiusLg),
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.radiusLg,
+                                ),
                               ),
                               child: Row(
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: Text(name,
-                                        style: const TextStyle(fontSize: 14)),
+                                    child: Text(
+                                      name,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
                                   ),
                                   Expanded(
                                     flex: 2,
                                     child: TextField(
                                       key: ValueKey('mapping-external-id-$id'),
                                       controller: _controllers[id],
-                                      decoration: const InputDecoration(
-                                        hintText: 'Внешний ID',
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            l10n.ecommerceMappingExternalIdHint,
                                         isDense: true,
-                                        border: OutlineInputBorder(),
+                                        border: const OutlineInputBorder(),
                                       ),
-                                      onSubmitted: (_) => _saveMapping(id),
+                                      onSubmitted: (_) =>
+                                          _saveMapping(l10n, id),
                                     ),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.check, size: 20),
-                                    onPressed: () => _saveMapping(id),
+                                    onPressed: () => _saveMapping(l10n, id),
                                   ),
                                 ],
                               ),
