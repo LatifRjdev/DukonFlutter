@@ -1000,6 +1000,24 @@ abstract class AppLocalizations {
   /// **'Нет товаров'**
   String get noProducts;
 
+  /// Empty products page — headline shown when the store has no products yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте свой первый товар'**
+  String get emptyProductsTitle;
+
+  /// Empty products page — subtitle explaining the benefit of adding products
+  ///
+  /// In ru, this message translates to:
+  /// **'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом'**
+  String get emptyProductsSubtitle;
+
+  /// Button label to import data from an Excel file; generic (also appears on the product list page's overflow menu)
+  ///
+  /// In ru, this message translates to:
+  /// **'Импорт из Excel'**
+  String get importFromExcel;
+
   /// Point of Sale section
   ///
   /// In ru, this message translates to:

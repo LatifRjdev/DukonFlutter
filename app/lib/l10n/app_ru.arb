@@ -339,6 +339,12 @@
   "@sku": { "description": "SKU field" },
   "noProducts": "Нет товаров",
   "@noProducts": { "description": "No products placeholder" },
+  "emptyProductsTitle": "Добавьте свой первый товар",
+  "@emptyProductsTitle": { "description": "Empty products page — headline shown when the store has no products yet" },
+  "emptyProductsSubtitle": "Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом",
+  "@emptyProductsSubtitle": { "description": "Empty products page — subtitle explaining the benefit of adding products" },
+  "importFromExcel": "Импорт из Excel",
+  "@importFromExcel": { "description": "Button label to import data from an Excel file; generic (also appears on the product list page's overflow menu)" },
 
   "pos": "Касса",
   "@pos": { "description": "Point of Sale section" },

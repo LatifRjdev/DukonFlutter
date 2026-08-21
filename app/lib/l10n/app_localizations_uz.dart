@@ -491,6 +491,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get noProducts => 'Tovarlar yo\'q';
 
   @override
+  String get emptyProductsTitle => 'Добавьте свой первый товар';
+
+  @override
+  String get emptyProductsSubtitle =>
+      'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом';
+
+  @override
+  String get importFromExcel => 'Импорт из Excel';
+
+  @override
   String get pos => 'Kassa';
 
   @override

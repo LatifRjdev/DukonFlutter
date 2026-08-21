@@ -491,6 +491,16 @@ class AppLocalizationsTg extends AppLocalizations {
   String get noProducts => 'Мол нест';
 
   @override
+  String get emptyProductsTitle => 'Добавьте свой первый товар';
+
+  @override
+  String get emptyProductsSubtitle =>
+      'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом';
+
+  @override
+  String get importFromExcel => 'Импорт из Excel';
+
+  @override
   String get pos => 'Касса';
 
   @override

@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
@@ -10,9 +11,10 @@ class EmptyProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Товары'),
+        title: Text(l10n.products),
       ),
       body: Center(
         child: Padding(
@@ -31,28 +33,29 @@ class EmptyProductsPage extends StatelessWidget {
                     size: 56, color: AppColors.primary),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Добавьте свой первый товар',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              Text(
+                l10n.emptyProductsTitle,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.w700),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом',
+                l10n.emptyProductsSubtitle,
                 style: TextStyle(
                     color: context.textSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               AppButton(
-                text: 'Добавить товар',
+                text: l10n.addProduct,
                 icon: Icons.add,
                 width: 220,
                 onPressed: () => context.push('/products/add'),
               ),
               const SizedBox(height: 12),
               AppButton(
-                text: 'Импорт из Excel',
+                text: l10n.importFromExcel,
                 type: AppButtonType.outlined,
                 icon: Icons.upload_file,
                 width: 220,
