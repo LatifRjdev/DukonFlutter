@@ -141,6 +141,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get createPassword => 'Парол созед';
 
   @override
+  String get createPasswordSubtitle =>
+      'Создайте новый пароль для вашего аккаунта';
+
+  @override
+  String get createPasswordSaveButton => 'Сохранить пароль';
+
+  @override
   String get enterOtp => 'Рамзи тасдиқро ворид кунед';
 
   @override

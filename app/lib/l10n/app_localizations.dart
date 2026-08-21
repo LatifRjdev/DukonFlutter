@@ -352,6 +352,18 @@ abstract class AppLocalizations {
   /// **'Создайте пароль'**
   String get createPassword;
 
+  /// Create password screen subtitle shown under the heading
+  ///
+  /// In ru, this message translates to:
+  /// **'Создайте новый пароль для вашего аккаунта'**
+  String get createPasswordSubtitle;
+
+  /// Create password screen submit button — distinct from generic `save` ("Сохранить"), includes the word "пароль"
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить пароль'**
+  String get createPasswordSaveButton;
+
   /// OTP entry screen title
   ///
   /// In ru, this message translates to:

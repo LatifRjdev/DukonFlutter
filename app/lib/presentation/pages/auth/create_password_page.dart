@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -48,6 +49,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -72,32 +74,32 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 24),
-                  const Text('Новый пароль',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                  Text(l10n.newPassword,
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Text(
-                    'Создайте новый пароль для вашего аккаунта',
+                    l10n.createPasswordSubtitle,
                     style: TextStyle(color: context.textSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   AppTextField(
                     controller: _passwordController,
-                    label: 'Новый пароль',
+                    label: l10n.newPassword,
                     obscureText: true,
                     prefixIcon: Icons.lock_outline,
                     validator: (v) {
-                      if (v == null || v.length < 6) return 'Минимум 6 символов';
+                      if (v == null || v.length < 6) return l10n.passwordMinLength;
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   AppTextField(
                     controller: _confirmController,
-                    label: 'Подтвердите пароль',
+                    label: l10n.confirmPassword,
                     obscureText: true,
                     prefixIcon: Icons.lock_outline,
                     validator: (v) {
-                      if (v != _passwordController.text) return 'Пароли не совпадают';
+                      if (v != _passwordController.text) return l10n.passwordsDoNotMatch;
                       return null;
                     },
                   ),
@@ -105,7 +107,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return AppButton(
-                        text: 'Сохранить пароль',
+                        text: l10n.createPasswordSaveButton,
                         onPressed: _submit,
                         isLoading: state is AuthLoading,
                       );

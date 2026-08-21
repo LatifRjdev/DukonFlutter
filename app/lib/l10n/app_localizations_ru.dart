@@ -141,6 +141,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get createPassword => 'Создайте пароль';
 
   @override
+  String get createPasswordSubtitle =>
+      'Создайте новый пароль для вашего аккаунта';
+
+  @override
+  String get createPasswordSaveButton => 'Сохранить пароль';
+
+  @override
   String get enterOtp => 'Введите код подтверждения';
 
   @override
