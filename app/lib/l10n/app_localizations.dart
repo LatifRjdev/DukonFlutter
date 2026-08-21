@@ -382,6 +382,30 @@ abstract class AppLocalizations {
   /// **'Код отправлен на ваш номер'**
   String get otpSent;
 
+  /// OTP verification screen heading — distinct from `enterOtp` ("Введите код подтверждения"), which is a different OTP-entry screen's title
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждение'**
+  String get otpPageTitle;
+
+  /// OTP verification screen — instructs the user to enter the code sent to their phone number
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите 6-значный код, отправленный на\n{phone}'**
+  String otpInstructions(String phone);
+
+  /// OTP verification screen — button shown once the resend countdown has expired, lets the user request a new code
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить код повторно'**
+  String get otpResendButton;
+
+  /// OTP verification screen — countdown shown before resend becomes available; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторная отправка через {seconds} сек.'**
+  String otpResendCountdown(String seconds);
+
   /// Phone number input hint
   ///
   /// In ru, this message translates to:

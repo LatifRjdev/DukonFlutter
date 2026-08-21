@@ -157,6 +157,22 @@ class AppLocalizationsTg extends AppLocalizations {
   String get otpSent => 'Рамз ба рақами шумо фиристода шуд';
 
   @override
+  String get otpPageTitle => 'Подтверждение';
+
+  @override
+  String otpInstructions(String phone) {
+    return 'Введите 6-значный код, отправленный на\n$phone';
+  }
+
+  @override
+  String get otpResendButton => 'Отправить код повторно';
+
+  @override
+  String otpResendCountdown(String seconds) {
+    return 'Повторная отправка через $seconds сек.';
+  }
+
+  @override
   String get phoneHint => '+992XXXXXXXXX';
 
   @override

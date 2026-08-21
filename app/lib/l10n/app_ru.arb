@@ -106,6 +106,20 @@
   "@enterOtp": { "description": "OTP entry screen title" },
   "otpSent": "Код отправлен на ваш номер",
   "@otpSent": { "description": "OTP sent confirmation message" },
+  "otpPageTitle": "Подтверждение",
+  "@otpPageTitle": { "description": "OTP verification screen heading — distinct from `enterOtp` (\"Введите код подтверждения\"), which is a different OTP-entry screen's title" },
+  "otpInstructions": "Введите 6-значный код, отправленный на\n{phone}",
+  "@otpInstructions": {
+    "description": "OTP verification screen — instructs the user to enter the code sent to their phone number",
+    "placeholders": { "phone": { "type": "String" } }
+  },
+  "otpResendButton": "Отправить код повторно",
+  "@otpResendButton": { "description": "OTP verification screen — button shown once the resend countdown has expired, lets the user request a new code" },
+  "otpResendCountdown": "Повторная отправка через {seconds} сек.",
+  "@otpResendCountdown": {
+    "description": "OTP verification screen — countdown shown before resend becomes available; placeholder is a pre-formatted String",
+    "placeholders": { "seconds": { "type": "String" } }
+  },
   "phoneHint": "+992XXXXXXXXX",
   "@phoneHint": { "description": "Phone number input hint" },
   "loginWelcome": "Добро пожаловать!",
