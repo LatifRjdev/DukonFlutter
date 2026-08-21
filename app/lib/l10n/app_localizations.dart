@@ -352,6 +352,24 @@ abstract class AppLocalizations {
   /// **'Забыли пароль?'**
   String get forgotPassword;
 
+  /// Forgot password screen — instructs the user to enter the phone number linked to their account
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.'**
+  String get forgotPasswordSubtitle;
+
+  /// Forgot password screen — submit button that requests an OTP code; distinct from otpResendButton ("Отправить код повторно"), which re-sends a code on the OTP screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить код'**
+  String get forgotPasswordSendCodeButton;
+
+  /// Forgot password screen — link back to the login screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуться к входу'**
+  String get forgotPasswordBackToLogin;
+
   /// Create password screen title
   ///
   /// In ru, this message translates to:

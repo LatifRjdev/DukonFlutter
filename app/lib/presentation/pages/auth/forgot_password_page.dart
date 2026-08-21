@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -36,6 +37,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -60,18 +62,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 24),
-                  const Text('Забыли пароль?',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                  Text(l10n.forgotPassword,
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Text(
-                    'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.',
+                    l10n.forgotPasswordSubtitle,
                     style: TextStyle(color: context.textSecondary, fontSize: 16),
                   ),
                   const SizedBox(height: 40),
                   PhoneInputField(
                     controller: _phoneController,
                     validator: (v) {
-                      if (v == null || v.length < 9) return 'Введите номер телефона';
+                      if (v == null || v.length < 9) return l10n.phoneRequired;
                       return null;
                     },
                   ),
@@ -79,7 +81,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return AppButton(
-                        text: 'Отправить код',
+                        text: l10n.forgotPasswordSendCodeButton,
                         onPressed: _submit,
                         isLoading: state is AuthLoading,
                       );
@@ -89,7 +91,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   Center(
                     child: TextButton(
                       onPressed: () => context.pop(),
-                      child: const Text('Вернуться к входу'),
+                      child: Text(l10n.forgotPasswordBackToLogin),
                     ),
                   ),
                 ],

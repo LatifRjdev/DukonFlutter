@@ -141,6 +141,16 @@ class AppLocalizationsTg extends AppLocalizations {
   String get forgotPassword => 'Паролро фаромӯш кардед?';
 
   @override
+  String get forgotPasswordSubtitle =>
+      'Введите номер телефона, привязанный к вашему аккаунту. Мы отправим код подтверждения.';
+
+  @override
+  String get forgotPasswordSendCodeButton => 'Отправить код';
+
+  @override
+  String get forgotPasswordBackToLogin => 'Вернуться к входу';
+
+  @override
   String get createPassword => 'Парол созед';
 
   @override
