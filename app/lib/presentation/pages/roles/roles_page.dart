@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -19,7 +20,13 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
   late final TabController _tabController;
 
   static const _roleTabs = ['OWNER', 'ADMIN', 'CASHIER', 'WAREHOUSE'];
-  static const _roleLabels = ['Владелец', 'Админ', 'Кассир', 'Складовщик'];
+
+  List<String> _roleLabels(AppLocalizations l10n) => [
+        l10n.owner,
+        l10n.adminRoleShort,
+        l10n.cashier,
+        l10n.warehouse,
+      ];
 
   static const _allPermissions = [
     'manage_products',
@@ -53,15 +60,16 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Роли и права'),
+        title: Text(l10n.moreRolesAndPermissions),
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
           unselectedLabelColor: context.textSecondary,
           indicatorColor: AppColors.primary,
-          tabs: _roleLabels.map((l) => Tab(text: l)).toList(),
+          tabs: _roleLabels(l10n).map((l) => Tab(text: l)).toList(),
         ),
       ),
       body: BlocBuilder<RolesBloc, RolesState>(
