@@ -982,6 +982,16 @@ class AppLocalizationsTg extends AppLocalizations {
   String get paymentRecorded => 'Пардохт сабт шуд';
 
   @override
+  String get paymentQueuedOfflineMessage =>
+      'Платёж сохранён офлайн — отправим при подключении';
+
+  @override
+  String get paymentHistory => 'История оплат';
+
+  @override
+  String get noPaymentRecords => 'Нет записей об оплате';
+
+  @override
   String get creditsEmptyState => 'Записей нет';
 
   @override

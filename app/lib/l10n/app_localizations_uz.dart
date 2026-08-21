@@ -982,6 +982,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get paymentRecorded => 'To\'lov qayd qilindi';
 
   @override
+  String get paymentQueuedOfflineMessage =>
+      'Платёж сохранён офлайн — отправим при подключении';
+
+  @override
+  String get paymentHistory => 'История оплат';
+
+  @override
+  String get noPaymentRecords => 'Нет записей об оплате';
+
+  @override
   String get creditsEmptyState => 'Записей нет';
 
   @override

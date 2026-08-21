@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -70,16 +71,18 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
       appBar: AppBar(title: Text(widget.supplierName)),
       body: BlocConsumer<DebtBloc, DebtState>(
         listener: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           if (state is DebtPaymentSuccess) {
             AppSnackbar.success(context, state.message);
             context.read<DebtBloc>().add(SupplierDebtsRequested(storeId: widget.storeId, supplierId: widget.supplierId));
           } else if (state is DebtPaymentQueued) {
-            AppSnackbar.info(context, 'Платёж сохранён офлайн — отправим при подключении');
+            AppSnackbar.info(context, l10n.paymentQueuedOfflineMessage);
           } else if (state is DebtError) {
             AppSnackbar.error(context, state.message);
           }
         },
         builder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           if (state is DebtLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -96,7 +99,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                   ),
                   child: Column(
                     children: [
-                      Text('Наш долг', style: TextStyle(fontSize: 14, color: context.textSecondary)),
+                      Text(l10n.ourDebt, style: TextStyle(fontSize: 14, color: context.textSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.debt.toStringAsFixed(2)} TJS',
@@ -112,7 +115,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                     child: ElevatedButton.icon(
                       onPressed: () => _showPaymentSheet(state.debt),
                       icon: const Icon(Icons.payment),
-                      label: const Text('Записать оплату'),
+                      label: Text(l10n.recordPayment),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.onPrimary,
@@ -122,13 +125,13 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                     ),
                   ),
                 const SizedBox(height: AppConstants.spacingLg),
-                const Text('История оплат', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(l10n.paymentHistory, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppConstants.spacingSm),
                 if (state.payments.isEmpty)
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(AppConstants.spacingXl),
-                      child: Text('Нет записей об оплате', style: TextStyle(color: context.textSecondary)),
+                      child: Text(l10n.noPaymentRecords, style: TextStyle(color: context.textSecondary)),
                     ),
                   )
                 else
@@ -157,7 +160,7 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(method == 'CASH' ? 'Наличные' : 'Карта', style: const TextStyle(fontWeight: FontWeight.w500)),
+                                  Text(method == 'CASH' ? l10n.cash : l10n.card, style: const TextStyle(fontWeight: FontWeight.w500)),
                                   if (notes != null && notes.isNotEmpty)
                                     Text(notes, style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
                                 ],

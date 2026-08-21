@@ -1954,6 +1954,24 @@ abstract class AppLocalizations {
   /// **'Оплата записана'**
   String get paymentRecorded;
 
+  /// Snackbar shown when a debt payment is submitted while offline and queued for later sync
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж сохранён офлайн — отправим при подключении'**
+  String get paymentQueuedOfflineMessage;
+
+  /// No description provided for @paymentHistory.
+  ///
+  /// In ru, this message translates to:
+  /// **'История оплат'**
+  String get paymentHistory;
+
+  /// No description provided for @noPaymentRecords.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет записей об оплате'**
+  String get noPaymentRecords;
+
   /// Credits screen — shown in a receivables/payables tab when there are no items
   ///
   /// In ru, this message translates to:
