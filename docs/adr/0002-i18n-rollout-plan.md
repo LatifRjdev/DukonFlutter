@@ -83,3 +83,52 @@ Three choices need owner input:
    block locale switch until 100% coverage.
 
 After those decisions the 10 batches can run in parallel on track 2.
+
+## Reconciliation update — 2026-08-22
+
+`feat/l10n-and-retry-after` shipped a 37-task worst-offender-first
+extraction plan (35 `lib/presentation/` files migrated to
+`AppLocalizations`/`app_ru.arb`) that was scoped and ordered before
+this ADR was discovered mid-branch. Reconciling now, after the fact:
+
+- **Track 2 ordering:** this branch did not follow the batch order
+  above (auth → dashboard → pos → …). It prioritized the highest
+  hardcoded-string-count files first, cutting across several of the
+  ADR's batches at once (dashboard, finance, inventory, pos, product,
+  staff, settings, etc.). No further action needed — the ADR's batch
+  list should be treated as already partially complete; whoever picks
+  up Track 2 next should re-derive remaining scope from
+  `tool/i18n-allowlist.txt` rather than the original per-batch string
+  counts, which now overcount work already done.
+- **tg/uz native-speaker review:** explicitly **not** pursued for this
+  branch's work, per an earlier product decision made mid-branch to
+  defer tg/uz translation for now. tg and uz continue to fall back to
+  Russian for all keys, including the ones this branch added. This is
+  a deliberate deferral, not an oversight — the acceptance criterion
+  "tg/uz native-speaker review for each batch" is intentionally unmet
+  and should stay unchecked until that product decision is revisited.
+- **Allowlist:** `tool/i18n-allowlist.txt` has been regenerated via
+  `dart run tool/check_i18n.dart --dump-allowlist` and now reflects
+  actual current violations (1017 entries, replacing the 859-entry
+  file from before this branch). The old allowlist was stale in both
+  directions: ~724 of its entries no longer match (either the string
+  was extracted by this branch, or its line number drifted because an
+  edit elsewhere in the same file shifted line numbers), while ~882
+  currently-real violations were missing from it. Investigation traced
+  most of that gap to a separate, pre-existing bug: `check_i18n.dart`'s
+  `main()` returns a non-zero `int` on failure but never calls
+  `dart:io`'s `exit()`/`exitCode`, so the process always exits `0`
+  regardless of what it finds. As a result CI's `i18n lint
+  (check_i18n.dart)` step in `.github/workflows/ci.yml` has never
+  actually failed the build, and ~590 hardcoded strings accumulated
+  in files outside this branch's scope between the allowlist's
+  original creation and this branch starting, undetected. That exit
+  code bug is out of scope for this reconciliation (kept as
+  bookkeeping-only) but should be fixed separately, since Track 1 is
+  currently not enforcing anything.
+- **Remaining scope:** none of the 35 files this branch touched have
+  any remaining lint offenders. The ~1017 remaining allowlisted
+  violations live entirely in files this branch did not touch, roughly
+  40-something screens/blocs/widgets by the mid-branch ~78-file
+  estimate minus what's done here. Left for future Track 2 batches, in
+  whatever order is convenient at that time.
