@@ -639,6 +639,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noSales => 'Нет продаж';
 
   @override
+  String get emptySalesSubtitle =>
+      'Совершите первую продажу через кассу, и она появится здесь';
+
+  @override
+  String get emptySalesGoToCheckout => 'Перейти к кассе';
+
+  @override
   String get stockIntake => 'Приход товара';
 
   @override

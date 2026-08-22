@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
@@ -10,9 +11,10 @@ class EmptySalesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Продажи'),
+        title: Text(l10n.sales),
       ),
       body: Center(
         child: Padding(
@@ -31,21 +33,22 @@ class EmptySalesPage extends StatelessWidget {
                     size: 56, color: AppColors.primary),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Пока нет продаж',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              Text(
+                l10n.dashboardNoSalesYet,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.w700),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Совершите первую продажу через кассу, и она появится здесь',
+                l10n.emptySalesSubtitle,
                 style: TextStyle(
                     color: context.textSecondary, fontSize: 15, height: 1.4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               AppButton(
-                text: 'Перейти к кассе',
+                text: l10n.emptySalesGoToCheckout,
                 icon: Icons.point_of_sale,
                 width: 220,
                 onPressed: () => context.go('/home'),

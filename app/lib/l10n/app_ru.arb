@@ -444,6 +444,10 @@
   "@cancelled": { "description": "Cancelled sale status" },
   "noSales": "Нет продаж",
   "@noSales": { "description": "No sales placeholder" },
+  "emptySalesSubtitle": "Совершите первую продажу через кассу, и она появится здесь",
+  "@emptySalesSubtitle": { "description": "Empty sales page — subtitle explaining that a sale made via checkout will appear here" },
+  "emptySalesGoToCheckout": "Перейти к кассе",
+  "@emptySalesGoToCheckout": { "description": "Empty sales page — button label to navigate to the POS checkout" },
 
   "stockIntake": "Приход товара",
   "@stockIntake": { "description": "Stock intake action" },

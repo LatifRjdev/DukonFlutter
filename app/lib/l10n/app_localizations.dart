@@ -1282,6 +1282,18 @@ abstract class AppLocalizations {
   /// **'Нет продаж'**
   String get noSales;
 
+  /// Empty sales page — subtitle explaining that a sale made via checkout will appear here
+  ///
+  /// In ru, this message translates to:
+  /// **'Совершите первую продажу через кассу, и она появится здесь'**
+  String get emptySalesSubtitle;
+
+  /// Empty sales page — button label to navigate to the POS checkout
+  ///
+  /// In ru, this message translates to:
+  /// **'Перейти к кассе'**
+  String get emptySalesGoToCheckout;
+
   /// Stock intake action
   ///
   /// In ru, this message translates to:

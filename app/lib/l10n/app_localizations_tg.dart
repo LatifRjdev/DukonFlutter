@@ -640,6 +640,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get noSales => 'Фурӯш нест';
 
   @override
+  String get emptySalesSubtitle =>
+      'Совершите первую продажу через кассу, и она появится здесь';
+
+  @override
+  String get emptySalesGoToCheckout => 'Перейти к кассе';
+
+  @override
   String get stockIntake => 'Воридоти мол';
 
   @override
