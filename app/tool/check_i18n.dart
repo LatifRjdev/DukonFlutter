@@ -10,7 +10,17 @@
 
 import 'dart:io';
 
-Future<int> main(List<String> args) async {
+Future<void> main(List<String> args) async {
+  // `main()` itself must stay `void`/non-int here: Dart only auto-applies a
+  // returned int to the process exit code for a *synchronous* `int main()`.
+  // For `Future<int> main() async`, the returned value is silently dropped
+  // and the process always exits 0 regardless of what the script found.
+  // Route the real logic through `_run` and set `exitCode` explicitly so
+  // CI actually observes failures.
+  exitCode = await _run(args);
+}
+
+Future<int> _run(List<String> args) async {
   final repoRoot = Directory.current.path;
   final presentation = Directory('$repoRoot/lib/presentation');
   if (!presentation.existsSync()) {
