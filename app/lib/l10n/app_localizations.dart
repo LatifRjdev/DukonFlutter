@@ -1282,6 +1282,12 @@ abstract class AppLocalizations {
   /// **'Нет продаж'**
   String get noSales;
 
+  /// Generic 'no sales yet' empty-state headline — dashboard's Recent Sales card caption and empty sales page's headline (formerly `dashboardNoSalesYet`, renamed/generalized when reused on a second screen); distinct from `noSales` ("Нет продаж"), a shorter placeholder used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет продаж'**
+  String get noSalesYet;
+
   /// Empty sales page — subtitle explaining that a sale made via checkout will appear here
   ///
   /// In ru, this message translates to:
@@ -1533,12 +1539,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Все продажи >'**
   String get dashboardAllSalesLink;
-
-  /// Empty state when there are no sales yet
-  ///
-  /// In ru, this message translates to:
-  /// **'Пока нет продаж'**
-  String get dashboardNoSalesYet;
 
   /// Hero revenue card label, today period
   ///

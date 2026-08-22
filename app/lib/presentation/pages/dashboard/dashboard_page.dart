@@ -499,7 +499,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     Icon(Icons.receipt_long, size: 48, color: AppColors.disabled),
                     const SizedBox(height: 8),
-                    Text(l10n.dashboardNoSalesYet,
+                    Text(l10n.noSalesYet,
                       style: TextStyle(color: context.textSecondary)),
                   ],
                 ),

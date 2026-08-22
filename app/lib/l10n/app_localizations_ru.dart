@@ -639,6 +639,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noSales => 'Нет продаж';
 
   @override
+  String get noSalesYet => 'Пока нет продаж';
+
+  @override
   String get emptySalesSubtitle =>
       'Совершите первую продажу через кассу, и она появится здесь';
 
@@ -768,9 +771,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dashboardAllSalesLink => 'Все продажи >';
-
-  @override
-  String get dashboardNoSalesYet => 'Пока нет продаж';
 
   @override
   String get dashboardRevenueToday => 'Выручка сегодня';

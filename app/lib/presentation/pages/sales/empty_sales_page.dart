@@ -34,7 +34,7 @@ class EmptySalesPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                l10n.dashboardNoSalesYet,
+                l10n.noSalesYet,
                 style: const TextStyle(
                     fontSize: 20, fontWeight: FontWeight.w700),
                 textAlign: TextAlign.center,
