@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text('DukonPro', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 8),
-                      Text(l10n.loginSubtitle, style: const TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
+                      Text(l10n.appTagline, style: const TextStyle(color: Color(0xB3FFFFFF), fontSize: 14)),
                     ],
                   ),
                 ),

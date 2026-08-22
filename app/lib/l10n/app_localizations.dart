@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'DukonPro'**
   String get appTitle;
 
+  /// App tagline shown under the app name/logo — used on both the splash screen and the login screen header
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление магазином'**
+  String get appTagline;
+
   /// Save button
   ///
   /// In ru, this message translates to:
@@ -435,12 +441,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Добро пожаловать!'**
   String get loginWelcome;
-
-  /// Login screen header subtitle under the app name, distinct from `loginWelcome` ("Добро пожаловать!")
-  ///
-  /// In ru, this message translates to:
-  /// **'Управление магазином'**
-  String get loginSubtitle;
 
   /// Register screen welcome message
   ///

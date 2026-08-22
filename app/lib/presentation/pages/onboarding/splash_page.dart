@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -24,6 +25,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
@@ -58,7 +60,7 @@ class _SplashPageState extends State<SplashPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Управление магазином',
+                l10n.appTagline,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white.withValues(alpha: 0.8),

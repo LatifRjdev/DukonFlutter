@@ -12,6 +12,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get appTitle => 'DukonPro';
 
   @override
+  String get appTagline => 'Управление магазином';
+
+  @override
   String get save => 'Нигоҳ доштан';
 
   @override
@@ -187,9 +190,6 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get loginWelcome => 'Хуш омадед!';
-
-  @override
-  String get loginSubtitle => 'Управление магазином';
 
   @override
   String get registerWelcome => 'Аккаунт созед';
