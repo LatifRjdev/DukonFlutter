@@ -123,9 +123,10 @@ this ADR was discovered mid-branch. Reconciling now, after the fact:
   actually failed the build, and ~590 hardcoded strings accumulated
   in files outside this branch's scope between the allowlist's
   original creation and this branch starting, undetected. That exit
-  code bug is out of scope for this reconciliation (kept as
-  bookkeeping-only) but should be fixed separately, since Track 1 is
-  currently not enforcing anything.
+  code bug has since been fixed on this branch (commit `0e8a802`):
+  the real logic now runs in a private `_run()` function, and a thin
+  `Future<void> main()` wrapper sets `exitCode` explicitly, so Track 1
+  is now actually enforcing.
 - **Remaining scope:** none of the 35 files this branch touched have
   any remaining lint offenders. The ~1017 remaining allowlisted
   violations live entirely in files this branch did not touch, roughly
