@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../../domain/entities/product.dart';
 import '../../../domain/repositories/product_repository.dart';
 import 'product_form_event.dart';
 import 'product_form_state.dart';
@@ -14,6 +15,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
     on<ProductFormSaveStep>(_onSaveStep);
     on<ProductFormSubmit>(_onSubmit);
     on<ProductFormLoadProduct>(_onLoadProduct);
+    on<ProductFormStartEditing>(_onStartEditing);
     on<ProductFormReset>(_onReset);
   }
 
@@ -53,7 +55,30 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
     emit(state.copyWith(isLoading: true, error: null));
     try {
       final product = await _productRepository.getProduct(event.storeId, event.productId);
-      final data = <String, dynamic>{
+      emit(state.copyWith(
+        isLoading: false,
+        productData: _productToFormData(product),
+        editingProductId: product.id,
+      ));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: mapErrorToUserMessage(e)));
+    }
+  }
+
+  /// Seeds the form from an already-in-hand [Product] (see
+  /// [ProductFormStartEditing]) — no network round trip, unlike
+  /// [_onLoadProduct].
+  void _onStartEditing(ProductFormStartEditing event, Emitter<ProductFormState> emit) {
+    final product = event.product;
+    emit(state.copyWith(
+      currentStep: 0,
+      productData: _productToFormData(product),
+      editingProductId: product.id,
+      error: null,
+    ));
+  }
+
+  Map<String, dynamic> _productToFormData(Product product) => <String, dynamic>{
         'name': product.name,
         'sku': product.sku,
         'barcode': product.barcode,
@@ -68,15 +93,6 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
         'supplierId': product.supplierId,
         'imageUrl': product.imageUrl,
       };
-      emit(state.copyWith(
-        isLoading: false,
-        productData: data,
-        editingProductId: product.id,
-      ));
-    } catch (e) {
-      emit(state.copyWith(isLoading: false, error: mapErrorToUserMessage(e)));
-    }
-  }
 
   void _onReset(ProductFormReset event, Emitter<ProductFormState> emit) {
     emit(const ProductFormState());

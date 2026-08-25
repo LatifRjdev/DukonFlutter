@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../domain/entities/product.dart';
 
 abstract class ProductFormEvent extends Equatable {
   const ProductFormEvent();
@@ -34,6 +35,17 @@ class ProductFormLoadProduct extends ProductFormEvent {
   const ProductFormLoadProduct({required this.storeId, required this.productId});
   @override
   List<Object?> get props => [storeId, productId];
+}
+
+/// Seeds the form directly from a [Product] already held by the caller
+/// (e.g. navigated in via `extra` from the product detail screen), marking
+/// the form as editing that product without a redundant network fetch —
+/// unlike [ProductFormLoadProduct], which re-fetches the product by id.
+class ProductFormStartEditing extends ProductFormEvent {
+  final Product product;
+  const ProductFormStartEditing(this.product);
+  @override
+  List<Object?> get props => [product];
 }
 
 class ProductFormReset extends ProductFormEvent {}

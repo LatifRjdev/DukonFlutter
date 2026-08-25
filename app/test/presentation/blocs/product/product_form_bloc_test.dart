@@ -341,6 +341,65 @@ void main() {
       );
     });
 
+    group('ProductFormStartEditing', () {
+      blocTest<ProductFormBloc, ProductFormState>(
+        'seeds productData + editingProductId from an already-in-hand '
+        'product without hitting the repository (#1)',
+        build: () => ProductFormBloc(productRepository: repository),
+        act: (bloc) => bloc.add(ProductFormStartEditing(mkProduct(
+          id: 'p1',
+          sku: 'A1',
+          barcode: '123456',
+          costPrice: 5,
+          sellPrice: 10,
+          quantity: 7,
+          minQuantity: 2,
+          unit: 'KG',
+        ))),
+        expect: () => [
+          predicate<ProductFormState>((s) =>
+              s.editingProductId == 'p1' &&
+              s.isEditing &&
+              s.currentStep == 0 &&
+              s.productData['name'] == 'Apple' &&
+              s.productData['sku'] == 'A1' &&
+              s.productData['barcode'] == '123456' &&
+              s.productData['costPrice'] == 5 &&
+              s.productData['sellPrice'] == 10 &&
+              s.productData['quantity'] == 7 &&
+              s.productData['minQuantity'] == 2 &&
+              s.productData['unit'] == 'KG'),
+        ],
+        verify: (_) {
+          verifyNever(() => repository.getProduct(any(), any()));
+        },
+      );
+
+      blocTest<ProductFormBloc, ProductFormState>(
+        'submitting right after start-editing calls updateProduct, not createProduct (#1)',
+        setUp: () {
+          when(() => repository.updateProduct(any(), any(), any()))
+              .thenAnswer((_) async => mkProduct());
+        },
+        build: () => ProductFormBloc(productRepository: repository),
+        act: (bloc) async {
+          bloc.add(ProductFormStartEditing(mkProduct(id: 'p1')));
+          await Future<void>.delayed(Duration.zero);
+          bloc.add(const ProductFormSubmit(storeId: 'store-1'));
+        },
+        expect: () => [
+          predicate<ProductFormState>((s) => s.isEditing),
+          predicate<ProductFormState>((s) => s.isSubmitting),
+          predicate<ProductFormState>((s) => !s.isSubmitting && s.isSuccess),
+        ],
+        verify: (_) {
+          verify(() => repository.updateProduct('store-1', 'p1', any()))
+              .called(1);
+          verifyNever(() => repository.createProduct(any(), any()));
+        },
+      );
+    });
+
     group('ProductFormReset', () {
       blocTest<ProductFormBloc, ProductFormState>(
         'resets to a fresh ProductFormState regardless of prior dirty state',

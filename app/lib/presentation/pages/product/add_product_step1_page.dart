@@ -35,7 +35,6 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
   String? _selectedCategoryId;
 
   bool _isEditing = false;
-  Product? _editingProduct;
   bool _initialized = false;
   File? _selectedImage;
 
@@ -56,19 +55,26 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
 
   void _checkForEditMode() {
     final extra = GoRouterState.of(context).extra;
-    if (extra is Map<String, dynamic>) {
-      final product = extra['product'] as Product?;
-      final isEditing = extra['isEditing'] as bool? ?? false;
-      if (product != null && isEditing) {
-        _isEditing = true;
-        _editingProduct = product;
-        _nameController.text = product.name;
-        _skuController.text = product.sku ?? '';
-        _barcodeController.text = product.barcode ?? '';
-        _descriptionController.text = product.description ?? '';
-        _selectedCategoryId = product.categoryId;
-        setState(() {});
-      }
+    final product = extra is Map<String, dynamic> ? extra['product'] as Product? : null;
+    final isEditing =
+        extra is Map<String, dynamic> ? (extra['isEditing'] as bool? ?? false) : false;
+    final formBloc = context.read<ProductFormBloc>();
+    if (product != null && isEditing) {
+      _isEditing = true;
+      _nameController.text = product.name;
+      _skuController.text = product.sku ?? '';
+      _barcodeController.text = product.barcode ?? '';
+      _descriptionController.text = product.description ?? '';
+      _selectedCategoryId = product.categoryId;
+      // Seed the bloc directly from the product we already have in hand —
+      // this is what makes `state.isEditing` true so ProductFormSubmit
+      // calls updateProduct instead of createProduct (#1).
+      formBloc.add(ProductFormStartEditing(product));
+      setState(() {});
+    } else {
+      // Guard against a leftover editingProductId from an abandoned edit in
+      // this app-scoped bloc corrupting a subsequent "new product" flow.
+      formBloc.add(ProductFormReset());
     }
   }
 
@@ -115,7 +121,6 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
           'barcode': _barcodeController.text,
           'categoryId': _selectedCategoryId,
           'description': _descriptionController.text,
-          if (_isEditing && _editingProduct != null) 'productId': _editingProduct!.id,
         },
       ));
       context.push('/products/add/step2');
