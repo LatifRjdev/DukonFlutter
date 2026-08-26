@@ -1,8 +1,12 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dio/dio.dart' show Options, RequestOptions, Response;
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/core/services/thermal_printer_service.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_bloc.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_event.dart';
+import 'package:dukonpro/presentation/blocs/pos/cart_state.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
 import 'package:dukonpro/presentation/pages/pos/sale_success_page.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +17,8 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/mock_blocs.dart';
 import '../../../helpers/golden_pump_helper.dart';
+
+class MockCartBloc extends MockBloc<CartEvent, CartState> implements CartBloc {}
 
 // ── Fakes for sl<ThermalPrinterService> and sl<DioClient> ────────────────────
 
@@ -50,6 +56,11 @@ Sale _fakeSale() => Sale(
 
 void main() {
   late MockStoreBloc storeBloc;
+  late MockCartBloc cartBloc;
+
+  setUpAll(() {
+    registerFallbackValue(CartCleared());
+  });
 
   setUp(() {
     if (!sl.isRegistered<ThermalPrinterService>()) {
@@ -61,6 +72,11 @@ void main() {
 
     storeBloc = MockStoreBloc();
     when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
+
+    // SaleSuccessPage dispatches CartCleared on init (#2) — needs a
+    // CartBloc in the tree even though these tests only assert pixels.
+    cartBloc = MockCartBloc();
+    when(() => cartBloc.state).thenReturn(const CartState());
   });
 
   tearDown(() {
@@ -74,8 +90,11 @@ void main() {
 
   Widget page() => SaleSuccessPage(sale: _fakeSale());
 
-  Widget wrapWithBlocs(Widget child) => BlocProvider<StoreBloc>.value(
-        value: storeBloc,
+  Widget wrapWithBlocs(Widget child) => MultiBlocProvider(
+        providers: [
+          BlocProvider<StoreBloc>.value(value: storeBloc),
+          BlocProvider<CartBloc>.value(value: cartBloc),
+        ],
         child: child,
       );
 

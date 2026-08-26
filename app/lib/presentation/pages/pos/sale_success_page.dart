@@ -10,6 +10,8 @@ import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/sale.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import '../../../injection.dart';
+import '../../blocs/pos/cart_bloc.dart';
+import '../../blocs/pos/cart_event.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -48,6 +50,13 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
       curve: Curves.elasticOut,
     );
     _animController.forward();
+
+    // The sale already succeeded by the time this page is reached (all
+    // payment paths — cash, card, credit — navigate here only after
+    // CheckoutProcessPayment resolves). Clear the cart immediately so a
+    // stale cart can never be resubmitted; fired once here rather than on
+    // "Новая продажа" so there's no window where the old items linger.
+    context.read<CartBloc>().add(CartCleared());
   }
 
   @override
