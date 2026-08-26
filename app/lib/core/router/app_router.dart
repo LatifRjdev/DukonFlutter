@@ -29,6 +29,7 @@ import '../../presentation/pages/pos/sale_success_page.dart';
 import '../../presentation/pages/pos/receipt_preview_page.dart';
 import '../../presentation/pages/settings/printer_settings_page.dart';
 import '../../domain/entities/sale.dart';
+import '../../domain/entities/staff_member.dart';
 import '../../presentation/pages/sales/sales_history_page.dart';
 import '../../presentation/pages/sales/transaction_detail_page.dart';
 import '../../presentation/pages/sales/refund_page.dart';
@@ -476,7 +477,13 @@ class AppRouter {
       GoRoute(
         path: RouteNames.addStaff,
         builder: (context, state) {
-          final storeId = state.extra as String? ?? '';
+          final extra = state.extra;
+          if (extra is Map<String, dynamic>) {
+            final storeId = extra['storeId'] as String? ?? '';
+            final staffMember = extra['staffMember'] as StaffMember?;
+            return AddStaffPage(storeId: storeId, staffMember: staffMember);
+          }
+          final storeId = extra as String? ?? '';
           return AddStaffPage(storeId: storeId);
         },
       ),

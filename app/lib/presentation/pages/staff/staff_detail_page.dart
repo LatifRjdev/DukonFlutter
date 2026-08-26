@@ -82,7 +82,11 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                   icon: const Icon(Icons.edit),
                   tooltip: l10n.editEmployee,
                   onPressed: () => context.push(
-                    '/edit-staff/${widget.storeId}/${widget.staffId}',
+                    '/staff/add',
+                    extra: {
+                      'storeId': widget.storeId,
+                      'staffMember': state.staffMember,
+                    },
                   ),
                 );
               }
