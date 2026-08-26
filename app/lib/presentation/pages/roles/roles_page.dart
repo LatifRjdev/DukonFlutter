@@ -22,6 +22,16 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
   late final TabController _tabController;
   bool _isSaving = false;
 
+  // Tracks whether the roles/permissions have ever loaded successfully.
+  // Save dispatches its own LoadRoles refetch, which re-emits RolesLoading —
+  // without this flag that would unmount the already-rendered TabBarView and
+  // switches and flash a bare full-page spinner over them. Once we've loaded
+  // once, a later RolesLoading only means "a save is refreshing in the
+  // background", so we keep showing the last-known permissions (with
+  // switches disabled via `_isSaving`) instead of tearing down the form.
+  bool _hasLoadedOnce = false;
+  List<RolePermission>? _lastLoadedRoles;
+
   static const _roleTabs = ['OWNER', 'ADMIN', 'CASHIER', 'WAREHOUSE'];
 
   List<String> _roleLabels(AppLocalizations l10n) => [
@@ -112,13 +122,22 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
           }
         },
         builder: (context, state) {
-          if (state is RolesLoading) {
+          // Track the latest successfully loaded roles here (rather than only
+          // in `listener`) so this also covers the very first build, whose
+          // state may already be RolesLoaded without ever passing through a
+          // stream event the listener would observe.
+          if (state is RolesLoaded) {
+            _hasLoadedOnce = true;
+            _lastLoadedRoles = state.roles;
+          }
+          if (state is RolesLoading && !_hasLoadedOnce) {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is RolesError) {
             return Center(child: Text(state.message));
           }
-          if (state is RolesLoaded) {
+          final roles = state is RolesLoaded ? state.roles : _lastLoadedRoles;
+          if (roles != null) {
             final currentRole = _roleTabs[_tabController.index];
             final canSaveCurrentRole = currentRole != 'OWNER';
 
@@ -128,7 +147,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
                   child: TabBarView(
                     controller: _tabController,
                     children: _roleTabs.map((role) {
-                      final rolePermission = state.roles
+                      final rolePermission = roles
                           .where((r) => r.role == role)
                           .toList();
                       final permissions = rolePermission.isNotEmpty

@@ -216,4 +216,76 @@ void main() {
     await tester.pump();
     verifyNever(() => rolesBloc.add(any(that: isA<UpdatePermission>())));
   });
+
+  testWidgets(
+      'shows the full-page spinner for the very first RolesLoading, before '
+      'any RolesLoaded has ever been seen', (tester) async {
+    whenListen<RolesState>(
+      rolesBloc,
+      stateController.stream,
+      initialState: RolesLoading(),
+    );
+
+    await tester.pumpWidget(wrap(const RolesPage(storeId: 'store-1')));
+    await tester.pump();
+
+    // Ambient initial load: nothing has ever rendered yet, so the bare
+    // full-page spinner is correct and expected here.
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(TabBarView), findsNothing);
+  });
+
+  testWidgets(
+      'keeps the TabBarView and switches visible (not replaced by a bare '
+      'full-page spinner) when Save triggers its own RolesLoading refetch',
+      (tester) async {
+    const loaded = RolesLoaded(roles: [cashierRoleInitial, ownerRole]);
+    whenListen<RolesState>(
+      rolesBloc,
+      stateController.stream,
+      initialState: loaded,
+    );
+
+    await tester.pumpWidget(wrap(const RolesPage(storeId: 'store-1')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Кассир'));
+    await tester.pumpAndSettle();
+
+    // Confirm the form actually rendered before the save-triggered reload.
+    expect(find.byType(TabBarView), findsOneWidget);
+    expect(find.byType(Switch), findsWidgets);
+
+    // Trigger a save. RolesBloc._onSavePermissions emits RolesLoading()
+    // before its network call — and again via the LoadRoles refetch it
+    // dispatches on success — which used to unmount the whole page body.
+    final saveButtonFinder = find.byKey(const Key('roles_save_button'));
+    await tester.tap(saveButtonFinder);
+    await tester.pump();
+
+    // Simulate the bloc's own RolesLoading emission from _onSavePermissions.
+    stateController.add(RolesLoading());
+    await tester.pump();
+
+    // The fix: since roles have already loaded once, this RolesLoading must
+    // NOT unmount the TabBarView/switches into a bare full-page spinner.
+    // The page should keep showing the last-known permissions, with the
+    // switches disabled (via _isSaving) and the Save button showing its
+    // inline spinner instead.
+    expect(find.byType(TabBarView), findsOneWidget);
+    final switches = tester.widgetList<Switch>(find.byType(Switch));
+    expect(switches, isNotEmpty);
+    for (final s in switches) {
+      expect(s.onChanged, isNull);
+    }
+    expect(
+      tester.widget<ElevatedButton>(saveButtonFinder).onPressed,
+      isNull,
+    );
+
+    // There should be exactly one CircularProgressIndicator on screen: the
+    // small inline one inside the Save button — not a second, full-page one
+    // replacing the form.
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
 }
