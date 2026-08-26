@@ -164,4 +164,56 @@ void main() {
       isNull,
     );
   });
+
+  testWidgets(
+      'permission switches are locked while a save is in flight, closing '
+      'the race with _onUpdatePermission also emitting RolesLoaded '
+      '(SPEC.md #4)', (tester) async {
+    const loaded = RolesLoaded(roles: [cashierRoleInitial, ownerRole]);
+    whenListen<RolesState>(
+      rolesBloc,
+      stateController.stream,
+      initialState: loaded,
+    );
+
+    await tester.pumpWidget(wrap(const RolesPage(storeId: 'store-1')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Кассир'));
+    await tester.pumpAndSettle();
+
+    // Sanity check: before any save is triggered, the switch is tappable.
+    final firstSwitchBefore = tester.widget<Switch>(find.byType(Switch).first);
+    expect(firstSwitchBefore.onChanged, isNotNull);
+
+    // Tap Save. The mocked bloc never emits a resulting state (simulating
+    // an in-flight network call), so the page is left in its local
+    // "_isSaving == true" window — exactly the window during which a user
+    // could otherwise interleave another permission toggle and trigger the
+    // race described in SPEC.md #4.
+    final saveButtonFinder = find.byKey(const Key('roles_save_button'));
+    await tester.tap(saveButtonFinder);
+    await tester.pump();
+
+    // The Save button itself flips into its spinner state.
+    expect(
+      tester.widget<ElevatedButton>(saveButtonFinder).onPressed,
+      isNull,
+    );
+
+    // Every permission switch on the visible tab must now be non-interactive
+    // — this is what prevents a toggle from landing while the save is
+    // outstanding, so its RolesLoaded emission can never be mistaken for
+    // the save's own completion by the _isSaving-gated listener.
+    final switches = tester.widgetList<Switch>(find.byType(Switch));
+    expect(switches, isNotEmpty);
+    for (final s in switches) {
+      expect(s.onChanged, isNull);
+    }
+
+    // Attempting to tap one anyway must not dispatch UpdatePermission.
+    await tester.tap(find.byType(Switch).first, warnIfMissed: false);
+    await tester.pump();
+    verifyNever(() => rolesBloc.add(any(that: isA<UpdatePermission>())));
+  });
 }
