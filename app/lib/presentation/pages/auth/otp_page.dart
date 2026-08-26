@@ -14,9 +14,24 @@ import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 
 class OtpPage extends StatefulWidget {
-  final String phone;
+  /// Default purpose — OTP confirmation logs the user in (existing
+  /// behavior for OTP-based login).
+  static const String purposeLogin = 'login';
 
-  const OtpPage({super.key, required this.phone});
+  /// Forgot-password flow — OTP confirmation must NOT log the user into
+  /// their old account. It only proves the code is valid client-side
+  /// enough to proceed to [CreatePasswordPage], which performs the real
+  /// server-side validation via `resetPassword(phone, code, newPassword)`.
+  static const String purposePasswordReset = 'passwordReset';
+
+  final String phone;
+  final String purpose;
+
+  const OtpPage({
+    super.key,
+    required this.phone,
+    this.purpose = purposeLogin,
+  });
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -68,9 +83,23 @@ class _OtpPageState extends State<OtpPage> {
   String get _otp => _controllers.map((c) => c.text).join();
 
   void _verify() {
-    if (_otp.length == 6) {
-      context.read<AuthBloc>().add(AuthVerifyOtpRequested(phone: widget.phone, code: _otp));
+    if (_otp.length != 6) return;
+
+    if (widget.purpose == OtpPage.purposePasswordReset) {
+      // Don't dispatch AuthVerifyOtpRequested here — that event logs the
+      // user in (persists tokens for whatever account owns `phone`), which
+      // is exactly the bug this purpose exists to avoid. Client-side we
+      // only know the code is 6 digits; the real validation happens when
+      // CreatePasswordPage submits AuthResetPasswordRequested, which passes
+      // this same code to resetPassword(phone, code, newPassword).
+      context.push('/create-password', extra: {
+        'phone': widget.phone,
+        'otp': _otp,
+      });
+      return;
     }
+
+    context.read<AuthBloc>().add(AuthVerifyOtpRequested(phone: widget.phone, code: _otp));
   }
 
   void _resend() {

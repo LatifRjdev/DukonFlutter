@@ -10,6 +10,7 @@ import '../../blocs/auth/auth_state.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/phone_input_field.dart';
+import 'otp_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -48,7 +49,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthOtpSent) {
-            context.push('/otp', extra: state.phone);
+            // purpose: passwordReset tells OtpPage to route to
+            // CreatePasswordPage after the code is confirmed, instead of
+            // logging the user into their old account (SPEC.md #3).
+            context.push('/otp', extra: {
+              'phone': state.phone,
+              'purpose': OtpPage.purposePasswordReset,
+            });
           } else if (state is AuthFailure) {
             AppSnackbar.error(context, state.message);
           }

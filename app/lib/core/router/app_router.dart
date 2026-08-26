@@ -167,8 +167,11 @@ class AppRouter {
       GoRoute(
         path: RouteNames.otp,
         builder: (context, state) {
-          final phone = state.extra as String? ?? '';
-          return OtpPage(phone: phone);
+          final extra = state.extra as Map<String, String>? ?? {};
+          return OtpPage(
+            phone: extra['phone'] ?? '',
+            purpose: extra['purpose'] ?? OtpPage.purposeLogin,
+          );
         },
       ),
       GoRoute(
