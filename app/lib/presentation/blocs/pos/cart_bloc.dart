@@ -53,7 +53,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     if (existingIndex >= 0) {
       final existing = items[existingIndex];
-      items[existingIndex] = existing.copyWith(quantity: existing.quantity + event.quantity);
+      items[existingIndex] = existing.copyWith(
+        quantity: existing.quantity + event.quantity,
+        // Refresh the captured stock in case it changed (restock, sale
+        // elsewhere) since the item was first added. SPEC.md #6.
+        stockQuantity: event.product.quantity,
+      );
     } else {
       items.add(CartItem(
         productId: event.product.id,
@@ -62,6 +67,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         costPrice: event.product.costPrice,
         quantity: event.quantity,
         unit: event.product.unit,
+        // Captured regardless of which screen dispatched CartItemAdded
+        // (POS quick-add, product-detail "Продать", ...) — this is the
+        // single, bypass-proof place every add-to-cart path passes
+        // through. SPEC.md #6.
+        stockQuantity: event.product.quantity,
       ));
     }
     emit(state.copyWith(items: items));
@@ -78,10 +88,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final items = List<CartItem>.from(state.items);
     final index = items.indexWhere((i) => i.productId == event.productId);
     if (index >= 0) {
-      if (event.quantity <= 0) {
+      final item = items[index];
+      final stock = item.stockQuantity;
+      // Clamp to stock on hand rather than applying the requested value
+      // verbatim — enforced here so it covers every path an item can
+      // reach the cart through (POS quick-add, product-detail "Продать",
+      // cart restore), not just the one screen that dispatched this
+      // particular event. SPEC.md #6.
+      final requestedQuantity = (stock != null && event.quantity > stock)
+          ? stock
+          : event.quantity;
+      if (requestedQuantity <= 0) {
         items.removeAt(index);
       } else {
-        items[index] = items[index].copyWith(quantity: event.quantity);
+        items[index] = item.copyWith(quantity: requestedQuantity);
       }
     }
     emit(state.copyWith(items: items));

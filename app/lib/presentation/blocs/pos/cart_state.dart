@@ -8,6 +8,11 @@ class CartItem {
   final int quantity;
   final double discount;
   final String unit;
+  // Stock on hand (Product.quantity) captured when this line item was
+  // added/refreshed by CartBloc._onItemAdded. Null means unknown (e.g.
+  // a hand-built CartItem in a test) — in that case CartBloc doesn't
+  // clamp CartItemQuantityChanged. SPEC.md #6.
+  final int? stockQuantity;
 
   const CartItem({
     required this.productId,
@@ -17,11 +22,12 @@ class CartItem {
     required this.quantity,
     this.discount = 0,
     this.unit = 'PCS',
+    this.stockQuantity,
   });
 
   double get total => (unitPrice * quantity) - discount;
 
-  CartItem copyWith({int? quantity, double? discount}) {
+  CartItem copyWith({int? quantity, double? discount, int? stockQuantity}) {
     return CartItem(
       productId: productId,
       productName: productName,
@@ -30,6 +36,7 @@ class CartItem {
       quantity: quantity ?? this.quantity,
       discount: discount ?? this.discount,
       unit: unit,
+      stockQuantity: stockQuantity ?? this.stockQuantity,
     );
   }
 }

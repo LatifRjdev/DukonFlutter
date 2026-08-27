@@ -26,6 +26,7 @@ class CartLocalDatasource {
                 'quantity': it.quantity,
                 'discount': it.discount,
                 'unit': it.unit,
+                'stockQuantity': it.stockQuantity,
               })
           .toList(),
       'discount': state.discount,
@@ -59,6 +60,7 @@ class CartLocalDatasource {
                 quantity: m['quantity'] as int,
                 discount: (m['discount'] as num? ?? 0).toDouble(),
                 unit: (m['unit'] as String?) ?? 'PCS',
+                stockQuantity: m['stockQuantity'] as int?,
               ))
           .toList();
       if (items.isEmpty) return null;

@@ -1,9 +1,16 @@
 // app/test/presentation/pages/pos/pos_checkout_page_test.dart
 //
 // Covers SPEC.md #6: the cart quantity stepper's "+" button must not push
-// an item's quantity past the product's stock on hand (Product.quantity at
-// the moment it was added to the cart), and must surface a snackbar when
-// the clamp is hit instead of silently doing nothing.
+// an item's quantity past the product's stock on hand, and must surface a
+// snackbar when the clamp is hit instead of silently doing nothing.
+//
+// The actual clamp is enforced in CartBloc (see cart_bloc_test.dart) —
+// CartItem.stockQuantity is captured on every CartItemAdded regardless of
+// which screen dispatched it, so it can't be bypassed the way the old
+// page-local `_stockOnHand` map could (product-detail "Продать" and cart
+// restore both dispatch straight into CartBloc, skipping this page).
+// This test only covers the page's snackbar-vs-dispatch decision, reading
+// item.stockQuantity from the (mocked) CartBloc state.
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dukonpro/domain/entities/product.dart';
 import 'package:dukonpro/presentation/blocs/customer/customer_list_bloc.dart';
@@ -63,6 +70,10 @@ void main() {
             productName: product.name,
             unitPrice: product.sellPrice,
             quantity: quantity,
+            // As CartBloc._onItemAdded would have captured it from
+            // `product.quantity` on the CartItemAdded that put this item
+            // in the cart.
+            stockQuantity: product.quantity,
           ),
         ],
       );
@@ -99,9 +110,10 @@ void main() {
         child: child,
       );
 
-  // Taps the quick-add tile for [product] so the page snapshots its stock
-  // quantity into the internal _stockOnHand map, exactly as a cashier
-  // adding it to the cart would.
+  // Taps the quick-add tile for [product], exactly as a cashier adding it
+  // to the cart would. Since CartBloc is mocked here, this only dispatches
+  // CartItemAdded — the resulting cart state (with stockQuantity already
+  // set) comes from `cartStateWithQuantity` via `when(() => cartBloc.state)`.
   Future<void> addProductToCart(WidgetTester tester) async {
     await tester.tap(find.text(product.name).first);
     await tester.pump();

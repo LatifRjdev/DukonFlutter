@@ -19,6 +19,7 @@ Product _makeProduct({
   double sellPrice = 10.0,
   double? costPrice = 5.0,
   String unit = 'PCS',
+  int quantity = 0,
 }) {
   return Product(
     id: id,
@@ -27,6 +28,7 @@ Product _makeProduct({
     sellPrice: sellPrice,
     costPrice: costPrice,
     unit: unit,
+    quantity: quantity,
     createdAt: DateTime(2026, 1, 1),
   );
 }
@@ -109,6 +111,46 @@ void main() {
         ),
         expect: () => [
           isA<CartState>().having((s) => s.items.length, 'items.length', 2),
+        ],
+      );
+
+      // SPEC.md #6: stockQuantity must be captured from event.product.quantity
+      // on EVERY CartItemAdded dispatch, regardless of which screen (POS
+      // quick-add, product-detail "Продать") triggered it — this is what
+      // makes the clamp in CartItemQuantityChanged bypass-proof.
+      blocTest<CartBloc, CartState>(
+        'captures stockQuantity from the product on a brand-new line item',
+        build: () => CartBloc(),
+        act: (bloc) => bloc.add(
+          CartItemAdded(product: _makeProduct(quantity: 7)),
+        ),
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 7),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'refreshes stockQuantity when the same product is added again '
+        '(e.g. restocked since it was first added)',
+        build: () => CartBloc(),
+        seed: () => const CartState(
+          items: [
+            CartItem(
+              productId: 'p1',
+              productName: 'Apple',
+              unitPrice: 10.0,
+              quantity: 2,
+              stockQuantity: 3,
+            ),
+          ],
+        ),
+        act: (bloc) => bloc.add(
+          CartItemAdded(product: _makeProduct(quantity: 9)),
+        ),
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 9),
         ],
       );
     });
@@ -206,6 +248,118 @@ void main() {
           const CartItemQuantityChanged(productId: 'ghost', quantity: 9),
         ),
         expect: () => [],
+      );
+
+      // SPEC.md #6 — the actual fix. The clamp lives here in CartBloc
+      // (rather than in a page-local map like PosCheckoutPage's old,
+      // bypassable `_stockOnHand`), so it applies no matter how the item
+      // reached the cart: POS quick-add, product-detail "Продать", or a
+      // restored persisted cart all populate stockQuantity via
+      // _onItemAdded / a restored CartState, and this handler is the one
+      // and only place a quantity increase is applied.
+      blocTest<CartBloc, CartState>(
+        'clamps the requested quantity to stockQuantity instead of applying '
+        'it verbatim when the request exceeds stock on hand',
+        build: () => CartBloc(),
+        seed: () => const CartState(
+          items: [
+            CartItem(
+              productId: 'p1',
+              productName: 'Apple',
+              unitPrice: 10,
+              quantity: 3,
+              stockQuantity: 3,
+            ),
+          ],
+        ),
+        act: (bloc) => bloc.add(
+          const CartItemQuantityChanged(productId: 'p1', quantity: 4),
+        ),
+        expect: () => [
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 3),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'does not clamp when the requested quantity is within stock on hand',
+        build: () => CartBloc(),
+        seed: () => const CartState(
+          items: [
+            CartItem(
+              productId: 'p1',
+              productName: 'Apple',
+              unitPrice: 10,
+              quantity: 2,
+              stockQuantity: 5,
+            ),
+          ],
+        ),
+        act: (bloc) => bloc.add(
+          const CartItemQuantityChanged(productId: 'p1', quantity: 3),
+        ),
+        expect: () => [
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 3),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'does not clamp when stockQuantity is unknown (null) — e.g. a '
+        'hand-built CartItem that never went through _onItemAdded',
+        build: () => CartBloc(),
+        seed: () => const CartState(
+          items: [
+            CartItem(productId: 'p1', productName: 'Apple', unitPrice: 10, quantity: 1),
+          ],
+        ),
+        act: (bloc) => bloc.add(
+          const CartItemQuantityChanged(productId: 'p1', quantity: 50),
+        ),
+        expect: () => [
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 50),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'closes the product-detail "Продать" bypass: an item added via a '
+        'bare CartItemAdded (no PosCheckoutPage involved) still gets its '
+        'quantity clamped to stock on hand',
+        build: () => CartBloc(),
+        act: (bloc) {
+          // Mirrors product_detail_page.dart's "Продать" button, which
+          // dispatches CartItemAdded straight to the app-scoped CartBloc,
+          // bypassing PosCheckoutPage entirely.
+          bloc.add(CartItemAdded(product: _makeProduct(quantity: 2)));
+          bloc.add(const CartItemQuantityChanged(productId: 'p1', quantity: 10));
+        },
+        expect: () => [
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 1),
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 2),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'closes the cart-restore bypass: a CartRestored item still gets '
+        'its quantity clamped to the stockQuantity carried in the '
+        'restored state',
+        build: () => CartBloc(),
+        act: (bloc) {
+          // Mirrors cart_restore_prompt.dart, which dispatches
+          // CartRestored(saved.state) straight into CartBloc.
+          bloc.add(const CartRestored(CartState(items: [
+            CartItem(
+              productId: 'p1',
+              productName: 'Apple',
+              unitPrice: 10,
+              quantity: 1,
+              stockQuantity: 4,
+            ),
+          ])));
+          bloc.add(const CartItemQuantityChanged(productId: 'p1', quantity: 99));
+        },
+        expect: () => [
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 1),
+          isA<CartState>().having((s) => s.items.first.quantity, 'quantity', 4),
+        ],
       );
     });
 
@@ -425,6 +579,28 @@ void main() {
         expect(updated.productId, 'p1');
         expect(updated.unit, 'KG');
         expect(updated.unitPrice, 10);
+      });
+
+      test('CartItem.stockQuantity defaults to null and copyWith preserves '
+          'it when not explicitly overridden', () {
+        const item = CartItem(
+          productId: 'p1',
+          productName: 'A',
+          unitPrice: 10,
+          quantity: 1,
+          stockQuantity: 6,
+        );
+        expect(const CartItem(
+          productId: 'p1',
+          productName: 'A',
+          unitPrice: 10,
+          quantity: 1,
+        ).stockQuantity, isNull);
+        final updated = item.copyWith(quantity: 2);
+        expect(updated.stockQuantity, 6);
+        final restocked = item.copyWith(stockQuantity: 10);
+        expect(restocked.stockQuantity, 10);
+        expect(restocked.quantity, 1);
       });
     });
   });

@@ -11,12 +11,14 @@ Product _makeProduct({
   String id = 'p1',
   String name = 'Apple',
   double sellPrice = 5.0,
+  int quantity = 0,
 }) {
   return Product(
     id: id,
     storeId: 'store-1',
     name: name,
     sellPrice: sellPrice,
+    quantity: quantity,
     createdAt: DateTime(2026, 1, 1),
   );
 }
@@ -81,6 +83,33 @@ void main() {
       expect(states.first.items.first.productId, 'p-restore');
 
       await bloc.close();
+    });
+
+    // SPEC.md #6: cart_restore_prompt.dart dispatches CartRestored straight
+    // into CartBloc, bypassing PosCheckoutPage. For the stock clamp to
+    // survive a process-kill-and-restore, stockQuantity has to round-trip
+    // through save/load, not just live in memory.
+    test('round-trips stockQuantity through save/load so a restored cart '
+        'still has its stock clamp enforced', () async {
+      final bloc = CartBloc(persistence: datasource);
+      bloc.add(CartItemAdded(product: _makeProduct(quantity: 4)));
+      await Future<void>.delayed(const Duration(milliseconds: 450));
+      await bloc.close();
+
+      final loaded = datasource.load();
+      expect(loaded, isNotNull);
+      expect(loaded!.state.items.first.stockQuantity, 4);
+
+      final restoredBloc = CartBloc();
+      restoredBloc.add(CartRestored(loaded.state));
+      restoredBloc.add(
+        const CartItemQuantityChanged(productId: 'p1', quantity: 999),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(restoredBloc.state.items.first.quantity, 4);
+
+      await restoredBloc.close();
     });
   });
 }
