@@ -53,11 +53,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     if (existingIndex >= 0) {
       final existing = items[existingIndex];
+      final stock = event.product.quantity;
+      final requestedQuantity = existing.quantity + event.quantity;
       items[existingIndex] = existing.copyWith(
-        quantity: existing.quantity + event.quantity,
+        // Clamp to stock on hand — mirrors _onQuantityChanged's clamp so
+        // a product added to the cart multiple times (e.g. scanned or
+        // tapped again) can't silently exceed stock either. SPEC.md #6.
+        quantity: requestedQuantity > stock ? stock : requestedQuantity,
         // Refresh the captured stock in case it changed (restock, sale
         // elsewhere) since the item was first added. SPEC.md #6.
-        stockQuantity: event.product.quantity,
+        stockQuantity: stock,
       );
     } else {
       items.add(CartItem(

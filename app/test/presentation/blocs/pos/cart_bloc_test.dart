@@ -85,11 +85,40 @@ void main() {
             ),
           ],
         ),
-        act: (bloc) => bloc.add(CartItemAdded(product: _makeProduct())),
+        // Plenty of stock headroom — this test is about merge-not-duplicate
+        // behavior, not the stock clamp (see the dedicated clamp test below).
+        act: (bloc) => bloc.add(CartItemAdded(product: _makeProduct(quantity: 10))),
         expect: () => [
           isA<CartState>()
               .having((s) => s.items.length, 'items.length', 1)
               .having((s) => s.items.first.quantity, 'quantity', 3),
+        ],
+      );
+
+      // SPEC.md #6 (remaining gap): the "+" stepper's clamp
+      // (CartItemQuantityChanged) isn't the only way an existing line
+      // item's quantity can grow — dispatching CartItemAdded again for a
+      // product already in the cart (POS quick-add tile, product-detail
+      // "Продать" button) bumps quantity too, and that bump must clamp to
+      // stock on hand exactly like the stepper does.
+      blocTest<CartBloc, CartState>(
+        'clamps quantity to stock on hand when the same product is added '
+        'multiple times via CartItemAdded (repeated scan/tap), not just '
+        'via the "+" stepper',
+        build: () => CartBloc(),
+        act: (bloc) {
+          bloc.add(CartItemAdded(product: _makeProduct(quantity: 3), quantity: 2));
+          bloc.add(CartItemAdded(product: _makeProduct(quantity: 3), quantity: 2));
+        },
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.items.length, 'items.length', 1)
+              .having((s) => s.items.first.quantity, 'quantity', 2)
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 3),
+          isA<CartState>()
+              .having((s) => s.items.length, 'items.length', 1)
+              .having((s) => s.items.first.quantity, 'quantity', 3)
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 3),
         ],
       );
 
