@@ -580,6 +580,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get clearCart => 'Очистить корзину';
 
   @override
+  String get cartMaxStockReached => 'Больше нет в наличии';
+
+  @override
   String get cartRestoreDialogTitle => 'Восстановить корзину?';
 
   @override

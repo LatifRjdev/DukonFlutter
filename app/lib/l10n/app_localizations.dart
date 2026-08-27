@@ -1168,6 +1168,12 @@ abstract class AppLocalizations {
   /// **'Очистить корзину'**
   String get clearCart;
 
+  /// Snackbar shown when the cart quantity stepper's "+" button is pressed but the item is already at the product's full stock quantity — distinct from `outOfStock` ("Нет в наличии"), which labels a product with zero stock rather than a blocked increment
+  ///
+  /// In ru, this message translates to:
+  /// **'Больше нет в наличии'**
+  String get cartMaxStockReached;
+
   /// Cart restore prompt — dialog title asking whether to restore a previously persisted POS cart on cold start
   ///
   /// In ru, this message translates to:

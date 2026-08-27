@@ -42,6 +42,12 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   bool _showSearchResults = false;
   String? _storeId;
   String _selectedPaymentMethod = 'CASH';
+  // Stock on hand at the moment each product was added to the cart, keyed
+  // by productId. Used to clamp the "+" stepper so a cashier can't ring up
+  // more units than are actually available. CartItem itself doesn't carry
+  // the product's stock quantity, so we snapshot it here from the Product
+  // passed to _addProductToCart.
+  final Map<String, int> _stockOnHand = {};
 
   String _formatPrice(double value) {
     final formatter = NumberFormat('#,##0', 'ru');
@@ -87,6 +93,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   }
 
   void _addProductToCart(Product product) {
+    _stockOnHand[product.id] = product.quantity;
     context.read<CartBloc>().add(CartItemAdded(product: product));
     _searchController.clear();
     setState(() {
@@ -602,6 +609,11 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     iconSize: 18,
                     icon: const Icon(Icons.add),
                     onPressed: () {
+                      final stock = _stockOnHand[item.productId];
+                      if (stock != null && item.quantity >= stock) {
+                        AppSnackbar.error(context, l10n.cartMaxStockReached);
+                        return;
+                      }
                       context.read<CartBloc>().add(CartItemQuantityChanged(
                         productId: item.productId, quantity: item.quantity + 1));
                     },

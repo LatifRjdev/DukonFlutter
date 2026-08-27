@@ -402,6 +402,8 @@
   "@removeFromCart": { "description": "Remove from cart action" },
   "clearCart": "Очистить корзину",
   "@clearCart": { "description": "Clear cart action" },
+  "cartMaxStockReached": "Больше нет в наличии",
+  "@cartMaxStockReached": { "description": "Snackbar shown when the cart quantity stepper's \"+\" button is pressed but the item is already at the product's full stock quantity — distinct from `outOfStock` (\"Нет в наличии\"), which labels a product with zero stock rather than a blocked increment" },
   "cartRestoreDialogTitle": "Восстановить корзину?",
   "@cartRestoreDialogTitle": { "description": "Cart restore prompt — dialog title asking whether to restore a previously persisted POS cart on cold start" },
   "cartRestoreDialogMessage": "Найдена сохранённая корзина ({time}, {count} товаров).",

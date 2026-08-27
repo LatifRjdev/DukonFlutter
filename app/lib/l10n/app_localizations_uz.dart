@@ -581,6 +581,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get clearCart => 'Savatni tozalash';
 
   @override
+  String get cartMaxStockReached => 'Больше нет в наличии';
+
+  @override
   String get cartRestoreDialogTitle => 'Восстановить корзину?';
 
   @override

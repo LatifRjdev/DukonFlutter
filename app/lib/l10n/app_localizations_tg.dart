@@ -581,6 +581,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get clearCart => 'Сабадро холӣ кардан';
 
   @override
+  String get cartMaxStockReached => 'Больше нет в наличии';
+
+  @override
   String get cartRestoreDialogTitle => 'Восстановить корзину?';
 
   @override
