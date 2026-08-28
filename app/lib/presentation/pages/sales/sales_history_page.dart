@@ -89,21 +89,24 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                       context,
                       initial: _activeFilter,
                       onApply: (filter) {
-                        setState(() => _activeFilter = filter);
+                        setState(() {
+                          _activeFilter = filter;
+                          _selectedPeriod = filter.period;
+                        });
                         context.read<SalesHistoryBloc>().add(
                           SalesHistoryFilterByDate(
                             dateFrom: filter.from,
                             dateTo: filter.to,
                           ),
                         );
-                        if (filter.paymentTypeValue != null ||
-                            filter.payment == SalesFilterPayment.all) {
-                          context.read<SalesHistoryBloc>().add(
-                            SalesHistoryFilterByPaymentMethod(
-                              filter.paymentTypeValue,
-                            ),
-                          );
-                        }
+                        context.read<SalesHistoryBloc>().add(
+                          SalesHistoryFilterByPaymentMethod(
+                            filter.paymentTypeValue,
+                          ),
+                        );
+                        context.read<SalesHistoryBloc>().add(
+                          SalesHistoryFilterByStatus(filter.statusValue),
+                        );
                       },
                     ),
                   ),

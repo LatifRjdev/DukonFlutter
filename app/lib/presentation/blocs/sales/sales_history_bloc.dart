@@ -14,6 +14,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
     on<SalesHistoryLoadRequested>(_onLoadRequested);
     on<SalesHistoryFilterByDate>(_onFilterByDate);
     on<SalesHistoryFilterByPaymentMethod>(_onFilterByPaymentMethod);
+    on<SalesHistoryFilterByStatus>(_onFilterByStatus);
     on<SalesHistoryLoadMore>(_onLoadMore);
     on<SalesHistoryRefundSale>(_onRefundSale);
   }
@@ -27,11 +28,13 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
       DateTime? dateFrom;
       DateTime? dateTo;
       String? paymentType;
+      String? status;
 
       if (currentState is SalesHistoryLoaded) {
         dateFrom = currentState.dateFrom;
         dateTo = currentState.dateTo;
         paymentType = currentState.paymentType;
+        status = currentState.status;
       }
 
       final result = await _saleRepository.getSales(
@@ -40,6 +43,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         dateFrom: dateFrom,
         dateTo: dateTo,
         paymentType: paymentType,
+        status: status,
       );
       emit(SalesHistoryLoaded(
         sales: result.data,
@@ -49,6 +53,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         dateFrom: dateFrom,
         dateTo: dateTo,
         paymentType: paymentType,
+        status: status,
         skippedRows: result.skippedRows,
       ));
     } catch (e) {
@@ -82,6 +87,18 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
     add(SalesHistoryLoadRequested(storeId: _storeId));
   }
 
+  Future<void> _onFilterByStatus(
+      SalesHistoryFilterByStatus event, Emitter<SalesHistoryState> emit) async {
+    final currentState = state;
+    if (currentState is SalesHistoryLoaded) {
+      emit(currentState.copyWith(
+        status: event.status,
+        clearStatus: event.status == null,
+      ));
+    }
+    add(SalesHistoryLoadRequested(storeId: _storeId));
+  }
+
   Future<void> _onLoadMore(
       SalesHistoryLoadMore event, Emitter<SalesHistoryState> emit) async {
     final currentState = state;
@@ -95,6 +112,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
           dateFrom: currentState.dateFrom,
           dateTo: currentState.dateTo,
           paymentType: currentState.paymentType,
+          status: currentState.status,
         );
         emit(SalesHistoryLoaded(
           sales: [...currentState.sales, ...result.data],
@@ -104,6 +122,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
           dateFrom: currentState.dateFrom,
           dateTo: currentState.dateTo,
           paymentType: currentState.paymentType,
+          status: currentState.status,
           skippedRows: currentState.skippedRows + result.skippedRows,
         ));
       } catch (e) {

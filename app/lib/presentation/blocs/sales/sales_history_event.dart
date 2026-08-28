@@ -29,6 +29,13 @@ class SalesHistoryFilterByPaymentMethod extends SalesHistoryEvent {
   List<Object?> get props => [paymentType];
 }
 
+class SalesHistoryFilterByStatus extends SalesHistoryEvent {
+  final String? status;
+  const SalesHistoryFilterByStatus(this.status);
+  @override
+  List<Object?> get props => [status];
+}
+
 class SalesHistoryLoadMore extends SalesHistoryEvent {}
 
 class SalesHistoryRefundSale extends SalesHistoryEvent {

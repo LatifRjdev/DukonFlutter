@@ -62,6 +62,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()], total: 1, totalPages: 1));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -86,6 +87,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenThrow(const NetworkException());
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -106,6 +108,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenThrow(Exception('DioException [bad response]: http://10.0.2.2/sales'));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -130,6 +133,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()], total: 3, skippedRows: 1));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -150,6 +154,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -178,6 +183,7 @@ void main() {
                 dateFrom: DateTime(2026, 1, 1),
                 dateTo: DateTime(2026, 1, 31),
                 paymentType: 'CARD',
+                status: null,
               )).called(1);
         },
       );
@@ -194,6 +200,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -226,6 +233,7 @@ void main() {
                 dateFrom: DateTime(2026, 2, 1),
                 dateTo: DateTime(2026, 2, 28),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).called(1);
         },
       );
@@ -239,6 +247,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -272,6 +281,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -289,6 +299,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: 'DEBT',
+                status: any(named: 'status'),
               )).called(1);
         },
       );
@@ -302,6 +313,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale()]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -311,6 +323,65 @@ void main() {
           isA<SalesHistoryLoaded>().having((s) => s.paymentType, 'paymentType', isNull),
           isA<SalesHistoryLoading>(),
           isA<SalesHistoryLoaded>().having((s) => s.paymentType, 'paymentType', isNull),
+        ],
+      );
+    });
+
+    group('SalesHistoryFilterByStatus', () {
+      blocTest<SalesHistoryBloc, SalesHistoryState>(
+        'applies the status filter and reloads, ending in a Loaded state '
+        'carrying that status, and actually queries with it (SPEC.md #10: '
+        'the SalesFilterSheet status filter used to be collected but never '
+        'threaded into the query)',
+        setUp: () {
+          when(() => repository.getSales(
+                any(),
+                page: any(named: 'page'),
+                dateFrom: any(named: 'dateFrom'),
+                dateTo: any(named: 'dateTo'),
+                paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
+              )).thenAnswer((_) async => _page([_makeSale()]));
+        },
+        build: () => SalesHistoryBloc(saleRepository: repository),
+        seed: () => SalesHistoryLoaded(sales: const [], total: 0, totalPages: 1),
+        act: (bloc) => bloc.add(const SalesHistoryFilterByStatus('RETURNED')),
+        expect: () => [
+          isA<SalesHistoryLoaded>().having((s) => s.status, 'status', 'RETURNED'),
+          isA<SalesHistoryLoading>(),
+          isA<SalesHistoryLoaded>().having((s) => s.status, 'status', 'RETURNED'),
+        ],
+        verify: (_) {
+          verify(() => repository.getSales(
+                any(),
+                page: any(named: 'page'),
+                dateFrom: any(named: 'dateFrom'),
+                dateTo: any(named: 'dateTo'),
+                paymentType: any(named: 'paymentType'),
+                status: 'RETURNED',
+              )).called(1);
+        },
+      );
+
+      blocTest<SalesHistoryBloc, SalesHistoryState>(
+        'clears the status filter when null is passed',
+        setUp: () {
+          when(() => repository.getSales(
+                any(),
+                page: any(named: 'page'),
+                dateFrom: any(named: 'dateFrom'),
+                dateTo: any(named: 'dateTo'),
+                paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
+              )).thenAnswer((_) async => _page([_makeSale()]));
+        },
+        build: () => SalesHistoryBloc(saleRepository: repository),
+        seed: () => SalesHistoryLoaded(sales: const [], total: 0, totalPages: 1, status: 'COMPLETED'),
+        act: (bloc) => bloc.add(const SalesHistoryFilterByStatus(null)),
+        expect: () => [
+          isA<SalesHistoryLoaded>().having((s) => s.status, 'status', isNull),
+          isA<SalesHistoryLoading>(),
+          isA<SalesHistoryLoaded>().having((s) => s.status, 'status', isNull),
         ],
       );
     });
@@ -326,6 +397,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenAnswer((_) async => _page([_makeSale(id: 's2', receiptNo: 'R-002')]));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),
@@ -334,6 +406,10 @@ void main() {
           total: 2,
           totalPages: 2,
           currentPage: 1,
+          dateFrom: DateTime(2026, 1, 1),
+          dateTo: DateTime(2026, 1, 31),
+          paymentType: 'CARD',
+          status: 'RETURNED',
         ),
         act: (bloc) => bloc.add(SalesHistoryLoadMore()),
         expect: () => [
@@ -342,8 +418,22 @@ void main() {
               .having((s) => s.sales.length, 'sales.length', 2)
               .having((s) => s.sales.map((e) => e.receiptNo), 'order', ['R-001', 'R-002'])
               .having((s) => s.currentPage, 'currentPage', 2)
-              .having((s) => s.isLoadingMore, 'isLoadingMore reset', false),
+              .having((s) => s.isLoadingMore, 'isLoadingMore reset', false)
+              .having((s) => s.status, 'status carried into next page', 'RETURNED'),
         ],
+        verify: (_) {
+          // A pull-to-refresh-style "load more" must keep applying the
+          // active filters, not silently drop them on page 2+ (same bug
+          // class as SPEC.md #9/#10, different entry point).
+          verify(() => repository.getSales(
+                any(),
+                page: 2,
+                dateFrom: DateTime(2026, 1, 1),
+                dateTo: DateTime(2026, 1, 31),
+                paymentType: 'CARD',
+                status: 'RETURNED',
+              )).called(1);
+        },
       );
 
       blocTest<SalesHistoryBloc, SalesHistoryState>(
@@ -364,6 +454,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               ));
         },
       );
@@ -388,6 +479,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               ));
         },
       );
@@ -403,6 +495,7 @@ void main() {
                 dateFrom: any(named: 'dateFrom'),
                 dateTo: any(named: 'dateTo'),
                 paymentType: any(named: 'paymentType'),
+                status: any(named: 'status'),
               )).thenThrow(const ServerException('boom', statusCode: 500));
         },
         build: () => SalesHistoryBloc(saleRepository: repository),

@@ -79,6 +79,20 @@ class SalesFilter {
         return 'DEBT';
     }
   }
+
+  /// Convert status enum to API string (null means "all").
+  String? get statusValue {
+    switch (status) {
+      case SalesFilterStatus.all:
+        return null;
+      case SalesFilterStatus.completed:
+        return 'COMPLETED';
+      case SalesFilterStatus.returned:
+        return 'RETURNED';
+      case SalesFilterStatus.cancelled:
+        return 'CANCELLED';
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
