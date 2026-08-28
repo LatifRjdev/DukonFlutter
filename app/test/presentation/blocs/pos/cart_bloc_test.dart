@@ -479,17 +479,13 @@ void main() {
         ],
       );
 
-      // BUG (revenue-critical, see report): unlike CheckoutBloc's own
-      // discount handler (which clamps total to 0 when discount > subtotal),
-      // CartState.total performs no clamping at all. A FIXED discount larger
-      // than the subtotal produces a *negative* total here, and this value
-      // flows straight through PosCheckoutPage._initCheckoutAndProceed into
-      // CheckoutInitiated(total: cart.total) — which CheckoutBloc also
-      // accepts unclamped — so a negative total/paidAmount could reach the
-      // sale payload sent to the API.
+      // SPEC.md #7: CartState.total clamps at 0, mirroring CheckoutBloc's
+      // own discount handler (`newTotal > 0 ? newTotal : 0`). A FIXED
+      // discount larger than the subtotal must not flow a negative total
+      // through PosCheckoutPage._initCheckoutAndProceed into
+      // CheckoutInitiated(total: cart.total) and on to the sale payload.
       blocTest<CartBloc, CartState>(
-        'FIXED discount larger than subtotal produces a negative total '
-        '(documents unclamped cart math — see BUG note above)',
+        'FIXED discount larger than subtotal clamps total to 0, not negative',
         build: () => CartBloc(),
         seed: () => const CartState(
           items: [
@@ -500,7 +496,28 @@ void main() {
           const CartDiscountApplied(discount: 100, type: 'FIXED'),
         ),
         expect: () => [
-          isA<CartState>().having((s) => s.total, 'total', -80),
+          isA<CartState>()
+              .having((s) => s.discountAmount, 'discountAmount', 100)
+              .having((s) => s.total, 'total', 0),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'PERCENTAGE discount larger than subtotal clamps total to 0, not negative',
+        build: () => CartBloc(),
+        seed: () => const CartState(
+          items: [
+            CartItem(productId: 'p1', productName: 'Apple', unitPrice: 10, quantity: 2),
+          ],
+        ),
+        act: (bloc) => bloc.add(
+          // 500% of a 20 subtotal = 100 discount, well over the 20 subtotal.
+          const CartDiscountApplied(discount: 500, type: 'PERCENTAGE'),
+        ),
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.discountAmount, 'discountAmount', 100)
+              .having((s) => s.total, 'total', 0),
         ],
       );
     });

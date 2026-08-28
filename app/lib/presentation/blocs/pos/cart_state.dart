@@ -70,7 +70,18 @@ class CartState extends Equatable {
   }
 
   double get loyaltyRedemptionValue => redemptionPoints * loyaltyPointValue;
-  double get total => subtotal - discountAmount - loyaltyRedemptionValue;
+
+  // Clamped at 0 — mirrors CheckoutBloc._onDiscountApplied's own
+  // `newTotal > 0 ? newTotal : 0` clamp, so a discount (or loyalty
+  // redemption) larger than the subtotal can't produce a negative total
+  // here either. This getter is the single place CartState computes the
+  // displayed/checkout total from, so clamping here covers every UI
+  // surface that reads `cart.total` (POS cart screen, cash/credit payment
+  // pages, PosCheckoutPage's CheckoutInitiated). SPEC.md #7.
+  double get total {
+    final rawTotal = subtotal - discountAmount - loyaltyRedemptionValue;
+    return rawTotal > 0 ? rawTotal : 0;
+  }
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
   bool get isEmpty => items.isEmpty;
 
