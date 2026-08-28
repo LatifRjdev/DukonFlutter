@@ -216,6 +216,18 @@ void main() {
               .having((s) => s.dateFrom, 'dateFrom', DateTime(2026, 2, 1))
               .having((s) => s.dateTo, 'dateTo', DateTime(2026, 2, 28)),
         ],
+        verify: (_) {
+          // The reload triggered by SalesHistoryFilterByDate must actually
+          // query with the selected range, not silently drop it (SPEC.md #9:
+          // period chips / custom date-range picker were pure UI state).
+          verify(() => repository.getSales(
+                'store-1',
+                page: any(named: 'page'),
+                dateFrom: DateTime(2026, 2, 1),
+                dateTo: DateTime(2026, 2, 28),
+                paymentType: any(named: 'paymentType'),
+              )).called(1);
+        },
       );
 
       blocTest<SalesHistoryBloc, SalesHistoryState>(

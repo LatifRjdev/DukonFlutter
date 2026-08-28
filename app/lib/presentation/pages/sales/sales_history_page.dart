@@ -27,7 +27,7 @@ class SalesHistoryPage extends StatefulWidget {
 }
 
 class _SalesHistoryPageState extends State<SalesHistoryPage> {
-  String _selectedPeriod = 'today';
+  SalesFilterPeriod _selectedPeriod = SalesFilterPeriod.today;
   SalesFilter _activeFilter = const SalesFilter();
 
   String get _storeId {
@@ -52,10 +52,11 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
     });
   }
 
-  void _onPeriodSelected(String period) {
+  void _onPeriodSelected(SalesFilterPeriod period) {
     setState(() => _selectedPeriod = period);
+    final (from, to) = SalesFilter.periodToDates(period);
     context.read<SalesHistoryBloc>().add(
-      SalesHistoryLoadRequested(storeId: _storeId),
+      SalesHistoryFilterByDate(dateFrom: from, dateTo: to),
     );
   }
 
@@ -132,25 +133,25 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   children: [
                     AppChip(
                       label: 'Сегодня',
-                      isSelected: _selectedPeriod == 'today',
-                      onTap: () => _onPeriodSelected('today'),
+                      isSelected: _selectedPeriod == SalesFilterPeriod.today,
+                      onTap: () => _onPeriodSelected(SalesFilterPeriod.today),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
                       label: 'Неделя',
-                      isSelected: _selectedPeriod == 'week',
-                      onTap: () => _onPeriodSelected('week'),
+                      isSelected: _selectedPeriod == SalesFilterPeriod.week,
+                      onTap: () => _onPeriodSelected(SalesFilterPeriod.week),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
                       label: 'Месяц',
-                      isSelected: _selectedPeriod == 'month',
-                      onTap: () => _onPeriodSelected('month'),
+                      isSelected: _selectedPeriod == SalesFilterPeriod.month,
+                      onTap: () => _onPeriodSelected(SalesFilterPeriod.month),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
                       label: 'Выбрать',
-                      isSelected: _selectedPeriod == 'custom',
+                      isSelected: _selectedPeriod == SalesFilterPeriod.custom,
                       onTap: _showDatePicker,
                     ),
                   ],
@@ -256,8 +257,11 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    if (range != null) {
-      setState(() => _selectedPeriod = 'custom');
+    if (range != null && mounted) {
+      setState(() => _selectedPeriod = SalesFilterPeriod.custom);
+      context.read<SalesHistoryBloc>().add(
+        SalesHistoryFilterByDate(dateFrom: range.start, dateTo: range.end),
+      );
     }
   }
 }
