@@ -1114,6 +1114,18 @@ abstract class AppLocalizations {
   /// **'Карта'**
   String get card;
 
+  /// Checkout screen — title of the confirmation dialog shown before a CARD payment is processed (cash and debt already require a dedicated confirming screen; this gives CARD the same review-before-submit step, SPEC.md #8)
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата картой?'**
+  String get cardPaymentConfirmTitle;
+
+  /// Checkout screen — body of the CARD payment confirmation dialog; placeholder is the pre-formatted total (amount + currency), following this file's String-only placeholder convention
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма к оплате: {total}'**
+  String cardPaymentConfirmMessage(String total);
+
   /// Debt payment method
   ///
   /// In ru, this message translates to:

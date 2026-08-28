@@ -554,6 +554,14 @@ class AppLocalizationsTg extends AppLocalizations {
   String get card => 'Корт';
 
   @override
+  String get cardPaymentConfirmTitle => 'Оплата картой?';
+
+  @override
+  String cardPaymentConfirmMessage(String total) {
+    return 'Сумма к оплате: $total';
+  }
+
+  @override
   String get debt => 'Қарз';
 
   @override

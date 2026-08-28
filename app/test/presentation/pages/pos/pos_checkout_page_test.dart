@@ -27,6 +27,7 @@ import 'package:dukonpro/presentation/blocs/product/product_list_event.dart';
 import 'package:dukonpro/presentation/blocs/product/product_list_state.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
 import 'package:dukonpro/presentation/pages/pos/pos_checkout_page.dart';
+import 'package:dukonpro/presentation/widgets/common/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -80,6 +81,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(CartCleared());
+    registerFallbackValue(const CheckoutPaymentMethodSelected('CASH'));
   });
 
   setUp(() {
@@ -151,6 +153,78 @@ void main() {
             const CartItemQuantityChanged(productId: 'p1', quantity: 3),
           )).called(1);
       expect(find.text('Больше нет в наличии'), findsNothing);
+    });
+  });
+
+  group('PosCheckoutPage card payment confirmation (SPEC.md #8)', () {
+    // Cash and debt payments both push a dedicated confirmation screen
+    // before CheckoutBloc ever processes the sale. Card payment used to
+    // dispatch CheckoutProcessPayment straight from the checkout CTA with
+    // no review step — this group proves it now shows a confirmation
+    // dialog first, and that cancelling it never reaches CheckoutBloc.
+    setUp(() {
+      when(() => cartBloc.state).thenReturn(
+        CartState(
+          items: [
+            CartItem(
+              productId: product.id,
+              productName: product.name,
+              unitPrice: product.sellPrice,
+              quantity: 1,
+              stockQuantity: product.quantity,
+            ),
+          ],
+        ),
+      );
+    });
+
+    Future<void> selectCardAndTapCheckout(WidgetTester tester) async {
+      await tester.tap(find.text('Карта'));
+      await tester.pump();
+      await tester.tap(find.byType(AppButton));
+      await tester.pump();
+    }
+
+    testWidgets(
+        'tapping the checkout CTA with CARD selected shows a confirmation '
+        'dialog instead of processing immediately', (tester) async {
+      await pumpPageWithTheme(tester, page(),
+          brightness: Brightness.light, wrap: wrapWithBlocs);
+
+      await selectCardAndTapCheckout(tester);
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('Оплата картой?'), findsOneWidget);
+      verifyNever(() => checkoutBloc.add(any(that: isA<CheckoutProcessPayment>())));
+    });
+
+    testWidgets('cancelling the card-payment confirmation does not process the sale',
+        (tester) async {
+      await pumpPageWithTheme(tester, page(),
+          brightness: Brightness.light, wrap: wrapWithBlocs);
+
+      await selectCardAndTapCheckout(tester);
+      await tester.tap(find.text('Отмена'));
+      await tester.pump();
+
+      expect(find.byType(AlertDialog), findsNothing);
+      verifyNever(() => checkoutBloc.add(any(that: isA<CheckoutProcessPayment>())));
+    });
+
+    testWidgets('confirming the card-payment dialog processes the sale',
+        (tester) async {
+      await pumpPageWithTheme(tester, page(),
+          brightness: Brightness.light, wrap: wrapWithBlocs);
+
+      await selectCardAndTapCheckout(tester);
+      await tester.tap(find.text('Подтвердить'));
+      await tester.pump();
+
+      expect(find.byType(AlertDialog), findsNothing);
+      verify(() => checkoutBloc.add(any(that: isA<CheckoutPaidAmountChanged>())))
+          .called(1);
+      verify(() => checkoutBloc.add(any(that: isA<CheckoutProcessPayment>())))
+          .called(1);
     });
   });
 }

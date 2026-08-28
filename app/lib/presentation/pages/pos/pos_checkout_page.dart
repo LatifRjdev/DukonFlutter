@@ -112,10 +112,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
         context.push('/pos/cash-payment');
         break;
       case 'CARD':
-        final storeId = _storeId ?? '';
-        context.read<CheckoutBloc>()
-          ..add(CheckoutPaidAmountChanged(cart.total))
-          ..add(CheckoutProcessPayment(storeId: storeId));
+        _confirmCardPayment(cart);
         break;
       case 'DEBT':
         context.push('/pos/credit-sale');
@@ -124,6 +121,38 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
         context.push('/pos/cash-payment');
         break;
     }
+  }
+
+  // Cash and debt payments both route through a dedicated confirmation
+  // screen (CashPaymentPage / CreditSalePage) before the sale is actually
+  // submitted. Card payment had no such step and processed instantly on
+  // tapping the checkout CTA — this dialog gives it the same
+  // review-before-submit chance to cancel (SPEC.md #8).
+  void _confirmCardPayment(CartState cart) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.cardPaymentConfirmTitle),
+        content: Text(l10n.cardPaymentConfirmMessage(_formatPrice(cart.total))),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              final storeId = _storeId ?? '';
+              context.read<CheckoutBloc>()
+                ..add(CheckoutPaidAmountChanged(cart.total))
+                ..add(CheckoutProcessPayment(storeId: storeId));
+            },
+            child: Text(l10n.confirm),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showCustomerSelection() {

@@ -553,6 +553,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get card => 'Карта';
 
   @override
+  String get cardPaymentConfirmTitle => 'Оплата картой?';
+
+  @override
+  String cardPaymentConfirmMessage(String total) {
+    return 'Сумма к оплате: $total';
+  }
+
+  @override
   String get debt => 'В долг';
 
   @override

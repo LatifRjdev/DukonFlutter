@@ -554,6 +554,14 @@ class AppLocalizationsUz extends AppLocalizations {
   String get card => 'Karta';
 
   @override
+  String get cardPaymentConfirmTitle => 'Оплата картой?';
+
+  @override
+  String cardPaymentConfirmMessage(String total) {
+    return 'Сумма к оплате: $total';
+  }
+
+  @override
   String get debt => 'Qarzga';
 
   @override

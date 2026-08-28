@@ -384,6 +384,13 @@
   "@cash": { "description": "Cash payment method" },
   "card": "Карта",
   "@card": { "description": "Card payment method" },
+  "cardPaymentConfirmTitle": "Оплата картой?",
+  "@cardPaymentConfirmTitle": { "description": "Checkout screen — title of the confirmation dialog shown before a CARD payment is processed (cash and debt already require a dedicated confirming screen; this gives CARD the same review-before-submit step, SPEC.md #8)" },
+  "cardPaymentConfirmMessage": "Сумма к оплате: {total}",
+  "@cardPaymentConfirmMessage": {
+    "description": "Checkout screen — body of the CARD payment confirmation dialog; placeholder is the pre-formatted total (amount + currency), following this file's String-only placeholder convention",
+    "placeholders": { "total": { "type": "String" } }
+  },
   "debt": "В долг",
   "@debt": { "description": "Debt payment method" },
   "mixed": "Смешанная оплата",
