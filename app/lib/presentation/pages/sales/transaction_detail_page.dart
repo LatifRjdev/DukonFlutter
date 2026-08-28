@@ -31,8 +31,8 @@ class TransactionDetailPage extends StatelessWidget {
   String _statusLabel(String status) {
     switch (status.toUpperCase()) {
       case 'COMPLETED': return 'Оплачен';
-      case 'REFUNDED': return 'Возвращён';
-      case 'PARTIALLY_REFUNDED': return 'Частичный возврат';
+      case 'RETURNED': return 'Возвращён';
+      case 'PARTIALLY_RETURNED': return 'Частичный возврат';
       default: return status;
     }
   }
@@ -40,16 +40,23 @@ class TransactionDetailPage extends StatelessWidget {
   Color _statusColor(BuildContext context, String status) {
     switch (status.toUpperCase()) {
       case 'COMPLETED': return context.success;
-      case 'REFUNDED': return context.danger;
-      case 'PARTIALLY_REFUNDED': return context.warning;
+      case 'RETURNED': return context.danger;
+      case 'PARTIALLY_RETURNED': return context.warning;
       default: return context.textSecondary;
     }
   }
+
+  // A sale that has already been fully returned can't be refunded again.
+  // `PARTIALLY_RETURNED` sales may still have un-refunded items, so the
+  // action stays available for those — full-vs-partial refund eligibility
+  // is a separate business rule outside this fix's scope.
+  bool _canRefund(Sale sale) => sale.status.toUpperCase() != 'RETURNED';
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
+    final canRefund = _canRefund(sale);
 
     return Scaffold(
       backgroundColor: context.bg,
@@ -241,23 +248,25 @@ class TransactionDetailPage extends StatelessWidget {
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => context.push('/sales/${sale.id}/refund', extra: sale),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.error,
-                        side: const BorderSide(color: AppColors.error),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                  if (canRefund) ...[
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.push('/sales/${sale.id}/refund', extra: sale),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.error,
+                          side: const BorderSide(color: AppColors.error),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                          ),
                         ),
+                        icon: const Icon(Icons.undo, size: 20),
+                        label: const Text('Возврат',
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                       ),
-                      icon: const Icon(Icons.undo, size: 20),
-                      label: const Text('Возврат',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
