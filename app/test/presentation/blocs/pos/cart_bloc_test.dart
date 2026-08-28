@@ -19,7 +19,11 @@ Product _makeProduct({
   double sellPrice = 10.0,
   double? costPrice = 5.0,
   String unit = 'PCS',
-  int quantity = 0,
+  // Defaults to plenty of stock headroom so tests unrelated to SPEC.md #6's
+  // stock clamp don't get incidentally clamped — tests that specifically
+  // exercise the clamp (0-stock, exceeding-stock cases) pass an explicit
+  // low value.
+  int quantity = 100,
 }) {
   return Product(
     id: id,
@@ -180,6 +184,51 @@ void main() {
         expect: () => [
           isA<CartState>()
               .having((s) => s.items.first.stockQuantity, 'stockQuantity', 9),
+        ],
+      );
+
+      // SPEC.md #6 (final gap): the else branch of _onItemAdded — creating
+      // a brand-new cart line item — never compared event.quantity to
+      // event.product.quantity, so tapping an out-of-stock product (POS
+      // quick-add tile, product-detail "Продать" button, neither of which
+      // pre-check stock) created a quantity-1 line item against 0 stock.
+      blocTest<CartBloc, CartState>(
+        'does not add a line item for a brand-new product with 0 stock',
+        build: () => CartBloc(),
+        act: (bloc) =>
+            bloc.add(CartItemAdded(product: _makeProduct(quantity: 0))),
+        expect: () => [
+          isA<CartState>().having((s) => s.items, 'items', isEmpty),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'clamps the requested quantity to stock on hand for a brand-new '
+        'line item',
+        build: () => CartBloc(),
+        act: (bloc) => bloc.add(
+          CartItemAdded(product: _makeProduct(quantity: 2), quantity: 5),
+        ),
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.items.length, 'items.length', 1)
+              .having((s) => s.items.first.quantity, 'quantity', 2)
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 2),
+        ],
+      );
+
+      blocTest<CartBloc, CartState>(
+        'adds a brand-new product normally when there is plenty of stock '
+        '(unaffected by the 0-stock clamp)',
+        build: () => CartBloc(),
+        act: (bloc) => bloc.add(
+          CartItemAdded(product: _makeProduct(quantity: 10)),
+        ),
+        expect: () => [
+          isA<CartState>()
+              .having((s) => s.items.length, 'items.length', 1)
+              .having((s) => s.items.first.quantity, 'quantity', 1)
+              .having((s) => s.items.first.stockQuantity, 'stockQuantity', 10),
         ],
       );
     });

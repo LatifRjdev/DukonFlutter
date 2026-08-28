@@ -61,6 +61,11 @@ Product _fakeProduct() => Product(
       storeId: 'test-store-id',
       name: 'Test Product',
       sellPrice: 500,
+      // CartBloc clamps CartItemAdded's quantity to Product.quantity
+      // (SPEC.md #6) — Product defaults to 0 stock, which would silently
+      // clamp this fixture's 3-unit pre-population to nothing. Give it
+      // enough stock headroom to actually populate the cart.
+      quantity: 10,
       createdAt: DateTime(2024, 1, 1),
     );
 

@@ -11,7 +11,10 @@ Product _makeProduct({
   String id = 'p1',
   String name = 'Apple',
   double sellPrice = 5.0,
-  int quantity = 0,
+  // Defaults to plenty of stock headroom so tests unrelated to SPEC.md #6's
+  // stock clamp don't get incidentally clamped — the one test that
+  // specifically exercises the clamp passes an explicit low value.
+  int quantity = 100,
 }) {
   return Product(
     id: id,

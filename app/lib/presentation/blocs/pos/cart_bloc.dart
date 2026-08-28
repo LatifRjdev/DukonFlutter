@@ -65,19 +65,30 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         stockQuantity: stock,
       );
     } else {
-      items.add(CartItem(
-        productId: event.product.id,
-        productName: event.product.name,
-        unitPrice: event.product.sellPrice,
-        costPrice: event.product.costPrice,
-        quantity: event.quantity,
-        unit: event.product.unit,
-        // Captured regardless of which screen dispatched CartItemAdded
-        // (POS quick-add, product-detail "Продать", ...) — this is the
-        // single, bypass-proof place every add-to-cart path passes
-        // through. SPEC.md #6.
-        stockQuantity: event.product.quantity,
-      ));
+      final stock = event.product.quantity;
+      // Clamp to stock on hand — mirrors the bump branch above and
+      // _onQuantityChanged's clamp so a brand-new cart line can't start
+      // out exceeding stock either (e.g. tapping an out-of-stock
+      // product's quick-add / "Продать" button). SPEC.md #6.
+      final requestedQuantity = event.quantity > stock ? stock : event.quantity;
+      // If there's no stock to give at all, don't add a quantity-0 line
+      // item — same precedent as _onQuantityChanged removing an item
+      // whose clamped quantity drops to <=0.
+      if (requestedQuantity > 0) {
+        items.add(CartItem(
+          productId: event.product.id,
+          productName: event.product.name,
+          unitPrice: event.product.sellPrice,
+          costPrice: event.product.costPrice,
+          quantity: requestedQuantity,
+          unit: event.product.unit,
+          // Captured regardless of which screen dispatched CartItemAdded
+          // (POS quick-add, product-detail "Продать", ...) — this is the
+          // single, bypass-proof place every add-to-cart path passes
+          // through. SPEC.md #6.
+          stockQuantity: stock,
+        ));
+      }
     }
     emit(state.copyWith(items: items));
     _schedulePersist();
