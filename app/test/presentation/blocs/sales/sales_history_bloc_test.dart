@@ -556,8 +556,9 @@ void main() {
       );
 
       blocTest<SalesHistoryBloc, SalesHistoryState>(
-        'resets isRefunding to false and leaves the sales list untouched '
-        'when the refund call fails',
+        'resets isRefunding to false, leaves the sales list untouched, and '
+        'surfaces a mapped user-facing refundError when the refund call '
+        'fails (SPEC.md #12: this used to be swallowed silently)',
         setUp: () {
           when(() => repository.refundSale(any(), any(), any()))
               .thenThrow(const NetworkException());
@@ -574,10 +575,77 @@ void main() {
           refundData: {},
         )),
         expect: () => [
-          isA<SalesHistoryLoaded>().having((s) => s.isRefunding, 'isRefunding', true),
+          isA<SalesHistoryLoaded>()
+              .having((s) => s.isRefunding, 'isRefunding', true)
+              .having((s) => s.refundError, 'refundError cleared on start', isNull),
           isA<SalesHistoryLoaded>()
               .having((s) => s.isRefunding, 'isRefunding reset', false)
-              .having((s) => s.sales.first.total, 'total unchanged', 100),
+              .having((s) => s.sales.first.total, 'total unchanged', 100)
+              .having(
+                (s) => s.refundError,
+                'refundError',
+                'Нет подключения к интернету',
+              ),
+        ],
+      );
+
+      blocTest<SalesHistoryBloc, SalesHistoryState>(
+        'never leaks a raw exception message into refundError',
+        setUp: () {
+          when(() => repository.refundSale(any(), any(), any())).thenThrow(
+            Exception('DioException [bad response]: http://10.0.2.2/refund'),
+          );
+        },
+        build: () => SalesHistoryBloc(saleRepository: repository),
+        seed: () => SalesHistoryLoaded(
+          sales: [_makeSale(id: 's1', receiptNo: 'R-001', total: 100)],
+          total: 1,
+          totalPages: 1,
+        ),
+        act: (bloc) => bloc.add(const SalesHistoryRefundSale(
+          storeId: 'store-1',
+          saleId: 's1',
+          refundData: {},
+        )),
+        expect: () => [
+          isA<SalesHistoryLoaded>().having((s) => s.isRefunding, 'isRefunding', true),
+          isA<SalesHistoryLoaded>().having(
+            (s) =>
+                s.refundError!.contains('DioException') ||
+                s.refundError!.contains('10.0.2.2'),
+            'no leaky internal text',
+            isFalse,
+          ),
+        ],
+      );
+
+      blocTest<SalesHistoryBloc, SalesHistoryState>(
+        'clears a stale refundError from a prior failed attempt once a '
+        'retry succeeds',
+        setUp: () {
+          when(() => repository.refundSale(any(), any(), any())).thenAnswer(
+            (_) async => _makeSale(id: 's1', receiptNo: 'R-001', total: 0),
+          );
+        },
+        build: () => SalesHistoryBloc(saleRepository: repository),
+        seed: () => SalesHistoryLoaded(
+          sales: [_makeSale(id: 's1', receiptNo: 'R-001', total: 100)],
+          total: 1,
+          totalPages: 1,
+          refundError: 'Нет подключения к интернету',
+        ),
+        act: (bloc) => bloc.add(const SalesHistoryRefundSale(
+          storeId: 'store-1',
+          saleId: 's1',
+          refundData: {'reason': 'damaged'},
+        )),
+        expect: () => [
+          isA<SalesHistoryLoaded>()
+              .having((s) => s.isRefunding, 'isRefunding', true)
+              .having((s) => s.refundError, 'refundError cleared on start', isNull),
+          isA<SalesHistoryLoaded>()
+              .having((s) => s.isRefunding, 'isRefunding reset', false)
+              .having((s) => s.refundError, 'refundError cleared on success', isNull),
         ],
       );
 

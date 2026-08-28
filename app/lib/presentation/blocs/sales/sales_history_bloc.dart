@@ -135,7 +135,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
       SalesHistoryRefundSale event, Emitter<SalesHistoryState> emit) async {
     final currentState = state;
     if (currentState is SalesHistoryLoaded) {
-      emit(currentState.copyWith(isRefunding: true));
+      emit(currentState.copyWith(isRefunding: true, clearRefundError: true));
       try {
         final refundedSale = await _saleRepository.refundSale(
           event.storeId,
@@ -145,9 +145,16 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         final updatedSales = currentState.sales.map((sale) {
           return sale.id == event.saleId ? refundedSale : sale;
         }).toList();
-        emit(currentState.copyWith(sales: updatedSales, isRefunding: false));
+        emit(currentState.copyWith(
+          sales: updatedSales,
+          isRefunding: false,
+          clearRefundError: true,
+        ));
       } catch (e) {
-        emit(currentState.copyWith(isRefunding: false));
+        emit(currentState.copyWith(
+          isRefunding: false,
+          refundError: mapErrorToUserMessage(e),
+        ));
       }
     }
   }

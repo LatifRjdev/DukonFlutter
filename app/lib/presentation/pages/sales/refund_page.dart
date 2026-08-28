@@ -124,6 +124,10 @@ class _RefundPageState extends State<RefundPage> {
     return BlocListener<SalesHistoryBloc, SalesHistoryState>(
       listener: (context, state) {
         if (state is SalesHistoryLoaded && !state.isRefunding) {
+          if (state.refundError != null) {
+            AppSnackbar.error(context, state.refundError!);
+            return;
+          }
           final updatedSale = state.sales
               .where((s) => s.id == widget.sale.id)
               .toList();

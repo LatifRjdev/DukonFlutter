@@ -22,6 +22,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
   final String? status;
   final bool isLoadingMore;
   final bool isRefunding;
+  final String? refundError;
   final int skippedRows;
 
   const SalesHistoryLoaded({
@@ -35,6 +36,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
     this.status,
     this.isLoadingMore = false,
     this.isRefunding = false,
+    this.refundError,
     this.skippedRows = 0,
   });
 
@@ -51,11 +53,13 @@ class SalesHistoryLoaded extends SalesHistoryState {
     String? status,
     bool? isLoadingMore,
     bool? isRefunding,
+    String? refundError,
     int? skippedRows,
     bool clearDateFrom = false,
     bool clearDateTo = false,
     bool clearPaymentType = false,
     bool clearStatus = false,
+    bool clearRefundError = false,
   }) {
     return SalesHistoryLoaded(
       sales: sales ?? this.sales,
@@ -68,6 +72,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
       status: clearStatus ? null : (status ?? this.status),
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isRefunding: isRefunding ?? this.isRefunding,
+      refundError: clearRefundError ? null : (refundError ?? this.refundError),
       skippedRows: skippedRows ?? this.skippedRows,
     );
   }
@@ -84,6 +89,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
         status,
         isLoadingMore,
         isRefunding,
+        refundError,
         skippedRows,
       ];
 }
