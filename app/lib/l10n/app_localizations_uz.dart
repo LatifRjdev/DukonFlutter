@@ -736,6 +736,19 @@ class AppLocalizationsUz extends AppLocalizations {
   String get offline => 'Internet aloqasi yo\'q. Oflayn rejimda ishlaymiz.';
 
   @override
+  String get offlineResetSyncStatusButton => 'Сбросить статус синхронизации';
+
+  @override
+  String get offlineResetSyncStatusTitle => 'Сбросить статус синхронизации?';
+
+  @override
+  String get offlineResetSyncStatusBody =>
+      'Отметка времени последней синхронизации и счётчик операций в очереди будут сброшены на этом устройстве. Локальные данные не удаляются.';
+
+  @override
+  String get offlineResetSyncStatusConfirm => 'Сбросить';
+
+  @override
   String get dashboardGreeting => 'Салом 👋';
 
   @override
@@ -1862,7 +1875,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get snackAdjustmentAdded => 'Tuzatish qo\'shildi';
 
   @override
-  String get snackCacheCleared => 'Kesh tozalandi';
+  String get snackSyncStatusReset => 'Статус синхронизации сброшен';
 
   @override
   String get snackScannerSettingsSaved => 'Skaner sozlamalari saqlandi';

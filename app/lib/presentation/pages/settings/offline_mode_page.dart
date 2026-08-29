@@ -84,39 +84,45 @@ class _OfflineModePageState extends State<OfflineModePage> {
   }
 
   void _confirmClearCache() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Очистить кэш'),
-        content: const Text(
-            'Все локально кэшированные данные будут удалены. '
-            'Данные синхронизированные с сервером останутся.'),
+        title: Text(l10n.offlineResetSyncStatusTitle),
+        content: Text(l10n.offlineResetSyncStatusBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               _clearCache();
             },
-            child: const Text('Очистить',
-                style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.offlineResetSyncStatusConfirm,
+                style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
     );
   }
 
+  // This does NOT wipe any local SQLite tables (products/categories/sales,
+  // etc.) — those double as the offline-first read source and can hold
+  // local writes not yet confirmed by the server (e.g. an offline sale or
+  // product created while disconnected), so clearing them here would risk
+  // real data loss or breaking offline reads. All this does — and all its
+  // label promises — is discard the locally displayed "last synced at"
+  // timestamp and reset the in-memory pending-ops count, so the sync
+  // status card goes back to "not synced yet" until the next real sync.
   Future<void> _clearCache() async {
     try {
-      // Clear local prefs cache keys (non-auth)
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('last_sync_timestamp');
       if (mounted) {
         setState(() { _lastSync = null; _pendingOps = 0; });
-        AppSnackbar.success(context, AppLocalizations.of(context)!.snackCacheCleared);
+        AppSnackbar.success(context, AppLocalizations.of(context)!.snackSyncStatusReset);
       }
     } catch (e) {
       if (mounted) {
@@ -341,9 +347,10 @@ class _OfflineModePageState extends State<OfflineModePage> {
                                 AppConstants.radiusLg)),
                       ),
                       onPressed: _confirmClearCache,
-                      icon: const Icon(Icons.delete_outline),
-                      label: const Text('Очистить кэш',
-                          style: TextStyle(
+                      icon: const Icon(Icons.restart_alt),
+                      label: Text(
+                          AppLocalizations.of(context)!.offlineResetSyncStatusButton,
+                          style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),

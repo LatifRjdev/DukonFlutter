@@ -1468,6 +1468,30 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
+  /// Offline mode page — button that clears the locally displayed last-synced timestamp and pending-ops count. It does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить статус синхронизации'**
+  String get offlineResetSyncStatusButton;
+
+  /// Confirmation dialog title for offlineResetSyncStatusButton
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить статус синхронизации?'**
+  String get offlineResetSyncStatusTitle;
+
+  /// Confirmation dialog body for offlineResetSyncStatusButton — clarifies no local data is deleted
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметка времени последней синхронизации и счётчик операций в очереди будут сброшены на этом устройстве. Локальные данные не удаляются.'**
+  String get offlineResetSyncStatusBody;
+
+  /// Confirm action in the offlineResetSyncStatusButton dialog
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить'**
+  String get offlineResetSyncStatusConfirm;
+
   /// Dashboard header greeting
   ///
   /// In ru, this message translates to:
@@ -3616,11 +3640,11 @@ abstract class AppLocalizations {
   /// **'Корректировка добавлена'**
   String get snackAdjustmentAdded;
 
-  /// No description provided for @snackCacheCleared.
+  /// Confirmation after offlineResetSyncStatusButton runs — replaces the old, inaccurate 'cache cleared' wording since no local data is actually deleted
   ///
   /// In ru, this message translates to:
-  /// **'Кэш очищен'**
-  String get snackCacheCleared;
+  /// **'Статус синхронизации сброшен'**
+  String get snackSyncStatusReset;
 
   /// No description provided for @snackScannerSettingsSaved.
   ///
