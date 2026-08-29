@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../fixtures/mock_blocs.dart';
 import '../../../helpers/golden_pump_helper.dart';
@@ -88,6 +89,7 @@ void main() {
   );
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     authBloc = _MockAuthBloc();
     settingsBloc = _MockSettingsBloc();
     storeBloc = MockStoreBloc();
