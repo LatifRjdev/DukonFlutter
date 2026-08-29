@@ -37,7 +37,13 @@ import 'presentation/blocs/subscription/subscription_bloc.dart';
 import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 
 class DukonProApp extends StatelessWidget {
-  const DukonProApp({super.key});
+  const DukonProApp({super.key, this.locale = const Locale('ru')});
+
+  /// SPEC.md #14 — the language saved via the language settings screen,
+  /// resolved by `main.dart`'s `loadSavedLocale()` before `runApp`. Defaults
+  /// to Russian so any other caller (tests, previews) that omits it keeps
+  /// the previous hardcoded behavior.
+  final Locale locale;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +101,7 @@ class DukonProApp extends StatelessWidget {
             routerConfig: AppRouter.router,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            locale: const Locale('ru'),
+            locale: locale,
             // Stack the offline banner above every route so sub-pages
             // (Оплата наличными, success, settings, …) keep showing it
             // when connectivity drops mid-flow. Previously the banner

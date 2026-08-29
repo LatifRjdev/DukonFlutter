@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/constants/api_endpoints.dart';
 import 'core/network/dio_client.dart';
@@ -21,6 +22,26 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   await initSentryAndRun(_runApp);
+}
+
+/// SPEC.md #14 — must match `_keyLanguage` in
+/// `presentation/pages/settings/language_settings_page.dart`, the only
+/// place this preference is written.
+const _kLanguagePrefKey = 'app_language';
+
+/// Reads the language saved by the language settings screen and resolves it
+/// to a `Locale` for `MaterialApp.locale` at cold start — the "restart to
+/// apply" notice on that screen was previously a lie, since this value was
+/// saved but never read back. Defaults to 'ru', matching that screen's own
+/// fallback when nothing has been saved yet (e.g. a fresh install).
+///
+/// Extracted as a standalone, SharedPreferences-only function (no
+/// WidgetsFlutterBinding/Firebase/DI dependency) so it's unit-testable
+/// without pumping a widget tree.
+Future<Locale> loadSavedLocale() async {
+  final prefs = await SharedPreferences.getInstance();
+  final code = prefs.getString(_kLanguagePrefKey) ?? 'ru';
+  return Locale(code);
 }
 
 Future<void> _runApp() async {
@@ -92,9 +113,14 @@ Future<void> _runApp() async {
     // Gracefully skip if Firebase is not initialised (e.g., missing config files).
   }
 
+  // SPEC.md #14 — read the language saved by the language settings screen
+  // so it actually applies on this cold start, instead of always rendering
+  // in the hardcoded default regardless of what the user picked and saved.
+  final locale = await loadSavedLocale();
+
   // SyncEngine.start() / dispose() are managed by _AppLifecycleHost so the
   // broadcast StreamController is closed deterministically on teardown.
-  runApp(const _AppLifecycleHost(child: DukonProApp()));
+  runApp(_AppLifecycleHost(child: DukonProApp(locale: locale)));
 }
 
 /// Owns process-lifetime resources that must be bound to the Flutter widget
