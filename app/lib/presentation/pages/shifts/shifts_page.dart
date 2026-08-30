@@ -12,6 +12,7 @@ import '../../blocs/shift/shift_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/app_snackbar.dart';
+import '../../widgets/common/app_text_field.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 class ShiftsPage extends StatefulWidget {
@@ -40,26 +41,33 @@ class _ShiftsPageState extends State<ShiftsPage> {
 
   void _showCloseShiftDialog(ShiftModel currentShift) {
     final cashController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
     // Dispose controller once the dialog route is gone (FE-P1-004).
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Закрыть смену'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Введите сумму наличных в кассе:'),
-            const SizedBox(height: 12),
-            TextField(
-              controller: cashController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Сумма наличных',
-                prefixIcon: const Icon(Icons.attach_money),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Введите сумму наличных в кассе:'),
+              const SizedBox(height: 12),
+              AppTextField(
+                controller: cashController,
+                label: 'Сумма наличных',
+                prefixIcon: Icons.attach_money,
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Введите сумму';
+                  if (double.tryParse(v) == null) return 'Некорректная сумма';
+                  if (double.parse(v) < 0) return 'Сумма не может быть отрицательной';
+                  return null;
+                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -68,8 +76,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              final cash = double.tryParse(cashController.text);
-              if (cash == null) return;
+              if (!formKey.currentState!.validate()) return;
+              final cash = double.parse(cashController.text);
               context.read<ShiftBloc>().add(CloseShift(
                 storeId: widget.storeId,
                 shiftId: currentShift.id,
