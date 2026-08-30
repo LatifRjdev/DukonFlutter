@@ -372,5 +372,109 @@ void main() {
         ],
       );
     });
+
+    // SPEC.md #16: ShiftsPage dispatches LoadCurrentShift and LoadShifts
+    // together on load — previously only LoadCurrentShift was dispatched
+    // at all, so the history section was always empty even though its
+    // rendering code worked.
+    group('LoadShifts', () {
+      blocTest<ShiftBloc, ShiftState>(
+        'emits [ShiftLoading, ShiftLoaded] with shift history on success',
+        setUp: () {
+          when(() => repository.getShifts(any(),
+                  page: any(named: 'page'),
+                  staffId: any(named: 'staffId'),
+                  dateFrom: any(named: 'dateFrom'),
+                  dateTo: any(named: 'dateTo')))
+              .thenAnswer((_) async =>
+                  (data: [shift(), shift(id: 'shift-2')], total: 2, totalPages: 1));
+        },
+        build: () => ShiftBloc(shiftRepository: repository),
+        act: (bloc) => bloc.add(const LoadShifts(storeId: 's1')),
+        expect: () => [
+          isA<ShiftLoading>(),
+          isA<ShiftLoaded>()
+              .having((s) => s.shifts.length, 'shifts.length', 2)
+              .having((s) => s.total, 'total', 2),
+        ],
+      );
+
+      // The bloc's two handlers run as independent concurrent event-type
+      // subscriptions (no sequential()/restartable() transformer), and
+      // ShiftsPage dispatches both LoadCurrentShift and LoadShifts back
+      // to back. Each handler merges its own result into whatever
+      // ShiftLoaded the OTHER handler already produced — this proves that
+      // merge survives regardless of which repository call resolves
+      // first, i.e. neither handler's "loading" reset can wipe out data
+      // the other handler already finished loading.
+      blocTest<ShiftBloc, ShiftState>(
+        'preserves shift history when LoadCurrentShift resolves after '
+        'LoadShifts has already loaded',
+        setUp: () {
+          when(() => repository.getShifts(any(),
+                  page: any(named: 'page'),
+                  staffId: any(named: 'staffId'),
+                  dateFrom: any(named: 'dateFrom'),
+                  dateTo: any(named: 'dateTo')))
+              .thenAnswer((_) async =>
+                  (data: [shift(id: 'shift-2')], total: 1, totalPages: 1));
+          when(() => repository.getCurrentShift(any())).thenAnswer(
+            (_) async {
+              // Resolves after getShifts, simulating LoadShifts finishing
+              // (and emitting its own ShiftLoading + ShiftLoaded) first.
+              await Future<void>.delayed(const Duration(milliseconds: 20));
+              return shift(id: 'shift-1');
+            },
+          );
+        },
+        build: () => ShiftBloc(shiftRepository: repository),
+        act: (bloc) {
+          bloc.add(const LoadCurrentShift(storeId: 's1'));
+          bloc.add(const LoadShifts(storeId: 's1'));
+        },
+        wait: const Duration(milliseconds: 50),
+        verify: (bloc) {
+          final state = bloc.state;
+          expect(state, isA<ShiftLoaded>());
+          state as ShiftLoaded;
+          expect(state.currentShift?.id, 'shift-1');
+          expect(state.shifts, hasLength(1));
+        },
+      );
+
+      blocTest<ShiftBloc, ShiftState>(
+        'preserves the current shift when LoadShifts resolves after '
+        'LoadCurrentShift has already loaded',
+        setUp: () {
+          when(() => repository.getCurrentShift(any()))
+              .thenAnswer((_) async => shift(id: 'shift-1'));
+          when(() => repository.getShifts(any(),
+                  page: any(named: 'page'),
+                  staffId: any(named: 'staffId'),
+                  dateFrom: any(named: 'dateFrom'),
+                  dateTo: any(named: 'dateTo')))
+              .thenAnswer((_) async {
+            // Resolves after getCurrentShift, simulating LoadCurrentShift
+            // finishing (and emitting its own ShiftLoading + ShiftLoaded)
+            // first.
+            await Future<void>.delayed(const Duration(milliseconds: 20));
+            return (data: [shift(id: 'shift-2')], total: 1, totalPages: 1);
+          });
+        },
+        build: () => ShiftBloc(shiftRepository: repository),
+        act: (bloc) {
+          bloc.add(const LoadCurrentShift(storeId: 's1'));
+          bloc.add(const LoadShifts(storeId: 's1'));
+        },
+        wait: const Duration(milliseconds: 50),
+        verify: (bloc) {
+          final state = bloc.state;
+          expect(state, isA<ShiftLoaded>());
+          state as ShiftLoaded;
+          expect(state.currentShift?.id, 'shift-1');
+          expect(state.shifts, hasLength(1));
+        },
+      );
+    });
   });
 }

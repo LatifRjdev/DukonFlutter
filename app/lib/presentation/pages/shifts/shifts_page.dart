@@ -35,6 +35,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
 
   void _loadData() {
     context.read<ShiftBloc>().add(LoadCurrentShift(storeId: widget.storeId));
+    context.read<ShiftBloc>().add(LoadShifts(storeId: widget.storeId));
   }
 
   void _showCloseShiftDialog(ShiftModel currentShift) {

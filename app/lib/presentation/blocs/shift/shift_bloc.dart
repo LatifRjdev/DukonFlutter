@@ -18,10 +18,23 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
   }
 
   Future<void> _onLoadCurrentShift(LoadCurrentShift event, Emitter<ShiftState> emit) async {
-    emit(ShiftLoading());
+    // The page dispatches LoadCurrentShift and LoadShifts together, and
+    // their handlers run concurrently (no shared transformer). If the
+    // other handler has already produced a ShiftLoaded, don't reset the
+    // UI to a bare loading spinner and wipe its data out from under it —
+    // only show the loading state before anything has loaded yet.
+    if (state is! ShiftLoaded) emit(ShiftLoading());
     try {
       final currentShift = await _shiftRepository.getCurrentShift(event.storeId);
-      emit(ShiftLoaded(currentShift: currentShift));
+      // Preserve whatever history data the other handler has already
+      // loaded instead of resetting it.
+      final previous = state;
+      emit(ShiftLoaded(
+        currentShift: currentShift,
+        shifts: previous is ShiftLoaded ? previous.shifts : const [],
+        total: previous is ShiftLoaded ? previous.total : 0,
+        totalPages: previous is ShiftLoaded ? previous.totalPages : 0,
+      ));
     } catch (e) {
       emit(ShiftError(mapErrorToUserMessage(e)));
     }
@@ -55,7 +68,9 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
   }
 
   Future<void> _onLoadShifts(LoadShifts event, Emitter<ShiftState> emit) async {
-    emit(ShiftLoading());
+    // See _onLoadCurrentShift — don't clobber a state the other handler
+    // already loaded with a bare loading spinner.
+    if (state is! ShiftLoaded) emit(ShiftLoading());
     try {
       final result = await _shiftRepository.getShifts(
         event.storeId,
@@ -64,7 +79,11 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
         dateFrom: event.dateFrom,
         dateTo: event.dateTo,
       );
+      // Preserve the current shift already loaded by the other concurrent
+      // handler instead of resetting it.
+      final previous = state;
       emit(ShiftLoaded(
+        currentShift: previous is ShiftLoaded ? previous.currentShift : null,
         shifts: result.data,
         total: result.total,
         totalPages: result.totalPages,
