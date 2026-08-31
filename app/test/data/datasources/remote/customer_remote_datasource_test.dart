@@ -36,6 +36,7 @@ void main() {
         'debt': 100,
         'isActive': true,
         'telegramChatId': 'tg-123',
+        'createdAt': '2024-03-10T08:00:00.000Z',
       };
 
   Map<String, dynamic> minimalCustomerJson({String id = 'c2'}) => {
@@ -150,6 +151,7 @@ void main() {
       expect(customer.debt, 100);
       expect(customer.isActive, isTrue);
       expect(customer.telegramChatId, 'tg-123');
+      expect(customer.createdAt, DateTime.parse('2024-03-10T08:00:00.000Z'));
     });
 
     test('applies defaults for missing optional numeric/bool fields', () async {
@@ -167,6 +169,7 @@ void main() {
       expect(customer.debt, 0);
       expect(customer.isActive, isTrue);
       expect(customer.telegramChatId, isNull);
+      expect(customer.createdAt, isNull);
     });
 
     test('unwraps {"data": {...}} envelope shape', () async {

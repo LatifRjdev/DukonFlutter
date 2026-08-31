@@ -13,6 +13,7 @@ class Customer extends Equatable {
   final double debt;
   final bool isActive;
   final String? telegramChatId;
+  final DateTime? createdAt;
 
   const Customer({
     required this.id,
@@ -27,6 +28,7 @@ class Customer extends Equatable {
     this.debt = 0,
     this.isActive = true,
     this.telegramChatId,
+    this.createdAt,
   });
 
   @override

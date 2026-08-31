@@ -8,6 +8,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../../domain/entities/customer.dart';
 import '../../../domain/repositories/customer_repository.dart';
 import '../../../injection.dart';
 import '../../blocs/customer/customer_list_bloc.dart';
@@ -29,6 +30,32 @@ class _CustomerListPageState extends State<CustomerListPage> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   String _selectedFilter = 'all';
+
+  // "Новые" chip: customers created within the last 30 days. The backend/
+  // entity has no separate "is new" flag, so this mirrors the 30-day
+  // window already used elsewhere in the app (e.g. the "month" sales
+  // period and the overdue-debt threshold) as the closest existing
+  // convention for "recent".
+  static const _newCustomerWindow = Duration(days: 30);
+
+  List<Customer> _applyFilter(List<Customer> customers) {
+    switch (_selectedFilter) {
+      case 'debt':
+        return customers.where((c) => c.debt > 0).toList();
+      case 'vip':
+        return customers
+            .where((c) => c.loyaltyPoints > 1000 || c.totalSpent > 50000)
+            .toList();
+      case 'new':
+        final cutoff = DateTime.now().subtract(_newCustomerWindow);
+        return customers
+            .where((c) => c.createdAt != null && c.createdAt!.isAfter(cutoff))
+            .toList();
+      case 'all':
+      default:
+        return customers;
+    }
+  }
 
   String _formatPrice(double value) {
     final formatter = NumberFormat('#,##0', 'ru');
@@ -223,14 +250,23 @@ class _CustomerListPageState extends State<CustomerListPage> {
                     );
                   }
                   if (state is CustomerListLoaded) {
-                    final customers = state.customers;
+                    final customers = _applyFilter(state.customers);
                     if (customers.isEmpty) {
+                      if (state.customers.isEmpty) {
+                        return AppEmptyState(
+                          icon: Icons.people_outline,
+                          title: 'Клиентов пока нет',
+                          subtitle: 'Добавьте первого клиента, чтобы отслеживать продажи и долги',
+                          buttonText: 'Добавить клиента',
+                          onButtonPressed: _showAddCustomerDialog,
+                        );
+                      }
                       return AppEmptyState(
-                        icon: Icons.people_outline,
-                        title: 'Клиентов пока нет',
-                        subtitle: 'Добавьте первого клиента, чтобы отслеживать продажи и долги',
-                        buttonText: 'Добавить клиента',
-                        onButtonPressed: _showAddCustomerDialog,
+                        icon: Icons.filter_alt_off_outlined,
+                        title: 'Нет клиентов по этому фильтру',
+                        subtitle: 'Попробуйте выбрать другой фильтр',
+                        buttonText: 'Сбросить фильтр',
+                        onButtonPressed: () => setState(() => _selectedFilter = 'all'),
                       );
                     }
 
