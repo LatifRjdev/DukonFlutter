@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -291,8 +291,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 final text = 'Закят: ${c.zakatDue.toStringAsFixed(2)} сом.\n'
                                     'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
                                     'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.';
-                                Clipboard.setData(ClipboardData(text: text));
-                                AppSnackbar.info(context, l10n.snackCalculationCopied);
+                                Share.share(text);
                               }
                             },
                             style: OutlinedButton.styleFrom(
