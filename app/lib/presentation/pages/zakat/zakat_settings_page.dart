@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -24,6 +25,17 @@ class ZakatSettingsPage extends StatefulWidget {
 }
 
 class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
+  // These two toggles have no backend field to persist to (SPEC.md #19):
+  // the backend's ZakatSettings model / upsert DTO don't declare
+  // reminderEnabled or includeSupplierDebts, and the API's global
+  // validation pipe rejects the whole request if it contains an
+  // undeclared key. So they're saved locally instead of going out over
+  // the ZakatSettingsUpdated payload — this closes the "toggle it, tap
+  // Save, change is silently lost" bug without touching the backend
+  // contract. See _save()/_loadLocalPreferences() below.
+  static const _keyReminderEnabled = 'zakat_reminder_enabled';
+  static const _keyIncludeSupplierDebts = 'zakat_include_supplier_debts';
+
   final _formKey = GlobalKey<FormState>();
   final _goldPriceController = TextEditingController();
   final _cashOnHandController = TextEditingController();
@@ -41,7 +53,23 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   @override
   void initState() {
     super.initState();
+    _loadLocalPreferences();
     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
+  }
+
+  Future<void> _loadLocalPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      _reminderEnabled = prefs.getBool(_keyReminderEnabled) ?? _reminderEnabled;
+      _includeSupplierDebts = prefs.getBool(_keyIncludeSupplierDebts) ?? _includeSupplierDebts;
+    });
+  }
+
+  Future<void> _saveLocalPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyReminderEnabled, _reminderEnabled);
+    await prefs.setBool(_keyIncludeSupplierDebts, _includeSupplierDebts);
   }
 
   @override
@@ -68,6 +96,10 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final goldPrice = double.tryParse(_goldPriceController.text);
     final nisabAmount = _nisabStandard == 'gold' ? (goldPrice ?? 920) * 85 : (goldPrice ?? 920) * 595 / 85;
+
+    // Local-only settings (see fields' doc comment above) — not part of
+    // the backend-facing payload.
+    _saveLocalPreferences();
 
     context.read<ZakatBloc>().add(ZakatSettingsUpdated(
       storeId: widget.storeId,

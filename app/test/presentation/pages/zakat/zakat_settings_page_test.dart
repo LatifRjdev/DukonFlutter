@@ -1,0 +1,199 @@
+// Regression coverage for SPEC.md #19 — the "reminder enabled" and
+// "include supplier debts" toggles updated local UI state via setState,
+// but _save()'s payload to ZakatSettingsUpdated never included them, so
+// toggling either switch and tapping Save silently lost the change. A
+// backend-integrated fix is out of scope for this plan (the backend's
+// ZakatSettings model/DTO don't declare these fields, and the API's
+// forbidNonWhitelisted validation pipe would reject the whole save
+// request if they were added to the payload). Instead, these two fields
+// are persisted client-side to SharedPreferences and read back on load —
+// this closes the literal "change is lost" bug without touching the
+// backend contract. These tests prove: (a) toggling either switch and
+// saving writes the new value locally, and (b) reopening the page (a
+// fresh widget instance) restores the previously-saved value instead of
+// always resetting to the hardcoded default.
+import 'dart:async';
+
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/domain/entities/zakat_settings.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
+import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_bloc.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_event.dart';
+import 'package:dukonpro/presentation/blocs/zakat/zakat_state.dart';
+import 'package:dukonpro/presentation/pages/zakat/zakat_settings_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../fixtures/mock_blocs.dart';
+
+class MockZakatBloc extends MockBloc<ZakatEvent, ZakatState>
+    implements ZakatBloc {}
+
+void main() {
+  late MockStoreBloc storeBloc;
+  late MockZakatBloc zakatBloc;
+
+  const storeId = 'store-1';
+
+  final loadedSettings = ZakatSettings(
+    id: 'zs-1',
+    storeId: storeId,
+    nisabAmount: 78200,
+    cashOnHand: 1000,
+    includeStock: true,
+    includeCash: true,
+    includeDebts: true,
+    haulStartDate: DateTime(2026, 1, 1),
+  );
+
+  setUpAll(() {
+    registerFallbackValue(
+      const ZakatSettingsUpdated(storeId: storeId, data: {}),
+    );
+  });
+
+  setUp(() {
+    storeBloc = MockStoreBloc();
+    zakatBloc = MockZakatBloc();
+    when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
+  });
+
+  Widget wrap(Widget child) => MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('ru'),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider<StoreBloc>.value(value: storeBloc),
+            BlocProvider<ZakatBloc>.value(value: zakatBloc),
+          ],
+          child: child,
+        ),
+      );
+
+  group('ZakatSettingsPage local persistence (SPEC.md #19)', () {
+    testWidgets(
+        'toggling the reminder and supplier-debts switches then tapping '
+        'Save writes the new values to SharedPreferences', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final stateController = StreamController<ZakatState>.broadcast();
+      addTearDown(stateController.close);
+      whenListen<ZakatState>(
+        zakatBloc,
+        stateController.stream,
+        initialState: ZakatLoading(),
+      );
+
+      // Tall surface so the full ListView (all 5 switches + save button)
+      // is laid out without needing to scroll to find widgets.
+      await tester.binding.setSurfaceSize(const Size(412, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(wrap(const ZakatSettingsPage(storeId: storeId)));
+      await tester.pump();
+
+      // Deliver the settings load the real bloc would emit after
+      // ZakatSettingsRequested — this is what populates the gold-price
+      // field so the form can validate, and marks the page initialized.
+      stateController.add(ZakatSettingsLoaded(loadedSettings));
+      await tester.pump();
+
+      final switches = find.byType(Switch);
+      // Order matches build order: reminder switch (haul section) comes
+      // before the four auto-data toggle rows, the last of which is
+      // "include supplier debts".
+      final reminderSwitch = switches.at(0);
+      final supplierDebtsSwitch = switches.at(4);
+
+      expect(tester.widget<Switch>(reminderSwitch).value, isTrue);
+      expect(tester.widget<Switch>(supplierDebtsSwitch).value, isTrue);
+
+      await tester.tap(reminderSwitch);
+      await tester.pump();
+      await tester.tap(supplierDebtsSwitch);
+      await tester.pump();
+
+      await tester.tap(find.text('Сохранить'));
+      await tester.pump();
+      // Let the fire-and-forget SharedPreferences write inside _save()
+      // complete.
+      await tester.pump();
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('zakat_reminder_enabled'), isFalse);
+      expect(prefs.getBool('zakat_include_supplier_debts'), isFalse);
+
+      // The existing backend-facing fields must still go out unchanged,
+      // and the payload must NOT contain the two local-only fields
+      // (adding them would trip the backend's forbidNonWhitelisted
+      // validation and break every save).
+      final captured = verify(() => zakatBloc.add(captureAny(
+            that: isA<ZakatSettingsUpdated>(),
+          ))).captured;
+      expect(captured, hasLength(1));
+      final event = captured.single as ZakatSettingsUpdated;
+      expect(event.data.containsKey('reminderEnabled'), isFalse);
+      expect(event.data.containsKey('includeSupplierDebts'), isFalse);
+      expect(event.data['includeStock'], isTrue);
+      expect(event.data['includeCash'], isTrue);
+      expect(event.data['includeDebts'], isTrue);
+      expect(event.data['cashOnHand'], 1000.0);
+    });
+
+    testWidgets(
+        'reopening the page (a fresh widget instance) reads back '
+        'previously-saved local values instead of resetting to the '
+        'hardcoded default', (tester) async {
+      SharedPreferences.setMockInitialValues({
+        'zakat_reminder_enabled': false,
+        'zakat_include_supplier_debts': false,
+      });
+
+      final freshBloc = MockZakatBloc();
+      final stateController = StreamController<ZakatState>.broadcast();
+      addTearDown(stateController.close);
+      whenListen<ZakatState>(
+        freshBloc,
+        stateController.stream,
+        initialState: ZakatLoading(),
+      );
+
+      await tester.binding.setSurfaceSize(const Size(412, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('ru'),
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider<StoreBloc>.value(value: storeBloc),
+              BlocProvider<ZakatBloc>.value(value: freshBloc),
+            ],
+            child: const ZakatSettingsPage(storeId: storeId),
+          ),
+        ),
+      );
+      // Two pumps: one for the widget tree, one to let the async
+      // SharedPreferences.getInstance() read in _loadLocalPreferences()
+      // resolve and setState.
+      await tester.pump();
+      await tester.pump();
+
+      stateController.add(ZakatSettingsLoaded(loadedSettings));
+      await tester.pump();
+
+      final switches = find.byType(Switch);
+      final reminderSwitch = switches.at(0);
+      final supplierDebtsSwitch = switches.at(4);
+
+      expect(tester.widget<Switch>(reminderSwitch).value, isFalse);
+      expect(tester.widget<Switch>(supplierDebtsSwitch).value, isFalse);
+    });
+  });
+}

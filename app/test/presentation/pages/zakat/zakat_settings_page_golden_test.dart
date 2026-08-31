@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../fixtures/mock_blocs.dart';
 import '../../../helpers/golden_pump_helper.dart';
@@ -21,6 +22,10 @@ void main() {
   late MockZakatBloc zakatBloc;
 
   setUp(() {
+    // SPEC.md #19: the page now reads/writes the reminder and
+    // supplier-debts toggles via SharedPreferences on initState, so the
+    // plugin channel needs mock values or initState throws.
+    SharedPreferences.setMockInitialValues({});
     storeBloc = MockStoreBloc();
     zakatBloc = MockZakatBloc();
     when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
