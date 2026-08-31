@@ -23,7 +23,9 @@ import '../../widgets/common/app_search_bar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 class StockIntakePage extends StatefulWidget {
-  const StockIntakePage({super.key});
+  final Product? product;
+
+  const StockIntakePage({super.key, this.product});
 
   @override
   State<StockIntakePage> createState() => _StockIntakePageState();
@@ -39,6 +41,12 @@ class _StockIntakePageState extends State<StockIntakePage> {
   void initState() {
     super.initState();
     _loadProducts();
+
+    final preselectedProduct = widget.product;
+    if (preselectedProduct != null) {
+      context.read<StockIntakeBloc>().add(StockIntakeSelectProduct(preselectedProduct));
+      _unitCostController.text = preselectedProduct.costPrice?.toString() ?? '';
+    }
   }
 
   void _loadProducts() {

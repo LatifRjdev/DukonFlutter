@@ -30,6 +30,7 @@ import '../../presentation/pages/pos/receipt_preview_page.dart';
 import '../../presentation/pages/settings/printer_settings_page.dart';
 import '../../domain/entities/sale.dart';
 import '../../domain/entities/staff_member.dart';
+import '../../domain/entities/product.dart';
 import '../../presentation/pages/sales/sales_history_page.dart';
 import '../../presentation/pages/sales/transaction_detail_page.dart';
 import '../../presentation/pages/sales/refund_page.dart';
@@ -293,7 +294,10 @@ class AppRouter {
       // Stock
       GoRoute(
         path: RouteNames.stockIntake,
-        builder: (context, state) => const StockIntakePage(),
+        builder: (context, state) {
+          final product = state.extra as Product?;
+          return StockIntakePage(product: product);
+        },
       ),
 
       // Finance
