@@ -253,6 +253,11 @@
   "@passwordsDoNotMatch": { "description": "Generic 'passwords do not match' validation error, used across multiple password-confirmation forms" },
   "invalidAmount": "Некорректная сумма",
   "@invalidAmount": { "description": "Generic 'invalid amount' validation error, used across multiple forms with a monetary/numeric amount field" },
+  "amountExceedsMax": "Сумма не может превышать {maxAmount}",
+  "@amountExceedsMax": {
+    "description": "Generic validation error shown when an entered amount exceeds the allowed maximum for the field (e.g. debt payment can't exceed the remaining debt); placeholder is a pre-formatted String",
+    "placeholders": { "maxAmount": { "type": "String" } }
+  },
   "invalidValue": "Некорректное значение",
   "@invalidValue": { "description": "Generic 'invalid value' validation error for a numeric field that isn't specifically an amount" },
   "percentRangeError": "От 0 до 100",

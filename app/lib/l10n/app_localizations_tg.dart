@@ -377,6 +377,11 @@ class AppLocalizationsTg extends AppLocalizations {
   String get invalidAmount => 'Некорректная сумма';
 
   @override
+  String amountExceedsMax(String maxAmount) {
+    return 'Сумма не может превышать $maxAmount';
+  }
+
+  @override
   String get invalidValue => 'Некорректное значение';
 
   @override

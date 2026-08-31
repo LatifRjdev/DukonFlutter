@@ -796,6 +796,12 @@ abstract class AppLocalizations {
   /// **'Некорректная сумма'**
   String get invalidAmount;
 
+  /// Generic validation error shown when an entered amount exceeds the allowed maximum for the field (e.g. debt payment can't exceed the remaining debt); placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма не может превышать {maxAmount}'**
+  String amountExceedsMax(String maxAmount);
+
   /// Generic 'invalid value' validation error for a numeric field that isn't specifically an amount
   ///
   /// In ru, this message translates to:
