@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../widgets/common/app_empty_state.dart';
@@ -147,7 +148,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                 _loadCustomers();
               } catch (e) {
                 navigator.pop();
-                final msg = 'Ошибка: $e';
+                final msg = mapErrorToUserMessage(e);
                 messenger.showSnackBar(SnackBar(
                   content: Text(msg),
                   backgroundColor: AppColors.error,
