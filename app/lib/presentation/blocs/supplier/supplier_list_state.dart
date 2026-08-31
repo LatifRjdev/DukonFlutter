@@ -34,3 +34,20 @@ class SupplierListError extends SupplierListState {
   @override
   List<Object?> get props => [message];
 }
+
+class SupplierFormLoading extends SupplierListState {}
+
+class SupplierFormSuccess extends SupplierListState {
+  final Supplier supplier;
+  final bool isEditing;
+  const SupplierFormSuccess({required this.supplier, required this.isEditing});
+  @override
+  List<Object?> get props => [supplier, isEditing];
+}
+
+class SupplierFormError extends SupplierListState {
+  final String message;
+  const SupplierFormError(this.message);
+  @override
+  List<Object?> get props => [message];
+}

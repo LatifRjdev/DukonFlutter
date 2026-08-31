@@ -57,6 +57,7 @@ import '../../presentation/pages/customer/customer_detail_page.dart';
 import '../../presentation/pages/customer/customer_form_page.dart';
 import '../../presentation/pages/supplier/supplier_list_page.dart';
 import '../../presentation/pages/supplier/supplier_detail_page.dart';
+import '../../presentation/pages/supplier/supplier_form_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/settings/edit_profile_page.dart';
 import '../../presentation/pages/settings/change_password_page.dart';
@@ -448,6 +449,18 @@ class AppRouter {
       GoRoute(
         path: RouteNames.supplierList,
         builder: (context, state) => const SupplierListPage(),
+      ),
+      // Static supplier form route MUST come before dynamic :id route
+      GoRoute(
+        path: RouteNames.supplierForm,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return SupplierFormPage(
+            storeId: extra['storeId'] as String? ?? '',
+            supplierId: extra['supplierId'] as String?,
+            existingSupplier: extra['supplier'] as dynamic,
+          );
+        },
       ),
       GoRoute(
         path: '/customers/:id',

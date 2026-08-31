@@ -21,3 +21,24 @@ class SupplierListSearchChanged extends SupplierListEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class SupplierCreateRequested extends SupplierListEvent {
+  final String storeId;
+  final Map<String, dynamic> data;
+  const SupplierCreateRequested({required this.storeId, required this.data});
+  @override
+  List<Object?> get props => [storeId, data];
+}
+
+class SupplierUpdateRequested extends SupplierListEvent {
+  final String storeId;
+  final String supplierId;
+  final Map<String, dynamic> data;
+  const SupplierUpdateRequested({
+    required this.storeId,
+    required this.supplierId,
+    required this.data,
+  });
+  @override
+  List<Object?> get props => [storeId, supplierId, data];
+}

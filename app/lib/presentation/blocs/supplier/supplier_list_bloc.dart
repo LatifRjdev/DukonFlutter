@@ -12,6 +12,8 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
         super(SupplierListInitial()) {
     on<SupplierListLoadRequested>(_onLoadRequested);
     on<SupplierListSearchChanged>(_onSearchChanged);
+    on<SupplierCreateRequested>(_onCreateRequested);
+    on<SupplierUpdateRequested>(_onUpdateRequested);
   }
 
   String _storeId = '';
@@ -46,5 +48,35 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
   ) async {
     final query = event.query.isEmpty ? null : event.query;
     add(SupplierListLoadRequested(storeId: _storeId, search: query));
+  }
+
+  Future<void> _onCreateRequested(
+    SupplierCreateRequested event,
+    Emitter<SupplierListState> emit,
+  ) async {
+    emit(SupplierFormLoading());
+    try {
+      final supplier = await _supplierRepository.createSupplier(event.storeId, event.data);
+      emit(SupplierFormSuccess(supplier: supplier, isEditing: false));
+    } catch (e) {
+      emit(SupplierFormError(mapErrorToUserMessage(e)));
+    }
+  }
+
+  Future<void> _onUpdateRequested(
+    SupplierUpdateRequested event,
+    Emitter<SupplierListState> emit,
+  ) async {
+    emit(SupplierFormLoading());
+    try {
+      final supplier = await _supplierRepository.updateSupplier(
+        event.storeId,
+        event.supplierId,
+        event.data,
+      );
+      emit(SupplierFormSuccess(supplier: supplier, isEditing: true));
+    } catch (e) {
+      emit(SupplierFormError(mapErrorToUserMessage(e)));
+    }
   }
 }

@@ -198,5 +198,85 @@ void main() {
         },
       );
     });
+
+    group('SupplierCreateRequested', () {
+      blocTest<SupplierListBloc, SupplierListState>(
+        'emits [FormLoading, FormSuccess(isEditing: false)] on success',
+        setUp: () {
+          when(() => repository.createSupplier('store-1', any()))
+              .thenAnswer((_) async => supplier1);
+        },
+        build: () => SupplierListBloc(supplierRepository: repository),
+        act: (bloc) => bloc.add(const SupplierCreateRequested(
+          storeId: 'store-1',
+          data: {'name': 'ACME'},
+        )),
+        expect: () => [
+          isA<SupplierFormLoading>(),
+          predicate<SupplierListState>((s) =>
+              s is SupplierFormSuccess &&
+              s.supplier == supplier1 &&
+              s.isEditing == false),
+        ],
+      );
+
+      blocTest<SupplierListBloc, SupplierListState>(
+        'emits [FormLoading, FormError] on failure',
+        setUp: () {
+          when(() => repository.createSupplier('store-1', any()))
+              .thenThrow(const ServerException('bad', statusCode: 400));
+        },
+        build: () => SupplierListBloc(supplierRepository: repository),
+        act: (bloc) => bloc.add(const SupplierCreateRequested(
+          storeId: 'store-1',
+          data: {'name': 'ACME'},
+        )),
+        expect: () => [
+          isA<SupplierFormLoading>(),
+          const SupplierFormError('Некорректные данные'),
+        ],
+      );
+    });
+
+    group('SupplierUpdateRequested', () {
+      blocTest<SupplierListBloc, SupplierListState>(
+        'emits [FormLoading, FormSuccess(isEditing: true)] on success',
+        setUp: () {
+          when(() => repository.updateSupplier('store-1', 's1', any()))
+              .thenAnswer((_) async => supplier1);
+        },
+        build: () => SupplierListBloc(supplierRepository: repository),
+        act: (bloc) => bloc.add(const SupplierUpdateRequested(
+          storeId: 'store-1',
+          supplierId: 's1',
+          data: {'name': 'ACME 2'},
+        )),
+        expect: () => [
+          isA<SupplierFormLoading>(),
+          predicate<SupplierListState>((s) =>
+              s is SupplierFormSuccess &&
+              s.supplier == supplier1 &&
+              s.isEditing == true),
+        ],
+      );
+
+      blocTest<SupplierListBloc, SupplierListState>(
+        'emits [FormLoading, FormError] on failure',
+        setUp: () {
+          when(() => repository.updateSupplier('store-1', 's1', any()))
+              .thenThrow(const UnauthorizedException());
+        },
+        build: () => SupplierListBloc(supplierRepository: repository),
+        act: (bloc) => bloc.add(const SupplierUpdateRequested(
+          storeId: 'store-1',
+          supplierId: 's1',
+          data: {'name': 'ACME 2'},
+        )),
+        expect: () => [
+          isA<SupplierFormLoading>(),
+          const SupplierFormError('Сессия истекла. Войдите снова.'),
+        ],
+      );
+    });
   });
 }

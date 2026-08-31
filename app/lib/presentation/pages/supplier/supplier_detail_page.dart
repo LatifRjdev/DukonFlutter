@@ -6,6 +6,7 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/router/route_names.dart';
 import '../../../injection.dart';
 import '../../blocs/supplier_detail/supplier_detail_bloc.dart';
 import '../../blocs/supplier_detail/supplier_detail_event.dart';
@@ -145,6 +146,26 @@ class _SupplierDetailView extends StatelessWidget {
                         label: l10n.order,
                         color: AppColors.primary,
                         onTap: () => context.push('/stock/intake'),
+                      ),
+                      _ActionButton(
+                        icon: Icons.edit_outlined,
+                        label: 'Изменить',
+                        color: context.textSecondary,
+                        onTap: () async {
+                          final updated = await context.push<bool>(
+                            RouteNames.supplierForm,
+                            extra: {
+                              'storeId': storeId,
+                              'supplierId': supplierId,
+                              'supplier': supplier,
+                            },
+                          );
+                          if (updated == true && context.mounted) {
+                            context.read<SupplierDetailBloc>().add(
+                              SupplierDetailRequested(storeId: storeId, supplierId: supplierId),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),

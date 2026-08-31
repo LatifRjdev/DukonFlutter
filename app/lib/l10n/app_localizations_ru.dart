@@ -902,6 +902,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customerFormPhoneCodeError => 'Введите номер с кодом +992';
 
   @override
+  String get newSupplier => 'Новый поставщик';
+
+  @override
+  String get editSupplier => 'Редактировать поставщика';
+
+  @override
+  String get supplierAdded => 'Поставщик добавлен';
+
+  @override
+  String get supplierUpdated => 'Поставщик обновлён';
+
+  @override
+  String get address => 'Адрес';
+
+  @override
   String get settings => 'Настройки';
 
   @override

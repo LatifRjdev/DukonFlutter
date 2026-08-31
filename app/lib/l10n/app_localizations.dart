@@ -1774,6 +1774,36 @@ abstract class AppLocalizations {
   /// **'Введите номер с кодом +992'**
   String get customerFormPhoneCodeError;
 
+  /// Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый поставщик'**
+  String get newSupplier;
+
+  /// Title for editing an existing supplier (screen) — pairs with `newSupplier` as the alternate title when a supplier form is in edit mode
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать поставщика'**
+  String get editSupplier;
+
+  /// Success message shown after a supplier is created
+  ///
+  /// In ru, this message translates to:
+  /// **'Поставщик добавлен'**
+  String get supplierAdded;
+
+  /// Success message shown after a supplier is updated
+  ///
+  /// In ru, this message translates to:
+  /// **'Поставщик обновлён'**
+  String get supplierUpdated;
+
+  /// Generic address field label, used on forms such as the supplier create/edit form — distinct from `storeAddress` ("Адрес магазина", the store's own address) and `deliveryDetailAddressLabel` (an info-row label on the delivery detail screen)
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес'**
+  String get address;
+
   /// Settings section
   ///
   /// In ru, this message translates to:
