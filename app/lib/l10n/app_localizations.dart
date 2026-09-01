@@ -2482,7 +2482,7 @@ abstract class AppLocalizations {
   /// **'СМС'**
   String get sms;
 
-  /// Generic 'Order' label — delivery detail screen's info row label for the order number, and supplier detail screen's place-order action button caption (formerly `deliveryDetailOrderLabel`, renamed/generalized when reused on a second screen)
+  /// Generic 'Order' label — delivery detail screen's info row label for the order number, supplier detail screen's place-order action button caption, and the create-delivery screen's sale-selection field label (formerly `deliveryDetailOrderLabel`, renamed/generalized when reused on a second screen)
   ///
   /// In ru, this message translates to:
   /// **'Заказ'**
@@ -2583,6 +2583,48 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Новый'**
   String get deliveryListStatusNew;
+
+  /// Create-delivery screen — AppBar title; distinct from `deliveryDetailTitle` ("Детали доставки") and `deliveryListTitle` ("Доставки")
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая доставка'**
+  String get createDeliveryTitle;
+
+  /// Create-delivery screen — form field label for the delivery address; distinct from `address` ("Адрес") and `deliveryDetailAddressLabel` ("Адрес", an info-row label on the delivery detail screen)
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес доставки'**
+  String get createDeliveryAddressLabel;
+
+  /// Create-delivery screen — address field placeholder text, also reused as the field's required-value validation error
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите адрес'**
+  String get createDeliveryAddressHint;
+
+  /// Create-delivery screen — form field label above the courier-selection dropdown
+  ///
+  /// In ru, this message translates to:
+  /// **'Курьер'**
+  String get createDeliveryCourierLabel;
+
+  /// Create-delivery screen — form field label for the optional notes field; distinct from `creditSaleNoteLabel` ("Примечание", singular) and `notes` ("Заметки")
+  ///
+  /// In ru, this message translates to:
+  /// **'Примечания'**
+  String get createDeliveryNotesLabel;
+
+  /// Create-delivery screen — notes field placeholder indicating the field is optional
+  ///
+  /// In ru, this message translates to:
+  /// **'Необязательно'**
+  String get createDeliveryNotesHint;
+
+  /// Create-delivery screen — submit button label
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать доставку'**
+  String get createDeliveryButton;
 
   /// Loyalty settings screen — AppBar title
   ///

@@ -1318,6 +1318,27 @@ class AppLocalizationsUz extends AppLocalizations {
   String get deliveryListStatusNew => 'Новый';
 
   @override
+  String get createDeliveryTitle => 'Новая доставка';
+
+  @override
+  String get createDeliveryAddressLabel => 'Адрес доставки';
+
+  @override
+  String get createDeliveryAddressHint => 'Введите адрес';
+
+  @override
+  String get createDeliveryCourierLabel => 'Курьер';
+
+  @override
+  String get createDeliveryNotesLabel => 'Примечания';
+
+  @override
+  String get createDeliveryNotesHint => 'Необязательно';
+
+  @override
+  String get createDeliveryButton => 'Создать доставку';
+
+  @override
   String get loyaltySettingsTitle => 'Программа лояльности';
 
   @override

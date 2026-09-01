@@ -197,14 +197,15 @@ class _CreateViewState extends State<_CreateView> {
       child: Scaffold(
         backgroundColor: context.bg,
         appBar: AppBar(
-          title: const Text('Новая доставка',
-              style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+          title: Text(AppLocalizations.of(context)!.createDeliveryTitle,
+              style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
           backgroundColor: Colors.white,
           foregroundColor: context.textPrimary,
           elevation: 0,
         ),
         body: BlocBuilder<_CreateCubit, _CreateState>(
           builder: (context, state) {
+            final l10n = AppLocalizations.of(context)!;
             if (state is _CreateRefsLoading || state is _CreateInitial) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -233,7 +234,7 @@ class _CreateViewState extends State<_CreateView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Sale dropdown
-                    _FieldLabel('Заказ'),
+                    _FieldLabel(l10n.order),
                     const SizedBox(height: AppConstants.spacingXs),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -246,7 +247,7 @@ class _CreateViewState extends State<_CreateView> {
                         child: DropdownButton<String>(
                           value: _selectedSaleId,
                           isExpanded: true,
-                          hint: Text('Выберите заказ',
+                          hint: Text(l10n.snackSelectOrder,
                               style: TextStyle(color: context.textMuted)),
                           items: sales
                               .map((s) => DropdownMenuItem(value: s.id, child: Text(s.label)))
@@ -260,13 +261,13 @@ class _CreateViewState extends State<_CreateView> {
                     const SizedBox(height: AppConstants.spacingMd),
 
                     // Address
-                    _FieldLabel('Адрес доставки'),
+                    _FieldLabel(l10n.createDeliveryAddressLabel),
                     const SizedBox(height: AppConstants.spacingXs),
                     TextFormField(
                       controller: _addressCtrl,
                       enabled: !isSubmitting,
                       decoration: InputDecoration(
-                        hintText: 'Введите адрес',
+                        hintText: l10n.createDeliveryAddressHint,
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -279,13 +280,14 @@ class _CreateViewState extends State<_CreateView> {
                         ),
                       ),
                       maxLines: 2,
-                      validator: (v) =>
-                          (v == null || v.trim().isEmpty) ? 'Введите адрес' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? l10n.createDeliveryAddressHint
+                          : null,
                     ),
                     const SizedBox(height: AppConstants.spacingMd),
 
                     // Courier dropdown
-                    _FieldLabel('Курьер'),
+                    _FieldLabel(l10n.createDeliveryCourierLabel),
                     const SizedBox(height: AppConstants.spacingXs),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -298,7 +300,7 @@ class _CreateViewState extends State<_CreateView> {
                         child: DropdownButton<String>(
                           value: _selectedCourierId,
                           isExpanded: true,
-                          hint: Text('Выберите курьера',
+                          hint: Text(l10n.snackSelectCourier,
                               style: TextStyle(color: context.textMuted)),
                           items: staff
                               .map((s) => DropdownMenuItem(value: s.id, child: Text(s.name)))
@@ -312,13 +314,13 @@ class _CreateViewState extends State<_CreateView> {
                     const SizedBox(height: AppConstants.spacingMd),
 
                     // Notes
-                    _FieldLabel('Примечания'),
+                    _FieldLabel(l10n.createDeliveryNotesLabel),
                     const SizedBox(height: AppConstants.spacingXs),
                     TextFormField(
                       controller: _notesCtrl,
                       enabled: !isSubmitting,
                       decoration: InputDecoration(
-                        hintText: 'Необязательно',
+                        hintText: l10n.createDeliveryNotesHint,
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -353,8 +355,8 @@ class _CreateViewState extends State<_CreateView> {
                                 height: 22,
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2, color: AppColors.onPrimary))
-                            : const Text('Создать доставку',
-                                style: TextStyle(
+                            : Text(l10n.createDeliveryButton,
+                                style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16)),
