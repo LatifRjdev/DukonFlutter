@@ -1,9 +1,12 @@
 import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
+import '../../blocs/store/store_bloc.dart';
+import '../../blocs/store/store_state.dart';
 import '../../widgets/common/app_button.dart';
 
 class EmptyProductsPage extends StatelessWidget {
@@ -59,7 +62,13 @@ class EmptyProductsPage extends StatelessWidget {
                 type: AppButtonType.outlined,
                 icon: Icons.upload_file,
                 width: 220,
-                onPressed: () => context.push('/products/import'),
+                onPressed: () {
+                  final storeState = context.read<StoreBloc>().state;
+                  final storeId = storeState is StoreLoaded
+                      ? storeState.selectedStore?.id ?? ''
+                      : '';
+                  context.push('/products/import', extra: storeId);
+                },
               ),
             ],
           ),
