@@ -189,7 +189,12 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
-        onPressed: () => context.push('/deliveries/create', extra: widget.storeId),
+        onPressed: () async {
+          final result = await context.push('/deliveries/create', extra: widget.storeId);
+          if (result == true && context.mounted) {
+            _reload(_tabStatuses[_tabController.index]);
+          }
+        },
         child: const Icon(Icons.add, color: AppColors.onPrimary),
       ),
       body: BlocBuilder<_DeliveryListCubit, _DeliveryListState>(

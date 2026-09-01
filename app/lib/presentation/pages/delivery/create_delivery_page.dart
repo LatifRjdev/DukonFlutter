@@ -188,7 +188,7 @@ class _CreateViewState extends State<_CreateView> {
     return BlocListener<_CreateCubit, _CreateState>(
       listener: (context, state) {
         if (state is _CreateSuccess) {
-          context.pop();
+          context.pop(true);
         }
         if (state is _CreateError) {
           AppSnackbar.error(context, state.message);
