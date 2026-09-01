@@ -84,6 +84,12 @@ class _ImportProductsView extends StatelessWidget {
                 storeId: storeId,
               );
             }
+            if (state is ImportError) {
+              return _ErrorView(
+                message: state.message,
+                onRetry: () => _pickFile(context),
+              );
+            }
             return _InitialView(
               onPickFile: () => _pickFile(context),
               onDownloadTemplate: () => _downloadTemplate(context),
@@ -260,6 +266,70 @@ class _InitialView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 side: const BorderSide(color: AppColors.primary),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _ErrorView({
+    required this.message,
+    required this.onRetry,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.all(AppConstants.spacingLg),
+      child: Column(
+        children: [
+          const SizedBox(height: 48),
+          Container(
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            l10n.importProducts,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: context.textSecondary,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.retry),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: context.onPrimary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                ),
               ),
             ),
           ),
