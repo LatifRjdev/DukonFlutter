@@ -707,7 +707,7 @@ class _ReportsPageState extends State<ReportsPage>
         await Share.shareXFiles([XFile(file.path)], text: 'Экспорт $type');
       }
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, 'Ошибка экспорта: $e');
+      if (mounted) AppSnackbar.error(context, _errMsg(e));
     }
   }
 
