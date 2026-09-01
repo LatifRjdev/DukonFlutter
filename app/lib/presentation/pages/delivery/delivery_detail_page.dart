@@ -51,7 +51,7 @@ class _DeliveryDetail {
         orderNumber: j['orderNumber'] as String? ?? '#${j['id']}',
         customerName: j['customerName'] as String? ?? '',
         address: j['address'] as String? ?? '',
-        total: (j['amount'] ?? j['total'] as num?)?.toDouble() ?? 0,
+        total: ((j['amount'] ?? j['total']) as num?)?.toDouble() ?? 0,
         status: _statusFrom(j['status'] as String? ?? ''),
         items: ((j['items'] as List?) ?? [])
             .map((e) => _DeliveryItem.fromJson(e as Map<String, dynamic>))
