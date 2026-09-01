@@ -61,13 +61,18 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onDeleteRequested(ExpenseDeleteRequested event, Emitter<ExpenseState> emit) async {
-    emit(ExpenseLoading());
+    // Deliberately no leading `emit(ExpenseLoading())` here (unlike the
+    // other handlers above): emitting it would replace the currently
+    // displayed ExpenseLoaded list with a spinner before the delete call
+    // has even resolved, and if the call then fails there'd be nothing to
+    // restore the list from. Skipping it keeps the list — and the item
+    // being deleted — on screen until the outcome is known (SPEC.md #32).
     try {
       await _expenseRepository.deleteExpense(event.storeId, event.id);
       emit(const ExpenseActionSuccess('Расход удалён'));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(mapErrorToUserMessage(e)));
+      emit(ExpenseDeleteFailure(mapErrorToUserMessage(e)));
     }
   }
 }

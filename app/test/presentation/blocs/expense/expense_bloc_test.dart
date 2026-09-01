@@ -260,7 +260,10 @@ void main() {
 
     group('ExpenseDeleteRequested', () {
       blocTest<ExpenseBloc, ExpenseState>(
-        'emits [Loading, ActionSuccess] then reloads the list on success',
+        // No leading ExpenseLoading: it used to be emitted before the
+        // delete call resolved, which briefly wiped the whole list off
+        // screen even for a successful delete (SPEC.md #32).
+        'emits [ActionSuccess] then reloads the list on success',
         setUp: () {
           when(() => repository.deleteExpense(any(), any()))
               .thenAnswer((_) async {});
@@ -279,7 +282,6 @@ void main() {
           id: 'exp-1',
         )),
         expect: () => [
-          isA<ExpenseLoading>(),
           isA<ExpenseActionSuccess>()
               .having((s) => s.message, 'message', 'Расход удалён'),
           isA<ExpenseLoading>(),
@@ -291,8 +293,18 @@ void main() {
         },
       );
 
+      // Regression coverage for SPEC.md #32: a failed expense deletion used
+      // to be silently swallowed by the UI — the bloc emitted ExpenseError,
+      // which replaced whatever ExpenseLoaded list was on screen, and the
+      // list page had no error handling at all, so the list simply
+      // vanished with no explanation. This asserts the failure produces a
+      // distinct, visible-error state and — critically — never touches the
+      // list: no ExpenseLoaded (with or without the item) is ever emitted,
+      // so the expense that failed to delete is never silently dropped.
       blocTest<ExpenseBloc, ExpenseState>(
-        'emits [Loading, Error] on failure and does not reload the list',
+        'emits ExpenseDeleteFailure on failure without emitting any '
+        'ExpenseLoaded (the list is left untouched)',
+        seed: () => ExpenseLoaded(expenses: [expense], total: 1, totalPages: 1),
         setUp: () {
           when(() => repository.deleteExpense(any(), any()))
               .thenThrow(const ServerException('boom', statusCode: 500));
@@ -303,8 +315,7 @@ void main() {
           id: 'exp-1',
         )),
         expect: () => [
-          isA<ExpenseLoading>(),
-          isA<ExpenseError>().having(
+          isA<ExpenseDeleteFailure>().having(
               (s) => s.message, 'message', 'Ошибка сервера — попробуйте позже'),
         ],
         verify: (_) {

@@ -11,6 +11,7 @@ import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/finance/expense_card.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -149,7 +150,18 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
             ),
           ),
           Expanded(
-            child: BlocBuilder<ExpenseBloc, ExpenseState>(
+            child: BlocConsumer<ExpenseBloc, ExpenseState>(
+              // A failed delete is surfaced via the listener only (snackbar)
+              // — it must not trigger a rebuild, otherwise the builder below
+              // would fall through to the SizedBox.shrink() branch and the
+              // still-valid list would vanish from the screen (SPEC.md #32).
+              listenWhen: (previous, current) => current is ExpenseDeleteFailure,
+              listener: (context, state) {
+                if (state is ExpenseDeleteFailure) {
+                  AppSnackbar.error(context, state.message);
+                }
+              },
+              buildWhen: (previous, current) => current is! ExpenseDeleteFailure,
               builder: (context, state) {
                 if (state is ExpenseLoading) {
                   return const Center(child: CircularProgressIndicator());

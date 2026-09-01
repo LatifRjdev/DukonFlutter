@@ -34,3 +34,17 @@ class ExpenseError extends ExpenseState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when [ExpenseDeleteRequested] fails.
+///
+/// Deliberately a distinct type from [ExpenseError]: the list page treats
+/// this as a listener-only event (show a snackbar) and skips rebuilding the
+/// list around it, so the still-valid [ExpenseLoaded] list — and the
+/// expense that failed to delete — are never wiped off the screen while the
+/// error is surfaced (SPEC.md #32).
+class ExpenseDeleteFailure extends ExpenseState {
+  final String message;
+  const ExpenseDeleteFailure(this.message);
+  @override
+  List<Object?> get props => [message];
+}
