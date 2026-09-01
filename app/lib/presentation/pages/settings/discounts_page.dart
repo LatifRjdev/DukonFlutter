@@ -68,6 +68,33 @@ class _DiscountsPageState extends State<DiscountsPage> {
     }
   }
 
+  // Matches the confirmation-dialog shape already used for category
+  // deletion (categories_page.dart) and product deletion
+  // (product_detail_page.dart): title, body, "Отмена"/destructive-action
+  // button pair (SPEC.md #31).
+  void _confirmDelete(String id, String name) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Удалить скидку?'),
+        content: Text('Вы уверены, что хотите удалить "$name"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _delete(id);
+            },
+            child: const Text('Удалить', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showForm({Map<String, dynamic>? existing}) {
     final nameCtrl = TextEditingController(text: existing?['name'] ?? '');
     final valueCtrl = TextEditingController(
@@ -301,7 +328,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                                 tooltip: l10n.a11yDeleteDiscount,
                                 icon: const Icon(Icons.delete_outline,
                                     size: 18, color: AppColors.error),
-                                onPressed: () => _delete(id),
+                                onPressed: () => _confirmDelete(id, name),
                               ),
                             ],
                           ),

@@ -73,6 +73,36 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
     ));
   }
 
+  // Matches the confirmation-dialog shape already used for category
+  // deletion (categories_page.dart) and product deletion
+  // (product_detail_page.dart): title, body, "Отмена"/destructive-action
+  // button pair (SPEC.md #31).
+  void _confirmDelete(BuildContext context, Expense expense) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Удалить расход?'),
+        content: const Text('Это действие нельзя отменить.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<ExpenseBloc>().add(ExpenseDeleteRequested(
+                storeId: widget.storeId,
+                id: expense.id,
+              ));
+            },
+            child: const Text('Удалить', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -196,9 +226,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                           for (final expense in grouped[dateKey]!) ...[
                             ExpenseCard(
                               expense: expense,
-                              onDelete: () {
-                                context.read<ExpenseBloc>().add(ExpenseDeleteRequested(storeId: widget.storeId, id: expense.id));
-                              },
+                              onDelete: () => _confirmDelete(context, expense),
                             ),
                             const SizedBox(height: AppConstants.spacingSm),
                           ],
