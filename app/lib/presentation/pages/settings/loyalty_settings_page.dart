@@ -19,6 +19,7 @@ class LoyaltySettingsPage extends StatefulWidget {
 }
 
 class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
+  final _formKey = GlobalKey<FormState>();
   bool _isEnabled = false;
   final _amountCtrl = TextEditingController();
   final _pointsPerAmountCtrl = TextEditingController();
@@ -31,8 +32,8 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
   void initState() {
     super.initState();
     context.read<LoyaltySettingsBloc>().add(
-          LoyaltySettingsLoadRequested(widget.storeId),
-        );
+      LoyaltySettingsLoadRequested(widget.storeId),
+    );
   }
 
   @override
@@ -52,36 +53,86 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
     _pointsPerAmountCtrl.text = settings['pointsPerAmount']?.toString() ?? '';
     _pointValueCtrl.text = settings['pointValue']?.toString() ?? '';
     _welcomePointsCtrl.text = settings['welcomePoints']?.toString() ?? '';
-    _birthdayDiscountCtrl.text =
-        settings['birthdayDiscount']?.toString() ?? '';
-    _pointsExpireDaysCtrl.text =
-        settings['pointsExpireDays']?.toString() ?? '';
+    _birthdayDiscountCtrl.text = settings['birthdayDiscount']?.toString() ?? '';
+    _pointsExpireDaysCtrl.text = settings['pointsExpireDays']?.toString() ?? '';
     setState(() {});
   }
 
+  // The backend (UpdateLoyaltySettingsDto) treats every one of these fields
+  // as optional, so an empty field is a deliberate "no value" and is always
+  // allowed through as null. What must be blocked is text that was actually
+  // typed but doesn't parse, or parses outside the range the backend
+  // enforces — previously that silently became `null` (via `tryParse`) with
+  // no indication to the user which field was rejected.
+  String? _validatePositiveDecimal(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    final parsed = double.tryParse(trimmed);
+    if (parsed == null) return l10n.invalidFormatError;
+    if (parsed <= 0) return l10n.invalidValue;
+    return null;
+  }
+
+  String? _validateNonNegativeInt(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    final parsed = int.tryParse(trimmed);
+    if (parsed == null) return l10n.invalidFormatError;
+    if (parsed < 0) return l10n.invalidValue;
+    return null;
+  }
+
+  String? _validateBirthdayDiscount(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    final parsed = double.tryParse(trimmed);
+    if (parsed == null) return l10n.invalidFormatError;
+    if (parsed < 0 || parsed > 100) return l10n.percentRangeError;
+    return null;
+  }
+
+  String? _validatePointsExpireDays(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    final parsed = int.tryParse(trimmed);
+    if (parsed == null) return l10n.invalidFormatError;
+    if (parsed < 1) return l10n.invalidValue;
+    return null;
+  }
+
   void _onSave() {
+    if (!_formKey.currentState!.validate()) return;
+    final amountText = _amountCtrl.text.trim();
+    final pointsPerAmountText = _pointsPerAmountCtrl.text.trim();
+    final pointValueText = _pointValueCtrl.text.trim();
+    final welcomePointsText = _welcomePointsCtrl.text.trim();
+    final birthdayDiscountText = _birthdayDiscountCtrl.text.trim();
+    final pointsExpireDaysText = _pointsExpireDaysCtrl.text.trim();
     context.read<LoyaltySettingsBloc>().add(
-          LoyaltySettingsSaveRequested(
-            widget.storeId,
-            {
-              'isEnabled': _isEnabled,
-              'amountForPoints':
-                  double.tryParse(_amountCtrl.text.trim()),
-              'pointsPerAmount':
-                  double.tryParse(_pointsPerAmountCtrl.text.trim()),
-              'pointValue':
-                  double.tryParse(_pointValueCtrl.text.trim()),
-              'welcomePoints':
-                  int.tryParse(_welcomePointsCtrl.text.trim()),
-              'birthdayDiscount': _birthdayDiscountCtrl.text.trim().isEmpty
-                  ? null
-                  : double.tryParse(_birthdayDiscountCtrl.text.trim()),
-              'pointsExpireDays': _pointsExpireDaysCtrl.text.trim().isEmpty
-                  ? null
-                  : int.tryParse(_pointsExpireDaysCtrl.text.trim()),
-            },
-          ),
-        );
+      LoyaltySettingsSaveRequested(widget.storeId, {
+        'isEnabled': _isEnabled,
+        'amountForPoints': amountText.isEmpty ? null : double.parse(amountText),
+        'pointsPerAmount': pointsPerAmountText.isEmpty
+            ? null
+            : double.parse(pointsPerAmountText),
+        'pointValue': pointValueText.isEmpty
+            ? null
+            : double.parse(pointValueText),
+        'welcomePoints': welcomePointsText.isEmpty
+            ? null
+            : int.parse(welcomePointsText),
+        'birthdayDiscount': birthdayDiscountText.isEmpty
+            ? null
+            : double.parse(birthdayDiscountText),
+        'pointsExpireDays': pointsExpireDaysText.isEmpty
+            ? null
+            : int.parse(pointsExpireDaysText),
+      }),
+    );
   }
 
   @override
@@ -122,140 +173,164 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Enable toggle
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radiusLg),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                l10n.loyaltySettingsActive,
-                                style: const TextStyle(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Enable toggle
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.radiusLg,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  l10n.loyaltySettingsActive,
+                                  style: const TextStyle(
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w500),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: _isEnabled,
+                                onChanged: (v) =>
+                                    setState(() => _isEnabled = v),
+                                activeThumbColor: AppColors.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Accrual settings card
+                        _buildSectionLabel(l10n.loyaltySettingsAccrualSection),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.radiusLg,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              _buildTextField(
+                                controller: _amountCtrl,
+                                label: l10n.loyaltySettingsAmountForPointsLabel,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                validator: _validatePositiveDecimal,
+                              ),
+                              const SizedBox(height: 12),
+                              _buildTextField(
+                                controller: _pointsPerAmountCtrl,
+                                label: l10n.loyaltySettingsPointsPerAmountLabel,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                validator: _validatePositiveDecimal,
+                              ),
+                              const SizedBox(height: 12),
+                              _buildTextField(
+                                controller: _pointValueCtrl,
+                                label: l10n.loyaltySettingsPointValueLabel,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                validator: _validatePositiveDecimal,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Bonus settings card
+                        _buildSectionLabel(l10n.loyaltySettingsBonusSection),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.radiusLg,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              _buildTextField(
+                                controller: _welcomePointsCtrl,
+                                label: l10n.loyaltySettingsWelcomePointsLabel,
+                                keyboardType: TextInputType.number,
+                                validator: _validateNonNegativeInt,
+                              ),
+                              const SizedBox(height: 12),
+                              _buildTextField(
+                                controller: _birthdayDiscountCtrl,
+                                label:
+                                    l10n.loyaltySettingsBirthdayDiscountLabel,
+                                hint: l10n.loyaltySettingsBirthdayDiscountHint,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                validator: _validateBirthdayDiscount,
+                              ),
+                              const SizedBox(height: 12),
+                              _buildTextField(
+                                controller: _pointsExpireDaysCtrl,
+                                label:
+                                    l10n.loyaltySettingsPointsExpireDaysLabel,
+                                hint: l10n.loyaltySettingsPointsExpireDaysHint,
+                                keyboardType: TextInputType.number,
+                                validator: _validatePointsExpireDays,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Save button
+                        SizedBox(
+                          width: double.infinity,
+                          height: AppConstants.buttonHeight,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.onPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.radiusLg,
+                                ),
                               ),
                             ),
-                            Switch(
-                              value: _isEnabled,
-                              onChanged: (v) =>
-                                  setState(() => _isEnabled = v),
-                              activeThumbColor: AppColors.primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Accrual settings card
-                      _buildSectionLabel(l10n.loyaltySettingsAccrualSection),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radiusLg),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildTextField(
-                              controller: _amountCtrl,
-                              label: l10n.loyaltySettingsAmountForPointsLabel,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildTextField(
-                              controller: _pointsPerAmountCtrl,
-                              label: l10n.loyaltySettingsPointsPerAmountLabel,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildTextField(
-                              controller: _pointValueCtrl,
-                              label: l10n.loyaltySettingsPointValueLabel,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Bonus settings card
-                      _buildSectionLabel(l10n.loyaltySettingsBonusSection),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radiusLg),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildTextField(
-                              controller: _welcomePointsCtrl,
-                              label: l10n.loyaltySettingsWelcomePointsLabel,
-                              keyboardType: TextInputType.number,
-                            ),
-                            const SizedBox(height: 12),
-                            _buildTextField(
-                              controller: _birthdayDiscountCtrl,
-                              label: l10n.loyaltySettingsBirthdayDiscountLabel,
-                              hint: l10n.loyaltySettingsBirthdayDiscountHint,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildTextField(
-                              controller: _pointsExpireDaysCtrl,
-                              label: l10n.loyaltySettingsPointsExpireDaysLabel,
-                              hint: l10n.loyaltySettingsPointsExpireDaysHint,
-                              keyboardType: TextInputType.number,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Save button
-                      SizedBox(
-                        width: double.infinity,
-                        height: AppConstants.buttonHeight,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.onPrimary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  AppConstants.radiusLg),
+                            onPressed: isLoading ? null : _onSave,
+                            child: Text(
+                              l10n.save,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          onPressed: isLoading ? null : _onSave,
-                          child: Text(
-                            l10n.save,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
         );
@@ -279,10 +354,12 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
     required String label,
     String? hint,
     TextInputType? keyboardType,
+    String? Function(String?)? validator,
   }) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      validator: validator,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
