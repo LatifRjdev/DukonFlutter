@@ -57,3 +57,17 @@ class DashboardError extends DashboardState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when [DashboardRefreshRequested] fails while a [DashboardLoaded]
+/// state already exists.
+///
+/// Deliberately a distinct type from [DashboardError]: the page treats this
+/// as a listener-only event (show a snackbar) and skips rebuilding around
+/// it, so the still-valid, already-rendered stats stay on screen instead of
+/// being replaced by an error view (SPEC.md #41).
+class DashboardRefreshFailure extends DashboardState {
+  final String message;
+  const DashboardRefreshFailure(this.message);
+  @override
+  List<Object?> get props => [message];
+}

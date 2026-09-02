@@ -119,8 +119,9 @@ void main() {
       );
 
       blocTest<DashboardBloc, DashboardState>(
-        'keeps showing existing DashboardLoaded state (does not emit '
-        'Error) when refresh fails while already loaded',
+        'emits DashboardRefreshFailure (not DashboardError) when refresh '
+        'fails while already loaded, so the still-good stats are never '
+        'replaced by an error view (SPEC.md #41)',
         setUp: () {
           when(() => repository.getOverview(any(),
                   period: any(named: 'period')))
@@ -129,7 +130,9 @@ void main() {
         build: () => DashboardBloc(dashboardRepository: repository),
         seed: () => const DashboardLoaded(stats),
         act: (bloc) => bloc.add(const DashboardRefreshRequested('store-1')),
-        expect: () => [],
+        expect: () => [
+          const DashboardRefreshFailure('Ошибка сервера — попробуйте позже'),
+        ],
       );
 
       blocTest<DashboardBloc, DashboardState>(

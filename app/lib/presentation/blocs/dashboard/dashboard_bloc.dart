@@ -30,7 +30,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
-      if (state is DashboardLoaded) return;
+      if (state is DashboardLoaded) {
+        emit(DashboardRefreshFailure(mapErrorToUserMessage(e)));
+        return;
+      }
       emit(DashboardError(mapErrorToUserMessage(e)));
     }
   }

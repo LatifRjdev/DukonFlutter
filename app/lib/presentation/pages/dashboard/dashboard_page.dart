@@ -19,6 +19,7 @@ import '../../widgets/common/gradient_header.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/home/active_banner.dart';
 import '../../widgets/home/impersonation_banner.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -112,7 +113,19 @@ class _DashboardPageState extends State<DashboardPage> {
             _buildPeriodTabs(),
             // Content
             Expanded(
-              child: BlocBuilder<DashboardBloc, DashboardState>(
+              child: BlocConsumer<DashboardBloc, DashboardState>(
+                // A failed refresh is surfaced via the listener only
+                // (snackbar) — it must not trigger a rebuild, otherwise the
+                // builder below would fall through to its Loading/default
+                // branch and the still-valid, already-rendered stats would
+                // vanish from the screen (SPEC.md #41).
+                listenWhen: (previous, current) => current is DashboardRefreshFailure,
+                listener: (context, state) {
+                  if (state is DashboardRefreshFailure) {
+                    AppSnackbar.error(context, state.message);
+                  }
+                },
+                buildWhen: (previous, current) => current is! DashboardRefreshFailure,
                 builder: (context, state) {
                   if (state is DashboardLoading) {
                     return const Center(
