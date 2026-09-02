@@ -198,15 +198,6 @@ void main() {
       expect(match.pathParameters.containsKey('id'), isFalse);
     });
 
-    testWidgets(
-        '/products/empty is matched by the static route, not the dynamic :id route',
-        (tester) async {
-      final match = AppRouter.router.configuration
-          .findMatch(Uri.parse('/products/empty'));
-      expect(match.isError, isFalse);
-      expect(match.pathParameters.containsKey('id'), isFalse);
-    });
-
     testWidgets('/customers/form is matched by the static customerForm route',
         (tester) async {
       final match = AppRouter.router.configuration
@@ -298,21 +289,6 @@ void main() {
       expect(match.pathParameters.containsKey('id'), isFalse);
     });
 
-    // Regression test for a fixed bug: the static `/sales/empty` route was
-    // registered AFTER the dynamic `/sales/:id` route, so GoRouter (which
-    // matches in registration order) swallowed it as `/sales/:id` with
-    // id="empty" — EmptySalesPage was unreachable via this path. Fixed by
-    // reordering `/sales/empty` before `/sales/:id`, matching the
-    // static-before-dynamic pattern used for products/customers/staff/
-    // deliveries elsewhere in this file.
-    testWidgets(
-        '/sales/empty is matched by the static route, not swallowed by :id',
-        (tester) async {
-      final match = AppRouter.router.configuration
-          .findMatch(Uri.parse('/sales/empty'));
-      expect(match.isError, isFalse);
-      expect(match.pathParameters.containsKey('id'), isFalse);
-    });
   });
 
   group('auth guard — unauthenticated user', () {

@@ -22,7 +22,6 @@ import '../../presentation/pages/product/add_product_step2_page.dart';
 import '../../presentation/pages/product/add_product_step3_page.dart';
 import '../../presentation/pages/product/categories_page.dart';
 import '../../presentation/pages/product/import_products_page.dart';
-import '../../presentation/pages/product/empty_products_page.dart';
 import '../../presentation/pages/pos/cash_payment_page.dart';
 import '../../presentation/pages/pos/credit_sale_page.dart';
 import '../../presentation/pages/pos/sale_success_page.dart';
@@ -34,7 +33,6 @@ import '../../domain/entities/product.dart';
 import '../../presentation/pages/sales/sales_history_page.dart';
 import '../../presentation/pages/sales/transaction_detail_page.dart';
 import '../../presentation/pages/sales/refund_page.dart';
-import '../../presentation/pages/sales/empty_sales_page.dart';
 import '../../presentation/pages/stock/stock_intake_page.dart';
 import '../../presentation/pages/finance/finance_dashboard_page.dart';
 import '../../presentation/pages/finance/expense_list_page.dart';
@@ -228,10 +226,6 @@ class AppRouter {
           return ImportProductsPage(storeId: storeId);
         },
       ),
-      GoRoute(
-        path: '/products/empty',
-        builder: (context, state) => const EmptyProductsPage(),
-      ),
       // Dynamic route MUST be last
       GoRoute(
         path: '/products/:id',
@@ -271,10 +265,6 @@ class AppRouter {
       GoRoute(
         path: '/sales/history',
         builder: (context, state) => const SalesHistoryPage(),
-      ),
-      GoRoute(
-        path: '/sales/empty',
-        builder: (context, state) => const EmptySalesPage(),
       ),
       GoRoute(
         path: '/sales/:id',
