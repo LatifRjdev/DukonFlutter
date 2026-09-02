@@ -319,7 +319,12 @@ class _DashboardPageState extends State<DashboardPage> {
                   final storeId = _getStoreId();
                   if (storeId != null) {
                     context.read<DashboardBloc>().add(
-                      DashboardPeriodChanged(storeId, 'custom'),
+                      DashboardPeriodChanged(
+                        storeId,
+                        'custom',
+                        startDate: picked.start,
+                        endDate: picked.end,
+                      ),
                     );
                   }
                 }
