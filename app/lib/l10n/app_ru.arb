@@ -1185,6 +1185,8 @@
   "snackNoPhoneNumber": "Номер телефона не указан",
   "snackPrintError": "Ошибка печати",
   "snackSaveError": "Ошибка сохранения",
+  "snackLoadError": "Ошибка загрузки",
+  "@snackLoadError": { "description": "Generic load-failure snackbar, mirrors snackSaveError but for a failed data load instead of a failed save" },
   "snackPrinterNotConnected": "Принтер не подключён. Настройте в Настройки → Принтер.",
   "snackIntakeSuccess": "Приход успешно оформлен",
   "snackCalculationCopied": "Расчёт скопирован",

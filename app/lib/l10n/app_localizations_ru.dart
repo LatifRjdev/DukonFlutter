@@ -1940,6 +1940,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get snackSaveError => 'Ошибка сохранения';
 
   @override
+  String get snackLoadError => 'Ошибка загрузки';
+
+  @override
   String get snackPrinterNotConnected =>
       'Принтер не подключён. Настройте в Настройки → Принтер.';
 

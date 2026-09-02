@@ -62,6 +62,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       });
     } catch (_) {
       setState(() => _loading = false);
+      if (mounted) {
+        AppSnackbar.error(context, AppLocalizations.of(context)!.snackLoadError);
+      }
     }
   }
 

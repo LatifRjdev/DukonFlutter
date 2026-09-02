@@ -269,7 +269,8 @@
     "zReportPdfDebtLine",
     "zReportPdfTotalLine",
     "employeeAdded",
-    "snackSyncStatusReset"
+    "snackSyncStatusReset",
+    "snackLoadError"
   ],
 
   "uz": [
@@ -542,6 +543,7 @@
     "zReportPdfDebtLine",
     "zReportPdfTotalLine",
     "employeeAdded",
-    "snackSyncStatusReset"
+    "snackSyncStatusReset",
+    "snackLoadError"
   ]
 }

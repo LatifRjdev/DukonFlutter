@@ -1941,6 +1941,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get snackSaveError => 'Saqlash xatosi';
 
   @override
+  String get snackLoadError => 'Ошибка загрузки';
+
+  @override
   String get snackPrinterNotConnected =>
       'Printer ulanmagan. Sozlamalar → Printer bo\'limida sozlang.';
 

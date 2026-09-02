@@ -3766,6 +3766,12 @@ abstract class AppLocalizations {
   /// **'Ошибка сохранения'**
   String get snackSaveError;
 
+  /// Generic load-failure snackbar, mirrors snackSaveError but for a failed data load instead of a failed save
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка загрузки'**
+  String get snackLoadError;
+
   /// No description provided for @snackPrinterNotConnected.
   ///
   /// In ru, this message translates to:

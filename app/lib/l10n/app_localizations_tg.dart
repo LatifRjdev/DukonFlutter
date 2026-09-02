@@ -1941,6 +1941,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get snackSaveError => 'Хатои нигоҳдорӣ';
 
   @override
+  String get snackLoadError => 'Ошибка загрузки';
+
+  @override
   String get snackPrinterNotConnected =>
       'Принтер пайваст нест. Дар Танзимот → Принтер танзим кунед.';
 
