@@ -246,6 +246,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   tooltip: l10n.a11yRefresh,
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
                                   onPressed: () {
+                                    _initialized = false;
                                     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
                                   },
                                 ),

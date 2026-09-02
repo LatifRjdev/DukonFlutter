@@ -196,4 +196,68 @@ void main() {
       expect(tester.widget<Switch>(supplierDebtsSwitch).value, isFalse);
     });
   });
+
+  group('ZakatSettingsPage gold-price refresh (SPEC.md #38)', () {
+    testWidgets(
+        'tapping the refresh button applies a freshly-fetched gold price '
+        'to the visible field', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final stateController = StreamController<ZakatState>.broadcast();
+      addTearDown(stateController.close);
+      whenListen<ZakatState>(
+        zakatBloc,
+        stateController.stream,
+        initialState: ZakatLoading(),
+      );
+
+      await tester.binding.setSurfaceSize(const Size(412, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(wrap(const ZakatSettingsPage(storeId: storeId)));
+      await tester.pump();
+
+      // Initial load: nisabAmount 78200 -> gold price field shows
+      // (78200 / 85).toStringAsFixed(2) == '920.00'.
+      stateController.add(ZakatSettingsLoaded(loadedSettings));
+      await tester.pump();
+
+      // Gold price is the first TextFormField built (cash-on-hand is the
+      // second), per the widget build order in zakat_settings_page.dart.
+      final goldPriceField = find.byType(TextFormField).first;
+      expect(
+        tester.widget<TextFormField>(goldPriceField).controller!.text,
+        '920.00',
+      );
+
+      // There is exactly one refresh icon on the page (the gold-price
+      // card's refresh button).
+      expect(find.byIcon(Icons.refresh), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.refresh));
+      await tester.pump();
+
+      // Simulate the bloc emitting a new ZakatSettingsLoaded after the
+      // refresh's ZakatSettingsRequested completes, this time with a
+      // different (freshly-fetched) nisabAmount.
+      final refreshedSettings = ZakatSettings(
+        id: 'zs-1',
+        storeId: storeId,
+        nisabAmount: 85000,
+        cashOnHand: 1000,
+        includeStock: true,
+        includeCash: true,
+        includeDebts: true,
+        haulStartDate: DateTime(2026, 1, 1),
+      );
+      stateController.add(ZakatSettingsLoaded(refreshedSettings));
+      await tester.pump();
+
+      // (85000 / 85).toStringAsFixed(2) == '1000.00'. Before the fix, the
+      // !_initialized guard silently dropped this reload and the field
+      // stayed at '920.00'.
+      expect(
+        tester.widget<TextFormField>(goldPriceField).controller!.text,
+        '1000.00',
+      );
+    });
+  });
 }
