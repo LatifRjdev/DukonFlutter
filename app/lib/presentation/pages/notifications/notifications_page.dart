@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/errors/error_messages.dart';
 import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
@@ -169,7 +170,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     } catch (e) {
       setState(() {
         _loading = false;
-        _error = 'Не удалось загрузить уведомления';
+        _error = mapErrorToUserMessage(e);
       });
     }
   }
