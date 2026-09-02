@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -18,6 +19,8 @@ class KkmSettingsPage extends StatefulWidget {
 }
 
 class _KkmSettingsPageState extends State<KkmSettingsPage> {
+  static const _keyAutoPrint = 'kkm_auto_print';
+
   List<BluetoothDevice> _devices = [];
   BluetoothDevice? _connectedDevice;
   bool _isScanning = false;
@@ -39,6 +42,14 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
         setState(() => _connectedDevice = null);
       }
     });
+    _loadAutoPrintPref();
+  }
+
+  Future<void> _loadAutoPrintPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() => _autoPrint = prefs.getBool(_keyAutoPrint) ?? false);
+    }
   }
 
   @override
@@ -331,7 +342,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                     ),
                     Switch(
                       value: _autoPrint,
-                      onChanged: (v) => setState(() => _autoPrint = v),
+                      onChanged: (v) async {
+                        setState(() => _autoPrint = v);
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool(_keyAutoPrint, v);
+                      },
                       activeThumbColor: AppColors.primary,
                     ),
                   ],
