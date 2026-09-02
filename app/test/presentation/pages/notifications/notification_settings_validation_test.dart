@@ -104,7 +104,7 @@ void main() {
       expect(fakeDio.putCallCount, 0);
     });
 
-    testWidgets('a negative percent value blocks save and shows a range error',
+    testWidgets('a percent value over 100 blocks save and shows a range error',
         (tester) async {
       await pumpLoaded(tester);
       await seedValidBaseline(tester);
@@ -127,6 +127,32 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Неверный формат'), findsOneWidget);
+      expect(fakeDio.putCallCount, 0);
+    });
+
+    testWidgets('a zero days-threshold value blocks save (backend requires >= 1)',
+        (tester) async {
+      await pumpLoaded(tester);
+      await seedValidBaseline(tester);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Дней без продаж'), '0');
+      await tapSave(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Некорректное значение'), findsOneWidget);
+      expect(fakeDio.putCallCount, 0);
+    });
+
+    testWidgets('a zero percent-threshold value blocks save (backend requires >= 1)',
+        (tester) async {
+      await pumpLoaded(tester);
+      await seedValidBaseline(tester);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Остаток, % от партии'), '0');
+      await tapSave(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('От 0 до 100'), findsOneWidget);
       expect(fakeDio.putCallCount, 0);
     });
 
