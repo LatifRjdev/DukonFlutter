@@ -52,6 +52,12 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
     }
   }
 
+  Future<void> _setAutoPrint(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyAutoPrint, value);
+    if (mounted) setState(() => _autoPrint = value);
+  }
+
   @override
   void dispose() {
     _scanSub?.cancel();
@@ -342,11 +348,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                     ),
                     Switch(
                       value: _autoPrint,
-                      onChanged: (v) async {
-                        setState(() => _autoPrint = v);
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.setBool(_keyAutoPrint, v);
-                      },
+                      onChanged: _setAutoPrint,
                       activeThumbColor: AppColors.primary,
                     ),
                   ],
