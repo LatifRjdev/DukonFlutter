@@ -198,9 +198,24 @@ void main() {
   });
 
   group('ZakatSettingsPage gold-price refresh (SPEC.md #38)', () {
+    // The real ZakatBloc always emits ZakatLoading() before the eventual
+    // ZakatSettingsLoaded/ZakatError (see ZakatBloc._onSettingsRequested) —
+    // including on the refresh path, since refresh just re-dispatches
+    // ZakatSettingsRequested. An earlier version of this fix reset the
+    // shared _initialized flag on refresh, which made that intermediate
+    // ZakatLoading() satisfy the builder's `state is ZakatLoading &&
+    // !_initialized` guard too, tearing down the whole form into a bare
+    // spinner on every refresh tap, and made the listener's blanket
+    // field-overwrite re-run on every refresh, silently discarding any
+    // unsaved edits to fields other than gold price. These tests exercise
+    // the REAL bloc sequence (including the intermediate ZakatLoading) and
+    // prove neither regression is present: the form stays mounted through
+    // a refresh, and refreshing gold price alone doesn't touch other
+    // fields' in-progress edits.
     testWidgets(
         'tapping the refresh button applies a freshly-fetched gold price '
-        'to the visible field', (tester) async {
+        'to the visible field, without a full-page spinner replacing the '
+        'form for the intermediate ZakatLoading state', (tester) async {
       SharedPreferences.setMockInitialValues({});
       final stateController = StreamController<ZakatState>.broadcast();
       addTearDown(stateController.close);
@@ -235,6 +250,14 @@ void main() {
       await tester.tap(find.byIcon(Icons.refresh));
       await tester.pump();
 
+      // The real bloc's intermediate state, emitted before it fetches the
+      // fresh settings. The form must stay mounted through this — no
+      // full-page spinner replacing it.
+      stateController.add(ZakatLoading());
+      await tester.pump();
+      expect(find.byType(TextFormField), findsWidgets);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+
       // Simulate the bloc emitting a new ZakatSettingsLoaded after the
       // refresh's ZakatSettingsRequested completes, this time with a
       // different (freshly-fetched) nisabAmount.
@@ -251,11 +274,80 @@ void main() {
       stateController.add(ZakatSettingsLoaded(refreshedSettings));
       await tester.pump();
 
-      // (85000 / 85).toStringAsFixed(2) == '1000.00'. Before the fix, the
-      // !_initialized guard silently dropped this reload and the field
-      // stayed at '920.00'.
+      // (85000 / 85).toStringAsFixed(2) == '1000.00'. Before the original
+      // #38 fix, the !_initialized guard silently dropped this reload and
+      // the field stayed at '920.00'.
       expect(
         tester.widget<TextFormField>(goldPriceField).controller!.text,
+        '1000.00',
+      );
+    });
+
+    testWidgets(
+        'refreshing the gold price does not discard an unsaved edit to '
+        'the cash-on-hand field', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final stateController = StreamController<ZakatState>.broadcast();
+      addTearDown(stateController.close);
+      whenListen<ZakatState>(
+        zakatBloc,
+        stateController.stream,
+        initialState: ZakatLoading(),
+      );
+
+      await tester.binding.setSurfaceSize(const Size(412, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(wrap(const ZakatSettingsPage(storeId: storeId)));
+      await tester.pump();
+
+      // loadedSettings.cashOnHand == 1000.
+      stateController.add(ZakatSettingsLoaded(loadedSettings));
+      await tester.pump();
+
+      final cashOnHandField = find.byType(TextFormField).at(1);
+      expect(
+        tester.widget<TextFormField>(cashOnHandField).controller!.text,
+        '1000.0',
+      );
+
+      // User starts editing cash-on-hand but hasn't saved yet.
+      await tester.enterText(cashOnHandField, '5000');
+      await tester.pump();
+      expect(
+        tester.widget<TextFormField>(cashOnHandField).controller!.text,
+        '5000',
+      );
+
+      // Refresh the gold price — the server's cashOnHand (still 1000, no
+      // real server-side change) must NOT overwrite the user's in-progress
+      // '5000' edit, since this button is scoped to gold price only.
+      await tester.tap(find.byIcon(Icons.refresh));
+      await tester.pump();
+      stateController.add(ZakatLoading());
+      await tester.pump();
+      final refreshedSettings = ZakatSettings(
+        id: 'zs-1',
+        storeId: storeId,
+        nisabAmount: 85000,
+        cashOnHand: 1000,
+        includeStock: true,
+        includeCash: true,
+        includeDebts: true,
+        haulStartDate: DateTime(2026, 1, 1),
+      );
+      stateController.add(ZakatSettingsLoaded(refreshedSettings));
+      await tester.pump();
+
+      expect(
+        tester.widget<TextFormField>(cashOnHandField).controller!.text,
+        '5000',
+      );
+      // Gold price itself still updates, per the other test above.
+      expect(
+        tester.widget<TextFormField>(find.byType(TextFormField).first)
+            .controller!
+            .text,
         '1000.00',
       );
     });

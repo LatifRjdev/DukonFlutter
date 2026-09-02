@@ -47,6 +47,11 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
   bool _includeSupplierDebts = true;
   bool _reminderEnabled = true;
   bool _initialized = false;
+  // Set only while the gold-price refresh button's request is in flight, so
+  // the listener/builder below can special-case it: apply just the gold
+  // price (not clobber unsaved edits to the other fields) and skip the
+  // full-page loading spinner the initial-load path shows.
+  bool _refreshingGoldPrice = false;
 
   DateTime _now() => (widget.now ?? DateTime.now)();
 
@@ -156,12 +161,19 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     _includeCash = s.includeCash;
                     _includeDebts = s.includeDebts;
                     setState(() {});
+                  } else if (state is ZakatSettingsLoaded && _refreshingGoldPrice) {
+                    _refreshingGoldPrice = false;
+                    final s = state.settings;
+                    setState(() {
+                      _goldPriceController.text = (s.nisabAmount / 85).toStringAsFixed(2);
+                    });
                   }
                   if (state is ZakatActionSuccess) {
                     AppSnackbar.success(context, state.message);
                     context.pop();
                   }
                   if (state is ZakatError) {
+                    _refreshingGoldPrice = false;
                     AppSnackbar.error(context, state.message);
                   }
                 },
@@ -246,7 +258,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   tooltip: l10n.a11yRefresh,
                                   icon: const Icon(Icons.refresh, color: AppColors.primary, size: 20),
                                   onPressed: () {
-                                    _initialized = false;
+                                    _refreshingGoldPrice = true;
                                     context.read<ZakatBloc>().add(ZakatSettingsRequested(storeId: widget.storeId));
                                   },
                                 ),
