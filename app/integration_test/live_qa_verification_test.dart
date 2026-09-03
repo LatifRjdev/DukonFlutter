@@ -250,11 +250,25 @@ void main() {
             debugPrint('[live_qa] STEP 3 — toggled first permission switch '
                 'on Cashier tab: $before -> $afterToggle (local state).');
 
+            // Task 4's fix added an explicit Save button (Key
+            // 'roles_save_button', dispatches SavePermissions) — toggling
+            // alone is still just local state, exactly like before the
+            // fix. Must tap Save here, or this probe would only prove
+            // "an unsaved change doesn't persist" (true and expected,
+            // not a bug) rather than "a saved change does persist".
+            final saveButton = find.byKey(const Key('roles_save_button'));
+            expect(saveButton, findsOneWidget,
+                reason: 'Roles Save button not found — cannot probe '
+                    'finding #4 (SPEC.md #4\'s fix added this button).');
+            await tester.tap(saveButton);
+            await _settle(tester);
+            debugPrint('[live_qa] STEP 3 — tapped Save for the toggled '
+                'permission.');
+
             // Navigate away (pop, back to MorePage) and back in again (tap
             // the same menu item) to force a fresh load of RolesBloc state
-            // from the server, simulating what a real user would see if
-            // they left and returned to this screen without an explicit
-            // "Save" action.
+            // from the server, confirming the SAVED change round-trips
+            // through the backend rather than just surviving in memory.
             AppRouter.router.pop();
             await _settle(tester);
             final navigatedBack =
@@ -265,38 +279,37 @@ void main() {
                   () => find.text('Роли и права').evaluate().isNotEmpty,
                   timeout: const Duration(seconds: 15),
                 );
-            if (rolesReloaded) {
-              final cashierTab2 = find.text('Кассир');
-              if (cashierTab2.evaluate().isNotEmpty) {
-                await tester.tap(cashierTab2.first);
-                await tester.pumpAndSettle();
-                final switches2 = find.byType(Switch);
-                if (switches2.evaluate().isNotEmpty) {
-                  final afterReload =
-                      tester.widget<Switch>(switches2.first).value;
-                  final persisted = afterReload == afterToggle;
-                  debugPrint('[live_qa] FINDING #4 (roles not persisting) '
-                      'LIVE RESULT: value after navigate-away-and-back = '
-                      '$afterReload (was $afterToggle right after toggle, '
-                      'started as $before). persisted=$persisted. '
-                      '${persisted ? "SPEC FINDING NOT REPRODUCED — toggle "
-                          "survived reload, may persist after all (or "
-                          "RolesBloc kept in-memory state without a fresh "
-                          "fetch — inconclusive, needs app restart to be "
-                          "fully certain)." : "SPEC FINDING CONFIRMED LIVE — "
-                          "toggle reverted to its pre-toggle value after "
-                          "leaving and returning to the screen, meaning "
-                          "the permission change was never actually saved "
-                          "to the server."}');
-                }
-              }
-            }
+            expect(rolesReloaded, isTrue,
+                reason: 'Could not reload the Roles page after '
+                    'navigating away — cannot verify SPEC.md #4\'s fix.');
+            final cashierTab2 = find.text('Кассир');
+            expect(cashierTab2, findsWidgets,
+                reason: '"Кассир" tab not found after reloading Roles '
+                    'page — cannot verify SPEC.md #4\'s fix.');
+            await tester.tap(cashierTab2.first);
+            await tester.pumpAndSettle();
+            final switches2 = find.byType(Switch);
+            expect(switches2, findsWidgets,
+                reason: 'No Switch widgets found on Roles/Cashier tab '
+                    'after reload — cannot verify SPEC.md #4\'s fix.');
+            final afterReload = tester.widget<Switch>(switches2.first).value;
+            final persisted = afterReload == afterToggle;
+            debugPrint('[live_qa] FINDING #4 (roles persistence) LIVE '
+                'RESULT: value after navigate-away-and-back = $afterReload '
+                '(was $afterToggle right after toggle, started as $before). '
+                'persisted=$persisted.');
+            expect(persisted, isTrue,
+                reason: 'SPEC.md #4 fix not confirmed live: the permission '
+                    'toggle reverted to its pre-toggle value ($before) '
+                    'after leaving and returning to the Roles screen, '
+                    'meaning the change was not actually saved to the '
+                    'server. Expected it to still read $afterToggle.');
           } else {
-            debugPrint('[live_qa] STEP 3 — no Switch widgets found on '
+            fail('[live_qa] STEP 3 — no Switch widgets found on '
                 'Roles/Cashier tab, cannot probe finding #4.');
           }
         } else {
-          debugPrint('[live_qa] STEP 3 — "Кассир" tab not found on Roles '
+          fail('[live_qa] STEP 3 — "Кассир" tab not found on Roles '
               'page, cannot probe finding #4.');
         }
         AppRouter.router.pop();
@@ -429,8 +442,305 @@ void main() {
             'load.');
       }
 
+      // STEP 4's own probe touches a pre-existing, already-documented
+      // test-harness flake (see this file's header comment, "KNOWN
+      // LIMITATION (STEP 4, finding #5)") that can leave the app
+      // stranded on the Add Staff form instead of back on the home
+      // shell. That's unrelated to — and outside the scope of — this
+      // task's probes, so force a known-good starting point rather than
+      // assuming STEP 4 left the navigation stack clean.
+      AppRouter.router.go(RouteNames.home);
+      await _settle(tester);
+
+      // ---------------------------------------------------------------
+      // STEP 5: PROBE — SPEC.md finding #1 (CRITICAL, fixed): editing a
+      // product used to always call createProduct (ProductFormLoadProduct
+      // was never dispatched, so state.isEditing stayed false), silently
+      // duplicating the product instead of updating it in place. Create a
+      // uniquely-named product, edit its name, and confirm the ORIGINAL
+      // name is gone (renamed in place) while the NEW name appears exactly
+      // once — this proves no duplicate exists regardless of how many
+      // other products are in the live QA store's catalog (a raw
+      // before/after total-count comparison would be unreliable here,
+      // since ListView.separated only builds on-screen items and the QA
+      // store may have more products than fit in one screen).
+      // ---------------------------------------------------------------
+      await tester.tap(find.text('Товары'));
+      await _settle(tester);
+      final productsReady = await _waitUntil(
+        tester,
+        () => find.text('Поиск товара').evaluate().isNotEmpty,
+        timeout: const Duration(seconds: 15),
+      );
+      if (productsReady) {
+        debugPrint('[live_qa] STEP 5 — on Products page.');
+        final originalName =
+            'QA Edit Test ${DateTime.now().millisecondsSinceEpoch}';
+        final editedName = '$originalName EDITED';
+
+        await tester.tap(find.byIcon(Icons.add));
+        await _settle(tester);
+        final onAddProduct = await _waitUntil(
+          tester,
+          () => find.text('Название товара *').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(onAddProduct, isTrue,
+            reason: 'Add-product step 1 form never appeared — cannot '
+                'probe finding #1.');
+
+        Future<void> fillStep1(String name) async {
+          // The name field is the first TextFormField on step 1 (before
+          // SKU/barcode/description), in both create and edit mode.
+          await tester.enterText(find.byType(TextFormField).first, name);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Далее'));
+          await _settle(tester);
+        }
+
+        Future<void> fillStep2() async {
+          final priceFields = find.byType(TextFormField);
+          await tester.enterText(priceFields.at(0), '100');
+          await tester.enterText(priceFields.at(1), '200');
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Далее'));
+          await _settle(tester);
+        }
+
+        Future<void> fillStep3AndSubmit() async {
+          await tester.enterText(find.byType(TextFormField).first, '10');
+          await tester.pumpAndSettle();
+          final submitButton = find.text('Добавить товар');
+          await tester.ensureVisible(submitButton);
+          await tester.pumpAndSettle();
+          await tester.tap(submitButton, warnIfMissed: false);
+        }
+
+        await fillStep1(originalName);
+        await _waitUntil(
+          tester,
+          () => find.text('Себестоимость *').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        await fillStep2();
+        await _waitUntil(
+          tester,
+          () => find.text('Начальное количество *').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        await fillStep3AndSubmit();
+        final backOnListAfterCreate = await _waitUntil(
+          tester,
+          () => find.text('Поиск товара').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 15),
+        );
+        expect(backOnListAfterCreate, isTrue,
+            reason: 'Did not return to the Products list after creating '
+                'the test product — cannot probe finding #1.');
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.enterText(find.text('Поиск товара'), originalName);
+        await _settle(tester);
+        expect(find.text(originalName), findsOneWidget,
+            reason: 'Newly-created test product "$originalName" not found '
+                'via search — cannot probe finding #1.');
+        debugPrint('[live_qa] STEP 5 — created product "$originalName".');
+
+        await tester.tap(find.text(originalName));
+        await _settle(tester);
+        final editIcon = find.byIcon(Icons.edit_outlined);
+        final onDetailPage = await _waitUntil(
+          tester,
+          () => editIcon.evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(onDetailPage, isTrue,
+            reason: 'Did not land on the product detail page (no edit '
+                'icon found) after tapping the new product — cannot '
+                'probe finding #1.');
+
+        await tester.tap(editIcon.first);
+        await _settle(tester);
+        final onEditForm = await _waitUntil(
+          tester,
+          () => find.text(originalName).evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(onEditForm, isTrue,
+            reason: 'Edit form did not open pre-filled with the product '
+                'name — cannot probe finding #1.');
+
+        await fillStep1(editedName);
+        await _waitUntil(
+          tester,
+          () => find.text('Себестоимость *').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        await fillStep2();
+        await _waitUntil(
+          tester,
+          () => find.text('Начальное количество *').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        await fillStep3AndSubmit();
+        final backOnListAfterEdit = await _waitUntil(
+          tester,
+          () => find.text('Поиск товара').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 15),
+        );
+        expect(backOnListAfterEdit, isTrue,
+            reason: 'Did not return to the Products list after saving '
+                'the edit — cannot probe finding #1.');
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.enterText(find.text('Поиск товара'), editedName);
+        await _settle(tester);
+        debugPrint('[live_qa] FINDING #1 (product edit duplicates) LIVE '
+            'RESULT: searching for edited name "$editedName" found '
+            '${find.text(editedName).evaluate().length} match(es).');
+        expect(find.text(editedName), findsOneWidget,
+            reason: 'SPEC.md #1 fix not confirmed live: after editing, '
+                'the product\'s new name "$editedName" should appear '
+                'exactly once.');
+
+        await tester.enterText(find.text('Поиск товара'), originalName);
+        await _settle(tester);
+        debugPrint('[live_qa] FINDING #1 LIVE RESULT: searching for the '
+            'pre-edit name "$originalName" found '
+            '${find.text(originalName).evaluate().length} match(es) '
+            '(0 expected — the original was renamed in place, not left '
+            'behind as a duplicate).');
+        expect(find.text(originalName), findsNothing,
+            reason: 'SPEC.md #1 fix not confirmed live: the pre-edit '
+                'name "$originalName" is still present after editing, '
+                'meaning a duplicate was created instead of updating '
+                'the product in place.');
+
+        await tester.enterText(find.text('Поиск товара'), '');
+        await _settle(tester);
+      } else {
+        fail('[live_qa] STEP 5 — Products page did not load ("Поиск '
+            'товара" search field never appeared), cannot probe finding '
+            '#1.');
+      }
+
+      // ---------------------------------------------------------------
+      // STEP 6: PROBE — SPEC.md finding #2 (CRITICAL, fixed): CartCleared
+      // was defined but never dispatched, so the cart from a completed
+      // sale lingered when returning to the POS tab. Add a product,
+      // complete a cash checkout, tap "Новая продажа", navigate back to
+      // the POS tab, and confirm the cart is empty.
+      // ---------------------------------------------------------------
+      await tester.tap(find.text('Касса'));
+      await _settle(tester);
+      final posReady = await _waitUntil(
+        tester,
+        () => find.textContaining('Оформить продажу').evaluate().isNotEmpty ||
+            find.text('Добавить товар').evaluate().isNotEmpty,
+        timeout: const Duration(seconds: 15),
+      );
+      if (posReady) {
+        debugPrint('[live_qa] STEP 6 — on POS page.');
+        final quickProductTile = find.text('Добавить товар');
+        final hasQuickProduct = await _waitUntil(
+          tester,
+          () => quickProductTile.evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(hasQuickProduct, isTrue,
+            reason: 'No quick-product tile found on the POS page — the '
+                'QA store may have no products. Cannot probe finding #2.');
+
+        await tester.tap(quickProductTile.first, warnIfMissed: false);
+        await _settle(tester);
+        final addedToCart = await _waitUntil(
+          tester,
+          () => find.text('Корзина пуста').evaluate().isEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(addedToCart, isTrue,
+            reason: 'Cart still shows "Корзина пуста" after tapping a '
+                'quick-product tile — item was not added. Cannot probe '
+                'finding #2.');
+        debugPrint('[live_qa] STEP 6 — added a product to the cart.');
+
+        final checkoutButton = find.textContaining('Оформить продажу');
+        expect(checkoutButton, findsOneWidget,
+            reason: 'Checkout CTA not found with a non-empty cart — '
+                'cannot probe finding #2.');
+        await tester.ensureVisible(checkoutButton);
+        await tester.pumpAndSettle();
+        await tester.tap(checkoutButton, warnIfMissed: false);
+        await _settle(tester);
+
+        final onCashPayment = await _waitUntil(
+          tester,
+          () => find.text('Оплата наличными').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 10),
+        );
+        expect(onCashPayment, isTrue,
+            reason: 'Did not land on the cash-payment screen — cannot '
+                'probe finding #2 (default payment method is CASH).');
+
+        final noChangeButton = find.text('Без сдачи');
+        expect(noChangeButton, findsOneWidget,
+            reason: '"Без сдачи" quick-amount button not found on the '
+                'cash-payment screen.');
+        await tester.tap(noChangeButton);
+        await tester.pumpAndSettle();
+
+        final confirmButton = find.text('Завершить и печатать чек');
+        expect(confirmButton, findsOneWidget,
+            reason: 'Cash-payment confirm button not found.');
+        await tester.tap(confirmButton);
+        final onSaleSuccess = await _waitUntil(
+          tester,
+          () => find.text('Новая продажа').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 20),
+        );
+        expect(onSaleSuccess, isTrue,
+            reason: 'Did not land on the sale-success screen after '
+                'confirming cash payment — cannot probe finding #2.');
+        debugPrint('[live_qa] STEP 6 — cash sale completed.');
+
+        await tester.tap(find.text('Новая продажа'));
+        await _settle(tester);
+        final backOnHomeShell = await _waitUntil(
+          tester,
+          () => find.byIcon(Icons.point_of_sale).evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 15),
+        );
+        expect(backOnHomeShell, isTrue,
+            reason: '"Новая продажа" did not return to the home shell — '
+                'cannot probe finding #2.');
+
+        await tester.tap(find.text('Касса'));
+        final posReloaded = await _waitUntil(
+          tester,
+          () => find.text('Корзина пуста').evaluate().isNotEmpty ||
+              find.textContaining('Оформить продажу').evaluate().isNotEmpty,
+          timeout: const Duration(seconds: 15),
+        );
+        expect(posReloaded, isTrue,
+            reason: 'POS tab did not reload after returning from the '
+                'sale-success screen — cannot probe finding #2.');
+
+        debugPrint('[live_qa] FINDING #2 (cart not clearing) LIVE RESULT: '
+            '"Корзина пуста" present = '
+            '${find.text('Корзина пуста').evaluate().isNotEmpty}, '
+            'checkout CTA present = '
+            '${find.textContaining('Оформить продажу').evaluate().isNotEmpty}.');
+        expect(find.text('Корзина пуста'), findsOneWidget,
+            reason: 'SPEC.md #2 fix not confirmed live: the cart from '
+                'the completed sale is still showing on the POS tab '
+                'instead of being empty.');
+      } else {
+        fail('[live_qa] STEP 6 — POS page did not load, cannot probe '
+            'finding #2.');
+      }
+
       debugPrint('[live_qa] All probes attempted. See debugPrint output '
           'above for each finding\'s live-verification result.');
-    }, timeout: const Timeout(Duration(minutes: 5)));
+    }, timeout: const Timeout(Duration(minutes: 8)));
   });
 }
