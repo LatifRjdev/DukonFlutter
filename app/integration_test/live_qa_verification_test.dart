@@ -474,6 +474,16 @@ void main() {
       );
       if (productsReady) {
         debugPrint('[live_qa] STEP 5 — on Products page.');
+
+        // 'Поиск товара' is the search TextField's hintText, rendered by
+        // InputDecorator as a Text widget that is a SIBLING of the
+        // field's EditableText, not an ancestor — `enterText` needs the
+        // actual TextField/EditableText, which `find.text(hint)` can
+        // never resolve to. Locate it structurally instead.
+        Future<void> searchProducts(String query) async {
+          await tester.enterText(find.byType(TextField).first, query);
+          await _settle(tester);
+        }
         final originalName =
             'QA Edit Test ${DateTime.now().millisecondsSinceEpoch}';
         final editedName = '$originalName EDITED';
@@ -539,8 +549,7 @@ void main() {
                 'the test product — cannot probe finding #1.');
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
-        await tester.enterText(find.text('Поиск товара'), originalName);
-        await _settle(tester);
+        await searchProducts(originalName);
         expect(find.text(originalName), findsOneWidget,
             reason: 'Newly-created test product "$originalName" not found '
                 'via search — cannot probe finding #1.');
@@ -593,8 +602,7 @@ void main() {
                 'the edit — cannot probe finding #1.');
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
-        await tester.enterText(find.text('Поиск товара'), editedName);
-        await _settle(tester);
+        await searchProducts(editedName);
         debugPrint('[live_qa] FINDING #1 (product edit duplicates) LIVE '
             'RESULT: searching for edited name "$editedName" found '
             '${find.text(editedName).evaluate().length} match(es).');
@@ -603,8 +611,7 @@ void main() {
                 'the product\'s new name "$editedName" should appear '
                 'exactly once.');
 
-        await tester.enterText(find.text('Поиск товара'), originalName);
-        await _settle(tester);
+        await searchProducts(originalName);
         debugPrint('[live_qa] FINDING #1 LIVE RESULT: searching for the '
             'pre-edit name "$originalName" found '
             '${find.text(originalName).evaluate().length} match(es) '
@@ -616,8 +623,7 @@ void main() {
                 'meaning a duplicate was created instead of updating '
                 'the product in place.');
 
-        await tester.enterText(find.text('Поиск товара'), '');
-        await _settle(tester);
+        await searchProducts('');
       } else {
         fail('[live_qa] STEP 5 — Products page did not load ("Поиск '
             'товара" search field never appeared), cannot probe finding '
@@ -633,15 +639,21 @@ void main() {
       // ---------------------------------------------------------------
       await tester.tap(find.text('Касса'));
       await _settle(tester);
+      // Each quick-product tile is wrapped in `Semantics(label:
+      // l10n.addProduct, ...)` — 'Добавить товар' — not rendered as its
+      // own visible Text (the tile's Text children show the product's
+      // name/price instead), so it must be found via its semantics
+      // label, not `find.text()` (which only matches Text/RichText/
+      // EditableText widgets, never Semantics labels).
+      final quickProductTile = find.bySemanticsLabel('Добавить товар');
       final posReady = await _waitUntil(
         tester,
         () => find.textContaining('Оформить продажу').evaluate().isNotEmpty ||
-            find.text('Добавить товар').evaluate().isNotEmpty,
+            quickProductTile.evaluate().isNotEmpty,
         timeout: const Duration(seconds: 15),
       );
       if (posReady) {
         debugPrint('[live_qa] STEP 6 — on POS page.');
-        final quickProductTile = find.text('Добавить товар');
         final hasQuickProduct = await _waitUntil(
           tester,
           () => quickProductTile.evaluate().isNotEmpty,
