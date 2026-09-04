@@ -84,6 +84,21 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
     return null;
   }
 
+  // Backend UpdateLoyaltySettingsDto.pointsPerAmount is @IsInt() @Min(1) —
+  // it previously used _validatePositiveDecimal (double, > 0), so a value
+  // like "5.5" passed client-side validation and was sent as a double,
+  // failing the save with a 400 the user couldn't make sense of (SPEC.md
+  // audit finding, post-plan).
+  String? _validatePositiveInt(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    final parsed = int.tryParse(trimmed);
+    if (parsed == null) return l10n.invalidFormatError;
+    if (parsed < 1) return l10n.invalidValue;
+    return null;
+  }
+
   String? _validateBirthdayDiscount(String? value) {
     final l10n = AppLocalizations.of(context)!;
     final trimmed = value?.trim() ?? '';
@@ -118,7 +133,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
         'amountForPoints': amountText.isEmpty ? null : double.parse(amountText),
         'pointsPerAmount': pointsPerAmountText.isEmpty
             ? null
-            : double.parse(pointsPerAmountText),
+            : int.parse(pointsPerAmountText),
         'pointValue': pointValueText.isEmpty
             ? null
             : double.parse(pointValueText),
@@ -238,11 +253,8 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
                               _buildTextField(
                                 controller: _pointsPerAmountCtrl,
                                 label: l10n.loyaltySettingsPointsPerAmountLabel,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                validator: _validatePositiveDecimal,
+                                keyboardType: TextInputType.number,
+                                validator: _validatePositiveInt,
                               ),
                               const SizedBox(height: 12),
                               _buildTextField(

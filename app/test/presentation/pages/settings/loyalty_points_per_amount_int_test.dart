@@ -1,11 +1,10 @@
-// Behavioral coverage for SPEC.md #36 — loyalty settings' numeric fields
-// (amount-for-points, points-per-amount, point value, welcome points,
-// birthday discount %, points-expire-days) used to parse with
-// int.tryParse/double.tryParse and silently substitute null on invalid
-// input, so garbage text never blocked Save. These tests prove invalid
-// (but non-empty) input now blocks the save request and shows an inline
-// error, while a genuinely empty field — which the backend DTO treats as
-// "no value" — is still allowed through unchanged.
+// Regression test for post-plan SPEC.md audit finding #4: the backend's
+// UpdateLoyaltySettingsDto.pointsPerAmount is @IsInt() @Min(1), but this
+// field used _validatePositiveDecimal (a double validator, > 0) and
+// double.parse at save time — so a value like "1.5" passed client-side
+// validation and was sent as a double, failing the save server-side with a
+// 400 the user couldn't make sense of, and even a whole-number entry
+// serialized as e.g. `2.0` rather than the `2` the DTO's @IsInt() expects.
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dukonpro/presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 import 'package:dukonpro/presentation/blocs/loyalty/loyalty_settings_event.dart';
@@ -42,10 +41,6 @@ void main() {
   setUp(() {
     bloc = MockLoyaltySettingsBloc();
     final loaded = LoyaltySettingsLoaded(loadedSettings);
-    // A BlocConsumer's listener only fires on a *stream* emission, not on
-    // the state the widget is already built with — whenListen gives the
-    // mock a real stream so _populateControllers actually runs, matching
-    // the real bloc's Initial -> Loading -> Loaded transition.
     whenListen<LoyaltySettingsState>(
       bloc,
       Stream.value(loaded),
@@ -69,15 +64,14 @@ void main() {
     );
   }
 
-  group('LoyaltySettingsPage numeric field validation (SPEC.md #36)', () {
-    testWidgets(
-        'non-numeric text in a required-format field blocks save and shows an error',
+  group('LoyaltySettingsPage pointsPerAmount is an integer field', () {
+    testWidgets('a decimal value blocks save with a format error',
         (tester) async {
       await pumpLoaded(tester);
 
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'За каждые __ сом'),
-        'abc',
+        find.widgetWithText(TextFormField, 'Начислять __ баллов'),
+        '1.5',
       );
       await tester.tap(find.text('Сохранить'));
       await tester.pump();
@@ -88,51 +82,30 @@ void main() {
       );
     });
 
-    testWidgets('a birthday discount over 100% blocks save with a range error',
-        (tester) async {
+    testWidgets('zero blocks save (backend requires Min(1))', (tester) async {
       await pumpLoaded(tester);
 
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Скидка в день рождения, %'),
-        '150',
+        find.widgetWithText(TextFormField, 'Начислять __ баллов'),
+        '0',
       );
       await tester.tap(find.text('Сохранить'));
       await tester.pump();
 
-      expect(find.text('От 0 до 100'), findsOneWidget);
+      expect(find.text('Некорректное значение'), findsOneWidget);
       verifyNever(
         () => bloc.add(any(that: isA<LoyaltySettingsSaveRequested>())),
       );
     });
 
     testWidgets(
-        'an emptied optional field is allowed through as null, not blocked',
-        (tester) async {
-      await pumpLoaded(tester);
-
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Скидка в день рождения, %'),
-        '',
-      );
-      await tester.tap(find.text('Сохранить'));
-      await tester.pump();
-
-      expect(find.text('От 0 до 100'), findsNothing);
-      expect(find.text('Неверный формат'), findsNothing);
-      final captured = verify(
-        () => bloc.add(captureAny(that: isA<LoyaltySettingsSaveRequested>())),
-      ).captured;
-      final event = captured.single as LoyaltySettingsSaveRequested;
-      expect(event.data['birthdayDiscount'], isNull);
-    });
-
-    testWidgets('valid numeric input for a changed field reaches the save payload',
-        (tester) async {
+        'a valid whole number reaches the save payload as an int, not a '
+        'double', (tester) async {
       await pumpLoaded(tester);
 
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Начислять __ баллов'),
-        '2',
+        '3',
       );
       await tester.tap(find.text('Сохранить'));
       await tester.pump();
@@ -141,10 +114,8 @@ void main() {
         () => bloc.add(captureAny(that: isA<LoyaltySettingsSaveRequested>())),
       ).captured;
       final event = captured.single as LoyaltySettingsSaveRequested;
-      // pointsPerAmount is an int field (backend @IsInt()) — see
-      // loyalty_points_per_amount_int_test.dart for dedicated coverage.
       expect(event.data['pointsPerAmount'], isA<int>());
-      expect(event.data['pointsPerAmount'], 2);
+      expect(event.data['pointsPerAmount'], 3);
     });
   });
 }
