@@ -111,7 +111,12 @@ class _StaffListPageState extends State<StaffListPage> {
                     return RefreshIndicator(
                       onRefresh: () async => _loadStaff(),
                       child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
+                        // Bottom padding clears the FAB (56dp button + 16dp
+                        // Scaffold margin, plus a little extra) so the last
+                        // card in the list isn't covered by/under it when
+                        // the list exactly fills the viewport (SPEC.md
+                        // audit finding #7).
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
                         itemCount: state.staff.length,
                         itemBuilder: (context, index) {
                           final staff = state.staff[index];
