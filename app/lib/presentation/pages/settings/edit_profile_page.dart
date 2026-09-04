@@ -4,9 +4,14 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../domain/entities/staff_member.dart';
+import '../../../domain/repositories/staff_repository.dart';
 import '../../blocs/settings/settings_bloc.dart';
 import '../../blocs/settings/settings_event.dart';
 import '../../blocs/settings/settings_state.dart';
+import '../../blocs/store/store_bloc.dart';
+import '../../blocs/store/store_state.dart';
+import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -24,6 +29,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _phoneController = TextEditingController();
   bool _initialized = false;
 
+  // Role badge, resolved the same way as SettingsPage's (SPEC.md #13):
+  // from already-loaded StoreBloc (store.ownerId) for owners, falling back
+  // to a StaffRepository lookup for non-owners. Null while unresolved —
+  // the badge is simply hidden rather than ever showing an incorrect role
+  // (this page previously hardcoded it to "Владелец" for every user).
+  String? _roleCode;
+  bool _roleRequested = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // SettingsBloc is a single app-wide instance, already loaded once at
+    // app startup. Without a fresh dispatch here, this page's
+    // BlocConsumer.listener (which both _loadRole and the pre-existing
+    // name/email/phone population rely on) would only fire on the *next*
+    // emission — and since the bloc is very likely already sitting on a
+    // settled SettingsLoaded with no new emission forthcoming, the listener
+    // would never run and the badge (and the form fields) would never
+    // populate. Mirrors SettingsPage's own initState dispatch.
+    context.read<SettingsBloc>().add(SettingsProfileRequested());
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -31,6 +58,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadRole(String userId) async {
+    if (_roleCode != null || _roleRequested) return;
+    final storeState = context.read<StoreBloc>().state;
+    final store = storeState is StoreLoaded ? storeState.selectedStore : null;
+    if (store == null) return; // retried on the next SettingsLoaded emission
+
+    if (store.ownerId == userId) {
+      if (mounted) setState(() => _roleCode = 'OWNER');
+      return;
+    }
+
+    _roleRequested = true;
+    try {
+      final result = await sl<StaffRepository>().getStaff(store.id);
+      StaffMember? mine;
+      for (final member in result.data) {
+        if (member.userId == userId) {
+          mine = member;
+          break;
+        }
+      }
+      if (mine != null && mounted) {
+        setState(() => _roleCode = mine!.role);
+      }
+    } catch (_) {
+      // Staff lookup unavailable (e.g. offline) — leave the badge
+      // unresolved rather than guess.
+    }
+  }
+
+  String _roleLabel(String role, AppLocalizations l10n) {
+    switch (role.toUpperCase()) {
+      case 'OWNER':
+        return l10n.owner;
+      case 'ADMIN':
+        return l10n.adminRoleShort;
+      case 'CASHIER':
+        return l10n.cashier;
+      case 'WAREHOUSE':
+        return l10n.warehouse;
+      default:
+        return role;
+    }
   }
 
   void _save() {
@@ -50,13 +122,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: SafeArea(
         child: BlocConsumer<SettingsBloc, SettingsState>(
           listener: (context, state) {
-            if (state is SettingsLoaded && !_initialized) {
-              _initialized = true;
-              final parts = state.user.name.split(' ');
-              _firstNameController.text = parts.isNotEmpty ? parts.first : '';
-              _lastNameController.text = parts.length > 1 ? parts.sublist(1).join(' ') : '';
-              _emailController.text = state.user.email ?? '';
-              _phoneController.text = state.user.phone;
+            if (state is SettingsLoaded) {
+              _loadRole(state.user.id);
+              if (!_initialized) {
+                _initialized = true;
+                final parts = state.user.name.split(' ');
+                _firstNameController.text = parts.isNotEmpty ? parts.first : '';
+                _lastNameController.text = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+                _emailController.text = state.user.email ?? '';
+                _phoneController.text = state.user.phone;
+              }
             }
             if (state is SettingsActionSuccess) {
               AppSnackbar.success(context, state.message);
@@ -129,24 +204,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             keyboardType: TextInputType.phone, enabled: false),
                           const SizedBox(height: 16),
 
-                          // Role badge
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                          // Role badge — hidden until the real role resolves
+                          // rather than ever showing an incorrect one.
+                          if (_roleCode != null) ...[
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.lock_outlined, size: 16, color: AppColors.primary),
+                                  const SizedBox(width: 8),
+                                  Text(_roleLabel(_roleCode!, l10n),
+                                    style: const TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                                ],
+                              ),
                             ),
-                            child: const Row(
-                              children: [
-                                Icon(Icons.lock_outlined, size: 16, color: AppColors.primary),
-                                SizedBox(width: 8),
-                                Text('Владелец',
-                                  style: TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
+                            const SizedBox(height: 24),
+                          ],
 
                           // Security section
                           Align(
