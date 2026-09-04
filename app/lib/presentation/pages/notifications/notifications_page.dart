@@ -10,6 +10,7 @@ import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../../injection.dart';
+import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
@@ -192,14 +193,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final id = _storeId;
     try {
       await sl<DioClient>().put<void>('/stores/$id/notifications/${notif.id}/read');
+      if (!mounted) return;
       setState(() {
         _notifications[index] = notif.copyWithRead();
       });
-    } catch (_) {
-      // Optimistically update anyway
+    } catch (e) {
+      if (!mounted) return;
+      // Optimistically update the local read state anyway (it'll be
+      // corrected by the next refresh either way), but surface the
+      // failure — silently swallowing it meant a notification could look
+      // read locally while staying unread on the server, with no
+      // indication to the user that the write never landed (SPEC.md audit
+      // finding, post-plan).
       setState(() {
         _notifications[index] = notif.copyWithRead();
       });
+      AppSnackbar.error(context, mapErrorToUserMessage(e));
     }
   }
 
