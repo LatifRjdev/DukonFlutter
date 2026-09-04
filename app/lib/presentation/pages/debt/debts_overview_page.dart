@@ -27,6 +27,22 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
     context.read<DebtBloc>().add(DebtsOverviewRequested(storeId: widget.storeId));
   }
 
+  // DebtBloc is a single app-wide instance shared with CustomerDebtsPage/
+  // SupplierDebtsPage (SPEC.md audit finding, post-plan). context.push
+  // keeps this page mounted underneath the pushed route rather than
+  // disposing it, so initState above never re-fires on return — and the
+  // bloc's current state by then is whatever the child screen last
+  // emitted (CustomerDebtsLoaded/SupplierDebtsLoaded), which this page's
+  // builder doesn't recognize, leaving it stuck on the fallback spinner
+  // forever. Re-request the overview explicitly once the pushed route
+  // returns, regardless of what it left the shared bloc's state as.
+  Future<void> _openDebtDetail(String route, Map<String, dynamic> extra) async {
+    await context.push(route, extra: extra);
+    if (mounted) {
+      context.read<DebtBloc>().add(DebtsOverviewRequested(storeId: widget.storeId));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DebtBloc, DebtState>(
@@ -116,7 +132,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                         name: c['name'] as String? ?? '',
                         debt: (c['debt'] as num? ?? 0).toDouble(),
                         phone: c['phone'] as String?,
-                        onTap: () => context.push('/debts/customer', extra: {
+                        onTap: () => _openDebtDetail('/debts/customer', {
                           'storeId': widget.storeId,
                           'customerId': c['id'] as String? ?? '',
                           'customerName': c['name'] as String? ?? '',
@@ -136,7 +152,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
                         debt: (s['debt'] as num? ?? 0).toDouble(),
                         phone: s['phone'] as String?,
                         isSupplier: true,
-                        onTap: () => context.push('/debts/supplier', extra: {
+                        onTap: () => _openDebtDetail('/debts/supplier', {
                           'storeId': widget.storeId,
                           'supplierId': s['id'] as String? ?? '',
                           'supplierName': s['name'] as String? ?? '',

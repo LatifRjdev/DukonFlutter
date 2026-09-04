@@ -89,6 +89,18 @@ class _CustomerListPageState extends State<CustomerListPage> {
     ));
   }
 
+  // CustomerListBloc is a single app-wide instance shared with
+  // CustomerFormPage (pushed from CustomerDetailPage below this page in the
+  // stack). context.push keeps this page mounted underneath rather than
+  // disposing it, so the bloc's state after a form edit is
+  // CustomerFormLoading/Success/Error — states this page's builder doesn't
+  // recognize, leaving it on the SizedBox.shrink() fallback. Reload
+  // explicitly once the pushed route returns.
+  Future<void> _openCustomerDetail(String customerId) async {
+    await context.push('/customers/$customerId', extra: _getStoreId());
+    if (mounted) _loadCustomers();
+  }
+
   void _showAddCustomerDialog() {
     _nameController.clear();
     _phoneController.clear();
@@ -295,7 +307,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                           const SizedBox(height: 12),
                           // Customer cards
                           ...customers.map((customer) => GestureDetector(
-                            onTap: () => context.push('/customers/${customer.id}', extra: _getStoreId()),
+                            onTap: () => _openCustomerDetail(customer.id),
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),

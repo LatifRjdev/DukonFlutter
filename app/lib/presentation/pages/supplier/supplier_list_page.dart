@@ -61,6 +61,18 @@ class _SupplierListPageState extends State<SupplierListPage> {
     ));
   }
 
+  // SupplierListBloc is a single app-wide instance shared with the supplier
+  // edit form (pushed from SupplierDetailPage below this page in the stack).
+  // context.push keeps this page mounted underneath rather than disposing
+  // it, so the bloc's state after a form edit is
+  // SupplierFormLoading/Success/Error — states this page's builder doesn't
+  // recognize, leaving it on the SizedBox.shrink() fallback. Reload
+  // explicitly once the pushed route returns.
+  Future<void> _openSupplierDetail(String supplierId) async {
+    await context.push('/suppliers/$supplierId', extra: _getStoreId());
+    if (mounted) _loadSuppliers();
+  }
+
   void _showAddSupplierDialog() {
     _nameController.clear();
     _phoneController.clear();
@@ -246,7 +258,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           const SizedBox(height: 12),
                           // Supplier cards
                           ...suppliers.map((supplier) => GestureDetector(
-                            onTap: () => context.push('/suppliers/${supplier.id}', extra: _getStoreId()),
+                            onTap: () => _openSupplierDetail(supplier.id),
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
