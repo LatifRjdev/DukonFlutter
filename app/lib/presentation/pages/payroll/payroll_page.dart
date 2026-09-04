@@ -26,6 +26,16 @@ class _PayrollPageState extends State<PayrollPage> {
   late int _selectedMonth;
   late int _selectedYear;
 
+  // Every payroll action (pay individual/all, add/remove adjustment,
+  // calculate) re-emits PayrollLoading while it runs, which used to tear
+  // down whichever view (periods list or period detail) was on screen down
+  // to a bare spinner. Track the last successfully loaded view so a
+  // background action keeps showing it (with action buttons disabled via
+  // `busy` instead of hidden), and so a failed action's Retry button
+  // reloads the *same* view instead of always falling back to the periods
+  // list (SPEC.md audit finding, post-plan).
+  PayrollState? _lastLoadedState;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +47,15 @@ class _PayrollPageState extends State<PayrollPage> {
 
   void _loadData() {
     context.read<PayrollBloc>().add(LoadPayrollPeriods(storeId: widget.storeId));
+  }
+
+  void _retryLastLoad() {
+    final last = _lastLoadedState;
+    if (last is PayrollPeriodDetailLoaded) {
+      _loadPeriodDetail(last.period.id);
+    } else {
+      _loadData();
+    }
   }
 
   void _onMonthChanged(({int month, int year}) value) {
@@ -107,6 +126,9 @@ class _PayrollPageState extends State<PayrollPage> {
           }
         },
         builder: (context, state) {
+          if (state is PayrollPeriodsLoaded || state is PayrollPeriodDetailLoaded) {
+            _lastLoadedState = state;
+          }
           return Column(
             children: [
               Padding(
@@ -137,21 +159,30 @@ class _PayrollPageState extends State<PayrollPage> {
 
   Widget _buildContent(PayrollState state) {
     if (state is PayrollLoading) {
-      return const Center(child: CircularProgressIndicator());
+      final last = _lastLoadedState;
+      if (last == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      // A background action (pay/adjustment/calculate) is refreshing this
+      // view — keep showing the last-known content, with action buttons
+      // disabled, instead of flashing a bare spinner over it.
+      return last is PayrollPeriodDetailLoaded
+          ? _buildPeriodDetail(last, busy: true)
+          : _buildPeriodsList(last as PayrollPeriodsLoaded, busy: true);
     }
 
     if (state is PayrollPeriodsLoaded) {
-      return _buildPeriodsList(state);
+      return _buildPeriodsList(state, busy: false);
     }
 
     if (state is PayrollPeriodDetailLoaded) {
-      return _buildPeriodDetail(state);
+      return _buildPeriodDetail(state, busy: false);
     }
 
     if (state is PayrollError) {
       return AppErrorWidget(
         message: state.message,
-        onRetry: _loadData,
+        onRetry: _retryLastLoad,
       );
     }
 
@@ -162,7 +193,7 @@ class _PayrollPageState extends State<PayrollPage> {
     );
   }
 
-  Widget _buildPeriodsList(PayrollPeriodsLoaded state) {
+  Widget _buildPeriodsList(PayrollPeriodsLoaded state, {required bool busy}) {
     if (state.periods.isEmpty) {
       return Center(
         child: Padding(
@@ -201,14 +232,14 @@ class _PayrollPageState extends State<PayrollPage> {
             totalAmount: period.totalAmount,
             paidAmount: period.paidAmount,
             staffCount: period.staffCount,
-            onTap: () => _loadPeriodDetail(period.id),
+            onTap: busy ? null : () => _loadPeriodDetail(period.id),
           );
         },
       ),
     );
   }
 
-  Widget _buildPeriodDetail(PayrollPeriodDetailLoaded state) {
+  Widget _buildPeriodDetail(PayrollPeriodDetailLoaded state, {required bool busy}) {
     final period = state.period;
     final hasUnpaid = period.payrolls.any((e) => !e.isPaid);
 
@@ -219,7 +250,7 @@ class _PayrollPageState extends State<PayrollPage> {
           child: Row(
             children: [
               IconButton(
-                onPressed: _loadData,
+                onPressed: busy ? null : _loadData,
                 icon: const Icon(Icons.arrow_back),
                 tooltip: AppLocalizations.of(context)!.back,
               ),
@@ -230,10 +261,12 @@ class _PayrollPageState extends State<PayrollPage> {
                 ),
               ),
               IconButton(
-                onPressed: () => context.push(
-                  '/payroll/${period.id}/adjustment',
-                  extra: {'storeId': widget.storeId, 'periodId': period.id},
-                ),
+                onPressed: busy
+                    ? null
+                    : () => context.push(
+                        '/payroll/${period.id}/adjustment',
+                        extra: {'storeId': widget.storeId, 'periodId': period.id},
+                      ),
                 icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
                 tooltip: 'Добавить корректировку',
               ),
@@ -251,8 +284,8 @@ class _PayrollPageState extends State<PayrollPage> {
                   padding: const EdgeInsets.only(bottom: AppConstants.spacingSm),
                   child: PayrollStaffCard(
                     entry: entry,
-                    onTap: () => context.push('/staff/${entry.staffId}', extra: widget.storeId),
-                    onPay: entry.isPaid
+                    onTap: busy ? null : () => context.push('/staff/${entry.staffId}', extra: widget.storeId),
+                    onPay: (entry.isPaid || busy)
                         ? null
                         : () => _payIndividual(period.id, entry.id),
                   ),
@@ -285,6 +318,7 @@ class _PayrollPageState extends State<PayrollPage> {
             child: AppButton(
               text: 'Выплатить всем',
               icon: Icons.payments_outlined,
+              isLoading: busy,
               onPressed: () => _payAll(period.id),
             ),
           ),
