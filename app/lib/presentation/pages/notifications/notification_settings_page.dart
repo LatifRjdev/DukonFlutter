@@ -93,7 +93,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (trimmed.isEmpty) return l10n.invalidFormatError;
     final parsed = int.tryParse(trimmed);
     if (parsed == null) return l10n.invalidFormatError;
-    if (parsed < 1 || parsed > 100) return l10n.percentRangeError;
+    if (parsed < 1 || parsed > 100) return l10n.percentRangeErrorFrom1;
     return null;
   }
 

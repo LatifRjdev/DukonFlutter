@@ -814,6 +814,12 @@ abstract class AppLocalizations {
   /// **'От 0 до 100'**
   String get percentRangeError;
 
+  /// Validation error shown when a percentage field's value falls outside the 1-100 range — distinct from `percentRangeError` (0-100 inclusive): used where 0 itself is rejected (e.g. a Min(1) backend constraint), so the message must not imply 0 is a valid value
+  ///
+  /// In ru, this message translates to:
+  /// **'От 1 до 100'**
+  String get percentRangeErrorFrom1;
+
   /// Quantity field
   ///
   /// In ru, this message translates to:

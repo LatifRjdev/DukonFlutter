@@ -113,7 +113,11 @@ void main() {
       await tapSave(tester);
       await tester.pumpAndSettle();
 
-      expect(find.text('От 0 до 100'), findsOneWidget);
+      // "От 1 до 100" (percentRangeErrorFrom1), not the generic 0-100
+      // percentRangeError — this field rejects 0 too (backend Min(1)), so
+      // the message must not imply 0 is a valid value (SPEC.md audit
+      // finding #6).
+      expect(find.text('От 1 до 100'), findsOneWidget);
       expect(fakeDio.putCallCount, 0);
     });
 
@@ -143,8 +147,10 @@ void main() {
       expect(fakeDio.putCallCount, 0);
     });
 
-    testWidgets('a zero percent-threshold value blocks save (backend requires >= 1)',
-        (tester) async {
+    testWidgets(
+        'a zero percent-threshold value blocks save with a message that '
+        'does not imply 0 is valid (backend requires >= 1, SPEC.md audit '
+        'finding #6)', (tester) async {
       await pumpLoaded(tester);
       await seedValidBaseline(tester);
 
@@ -152,7 +158,11 @@ void main() {
       await tapSave(tester);
       await tester.pumpAndSettle();
 
-      expect(find.text('От 0 до 100'), findsOneWidget);
+      // Previously showed the generic 0-100 percentRangeError text ("От 0
+      // до 100"), which is actively misleading for a value the field
+      // itself just rejected.
+      expect(find.text('От 1 до 100'), findsOneWidget);
+      expect(find.text('От 0 до 100'), findsNothing);
       expect(fakeDio.putCallCount, 0);
     });
 

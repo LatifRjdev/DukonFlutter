@@ -262,6 +262,8 @@
   "@invalidValue": { "description": "Generic 'invalid value' validation error for a numeric field that isn't specifically an amount" },
   "percentRangeError": "От 0 до 100",
   "@percentRangeError": { "description": "Validation error shown when a percentage field's value falls outside the 0-100 range" },
+  "percentRangeErrorFrom1": "От 1 до 100",
+  "@percentRangeErrorFrom1": { "description": "Validation error shown when a percentage field's value falls outside the 1-100 range — distinct from `percentRangeError` (0-100 inclusive): used where 0 itself is rejected (e.g. a Min(1) backend constraint), so the message must not imply 0 is a valid value" },
   "quantity": "Количество",
   "@quantity": { "description": "Quantity field" },
   "quantityShort": "Кол-во",

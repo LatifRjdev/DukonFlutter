@@ -387,6 +387,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get percentRangeError => 'От 0 до 100';
 
   @override
+  String get percentRangeErrorFrom1 => 'От 1 до 100';
+
+  @override
   String get quantity => 'Количество';
 
   @override
