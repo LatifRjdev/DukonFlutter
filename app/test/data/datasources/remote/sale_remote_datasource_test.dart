@@ -58,6 +58,60 @@ void main() {
       expect(result.skippedRows, 1);
     });
 
+    // Regression test for a real bug found during a live manual QA pass
+    // (2026-09-07): the sales LIST endpoint (`SalesService.findAll`)
+    // deliberately returns a lightweight items projection —
+    // {id, productName, quantity, total} only, no saleId/productId/
+    // unitPrice — for pagination performance; only the single-sale detail
+    // endpoint returns those fields. `_mapSaleItem` used to require all
+    // three unconditionally, so EVERY sale returned by the list endpoint
+    // failed to parse (the exception from `_mapSaleItem` propagates up
+    // through `_mapSale`, which has no per-item try/catch of its own,
+    // and gets caught by `getSales`'s per-*row* catch) — making История
+    // продаж always render empty regardless of real data, while `total`
+    // (from a separate COUNT query) stayed correct. This reproduces that
+    // exact minimal item shape and asserts it now parses successfully.
+    test(
+        'parses a sale whose item uses the sales-LIST minimal projection '
+        '(no saleId/productId/unitPrice) instead of skipping it', () async {
+      when(() => dio.get<dynamic>(
+            any(),
+            queryParameters: any(named: 'queryParameters'),
+          )).thenAnswer((_) async => resp({
+            'data': [
+              {
+                ..._validSaleJson('R-003'),
+                'items': [
+                  {
+                    'id': 'item-1',
+                    'productName': 'Test_Product_1',
+                    'quantity': 2,
+                    'total': 160,
+                  },
+                ],
+              },
+            ],
+            'total': 1,
+            'page': 1,
+            'limit': 20,
+            'totalPages': 1,
+          }));
+
+      final result = await ds.getSales('store-1');
+
+      expect(result.skippedRows, 0);
+      expect(result.data.length, 1);
+      final item = result.data.single.items.single;
+      expect(item.productName, 'Test_Product_1');
+      expect(item.quantity, 2);
+      expect(item.total, 160);
+      // Derived fallbacks: saleId from the parent sale, unitPrice from
+      // total/quantity, productId empty rather than throwing.
+      expect(item.saleId, 'sale-R-003');
+      expect(item.unitPrice, 80);
+      expect(item.productId, '');
+    });
+
     test('returns 0 sales + skippedRows=0 when API returns empty list',
         () async {
       when(() => dio.get<dynamic>(

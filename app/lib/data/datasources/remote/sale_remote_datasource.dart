@@ -161,7 +161,8 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
       status: json['status'] as String? ?? 'COMPLETED',
       notes: json['notes'] as String?,
       items: itemsList
-          .map((item) => _mapSaleItem(item as Map<String, dynamic>))
+          .map((item) => _mapSaleItem(item as Map<String, dynamic>,
+              parentSaleId: json['id'] as String?))
           .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       pointsEarned: (json['pointsEarned'] as num?)?.toInt() ?? 0,
@@ -169,21 +170,35 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
     );
   }
 
-  SaleItem _mapSaleItem(Map<String, dynamic> json) {
+  // The sales LIST endpoint (`SalesService.findAll`) deliberately returns a
+  // lightweight items projection — just {id, productName, quantity, total}
+  // — omitting saleId/productId/unitPrice for pagination performance. Only
+  // the single-sale detail endpoint (`findOne`) returns those. This method
+  // used to require all three unconditionally, so every sale in the list
+  // failed to parse (the exception propagates up through `_mapSale`, which
+  // has no per-item try/catch of its own), got caught by `getSales`'s
+  // per-*row* catch, and was silently dropped — making the sales list
+  // always render empty while `total`/`totalPages` (from a separate COUNT
+  // query) stayed correct. Fall back to values derivable from what the
+  // list projection does provide, rather than requiring the full shape.
+  SaleItem _mapSaleItem(Map<String, dynamic> json, {String? parentSaleId}) {
+    final quantity = (json['quantity'] as num).toInt();
+    final total = (json['total'] as num).toDouble();
     return SaleItem(
       id: json['id'] as String,
-      saleId: json['saleId'] as String,
-      productId: json['productId'] as String,
+      saleId: json['saleId'] as String? ?? parentSaleId ?? '',
+      productId: json['productId'] as String? ?? '',
       productName: json['productName'] as String? ??
           (json['product'] is Map
               ? (json['product'] as Map<String, dynamic>)['name'] as String? ??
                   ''
               : ''),
-      quantity: (json['quantity'] as num).toInt(),
-      unitPrice: (json['unitPrice'] as num).toDouble(),
+      quantity: quantity,
+      unitPrice: (json['unitPrice'] as num?)?.toDouble() ??
+          (quantity > 0 ? total / quantity : 0),
       costPrice: (json['costPrice'] as num?)?.toDouble(),
       discount: (json['discount'] as num?)?.toDouble() ?? 0,
-      total: (json['total'] as num).toDouble(),
+      total: total,
     );
   }
 
