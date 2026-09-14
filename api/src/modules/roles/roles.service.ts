@@ -165,7 +165,11 @@ export class RolesService {
     return { role, permissions: perms };
   }
 
-  async updateRolePermissions(storeId: string, role: string, dto: UpdatePermissionsDto) {
+  async updateRolePermissions(
+    storeId: string,
+    role: string,
+    dto: UpdatePermissionsDto,
+  ) {
     this.validateRole(role);
 
     if (role === 'OWNER') {
@@ -177,29 +181,32 @@ export class RolesService {
       (p) => !ALL_PERMISSIONS.includes(p),
     );
     if (invalidPerms.length > 0) {
-      throw new BadRequestException(`Invalid permissions: ${invalidPerms.join(', ')}`);
+      throw new BadRequestException(
+        `Invalid permissions: ${invalidPerms.join(', ')}`,
+      );
     }
 
     await this.seedIfNeeded(storeId);
 
     // Upsert each permission
-    const updates = Object.entries(dto.permissions).map(([permission, isGranted]) =>
-      this.prisma.rolePermission.upsert({
-        where: {
-          storeId_role_permission: {
+    const updates = Object.entries(dto.permissions).map(
+      ([permission, isGranted]) =>
+        this.prisma.rolePermission.upsert({
+          where: {
+            storeId_role_permission: {
+              storeId,
+              role: role as StaffRole,
+              permission,
+            },
+          },
+          update: { isGranted },
+          create: {
             storeId,
             role: role as StaffRole,
             permission,
+            isGranted,
           },
-        },
-        update: { isGranted },
-        create: {
-          storeId,
-          role: role as StaffRole,
-          permission,
-          isGranted,
-        },
-      }),
+        }),
     );
 
     await this.prisma.$transaction(updates);
@@ -216,7 +223,12 @@ export class RolesService {
       return;
     }
 
-    const data: { storeId: string; role: StaffRole; permission: string; isGranted: boolean }[] = [];
+    const data: {
+      storeId: string;
+      role: StaffRole;
+      permission: string;
+      isGranted: boolean;
+    }[] = [];
 
     for (const role of CONFIGURABLE_ROLES) {
       for (const permission of ALL_PERMISSIONS) {

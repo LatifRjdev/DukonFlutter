@@ -69,10 +69,7 @@ describe('RolesService', () => {
   beforeEach(async () => {
     prisma = makePrismaFake();
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        RolesService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [RolesService, { provide: PrismaService, useValue: prisma }],
     }).compile();
     service = moduleRef.get(RolesService);
   });
@@ -80,7 +77,9 @@ describe('RolesService', () => {
   describe('getAllRoles — default permission flag math', () => {
     it('should grant manage_staff only to OWNER (not ADMIN/CASHIER/WAREHOUSE) by default', async () => {
       const all = await service.getAllRoles('store-A');
-      const byRole = Object.fromEntries(all.map((r) => [r.role, r.permissions]));
+      const byRole = Object.fromEntries(
+        all.map((r) => [r.role, r.permissions]),
+      );
 
       expect(byRole.OWNER.manage_staff).toBe(true);
       expect(byRole.ADMIN.manage_staff).toBe(false);
