@@ -160,6 +160,33 @@ describe('RolesService', () => {
       ).rejects.toBeInstanceOf(BadRequestException);
     });
 
+    it('should accept the mobile-only permission keys the roles screen renders (regression: previously 400\'d as "Invalid permissions")', async () => {
+      // app/lib/presentation/pages/roles/roles_page.dart's _allPermissions
+      // includes these keys, but the backend whitelist only recognized a
+      // disjoint legacy set until this fix — saving any of them from the
+      // mobile app failed with "Некорректные данные" for every role except
+      // the 4 that happened to overlap by name.
+      const updated = await service.updateRolePermissions('store-A', 'ADMIN', {
+        permissions: {
+          manage_sales: true,
+          manage_returns: true,
+          manage_expenses: false,
+          manage_suppliers: true,
+          manage_stock: true,
+          manage_debts: false,
+          manage_settings: true,
+          open_close_shift: false,
+          apply_discounts: true,
+          manage_payroll: false,
+        },
+      });
+
+      expect(updated.permissions.manage_sales).toBe(true);
+      expect(updated.permissions.manage_returns).toBe(true);
+      expect(updated.permissions.manage_settings).toBe(true);
+      expect(updated.permissions.manage_payroll).toBe(false);
+    });
+
     it('should flip a permission flag and persist it scoped to the calling store', async () => {
       // Seed both stores first
       await service.getAllRoles('store-A');

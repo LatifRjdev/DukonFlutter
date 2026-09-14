@@ -3,6 +3,14 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { StaffRole } from '@prisma/client';
 import { UpdatePermissionsDto } from './dto/update-permissions.dto';
 
+// The mobile Роли и права screen (app/lib/presentation/pages/roles/roles_page.dart,
+// _allPermissions) renders toggles for a set of keys that only partially overlapped
+// with this list, so saving any of the non-overlapping mobile keys 400'd with
+// "Invalid permissions". Extended to the union of both lists so every mobile
+// toggle can be saved. Note some of these keys (including several pre-existing
+// ones like view_sales/view_profit/change_prices) aren't wired to real route
+// enforcement yet — see api/src/common/guards/permissions-matrix.ts and its
+// LEGACY_PERMISSION_ALIASES for which permissions actually gate access today.
 const ALL_PERMISSIONS = [
   'view_sales',
   'create_sales',
@@ -14,6 +22,16 @@ const ALL_PERMISSIONS = [
   'manage_customers',
   'manage_staff',
   'view_reports',
+  'manage_sales',
+  'manage_returns',
+  'manage_expenses',
+  'manage_suppliers',
+  'manage_stock',
+  'manage_debts',
+  'manage_settings',
+  'open_close_shift',
+  'apply_discounts',
+  'manage_payroll',
 ];
 
 const DEFAULT_PERMISSIONS: Record<string, Record<string, boolean>> = {
@@ -28,6 +46,16 @@ const DEFAULT_PERMISSIONS: Record<string, Record<string, boolean>> = {
     manage_customers: true,
     manage_staff: false,
     view_reports: true,
+    manage_sales: true,
+    manage_returns: true,
+    manage_expenses: true,
+    manage_suppliers: true,
+    manage_stock: true,
+    manage_debts: true,
+    manage_settings: false,
+    open_close_shift: true,
+    apply_discounts: true,
+    manage_payroll: false,
   },
   CASHIER: {
     view_sales: true,
@@ -40,6 +68,16 @@ const DEFAULT_PERMISSIONS: Record<string, Record<string, boolean>> = {
     manage_customers: true,
     manage_staff: false,
     view_reports: false,
+    manage_sales: true,
+    manage_returns: false,
+    manage_expenses: false,
+    manage_suppliers: false,
+    manage_stock: false,
+    manage_debts: true,
+    manage_settings: false,
+    open_close_shift: true,
+    apply_discounts: true,
+    manage_payroll: false,
   },
   WAREHOUSE: {
     view_sales: false,
@@ -52,6 +90,16 @@ const DEFAULT_PERMISSIONS: Record<string, Record<string, boolean>> = {
     manage_customers: false,
     manage_staff: false,
     view_reports: false,
+    manage_sales: false,
+    manage_returns: false,
+    manage_expenses: false,
+    manage_suppliers: true,
+    manage_stock: true,
+    manage_debts: false,
+    manage_settings: false,
+    open_close_shift: false,
+    apply_discounts: false,
+    manage_payroll: false,
   },
 };
 
