@@ -7,9 +7,10 @@ export enum AdjustmentType {
 }
 
 export class CreateAdjustmentDto {
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Omit to apply this adjustment to every staff member on the period' })
+  @IsOptional()
   @IsString()
-  staffId: string;
+  staffId?: string;
 
   @ApiProperty({ enum: AdjustmentType })
   @IsEnum(AdjustmentType)

@@ -654,5 +654,47 @@ describe('PayrollService', () => {
       // 1000 base + 0 commission + 250 bonus = 1250
       expect(Number(payroll.totalAmount)).toBe(1250);
     });
+
+    // Mobile's "ID сотрудника (необязательно)" field omits staffId to mean
+    // "apply to everyone on this period" — found unimplemented during the
+    // 2026-09-21 manual QA pass (every request failed with a class-validator
+    // 400 since staffId was required). This asserts the fan-out actually
+    // reaches every payroll on the period, not just the first one.
+    it('should apply the adjustment to every payroll on the period when staffId is omitted', async () => {
+      seedStaff({ id: 's1', salary: 1000, commission: 0 });
+      seedStaff({ id: 's2', salary: 500, commission: 0 });
+      await service.calculate('store-A', { month: 4, year: 2026 });
+      const period = Array.from(prisma._periods.values())[0];
+
+      const result: any = await service.addAdjustment('store-A', period.id, {
+        type: AdjustmentType.BONUS,
+        amount: 100,
+        description: 'Store-wide bonus',
+      } as any);
+
+      expect(result).toHaveLength(2);
+      const payrolls = Array.from(prisma._payrolls.values());
+      const p1 = payrolls.find((p) => p.staffId === 's1')!;
+      const p2 = payrolls.find((p) => p.staffId === 's2')!;
+      expect(Number(p1.totalAmount)).toBe(1100);
+      expect(Number(p2.totalAmount)).toBe(600);
+
+      const updatedPeriod = prisma._periods.get(period.id)!;
+      expect(Number(updatedPeriod.totalAmount)).toBe(1700);
+    });
+
+    it('should throw NotFoundException when staffId is omitted and the period has no payroll records', async () => {
+      const period = await (prisma.payrollPeriod.create as any)({
+        data: { storeId: 'store-A', month: 4, year: 2026, status: 'DRAFT' },
+      });
+
+      await expect(
+        service.addAdjustment('store-A', period.id, {
+          type: AdjustmentType.BONUS,
+          amount: 100,
+          description: 'Store-wide bonus',
+        } as any),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
   });
 });

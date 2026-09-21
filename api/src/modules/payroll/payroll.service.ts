@@ -196,6 +196,38 @@ export class PayrollService {
     });
     if (!period) throw new NotFoundException('Payroll period not found');
 
+    // Omitting staffId applies the adjustment to every staff member on this
+    // period (mobile's "ID сотрудника (необязательно)" field) rather than
+    // one specific payroll record.
+    if (!dto.staffId) {
+      const payrolls = await this.prisma.payroll.findMany({
+        where: { payrollPeriodId: periodId },
+      });
+      if (payrolls.length === 0) {
+        throw new NotFoundException('No payroll records found for this period');
+      }
+
+      return this.prisma.$transaction(async (tx) => {
+        const adjustments = [];
+        for (const payroll of payrolls) {
+          adjustments.push(
+            await tx.payrollAdjustment.create({
+              data: {
+                payrollId: payroll.id,
+                type: dto.type,
+                amount: dto.amount,
+                description: dto.description,
+                date: dto.date ? new Date(dto.date) : new Date(),
+              },
+            }),
+          );
+          await this.recalculatePayroll(tx, payroll.id);
+        }
+        await this.recalculatePeriod(tx, periodId);
+        return adjustments;
+      });
+    }
+
     const payroll = await this.prisma.payroll.findFirst({
       where: { payrollPeriodId: periodId, staffId: dto.staffId },
     });
