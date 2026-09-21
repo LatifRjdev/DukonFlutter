@@ -76,14 +76,22 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
     }
   }
 
-  void _submit() {
+  // Takes an explicit BuildContext from a descendant of the BlocProvider
+  // declared in build() below. Using the State's own `context` here would
+  // throw ProviderNotFoundException, since that context sits *above* the
+  // BlocProvider this widget creates — Provider lookups only search
+  // ancestors, and a widget can't see a provider it declares in its own
+  // subtree. That exception is thrown inside a gesture callback, so Flutter
+  // swallows it silently (logged, no crash, no visible feedback) — the
+  // button looked like it was doing nothing on every tap.
+  void _submit(BuildContext ctx) {
     if (!_formKey.currentState!.validate()) return;
     final amount = double.tryParse(_amountController.text);
     if (amount == null || amount <= 0) return;
 
     final returnAmount = double.tryParse(_returnAmountController.text);
 
-    context.read<InvestmentBloc>().add(InvestmentCreateRequested(
+    ctx.read<InvestmentBloc>().add(InvestmentCreateRequested(
       storeId: widget.storeId,
       data: {
         'name': _nameController.text,
@@ -266,7 +274,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                           return AppButton(
                             text: 'Сохранить',
                             isLoading: state is InvestmentLoading,
-                            onPressed: _submit,
+                            onPressed: () => _submit(context),
                           );
                         },
                       ),
