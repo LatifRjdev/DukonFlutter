@@ -15,6 +15,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../../core/errors/exceptions.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../blocs/store/store_bloc.dart';
@@ -427,7 +428,45 @@ class _ReportsPageState extends State<ReportsPage>
     }
   }
 
-  String _errMsg(Object e) => mapErrorToUserMessage(e);
+  // This page calls DioClient directly (not through a datasource with its
+  // own error mapping), so a raw DioException used to reach
+  // mapErrorToUserMessage() unconverted — that function only recognizes
+  // NetworkException/UnauthorizedException/ServerException/CacheException,
+  // so every failure here (expired subscription, 400, 404, 500, no
+  // network) fell through to the same generic "Не удалось выполнить
+  // операцию", with no way to tell a permanent failure (like an expired
+  // subscription) from a transient one worth retrying (found during the
+  // 2026-09-21 manual QA pass). Converts DioException the same way every
+  // other remote datasource in the app does before mapping it.
+  String _errMsg(Object e) =>
+      mapErrorToUserMessage(e is DioException ? _handleDioError(e) : e);
+
+  Exception _handleDioError(DioException e) {
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.connectionError) {
+      return const NetworkException();
+    }
+
+    final statusCode = e.response?.statusCode;
+    final rawMessage =
+        (e.response?.data is Map) ? e.response?.data['message'] : null;
+    final String message;
+    if (rawMessage is List) {
+      message = rawMessage.join(', ');
+    } else if (rawMessage is String) {
+      message = rawMessage;
+    } else {
+      message = e.message ?? 'Unknown error';
+    }
+
+    if (statusCode == 401) {
+      return UnauthorizedException(message);
+    }
+
+    return ServerException(message, statusCode: statusCode);
+  }
 
   String _catLabel(String key) => const {
         'PURCHASE': 'Закупка',
