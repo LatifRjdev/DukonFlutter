@@ -30,7 +30,30 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
   @override
   void initState() {
     super.initState();
+    _loadCalculation();
+  }
+
+  void _loadCalculation() {
     context.read<ZakatBloc>().add(ZakatCalculateRequested(storeId: widget.storeId));
+  }
+
+  // ZakatBloc is shared with ZakatSettingsPage/ZakatHistoryPage. A bare
+  // context.push left this page mounted underneath with whatever state the
+  // pushed page's own actions left the shared bloc in (e.g.
+  // ZakatSettingsLoaded from tapping "Обновить" on the gold rate) — this
+  // page's BlocConsumer doesn't recognize that state and falls through to
+  // a blank screen on return (found during the 2026-09-21 manual QA pass;
+  // same root-cause class as the Staff/Debts/Payroll reload fixes
+  // elsewhere in this app). Re-request the calculation once the pushed
+  // route returns, regardless of what it left the shared bloc's state as.
+  Future<void> _openSettings() async {
+    await context.push('/zakat/settings', extra: widget.storeId);
+    if (mounted) _loadCalculation();
+  }
+
+  Future<void> _openHistory() async {
+    await context.push('/zakat/history', extra: widget.storeId);
+    if (mounted) _loadCalculation();
   }
 
   @override
@@ -61,12 +84,12 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                   IconButton(
                     tooltip: l10n.zakatSettings,
                     icon: Icon(Icons.settings_outlined, color: context.textSecondary),
-                    onPressed: () => context.push('/zakat/settings', extra: widget.storeId),
+                    onPressed: _openSettings,
                   ),
                   IconButton(
                     tooltip: l10n.a11yCalculationHistory,
                     icon: Icon(Icons.list_alt_outlined, color: context.textSecondary),
-                    onPressed: () => context.push('/zakat/history', extra: widget.storeId),
+                    onPressed: _openHistory,
                   ),
                 ],
               ),
