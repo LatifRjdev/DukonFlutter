@@ -92,7 +92,24 @@ class _AddStaffPageState extends State<AddStaffPage> {
       body: BlocListener<StaffFormBloc, StaffFormState>(
         listener: (context, state) {
           if (state is StaffFormSuccess) {
-            context.read<StaffBloc>().add(LoadStaff(storeId: widget.storeId));
+            // AddStaffPage and StaffDetailPage share one StaffBloc instance.
+            // When editing, popping back returns to StaffDetailPage, whose
+            // BlocBuilder only renders for StaffDetailLoaded — dispatching
+            // LoadStaff (the list reload) here clobbers that state with
+            // StaffLoaded instead, leaving the detail screen permanently
+            // blank. Refresh the detail record it's actually returning to;
+            // only refresh the list when this was a create flow, which
+            // returns to the list screen (found during the 2026-09-21
+            // manual QA pass — same root cause class as the already-fixed
+            // post-plan finding №1 for Debts/Customers/Suppliers).
+            if (_isEditing) {
+              context.read<StaffBloc>().add(LoadStaffDetail(
+                    storeId: widget.storeId,
+                    id: widget.staffMember!.id,
+                  ));
+            } else {
+              context.read<StaffBloc>().add(LoadStaff(storeId: widget.storeId));
+            }
             AppSnackbar.success(
               context,
               _isEditing ? l10n.employeeUpdated : l10n.employeeAdded,
