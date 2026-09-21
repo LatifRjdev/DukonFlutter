@@ -45,12 +45,17 @@ class _Transaction {
     required this.description,
   });
 
+  // Backend sends each recentTransactions item as {type: 'SALE'|'EXPENSE',
+  // label: ..., ...} — this used to read the non-existent 'description'
+  // key (always ''), and compared `type` against the lowercase 'sale'
+  // below without normalizing case, which would have misclassified every
+  // real transaction as an expense once `recentTransactions` was wired up.
   factory _Transaction.fromJson(Map<String, dynamic> j) => _Transaction(
         id: j['id'] as String? ?? '',
-        type: j['type'] as String? ?? 'sale',
+        type: (j['type'] as String?)?.toLowerCase() ?? 'sale',
         amount: (j['amount'] as num?)?.toDouble() ?? 0,
         date: j['date'] as String? ?? '',
-        description: j['description'] as String? ?? '',
+        description: j['label'] as String? ?? '',
       );
 }
 
@@ -71,15 +76,23 @@ class _BalanceData {
     required this.transactions,
   });
 
+  // Backend (FinancesService.getBalance) returns `currentBalance` and
+  // `recentTransactions` — this used to read `balance`/`transactions`,
+  // neither of which the API ever sends, so both fell back to their
+  // defaults (0 / empty list) unconditionally regardless of real data
+  // (found during the 2026-09-21 manual QA pass: "Текущий баланс" always
+  // showed 0 despite a positive "Прибыль" on the same screen, and
+  // "Транзакций нет" contradicted the non-empty "Динамика" chart, which
+  // reads the correctly-named `chartData` field).
   factory _BalanceData.fromJson(Map<String, dynamic> j) => _BalanceData(
-        balance: (j['balance'] as num?)?.toDouble() ?? 0,
+        balance: (j['currentBalance'] as num?)?.toDouble() ?? 0,
         income: (j['income'] as num?)?.toDouble() ?? 0,
         expenses: (j['expenses'] as num?)?.toDouble() ?? 0,
         profit: (j['profit'] as num?)?.toDouble() ?? 0,
         chartData: ((j['chartData'] as List?) ?? [])
             .map((e) => _ChartPoint.fromJson(e as Map<String, dynamic>))
             .toList(),
-        transactions: ((j['transactions'] as List?) ?? [])
+        transactions: ((j['recentTransactions'] as List?) ?? [])
             .map((e) => _Transaction.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
