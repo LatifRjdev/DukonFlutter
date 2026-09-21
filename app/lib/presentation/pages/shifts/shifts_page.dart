@@ -121,15 +121,17 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   BlocBuilder<ShiftBloc, ShiftState>(
                     builder: (context, state) {
                       if (state is ShiftLoaded && state.currentShift == null) {
-                        return OutlinedButton(
-                          onPressed: () => context.push('/shifts/open', extra: widget.storeId),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
+                        return IntrinsicWidth(
+                          child: OutlinedButton(
+                            onPressed: () => context.push('/shifts/open', extra: widget.storeId),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                              side: const BorderSide(color: AppColors.primary),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
+                            ),
+                            child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
                           ),
-                          child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
                         );
                       }
                       return const SizedBox.shrink();
