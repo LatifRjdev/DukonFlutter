@@ -80,6 +80,21 @@ class _PayrollPageState extends State<PayrollPage> {
     ));
   }
 
+  // PayrollBloc is shared with AddAdjustmentPage. A bare context.push here
+  // left this page mounted underneath, so a failed add-adjustment (which
+  // leaves the shared bloc in PayrollError after the child page's own
+  // snackbar) surfaced as a full-page "Некорректные данные" error the
+  // instant the user navigated back — even though nothing was wrong with
+  // the period they were already looking at (found during the 2026-09-21
+  // manual QA pass). Same root-cause class as the Staff/Debts list-vs-detail
+  // reload fixes elsewhere in this app: explicitly reload the period detail
+  // on return so this page never renders whatever state a child route left
+  // the shared bloc in.
+  Future<void> _openAddAdjustment(String periodId) async {
+    await context.push('/payroll/$periodId/adjustment', extra: widget.storeId);
+    if (mounted) _loadPeriodDetail(periodId);
+  }
+
   void _payAll(String periodId) {
     showDialog(
       context: context,
@@ -261,20 +276,7 @@ class _PayrollPageState extends State<PayrollPage> {
                 ),
               ),
               IconButton(
-                onPressed: busy
-                    ? null
-                    : () => context.push(
-                        '/payroll/${period.id}/adjustment',
-                        // The route reads periodId from the path parameter
-                        // already in the URL above, not from extra — extra
-                        // is just storeId here, matching every sibling
-                        // route's `state.extra as String? ?? ''` in
-                        // app_router.dart. Passing a Map here instead threw
-                        // "type '_Map<String, String>' is not a subtype of
-                        // type 'String?'" on every tap, crashing the screen
-                        // (found during the 2026-09-21 manual QA pass).
-                        extra: widget.storeId,
-                      ),
+                onPressed: busy ? null : () => _openAddAdjustment(period.id),
                 icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
                 tooltip: 'Добавить корректировку',
               ),
