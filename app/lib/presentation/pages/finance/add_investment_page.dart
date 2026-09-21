@@ -147,7 +147,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                     children: [
                       AppTextField(
                         controller: _nameController,
-                        label: 'Название',
+                        label: 'Название *',
                         prefixIcon: Icons.label_outline,
                         validator: (v) {
                           if (v == null || v.isEmpty) return 'Введите название';
@@ -163,7 +163,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _amountController,
-                        label: 'Сумма',
+                        label: 'Сумма *',
                         keyboardType: TextInputType.number,
                         prefixIcon: Icons.attach_money,
                         validator: (v) {
@@ -184,7 +184,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _investorNameController,
-                        label: 'Имя инвестора',
+                        label: 'Имя инвестора *',
                         prefixIcon: Icons.person_outline,
                         validator: (v) {
                           if (v == null || v.isEmpty) {
