@@ -32,14 +32,19 @@ class _MyStoresPageState extends State<MyStoresPage> {
   }
 
   Future<void> _loadStores() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final res = await _dioClient.get('/stores');
       final data = res.data;
       if (data is List) {
         setState(() => _stores = List<Map<String, dynamic>>.from(data));
       } else if (data is Map && data['data'] is List) {
-        setState(() => _stores = List<Map<String, dynamic>>.from(data['data'] as List));
+        setState(
+          () => _stores = List<Map<String, dynamic>>.from(data['data'] as List),
+        );
       }
     } catch (e) {
       setState(() => _error = mapErrorToUserMessage(e));
@@ -63,6 +68,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
   };
 
   void _showStoreForm({Map<String, dynamic>? existing}) {
+    final formKey = GlobalKey<FormState>();
     final nameCtrl = TextEditingController(text: existing?['name'] ?? '');
     final addressCtrl = TextEditingController(text: existing?['address'] ?? '');
     final phoneCtrl = TextEditingController(text: existing?['phone'] ?? '');
@@ -78,83 +84,131 @@ class _MyStoresPageState extends State<MyStoresPage> {
       ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) => Padding(
-        padding: EdgeInsets.fromLTRB(
-            16, 16, 16, MediaQuery.of(ctx).viewInsets.bottom + 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40, height: 4,
-                decoration: BoxDecoration(
-                  color: context.border,
-                  borderRadius: BorderRadius.circular(2),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            MediaQuery.of(ctx).viewInsets.bottom + 24,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: context.border,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(isEdit ? 'Редактировать магазин' : 'Добавить магазин',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 16),
-            TextField(
-              controller: nameCtrl,
-              decoration: const InputDecoration(labelText: 'Название *', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: selectedCategory,
-              decoration: const InputDecoration(labelText: 'Категория *', border: OutlineInputBorder()),
-              items: _categories.entries
-                  .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) setSheetState(() => selectedCategory = v);
-              },
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: addressCtrl,
-              decoration: const InputDecoration(labelText: 'Адрес', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: phoneCtrl,
-              decoration: const InputDecoration(labelText: 'Телефон', border: OutlineInputBorder()),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: AppConstants.buttonHeight,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.onPrimary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
+                const SizedBox(height: 16),
+                Text(
+                  isEdit ? 'Редактировать магазин' : 'Добавить магазин',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                onPressed: () async {
-                  Navigator.pop(ctx);
-                  await _saveStore(
-                    id: existing?['id'] as String?,
-                    name: nameCtrl.text.trim(),
-                    category: selectedCategory,
-                    address: addressCtrl.text.trim(),
-                    phone: phoneCtrl.text.trim(),
-                  );
-                },
-                child: Text(isEdit ? 'Сохранить' : 'Создать',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: nameCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Название *',
+                    border: OutlineInputBorder(),
+                  ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Введите название'
+                      : null,
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedCategory,
+                  decoration: const InputDecoration(
+                    labelText: 'Категория *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _categories.entries
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e.key,
+                          child: Text(e.value),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (v) {
+                    if (v != null) setSheetState(() => selectedCategory = v);
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: addressCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Адрес',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: phoneCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Телефон',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: AppConstants.buttonHeight,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusLg,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (!formKey.currentState!.validate()) return;
+                      final success = await _saveStore(
+                        id: existing?['id'] as String?,
+                        name: nameCtrl.text.trim(),
+                        category: selectedCategory,
+                        address: addressCtrl.text.trim(),
+                        phone: phoneCtrl.text.trim(),
+                      );
+                      // Only close the sheet on success — on failure the user's
+                      // input (and the error shown via snackbar) stays visible
+                      // instead of being silently discarded (regression found
+                      // during the 2026-09-08 manual QA pass).
+                      if (success && ctx.mounted) Navigator.pop(ctx);
+                    },
+                    child: Text(
+                      isEdit ? 'Сохранить' : 'Создать',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
-  Future<void> _saveStore({
+  Future<bool> _saveStore({
     String? id,
     required String name,
     required String category,
@@ -162,26 +216,36 @@ class _MyStoresPageState extends State<MyStoresPage> {
     required String phone,
   }) async {
     try {
-      final payload = {'name': name, 'category': category, 'address': address, 'phone': phone};
+      final payload = {
+        'name': name,
+        'category': category,
+        'address': address,
+        'phone': phone,
+      };
       if (id != null) {
         await _dioClient.put('/stores/$id', data: payload);
       } else {
         await _dioClient.post('/stores', data: payload);
       }
-      if (!mounted) return;
+      if (!mounted) return true;
       await _loadStores();
-      if (!mounted) return;
+      if (!mounted) return true;
       context.read<StoreBloc>().add(StoreLoadRequested());
+      return true;
     } catch (e) {
       if (mounted) {
         AppSnackbar.error(context, mapErrorToUserMessage(e));
       }
+      return false;
     }
   }
 
   void _switchStore(String storeId, String storeName) {
     context.read<StoreBloc>().add(StoreSelected(storeId));
-    AppSnackbar.success(context, AppLocalizations.of(context)!.snackStoreSelected(storeName));
+    AppSnackbar.success(
+      context,
+      AppLocalizations.of(context)!.snackStoreSelected(storeName),
+    );
   }
 
   @override
@@ -205,125 +269,165 @@ class _MyStoresPageState extends State<MyStoresPage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_error!, style: const TextStyle(color: AppColors.error)),
-                      const SizedBox(height: 12),
-                      ElevatedButton(onPressed: _loadStores, child: const Text('Повторить')),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(_error!, style: const TextStyle(color: AppColors.error)),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: _loadStores,
+                    child: const Text('Повторить'),
                   ),
-                )
-              : _stores.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.storefront_outlined, size: 64,
-                              color: context.textSecondary.withValues(alpha: 0.5)),
-                          const SizedBox(height: 12),
-                          Text('Нет магазинов',
-                              style: TextStyle(fontSize: 16, color: context.textSecondary)),
-                          const SizedBox(height: 8),
-                          ElevatedButton.icon(
-                            onPressed: () => _showStoreForm(),
-                            icon: const Icon(Icons.add),
-                            label: const Text('Добавить магазин'),
-                            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.onPrimary),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: _stores.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final store = _stores[index];
-                        final id = store['id'] as String? ?? '';
-                        final name = store['name'] as String? ?? '';
-                        final address = store['address'] as String? ?? '';
-                        final isActive = id == selectedId;
+                ],
+              ),
+            )
+          : _stores.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.storefront_outlined,
+                    size: 64,
+                    color: context.textSecondary.withValues(alpha: 0.5),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Нет магазинов',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: context.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton.icon(
+                    onPressed: () => _showStoreForm(),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Добавить магазин'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.onPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: _stores.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final store = _stores[index];
+                final id = store['id'] as String? ?? '';
+                final name = store['name'] as String? ?? '';
+                final address = store['address'] as String? ?? '';
+                final isActive = id == selectedId;
 
-                        return Semantics(
-                          label: l10n.a11ySelectStore(name),
-                          button: true,
-                          child: GestureDetector(
-                          onTap: () => _switchStore(id, name),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
+                return Semantics(
+                  label: l10n.a11ySelectStore(name),
+                  button: true,
+                  child: GestureDetector(
+                    onTap: () => _switchStore(id, name),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusLg,
+                        ),
+                        border: isActive
+                            ? Border.all(color: AppColors.primary, width: 2)
+                            : Border.all(color: context.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-                              border: isActive
-                                  ? Border.all(color: AppColors.primary, width: 2)
-                                  : Border.all(color: context.border),
+                              color: isActive
+                                  ? AppColors.primary.withValues(alpha: 0.12)
+                                  : context.bg,
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.radiusMd,
+                              ),
                             ),
-                            child: Row(
+                            child: Icon(
+                              Icons.storefront_outlined,
+                              color: isActive
+                                  ? AppColors.primary
+                                  : context.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: isActive
-                                        ? AppColors.primary.withValues(alpha: 0.12)
-                                        : context.bg,
-                                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                                  ),
-                                  child: Icon(Icons.storefront_outlined,
-                                      color: isActive ? AppColors.primary : context.textSecondary),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(name,
-                                              style: const TextStyle(
-                                                  fontSize: 15, fontWeight: FontWeight.w600)),
-                                          if (isActive) ...[
-                                            const SizedBox(width: 8),
-                                            Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 2),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primary.withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                                              ),
-                                              child: const Text('Активный',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: AppColors.primary,
-                                                      fontWeight: FontWeight.w600)),
-                                            ),
-                                          ],
-                                        ],
+                                Row(
+                                  children: [
+                                    Text(
+                                      name,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      if (address.isNotEmpty)
-                                        Text(address,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: context.textSecondary)),
+                                    ),
+                                    if (isActive) ...[
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary.withValues(
+                                            alpha: 0.12,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            AppConstants.radiusSm,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Активный',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
                                     ],
+                                  ],
+                                ),
+                                if (address.isNotEmpty)
+                                  Text(
+                                    address,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: context.textSecondary,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  tooltip: l10n.a11yEditStore,
-                                  icon: Icon(Icons.edit_outlined,
-                                      color: context.textSecondary, size: 18),
-                                  onPressed: () => _showStoreForm(existing: store),
-                                ),
                               ],
                             ),
                           ),
-                        ),
-                        );
-                      },
+                          IconButton(
+                            tooltip: l10n.a11yEditStore,
+                            icon: Icon(
+                              Icons.edit_outlined,
+                              color: context.textSecondary,
+                              size: 18,
+                            ),
+                            onPressed: () => _showStoreForm(existing: store),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
