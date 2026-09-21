@@ -121,9 +121,19 @@ class _AddStaffPageState extends State<AddStaffPage> {
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _phoneController,
-                  label: l10n.phoneLabel,
+                  label: '${l10n.phoneLabel} *',
                   prefixIcon: Icons.phone,
                   keyboardType: TextInputType.phone,
+                  // Backend's CreateStaffDto requires `phone` (@IsString(),
+                  // no @IsOptional()), but this field had no validator and
+                  // _submit() sent `null` when empty, so creating a staff
+                  // member with just a name 400'd with the generic
+                  // "Некорректные данные" — found during the 2026-09-21
+                  // manual QA pass.
+                  validator: (v) {
+                    if (v == null || v.trim().length < 9) return l10n.phoneRequired;
+                    return null;
+                  },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 Text(l10n.role, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
