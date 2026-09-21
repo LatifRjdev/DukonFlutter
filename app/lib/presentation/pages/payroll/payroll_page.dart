@@ -265,7 +265,15 @@ class _PayrollPageState extends State<PayrollPage> {
                     ? null
                     : () => context.push(
                         '/payroll/${period.id}/adjustment',
-                        extra: {'storeId': widget.storeId, 'periodId': period.id},
+                        // The route reads periodId from the path parameter
+                        // already in the URL above, not from extra — extra
+                        // is just storeId here, matching every sibling
+                        // route's `state.extra as String? ?? ''` in
+                        // app_router.dart. Passing a Map here instead threw
+                        // "type '_Map<String, String>' is not a subtype of
+                        // type 'String?'" on every tap, crashing the screen
+                        // (found during the 2026-09-21 manual QA pass).
+                        extra: widget.storeId,
                       ),
                 icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
                 tooltip: 'Добавить корректировку',
