@@ -54,8 +54,11 @@ class _FakeDioClient extends Fake implements DioClient {
     }
     if (path.endsWith('/sales')) {
       return Response<T>(
+        // Real sale objects carry the receipt number as `receiptNo`, not
+        // `orderNumber` (2026-09-21 manual QA finding — see
+        // create_delivery_page_parsing_test.dart).
         data: <Map<String, dynamic>>[
-          {'id': 's1', 'orderNumber': '#S1'},
+          {'id': 's1', 'receiptNo': '#S1'},
         ] as T,
         requestOptions: RequestOptions(path: path),
         statusCode: 200,
@@ -63,8 +66,10 @@ class _FakeDioClient extends Fake implements DioClient {
     }
     if (path.endsWith('/staff')) {
       return Response<T>(
+        // Real staff objects carry a flat `name`, not `firstName`/
+        // `lastName` (2026-09-21 manual QA finding).
         data: <Map<String, dynamic>>[
-          {'id': 'c1', 'firstName': 'Курьер', 'lastName': 'Курьеров'},
+          {'id': 'c1', 'name': 'Курьер Курьеров'},
         ] as T,
         requestOptions: RequestOptions(path: path),
         statusCode: 200,

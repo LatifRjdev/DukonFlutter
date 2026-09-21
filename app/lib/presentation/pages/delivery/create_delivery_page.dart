@@ -16,9 +16,13 @@ class _Sale {
   final String id;
   final String label;
   const _Sale({required this.id, required this.label});
+  // Sales list responses (GET /stores/:storeId/sales) return the receipt
+  // number as `receiptNo`, not `orderNumber` — that field doesn't exist on
+  // the backend at all, so this always fell through to the raw-UUID
+  // fallback (found during the 2026-09-21 manual QA pass, Section 14).
   factory _Sale.fromJson(Map<String, dynamic> j) => _Sale(
         id: j['id'] as String,
-        label: j['orderNumber'] as String? ?? '#${j['id']}',
+        label: j['receiptNo'] as String? ?? '#${j['id']}',
       );
 }
 
@@ -26,9 +30,14 @@ class _StaffMember {
   final String id;
   final String name;
   const _StaffMember({required this.id, required this.name});
+  // Staff list responses (GET /stores/:storeId/staff) return a flat `name`
+  // field, not `firstName`/`lastName` — neither of those exist on the
+  // backend, so this always evaluated to an empty string, rendering blank
+  // rows in the courier dropdown (found during the 2026-09-21 manual QA
+  // pass, Section 14).
   factory _StaffMember.fromJson(Map<String, dynamic> j) => _StaffMember(
         id: j['id'] as String,
-        name: '${j['firstName'] ?? ''} ${j['lastName'] ?? ''}'.trim(),
+        name: j['name'] as String? ?? '',
       );
 }
 
