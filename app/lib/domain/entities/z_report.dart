@@ -43,28 +43,52 @@ class ZReport extends Equatable {
     this.topProducts = const [],
   });
 
+  // Backend's GET /shifts/:id/z-report nests fields under shift/sales/
+  // returns/cashDrawer, with different names than this entity's flat
+  // properties (e.g. cashDrawer.opening -> openingCash, cashDrawer.actual
+  // -> actualCash, sales.total -> salesTotal, topProducts[].productName ->
+  // topProducts[].name) — see shifts.service.ts's getZReport(). The mobile
+  // side was written against a flat shape that never matched, so this
+  // parse threw on every real response and the Z-report screen always
+  // showed a generic error instead of the report (found during the
+  // 2026-09-21 manual QA pass). `duration` isn't sent by the backend at
+  // all — computed here from openedAt/closedAt instead.
   factory ZReport.fromJson(Map<String, dynamic> json) {
+    final shift = json['shift'] as Map<String, dynamic>? ?? const {};
+    final sales = json['sales'] as Map<String, dynamic>? ?? const {};
+    final returns = json['returns'] as Map<String, dynamic>? ?? const {};
+    final cashDrawer = json['cashDrawer'] as Map<String, dynamic>? ?? const {};
+
+    final openedAt = DateTime.parse(shift['openedAt'] as String);
+    final closedAt = DateTime.parse(shift['closedAt'] as String);
+    final diff = closedAt.difference(openedAt);
+
     return ZReport(
-      staffName: json['staffName'] as String,
-      openedAt: DateTime.parse(json['openedAt'] as String),
-      closedAt: DateTime.parse(json['closedAt'] as String),
-      duration: json['duration'] as String,
-      salesCount: json['salesCount'] as int? ?? 0,
-      cashTotal: (json['cashTotal'] as num?)?.toDouble() ?? 0,
-      cardTotal: (json['cardTotal'] as num?)?.toDouble() ?? 0,
-      debtTotal: (json['debtTotal'] as num?)?.toDouble() ?? 0,
-      salesTotal: (json['salesTotal'] as num?)?.toDouble() ?? 0,
-      returnsCount: json['returnsCount'] as int? ?? 0,
-      returnsTotal: (json['returnsTotal'] as num?)?.toDouble() ?? 0,
-      openingCash: (json['openingCash'] as num?)?.toDouble() ?? 0,
-      cashSalesAmount: (json['cashSalesAmount'] as num?)?.toDouble() ?? 0,
-      cashReturns: (json['cashReturns'] as num?)?.toDouble() ?? 0,
-      withdrawals: (json['withdrawals'] as num?)?.toDouble() ?? 0,
-      expectedCash: (json['expectedCash'] as num?)?.toDouble() ?? 0,
-      actualCash: (json['actualCash'] as num?)?.toDouble() ?? 0,
-      difference: (json['difference'] as num?)?.toDouble() ?? 0,
+      staffName: shift['staffName'] as String? ?? '',
+      openedAt: openedAt,
+      closedAt: closedAt,
+      duration: '${diff.inHours}ч ${diff.inMinutes % 60}м',
+      salesCount: sales['count'] as int? ?? 0,
+      cashTotal: (sales['cashTotal'] as num?)?.toDouble() ?? 0,
+      cardTotal: (sales['cardTotal'] as num?)?.toDouble() ?? 0,
+      debtTotal: (sales['debtTotal'] as num?)?.toDouble() ?? 0,
+      salesTotal: (sales['total'] as num?)?.toDouble() ?? 0,
+      returnsCount: returns['count'] as int? ?? 0,
+      returnsTotal: (returns['total'] as num?)?.toDouble() ?? 0,
+      openingCash: (cashDrawer['opening'] as num?)?.toDouble() ?? 0,
+      cashSalesAmount: (cashDrawer['cashSales'] as num?)?.toDouble() ?? 0,
+      cashReturns: (cashDrawer['cashReturns'] as num?)?.toDouble() ?? 0,
+      withdrawals: (cashDrawer['withdrawals'] as num?)?.toDouble() ?? 0,
+      expectedCash: (cashDrawer['expected'] as num?)?.toDouble() ?? 0,
+      actualCash: (cashDrawer['actual'] as num?)?.toDouble() ?? 0,
+      difference: (cashDrawer['difference'] as num?)?.toDouble() ?? 0,
       topProducts: (json['topProducts'] as List?)
               ?.map((e) => e as Map<String, dynamic>)
+              .map((p) => {
+                    'name': p['productName'],
+                    'quantity': p['quantitySold'],
+                    'total': p['totalRevenue'],
+                  })
               .toList() ??
           const [],
     );

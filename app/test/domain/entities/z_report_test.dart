@@ -4,43 +4,82 @@ import 'package:dukonpro/domain/entities/z_report.dart';
 
 void main() {
   group('ZReport.fromJson', () {
-    Map<String, dynamic> baseJson({Map<String, dynamic> overrides = const {}}) => {
-          'staffName': 'Ali',
-          'openedAt': '2026-07-17T08:00:00.000Z',
-          'closedAt': '2026-07-17T20:00:00.000Z',
-          'duration': '12h 00m',
-          ...overrides,
+    // Matches the real nested shape returned by shifts.service.ts's
+    // getZReport() — shift/sales/returns/cashDrawer sub-objects, not a
+    // flat top-level structure. A prior version of this test (and of
+    // ZReport.fromJson) assumed a flat shape that the backend never
+    // actually sent, so fromJson threw on every real response and this
+    // test suite never caught it (found during the 2026-09-21 manual QA
+    // pass — the Z-report screen always showed a generic error).
+    Map<String, dynamic> baseJson({
+      Map<String, dynamic> shiftOverrides = const {},
+      Map<String, dynamic> salesOverrides = const {},
+      Map<String, dynamic> returnsOverrides = const {},
+      Map<String, dynamic> cashDrawerOverrides = const {},
+      List<Map<String, dynamic>>? topProducts,
+    }) =>
+        {
+          'shift': {
+            'staffName': 'Ali',
+            'openedAt': '2026-07-17T08:00:00.000Z',
+            'closedAt': '2026-07-17T20:00:00.000Z',
+            ...shiftOverrides,
+          },
+          'sales': {
+            'cashTotal': 0,
+            'cardTotal': 0,
+            'debtTotal': 0,
+            'total': 0,
+            'count': 0,
+            ...salesOverrides,
+          },
+          'returns': {
+            'count': 0,
+            'total': 0,
+            ...returnsOverrides,
+          },
+          'cashDrawer': {
+            'opening': 0,
+            'cashSales': 0,
+            'cashReturns': 0,
+            'withdrawals': 0,
+            'expected': 0,
+            'actual': 0,
+            'difference': 0,
+            ...cashDrawerOverrides,
+          },
+          'topProducts': topProducts ?? const [],
         };
 
     test('parses a full Z-report response with all fields present', () {
-      final report = ZReport.fromJson({
-        'staffName': 'Ali',
-        'openedAt': '2026-07-17T08:00:00.000Z',
-        'closedAt': '2026-07-17T20:00:00.000Z',
-        'duration': '12h 00m',
-        'salesCount': 42,
-        'cashTotal': 750,
-        'cardTotal': 2000,
-        'debtTotal': 250,
-        'salesTotal': 3000,
-        'returnsCount': 2,
-        'returnsTotal': 100,
-        'openingCash': 500,
-        'cashSalesAmount': 750,
-        'cashReturns': 50,
-        'withdrawals': 200,
-        'expectedCash': 1000,
-        'actualCash': 1000,
-        'difference': 0,
-        'topProducts': [
-          {'productId': 'p1', 'name': 'Bread', 'quantity': 10},
+      final report = ZReport.fromJson(baseJson(
+        salesOverrides: {
+          'cashTotal': 750,
+          'cardTotal': 2000,
+          'debtTotal': 250,
+          'total': 3000,
+          'count': 42,
+        },
+        returnsOverrides: {'count': 2, 'total': 100},
+        cashDrawerOverrides: {
+          'opening': 500,
+          'cashSales': 750,
+          'cashReturns': 50,
+          'withdrawals': 200,
+          'expected': 1000,
+          'actual': 1000,
+          'difference': 0,
+        },
+        topProducts: [
+          {'productId': 'p1', 'productName': 'Bread', 'quantitySold': 10, 'totalRevenue': 500},
         ],
-      });
+      ));
 
       expect(report.staffName, 'Ali');
       expect(report.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z'));
       expect(report.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z'));
-      expect(report.duration, '12h 00m');
+      // duration isn't sent by the backend — computed from openedAt/closedAt.
+      expect(report.duration, '12ч 0м');
       expect(report.salesCount, 42);
       expect(report.cashTotal, 750);
       expect(report.cardTotal, 2000);
@@ -56,12 +95,16 @@ void main() {
       expect(report.actualCash, 1000);
       expect(report.difference, 0);
       expect(report.topProducts, hasLength(1));
-      expect(report.topProducts.first['productId'], 'p1');
+      // topProducts entries are remapped to name/quantity/total, matching
+      // what z_report_page.dart's _buildReport actually reads.
+      expect(report.topProducts.first['name'], 'Bread');
+      expect(report.topProducts.first['quantity'], 10);
+      expect(report.topProducts.first['total'], 500);
     });
 
     test(
         'defaults every numeric field to 0 and topProducts to empty when '
-        'only the required fields are present', () {
+        'only the required shift fields are present', () {
       final report = ZReport.fromJson(baseJson());
 
       expect(report.salesCount, 0);
@@ -81,11 +124,10 @@ void main() {
       expect(report.topProducts, isEmpty);
     });
 
-    test('cash-count overage: positive difference when actualCash exceeds '
-        'expectedCash', () {
-      final report = ZReport.fromJson(baseJson(overrides: {
-        'expectedCash': 1000,
-        'actualCash': 1050,
+    test('cash-count overage: positive difference when actual exceeds expected', () {
+      final report = ZReport.fromJson(baseJson(cashDrawerOverrides: {
+        'expected': 1000,
+        'actual': 1050,
         'difference': 50,
       }));
 
@@ -95,11 +137,10 @@ void main() {
       expect(report.difference, report.actualCash - report.expectedCash);
     });
 
-    test('cash-count shortage: negative difference when actualCash is '
-        'below expectedCash', () {
-      final report = ZReport.fromJson(baseJson(overrides: {
-        'expectedCash': 1000,
-        'actualCash': 940,
+    test('cash-count shortage: negative difference when actual is below expected', () {
+      final report = ZReport.fromJson(baseJson(cashDrawerOverrides: {
+        'expected': 1000,
+        'actual': 940,
         'difference': -60,
       }));
 
@@ -109,24 +150,24 @@ void main() {
       expect(report.difference, report.actualCash - report.expectedCash);
     });
 
-    test('exact cash count: zero difference when actualCash equals '
-        'expectedCash', () {
-      final report = ZReport.fromJson(baseJson(overrides: {
-        'expectedCash': 1000,
-        'actualCash': 1000,
+    test('exact cash count: zero difference when actual equals expected', () {
+      final report = ZReport.fromJson(baseJson(cashDrawerOverrides: {
+        'expected': 1000,
+        'actual': 1000,
         'difference': 0,
       }));
 
       expect(report.difference, 0);
     });
 
-    test('throws when a required field (staffName) is missing', () {
-      final json = baseJson()..remove('staffName');
+    test('throws when a required field (shift.staffName) is missing defaults to empty string, '
+        'but a missing shift object throws', () {
+      final json = baseJson()..remove('shift');
       expect(() => ZReport.fromJson(json), throwsA(isA<TypeError>()));
     });
 
     test('throws when a required date field is unparseable', () {
-      final json = baseJson(overrides: {'openedAt': 'not-a-date'});
+      final json = baseJson(shiftOverrides: {'openedAt': 'not-a-date'});
       expect(() => ZReport.fromJson(json), throwsFormatException);
     });
   });

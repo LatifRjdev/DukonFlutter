@@ -273,14 +273,28 @@ void main() {
   });
 
   group('ShiftRemoteDatasourceImpl.getZReport', () {
+    // Matches the real nested shape from shifts.service.ts's getZReport()
+    // (shift/sales/returns/cashDrawer sub-objects) — see z_report_test.dart
+    // for the finding this fixture used to miss (a flat fixture here would
+    // never have caught fromJson's real-world parse failure).
     Map<String, dynamic> zReportJson() => {
-          'staffName': 'Ali',
-          'openedAt': '2026-07-17T08:00:00.000Z',
-          'closedAt': '2026-07-17T20:00:00.000Z',
-          'duration': '12h 00m',
-          'expectedCash': 1000,
-          'actualCash': 950,
-          'difference': -50,
+          'shift': {
+            'staffName': 'Ali',
+            'openedAt': '2026-07-17T08:00:00.000Z',
+            'closedAt': '2026-07-17T20:00:00.000Z',
+          },
+          'sales': {'cashTotal': 0, 'cardTotal': 0, 'debtTotal': 0, 'total': 0, 'count': 0},
+          'returns': {'count': 0, 'total': 0},
+          'cashDrawer': {
+            'opening': 0,
+            'cashSales': 0,
+            'cashReturns': 0,
+            'withdrawals': 0,
+            'expected': 1000,
+            'actual': 950,
+            'difference': -50,
+          },
+          'topProducts': [],
         };
 
     test('fetches and parses the Z-report for a closed shift', () async {
