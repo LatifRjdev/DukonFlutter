@@ -226,6 +226,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                             controller: _daysController,
                             keyboardType: TextInputType.number,
                             validator: _validateDaysThreshold,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: const InputDecoration(
                               labelText: 'Дней без продаж',
                               border: OutlineInputBorder(),
@@ -236,6 +237,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                             controller: _percentController,
                             keyboardType: TextInputType.number,
                             validator: _validatePercentThreshold,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: const InputDecoration(
                               labelText: 'Остаток, % от партии',
                               border: OutlineInputBorder(),

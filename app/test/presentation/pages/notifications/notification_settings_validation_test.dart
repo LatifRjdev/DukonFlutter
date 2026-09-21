@@ -166,6 +166,25 @@ void main() {
       expect(fakeDio.putCallCount, 0);
     });
 
+    testWidgets(
+        'correcting an invalid days value clears its error without a second '
+        'Save tap (found live during the 2026-09-21 manual QA pass: the '
+        'fields lacked autovalidateMode, so "Некорректное значение" stayed '
+        'on screen even after typing a valid value)', (tester) async {
+      await pumpLoaded(tester);
+      await seedValidBaseline(tester);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Дней без продаж'), '0');
+      await tapSave(tester);
+      await tester.pumpAndSettle();
+      expect(find.text('Некорректное значение'), findsOneWidget);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Дней без продаж'), '10');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Некорректное значение'), findsNothing);
+    });
+
     testWidgets('valid numeric input for both fields is saved and reaches the PUT payload',
         (tester) async {
       await pumpLoaded(tester);
