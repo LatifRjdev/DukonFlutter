@@ -30,6 +30,22 @@ class _StaffListPageState extends State<StaffListPage> {
     context.read<StaffBloc>().add(LoadStaff(storeId: widget.storeId));
   }
 
+  // StaffBloc is a single app-wide instance shared with StaffDetailPage/
+  // AddStaffPage. context.push keeps this page mounted underneath the
+  // pushed route rather than disposing it, so initState above never
+  // re-fires on return — and the bloc's state by then is whatever the
+  // detail screen last left it as (StaffDetailLoaded), which this page's
+  // builder doesn't recognize, leaving it stuck on a blank screen forever
+  // (found during the 2026-09-21 manual QA pass — same root-cause class as
+  // the already-fixed post-plan finding №1 for
+  // Debts/Customers/Suppliers). Re-request the list explicitly once the
+  // pushed detail route returns, regardless of what it left the shared
+  // bloc's state as.
+  Future<void> _openStaffDetail(String staffId) async {
+    await context.push('/staff/$staffId', extra: widget.storeId);
+    if (mounted) _loadStaff();
+  }
+
   String _formatPrice(double value) {
     final formatter = NumberFormat('#,##0', 'ru');
     return '${formatter.format(value)} TJS';
@@ -124,7 +140,7 @@ class _StaffListPageState extends State<StaffListPage> {
                           final roleColor = _roleBadgeColor(staff.role);
 
                           return GestureDetector(
-                            onTap: () => context.push('/staff/${staff.id}', extra: widget.storeId),
+                            onTap: () => _openStaffDetail(staff.id),
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(14),
