@@ -22,9 +22,8 @@ class SyncEngine {
   bool _disposed = false;
 
   /// Gates only the automatic on-reconnect path in [start]'s connectivity
-  /// listener. Manual [processQueue] calls (this screen's button,
-  /// OfflineBanner's "Повторить" link) are never gated by this — it only
-  /// controls whether reconnecting the network by itself kicks off a sync.
+  /// listener — never [processQueue] itself, which callers can always
+  /// invoke manually regardless of this flag's value.
   bool autoSyncEnabled = true;
 
   /// Stream controller to broadcast sync status updates.
