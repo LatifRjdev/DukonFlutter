@@ -130,16 +130,10 @@ class PayrollStaffCard extends StatelessWidget {
                     ),
                   ),
                   if (onDeleteAdjustment != null)
-                    InkWell(
-                      onTap: () => onDeleteAdjustment!(adj),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4),
-                        child: Icon(
-                          Icons.delete_outline,
-                          size: 14,
-                          color: context.textSecondary,
-                        ),
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
+                      tooltip: 'Удалить',
+                      onPressed: () => onDeleteAdjustment!(adj),
                     ),
                 ],
               ),
