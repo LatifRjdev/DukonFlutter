@@ -3,14 +3,22 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/payroll_entry.dart';
+import '../../../domain/entities/payroll_adjustment.dart';
 import '../common/app_card.dart';
 
 class PayrollStaffCard extends StatelessWidget {
   final PayrollEntry entry;
   final VoidCallback? onTap;
   final VoidCallback? onPay;
+  final void Function(PayrollAdjustment)? onDeleteAdjustment;
 
-  const PayrollStaffCard({super.key, required this.entry, this.onTap, this.onPay});
+  const PayrollStaffCard({
+    super.key,
+    required this.entry,
+    this.onTap,
+    this.onPay,
+    this.onDeleteAdjustment,
+  });
 
   String _roleLabel(String? role) {
     switch (role) {
@@ -121,6 +129,18 @@ class PayrollStaffCard extends StatelessWidget {
                       color: adj.type == 'BONUS' ? AppColors.success : AppColors.error,
                     ),
                   ),
+                  if (onDeleteAdjustment != null)
+                    InkWell(
+                      onTap: () => onDeleteAdjustment!(adj),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Icon(
+                          Icons.delete_outline,
+                          size: 14,
+                          color: context.textSecondary,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             )),
