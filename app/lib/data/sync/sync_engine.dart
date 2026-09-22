@@ -21,6 +21,12 @@ class SyncEngine {
   bool _isSyncing = false;
   bool _disposed = false;
 
+  /// Gates only the automatic on-reconnect path in [start]'s connectivity
+  /// listener. Manual [processQueue] calls (this screen's button,
+  /// OfflineBanner's "Повторить" link) are never gated by this — it only
+  /// controls whether reconnecting the network by itself kicks off a sync.
+  bool autoSyncEnabled = true;
+
   /// Stream controller to broadcast sync status updates.
   final _syncStatusController = StreamController<SyncStatus>.broadcast();
 
@@ -53,7 +59,7 @@ class SyncEngine {
     if (_connectivitySubscription != null) return;
     _connectivitySubscription = _networkInfo.onConnectivityChanged.listen(
       (isConnected) {
-        if (isConnected) {
+        if (isConnected && autoSyncEnabled) {
           processQueue();
         }
       },

@@ -130,6 +130,48 @@ void main() {
     await engine.dispose();
   });
 
+  test('autoSyncEnabled defaults to true', () {
+    final engine = buildEngine();
+    expect(engine.autoSyncEnabled, isTrue);
+  });
+
+  test(
+      'connectivity restore does not trigger processQueue when '
+      'autoSyncEnabled is false', () async {
+    final engine = buildEngine();
+    engine.autoSyncEnabled = false;
+    when(() => queue.getPendingItems())
+        .thenAnswer((_) async => [item(operation: 'DELETE')]);
+    when(() => dio.delete(any())).thenAnswer(
+      (_) async => Response(requestOptions: RequestOptions(path: '/'), statusCode: 204),
+    );
+
+    engine.start();
+    connectivityCtrl.add(true);
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    verifyNever(() => queue.getPendingItems());
+    await engine.dispose();
+  });
+
+  test(
+      'manual processQueue() still runs even when autoSyncEnabled is false',
+      () async {
+    final engine = buildEngine();
+    engine.autoSyncEnabled = false;
+    when(() => queue.getPendingItems())
+        .thenAnswer((_) async => [item(operation: 'DELETE')]);
+    when(() => dio.delete(any())).thenAnswer(
+      (_) async => Response(requestOptions: RequestOptions(path: '/'), statusCode: 204),
+    );
+
+    await engine.processQueue();
+
+    verify(() => queue.getPendingItems()).called(1);
+    await engine.dispose();
+  });
+
   test('dispose() closes the broadcast stream — no late events delivered', () async {
     final engine = buildEngine();
     final received = <SyncStatus>[];
