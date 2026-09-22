@@ -44,6 +44,23 @@ Future<Locale> loadSavedLocale() async {
   return Locale(code);
 }
 
+/// Key `offline_mode_page.dart`'s auto-sync toggle writes to. Read at
+/// startup so a previously-saved "off" choice actually disables automatic
+/// on-reconnect sync from a cold start, not just after revisiting the
+/// Offline Mode settings screen.
+const _kAutoSyncPrefKey = 'offline_auto_sync';
+
+/// Reads the auto-sync preference saved by the Offline Mode settings
+/// screen. Defaults to true, matching that screen's own fallback.
+///
+/// Extracted as a standalone, SharedPreferences-only function for the same
+/// reason as [loadSavedLocale]: unit-testable without pumping a widget tree
+/// or touching WidgetsFlutterBinding/Firebase/DI.
+Future<bool> loadAutoSyncPreference() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool(_kAutoSyncPrefKey) ?? true;
+}
+
 Future<void> _runApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -117,6 +134,11 @@ Future<void> _runApp() async {
   // so it actually applies on this cold start, instead of always rendering
   // in the hardcoded default regardless of what the user picked and saved.
   final locale = await loadSavedLocale();
+
+  // Apply a previously-saved auto-sync preference before SyncEngine.start()
+  // (called by _AppLifecycleHost below) attaches its connectivity listener,
+  // so a saved "off" choice takes effect from a cold start.
+  sl<SyncEngine>().autoSyncEnabled = await loadAutoSyncPreference();
 
   // SyncEngine.start() / dispose() are managed by _AppLifecycleHost so the
   // broadcast StreamController is closed deterministically on teardown.

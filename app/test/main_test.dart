@@ -46,4 +46,31 @@ void main() {
       expect(locale, const Locale('uz'));
     });
   });
+
+  group('loadAutoSyncPreference', () {
+    test('defaults to true when nothing has been saved yet', () async {
+      SharedPreferences.setMockInitialValues({});
+
+      final enabled = await loadAutoSyncPreference();
+
+      expect(enabled, isTrue);
+    });
+
+    test('reads back a previously saved false value', () async {
+      // Same key ('offline_auto_sync') OfflineModePage._saveAutoSync() writes.
+      SharedPreferences.setMockInitialValues({'offline_auto_sync': false});
+
+      final enabled = await loadAutoSyncPreference();
+
+      expect(enabled, isFalse);
+    });
+
+    test('reads back a previously saved true value', () async {
+      SharedPreferences.setMockInitialValues({'offline_auto_sync': true});
+
+      final enabled = await loadAutoSyncPreference();
+
+      expect(enabled, isTrue);
+    });
+  });
 }
