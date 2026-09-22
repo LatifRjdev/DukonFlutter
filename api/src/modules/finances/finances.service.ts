@@ -7,9 +7,13 @@ import { BalanceQueryDto, BalancePeriod } from './dto/balance-query.dto';
 export class FinancesService {
   constructor(private prisma: PrismaService) {}
 
-  async getOverview(storeId: string) {
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+  async getOverview(storeId: string, query: FinanceQueryDto = {}) {
+    // getDateRange() defaults an omitted period to "month" (tuned for
+    // getDashboard/getSummary); the home dashboard's default tab is "today".
+    const { startDate, endDate } = this.getDateRange({
+      ...query,
+      period: query.period ?? 'today',
+    });
 
     const [
       salesAggregate,
@@ -22,7 +26,7 @@ export class FinancesService {
         where: {
           storeId,
           status: 'COMPLETED',
-          createdAt: { gte: startOfToday },
+          createdAt: { gte: startDate, lte: endDate },
         },
         _sum: { total: true },
         _count: true,
@@ -30,7 +34,7 @@ export class FinancesService {
       this.prisma.expense.aggregate({
         where: {
           storeId,
-          date: { gte: startOfToday },
+          date: { gte: startDate, lte: endDate },
         },
         _sum: { amount: true },
       }),
@@ -460,6 +464,7 @@ export class FinancesService {
     const startDate = new Date();
 
     switch (query.period) {
+      case 'today':
       case 'day':
         startDate.setHours(0, 0, 0, 0);
         break;

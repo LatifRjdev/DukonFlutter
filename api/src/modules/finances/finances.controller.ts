@@ -15,10 +15,15 @@ export class FinancesController {
 
   @Get('overview')
   @ApiOperation({
-    summary: 'Get home dashboard overview (today stats + product counts)',
+    summary:
+      'Get home dashboard overview (period stats + product counts). ' +
+      'period defaults to "today" when omitted.',
   })
-  getOverview(@Param('storeId') storeId: string) {
-    return this.financesService.getOverview(storeId);
+  getOverview(
+    @Param('storeId') storeId: string,
+    @Query() query: FinanceQueryDto,
+  ) {
+    return this.financesService.getOverview(storeId, query);
   }
 
   @Get('dashboard')

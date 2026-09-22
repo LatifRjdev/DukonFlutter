@@ -219,6 +219,71 @@ describe('FinancesService', () => {
     return expense;
   };
 
+  describe('getOverview', () => {
+    it('should include sales from earlier in the week when period=week, not just today (2026-09-22 dashboard bug: period selector had no effect)', async () => {
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+
+      const result = await service.getOverview('store-A', {
+        period: 'week',
+      } as any);
+
+      expect(result.todayRevenue).toBe(400);
+      expect(result.todaySalesCount).toBe(1);
+    });
+
+    it('should include sales from earlier in the month when period=month, not just today', async () => {
+      const twoWeeksAgo = new Date();
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+      seedSale({ id: 'earlier-this-month', total: 250, createdAt: twoWeeksAgo });
+
+      const result = await service.getOverview('store-A', {
+        period: 'month',
+      } as any);
+
+      expect(result.todayRevenue).toBe(250);
+      expect(result.todaySalesCount).toBe(1);
+    });
+
+    it('should exclude a sale from 3 days ago when period=today (or omitted)', async () => {
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+
+      const result = await service.getOverview('store-A', {
+        period: 'today',
+      } as any);
+
+      expect(result.todayRevenue).toBe(0);
+      expect(result.todaySalesCount).toBe(0);
+    });
+
+    it('should default to today when no period is given, matching prior behavior', async () => {
+      const now = new Date();
+      seedSale({ id: 'right-now', total: 75, createdAt: now });
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+
+      const result = await service.getOverview('store-A', {} as any);
+
+      expect(result.todayRevenue).toBe(75);
+      expect(result.todaySalesCount).toBe(1);
+    });
+
+    it('should exclude sales from other stores', async () => {
+      seedSale({ id: 'a1', storeId: 'store-A', total: 100, createdAt: new Date() });
+      seedSale({ id: 'b1', storeId: 'store-B', total: 9999, createdAt: new Date() });
+
+      const result = await service.getOverview('store-A', {
+        period: 'month',
+      } as any);
+
+      expect(result.todayRevenue).toBe(100);
+    });
+  });
+
   describe('getDashboard', () => {
     it('should exclude sales from other stores when computing totalRevenue', async () => {
       seedSale({ id: 'a1', storeId: 'store-A', total: 100 });
