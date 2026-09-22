@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/network/dio_client.dart';
+import '../../../core/network/network_info.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../../core/errors/exceptions.dart';
+import '../../../data/sync/sync_engine.dart';
+import '../../../data/sync/sync_queue.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -18,7 +22,9 @@ class OfflineModePage extends StatefulWidget {
 }
 
 class _OfflineModePageState extends State<OfflineModePage> {
-  final _dioClient = sl<DioClient>();
+  final _syncEngine = sl<SyncEngine>();
+  final _syncQueue = sl<SyncQueue>();
+  final _networkInfo = sl<NetworkInfo>();
   static const _keyAutoSync = 'offline_auto_sync';
 
   bool _autoSync = true;
@@ -27,10 +33,19 @@ class _OfflineModePageState extends State<OfflineModePage> {
   bool _loading = true;
   bool _syncing = false;
 
+  StreamSubscription<SyncStatus>? _syncStatusSub;
+
   @override
   void initState() {
     super.initState();
     _load();
+    _syncStatusSub = _syncEngine.syncStatus.listen(_onSyncStatus);
+  }
+
+  @override
+  void dispose() {
+    _syncStatusSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -43,43 +58,67 @@ class _OfflineModePageState extends State<OfflineModePage> {
       _lastSync = DateTime.fromMillisecondsSinceEpoch(lastSyncMs);
     }
 
-    try {
-      final res = await _dioClient.get('/sync/status');
-      final data = res.data as Map<String, dynamic>? ?? {};
-      _pendingOps = data['pendingOperations'] as int? ?? 0;
-    } catch (_) {
-      _pendingOps = 0;
-    }
+    _pendingOps = await _syncQueue.pendingCount();
 
     if (mounted) setState(() => _loading = false);
   }
 
-  Future<void> _manualSync() async {
-    setState(() => _syncing = true);
-    try {
-      await _dioClient.post('/sync/trigger');
-      final prefs = await SharedPreferences.getInstance();
-      final now = DateTime.now();
-      await prefs.setInt('last_sync_timestamp', now.millisecondsSinceEpoch);
-      if (mounted) {
-        setState(() {
-          _lastSync = now;
-          _pendingOps = 0;
-          _syncing = false;
-        });
-        AppSnackbar.success(context, AppLocalizations.of(context)!.snackSyncCompleted);
-      }
-    } catch (e) {
-      if (mounted) {
+  Future<void> _refreshPendingCount() async {
+    final count = await _syncQueue.pendingCount();
+    if (mounted) setState(() => _pendingOps = count);
+  }
+
+  Future<void> _recordLastSync() async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    await prefs.setInt('last_sync_timestamp', now.millisecondsSinceEpoch);
+    if (mounted) setState(() => _lastSync = now);
+  }
+
+  void _onSyncStatus(SyncStatus status) {
+    if (!mounted) return;
+    switch (status) {
+      case SyncStatus.syncing:
+        setState(() => _syncing = true);
+        break;
+      case SyncStatus.completed:
+        _refreshPendingCount();
+        _recordLastSync();
         setState(() => _syncing = false);
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackSyncError(mapErrorToUserMessage(e)));
-      }
+        AppSnackbar.success(
+            context, AppLocalizations.of(context)!.snackSyncCompleted);
+        break;
+      case SyncStatus.error:
+        _refreshPendingCount();
+        setState(() => _syncing = false);
+        AppSnackbar.error(
+          context,
+          AppLocalizations.of(context)!
+              .snackSyncError('не удалось синхронизировать часть операций'),
+        );
+        break;
+      case SyncStatus.idle:
+        setState(() => _syncing = false);
+        break;
     }
+  }
+
+  Future<void> _manualSync() async {
+    final connected = await _networkInfo.isConnected;
+    if (!connected) {
+      if (mounted) {
+        AppSnackbar.error(
+            context, mapErrorToUserMessage(const NetworkException()));
+      }
+      return;
+    }
+    await _syncEngine.processQueue();
   }
 
   Future<void> _saveAutoSync(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyAutoSync, value);
+    _syncEngine.autoSyncEnabled = value;
     if (mounted) setState(() => _autoSync = value);
   }
 
@@ -114,14 +153,15 @@ class _OfflineModePageState extends State<OfflineModePage> {
   // product created while disconnected), so clearing them here would risk
   // real data loss or breaking offline reads. All this does — and all its
   // label promises — is discard the locally displayed "last synced at"
-  // timestamp and reset the in-memory pending-ops count, so the sync
-  // status card goes back to "not synced yet" until the next real sync.
+  // timestamp. The pending-ops count shown on this screen is a live read
+  // from the real sync queue (SyncQueue.pendingCount()), not a local value
+  // this button can honestly reset.
   Future<void> _clearCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('last_sync_timestamp');
       if (mounted) {
-        setState(() { _lastSync = null; _pendingOps = 0; });
+        setState(() { _lastSync = null; });
         AppSnackbar.success(context, AppLocalizations.of(context)!.snackSyncStatusReset);
       }
     } catch (e) {
