@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../domain/entities/payroll_adjustment.dart';
 import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
@@ -116,6 +117,38 @@ class _PayrollPageState extends State<PayrollPage> {
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
             child: const Text('Выплатить', style: TextStyle(color: AppColors.onPrimary)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteAdjustment(String periodId, PayrollAdjustment adjustment) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Удалить корректировку?'),
+        content: Text(
+          '"${adjustment.description}" '
+          '${adjustment.type == 'BONUS' ? '+' : '-'}'
+          '${adjustment.amount.toStringAsFixed(0)} TJS',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<PayrollBloc>().add(RemoveAdjustment(
+                storeId: widget.storeId,
+                periodId: periodId,
+                adjustmentId: adjustment.id,
+              ));
+              Navigator.pop(ctx);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+            child: const Text('Удалить', style: TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),
@@ -298,6 +331,9 @@ class _PayrollPageState extends State<PayrollPage> {
                     onPay: (entry.isPaid || busy)
                         ? null
                         : () => _payIndividual(period.id, entry.id),
+                    onDeleteAdjustment: busy
+                        ? null
+                        : (adj) => _confirmDeleteAdjustment(period.id, adj),
                   ),
                 )),
                 if (period.payrolls.isEmpty)
