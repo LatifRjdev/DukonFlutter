@@ -392,6 +392,8 @@ class _DashboardPageState extends State<DashboardPage> {
             label: l10n.expenses,
             value: _formatPrice(stats.todayExpenses),
             accent: AppColors.error,
+            onTap: () =>
+                context.push(RouteNames.expenses, extra: _getStoreId() ?? ''),
           ),
         ),
       ],
@@ -676,16 +678,18 @@ class _MetricTile extends StatelessWidget {
   final String label;
   final String value;
   final Color accent;
+  final VoidCallback? onTap;
 
   const _MetricTile({
     required this.label,
     required this.value,
     required this.accent,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final content = Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
       decoration: BoxDecoration(
         color: context.surface,
@@ -730,6 +734,17 @@ class _MetricTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+
+    if (onTap == null) return content;
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        child: content,
       ),
     );
   }
