@@ -670,7 +670,7 @@ export class AdminService {
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
+    const [announcements, total] = await Promise.all([
       this.prisma.announcement.findMany({
         orderBy: { createdAt: 'desc' },
         skip,
@@ -678,6 +678,21 @@ export class AdminService {
       }),
       this.prisma.announcement.count(),
     ]);
+
+    // Announcement.sentBy is a bare String column, not a Prisma relation,
+    // so there's nothing to `include` — batch-fetch names the same way
+    // listAuditLog() already does for its identical userId problem.
+    const senderIds = [...new Set(announcements.map((a) => a.sentBy))];
+    const senders = await this.prisma.user.findMany({
+      where: { id: { in: senderIds } },
+      select: { id: true, name: true },
+    });
+    const senderMap = new Map(senders.map((s) => [s.id, s.name]));
+
+    const data = announcements.map((a) => ({
+      ...a,
+      senderName: senderMap.get(a.sentBy) ?? null,
+    }));
 
     return { data, total, page, limit };
   }

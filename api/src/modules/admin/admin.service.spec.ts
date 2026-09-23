@@ -18,6 +18,11 @@ function makePrismaFake() {
         id: 'a-generated',
         ...data,
       })),
+      findMany: jest.fn(async () => [] as any[]),
+      count: jest.fn(async () => 0),
+    },
+    user: {
+      findMany: jest.fn(async () => [] as any[]),
     },
   };
 }
@@ -280,5 +285,77 @@ describe('AdminService — updatePlan', () => {
       data: { hasBatchProfitability: true },
     });
     expect((result as any).hasBatchProfitability).toBe(true);
+  });
+});
+
+describe('AdminService — listAnnouncements attaches senderName', () => {
+  let service: AdminService;
+  let prisma: ReturnType<typeof makePrismaFake>;
+
+  beforeEach(async () => {
+    prisma = makePrismaFake();
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        AdminService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
+        { provide: StoresService, useValue: { create: jest.fn() } },
+      ],
+    }).compile();
+    service = moduleRef.get(AdminService);
+  });
+
+  it('resolves sentBy to the sending admin\'s name via a batch lookup', async () => {
+    prisma.announcement.findMany.mockResolvedValueOnce([
+      {
+        id: 'ann1',
+        title: 'Hello',
+        body: 'World',
+        targetPlan: null,
+        targetStatus: null,
+        sentBy: 'admin-1',
+        recipientCount: 5,
+        createdAt: new Date('2026-04-01T00:00:00Z'),
+      },
+    ]);
+    prisma.announcement.count.mockResolvedValueOnce(1);
+    prisma.user.findMany.mockResolvedValueOnce([
+      { id: 'admin-1', name: 'Алишер Админ' },
+    ]);
+
+    const result = await service.listAnnouncements({
+      page: 1,
+      limit: 20,
+    } as any);
+
+    expect(result.data[0].senderName).toBe('Алишер Админ');
+    expect(prisma.user.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['admin-1'] } },
+      select: { id: true, name: true },
+    });
+  });
+
+  it('falls back to null senderName when the sending admin no longer exists', async () => {
+    prisma.announcement.findMany.mockResolvedValueOnce([
+      {
+        id: 'ann1',
+        title: 'Hello',
+        body: 'World',
+        targetPlan: null,
+        targetStatus: null,
+        sentBy: 'deleted-admin',
+        recipientCount: 0,
+        createdAt: new Date('2026-04-01T00:00:00Z'),
+      },
+    ]);
+    prisma.announcement.count.mockResolvedValueOnce(1);
+    prisma.user.findMany.mockResolvedValueOnce([]);
+
+    const result = await service.listAnnouncements({
+      page: 1,
+      limit: 20,
+    } as any);
+
+    expect(result.data[0].senderName).toBeNull();
   });
 });
