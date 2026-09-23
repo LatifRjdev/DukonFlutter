@@ -26,35 +26,6 @@ import {
   PendingPayment,
 } from '@/lib/types';
 
-function generateMockRevenue(): RevenuePoint[] {
-  const data: RevenuePoint[] = [];
-  const now = new Date();
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    data.push({
-      date: d.toISOString().slice(0, 10),
-      revenue: Math.floor(Math.random() * 5000 + 2000),
-    });
-  }
-  return data;
-}
-
-function generateMockRegistrations(): RegistrationPoint[] {
-  const data: RegistrationPoint[] = [];
-  const now = new Date();
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    data.push({
-      date: d.toISOString().slice(0, 10),
-      users: Math.floor(Math.random() * 20 + 5),
-      stores: Math.floor(Math.random() * 10 + 2),
-    });
-  }
-  return data;
-}
-
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard-stats'],
@@ -75,9 +46,6 @@ export default function DashboardPage() {
     queryKey: ['pending-payments'],
     queryFn: () => api.get('/admin/subscriptions/pending-payments'),
   });
-
-  const mockRevenue = generateMockRevenue();
-  const mockRegistrations = generateMockRegistrations();
 
   const cardData = [
     {
@@ -169,8 +137,8 @@ export default function DashboardPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-2 gap-6">
-        <RevenueChart data={revenueData ?? mockRevenue} />
-        <RegistrationsChart data={registrationData ?? mockRegistrations} />
+        <RevenueChart data={revenueData ?? []} />
+        <RegistrationsChart data={registrationData ?? []} />
       </div>
 
       {/* Pending Payments */}
