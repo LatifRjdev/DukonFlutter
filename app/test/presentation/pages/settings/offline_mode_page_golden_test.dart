@@ -1,49 +1,51 @@
-import 'package:dio/dio.dart' show Options, Response;
-import 'package:dukonpro/core/network/dio_client.dart';
+import 'package:dukonpro/core/network/network_info.dart';
+import 'package:dukonpro/data/sync/sync_engine.dart';
+import 'package:dukonpro/data/sync/sync_queue.dart';
 import 'package:dukonpro/injection.dart';
 import 'package:dukonpro/presentation/pages/settings/offline_mode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../helpers/golden_pump_helper.dart';
 
-// ── Fake DioClient — always throws so page renders deterministic state ────────
+// ── Mocks — mirrors offline_mode_page_test.dart's setup ────────────────────
 
-class _FakeDioClient extends Fake implements DioClient {
-  @override
-  Future<Response<T>> get<T>(
-    String path, {
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async =>
-      throw Exception('network unavailable');
+class _MockSyncEngine extends Mock implements SyncEngine {}
 
-  @override
-  Future<Response<T>> post<T>(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async =>
-      throw Exception('network unavailable');
-}
+class _MockSyncQueue extends Mock implements SyncQueue {}
+
+class _MockNetworkInfo extends Mock implements NetworkInfo {}
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    if (!sl.isRegistered<DioClient>()) {
-      sl.registerSingleton<DioClient>(_FakeDioClient());
-    }
+
+    final syncEngine = _MockSyncEngine();
+    final syncQueue = _MockSyncQueue();
+    final networkInfo = _MockNetworkInfo();
+
+    when(() => syncEngine.syncStatus)
+        .thenAnswer((_) => const Stream<SyncStatus>.empty());
+    when(() => syncQueue.pendingCount()).thenAnswer((_) async => 0);
+    when(() => networkInfo.isConnected).thenAnswer((_) async => true);
+
+    if (sl.isRegistered<SyncEngine>()) sl.unregister<SyncEngine>();
+    if (sl.isRegistered<SyncQueue>()) sl.unregister<SyncQueue>();
+    if (sl.isRegistered<NetworkInfo>()) sl.unregister<NetworkInfo>();
+    sl.registerSingleton<SyncEngine>(syncEngine);
+    sl.registerSingleton<SyncQueue>(syncQueue);
+    sl.registerSingleton<NetworkInfo>(networkInfo);
   });
 
   tearDown(() {
-    if (sl.isRegistered<DioClient>()) {
-      sl.unregister<DioClient>();
-    }
+    if (sl.isRegistered<SyncEngine>()) sl.unregister<SyncEngine>();
+    if (sl.isRegistered<SyncQueue>()) sl.unregister<SyncQueue>();
+    if (sl.isRegistered<NetworkInfo>()) sl.unregister<NetworkInfo>();
   });
 
   Widget page() => const OfflineModePage();
