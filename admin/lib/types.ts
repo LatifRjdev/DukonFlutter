@@ -126,12 +126,10 @@ export interface AuditLog {
 export interface DashboardStats {
   totalUsers: number;
   totalStores: number;
-  activeSubscriptions: number;
-  trialSubscriptions: number;
-  expiredSubscriptions: number;
-  monthlyRevenue: number;
-  newUsersThisWeek: number;
-  newStoresThisWeek: number;
+  subscriptionsByStatus: Record<string, number>;
+  approvedPaymentsThisMonth: { total: number; count: number };
+  newUsersThisMonth: number;
+  newStoresThisMonth: number;
 }
 
 export interface RevenuePoint {
