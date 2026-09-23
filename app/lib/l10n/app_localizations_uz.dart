@@ -751,7 +751,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get offlineResetSyncStatusBody =>
-      'Отметка времени последней синхронизации и счётчик операций в очереди будут сброшены на этом устройстве. Локальные данные не удаляются.';
+      'Отметка времени последней синхронизации будет сброшена на этом устройстве. Локальные данные не удаляются.';
 
   @override
   String get offlineResetSyncStatusConfirm => 'Сбросить';
