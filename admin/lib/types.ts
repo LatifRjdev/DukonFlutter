@@ -95,8 +95,9 @@ export interface Announcement {
   targetPlan?: string;
   targetStatus?: string;
   recipientCount: number;
-  sentAt: string;
+  createdAt: string;
   sentBy: string;
+  senderName?: string | null;
 }
 
 export interface Banner {

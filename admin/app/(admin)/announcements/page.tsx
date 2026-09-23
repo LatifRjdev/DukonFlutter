@@ -227,9 +227,9 @@ export default function AnnouncementsPage() {
                     </TableCell>
                     <TableCell>{a.recipientCount}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {a.sentAt ? format(new Date(a.sentAt), 'dd.MM.yyyy HH:mm') : '—'}
+                      {a.createdAt ? format(new Date(a.createdAt), 'dd.MM.yyyy HH:mm') : '—'}
                     </TableCell>
-                    <TableCell className="text-sm">{a.sentBy}</TableCell>
+                    <TableCell className="text-sm">{a.senderName ?? a.sentBy}</TableCell>
                   </TableRow>
                 ))
               )}
