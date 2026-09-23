@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -30,15 +31,17 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    setUserName(localStorage.getItem('userName'));
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     router.push('/login');
   };
-
-  const userName =
-    typeof window !== 'undefined' ? localStorage.getItem('userName') : null;
 
   return (
     <aside className="flex h-screen w-60 flex-col border-r border-slate-200 bg-slate-900 text-white">
