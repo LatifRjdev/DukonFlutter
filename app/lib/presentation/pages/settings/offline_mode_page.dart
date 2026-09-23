@@ -112,7 +112,13 @@ class _OfflineModePageState extends State<OfflineModePage> {
       }
       return;
     }
-    await _syncEngine.processQueue();
+    try {
+      await _syncEngine.processQueue();
+    } catch (e) {
+      if (mounted) {
+        AppSnackbar.error(context, mapErrorToUserMessage(e));
+      }
+    }
   }
 
   Future<void> _saveAutoSync(bool value) async {
