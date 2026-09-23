@@ -31,6 +31,12 @@ const HOP_BY_HOP = new Set([
   'cookie',
   // Length is recomputed by fetch.
   'content-length',
+  // fetch() already transparently decompresses the upstream body before we
+  // see it (upstream.body below is plain, not gzip bytes), but the original
+  // Content-Encoding header survives on upstream.headers. Forwarding it
+  // verbatim tells the browser "this body is still gzip", so it tries to
+  // gunzip already-plain JSON and fails with ERR_CONTENT_DECODING_FAILED.
+  'content-encoding',
 ]);
 
 function buildHeaders(req: NextRequest, token: string | undefined): Headers {
