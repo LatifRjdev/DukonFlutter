@@ -1480,7 +1480,7 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
-  /// Offline mode page — button that clears the locally displayed last-synced timestamp and pending-ops count. It does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased
+  /// Offline mode page — button that clears the locally displayed last-synced timestamp. Does NOT reset the pending-ops count (a live read from the real sync queue as of the 2026-09-23 SyncEngine rewiring — it can't be honestly reset without discarding real queued data) and does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased
   ///
   /// In ru, this message translates to:
   /// **'Сбросить статус синхронизации'**
