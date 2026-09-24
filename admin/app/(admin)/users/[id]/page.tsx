@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Send,
   UserCog,
+  Trash2,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
@@ -76,6 +77,18 @@ export default function UserDetailPage({
       toast.success('Статус пользователя обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
+  });
+
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+
+  const deleteMutation = useMutation({
+    mutationFn: () => api.delete(`/admin/users/${id}`),
+    onSuccess: () => {
+      setDeleteConfirm(false);
+      toast.success('Пользователь удалён');
+      router.push('/users');
+    },
+    onError: () => toast.error('Ошибка удаления пользователя'),
   });
 
   const [messageDialog, setMessageDialog] = useState(false);
@@ -271,6 +284,13 @@ export default function UserDetailPage({
               <UserCog className="mr-2 h-4 w-4" />
               Войти как пользователь
             </Button>
+            <Button
+              variant="destructive"
+              onClick={() => setDeleteConfirm(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Удалить пользователя
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -429,6 +449,16 @@ export default function UserDetailPage({
         variant="destructive"
         pending={toggleBlockMutation.isPending}
         onConfirm={() => toggleBlockMutation.mutate()}
+      />
+      <ConfirmDialog
+        open={deleteConfirm}
+        onOpenChange={setDeleteConfirm}
+        title="Удалить пользователя?"
+        description={`Аккаунт «${user.name}» будет анонимизирован (телефон и email обезличены). Это действие нельзя отменить.`}
+        confirmLabel="Удалить"
+        variant="destructive"
+        pending={deleteMutation.isPending}
+        onConfirm={() => deleteMutation.mutate()}
       />
     </div>
   );

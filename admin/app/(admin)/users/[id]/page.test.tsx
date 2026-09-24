@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../../test/msw/server';
 
+const routerPush = vi.fn();
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({ push: routerPush, replace: vi.fn(), refresh: vi.fn() }),
 }));
 
 const toastSuccess = vi.fn();
@@ -302,5 +303,38 @@ describe('UserDetailPage — destructive action: revoke admin role', () => {
 
     await waitFor(() => expect(toggleCalls).toContain('toggle'));
     expect(toastSuccess).toHaveBeenCalledWith('Роль пользователя обновлена');
+  });
+});
+
+describe('UserDetailPage — delete user', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+    routerPush.mockReset();
+  });
+
+  it('clicking "Удалить пользователя" opens a confirmation, then DELETEs and navigates to /users', async () => {
+    mockUser();
+
+    const calls: string[] = [];
+    server.use(
+      http.delete(`${API_URL}/admin/users/u1`, () => {
+        calls.push('delete');
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    const user = userEvent.setup();
+    await renderPage();
+    await waitFor(() => expect(screen.getByText('Alice')).toBeInTheDocument());
+
+    await user.click(screen.getByRole('button', { name: 'Удалить пользователя' }));
+    expect(calls).not.toContain('delete');
+
+    await user.click(screen.getByRole('button', { name: 'Удалить' }));
+
+    await waitFor(() => expect(calls).toContain('delete'));
+    expect(toastSuccess).toHaveBeenCalledWith('Пользователь удалён');
+    expect(routerPush).toHaveBeenCalledWith('/users');
   });
 });
