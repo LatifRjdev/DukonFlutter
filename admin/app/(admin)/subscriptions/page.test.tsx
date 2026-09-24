@@ -95,8 +95,7 @@ describe('SubscriptionsPage — destructive action: cancel subscription', () => 
     toastError.mockReset();
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
-  it('clicking "Отменить" PUTs /admin/subscriptions/:id/cancel and toasts success', async () => {
+  it('clicking "Отменить" opens a confirmation dialog before PUTting cancel', async () => {
     mockSubscriptionsAndPending();
 
     const calls: string[] = [];
@@ -119,6 +118,9 @@ describe('SubscriptionsPage — destructive action: cancel subscription', () => 
     const cancelItem = await screen.findByText('Отменить');
     await user.click(cancelItem);
 
+    expect(calls).not.toContain('cancel');
+    await user.click(screen.getByRole('button', { name: 'Отменить подписку' }));
+
     await waitFor(() => expect(calls).toContain('cancel'));
     expect(toastSuccess).toHaveBeenCalledWith('Подписка отменена');
   });
@@ -130,8 +132,7 @@ describe('SubscriptionsPage — destructive action: approve / reject pending pay
     toastError.mockReset();
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
-  it('clicking "Подтвердить" PUTs /admin/subscriptions/:subId/approve-payment/:payId', async () => {
+  it('clicking "Подтвердить" opens a confirmation dialog before approving the payment', async () => {
     mockSubscriptionsAndPending();
 
     const calls: string[] = [];
@@ -158,6 +159,9 @@ describe('SubscriptionsPage — destructive action: approve / reject pending pay
       name: /Подтвердить/i,
     });
     await user.click(approveBtn);
+
+    expect(calls).not.toContain('approve');
+    await user.click(screen.getByRole('button', { name: 'Подтвердить платёж' }));
 
     await waitFor(() => expect(calls).toContain('approve'));
     expect(toastSuccess).toHaveBeenCalledWith('Платёж подтверждён');

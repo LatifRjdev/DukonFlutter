@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DataTable, Column } from '@/components/data-table';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { api } from '@/lib/api';
 import { Subscription, PendingPayment } from '@/lib/types';
 import { toast } from 'sonner';
@@ -83,6 +84,8 @@ function SubscriptionsContent() {
   const [manualMethod, setManualMethod] = useState('CASH');
   const [manualPeriodDays, setManualPeriodDays] = useState('30');
   const [manualNotes, setManualNotes] = useState('');
+  const [cancelConfirm, setCancelConfirm] = useState<Subscription | null>(null);
+  const [approveConfirm, setApproveConfirm] = useState<PendingPayment | null>(null);
 
   const { data: subscriptions = [], isLoading: subLoading } = useQuery<Subscription[]>({
     queryKey: ['subscriptions'],
@@ -159,6 +162,7 @@ function SubscriptionsContent() {
     mutationFn: (id: string) => api.put(`/admin/subscriptions/${id}/cancel`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      setCancelConfirm(null);
       toast.success('Подписка отменена');
     },
     onError: () => toast.error('Ошибка отмены'),
@@ -172,6 +176,7 @@ function SubscriptionsContent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-payments'] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      setApproveConfirm(null);
       toast.success('Платёж подтверждён');
     },
     onError: () => toast.error('Ошибка подтверждения'),
@@ -265,7 +270,7 @@ function SubscriptionsContent() {
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => cancelMutation.mutate(s.id)}
+              onClick={() => setCancelConfirm(s)}
             >
               Отменить
             </DropdownMenuItem>
@@ -394,7 +399,7 @@ function SubscriptionsContent() {
                       <Button
                         size="sm"
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => approveMutation.mutate(p)}
+                        onClick={() => setApproveConfirm(p)}
                         disabled={approveMutation.isPending}
                       >
                         <CheckCircle className="mr-1 h-3 w-3" />
@@ -651,6 +656,31 @@ function SubscriptionsContent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={!!cancelConfirm}
+        onOpenChange={(open) => !open && setCancelConfirm(null)}
+        title="Отменить подписку?"
+        description={`Магазин «${cancelConfirm?.store?.name}» немедленно потеряет доступ к платным функциям тарифа.`}
+        confirmLabel="Отменить подписку"
+        variant="destructive"
+        pending={cancelMutation.isPending}
+        onConfirm={() => {
+          if (cancelConfirm) cancelMutation.mutate(cancelConfirm.id);
+        }}
+      />
+
+      <ConfirmDialog
+        open={!!approveConfirm}
+        onOpenChange={(open) => !open && setApproveConfirm(null)}
+        title="Подтвердить платёж?"
+        description="Подписка будет немедленно активирована на срок оплаченного периода."
+        confirmLabel="Подтвердить платёж"
+        pending={approveMutation.isPending}
+        onConfirm={() => {
+          if (approveConfirm) approveMutation.mutate(approveConfirm);
+        }}
+      />
 
       {/* Receipt Preview */}
       <Dialog open={!!receiptPreview} onOpenChange={() => setReceiptPreview(null)}>
