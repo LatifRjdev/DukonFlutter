@@ -674,7 +674,7 @@ function SubscriptionsContent() {
         open={!!approveConfirm}
         onOpenChange={(open) => !open && setApproveConfirm(null)}
         title="Подтвердить платёж?"
-        description="Подписка будет немедленно активирована на срок оплаченного периода."
+        description={`Подписка магазина «${approveConfirm?.subscription?.store?.name ?? '—'}» будет немедленно активирована на срок оплаченного периода.`}
         confirmLabel="Подтвердить платёж"
         pending={approveMutation.isPending}
         onConfirm={() => {

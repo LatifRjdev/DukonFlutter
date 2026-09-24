@@ -470,7 +470,7 @@ export default function UsersPage() {
             : 'Назначить администратором?'
         }
         description={`Пользователь «${adminToggleConfirm?.name}» ${adminToggleConfirm?.isAdmin ? 'потеряет' : 'получит'} доступ к админ-панели.`}
-        confirmLabel="Подтвердить"
+        confirmLabel={adminToggleConfirm?.isAdmin ? 'Снять права admin' : 'Сделать admin'}
         pending={toggleAdminMutation.isPending}
         onConfirm={() => {
           if (adminToggleConfirm) toggleAdminMutation.mutate(adminToggleConfirm.id);

@@ -268,7 +268,13 @@ export default function StoreDetailPage({
       />
 
       {/* Transfer Dialog */}
-      <Dialog open={transferDialog} onOpenChange={setTransferDialog}>
+      <Dialog
+        open={transferDialog}
+        onOpenChange={(open) => {
+          setTransferDialog(open);
+          if (!open) setNewOwnerId('');
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Передать магазин</DialogTitle>
@@ -279,11 +285,17 @@ export default function StoreDetailPage({
             </p>
             <div className="space-y-2">
               <Label>Новый владелец</Label>
-              <UserPicker value={newOwnerId} onSelect={(id) => setNewOwnerId(id)} />
+              <UserPicker key={String(transferDialog)} value={newOwnerId} onSelect={(id) => setNewOwnerId(id)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setTransferDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTransferDialog(false);
+                setNewOwnerId('');
+              }}
+            >
               Отмена
             </Button>
             <Button

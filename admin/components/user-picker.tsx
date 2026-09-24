@@ -21,6 +21,11 @@ export function UserPicker({
   placeholder?: string;
 }) {
   const [search, setSearch] = useState(value);
+  // Tracks whether `search` currently reflects a clicked match. Typing
+  // after a selection must invalidate it immediately — otherwise the
+  // input can show newly-typed text while the parent still holds the
+  // previously selected id, letting a caller submit a stale selection.
+  const [selectedId, setSelectedId] = useState('');
 
   // Same client-side-filter-over-the-full-list approach the Users list page
   // (admin/app/(admin)/users/page.tsx) already uses for its own search box —
@@ -42,7 +47,17 @@ export function UserPicker({
     <div className="relative">
       <Input
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          const next = e.target.value;
+          setSearch(next);
+          if (selectedId) {
+            // The previous selection no longer matches what's displayed —
+            // clear it in the parent so submit re-disables until a fresh
+            // match is clicked.
+            setSelectedId('');
+            onSelect('', next);
+          }
+        }}
         placeholder={placeholder}
       />
       {matches.length > 0 && (
@@ -54,6 +69,7 @@ export function UserPicker({
               className="block w-full px-3 py-2 text-left text-sm hover:bg-muted"
               onClick={() => {
                 onSelect(u.id, u.name);
+                setSelectedId(u.id);
                 setSearch(u.name);
               }}
             >

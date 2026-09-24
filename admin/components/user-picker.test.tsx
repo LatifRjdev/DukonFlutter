@@ -57,4 +57,26 @@ describe('UserPicker', () => {
     renderWithQuery(<UserPicker value="" onSelect={vi.fn()} />);
     expect(screen.queryByText('Alice Owner')).not.toBeInTheDocument();
   });
+
+  it('clears the committed selection if the user keeps typing after picking a match', async () => {
+    mockUsers();
+    const onSelect = vi.fn();
+    renderWithQuery(<UserPicker value="" onSelect={onSelect} />);
+
+    const input = screen.getByPlaceholderText(/Поиск по имени или телефону/i);
+    await userEvent.type(input, 'Alice');
+    await waitFor(() => expect(screen.getByText('Alice Owner')).toBeInTheDocument());
+    await userEvent.click(screen.getByText('Alice Owner'));
+    expect(onSelect).toHaveBeenLastCalledWith('u1', 'Alice Owner');
+
+    // Now the admin changes their mind without clicking a new match.
+    // Only the first keystroke after a selection needs to clear it (once
+    // cleared, there's nothing left to re-clear on further keystrokes).
+    await userEvent.type(input, 'x');
+
+    // The stale 'u1' selection must be invalidated immediately — a caller
+    // relying on the last onSelect id (e.g. to enable a submit button)
+    // must not still be holding 'u1' while the input shows different text.
+    expect(onSelect).toHaveBeenLastCalledWith('', 'Alice Ownerx');
+  });
 });

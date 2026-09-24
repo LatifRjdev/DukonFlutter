@@ -316,7 +316,13 @@ export default function StoresPage() {
       />
 
       {/* Transfer dialog */}
-      <Dialog open={!!transferDialog} onOpenChange={() => setTransferDialog(null)}>
+      <Dialog
+        open={!!transferDialog}
+        onOpenChange={() => {
+          setTransferDialog(null);
+          setNewOwnerId('');
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Передать магазин</DialogTitle>
@@ -327,11 +333,17 @@ export default function StoresPage() {
             </p>
             <div className="space-y-2">
               <Label>Новый владелец</Label>
-              <UserPicker value={newOwnerId} onSelect={(id) => setNewOwnerId(id)} />
+              <UserPicker key={transferDialog?.id} value={newOwnerId} onSelect={(id) => setNewOwnerId(id)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setTransferDialog(null)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTransferDialog(null);
+                setNewOwnerId('');
+              }}
+            >
               Отмена
             </Button>
             <Button

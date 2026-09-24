@@ -436,7 +436,7 @@ export default function UserDetailPage({
             : 'Назначить администратором?'
         }
         description={`Пользователь «${user.name}» ${user.isAdmin ? 'потеряет' : 'получит'} доступ к админ-панели.`}
-        confirmLabel="Подтвердить"
+        confirmLabel={user.isAdmin ? 'Снять права admin' : 'Сделать admin'}
         pending={toggleAdminMutation.isPending}
         onConfirm={() => toggleAdminMutation.mutate()}
       />

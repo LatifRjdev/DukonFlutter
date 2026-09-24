@@ -182,10 +182,10 @@ describe('UsersPage — destructive action: revoke admin role', () => {
     await user.click(revokeItem);
 
     // Dialog open, mutation not fired yet.
-    expect(await screen.findByRole('button', { name: 'Подтвердить' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: 'Снять права admin' })).toBeInTheDocument();
     expect(toggleCalls).not.toContain('toggle');
 
-    await user.click(screen.getByRole('button', { name: 'Подтвердить' }));
+    await user.click(screen.getByRole('button', { name: 'Снять права admin' }));
 
     await waitFor(() => expect(toggleCalls).toContain('toggle'));
     expect(toastSuccess).toHaveBeenCalledWith('Роль пользователя обновлена');
