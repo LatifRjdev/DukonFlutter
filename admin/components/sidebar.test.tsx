@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 
 vi.mock('next/navigation', () => ({
@@ -9,6 +9,10 @@ vi.mock('next/navigation', () => ({
 import { Sidebar } from './sidebar';
 
 describe('Sidebar username display', () => {
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
   it('shows the stored username once mounted, without branching on typeof window', async () => {
     window.localStorage.setItem('userName', 'Admin');
 
@@ -18,8 +22,6 @@ describe('Sidebar username display', () => {
   });
 
   it('falls back to "Администратор" when nothing is stored', async () => {
-    window.localStorage.clear();
-
     render(<Sidebar />);
 
     await waitFor(() =>

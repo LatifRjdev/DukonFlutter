@@ -90,7 +90,7 @@ export default function DashboardPage() {
             style: 'currency',
             currency: 'TJS',
             maximumFractionDigits: 0,
-          }).format(stats.approvedPaymentsThisMonth.total)
+          }).format(stats.approvedPaymentsThisMonth?.total ?? 0)
         : '—',
       icon: TrendingUp,
       description: 'Текущий месяц',
