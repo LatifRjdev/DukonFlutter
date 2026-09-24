@@ -69,6 +69,14 @@ jobs:
         working-directory: api
     env:
       DATABASE_URL: postgresql://dukonpro:dukonpro@localhost:5435/dukonpro?schema=public
+      # The app refuses to boot without these (see
+      # api/src/common/bootstrap/validate-config.ts) — e2e tests create the
+      # real Nest app (JwtAccessStrategy etc. call configService.getOrThrow),
+      # unlike the unit-test job above which never boots the full app. These
+      # are throwaway values for a disposable CI Postgres container, not real
+      # secrets — never reuse them outside CI.
+      JWT_ACCESS_SECRET: 706c8873d54d8052dfa5e9f18015d159fab477a203f428ec3b11ca66bd4729304ae03375107f06f93b1383f004a14f4884d359271c174be1698fd0a312992b8e
+      JWT_REFRESH_SECRET: 6cf05e14dc0c6a9c78c9095019a8fd807d54deb0344b33c9bfcf23c5c796fa67091b4244e8191851b41d8b90c8396b63bee0007e3e60c64c3ea5a127abe64182
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
