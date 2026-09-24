@@ -68,10 +68,8 @@ export interface Subscription {
 }
 
 export interface Plan {
-  id: string;
-  name: string;
+  plan: 'START' | 'BUSINESS' | 'PREMIUM';
   price: number;
-  maxStores: number;
   maxProducts: number;
   maxStaff: number;
   maxDiscounts: number;
