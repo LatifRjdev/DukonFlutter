@@ -62,6 +62,40 @@ function renderPage() {
   return renderWithQuery(<StoreDetailPage params={Promise.resolve({ id: 's1' })} />);
 }
 
+describe('StoreDetailPage — destructive action: suspend', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('clicking "Приостановить" opens a confirmation dialog before PUTting suspend', async () => {
+    mockStore();
+
+    const calls: string[] = [];
+    server.use(
+      http.put(`${API_URL}/admin/stores/s1/suspend`, () => {
+        calls.push('suspend');
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    const user = userEvent.setup();
+    await renderPage();
+    await waitFor(() => screen.getByText('Test Store'));
+
+    await user.click(screen.getByRole('button', { name: 'Приостановить' }));
+
+    // Dialog open, mutation not fired yet.
+    expect(await screen.findByRole('button', { name: 'Приостановить' })).toBeInTheDocument();
+    expect(calls).not.toContain('suspend');
+
+    await user.click(screen.getByRole('button', { name: 'Приостановить' }));
+
+    await waitFor(() => expect(calls).toContain('suspend'));
+    expect(toastSuccess).toHaveBeenCalledWith('Статус магазина обновлён');
+  });
+});
+
 describe('StoreDetailPage — transfer ownership sends newOwnerId, not userId', () => {
   beforeEach(() => {
     toastSuccess.mockReset();

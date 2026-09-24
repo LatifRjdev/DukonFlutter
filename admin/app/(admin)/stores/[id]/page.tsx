@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { StatsCard } from '@/components/stats-card';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { api } from '@/lib/api';
 import { Store, Subscription } from '@/lib/types';
 import { toast } from 'sonner';
@@ -50,6 +51,7 @@ export default function StoreDetailPage({
   const queryClient = useQueryClient();
   const [transferDialog, setTransferDialog] = useState(false);
   const [newOwnerId, setNewOwnerId] = useState('');
+  const [suspendConfirm, setSuspendConfirm] = useState(false);
   const [messageDialog, setMessageDialog] = useState(false);
   const [msgTitle, setMsgTitle] = useState('');
   const [msgBody, setMsgBody] = useState('');
@@ -69,6 +71,7 @@ export default function StoreDetailPage({
       api.put(`/admin/stores/${id}/${store && !store.isActive ? 'unsuspend' : 'suspend'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['store', id] });
+      setSuspendConfirm(false);
       toast.success('Статус магазина обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
@@ -163,7 +166,7 @@ export default function StoreDetailPage({
           <div className="flex gap-3">
             <Button
               variant={!store.isActive ? 'outline' : 'destructive'}
-              onClick={() => suspendMutation.mutate()}
+              onClick={() => (store.isActive ? setSuspendConfirm(true) : suspendMutation.mutate())}
               disabled={suspendMutation.isPending}
             >
               {!store.isActive ? (
@@ -251,6 +254,17 @@ export default function StoreDetailPage({
           </CardContent>
         </Card>
       )}
+
+      <ConfirmDialog
+        open={suspendConfirm}
+        onOpenChange={setSuspendConfirm}
+        title="Приостановить магазин?"
+        description={`Магазин «${store.name}» станет недоступен владельцу до восстановления.`}
+        confirmLabel="Приостановить"
+        variant="destructive"
+        pending={suspendMutation.isPending}
+        onConfirm={() => suspendMutation.mutate()}
+      />
 
       {/* Transfer Dialog */}
       <Dialog open={transferDialog} onOpenChange={setTransferDialog}>

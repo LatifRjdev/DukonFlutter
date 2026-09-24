@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DataTable, Column } from '@/components/data-table';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { api } from '@/lib/api';
 import { Store } from '@/lib/types';
 import { toast } from 'sonner';
@@ -70,6 +71,7 @@ export default function StoresPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [transferDialog, setTransferDialog] = useState<Store | null>(null);
   const [newOwnerId, setNewOwnerId] = useState('');
+  const [suspendConfirm, setSuspendConfirm] = useState<Store | null>(null);
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
@@ -81,6 +83,7 @@ export default function StoresPage() {
       api.put(`/admin/stores/${store.id}/${!store.isActive ? 'unsuspend' : 'suspend'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stores'] });
+      setSuspendConfirm(null);
       toast.success('Статус магазина обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
@@ -181,7 +184,7 @@ export default function StoresPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                suspendMutation.mutate(s);
+                s.isActive ? setSuspendConfirm(s) : suspendMutation.mutate(s);
               }}
               className={!s.isActive ? 'text-green-600' : 'text-red-600'}
             >
@@ -292,6 +295,19 @@ export default function StoresPage() {
         isLoading={isLoading}
         onRowClick={(s) => router.push(`/stores/${s.id}`)}
         emptyMessage="Магазины не найдены"
+      />
+
+      <ConfirmDialog
+        open={!!suspendConfirm}
+        onOpenChange={(open) => !open && setSuspendConfirm(null)}
+        title="Приостановить магазин?"
+        description={`Магазин «${suspendConfirm?.name}» станет недоступен владельцу до восстановления.`}
+        confirmLabel="Приостановить"
+        variant="destructive"
+        pending={suspendMutation.isPending}
+        onConfirm={() => {
+          if (suspendConfirm) suspendMutation.mutate(suspendConfirm);
+        }}
       />
 
       {/* Transfer dialog */}

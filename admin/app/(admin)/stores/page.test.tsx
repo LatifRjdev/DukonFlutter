@@ -63,8 +63,7 @@ describe('StoresPage — destructive action: suspend / activate', () => {
     toastError.mockReset();
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
-  it('clicking "Приостановить" PUTs /admin/stores/:id/suspend and toasts success', async () => {
+  it('clicking "Приостановить" opens a confirmation dialog before PUTting suspend', async () => {
     mockSingleStore(true);
 
     const calls: string[] = [];
@@ -87,11 +86,16 @@ describe('StoresPage — destructive action: suspend / activate', () => {
     const suspendItem = await screen.findByText('Приостановить');
     await user.click(suspendItem);
 
+    // Dialog open, mutation not fired yet.
+    expect(await screen.findByRole('button', { name: 'Приостановить' })).toBeInTheDocument();
+    expect(calls).not.toContain('suspend');
+
+    await user.click(screen.getByRole('button', { name: 'Приостановить' }));
+
     await waitFor(() => expect(calls).toContain('suspend'));
     expect(toastSuccess).toHaveBeenCalledWith('Статус магазина обновлён');
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
   it('clicking "Восстановить" on a suspended store PUTs /admin/stores/:id/unsuspend', async () => {
     mockSingleStore(false);
 
