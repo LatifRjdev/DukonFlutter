@@ -152,9 +152,11 @@ export default function AnnouncementsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Все статусы</SelectItem>
-                  <SelectItem value="active">Активные</SelectItem>
-                  <SelectItem value="trial">Trial</SelectItem>
-                  <SelectItem value="expired">Истекшие</SelectItem>
+                  <SelectItem value="ACTIVE">Активные</SelectItem>
+                  <SelectItem value="TRIAL">Trial</SelectItem>
+                  <SelectItem value="PAST_DUE">Просрочены</SelectItem>
+                  <SelectItem value="CANCELLED">Отменены</SelectItem>
+                  <SelectItem value="EXPIRED">Истекшие</SelectItem>
                 </SelectContent>
               </Select>
             </div>

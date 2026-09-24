@@ -127,3 +127,40 @@ describe('AnnouncementsPage preview request includes title and body', () => {
     }));
   });
 });
+
+describe('AnnouncementsPage status filter sends the real SubscriptionStatus enum casing', () => {
+  it('sends targetStatus: "TRIAL" (uppercase), not "trial", when "Trial" is selected', async () => {
+    server.use(
+      http.get(`${API_URL}/admin/announcements`, () =>
+        HttpResponse.json({ data: [], total: 0, page: 1, limit: 20 }),
+      ),
+    );
+
+    const captured: { body?: unknown } = {};
+    server.use(
+      http.post(`${API_URL}/admin/announcements/preview`, async ({ request }) => {
+        captured.body = await request.json();
+        return HttpResponse.json({ count: 3 });
+      }),
+    );
+
+    renderWithQuery(<AnnouncementsPage />);
+
+    await userEvent.type(screen.getByPlaceholderText(/Новые функции/i), 'QA Title');
+    await userEvent.type(
+      screen.getByPlaceholderText(/Введите текст объявления/i),
+      'QA Body',
+    );
+
+    // "Фильтр по статусу" is the second combobox on this page (the first is
+    // "Фильтр по тарифу").
+    await userEvent.click(screen.getAllByRole('combobox')[1]);
+    await userEvent.click(await screen.findByRole('option', { name: 'Trial' }));
+
+    await userEvent.click(screen.getByRole('button', { name: /Отправить/i }));
+
+    await waitFor(() =>
+      expect(captured.body).toMatchObject({ targetStatus: 'TRIAL' }),
+    );
+  });
+});
