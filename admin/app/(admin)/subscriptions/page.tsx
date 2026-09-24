@@ -106,8 +106,8 @@ function SubscriptionsContent() {
   });
 
   const changePlanMutation = useMutation({
-    mutationFn: ({ id, planId }: { id: string; planId: string }) =>
-      api.put(`/admin/subscriptions/${id}/change-plan`, { planId }),
+    mutationFn: ({ id, plan }: { id: string; plan: string }) =>
+      api.put(`/admin/subscriptions/${id}/change-plan`, { plan }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
       setChangePlanStore(null);
@@ -486,7 +486,7 @@ function SubscriptionsContent() {
             <Button
               onClick={() =>
                 changePlanStore &&
-                changePlanMutation.mutate({ id: changePlanStore.id, planId: newPlan })
+                changePlanMutation.mutate({ id: changePlanStore.id, plan: newPlan })
               }
               disabled={!newPlan || changePlanMutation.isPending}
             >

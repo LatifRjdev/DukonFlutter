@@ -209,3 +209,41 @@ describe('SubscriptionsPage — destructive action: approve / reject pending pay
     );
   });
 });
+
+describe('SubscriptionsPage — change-plan sends { plan }, not { planId }', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('PUTs { plan } to /admin/subscriptions/:id/change-plan', async () => {
+    mockSubscriptionsAndPending();
+
+    const captured: { body?: unknown } = {};
+    server.use(
+      http.put(`${API_URL}/admin/subscriptions/sub1/change-plan`, async ({ request }) => {
+        captured.body = await request.json();
+        return HttpResponse.json({ id: 'sub1', plan: 'PREMIUM', status: 'ACTIVE' });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<SubscriptionsPage />);
+    await waitFor(() => screen.getByText('Demo Store'));
+
+    const trigger = document.querySelector(
+      '[data-slot="dropdown-menu-trigger"]',
+    ) as HTMLElement;
+    await user.click(trigger);
+
+    const changePlanItem = await screen.findByText('Изменить тариф');
+    await user.click(changePlanItem);
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(await screen.findByRole('option', { name: 'PREMIUM' }));
+    await user.click(screen.getByRole('button', { name: 'Изменить' }));
+
+    await waitFor(() => expect(captured.body).toEqual({ plan: 'PREMIUM' }));
+    expect(toastSuccess).toHaveBeenCalledWith('Тариф изменён');
+  });
+});
