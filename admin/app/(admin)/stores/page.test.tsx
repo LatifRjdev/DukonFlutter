@@ -213,6 +213,11 @@ describe('StoresPage — transfer ownership sends newOwnerId, not userId', () =>
         captured.body = await request.json();
         return HttpResponse.json({ id: 's1', ownerId: 'owner-2', name: 'Active Mart' });
       }),
+      http.get(`${API_URL}/admin/users`, () =>
+        HttpResponse.json({
+          data: [{ id: 'owner-2', name: 'New Owner', phone: '+992900000099' }],
+        }),
+      ),
     );
 
     const user = userEvent.setup();
@@ -227,7 +232,8 @@ describe('StoresPage — transfer ownership sends newOwnerId, not userId', () =>
     const transferItem = await screen.findByText('Передать владение');
     await user.click(transferItem);
 
-    await user.type(screen.getByPlaceholderText('Введите ID пользователя'), 'owner-2');
+    await user.type(screen.getByPlaceholderText(/Поиск по имени или телефону/i), 'New Owner');
+    await user.click(await screen.findByText('New Owner'));
     // Exact-string match (default for getByRole's `name`) so this doesn't
     // also match the "Передать владение" dropdown item from above.
     await user.click(screen.getByRole('button', { name: 'Передать' }));

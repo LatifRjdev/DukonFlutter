@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select';
 import { DataTable, Column } from '@/components/data-table';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { UserPicker } from '@/components/user-picker';
 import { api } from '@/lib/api';
 import { Store } from '@/lib/types';
 import { toast } from 'sonner';
@@ -321,12 +322,8 @@ export default function StoresPage() {
               Магазин: <strong>{transferDialog?.name}</strong>
             </p>
             <div className="space-y-2">
-              <Label>ID нового владельца</Label>
-              <Input
-                value={newOwnerId}
-                onChange={(e) => setNewOwnerId(e.target.value)}
-                placeholder="Введите ID пользователя"
-              />
+              <Label>Новый владелец</Label>
+              <UserPicker value={newOwnerId} onSelect={(id) => setNewOwnerId(id)} />
             </div>
           </div>
           <DialogFooter>
