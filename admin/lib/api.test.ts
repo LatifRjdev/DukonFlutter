@@ -77,4 +77,33 @@ describe('lib/api', () => {
 
     fetchSpy.mockRestore();
   });
+
+  it('api.post resolves (does not throw) when the response body is empty', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => {
+      // Mirrors a NestJS controller method returning Promise<void>: 201,
+      // empty body — matches POST /admin/notifications/direct. Verified
+      // empirically that `new Response(null, {...})` has NO Content-Length
+      // header in Node's fetch (not "0" — absent), so the fix must not
+      // rely on that header to detect an empty body.
+      return new Response(null, { status: 201 });
+    });
+
+    await expect(api.post('/admin/notifications/direct', { userId: 'u1' })).resolves.toBeUndefined();
+
+    fetchSpy.mockRestore();
+  });
+
+  it('api.post still parses a normal JSON body on success (no regression)', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => {
+      return new Response(JSON.stringify({ id: 'sub-1', plan: 'PREMIUM' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+
+    const result = await api.post('/admin/subscriptions/sub-1/change-plan', { plan: 'PREMIUM' });
+    expect(result).toEqual({ id: 'sub-1', plan: 'PREMIUM' });
+
+    fetchSpy.mockRestore();
+  });
 });

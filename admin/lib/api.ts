@@ -35,7 +35,15 @@ async function apiFetch(path: string, options?: RequestInit) {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || `HTTP ${res.status}`);
   }
-  return res.json();
+  // Some admin endpoints (e.g. POST /admin/notifications/direct) return a
+  // controller method typed Promise<void> — NestJS sends an empty 2xx body
+  // for those. res.json() throws SyntaxError on an empty body, which would
+  // otherwise surface as a false "error" toast for a request that actually
+  // succeeded. Read as text first (no Content-Length header can be relied
+  // on to detect this — an empty-bodied Response has none at all) and only
+  // parse when there's something to parse.
+  const text = await res.text();
+  return text ? JSON.parse(text) : undefined;
 }
 
 export const api = {
