@@ -33,6 +33,30 @@ const FEATURE_LABELS: Record<string, string> = {
   hasBatchProfitability: 'Прибыльность по партиям',
 };
 
+// Fields UpdatePlanDto (api/src/modules/admin/dto/update-plan.dto.ts) accepts.
+// Built explicitly (not a spread of the whole edited object) so a future
+// field added to the Plan type can't silently reintroduce a
+// forbidNonWhitelisted 400 the way id/name/maxStores once did.
+function toUpdatePayload(plan: Plan) {
+  return {
+    price: plan.price,
+    maxProducts: plan.maxProducts,
+    maxStaff: plan.maxStaff,
+    maxDiscounts: plan.maxDiscounts,
+    hasReportsAll: plan.hasReportsAll,
+    hasExport: plan.hasExport,
+    hasTelegram: plan.hasTelegram,
+    hasAllPush: plan.hasAllPush,
+    hasDelivery: plan.hasDelivery,
+    hasInventory: plan.hasInventory,
+    hasEcommerceIntegration: plan.hasEcommerceIntegration,
+    hasZakat: plan.hasZakat,
+    hasInvestments: plan.hasInvestments,
+    hasLoyalty: plan.hasLoyalty,
+    hasBatchProfitability: plan.hasBatchProfitability,
+  };
+}
+
 function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
   const [edited, setEdited] = useState<Plan>(plan);
   const [dirty, setDirty] = useState(false);
@@ -47,12 +71,12 @@ function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
     setDirty(true);
   };
 
-  const config = PLAN_CONFIGS.find((c) => c.key === plan.name) || PLAN_CONFIGS[0];
+  const config = PLAN_CONFIGS.find((c) => c.key === plan.plan) || PLAN_CONFIGS[0];
 
   return (
     <Card className={`border-2 ${config.color}`}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg">{plan.name}</CardTitle>
+        <CardTitle className="text-lg">{plan.plan}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Numeric fields */}
@@ -60,15 +84,17 @@ function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
           {(
             [
               ['price', 'Цена (сом/месяц)'],
-              ['maxStores', 'Макс. магазинов'],
               ['maxProducts', 'Макс. товаров'],
               ['maxStaff', 'Макс. сотрудников'],
               ['maxDiscounts', 'Макс. скидок'],
             ] as [keyof Plan, string][]
           ).map(([key, label]) => (
             <div key={key} className="grid grid-cols-2 items-center gap-2">
-              <Label className="text-sm">{label}</Label>
+              <Label htmlFor={`${plan.plan}-${key}`} className="text-sm">
+                {label}
+              </Label>
               <Input
+                id={`${plan.plan}-${key}`}
                 type="number"
                 min="0"
                 value={edited[key] as number}
@@ -85,11 +111,11 @@ function PlanCard({ plan, onSave }: { plan: Plan; onSave: (p: Plan) => void }) {
         <div className="space-y-3">
           {Object.entries(FEATURE_LABELS).map(([key, label]) => (
             <div key={key} className="flex items-center justify-between">
-              <Label className="text-sm cursor-pointer" htmlFor={`${plan.id}-${key}`}>
+              <Label className="text-sm cursor-pointer" htmlFor={`${plan.plan}-${key}`}>
                 {label}
               </Label>
               <Switch
-                id={`${plan.id}-${key}`}
+                id={`${plan.plan}-${key}`}
                 checked={edited[key as keyof Plan] as boolean}
                 onCheckedChange={(checked) =>
                   update(key as keyof Plan, checked as Plan[keyof Plan])
@@ -121,7 +147,7 @@ export default function PlansPage() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (plan: Plan) => api.put(`/admin/plans/${plan.id}`, plan),
+    mutationFn: (plan: Plan) => api.put(`/admin/plans/${plan.plan}`, toUpdatePayload(plan)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plans'] });
       toast.success('Тариф сохранён');
@@ -139,15 +165,13 @@ export default function PlansPage() {
     );
   }
 
-  // If no plans from API, show placeholders
-  const displayPlans =
+  // If no plans from API, show placeholders (same shape as the real response).
+  const displayPlans: Plan[] =
     plans.length > 0
       ? plans
       : PLAN_CONFIGS.map((c, i) => ({
-          id: c.key,
-          name: c.key,
+          plan: c.key as Plan['plan'],
           price: i === 0 ? 49 : i === 1 ? 99 : 199,
-          maxStores: i === 0 ? 1 : i === 1 ? 3 : 10,
           maxProducts: i === 0 ? 100 : i === 1 ? 500 : 99999,
           maxStaff: i === 0 ? 2 : i === 1 ? 5 : 20,
           maxDiscounts: i === 0 ? 5 : i === 1 ? 20 : 99999,
@@ -183,7 +207,7 @@ export default function PlansPage() {
       <div className="grid grid-cols-3 gap-6">
         {displayPlans.map((plan) => (
           <PlanCard
-            key={plan.id}
+            key={plan.plan}
             plan={plan}
             onSave={(p) => saveMutation.mutate(p)}
           />
