@@ -87,8 +87,7 @@ describe('UsersPage — destructive action: block / unblock', () => {
     toastError.mockReset();
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
-  it('clicking "Заблокировать" PUTs /admin/users/:id/block and toasts success', async () => {
+  it('clicking "Заблокировать" opens a confirmation dialog before PUTting block', async () => {
     mockSingleUser({ id: 'u1', name: 'Alice', isActive: true });
 
     const blockCalls: string[] = [];
@@ -113,13 +112,18 @@ describe('UsersPage — destructive action: block / unblock', () => {
     const blockItem = await screen.findByText('Заблокировать');
     await user.click(blockItem);
 
+    // Dialog open, mutation not fired yet.
+    expect(await screen.findByRole('button', { name: 'Заблокировать' })).toBeInTheDocument();
+    expect(blockCalls).not.toContain('block');
+
+    await user.click(screen.getByRole('button', { name: 'Заблокировать' }));
+
     await waitFor(() => expect(blockCalls).toContain('block'));
     await waitFor(() =>
       expect(toastSuccess).toHaveBeenCalledWith('Статус пользователя обновлён'),
     );
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
   it('clicking "Разблокировать" on a blocked user PUTs /admin/users/:id/unblock', async () => {
     mockSingleUser({ id: 'u1', name: 'Bob Blocked', isActive: false });
 
@@ -154,8 +158,7 @@ describe('UsersPage — destructive action: revoke admin role', () => {
     toastError.mockReset();
   });
 
-  // TODO: when confirmation dialog is added, this test should assert dialog appears first.
-  it('clicking "Снять права admin" PUTs /admin/users/:id/toggle-admin and toasts success', async () => {
+  it('clicking "Снять права admin" opens a confirmation dialog before PUTting toggle-admin', async () => {
     mockSingleUser({ id: 'u1', name: 'Carol Admin', isAdmin: true });
 
     const toggleCalls: string[] = [];
@@ -177,6 +180,12 @@ describe('UsersPage — destructive action: revoke admin role', () => {
 
     const revokeItem = await screen.findByText('Снять права admin');
     await user.click(revokeItem);
+
+    // Dialog open, mutation not fired yet.
+    expect(await screen.findByRole('button', { name: 'Подтвердить' })).toBeInTheDocument();
+    expect(toggleCalls).not.toContain('toggle');
+
+    await user.click(screen.getByRole('button', { name: 'Подтвердить' }));
 
     await waitFor(() => expect(toggleCalls).toContain('toggle'));
     expect(toastSuccess).toHaveBeenCalledWith('Роль пользователя обновлена');

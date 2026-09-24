@@ -30,6 +30,7 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import { DataTable, Column } from '@/components/data-table';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { api } from '@/lib/api';
 import { User, CreateUserByAdminInput, CreateUserByAdminResult } from '@/lib/types';
 import { toast } from 'sonner';
@@ -57,10 +58,14 @@ export default function UsersPage() {
     queryFn: () => api.get('/admin/users').then((r) => r.data ?? []),
   });
 
+  const [blockConfirm, setBlockConfirm] = useState<User | null>(null);
+  const [adminToggleConfirm, setAdminToggleConfirm] = useState<User | null>(null);
+
   const toggleAdminMutation = useMutation({
     mutationFn: (userId: string) => api.put(`/admin/users/${userId}/toggle-admin`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      setAdminToggleConfirm(null);
       toast.success('Роль пользователя обновлена');
     },
     onError: () => toast.error('Ошибка обновления роли'),
@@ -71,6 +76,7 @@ export default function UsersPage() {
       api.put(`/admin/users/${user.id}/${user.isActive ? 'block' : 'unblock'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      setBlockConfirm(null);
       toast.success('Статус пользователя обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
@@ -213,7 +219,7 @@ export default function UsersPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                toggleAdminMutation.mutate(u.id);
+                setAdminToggleConfirm(u);
               }}
             >
               {u.isAdmin ? 'Снять права admin' : 'Сделать admin'}
@@ -221,7 +227,7 @@ export default function UsersPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                toggleBlockMutation.mutate(u);
+                u.isActive ? setBlockConfirm(u) : toggleBlockMutation.mutate(u);
               }}
               className={u.isActive ? 'text-red-600' : 'text-green-600'}
             >
@@ -450,6 +456,34 @@ export default function UsersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={!!adminToggleConfirm}
+        onOpenChange={(open) => !open && setAdminToggleConfirm(null)}
+        title={
+          adminToggleConfirm?.isAdmin
+            ? 'Снять права администратора?'
+            : 'Назначить администратором?'
+        }
+        description={`Пользователь «${adminToggleConfirm?.name}» ${adminToggleConfirm?.isAdmin ? 'потеряет' : 'получит'} доступ к админ-панели.`}
+        confirmLabel="Подтвердить"
+        pending={toggleAdminMutation.isPending}
+        onConfirm={() => {
+          if (adminToggleConfirm) toggleAdminMutation.mutate(adminToggleConfirm.id);
+        }}
+      />
+      <ConfirmDialog
+        open={!!blockConfirm}
+        onOpenChange={(open) => !open && setBlockConfirm(null)}
+        title="Заблокировать пользователя?"
+        description={`Пользователь «${blockConfirm?.name}» немедленно потеряет доступ и все его текущие сессии будут завершены.`}
+        confirmLabel="Заблокировать"
+        variant="destructive"
+        pending={toggleBlockMutation.isPending}
+        onConfirm={() => {
+          if (blockConfirm) toggleBlockMutation.mutate(blockConfirm);
+        }}
+      />
     </div>
   );
 }

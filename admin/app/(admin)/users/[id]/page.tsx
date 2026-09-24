@@ -29,6 +29,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { api } from '@/lib/api';
 import { User, Store as StoreType } from '@/lib/types';
 import { toast } from 'sonner';
@@ -53,10 +54,14 @@ export default function UserDetailPage({
     queryFn: () => api.get(`/admin/users/${id}/stores`),
   });
 
+  const [blockConfirm, setBlockConfirm] = useState(false);
+  const [adminToggleConfirm, setAdminToggleConfirm] = useState(false);
+
   const toggleAdminMutation = useMutation({
     mutationFn: () => api.put(`/admin/users/${id}/toggle-admin`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user', id] });
+      setAdminToggleConfirm(false);
       toast.success('Роль пользователя обновлена');
     },
     onError: () => toast.error('Ошибка обновления роли'),
@@ -67,6 +72,7 @@ export default function UserDetailPage({
       api.put(`/admin/users/${id}/${user?.isActive ? 'block' : 'unblock'}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user', id] });
+      setBlockConfirm(false);
       toast.success('Статус пользователя обновлён');
     },
     onError: () => toast.error('Ошибка обновления статуса'),
@@ -219,7 +225,7 @@ export default function UserDetailPage({
           <div className="flex gap-3">
             <Button
               variant="outline"
-              onClick={() => toggleAdminMutation.mutate()}
+              onClick={() => setAdminToggleConfirm(true)}
               disabled={toggleAdminMutation.isPending}
             >
               {user.isAdmin ? (
@@ -236,7 +242,9 @@ export default function UserDetailPage({
             </Button>
             <Button
               variant={user.isActive ? 'destructive' : 'outline'}
-              onClick={() => toggleBlockMutation.mutate()}
+              onClick={() =>
+                user.isActive ? setBlockConfirm(true) : toggleBlockMutation.mutate()
+              }
               disabled={toggleBlockMutation.isPending}
             >
               {user.isActive ? (
@@ -398,6 +406,30 @@ export default function UserDetailPage({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={adminToggleConfirm}
+        onOpenChange={setAdminToggleConfirm}
+        title={
+          user.isAdmin
+            ? 'Снять права администратора?'
+            : 'Назначить администратором?'
+        }
+        description={`Пользователь «${user.name}» ${user.isAdmin ? 'потеряет' : 'получит'} доступ к админ-панели.`}
+        confirmLabel="Подтвердить"
+        pending={toggleAdminMutation.isPending}
+        onConfirm={() => toggleAdminMutation.mutate()}
+      />
+      <ConfirmDialog
+        open={blockConfirm}
+        onOpenChange={setBlockConfirm}
+        title="Заблокировать пользователя?"
+        description={`Пользователь «${user.name}» немедленно потеряет доступ и все его текущие сессии будут завершены.`}
+        confirmLabel="Заблокировать"
+        variant="destructive"
+        pending={toggleBlockMutation.isPending}
+        onConfirm={() => toggleBlockMutation.mutate()}
+      />
     </div>
   );
 }

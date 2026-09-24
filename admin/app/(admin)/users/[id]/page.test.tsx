@@ -221,3 +221,86 @@ describe('UserDetailPage — impersonation flow', () => {
     await waitFor(() => expect(impersonateCalls).toBe(2));
   });
 });
+
+describe('UserDetailPage — destructive action: block user', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+    mockUser();
+  });
+
+  it('clicking "Заблокировать" opens a confirmation dialog before PUTting block', async () => {
+    const blockCalls: string[] = [];
+    server.use(
+      http.put(`${API_URL}/admin/users/u1/block`, () => {
+        blockCalls.push('block');
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    const user = userEvent.setup();
+    await renderPage();
+    await waitFor(() => expect(screen.getByText('Alice')).toBeInTheDocument());
+
+    await user.click(screen.getByRole('button', { name: /Заблокировать/i }));
+
+    // Dialog open, mutation not fired yet.
+    expect(
+      await screen.findByRole('button', { name: 'Заблокировать' }),
+    ).toBeInTheDocument();
+    expect(blockCalls).not.toContain('block');
+
+    await user.click(screen.getByRole('button', { name: 'Заблокировать' }));
+
+    await waitFor(() => expect(blockCalls).toContain('block'));
+    expect(toastSuccess).toHaveBeenCalledWith('Статус пользователя обновлён');
+  });
+});
+
+describe('UserDetailPage — destructive action: revoke admin role', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('clicking "Снять права admin" opens a confirmation dialog before PUTting toggle-admin', async () => {
+    server.use(
+      http.get(`${API_URL}/admin/users/u1`, () =>
+        HttpResponse.json({
+          id: 'u1',
+          name: 'Carol Admin',
+          phone: '+992900000001',
+          isAdmin: true,
+          isActive: true,
+          createdAt: '2026-01-01T00:00:00Z',
+        }),
+      ),
+      http.get(`${API_URL}/admin/users/u1/stores`, () => HttpResponse.json([])),
+    );
+
+    const toggleCalls: string[] = [];
+    server.use(
+      http.put(`${API_URL}/admin/users/u1/toggle-admin`, () => {
+        toggleCalls.push('toggle');
+        return HttpResponse.json({ ok: true });
+      }),
+    );
+
+    const user = userEvent.setup();
+    await renderPage();
+    await waitFor(() => expect(screen.getByText('Carol Admin')).toBeInTheDocument());
+
+    await user.click(screen.getByRole('button', { name: /Снять права admin/i }));
+
+    // Dialog open, mutation not fired yet.
+    expect(
+      await screen.findByRole('button', { name: 'Подтвердить' }),
+    ).toBeInTheDocument();
+    expect(toggleCalls).not.toContain('toggle');
+
+    await user.click(screen.getByRole('button', { name: 'Подтвердить' }));
+
+    await waitFor(() => expect(toggleCalls).toContain('toggle'));
+    expect(toastSuccess).toHaveBeenCalledWith('Роль пользователя обновлена');
+  });
+});
