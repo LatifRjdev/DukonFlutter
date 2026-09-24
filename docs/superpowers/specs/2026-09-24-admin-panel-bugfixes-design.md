@@ -128,20 +128,24 @@ Because the admin sees a false error, they may reasonably retry and send
 the same message to the user twice.
 
 **Fix:** `apiFetch` must not assume every successful response has a JSON
-body. Change the final block to only parse JSON when there's a body to
-parse:
+body. Read the body as text first and only parse it as JSON when it's
+non-empty:
 ```ts
-if (res.status === 204 || res.headers.get('content-length') === '0') {
-  return undefined;
-}
-return res.json();
+const text = await res.text();
+return text ? JSON.parse(text) : undefined;
 ```
-This is a general robustness fix (not special-cased to the notifications
-endpoint), since any future void-returning admin endpoint would hit the
-exact same failure mode. No other caller of `api.post`/`api.put` in the
-codebase currently depends on always receiving a parsed body from a 204/
-empty response (checked: every other admin mutation's backend method
-returns a Prisma record or an explicit object).
+(Checked empirically: a `Response` constructed with a `null` body — what
+NestJS sends for a controller method returning `void` — has no
+`Content-Length` header at all in Node's `fetch` implementation, not
+`"0"`; relying on that header to detect an empty body is unreliable. Reading
+`res.text()` and checking for an empty string works regardless of which
+headers happen to be present.) This is a general robustness fix (not
+special-cased to the notifications endpoint), since any future
+void-returning admin endpoint would hit the exact same failure mode. No
+other caller of `api.post`/`api.put` in the codebase currently depends on
+always receiving a parsed body from an empty response (checked: every other
+admin mutation's backend method returns a Prisma record or an explicit
+object).
 
 ## Testing approach
 
