@@ -242,3 +242,21 @@ describe('StoresPage — transfer ownership sends newOwnerId, not userId', () =>
     expect(toastSuccess).toHaveBeenCalledWith('Владелец магазина изменён');
   });
 });
+
+describe('StoresPage requests enough rows for client-side filtering to be accurate', () => {
+  it('fetches /admin/stores with a limit large enough to not silently drop rows past page 1', async () => {
+    const captured: { url?: string } = {};
+    server.use(
+      http.get(`${API_URL}/admin/stores`, ({ request }) => {
+        captured.url = request.url;
+        return HttpResponse.json({ data: [], total: 0 });
+      }),
+    );
+
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => expect(captured.url).toBeDefined());
+
+    const limit = Number(new URL(captured.url!).searchParams.get('limit'));
+    expect(limit).toBeGreaterThanOrEqual(1000);
+  });
+});

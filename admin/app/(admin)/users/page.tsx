@@ -55,7 +55,15 @@ export default function UsersPage() {
 
   const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ['users'],
-    queryFn: () => api.get('/admin/users').then((r) => r.data ?? []),
+    // limit=1000: this page has no pagination UI at all — search and the
+    // Все/Администраторы/Заблокированные tabs all filter client-side over
+    // whatever this fetch returns. The backend defaults to limit=20, which
+    // silently dropped users past the first page (e.g. any admin/blocked
+    // user created after the 20th signup would never appear in those
+    // tabs). Real server-side pagination would be the more scalable fix,
+    // but at this app's user count a single large fetch is simpler and
+    // matches how every other filter/search on this page already works.
+    queryFn: () => api.get('/admin/users?limit=1000').then((r) => r.data ?? []),
   });
 
   const [blockConfirm, setBlockConfirm] = useState<User | null>(null);

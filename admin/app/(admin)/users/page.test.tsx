@@ -414,3 +414,25 @@ describe('UsersPage — manual user creation', () => {
     expect(screen.queryByLabelText(/^пароль$/i)).not.toBeInTheDocument();
   });
 });
+
+describe('UsersPage requests enough rows for client-side filtering to be accurate', () => {
+  it('fetches /admin/users with a limit large enough to not silently drop rows past page 1', async () => {
+    const captured: { url?: string } = {};
+    server.use(
+      http.get(`${API_URL}/admin/users`, ({ request }) => {
+        captured.url = request.url;
+        return HttpResponse.json({ data: [], total: 0 });
+      }),
+    );
+
+    renderWithQuery(<UsersPage />);
+    await waitFor(() => expect(captured.url).toBeDefined());
+
+    const limit = Number(new URL(captured.url!).searchParams.get('limit'));
+    // The backend defaults to 20 with no server-side filter/search wired
+    // into this page's tabs — anything not comfortably above real user
+    // counts would reintroduce the "admins/blocked users past page 1 are
+    // invisible" bug this test guards against.
+    expect(limit).toBeGreaterThanOrEqual(1000);
+  });
+});

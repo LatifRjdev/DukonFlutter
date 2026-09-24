@@ -76,7 +76,11 @@ export default function StoresPage() {
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
-    queryFn: () => api.get('/admin/stores').then((r) => r.data ?? []),
+    // limit=1000: same reasoning as the Users page's identical fix — this
+    // page has no pagination UI, so a hidden backend default of 20 was
+    // silently dropping stores past the first page from every client-side
+    // filter/search on this list.
+    queryFn: () => api.get('/admin/stores?limit=1000').then((r) => r.data ?? []),
   });
 
   const suspendMutation = useMutation({
