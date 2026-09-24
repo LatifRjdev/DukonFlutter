@@ -227,7 +227,11 @@ export default function UsersPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                u.isActive ? setBlockConfirm(u) : toggleBlockMutation.mutate(u);
+                if (u.isActive) {
+                  setBlockConfirm(u);
+                } else {
+                  toggleBlockMutation.mutate(u);
+                }
               }}
               className={u.isActive ? 'text-red-600' : 'text-green-600'}
             >

@@ -185,7 +185,11 @@ export default function StoresPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                s.isActive ? setSuspendConfirm(s) : suspendMutation.mutate(s);
+                if (s.isActive) {
+                  setSuspendConfirm(s);
+                } else {
+                  suspendMutation.mutate(s);
+                }
               }}
               className={!s.isActive ? 'text-green-600' : 'text-red-600'}
             >
