@@ -87,8 +87,8 @@ export default function StoresPage() {
   });
 
   const transferMutation = useMutation({
-    mutationFn: ({ storeId, userId }: { storeId: string; userId: string }) =>
-      api.put(`/admin/stores/${storeId}/transfer`, { userId }),
+    mutationFn: ({ storeId, newOwnerId }: { storeId: string; newOwnerId: string }) =>
+      api.put(`/admin/stores/${storeId}/transfer`, { newOwnerId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stores'] });
       setTransferDialog(null);
@@ -322,7 +322,7 @@ export default function StoresPage() {
                 transferDialog &&
                 transferMutation.mutate({
                   storeId: transferDialog.id,
-                  userId: newOwnerId,
+                  newOwnerId,
                 })
               }
               disabled={!newOwnerId || transferMutation.isPending}

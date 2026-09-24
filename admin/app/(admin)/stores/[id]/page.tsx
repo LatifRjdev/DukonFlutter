@@ -75,8 +75,8 @@ export default function StoreDetailPage({
   });
 
   const transferMutation = useMutation({
-    mutationFn: (userId: string) =>
-      api.put(`/admin/stores/${id}/transfer`, { userId }),
+    mutationFn: (newOwnerId: string) =>
+      api.put(`/admin/stores/${id}/transfer`, { newOwnerId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['store', id] });
       setTransferDialog(false);

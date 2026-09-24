@@ -193,3 +193,42 @@ describe('StoresPage — Экспорт button vs. subscription-status filter', 
     expect(window.location.href).toContain('/api/proxy/admin/stores/export?');
   });
 });
+
+describe('StoresPage — transfer ownership sends newOwnerId, not userId', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('PUTs { newOwnerId } to /admin/stores/:id/transfer', async () => {
+    mockSingleStore(true);
+
+    const captured: { body?: unknown } = {};
+    server.use(
+      http.put(`${API_URL}/admin/stores/s1/transfer`, async ({ request }) => {
+        captured.body = await request.json();
+        return HttpResponse.json({ id: 's1', ownerId: 'owner-2', name: 'Active Mart' });
+      }),
+    );
+
+    const user = userEvent.setup();
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => screen.getByText('Active Mart'));
+
+    const trigger = document.querySelector(
+      '[data-slot="dropdown-menu-trigger"]',
+    ) as HTMLElement;
+    await user.click(trigger);
+
+    const transferItem = await screen.findByText('Передать владение');
+    await user.click(transferItem);
+
+    await user.type(screen.getByPlaceholderText('Введите ID пользователя'), 'owner-2');
+    // Exact-string match (default for getByRole's `name`) so this doesn't
+    // also match the "Передать владение" dropdown item from above.
+    await user.click(screen.getByRole('button', { name: 'Передать' }));
+
+    await waitFor(() => expect(captured.body).toEqual({ newOwnerId: 'owner-2' }));
+    expect(toastSuccess).toHaveBeenCalledWith('Владелец магазина изменён');
+  });
+});
