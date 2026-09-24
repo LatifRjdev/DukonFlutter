@@ -53,6 +53,8 @@ export default function AnnouncementsPage() {
   const previewMutation = useMutation({
     mutationFn: () =>
       api.post('/admin/announcements/preview', {
+        title,
+        body,
         targetPlan: targetPlan === 'all' ? undefined : targetPlan,
         targetStatus: targetStatus === 'all' ? undefined : targetStatus,
       }),

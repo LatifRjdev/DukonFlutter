@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { format } from 'date-fns';
@@ -89,5 +90,40 @@ describe('AnnouncementsPage history table shows real sender name and date', () =
     await waitFor(() =>
       expect(screen.getByText('deleted-admin-id')).toBeInTheDocument(),
     );
+  });
+});
+
+describe('AnnouncementsPage preview request includes title and body', () => {
+  it('POSTs title and body (not just targetPlan/targetStatus) to /admin/announcements/preview', async () => {
+    server.use(
+      http.get(`${API_URL}/admin/announcements`, () =>
+        HttpResponse.json({ data: [], total: 0, page: 1, limit: 20 }),
+      ),
+    );
+
+    const captured: { body?: unknown } = {};
+    server.use(
+      http.post(`${API_URL}/admin/announcements/preview`, async ({ request }) => {
+        captured.body = await request.json();
+        return HttpResponse.json({ count: 3 });
+      }),
+    );
+
+    renderWithQuery(<AnnouncementsPage />);
+
+    await userEvent.type(
+      screen.getByPlaceholderText(/Новые функции/i),
+      'QA Title',
+    );
+    await userEvent.type(
+      screen.getByPlaceholderText(/Введите текст объявления/i),
+      'QA Body',
+    );
+    await userEvent.click(screen.getByRole('button', { name: /Отправить/i }));
+
+    await waitFor(() => expect(captured.body).toMatchObject({
+      title: 'QA Title',
+      body: 'QA Body',
+    }));
   });
 });
