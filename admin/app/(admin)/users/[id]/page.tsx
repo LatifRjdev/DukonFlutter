@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import {
@@ -80,6 +80,14 @@ export default function UserDetailPage({
   });
 
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  // Self-delete guard: matches the SSR-safe null-then-populate pattern
+  // already used for the sidebar's display name (both read a non-secret
+  // value out of localStorage, which doesn't exist during server render).
+  const [viewerId, setViewerId] = useState<string | null>(null);
+  useEffect(() => {
+    setViewerId(localStorage.getItem('userId'));
+  }, []);
+  const isSelf = viewerId !== null && viewerId === id;
 
   const deleteMutation = useMutation({
     mutationFn: () => api.delete(`/admin/users/${id}`),
@@ -284,13 +292,15 @@ export default function UserDetailPage({
               <UserCog className="mr-2 h-4 w-4" />
               Войти как пользователь
             </Button>
-            <Button
-              variant="destructive"
-              onClick={() => setDeleteConfirm(true)}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Удалить пользователя
-            </Button>
+            {!isSelf && (
+              <Button
+                variant="destructive"
+                onClick={() => setDeleteConfirm(true)}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Удалить пользователя
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

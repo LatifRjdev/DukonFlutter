@@ -51,6 +51,11 @@ export default function LoginPage() {
         'userName',
         data.user.name || data.user.phone || 'Администратор',
       );
+      // userId is likewise not a credential (just an opaque identifier,
+      // already visible to this admin via every list page) — stored so
+      // the user detail page can tell "am I looking at my own account?"
+      // and hide the delete action there (self-delete guard).
+      localStorage.setItem('userId', data.user.id);
       toast.success('Вход выполнен успешно');
       router.push('/');
     } catch (err) {

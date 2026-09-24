@@ -311,6 +311,23 @@ describe('UserDetailPage — delete user', () => {
     toastSuccess.mockReset();
     toastError.mockReset();
     routerPush.mockReset();
+    localStorage.removeItem('userId');
+  });
+
+  afterEach(() => {
+    localStorage.removeItem('userId');
+  });
+
+  it('hides "Удалить пользователя" when viewing your own account (self-delete guard)', async () => {
+    mockUser();
+    localStorage.setItem('userId', 'u1'); // the viewed user's id, from mockUser()
+
+    await renderPage();
+    await waitFor(() => expect(screen.getByText('Alice')).toBeInTheDocument());
+
+    expect(
+      screen.queryByRole('button', { name: 'Удалить пользователя' }),
+    ).not.toBeInTheDocument();
   });
 
   it('clicking "Удалить пользователя" opens a confirmation, then DELETEs and navigates to /users', async () => {
