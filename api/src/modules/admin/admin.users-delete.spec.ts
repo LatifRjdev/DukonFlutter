@@ -12,7 +12,9 @@ function makePrismaFake() {
   return {
     _users: users,
     user: {
-      findUnique: jest.fn(async ({ where }: any) => users.get(where.id) ?? null),
+      findUnique: jest.fn(
+        async ({ where }: any) => users.get(where.id) ?? null,
+      ),
       update: jest.fn(async ({ where, data }: any) => {
         const u = users.get(where.id);
         if (!u) throw new Error('not found');
