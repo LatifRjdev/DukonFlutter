@@ -88,6 +88,8 @@ jobs:
         run: npm ci
       - name: Prisma migrate deploy
         run: npx prisma migrate deploy
+      - name: Seed e2e fixtures
+        run: npx ts-node scripts/seed-e2e.ts
       - name: e2e tests (Jest)
         run: npm run test:e2e -- --ci --colors
 
