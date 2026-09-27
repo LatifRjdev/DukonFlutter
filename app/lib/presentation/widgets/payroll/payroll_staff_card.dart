@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
@@ -20,16 +21,16 @@ class PayrollStaffCard extends StatelessWidget {
     this.onDeleteAdjustment,
   });
 
-  String _roleLabel(String? role) {
+  String _roleLabel(BuildContext context, String? role) {
     switch (role) {
       case 'OWNER':
-        return 'Владелец';
+        return AppLocalizations.of(context)!.owner;
       case 'ADMIN':
-        return 'Админ';
+        return AppLocalizations.of(context)!.adminRoleShort;
       case 'CASHIER':
-        return 'Кассир';
+        return AppLocalizations.of(context)!.cashier;
       case 'WAREHOUSE':
-        return 'Складовщик';
+        return AppLocalizations.of(context)!.warehouse;
       default:
         return role ?? '';
     }
@@ -66,7 +67,7 @@ class PayrollStaffCard extends StatelessWidget {
                     ),
                     if (entry.staffRole != null)
                       Text(
-                        _roleLabel(entry.staffRole),
+                        _roleLabel(context, entry.staffRole),
                         style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                   ],
@@ -79,7 +80,7 @@ class PayrollStaffCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 ),
                 child: Text(
-                  entry.isPaid ? 'Оплачено' : 'Не оплачено',
+                  entry.isPaid ? AppLocalizations.of(context)!.paid : AppLocalizations.of(context)!.unpaid,
                   style: TextStyle(
                     color: entry.isPaid ? AppColors.success : AppColors.warning,
                     fontSize: 12,
@@ -94,10 +95,16 @@ class PayrollStaffCard extends StatelessWidget {
           const SizedBox(height: AppConstants.spacingSm),
           Row(
             children: [
-              _PayrollItem(label: 'Оклад', value: '${entry.baseSalary.toStringAsFixed(0)} TJS'),
-              _PayrollItem(label: 'Комиссия', value: '${entry.commission.toStringAsFixed(0)} TJS'),
               _PayrollItem(
-                label: 'Итого',
+                label: AppLocalizations.of(context)!.baseSalary,
+                value: '${entry.baseSalary.toStringAsFixed(0)} TJS',
+              ),
+              _PayrollItem(
+                label: AppLocalizations.of(context)!.commission,
+                value: '${entry.commission.toStringAsFixed(0)} TJS',
+              ),
+              _PayrollItem(
+                label: AppLocalizations.of(context)!.total,
                 value: '${entry.totalAmount.toStringAsFixed(0)} TJS',
                 isBold: true,
               ),
@@ -132,7 +139,7 @@ class PayrollStaffCard extends StatelessWidget {
                   if (onDeleteAdjustment != null)
                     IconButton(
                       icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
-                      tooltip: 'Удалить',
+                      tooltip: AppLocalizations.of(context)!.delete,
                       onPressed: () => onDeleteAdjustment!(adj),
                     ),
                 ],
@@ -152,7 +159,7 @@ class PayrollStaffCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                   ),
                 ),
-                child: const Text('Выплатить'),
+                child: Text(AppLocalizations.of(context)!.payrollStaffCardPayButton),
               ),
             ),
           ],

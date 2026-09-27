@@ -1928,6 +1928,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get payrollPayAllConfirm => 'Выплатить';
 
   @override
+  String get payrollStaffCardPayButton => 'Выплатить';
+
+  @override
   String get payrollDeleteAdjustmentTitle => 'Удалить корректировку?';
 
   @override

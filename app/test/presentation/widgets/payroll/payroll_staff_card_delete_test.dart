@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dukonpro/domain/entities/payroll_entry.dart';
 import 'package:dukonpro/domain/entities/payroll_adjustment.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/widgets/payroll/payroll_staff_card.dart';
 
 void main() {
@@ -26,7 +27,12 @@ void main() {
   );
 
   Future<void> pump(WidgetTester tester, Widget card) => tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: card)),
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('ru'),
+          home: Scaffold(body: card),
+        ),
       );
 
   testWidgets(

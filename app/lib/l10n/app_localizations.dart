@@ -3742,6 +3742,12 @@ abstract class AppLocalizations {
   /// **'Выплатить'**
   String get payrollPayAllConfirm;
 
+  /// Pay button on an individual staff member's payroll card — same word as `payrollPayAllConfirm` but pays only this one employee's entry, not all staff, so kept as a separate key
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплатить'**
+  String get payrollStaffCardPayButton;
+
   /// No description provided for @payrollDeleteAdjustmentTitle.
   ///
   /// In ru, this message translates to:
