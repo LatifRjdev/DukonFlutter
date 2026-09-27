@@ -1055,12 +1055,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsTileTelegramBot => 'Telegram-бот';
 
   @override
-  String get settingsConnected => 'Подключён';
-
-  @override
-  String get settingsNotConnected => 'Не подключён';
-
-  @override
   String get settingsTileKkm => 'ККМ / Фискализация';
 
   @override

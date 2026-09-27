@@ -2062,18 +2062,6 @@ abstract class AppLocalizations {
   /// **'Telegram-бот'**
   String get settingsTileTelegramBot;
 
-  /// Settings page — generic connection-status badge (currently used for the Telegram bot tile). Distinct from `printerSettingsConnected`, the same word scoped to the printer settings screen
-  ///
-  /// In ru, this message translates to:
-  /// **'Подключён'**
-  String get settingsConnected;
-
-  /// Settings page — generic not-connected badge (currently used for the Telegram bot tile). Distinct from `printerSettingsNotConnected`, the same word scoped to the printer settings screen
-  ///
-  /// In ru, this message translates to:
-  /// **'Не подключён'**
-  String get settingsNotConnected;
-
   /// Settings page — tile linking to fiscal register (KKM) settings
   ///
   /// In ru, this message translates to:
@@ -3064,13 +3052,13 @@ abstract class AppLocalizations {
   /// **'Настройки принтера'**
   String get printerSettingsTitle;
 
-  /// Printer settings screen — connection status label shown when a printer is connected
+  /// Generic connected-status label (printer settings screen and the settings page's Telegram-bot tile badge both reuse this — same meaning, different UI locations)
   ///
   /// In ru, this message translates to:
   /// **'Подключён'**
   String get printerSettingsConnected;
 
-  /// Printer settings screen — connection status label shown when no printer is connected; distinct from `snackPrinterNotConnected`, which is a full sentence with instructions
+  /// Generic not-connected-status label (printer settings screen and the settings page's Telegram-bot tile badge both reuse this); distinct from `snackPrinterNotConnected`, which is a full sentence with instructions
   ///
   /// In ru, this message translates to:
   /// **'Не подключён'**

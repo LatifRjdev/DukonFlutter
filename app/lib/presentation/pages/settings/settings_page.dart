@@ -347,7 +347,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         _buildSectionCard([
                           _buildTile(Icons.send_outlined, l10n.settingsTileTelegramBot,
                             badge: _telegramStatusLoaded
-                                ? (_telegramConnected ? l10n.settingsConnected : l10n.settingsNotConnected)
+                                ? (_telegramConnected ? l10n.printerSettingsConnected : l10n.printerSettingsNotConnected)
                                 : null,
                             badgeColor: _telegramStatusLoaded
                                 ? (_telegramConnected ? AppColors.success : AppColors.error)
