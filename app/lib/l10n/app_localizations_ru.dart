@@ -1018,6 +1018,89 @@ class AppLocalizationsRu extends AppLocalizations {
   String get about => 'О приложении';
 
   @override
+  String get settingsLogoutTitle => 'Выход';
+
+  @override
+  String get settingsLogoutConfirmBody => 'Вы уверены, что хотите выйти?';
+
+  @override
+  String get settingsPremiumGateTitle => 'Доступно на тарифе PREMIUM';
+
+  @override
+  String get settingsPremiumGateBody =>
+      'Интеграция с интернет-магазином доступна на тарифе PREMIUM. Перейдите на PREMIUM, чтобы синхронизировать остатки и заказы с вашим сайтом.';
+
+  @override
+  String get settingsPremiumGateLater => 'Позже';
+
+  @override
+  String get settingsPremiumGateUpgrade => 'Перейти к тарифам';
+
+  @override
+  String get settingsSectionIntegrations => 'Интеграции';
+
+  @override
+  String get settingsTileStaff => 'Продавцы';
+
+  @override
+  String get settingsTileRoles => 'Роли и доступы';
+
+  @override
+  String get settingsTileDiscounts => 'Скидки';
+
+  @override
+  String get settingsTileReceiptTemplates => 'Шаблоны чеков';
+
+  @override
+  String get settingsTileTelegramBot => 'Telegram-бот';
+
+  @override
+  String get settingsConnected => 'Подключён';
+
+  @override
+  String get settingsNotConnected => 'Не подключён';
+
+  @override
+  String get settingsTileKkm => 'ККМ / Фискализация';
+
+  @override
+  String get settingsTilePrinter => 'Принтер чеков';
+
+  @override
+  String get settingsTileScanner => 'Сканер';
+
+  @override
+  String get settingsSectionApp => 'Приложение';
+
+  @override
+  String get settingsTileOfflineMode => 'Офлайн-режим';
+
+  @override
+  String get settingsSynced => 'Синхронизировано';
+
+  @override
+  String settingsPendingSyncOps(String count) {
+    return '$count в очереди';
+  }
+
+  @override
+  String get settingsSectionSubscription => 'Подписка';
+
+  @override
+  String get settingsPlanFallbackLabel => 'Тариф';
+
+  @override
+  String settingsPlanUntilDate(String plan, String date) {
+    return '$plan до $date';
+  }
+
+  @override
+  String get settingsChangePlan => 'Сменить тариф';
+
+  @override
+  String get settingsLogoutButton => 'Выйти из аккаунта';
+
+  @override
   String get finances => 'Финансы';
 
   @override

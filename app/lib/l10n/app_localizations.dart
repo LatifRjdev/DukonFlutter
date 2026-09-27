@@ -1990,6 +1990,162 @@ abstract class AppLocalizations {
   /// **'О приложении'**
   String get about;
 
+  /// Settings page — logout confirmation dialog title
+  ///
+  /// In ru, this message translates to:
+  /// **'Выход'**
+  String get settingsLogoutTitle;
+
+  /// Settings page — logout confirmation dialog body
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы уверены, что хотите выйти?'**
+  String get settingsLogoutConfirmBody;
+
+  /// Settings page — dialog title shown when tapping the ecommerce integration tile on a non-PREMIUM plan
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно на тарифе PREMIUM'**
+  String get settingsPremiumGateTitle;
+
+  /// Settings page — body text of the PREMIUM upsell dialog for the ecommerce integration
+  ///
+  /// In ru, this message translates to:
+  /// **'Интеграция с интернет-магазином доступна на тарифе PREMIUM. Перейдите на PREMIUM, чтобы синхронизировать остатки и заказы с вашим сайтом.'**
+  String get settingsPremiumGateBody;
+
+  /// Settings page — dismiss button on the PREMIUM upsell dialog
+  ///
+  /// In ru, this message translates to:
+  /// **'Позже'**
+  String get settingsPremiumGateLater;
+
+  /// Settings page — upgrade button on the PREMIUM upsell dialog, navigates to the subscription screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Перейти к тарифам'**
+  String get settingsPremiumGateUpgrade;
+
+  /// Settings page — integrations section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Интеграции'**
+  String get settingsSectionIntegrations;
+
+  /// Settings page — tile linking to the staff list
+  ///
+  /// In ru, this message translates to:
+  /// **'Продавцы'**
+  String get settingsTileStaff;
+
+  /// Settings page — tile linking to roles and permissions management. Distinct from `moreRolesAndPermissions` ("Роли и права"), a different label used on the More page
+  ///
+  /// In ru, this message translates to:
+  /// **'Роли и доступы'**
+  String get settingsTileRoles;
+
+  /// Settings page — tile linking to discount settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидки'**
+  String get settingsTileDiscounts;
+
+  /// Settings page — tile linking to receipt template settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Шаблоны чеков'**
+  String get settingsTileReceiptTemplates;
+
+  /// Settings page — tile linking to Telegram bot settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Telegram-бот'**
+  String get settingsTileTelegramBot;
+
+  /// Settings page — generic connection-status badge (currently used for the Telegram bot tile). Distinct from `printerSettingsConnected`, the same word scoped to the printer settings screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Подключён'**
+  String get settingsConnected;
+
+  /// Settings page — generic not-connected badge (currently used for the Telegram bot tile). Distinct from `printerSettingsNotConnected`, the same word scoped to the printer settings screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Не подключён'**
+  String get settingsNotConnected;
+
+  /// Settings page — tile linking to fiscal register (KKM) settings
+  ///
+  /// In ru, this message translates to:
+  /// **'ККМ / Фискализация'**
+  String get settingsTileKkm;
+
+  /// Settings page — tile linking to receipt printer settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер чеков'**
+  String get settingsTilePrinter;
+
+  /// Settings page — tile linking to barcode scanner settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер'**
+  String get settingsTileScanner;
+
+  /// Settings page — app section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Приложение'**
+  String get settingsSectionApp;
+
+  /// Settings page — tile linking to offline mode settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Офлайн-режим'**
+  String get settingsTileOfflineMode;
+
+  /// Settings page — offline-mode tile trailing label shown when there are no pending sync operations
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизировано'**
+  String get settingsSynced;
+
+  /// Settings page — offline-mode tile trailing label shown when there are pending sync operations
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} в очереди'**
+  String settingsPendingSyncOps(String count);
+
+  /// Settings page — subscription section header
+  ///
+  /// In ru, this message translates to:
+  /// **'Подписка'**
+  String get settingsSectionSubscription;
+
+  /// Settings page — fallback plan tile title shown before the subscription has loaded
+  ///
+  /// In ru, this message translates to:
+  /// **'Тариф'**
+  String get settingsPlanFallbackLabel;
+
+  /// Settings page — plan tile title showing the plan name and its expiry date
+  ///
+  /// In ru, this message translates to:
+  /// **'{plan} до {date}'**
+  String settingsPlanUntilDate(String plan, String date);
+
+  /// Settings page — trailing action on the plan tile, navigates to the subscription screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сменить тариф'**
+  String get settingsChangePlan;
+
+  /// Settings page — full-width logout button at the bottom of the page. Distinct from `logout` ("Выйти"), the bare confirm button inside the logout dialog
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти из аккаунта'**
+  String get settingsLogoutButton;
+
   /// No description provided for @finances.
   ///
   /// In ru, this message translates to:

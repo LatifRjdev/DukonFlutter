@@ -177,15 +177,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showLogoutDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Выход'),
-        content: const Text('Вы уверены, что хотите выйти?'),
+        title: Text(l10n.settingsLogoutTitle),
+        content: Text(l10n.settingsLogoutConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -194,7 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
               context.read<AuthBloc>().add(AuthLogoutRequested());
               context.go('/login');
             },
-            child: const Text('Выйти', style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.logout, style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -202,24 +203,23 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showPremiumUpsellDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Доступно на тарифе PREMIUM'),
-        content: const Text(
-          'Интеграция с интернет-магазином доступна на тарифе PREMIUM. Перейдите на PREMIUM, чтобы синхронизировать остатки и заказы с вашим сайтом.',
-        ),
+        title: Text(l10n.settingsPremiumGateTitle),
+        content: Text(l10n.settingsPremiumGateBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Позже'),
+            child: Text(l10n.settingsPremiumGateLater),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               context.push(RouteNames.subscription);
             },
-            child: const Text('Перейти к тарифам'),
+            child: Text(l10n.settingsPremiumGateUpgrade),
           ),
         ],
       ),
@@ -235,12 +235,12 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: [
             // Header
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Настройки',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                child: Text(l10n.settings,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
               ),
             ),
             const SizedBox(height: 12),
@@ -318,49 +318,49 @@ class _SettingsPageState extends State<SettingsPage> {
                         const SizedBox(height: 20),
 
                         // Магазин section
-                        _buildSectionLabel('Магазин'),
+                        _buildSectionLabel(l10n.moreStoreTitle),
                         const SizedBox(height: 8),
                         _buildSectionCard([
-                          _buildTile(Icons.storefront_outlined, 'Мои магазины',
+                          _buildTile(Icons.storefront_outlined, l10n.moreMyStores,
                             onTap: () => context.push(RouteNames.myStores)),
                           _buildDivider(),
-                          _buildTile(Icons.people_outlined, 'Продавцы',
+                          _buildTile(Icons.people_outlined, l10n.settingsTileStaff,
                             onTap: () => context.push(RouteNames.staffList, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.admin_panel_settings_outlined, 'Роли и доступы',
+                          _buildTile(Icons.admin_panel_settings_outlined, l10n.settingsTileRoles,
                             onTap: () => context.push(RouteNames.roles, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.discount_outlined, 'Скидки',
+                          _buildTile(Icons.discount_outlined, l10n.settingsTileDiscounts,
                             onTap: () => context.push(RouteNames.discounts, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.card_giftcard_outlined, 'Программа лояльности',
+                          _buildTile(Icons.card_giftcard_outlined, l10n.loyaltySettingsTitle,
                             onTap: () => context.push(RouteNames.loyaltySettings, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.receipt_long_outlined, 'Шаблоны чеков',
+                          _buildTile(Icons.receipt_long_outlined, l10n.settingsTileReceiptTemplates,
                             onTap: () => context.push(RouteNames.receiptTemplate, extra: _getStoreId())),
                         ]),
                         const SizedBox(height: 20),
 
                         // Интеграции section
-                        _buildSectionLabel('Интеграции'),
+                        _buildSectionLabel(l10n.settingsSectionIntegrations),
                         const SizedBox(height: 8),
                         _buildSectionCard([
-                          _buildTile(Icons.send_outlined, 'Telegram-бот',
+                          _buildTile(Icons.send_outlined, l10n.settingsTileTelegramBot,
                             badge: _telegramStatusLoaded
-                                ? (_telegramConnected ? 'Подключён' : 'Не подключён')
+                                ? (_telegramConnected ? l10n.settingsConnected : l10n.settingsNotConnected)
                                 : null,
                             badgeColor: _telegramStatusLoaded
                                 ? (_telegramConnected ? AppColors.success : AppColors.error)
                                 : null,
                             onTap: () => context.push(RouteNames.telegramBot, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.point_of_sale_outlined, 'ККМ / Фискализация',
+                          _buildTile(Icons.point_of_sale_outlined, l10n.settingsTileKkm,
                             onTap: () => context.push(RouteNames.kkmSettings)),
                           _buildDivider(),
-                          _buildTile(Icons.print_outlined, 'Принтер чеков',
+                          _buildTile(Icons.print_outlined, l10n.settingsTilePrinter,
                             onTap: () => context.push(RouteNames.printerSettings)),
                           _buildDivider(),
-                          _buildTile(Icons.qr_code_scanner_outlined, 'Сканер',
+                          _buildTile(Icons.qr_code_scanner_outlined, l10n.settingsTileScanner,
                             onTap: () => context.push(RouteNames.scannerSettings)),
                           _buildDivider(),
                           BlocBuilder<SubscriptionBloc, SubscriptionState>(
@@ -372,7 +372,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               final confirmedIneligible = !stillLoading && !hasEcommerce;
                               return _buildTile(
                                 Icons.storefront_outlined,
-                                'Интернет-магазин',
+                                l10n.ecommerceSettingsTitle,
                                 badge: confirmedIneligible ? 'PREMIUM' : null,
                                 badgeColor: confirmedIneligible ? AppColors.warning : null,
                                 onTap: stillLoading
@@ -387,10 +387,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         const SizedBox(height: 20),
 
                         // Приложение section
-                        _buildSectionLabel('Приложение'),
+                        _buildSectionLabel(l10n.settingsSectionApp),
                         const SizedBox(height: 8),
                         _buildSectionCard([
-                          _buildToggleTile(Icons.notifications_outlined, 'Уведомления',
+                          _buildToggleTile(Icons.notifications_outlined, l10n.notifications,
                             value: _notificationsEnabled,
                             onChanged: (v) async {
                               setState(() => _notificationsEnabled = v);
@@ -412,7 +412,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   state.themeMode == ThemeMode.dark;
                               return _buildToggleTile(
                                 Icons.dark_mode_outlined,
-                                'Тёмная тема',
+                                l10n.darkMode,
                                 value: isDark,
                                 onChanged: (value) {
                                   context.read<SettingsBloc>().add(
@@ -424,12 +424,12 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                           ),
                           _buildDivider(),
-                          _buildTile(Icons.language_outlined, 'Язык',
+                          _buildTile(Icons.language_outlined, l10n.language,
                             trailing: Text(_languageLabel(_languageCode),
                               style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             onTap: () => context.push(RouteNames.languageSettings)),
                           _buildDivider(),
-                          _buildTile(Icons.cloud_done_outlined, 'Офлайн-режим',
+                          _buildTile(Icons.cloud_done_outlined, l10n.settingsTileOfflineMode,
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -441,8 +441,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 const SizedBox(width: 4),
                                 Text(
                                   _pendingSyncOps == 0
-                                      ? 'Синхронизировано'
-                                      : '$_pendingSyncOps в очереди',
+                                      ? l10n.settingsSynced
+                                      : l10n.settingsPendingSyncOps(_pendingSyncOps.toString()),
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: _pendingSyncOps == 0 ? AppColors.success : AppColors.warning,
@@ -455,21 +455,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         const SizedBox(height: 20),
 
                         // Подписка section
-                        _buildSectionLabel('Подписка'),
+                        _buildSectionLabel(l10n.settingsSectionSubscription),
                         const SizedBox(height: 8),
                         BlocBuilder<SubscriptionBloc, SubscriptionState>(
                           builder: (_, sub) {
-                            String planTitle = 'Тариф';
+                            String planTitle = l10n.settingsPlanFallbackLabel;
                             if (sub is SubscriptionLoaded) {
                               final planLabel = _planLabel(sub.plan);
                               planTitle = sub.expiresAt != null
-                                  ? '$planLabel до ${DateFormat('dd.MM.yyyy').format(sub.expiresAt!)}'
+                                  ? l10n.settingsPlanUntilDate(planLabel, DateFormat('dd.MM.yyyy').format(sub.expiresAt!))
                                   : planLabel;
                             }
                             return _buildSectionCard([
                               _buildTile(Icons.workspace_premium_outlined, planTitle,
-                                trailing: const Text('Сменить тариф',
-                                  style: TextStyle(fontSize: 12, color: AppColors.primary)),
+                                trailing: Text(l10n.settingsChangePlan,
+                                  style: const TextStyle(fontSize: 12, color: AppColors.primary)),
                                 onTap: () => context.push(RouteNames.subscription)),
                             ]);
                           },
@@ -487,8 +487,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               side: const BorderSide(color: AppColors.error),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                             ),
-                            child: const Text('Выйти из аккаунта',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                            child: Text(l10n.settingsLogoutButton,
+                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           ),
                         ),
                         const SizedBox(height: 24),
