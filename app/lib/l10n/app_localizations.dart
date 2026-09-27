@@ -2254,6 +2254,78 @@ abstract class AppLocalizations {
   /// **'Месяц'**
   String get month;
 
+  /// No description provided for @monthJanuary.
+  ///
+  /// In ru, this message translates to:
+  /// **'Январь'**
+  String get monthJanuary;
+
+  /// No description provided for @monthFebruary.
+  ///
+  /// In ru, this message translates to:
+  /// **'Февраль'**
+  String get monthFebruary;
+
+  /// No description provided for @monthMarch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Март'**
+  String get monthMarch;
+
+  /// No description provided for @monthApril.
+  ///
+  /// In ru, this message translates to:
+  /// **'Апрель'**
+  String get monthApril;
+
+  /// No description provided for @monthMay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Май'**
+  String get monthMay;
+
+  /// No description provided for @monthJune.
+  ///
+  /// In ru, this message translates to:
+  /// **'Июнь'**
+  String get monthJune;
+
+  /// No description provided for @monthJuly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Июль'**
+  String get monthJuly;
+
+  /// No description provided for @monthAugust.
+  ///
+  /// In ru, this message translates to:
+  /// **'Август'**
+  String get monthAugust;
+
+  /// No description provided for @monthSeptember.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сентябрь'**
+  String get monthSeptember;
+
+  /// No description provided for @monthOctober.
+  ///
+  /// In ru, this message translates to:
+  /// **'Октябрь'**
+  String get monthOctober;
+
+  /// No description provided for @monthNovember.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ноябрь'**
+  String get monthNovember;
+
+  /// No description provided for @monthDecember.
+  ///
+  /// In ru, this message translates to:
+  /// **'Декабрь'**
+  String get monthDecember;
+
   /// No description provided for @year.
   ///
   /// In ru, this message translates to:
@@ -3651,6 +3723,96 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Все зарплаты выплачены'**
   String get allPayrollsPaid;
+
+  /// No description provided for @payrollPayAllTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплатить всем'**
+  String get payrollPayAllTitle;
+
+  /// No description provided for @payrollPayAllConfirmBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы уверены, что хотите выплатить зарплату всем сотрудникам?'**
+  String get payrollPayAllConfirmBody;
+
+  /// Confirm button inside the pay-all dialog (bare verb) — distinct from `payAll` ("Оплатить всем") and `pay` ("Оплатить"), and from `payrollPayAllTitle`, which is the same text used for the dialog title and the button that opens it
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплатить'**
+  String get payrollPayAllConfirm;
+
+  /// No description provided for @payrollDeleteAdjustmentTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить корректировку?'**
+  String get payrollDeleteAdjustmentTitle;
+
+  /// Compact toolbar button label on the payroll page — distinct from `calculatePayroll` ("Рассчитать зарплату"), a longer label used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассчитать'**
+  String get payrollCalculateButton;
+
+  /// No description provided for @payrollCalculateEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расчёт зарплаты'**
+  String get payrollCalculateEmptyTitle;
+
+  /// No description provided for @payrollCalculateEmptySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите месяц и нажмите \"Рассчитать\" для расчёта зарплаты сотрудников'**
+  String get payrollCalculateEmptySubtitle;
+
+  /// No description provided for @payrollNoDataTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных по зарплате'**
+  String get payrollNoDataTitle;
+
+  /// No description provided for @payrollNoDataSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите месяц и нажмите \"Рассчитать\"'**
+  String get payrollNoDataSubtitle;
+
+  /// Payroll period detail header — total payroll amount for the selected period
+  ///
+  /// In ru, this message translates to:
+  /// **'Итого: {amount} TJS'**
+  String payrollTotalLine(String amount);
+
+  /// No description provided for @payrollAddAdjustmentTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить корректировку'**
+  String get payrollAddAdjustmentTooltip;
+
+  /// No description provided for @payrollNoStaffData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных по сотрудникам'**
+  String get payrollNoStaffData;
+
+  /// No description provided for @payrollStatusCalculated.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассчитано'**
+  String get payrollStatusCalculated;
+
+  /// No description provided for @payrollStatusPartiallyPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Частично оплачено'**
+  String get payrollStatusPartiallyPaid;
+
+  /// Payroll period card — disbursed-amount column label; distinct from `paid`/`paidAmount` ("Оплачено", an adjective/status word) — this labels the actual paid-out sum
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплачено'**
+  String get payrollPaidLabel;
 
   /// No description provided for @permissions.
   ///

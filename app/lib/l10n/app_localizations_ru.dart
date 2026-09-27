@@ -1155,6 +1155,42 @@ class AppLocalizationsRu extends AppLocalizations {
   String get month => 'Месяц';
 
   @override
+  String get monthJanuary => 'Январь';
+
+  @override
+  String get monthFebruary => 'Февраль';
+
+  @override
+  String get monthMarch => 'Март';
+
+  @override
+  String get monthApril => 'Апрель';
+
+  @override
+  String get monthMay => 'Май';
+
+  @override
+  String get monthJune => 'Июнь';
+
+  @override
+  String get monthJuly => 'Июль';
+
+  @override
+  String get monthAugust => 'Август';
+
+  @override
+  String get monthSeptember => 'Сентябрь';
+
+  @override
+  String get monthOctober => 'Октябрь';
+
+  @override
+  String get monthNovember => 'Ноябрь';
+
+  @override
+  String get monthDecember => 'Декабрь';
+
+  @override
   String get year => 'Год';
 
   @override
@@ -1879,6 +1915,55 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get allPayrollsPaid => 'Все зарплаты выплачены';
+
+  @override
+  String get payrollPayAllTitle => 'Выплатить всем';
+
+  @override
+  String get payrollPayAllConfirmBody =>
+      'Вы уверены, что хотите выплатить зарплату всем сотрудникам?';
+
+  @override
+  String get payrollPayAllConfirm => 'Выплатить';
+
+  @override
+  String get payrollDeleteAdjustmentTitle => 'Удалить корректировку?';
+
+  @override
+  String get payrollCalculateButton => 'Рассчитать';
+
+  @override
+  String get payrollCalculateEmptyTitle => 'Расчёт зарплаты';
+
+  @override
+  String get payrollCalculateEmptySubtitle =>
+      'Выберите месяц и нажмите \"Рассчитать\" для расчёта зарплаты сотрудников';
+
+  @override
+  String get payrollNoDataTitle => 'Нет данных по зарплате';
+
+  @override
+  String get payrollNoDataSubtitle => 'Выберите месяц и нажмите \"Рассчитать\"';
+
+  @override
+  String payrollTotalLine(String amount) {
+    return 'Итого: $amount TJS';
+  }
+
+  @override
+  String get payrollAddAdjustmentTooltip => 'Добавить корректировку';
+
+  @override
+  String get payrollNoStaffData => 'Нет данных по сотрудникам';
+
+  @override
+  String get payrollStatusCalculated => 'Рассчитано';
+
+  @override
+  String get payrollStatusPartiallyPaid => 'Частично оплачено';
+
+  @override
+  String get payrollPaidLabel => 'Выплачено';
 
   @override
   String get permissions => 'Права доступа';

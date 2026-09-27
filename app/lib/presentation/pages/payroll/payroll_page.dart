@@ -100,12 +100,12 @@ class _PayrollPageState extends State<PayrollPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Выплатить всем'),
-        content: const Text('Вы уверены, что хотите выплатить зарплату всем сотрудникам?'),
+        title: Text(AppLocalizations.of(ctx)!.payrollPayAllTitle),
+        content: Text(AppLocalizations.of(ctx)!.payrollPayAllConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -116,7 +116,7 @@ class _PayrollPageState extends State<PayrollPage> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text('Выплатить', style: TextStyle(color: AppColors.onPrimary)),
+            child: Text(AppLocalizations.of(ctx)!.payrollPayAllConfirm, style: TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),
@@ -127,7 +127,7 @@ class _PayrollPageState extends State<PayrollPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Удалить корректировку?'),
+        title: Text(AppLocalizations.of(ctx)!.payrollDeleteAdjustmentTitle),
         content: Text(
           '"${adjustment.description}" '
           '${adjustment.type == 'BONUS' ? '+' : '-'}'
@@ -136,7 +136,7 @@ class _PayrollPageState extends State<PayrollPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -148,7 +148,7 @@ class _PayrollPageState extends State<PayrollPage> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Удалить', style: TextStyle(color: AppColors.onPrimary)),
+            child: Text(AppLocalizations.of(ctx)!.delete, style: TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),
@@ -165,8 +165,9 @@ class _PayrollPageState extends State<PayrollPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Зарплата')),
+      appBar: AppBar(title: Text(l10n.payroll)),
       body: BlocConsumer<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollError) {
@@ -190,7 +191,7 @@ class _PayrollPageState extends State<PayrollPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
                 child: AppButton(
-                  text: 'Рассчитать',
+                  text: l10n.payrollCalculateButton,
                   icon: Icons.calculate,
                   isLoading: state is PayrollLoading,
                   onPressed: _calculate,
@@ -206,6 +207,7 @@ class _PayrollPageState extends State<PayrollPage> {
   }
 
   Widget _buildContent(PayrollState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state is PayrollLoading) {
       final last = _lastLoadedState;
       if (last == null) {
@@ -234,14 +236,15 @@ class _PayrollPageState extends State<PayrollPage> {
       );
     }
 
-    return const AppEmptyState(
+    return AppEmptyState(
       icon: Icons.account_balance_wallet_outlined,
-      title: 'Расчёт зарплаты',
-      subtitle: 'Выберите месяц и нажмите "Рассчитать" для расчёта зарплаты сотрудников',
+      title: l10n.payrollCalculateEmptyTitle,
+      subtitle: l10n.payrollCalculateEmptySubtitle,
     );
   }
 
   Widget _buildPeriodsList(PayrollPeriodsLoaded state, {required bool busy}) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.periods.isEmpty) {
       return Center(
         child: Padding(
@@ -252,12 +255,12 @@ class _PayrollPageState extends State<PayrollPage> {
               Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.disabled),
               const SizedBox(height: AppConstants.spacingMd),
               Text(
-                'Нет данных по зарплате',
+                l10n.payrollNoDataTitle,
                 style: TextStyle(color: context.textSecondary, fontSize: 16),
               ),
               const SizedBox(height: AppConstants.spacingSm),
               Text(
-                'Выберите месяц и нажмите "Рассчитать"',
+                l10n.payrollNoDataSubtitle,
                 style: TextStyle(color: context.textMuted, fontSize: 14),
               ),
             ],
@@ -288,6 +291,7 @@ class _PayrollPageState extends State<PayrollPage> {
   }
 
   Widget _buildPeriodDetail(PayrollPeriodDetailLoaded state, {required bool busy}) {
+    final l10n = AppLocalizations.of(context)!;
     final period = state.period;
     final hasUnpaid = period.payrolls.any((e) => !e.isPaid);
 
@@ -304,14 +308,14 @@ class _PayrollPageState extends State<PayrollPage> {
               ),
               Expanded(
                 child: Text(
-                  'Итого: ${period.totalAmount.toStringAsFixed(2)} TJS',
+                  l10n.payrollTotalLine(period.totalAmount.toStringAsFixed(2)),
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               IconButton(
                 onPressed: busy ? null : () => _openAddAdjustment(period.id),
                 icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
-                tooltip: 'Добавить корректировку',
+                tooltip: l10n.payrollAddAdjustmentTooltip,
               ),
             ],
           ),
@@ -346,7 +350,7 @@ class _PayrollPageState extends State<PayrollPage> {
                           Icon(Icons.people_outline, size: 64, color: AppColors.disabled),
                           const SizedBox(height: AppConstants.spacingMd),
                           Text(
-                            'Нет данных по сотрудникам',
+                            l10n.payrollNoStaffData,
                             style: TextStyle(color: context.textSecondary, fontSize: 16),
                           ),
                         ],
@@ -362,7 +366,7 @@ class _PayrollPageState extends State<PayrollPage> {
           Padding(
             padding: const EdgeInsets.all(AppConstants.spacingMd),
             child: AppButton(
-              text: 'Выплатить всем',
+              text: l10n.payrollPayAllTitle,
               icon: Icons.payments_outlined,
               isLoading: busy,
               onPressed: () => _payAll(period.id),
@@ -392,29 +396,33 @@ class _PeriodCard extends StatelessWidget {
     this.onTap,
   });
 
-  static const _monthNames = [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь',
-  ];
+  List<String> _monthNames(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      l10n.monthJanuary,
+      l10n.monthFebruary,
+      l10n.monthMarch,
+      l10n.monthApril,
+      l10n.monthMay,
+      l10n.monthJune,
+      l10n.monthJuly,
+      l10n.monthAugust,
+      l10n.monthSeptember,
+      l10n.monthOctober,
+      l10n.monthNovember,
+      l10n.monthDecember,
+    ];
+  }
 
-  String _statusLabel(String status) {
+  String _statusLabel(String status, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case 'CALCULATED':
-        return 'Рассчитано';
+        return l10n.payrollStatusCalculated;
       case 'PARTIALLY_PAID':
-        return 'Частично оплачено';
+        return l10n.payrollStatusPartiallyPaid;
       case 'PAID':
-        return 'Оплачено';
+        return l10n.paid;
       default:
         return status;
     }
@@ -435,6 +443,7 @@ class _PeriodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
       shape: RoundedRectangleBorder(
@@ -453,7 +462,7 @@ class _PeriodCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${_monthNames[month - 1]} $year',
+                    '${_monthNames(context)[month - 1]} $year',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Container(
@@ -463,7 +472,7 @@ class _PeriodCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                     ),
                     child: Text(
-                      _statusLabel(status),
+                      _statusLabel(status, context),
                       style: TextStyle(
                         color: _statusColor(status, context),
                         fontSize: 12,
@@ -491,7 +500,7 @@ class _PeriodCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Итого',
+                          l10n.total,
                           style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       ],
@@ -510,7 +519,7 @@ class _PeriodCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Выплачено',
+                          l10n.paidAmount,
                           style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       ],
@@ -530,7 +539,7 @@ class _PeriodCard extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        'Сотрудники',
+                        l10n.employees,
                         style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
