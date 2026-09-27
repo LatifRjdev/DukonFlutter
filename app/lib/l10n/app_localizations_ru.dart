@@ -286,7 +286,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get createStorePhoneLabel => 'Телефон магазина (необязательно)';
 
   @override
-  String get grocery => 'Продуктовый';
+  String get grocery => 'Продукты';
 
   @override
   String get clothing => 'Одежда';

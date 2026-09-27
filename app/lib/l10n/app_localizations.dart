@@ -619,7 +619,7 @@ abstract class AppLocalizations {
   /// Grocery store type
   ///
   /// In ru, this message translates to:
-  /// **'Продуктовый'**
+  /// **'Продукты'**
   String get grocery;
 
   /// Clothing store type

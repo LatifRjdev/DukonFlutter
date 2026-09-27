@@ -192,7 +192,7 @@
   "@createStoreAddressLabel": { "description": "Create-store form's optional address field label; distinct from `storeAddress` (\"Адрес магазина\"), a differently-worded label used elsewhere" },
   "createStorePhoneLabel": "Телефон магазина (необязательно)",
   "@createStorePhoneLabel": { "description": "Create-store form's optional phone field label" },
-  "grocery": "Продуктовый",
+  "grocery": "Продукты",
   "@grocery": { "description": "Grocery store type" },
   "clothing": "Одежда",
   "@clothing": { "description": "Clothing store type" },
