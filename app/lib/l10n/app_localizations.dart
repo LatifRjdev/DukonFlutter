@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// **'Удалить'**
   String get delete;
 
+  /// Generic destructive-confirmation dialog body warning the action is irreversible — reused across delete-confirmation dialogs for expenses, discounts, payroll adjustments, etc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это действие нельзя отменить.'**
+  String get actionCannotBeUndone;
+
   /// Edit button
   ///
   /// In ru, this message translates to:
@@ -2541,6 +2547,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Добавьте первый расход, чтобы видеть финансовую картину'**
   String get expenseListEmptySubtitle;
+
+  /// Delete-confirmation dialog title on the expense list page
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить расход?'**
+  String get expenseListDeleteTitle;
 
   /// No description provided for @noPurchases.
   ///

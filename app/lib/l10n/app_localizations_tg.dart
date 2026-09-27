@@ -24,6 +24,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get delete => 'Нест кардан';
 
   @override
+  String get actionCannotBeUndone => 'Это действие нельзя отменить.';
+
+  @override
   String get edit => 'Таҳрир кардан';
 
   @override
@@ -1301,6 +1304,9 @@ class AppLocalizationsTg extends AppLocalizations {
   @override
   String get expenseListEmptySubtitle =>
       'Добавьте первый расход, чтобы видеть финансовую картину';
+
+  @override
+  String get expenseListDeleteTitle => 'Удалить расход?';
 
   @override
   String get noPurchases => 'Харидорӣ нест';

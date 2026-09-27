@@ -82,12 +82,12 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Удалить расход?'),
-        content: const Text('Это действие нельзя отменить.'),
+        title: Text(AppLocalizations.of(ctx)!.expenseListDeleteTitle),
+        content: Text(AppLocalizations.of(ctx)!.actionCannotBeUndone),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -97,7 +97,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                 id: expense.id,
               ));
             },
-            child: const Text('Удалить', style: TextStyle(color: AppColors.error)),
+            child: Text(AppLocalizations.of(ctx)!.delete, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

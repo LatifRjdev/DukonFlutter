@@ -24,6 +24,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get delete => 'O\'chirish';
 
   @override
+  String get actionCannotBeUndone => 'Это действие нельзя отменить.';
+
+  @override
   String get edit => 'Tahrirlash';
 
   @override
@@ -1301,6 +1304,9 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get expenseListEmptySubtitle =>
       'Добавьте первый расход, чтобы видеть финансовую картину';
+
+  @override
+  String get expenseListDeleteTitle => 'Удалить расход?';
 
   @override
   String get noPurchases => 'Xaridlar yo\'q';
