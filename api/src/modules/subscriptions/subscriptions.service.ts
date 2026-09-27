@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../common/audit/audit-log.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -100,38 +101,61 @@ export class SubscriptionsService implements OnModuleInit {
       },
     ];
 
+    // update: {} previously meant existing rows in a running DB never
+    // picked up newly-added flags; patch the field explicitly so
+    // existing rows self-heal on next server boot.
+    //
+    // hasEcommerceIntegration is only set on the PREMIUM literal above
+    // (omitted, not `false`, on START/BUSINESS), and hasBatchProfitability
+    // is only set as `true` on BUSINESS/PREMIUM (omitted on START) — so
+    // both resolve to `undefined` for the plans where forcing a write
+    // isn't needed to fix a missing "should be true" default. Prisma
+    // treats `undefined` as "field not provided" and skips the write,
+    // so this self-heal can correct a plan missing its true value but
+    // can never clobber an admin's manual override toward `false` on
+    // START via the plan-config editor.
+    //
+    // hasZakat/hasInvestments/hasLoyalty are NOT listed here at all —
+    // unlike hasEcommerceIntegration, all three already have their own
+    // one-time backfill migrations from when their columns were added
+    // (20260516000000_g2_zakat_tier_flag, 20260516160000_investments_hardening,
+    // 20260706000001_loyalty_plan_flags), so there's no live data gap
+    // for them to self-heal. This update: block is an ad-hoc list of
+    // fields that specifically needed this treatment, not a general
+    // policy — don't add a new flag here without checking whether it
+    // actually has the same gap first.
     for (const config of plans) {
-      await this.prisma.subscriptionPlanConfig.upsert({
-        where: { plan: config.plan },
-        create: config,
-        // update: {} previously meant existing rows in a running DB never
-        // picked up newly-added flags; patch the field explicitly so
-        // existing rows self-heal on next server boot.
-        //
-        // hasEcommerceIntegration is only set on the PREMIUM literal above
-        // (omitted, not `false`, on START/BUSINESS), and hasBatchProfitability
-        // is only set as `true` on BUSINESS/PREMIUM (omitted on START) — so
-        // both resolve to `undefined` for the plans where forcing a write
-        // isn't needed to fix a missing "should be true" default. Prisma
-        // treats `undefined` as "field not provided" and skips the write,
-        // so this self-heal can correct a plan missing its true value but
-        // can never clobber an admin's manual override toward `false` on
-        // START via the plan-config editor.
-        //
-        // hasZakat/hasInvestments/hasLoyalty are NOT listed here at all —
-        // unlike hasEcommerceIntegration, all three already have their own
-        // one-time backfill migrations from when their columns were added
-        // (20260516000000_g2_zakat_tier_flag, 20260516160000_investments_hardening,
-        // 20260706000001_loyalty_plan_flags), so there's no live data gap
-        // for them to self-heal. This update: block is an ad-hoc list of
-        // fields that specifically needed this treatment, not a general
-        // policy — don't add a new flag here without checking whether it
-        // actually has the same gap first.
-        update: {
-          hasBatchProfitability: config.hasBatchProfitability,
-          hasEcommerceIntegration: config.hasEcommerceIntegration,
-        },
-      });
+      const update = {
+        hasBatchProfitability: config.hasBatchProfitability,
+        hasEcommerceIntegration: config.hasEcommerceIntegration,
+      };
+      try {
+        await this.prisma.subscriptionPlanConfig.upsert({
+          where: { plan: config.plan },
+          create: config,
+          update,
+        });
+      } catch (err) {
+        // Multiple app instances can run this hook concurrently against
+        // the same database (e.g. each e2e test file boots its own full
+        // AppModule against a shared test DB) — two upserts for the same
+        // `plan` can race between their existence check and insert, and
+        // the loser hits the unique constraint on `plan` instead of
+        // taking the update path. Treat that specific case as "someone
+        // else just created this row" and fall back to a plain update so
+        // the self-heal above still applies rather than crashing boot.
+        if (
+          err instanceof Prisma.PrismaClientKnownRequestError &&
+          err.code === 'P2002'
+        ) {
+          await this.prisma.subscriptionPlanConfig.update({
+            where: { plan: config.plan },
+            data: update,
+          });
+        } else {
+          throw err;
+        }
+      }
     }
 
     this.logger.log('Subscription plan configs seeded');
