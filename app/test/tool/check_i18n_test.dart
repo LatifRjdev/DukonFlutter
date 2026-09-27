@@ -63,4 +63,27 @@ void main() {
       "lib/presentation/sample.dart::'Пример'",
     );
   });
+
+  test('a matched string containing a double space (the label  separator  value convention) round-trips through dump and check without truncation', () async {
+    // Regression test for a bug caught during implementation: recovering
+    // the allow-list key by splitting the offender report string on a
+    // double-space separator silently truncated any key whose *content*
+    // also contained a double space — which real UI strings do (see
+    // .claude/rules/mobile-l10n.md's label+separator+value convention).
+    final source = "const text = '5 клиентов  |  Долг: 100 TJS';\n";
+    File('${tempDir.path}/lib/presentation/sample.dart')
+        .writeAsStringSync(source);
+    final allowlistFile = File('${tempDir.path}/tool/i18n-allowlist.txt');
+    allowlistFile.writeAsStringSync('');
+
+    await check_i18n.run(['--dump-allowlist'], repoRootOverride: tempDir.path);
+
+    expect(
+      allowlistFile.readAsStringSync().trim(),
+      "lib/presentation/sample.dart::'5 клиентов  |  Долг: 100 TJS'",
+    );
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+    expect(code, 0);
+  });
 }
