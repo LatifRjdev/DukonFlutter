@@ -30,6 +30,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get edit => 'Таҳрир кардан';
 
   @override
+  String get modify => 'Изменить';
+
+  @override
   String get create => 'Создать';
 
   @override

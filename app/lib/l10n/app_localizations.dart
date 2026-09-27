@@ -142,6 +142,12 @@ abstract class AppLocalizations {
   /// **'Редактировать'**
   String get edit;
 
+  /// Shorter-form edit action button (supplier detail page) — distinct from `edit` ("Редактировать"), a different Russian verb with the same intent
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить'**
+  String get modify;
+
   /// Generic 'Create' button — often toggled with `save` in the same slot (e.g. "Сохранить" when editing, "Создать" when adding new)
   ///
   /// In ru, this message translates to:

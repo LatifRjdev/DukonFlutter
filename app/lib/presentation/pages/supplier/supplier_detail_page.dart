@@ -149,7 +149,7 @@ class _SupplierDetailView extends StatelessWidget {
                       ),
                       _ActionButton(
                         icon: Icons.edit_outlined,
-                        label: 'Изменить',
+                        label: l10n.modify,
                         color: context.textSecondary,
                         onTap: () async {
                           final updated = await context.push<bool>(

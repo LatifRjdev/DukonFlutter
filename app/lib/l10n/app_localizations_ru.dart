@@ -30,6 +30,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get edit => 'Редактировать';
 
   @override
+  String get modify => 'Изменить';
+
+  @override
   String get create => 'Создать';
 
   @override

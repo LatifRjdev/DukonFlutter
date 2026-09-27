@@ -30,6 +30,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get edit => 'Tahrirlash';
 
   @override
+  String get modify => 'Изменить';
+
+  @override
   String get create => 'Создать';
 
   @override

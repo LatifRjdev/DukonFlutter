@@ -16,6 +16,8 @@
   "@actionCannotBeUndone": { "description": "Generic destructive-confirmation dialog body warning the action is irreversible — reused across delete-confirmation dialogs for expenses, discounts, payroll adjustments, etc." },
   "edit": "Редактировать",
   "@edit": { "description": "Edit button" },
+  "modify": "Изменить",
+  "@modify": { "description": "Shorter-form edit action button (supplier detail page) — distinct from `edit` (\"Редактировать\"), a different Russian verb with the same intent" },
   "create": "Создать",
   "@create": { "description": "Generic 'Create' button — often toggled with `save` in the same slot (e.g. \"Сохранить\" when editing, \"Создать\" when adding new)" },
   "search": "Поиск",
