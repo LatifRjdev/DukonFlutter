@@ -910,6 +910,60 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customerFormPhoneCodeError => 'Введите номер с кодом +992';
 
   @override
+  String get customerListTitle => 'Клиенты';
+
+  @override
+  String get customerListSearchHint => 'Поиск клиента';
+
+  @override
+  String get customerListFilterDebt => 'С долгом';
+
+  @override
+  String get customerListFilterVip => 'VIP';
+
+  @override
+  String get customerListFilterNew => 'Новые';
+
+  @override
+  String get customerListEmptyTitle => 'Клиентов пока нет';
+
+  @override
+  String get customerListEmptySubtitle =>
+      'Добавьте первого клиента, чтобы отслеживать продажи и долги';
+
+  @override
+  String get customerListEmptyButton => 'Добавить клиента';
+
+  @override
+  String get customerListFilterEmptyTitle => 'Нет клиентов по этому фильтру';
+
+  @override
+  String get customerListFilterEmptySubtitle =>
+      'Попробуйте выбрать другой фильтр';
+
+  @override
+  String get customerListResetFilterButton => 'Сбросить фильтр';
+
+  @override
+  String get customerListNameHint => 'Введите имя клиента';
+
+  @override
+  String get customerListAddConfirm => 'Добавить';
+
+  @override
+  String customerListStatsLine(String count, String debt) {
+    return '$count клиентов  |  Долг: $debt';
+  }
+
+  @override
+  String get customerListNoDebt => 'Нет долга';
+
+  @override
+  String customerListPurchasesLine(String amount) {
+    return 'Покупок: $amount';
+  }
+
+  @override
   String get newSupplier => 'Новый поставщик';
 
   @override

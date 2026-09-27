@@ -641,6 +641,37 @@
   "@customerFormPhoneLabel": { "description": "Phone field label with inline country-code hint, specific to the customer create/edit form — distinct from the bare `phoneLabel` (\"Телефон\") used elsewhere" },
   "customerFormPhoneCodeError": "Введите номер с кодом +992",
   "@customerFormPhoneCodeError": { "description": "Validation error shown on the customer form's phone field when the entered number doesn't start with the +992/992 country code — distinct from `phoneRequired` (\"Введите номер телефона\"), which just checks the field isn't empty" },
+  "customerListTitle": "Клиенты",
+  "@customerListTitle": { "description": "Customer list screen header title — distinct from `moreClients` (\"Клиенты\"), which is the More-page menu item linking to this same screen" },
+  "customerListSearchHint": "Поиск клиента",
+  "customerListFilterDebt": "С долгом",
+  "customerListFilterVip": "VIP",
+  "customerListFilterNew": "Новые",
+  "customerListEmptyTitle": "Клиентов пока нет",
+  "customerListEmptySubtitle": "Добавьте первого клиента, чтобы отслеживать продажи и долги",
+  "customerListEmptyButton": "Добавить клиента",
+  "customerListFilterEmptyTitle": "Нет клиентов по этому фильтру",
+  "customerListFilterEmptySubtitle": "Попробуйте выбрать другой фильтр",
+  "customerListResetFilterButton": "Сбросить фильтр",
+  "customerListNameHint": "Введите имя клиента",
+  "customerListAddConfirm": "Добавить",
+  "@customerListAddConfirm": { "description": "Confirm button on the add-customer dialog — distinct from `addCustomer` (\"Добавить покупателя\"), which labels the nav action that opens this dialog" },
+  "customerListStatsLine": "{count} клиентов  |  Долг: {debt}",
+  "@customerListStatsLine": {
+    "placeholders": {
+      "count": { "type": "String" },
+      "debt": { "type": "String" }
+    }
+  },
+  "customerListNoDebt": "Нет долга",
+  "@customerListNoDebt": { "description": "Shown in place of a debt amount on a customer card when the customer owes nothing" },
+  "customerListPurchasesLine": "Покупок: {amount}",
+  "@customerListPurchasesLine": {
+    "description": "Customer card subtitle showing total purchases amount",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
   "newSupplier": "Новый поставщик",
   "@newSupplier": { "description": "Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode" },
   "editSupplier": "Редактировать поставщика",

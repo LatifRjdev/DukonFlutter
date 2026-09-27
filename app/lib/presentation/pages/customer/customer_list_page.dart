@@ -107,15 +107,15 @@ class _CustomerListPageState extends State<CustomerListPage> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Новый клиент'),
+        title: Text(AppLocalizations.of(dialogContext)!.newCustomer),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: 'Имя',
-                hintText: 'Введите имя клиента',
+                labelText: AppLocalizations.of(context)!.name,
+                hintText: AppLocalizations.of(context)!.customerListNameHint,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
               textCapitalization: TextCapitalization.words,
@@ -124,7 +124,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
             TextField(
               controller: _phoneController,
               decoration: InputDecoration(
-                labelText: 'Телефон',
+                labelText: AppLocalizations.of(context)!.phoneLabel,
                 hintText: '+992 XX XXX XXXX',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
@@ -135,7 +135,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(dialogContext)!.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -168,7 +168,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                 SemanticsService.sendAnnouncement(view, msg, dir);
               }
             },
-            child: const Text('Добавить'),
+            child: Text(AppLocalizations.of(dialogContext)!.customerListAddConfirm),
           ),
         ],
       ),
@@ -194,8 +194,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
               child: Row(
                 children: [
                   IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-                  const Text('Клиенты',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.customerListTitle,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     tooltip: l10n.a11yAddClient,
@@ -218,7 +218,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                   controller: _searchController,
                   onChanged: (_) => _loadCustomers(),
                   decoration: InputDecoration(
-                    hintText: 'Поиск клиента',
+                    hintText: l10n.customerListSearchHint,
                     hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
                     prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     border: InputBorder.none,
@@ -237,13 +237,13 @@ class _CustomerListPageState extends State<CustomerListPage> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    _filterChip('Все', 'all'),
+                    _filterChip(l10n.all, 'all'),
                     const SizedBox(width: 8),
-                    _filterChip('С долгом', 'debt'),
+                    _filterChip(l10n.customerListFilterDebt, 'debt'),
                     const SizedBox(width: 8),
-                    _filterChip('VIP', 'vip'),
+                    _filterChip(l10n.customerListFilterVip, 'vip'),
                     const SizedBox(width: 8),
-                    _filterChip('Новые', 'new'),
+                    _filterChip(l10n.customerListFilterNew, 'new'),
                   ],
                 ),
               ),
@@ -268,17 +268,17 @@ class _CustomerListPageState extends State<CustomerListPage> {
                       if (state.customers.isEmpty) {
                         return AppEmptyState(
                           icon: Icons.people_outline,
-                          title: 'Клиентов пока нет',
-                          subtitle: 'Добавьте первого клиента, чтобы отслеживать продажи и долги',
-                          buttonText: 'Добавить клиента',
+                          title: l10n.customerListEmptyTitle,
+                          subtitle: l10n.customerListEmptySubtitle,
+                          buttonText: l10n.customerListEmptyButton,
                           onButtonPressed: _showAddCustomerDialog,
                         );
                       }
                       return AppEmptyState(
                         icon: Icons.filter_alt_off_outlined,
-                        title: 'Нет клиентов по этому фильтру',
-                        subtitle: 'Попробуйте выбрать другой фильтр',
-                        buttonText: 'Сбросить фильтр',
+                        title: l10n.customerListFilterEmptyTitle,
+                        subtitle: l10n.customerListFilterEmptySubtitle,
+                        buttonText: l10n.customerListResetFilterButton,
                         onButtonPressed: () => setState(() => _selectedFilter = 'all'),
                       );
                     }
@@ -299,7 +299,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Text(
-                              '${customers.length} клиентов  |  Долг: ${_formatPrice(totalDebt)}',
+                              l10n.customerListStatsLine(customers.length.toString(), _formatPrice(totalDebt)),
                               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.primary),
                               textAlign: TextAlign.center,
                             ),
@@ -363,7 +363,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         ],
                                         if (customer.totalSpent > 0) ...[
                                           const SizedBox(height: 2),
-                                          Text('Покупок: ${_formatPrice(customer.totalSpent)}',
+                                          Text(l10n.customerListPurchasesLine(_formatPrice(customer.totalSpent)),
                                             style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                         ],
                                       ],
@@ -373,7 +373,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        customer.debt > 0 ? _formatPrice(customer.debt) : 'Нет долга',
+                                        customer.debt > 0 ? _formatPrice(customer.debt) : l10n.customerListNoDebt,
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,

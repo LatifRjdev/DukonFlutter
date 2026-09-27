@@ -1786,6 +1786,102 @@ abstract class AppLocalizations {
   /// **'Введите номер с кодом +992'**
   String get customerFormPhoneCodeError;
 
+  /// Customer list screen header title — distinct from `moreClients` ("Клиенты"), which is the More-page menu item linking to this same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиенты'**
+  String get customerListTitle;
+
+  /// No description provided for @customerListSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск клиента'**
+  String get customerListSearchHint;
+
+  /// No description provided for @customerListFilterDebt.
+  ///
+  /// In ru, this message translates to:
+  /// **'С долгом'**
+  String get customerListFilterDebt;
+
+  /// No description provided for @customerListFilterVip.
+  ///
+  /// In ru, this message translates to:
+  /// **'VIP'**
+  String get customerListFilterVip;
+
+  /// No description provided for @customerListFilterNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые'**
+  String get customerListFilterNew;
+
+  /// No description provided for @customerListEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиентов пока нет'**
+  String get customerListEmptyTitle;
+
+  /// No description provided for @customerListEmptySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первого клиента, чтобы отслеживать продажи и долги'**
+  String get customerListEmptySubtitle;
+
+  /// No description provided for @customerListEmptyButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить клиента'**
+  String get customerListEmptyButton;
+
+  /// No description provided for @customerListFilterEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет клиентов по этому фильтру'**
+  String get customerListFilterEmptyTitle;
+
+  /// No description provided for @customerListFilterEmptySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попробуйте выбрать другой фильтр'**
+  String get customerListFilterEmptySubtitle;
+
+  /// No description provided for @customerListResetFilterButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить фильтр'**
+  String get customerListResetFilterButton;
+
+  /// No description provided for @customerListNameHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите имя клиента'**
+  String get customerListNameHint;
+
+  /// Confirm button on the add-customer dialog — distinct from `addCustomer` ("Добавить покупателя"), which labels the nav action that opens this dialog
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get customerListAddConfirm;
+
+  /// No description provided for @customerListStatsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} клиентов  |  Долг: {debt}'**
+  String customerListStatsLine(String count, String debt);
+
+  /// Shown in place of a debt amount on a customer card when the customer owes nothing
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет долга'**
+  String get customerListNoDebt;
+
+  /// Customer card subtitle showing total purchases amount
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупок: {amount}'**
+  String customerListPurchasesLine(String amount);
+
   /// Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode
   ///
   /// In ru, this message translates to:
