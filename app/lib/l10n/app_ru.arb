@@ -641,8 +641,6 @@
   "@customerFormPhoneLabel": { "description": "Phone field label with inline country-code hint, specific to the customer create/edit form — distinct from the bare `phoneLabel` (\"Телефон\") used elsewhere" },
   "customerFormPhoneCodeError": "Введите номер с кодом +992",
   "@customerFormPhoneCodeError": { "description": "Validation error shown on the customer form's phone field when the entered number doesn't start with the +992/992 country code — distinct from `phoneRequired` (\"Введите номер телефона\"), which just checks the field isn't empty" },
-  "customerListTitle": "Клиенты",
-  "@customerListTitle": { "description": "Customer list screen header title — distinct from `moreClients` (\"Клиенты\"), which is the More-page menu item linking to this same screen" },
   "customerListSearchHint": "Поиск клиента",
   "customerListFilterDebt": "С долгом",
   "customerListFilterVip": "VIP",

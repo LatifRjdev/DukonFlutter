@@ -194,7 +194,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
               child: Row(
                 children: [
                   IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-                  Text(l10n.customerListTitle,
+                  Text(l10n.moreClients,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(

@@ -1786,12 +1786,6 @@ abstract class AppLocalizations {
   /// **'Введите номер с кодом +992'**
   String get customerFormPhoneCodeError;
 
-  /// Customer list screen header title — distinct from `moreClients` ("Клиенты"), which is the More-page menu item linking to this same screen
-  ///
-  /// In ru, this message translates to:
-  /// **'Клиенты'**
-  String get customerListTitle;
-
   /// No description provided for @customerListSearchHint.
   ///
   /// In ru, this message translates to:

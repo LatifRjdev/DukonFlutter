@@ -911,9 +911,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get customerFormPhoneCodeError => 'Введите номер с кодом +992';
 
   @override
-  String get customerListTitle => 'Клиенты';
-
-  @override
   String get customerListSearchHint => 'Поиск клиента';
 
   @override
