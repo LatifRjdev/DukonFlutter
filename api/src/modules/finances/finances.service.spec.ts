@@ -59,7 +59,10 @@ function makePrismaFake() {
     Array.from(sales.values()).filter((s) => {
       if (where.storeId && s.storeId !== where.storeId) return false;
       if (where.status && s.status !== where.status) return false;
-      if (where.createdAt && !inRange(s.createdAt, where.createdAt.gte, where.createdAt.lte))
+      if (
+        where.createdAt &&
+        !inRange(s.createdAt, where.createdAt.gte, where.createdAt.lte)
+      )
         return false;
       return true;
     });
@@ -88,9 +91,7 @@ function makePrismaFake() {
           _count: matched.length,
         };
       }),
-      count: jest.fn(async ({ where }: any = {}) =>
-        filterSales(where).length,
-      ),
+      count: jest.fn(async ({ where }: any = {}) => filterSales(where).length),
       findMany: jest.fn(async ({ where, take = 5 }: any = {}) => {
         const matched = filterSales(where).sort(
           (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
@@ -133,13 +134,15 @@ function makePrismaFake() {
       findMany: jest.fn(async ({ where }: any = {}) =>
         Array.from(customers.values()).filter(
           (c) =>
-            c.storeId === where.storeId && c.debt > (where.debt?.gt ?? -Infinity),
+            c.storeId === where.storeId &&
+            c.debt > (where.debt?.gt ?? -Infinity),
         ),
       ),
       aggregate: jest.fn(async ({ where }: any = {}) => {
         const matched = Array.from(customers.values()).filter(
           (c) =>
-            c.storeId === where.storeId && c.debt > (where.debt?.gt ?? -Infinity),
+            c.storeId === where.storeId &&
+            c.debt > (where.debt?.gt ?? -Infinity),
         );
         return {
           _sum: { debt: matched.reduce((s, c) => s + c.debt, 0) },
@@ -151,13 +154,15 @@ function makePrismaFake() {
       findMany: jest.fn(async ({ where }: any = {}) =>
         Array.from(suppliers.values()).filter(
           (s) =>
-            s.storeId === where.storeId && s.debt > (where.debt?.gt ?? -Infinity),
+            s.storeId === where.storeId &&
+            s.debt > (where.debt?.gt ?? -Infinity),
         ),
       ),
       aggregate: jest.fn(async ({ where }: any = {}) => {
         const matched = Array.from(suppliers.values()).filter(
           (s) =>
-            s.storeId === where.storeId && s.debt > (where.debt?.gt ?? -Infinity),
+            s.storeId === where.storeId &&
+            s.debt > (where.debt?.gt ?? -Infinity),
         );
         return {
           _sum: { debt: matched.reduce((sum, s) => sum + s.debt, 0) },
@@ -223,7 +228,11 @@ describe('FinancesService', () => {
     it('should include sales from earlier in the week when period=week, not just today (2026-09-22 dashboard bug: period selector had no effect)', async () => {
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+      seedSale({
+        id: 'earlier-this-week',
+        total: 400,
+        createdAt: threeDaysAgo,
+      });
 
       const result = await service.getOverview('store-A', {
         period: 'week',
@@ -236,7 +245,11 @@ describe('FinancesService', () => {
     it('should include sales from earlier in the month when period=month, not just today', async () => {
       const twoWeeksAgo = new Date();
       twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-      seedSale({ id: 'earlier-this-month', total: 250, createdAt: twoWeeksAgo });
+      seedSale({
+        id: 'earlier-this-month',
+        total: 250,
+        createdAt: twoWeeksAgo,
+      });
 
       const result = await service.getOverview('store-A', {
         period: 'month',
@@ -249,7 +262,11 @@ describe('FinancesService', () => {
     it('should exclude a sale from 3 days ago when period=today (or omitted)', async () => {
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+      seedSale({
+        id: 'earlier-this-week',
+        total: 400,
+        createdAt: threeDaysAgo,
+      });
 
       const result = await service.getOverview('store-A', {
         period: 'today',
@@ -264,7 +281,11 @@ describe('FinancesService', () => {
       seedSale({ id: 'right-now', total: 75, createdAt: now });
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      seedSale({ id: 'earlier-this-week', total: 400, createdAt: threeDaysAgo });
+      seedSale({
+        id: 'earlier-this-week',
+        total: 400,
+        createdAt: threeDaysAgo,
+      });
 
       const result = await service.getOverview('store-A', {} as any);
 
@@ -273,8 +294,18 @@ describe('FinancesService', () => {
     });
 
     it('should exclude sales from other stores', async () => {
-      seedSale({ id: 'a1', storeId: 'store-A', total: 100, createdAt: new Date() });
-      seedSale({ id: 'b1', storeId: 'store-B', total: 9999, createdAt: new Date() });
+      seedSale({
+        id: 'a1',
+        storeId: 'store-A',
+        total: 100,
+        createdAt: new Date(),
+      });
+      seedSale({
+        id: 'b1',
+        storeId: 'store-B',
+        total: 9999,
+        createdAt: new Date(),
+      });
 
       const result = await service.getOverview('store-A', {
         period: 'month',
@@ -316,9 +347,21 @@ describe('FinancesService', () => {
     });
 
     it('should respect startDate/endDate filters when aggregating sales', async () => {
-      seedSale({ id: 'before', total: 1000, createdAt: new Date('2026-03-31T23:59:59Z') });
-      seedSale({ id: 'inrange', total: 200, createdAt: new Date('2026-04-15T12:00:00Z') });
-      seedSale({ id: 'after', total: 5000, createdAt: new Date('2026-05-01T00:00:01Z') });
+      seedSale({
+        id: 'before',
+        total: 1000,
+        createdAt: new Date('2026-03-31T23:59:59Z'),
+      });
+      seedSale({
+        id: 'inrange',
+        total: 200,
+        createdAt: new Date('2026-04-15T12:00:00Z'),
+      });
+      seedSale({
+        id: 'after',
+        total: 5000,
+        createdAt: new Date('2026-05-01T00:00:01Z'),
+      });
 
       const result = await service.getDashboard('store-A', {
         startDate: '2026-04-01T00:00:00Z',

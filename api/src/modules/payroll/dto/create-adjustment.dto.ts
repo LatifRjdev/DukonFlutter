@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNumber, IsEnum, IsOptional, IsDateString, Min } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsEnum,
+  IsOptional,
+  IsDateString,
+  Min,
+} from 'class-validator';
 
 export enum AdjustmentType {
   BONUS = 'BONUS',
@@ -7,7 +14,10 @@ export enum AdjustmentType {
 }
 
 export class CreateAdjustmentDto {
-  @ApiPropertyOptional({ description: 'Omit to apply this adjustment to every staff member on the period' })
+  @ApiPropertyOptional({
+    description:
+      'Omit to apply this adjustment to every staff member on the period',
+  })
   @IsOptional()
   @IsString()
   staffId?: string;
