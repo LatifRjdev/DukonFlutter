@@ -352,7 +352,12 @@ void main() {
           expect(payload['type'], 'PURCHASE');
           expect(payload['quantity'], 10);
           expect(payload['unitCost'], 5);
-          expect(payload['totalCost'], 50);
+          // The backend computes totalCost itself from unitCost*quantity
+          // (stock-movements.service.ts) and CreateStockMovementDto doesn't
+          // even declare the field — the global ValidationPipe runs with
+          // forbidNonWhitelisted: true, so actually sending it would 400.
+          // This asserts the app never regresses toward sending it.
+          expect(payload.containsKey('totalCost'), false);
           expect(payload['supplierId'], 'sup-1');
           expect(payload['notes'], 'careful');
         },
