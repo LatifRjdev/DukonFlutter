@@ -3,6 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
@@ -235,6 +236,22 @@ export class AdminService {
   async deleteUser(id: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
+
+    // Deleting the last remaining admin would lock everyone out of the
+    // admin panel with no way back in (a follow-up flagged in 5e92361,
+    // which only guarded self-delete client-side). This is the missing
+    // server-side check.
+    if (user.isAdmin) {
+      const remainingAdmins = await this.prisma.user.count({
+        where: { isAdmin: true, isActive: true, id: { not: id } },
+      });
+      if (remainingAdmins === 0) {
+        throw new ForbiddenException(
+          'Cannot delete the last remaining admin account',
+        );
+      }
+    }
+
     return this.prisma.user.update({
       where: { id },
       data: {
