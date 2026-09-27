@@ -76,19 +76,19 @@ class _DiscountsPageState extends State<DiscountsPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Удалить скидку?'),
-        content: Text('Вы уверены, что хотите удалить "$name"?'),
+        title: Text(AppLocalizations.of(ctx)!.discountsDeleteTitle),
+        content: Text(AppLocalizations.of(ctx)!.discountsDeleteConfirmBody(name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               _delete(id);
             },
-            child: const Text('Удалить', style: TextStyle(color: AppColors.error)),
+            child: Text(AppLocalizations.of(ctx)!.delete, style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -128,22 +128,22 @@ class _DiscountsPageState extends State<DiscountsPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(isEdit ? 'Редактировать скидку' : 'Новая скидка',
+              Text(isEdit ? AppLocalizations.of(context)!.discountsEditTitle : AppLocalizations.of(context)!.discountsNewTitle,
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               const SizedBox(height: 16),
               TextField(
                 controller: nameCtrl,
-                decoration: const InputDecoration(
-                    labelText: 'Название', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.itemName, border: const OutlineInputBorder()),
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'percent', label: Text('% Процент')),
-                        ButtonSegment(value: 'fixed', label: Text('Сум Фиксированная')),
+                      segments: [
+                        ButtonSegment(value: 'percent', label: Text(AppLocalizations.of(context)!.discountsTypePercent)),
+                        ButtonSegment(value: 'fixed', label: Text(AppLocalizations.of(context)!.discountsTypeFixed)),
                       ],
                       selected: {type},
                       onSelectionChanged: (s) => setLocal(() => type = s.first),
@@ -156,7 +156,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                 controller: valueCtrl,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: type == 'percent' ? 'Значение (%)' : 'Значение (TJS)',
+                  labelText: type == 'percent' ? AppLocalizations.of(context)!.discountsValuePercentLabel : AppLocalizations.of(context)!.discountsValueFixedLabel,
                   border: const OutlineInputBorder(),
                 ),
               ),
@@ -164,9 +164,9 @@ class _DiscountsPageState extends State<DiscountsPage> {
               TextField(
                 controller: conditionCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                    labelText: 'Мин. сумма заказа (условие, необязательно)',
-                    border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.discountsMinOrderLabel,
+                    border: const OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -189,7 +189,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
                       minTotal: double.tryParse(conditionCtrl.text),
                     );
                   },
-                  child: Text(isEdit ? 'Сохранить' : 'Создать',
+                  child: Text(isEdit ? AppLocalizations.of(context)!.save : AppLocalizations.of(context)!.create,
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ),
               ),
@@ -235,7 +235,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Скидки'),
+        title: Text(l10n.discountsPageTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -254,13 +254,13 @@ class _DiscountsPageState extends State<DiscountsPage> {
                     children: [
                       Text(_error!, style: const TextStyle(color: AppColors.error)),
                       const SizedBox(height: 12),
-                      ElevatedButton(onPressed: _load, child: const Text('Повторить')),
+                      ElevatedButton(onPressed: _load, child: Text(l10n.retry)),
                     ],
                   ),
                 )
               : _discounts.isEmpty
                   ? Center(
-                      child: Text('Нет скидок. Нажмите + для создания.',
+                      child: Text(l10n.discountsEmptyState,
                           style: TextStyle(color: context.textSecondary)),
                     )
                   : ListView.separated(

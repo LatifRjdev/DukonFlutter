@@ -1894,6 +1894,42 @@ class AppLocalizationsRu extends AppLocalizations {
   String get a11yDeleteDiscount => 'Удалить скидку';
 
   @override
+  String get discountsPageTitle => 'Скидки';
+
+  @override
+  String get discountsEmptyState => 'Нет скидок. Нажмите + для создания.';
+
+  @override
+  String get discountsDeleteTitle => 'Удалить скидку?';
+
+  @override
+  String discountsDeleteConfirmBody(String name) {
+    return 'Вы уверены, что хотите удалить \"$name\"?';
+  }
+
+  @override
+  String get discountsEditTitle => 'Редактировать скидку';
+
+  @override
+  String get discountsNewTitle => 'Новая скидка';
+
+  @override
+  String get discountsTypePercent => '% Процент';
+
+  @override
+  String get discountsTypeFixed => 'Сум Фиксированная';
+
+  @override
+  String get discountsValuePercentLabel => 'Значение (%)';
+
+  @override
+  String get discountsValueFixedLabel => 'Значение (TJS)';
+
+  @override
+  String get discountsMinOrderLabel =>
+      'Мин. сумма заказа (условие, необязательно)';
+
+  @override
   String get a11yEditCategory => 'Редактировать категорию';
 
   @override

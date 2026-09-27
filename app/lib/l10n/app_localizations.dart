@@ -706,7 +706,7 @@ abstract class AppLocalizations {
   /// **'Название товара'**
   String get productName;
 
-  /// Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment name) — distinct from `name` ("Имя", a person's name) and `productName` ("Название товара", the fuller product-specific label)
+  /// Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment/discount name) — distinct from `name` ("Имя", a person's name) and `productName` ("Название товара", the fuller product-specific label)
   ///
   /// In ru, this message translates to:
   /// **'Название'**
@@ -3687,6 +3687,72 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить скидку'**
   String get a11yDeleteDiscount;
+
+  /// Discounts list screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидки'**
+  String get discountsPageTitle;
+
+  /// No description provided for @discountsEmptyState.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет скидок. Нажмите + для создания.'**
+  String get discountsEmptyState;
+
+  /// Delete-confirmation dialog title on the discounts list page — distinct from `a11yEditDiscount`/`a11yDeleteDiscount` above, which label the row's edit/delete icon buttons (tooltips), not this dialog's title text
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить скидку?'**
+  String get discountsDeleteTitle;
+
+  /// No description provided for @discountsDeleteConfirmBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы уверены, что хотите удалить \"{name}\"?'**
+  String discountsDeleteConfirmBody(String name);
+
+  /// Discount create/edit bottom sheet header when editing an existing discount — same wording as the `a11yEditDiscount` tooltip but a different UI role (sheet header vs. icon-button tooltip), kept as a separate key
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать скидку'**
+  String get discountsEditTitle;
+
+  /// Discount create/edit bottom sheet header when creating a new discount
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая скидка'**
+  String get discountsNewTitle;
+
+  /// No description provided for @discountsTypePercent.
+  ///
+  /// In ru, this message translates to:
+  /// **'% Процент'**
+  String get discountsTypePercent;
+
+  /// No description provided for @discountsTypeFixed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сум Фиксированная'**
+  String get discountsTypeFixed;
+
+  /// No description provided for @discountsValuePercentLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значение (%)'**
+  String get discountsValuePercentLabel;
+
+  /// No description provided for @discountsValueFixedLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значение (TJS)'**
+  String get discountsValueFixedLabel;
+
+  /// No description provided for @discountsMinOrderLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мин. сумма заказа (условие, необязательно)'**
+  String get discountsMinOrderLabel;
 
   /// Edit category action (tooltip)
   ///
