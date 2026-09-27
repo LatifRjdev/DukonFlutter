@@ -519,7 +519,7 @@ class _PeriodCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          l10n.paidAmount,
+                          l10n.payrollPaidLabel,
                           style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       ],
