@@ -730,8 +730,6 @@
   "@settingsTileStaff": { "description": "Settings page — tile linking to the staff list" },
   "settingsTileRoles": "Роли и доступы",
   "@settingsTileRoles": { "description": "Settings page — tile linking to roles and permissions management. Distinct from `moreRolesAndPermissions` (\"Роли и права\"), a different label used on the More page" },
-  "settingsTileDiscounts": "Скидки",
-  "@settingsTileDiscounts": { "description": "Settings page — tile linking to discount settings" },
   "settingsTileReceiptTemplates": "Шаблоны чеков",
   "@settingsTileReceiptTemplates": { "description": "Settings page — tile linking to receipt template settings" },
   "settingsTileTelegramBot": "Telegram-бот",

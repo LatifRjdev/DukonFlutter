@@ -330,7 +330,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildTile(Icons.admin_panel_settings_outlined, l10n.settingsTileRoles,
                             onTap: () => context.push(RouteNames.roles, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.discount_outlined, l10n.settingsTileDiscounts,
+                          _buildTile(Icons.discount_outlined, l10n.discountsPageTitle,
                             onTap: () => context.push(RouteNames.discounts, extra: _getStoreId())),
                           _buildDivider(),
                           _buildTile(Icons.card_giftcard_outlined, l10n.loyaltySettingsTitle,

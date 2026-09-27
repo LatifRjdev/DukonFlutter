@@ -2050,12 +2050,6 @@ abstract class AppLocalizations {
   /// **'Роли и доступы'**
   String get settingsTileRoles;
 
-  /// Settings page — tile linking to discount settings
-  ///
-  /// In ru, this message translates to:
-  /// **'Скидки'**
-  String get settingsTileDiscounts;
-
   /// Settings page — tile linking to receipt template settings
   ///
   /// In ru, this message translates to:

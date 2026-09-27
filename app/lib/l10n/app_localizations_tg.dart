@@ -1050,9 +1050,6 @@ class AppLocalizationsTg extends AppLocalizations {
   String get settingsTileRoles => 'Роли и доступы';
 
   @override
-  String get settingsTileDiscounts => 'Скидки';
-
-  @override
   String get settingsTileReceiptTemplates => 'Шаблоны чеков';
 
   @override
