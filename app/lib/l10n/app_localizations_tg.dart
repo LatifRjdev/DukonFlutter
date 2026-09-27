@@ -1783,6 +1783,64 @@ class AppLocalizationsTg extends AppLocalizations {
   String get enterOpeningCash => 'Маблағи кассаи аввалро ворид кунед';
 
   @override
+  String get shiftsCloseCashPrompt => 'Введите сумму наличных в кассе:';
+
+  @override
+  String get shiftsCashAmountLabel => 'Сумма наличных';
+
+  @override
+  String get shiftsCashAmountRequired => 'Введите сумму';
+
+  @override
+  String get shiftsCashAmountNegative => 'Сумма не может быть отрицательной';
+
+  @override
+  String shiftsDurationFormat(String hours, String minutes) {
+    return '$hoursч $minutesм';
+  }
+
+  @override
+  String get shiftsEmptySubtitle =>
+      'Откройте смену, чтобы начать приём платежей';
+
+  @override
+  String get shiftsActiveStatus => 'Активна';
+
+  @override
+  String shiftsCashierLine(String name) {
+    return 'Кассир: $name';
+  }
+
+  @override
+  String get shiftsUnknownCashier => 'Не указан';
+
+  @override
+  String shiftsOpenedLine(String time, String duration) {
+    return 'Открыта: $time  •  Время работы: $duration';
+  }
+
+  @override
+  String shiftsSalesLine(String count, String amount) {
+    return 'Продаж: $count  |  Сумма: $amount';
+  }
+
+  @override
+  String shiftsHistoryRowLine(
+    String openedTime,
+    String closedTime,
+    String count,
+    String amount,
+  ) {
+    return '$openedTime–$closedTime  •  $count продаж  •  $amount';
+  }
+
+  @override
+  String get shiftsClosedStatus => 'Сдано';
+
+  @override
+  String get shiftsOpenStatus => 'Открыта';
+
+  @override
   String get zReport => 'Z-ҳисобот';
 
   @override

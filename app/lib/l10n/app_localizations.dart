@@ -3466,6 +3466,95 @@ abstract class AppLocalizations {
   /// **'Введите сумму начальной кассы'**
   String get enterOpeningCash;
 
+  /// Close-shift dialog — prompt above the closing cash amount field
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму наличных в кассе:'**
+  String get shiftsCloseCashPrompt;
+
+  /// No description provided for @shiftsCashAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма наличных'**
+  String get shiftsCashAmountLabel;
+
+  /// Close-shift dialog — validation error when the cash amount field is left empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму'**
+  String get shiftsCashAmountRequired;
+
+  /// No description provided for @shiftsCashAmountNegative.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма не может быть отрицательной'**
+  String get shiftsCashAmountNegative;
+
+  /// Elapsed shift duration, e.g. '3ч 15м'
+  ///
+  /// In ru, this message translates to:
+  /// **'{hours}ч {minutes}м'**
+  String shiftsDurationFormat(String hours, String minutes);
+
+  /// No description provided for @shiftsEmptySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Откройте смену, чтобы начать приём платежей'**
+  String get shiftsEmptySubtitle;
+
+  /// Active-shift status badge on the current-shift card — near-duplicate value to `loyaltySettingsActive` ("Активна", the loyalty-toggle label on a different screen); kept separate since that key is feature-prefixed to loyalty settings
+  ///
+  /// In ru, this message translates to:
+  /// **'Активна'**
+  String get shiftsActiveStatus;
+
+  /// Current-shift card — cashier name line; label+value composite, distinct from the bare `cashier` label
+  ///
+  /// In ru, this message translates to:
+  /// **'Кассир: {name}'**
+  String shiftsCashierLine(String name);
+
+  /// Fallback shown in shiftsCashierLine when the shift has no staff name recorded
+  ///
+  /// In ru, this message translates to:
+  /// **'Не указан'**
+  String get shiftsUnknownCashier;
+
+  /// Current-shift card — opened-at time and elapsed duration line
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыта: {time}  •  Время работы: {duration}'**
+  String shiftsOpenedLine(String time, String duration);
+
+  /// Current-shift card — sales count and total amount line
+  ///
+  /// In ru, this message translates to:
+  /// **'Продаж: {count}  |  Сумма: {amount}'**
+  String shiftsSalesLine(String count, String amount);
+
+  /// Shift history list row — opened/closed time range, sales count, and total amount
+  ///
+  /// In ru, this message translates to:
+  /// **'{openedTime}–{closedTime}  •  {count} продаж  •  {amount}'**
+  String shiftsHistoryRowLine(
+    String openedTime,
+    String closedTime,
+    String count,
+    String amount,
+  );
+
+  /// Shift history row status badge for a closed shift
+  ///
+  /// In ru, this message translates to:
+  /// **'Сдано'**
+  String get shiftsClosedStatus;
+
+  /// Shift history row status badge for a still-open shift — distinct from `shiftsActiveStatus` ("Активна"), different wording used in the history list vs. the current-shift card
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыта'**
+  String get shiftsOpenStatus;
+
   /// No description provided for @zReport.
   ///
   /// In ru, this message translates to:

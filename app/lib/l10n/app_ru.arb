@@ -1121,6 +1121,51 @@
   "shiftOpened": "Смена открыта",
   "shiftClosed": "Смена закрыта",
   "enterOpeningCash": "Введите сумму начальной кассы",
+  "shiftsCloseCashPrompt": "Введите сумму наличных в кассе:",
+  "@shiftsCloseCashPrompt": { "description": "Close-shift dialog — prompt above the closing cash amount field" },
+  "shiftsCashAmountLabel": "Сумма наличных",
+  "shiftsCashAmountRequired": "Введите сумму",
+  "@shiftsCashAmountRequired": { "description": "Close-shift dialog — validation error when the cash amount field is left empty" },
+  "shiftsCashAmountNegative": "Сумма не может быть отрицательной",
+  "shiftsDurationFormat": "{hours}ч {minutes}м",
+  "@shiftsDurationFormat": {
+    "description": "Elapsed shift duration, e.g. '3ч 15м'",
+    "placeholders": { "hours": { "type": "String" }, "minutes": { "type": "String" } }
+  },
+  "shiftsEmptySubtitle": "Откройте смену, чтобы начать приём платежей",
+  "shiftsActiveStatus": "Активна",
+  "@shiftsActiveStatus": { "description": "Active-shift status badge on the current-shift card — near-duplicate value to `loyaltySettingsActive` (\"Активна\", the loyalty-toggle label on a different screen); kept separate since that key is feature-prefixed to loyalty settings" },
+  "shiftsCashierLine": "Кассир: {name}",
+  "@shiftsCashierLine": {
+    "description": "Current-shift card — cashier name line; label+value composite, distinct from the bare `cashier` label",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "shiftsUnknownCashier": "Не указан",
+  "@shiftsUnknownCashier": { "description": "Fallback shown in shiftsCashierLine when the shift has no staff name recorded" },
+  "shiftsOpenedLine": "Открыта: {time}  •  Время работы: {duration}",
+  "@shiftsOpenedLine": {
+    "description": "Current-shift card — opened-at time and elapsed duration line",
+    "placeholders": { "time": { "type": "String" }, "duration": { "type": "String" } }
+  },
+  "shiftsSalesLine": "Продаж: {count}  |  Сумма: {amount}",
+  "@shiftsSalesLine": {
+    "description": "Current-shift card — sales count and total amount line",
+    "placeholders": { "count": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "shiftsHistoryRowLine": "{openedTime}–{closedTime}  •  {count} продаж  •  {amount}",
+  "@shiftsHistoryRowLine": {
+    "description": "Shift history list row — opened/closed time range, sales count, and total amount",
+    "placeholders": {
+      "openedTime": { "type": "String" },
+      "closedTime": { "type": "String" },
+      "count": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+  "shiftsClosedStatus": "Сдано",
+  "@shiftsClosedStatus": { "description": "Shift history row status badge for a closed shift" },
+  "shiftsOpenStatus": "Открыта",
+  "@shiftsOpenStatus": { "description": "Shift history row status badge for a still-open shift — distinct from `shiftsActiveStatus` (\"Активна\"), different wording used in the history list vs. the current-shift card" },
 
   "zReport": "Z-отчёт",
   "salesBreakdown": "Разбивка продаж",

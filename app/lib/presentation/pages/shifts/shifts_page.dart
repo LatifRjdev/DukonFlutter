@@ -46,23 +46,23 @@ class _ShiftsPageState extends State<ShiftsPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Закрыть смену'),
+        title: Text(AppLocalizations.of(ctx)!.closeShift),
         content: Form(
           key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Введите сумму наличных в кассе:'),
+              Text(AppLocalizations.of(ctx)!.shiftsCloseCashPrompt),
               const SizedBox(height: 12),
               AppTextField(
                 controller: cashController,
-                label: 'Сумма наличных',
+                label: AppLocalizations.of(ctx)!.shiftsCashAmountLabel,
                 prefixIcon: Icons.attach_money,
                 keyboardType: TextInputType.number,
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Введите сумму';
-                  if (double.tryParse(v) == null) return 'Некорректная сумма';
-                  if (double.parse(v) < 0) return 'Сумма не может быть отрицательной';
+                  if (v == null || v.isEmpty) return AppLocalizations.of(ctx)!.shiftsCashAmountRequired;
+                  if (double.tryParse(v) == null) return AppLocalizations.of(ctx)!.invalidAmount;
+                  if (double.parse(v) < 0) return AppLocalizations.of(ctx)!.shiftsCashAmountNegative;
                   return null;
                 },
               ),
@@ -72,7 +72,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -86,7 +86,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text('Закрыть', style: TextStyle(color: AppColors.onPrimary)),
+            child: Text(AppLocalizations.of(ctx)!.close, style: const TextStyle(color: AppColors.onPrimary)),
           ),
         ],
       ),
@@ -98,7 +98,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
     final diff = now.difference(start);
     final hours = diff.inHours;
     final minutes = diff.inMinutes % 60;
-    return '$hoursч $minutesм';
+    return AppLocalizations.of(context)!.shiftsDurationFormat(hours.toString(), minutes.toString());
   }
 
   @override
@@ -115,8 +115,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
               child: Row(
                 children: [
                   IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
-                  const Text('Смены',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.shifts,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   BlocBuilder<ShiftBloc, ShiftState>(
                     builder: (context, state) {
@@ -130,7 +130,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusSm)),
                             ),
-                            child: const Text('Открыть смену', style: TextStyle(fontSize: 13)),
+                            child: Text(l10n.openShift, style: const TextStyle(fontSize: 13)),
                           ),
                         );
                       }
@@ -175,18 +175,18 @@ class _ShiftsPageState extends State<ShiftsPage> {
                           ],
                           // History
                           if (state.shifts.isNotEmpty) ...[
-                            const Text('История смен',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                            Text(l10n.shiftHistory,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                             const SizedBox(height: 8),
                             ...state.shifts.map((shift) => _buildShiftHistoryCard(shift)),
                           ],
                           if (state.currentShift == null && state.shifts.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 60),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 60),
                               child: AppEmptyState(
                                 icon: Icons.access_time,
-                                title: 'Нет смен',
-                                subtitle: 'Откройте смену, чтобы начать приём платежей',
+                                title: l10n.noShifts,
+                                subtitle: l10n.shiftsEmptySubtitle,
                               ),
                             ),
                         ],
@@ -210,6 +210,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
   }
 
   Widget _buildCurrentShiftCard(ShiftModel shift) {
+    final l10n = AppLocalizations.of(context)!;
     final timeFormat = DateFormat('HH:mm');
     return Container(
       padding: const EdgeInsets.all(16),
@@ -223,8 +224,8 @@ class _ShiftsPageState extends State<ShiftsPage> {
         children: [
           Row(
             children: [
-              const Text('Текущая смена',
-                style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
+              Text(l10n.currentShift,
+                style: const TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -232,19 +233,19 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   color: AppColors.success.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
-                child: const Text('Активна',
-                  style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
+                child: Text(l10n.shiftsActiveStatus,
+                  style: const TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text('Кассир: ${shift.staffName ?? 'Не указан'}',
+          Text(l10n.shiftsCashierLine(shift.staffName ?? l10n.shiftsUnknownCashier),
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text('Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}',
+          Text(l10n.shiftsOpenedLine(timeFormat.format(shift.openedAt), _formatDuration(shift.openedAt)),
             style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 4),
-          Text('Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}',
+          Text(l10n.shiftsSalesLine(shift.salesCount.toString(), _formatPrice(shift.salesTotal)),
             style: const TextStyle(fontSize: 13)),
           const SizedBox(height: 12),
           SizedBox(
@@ -256,7 +257,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 side: const BorderSide(color: AppColors.warning),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
               ),
-              child: const Text('Закрыть смену', style: TextStyle(fontWeight: FontWeight.w600)),
+              child: Text(l10n.closeShift, style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
           ),
         ],
@@ -265,11 +266,12 @@ class _ShiftsPageState extends State<ShiftsPage> {
   }
 
   Widget _buildShiftHistoryCard(ShiftModel shift) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('dd.MM');
     final timeFormat = DateFormat('HH:mm');
 
     return Semantics(
-      label: AppLocalizations.of(context)!.a11yOpenZReport,
+      label: l10n.a11yOpenZReport,
       button: true,
       child: GestureDetector(
       onTap: () => context.push('/shifts/${shift.id}/z-report', extra: widget.storeId),
@@ -297,7 +299,12 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${timeFormat.format(shift.openedAt)}–${shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}',
+                    l10n.shiftsHistoryRowLine(
+                      timeFormat.format(shift.openedAt),
+                      shift.closedAt != null ? timeFormat.format(shift.closedAt!) : '...',
+                      shift.salesCount.toString(),
+                      _formatPrice(shift.salesTotal),
+                    ),
                     style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],
@@ -312,7 +319,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Text(
-                shift.closedAt != null ? 'Сдано' : 'Открыта',
+                shift.closedAt != null ? l10n.shiftsClosedStatus : l10n.shiftsOpenStatus,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
