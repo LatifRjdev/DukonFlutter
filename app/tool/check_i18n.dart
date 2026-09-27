@@ -7,6 +7,17 @@
 // pre-commit / CI step without pulling extra packages. False positives
 // are added to tool/i18n-allowlist.txt to keep the signal clean during
 // the incremental migration described in docs/adr/0002-i18n-rollout-plan.md.
+//
+// Allow-list entries are keyed by `<relative-path>::<matched-substring>`,
+// not by line number. Line-number keys broke every time an unrelated
+// edit landed above an already-allow-listed line in the same file — the
+// entry silently stopped matching and the same, already-known violation
+// reappeared as "new" (see docs/adr/0002-i18n-rollout-plan.md's
+// Reconciliation section for this happening once before, and
+// docs/superpowers/specs/2026-09-27-i18n-nine-file-migration-design.md
+// for the second occurrence that prompted this fix). Content-keying
+// means an already-covered string stays covered no matter which line it
+// ends up on.
 
 import 'dart:io';
 
@@ -15,13 +26,16 @@ Future<void> main(List<String> args) async {
   // returned int to the process exit code for a *synchronous* `int main()`.
   // For `Future<int> main() async`, the returned value is silently dropped
   // and the process always exits 0 regardless of what the script found.
-  // Route the real logic through `_run` and set `exitCode` explicitly so
+  // Route the real logic through `run` and set `exitCode` explicitly so
   // CI actually observes failures.
-  exitCode = await _run(args);
+  exitCode = await run(args);
 }
 
-Future<int> _run(List<String> args) async {
-  final repoRoot = Directory.current.path;
+/// `repoRootOverride` exists purely so tests can point this at a temp
+/// directory instead of the real repo — production callers (main(), CI)
+/// never pass it and get `Directory.current.path` as before.
+Future<int> run(List<String> args, {String? repoRootOverride}) async {
+  final repoRoot = repoRootOverride ?? Directory.current.path;
   final presentation = Directory('$repoRoot/lib/presentation');
   if (!presentation.existsSync()) {
     stderr.writeln('lib/presentation not found — run from app/ directory');
@@ -41,7 +55,15 @@ Future<int> _run(List<String> args) async {
 
   final cyrillicInString = RegExp(r'''['"][^'"]*[а-яА-ЯёЁ][^'"]*['"]''');
 
-  final offenders = <String>[];
+  // Track key and display text as a record pair rather than concatenating
+  // them into one string and splitting it back apart later: the matched
+  // `content` can itself contain a run of spaces (e.g. the
+  // "label + separator + value" strings like
+  // "N клиентов  |  Долг: X" this codebase uses — see
+  // .claude/rules/mobile-l10n.md), which would collide with any
+  // whitespace-based delimiter used to rejoin/re-split key vs. display
+  // text.
+  final offenders = <({String key, String display})>[];
   var scanned = 0;
   await for (final entity in presentation.list(recursive: true)) {
     if (entity is! File || !entity.path.endsWith('.dart')) continue;
@@ -50,8 +72,10 @@ Future<int> _run(List<String> args) async {
     final lines = entity.readAsLinesSync();
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
-      if (!cyrillicInString.hasMatch(line)) continue;
-      final key = '$rel:${i + 1}';
+      final match = cyrillicInString.firstMatch(line);
+      if (match == null) continue;
+      final content = match.group(0)!;
+      final key = '$rel::$content';
       if (allowlist.contains(key)) continue;
       // Skip debugPrint / log / comments
       final trimmed = line.trimLeft();
@@ -61,19 +85,15 @@ Future<int> _run(List<String> args) async {
           trimmed.startsWith('print(')) {
         continue;
       }
-      offenders.add('$key  $trimmed');
+      offenders.add((key: key, display: trimmed));
     }
   }
 
-  // --dump-allowlist writes every offender location (path:line) to
-  // tool/i18n-allowlist.txt and exits 0. Used once when bootstrapping the
-  // allow-list so CI can start enforcing the rule for new code.
+  // --dump-allowlist writes every offender's key to tool/i18n-allowlist.txt
+  // and exits 0. Used once when bootstrapping the allow-list (or
+  // resyncing it) so CI can start enforcing the rule for new code.
   if (dumpAllowlist) {
-    final locations = offenders
-        .map((o) => o.split('  ').first)
-        .toSet()
-        .toList()
-      ..sort();
+    final locations = offenders.map((o) => o.key).toSet().toList()..sort();
     allowlistFile.writeAsStringSync('${locations.join('\n')}\n');
     stdout.writeln(
       'check_i18n: wrote ${locations.length} locations to tool/i18n-allowlist.txt',
@@ -94,7 +114,7 @@ Future<int> _run(List<String> args) async {
     'to tool/i18n-allowlist.txt with a TODO.',
   );
   for (final o in offenders.take(50)) {
-    stdout.writeln('  $o');
+    stdout.writeln('  ${o.key}  ${o.display}');
   }
   if (offenders.length > 50) {
     stdout.writeln('  ... and ${offenders.length - 50} more.');

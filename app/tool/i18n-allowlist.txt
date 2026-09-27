@@ -1,1022 +1,952 @@
-lib/presentation/blocs/debt/debt_bloc.dart:132
-lib/presentation/blocs/debt/debt_bloc.dart:73
-lib/presentation/blocs/expense/expense_bloc.dart:45
-lib/presentation/blocs/expense/expense_bloc.dart:56
-lib/presentation/blocs/expense/expense_bloc.dart:72
-lib/presentation/blocs/printer/printer_bloc.dart:27
-lib/presentation/blocs/printer/printer_bloc.dart:38
-lib/presentation/blocs/printer/printer_bloc.dart:41
-lib/presentation/blocs/printer/printer_bloc.dart:44
-lib/presentation/blocs/printer/printer_bloc.dart:50
-lib/presentation/blocs/printer/printer_bloc.dart:59
-lib/presentation/blocs/printer/printer_bloc.dart:60
-lib/presentation/blocs/printer/printer_bloc.dart:63
-lib/presentation/blocs/printer/printer_bloc.dart:72
-lib/presentation/blocs/settings/settings_bloc.dart:54
-lib/presentation/blocs/settings/settings_bloc.dart:71
-lib/presentation/blocs/subscription/subscription_bloc.dart:64
-lib/presentation/blocs/subscription/subscription_bloc.dart:88
-lib/presentation/blocs/zakat/zakat_bloc.dart:49
-lib/presentation/blocs/zakat/zakat_bloc.dart:59
-lib/presentation/pages/customer/customer_detail_page.dart:136
-lib/presentation/pages/customer/customer_detail_page.dart:143
-lib/presentation/pages/customer/customer_detail_page.dart:149
-lib/presentation/pages/customer/customer_detail_page.dart:163
-lib/presentation/pages/customer/customer_detail_page.dart:177
-lib/presentation/pages/customer/customer_detail_page.dart:189
-lib/presentation/pages/customer/customer_detail_page.dart:201
-lib/presentation/pages/customer/customer_detail_page.dart:214
-lib/presentation/pages/customer/customer_detail_page.dart:227
-lib/presentation/pages/customer/customer_detail_page.dart:248
-lib/presentation/pages/customer/customer_detail_page.dart:254
-lib/presentation/pages/customer/customer_detail_page.dart:265
-lib/presentation/pages/customer/customer_detail_page.dart:271
-lib/presentation/pages/customer/customer_detail_page.dart:284
-lib/presentation/pages/customer/customer_detail_page.dart:323
-lib/presentation/pages/customer/customer_detail_page.dart:324
-lib/presentation/pages/customer/customer_detail_page.dart:325
-lib/presentation/pages/customer/customer_detail_page.dart:68
-lib/presentation/pages/customer/customer_list_page.dart:110
-lib/presentation/pages/customer/customer_list_page.dart:117
-lib/presentation/pages/customer/customer_list_page.dart:118
-lib/presentation/pages/customer/customer_list_page.dart:127
-lib/presentation/pages/customer/customer_list_page.dart:138
-lib/presentation/pages/customer/customer_list_page.dart:171
-lib/presentation/pages/customer/customer_list_page.dart:197
-lib/presentation/pages/customer/customer_list_page.dart:221
-lib/presentation/pages/customer/customer_list_page.dart:240
-lib/presentation/pages/customer/customer_list_page.dart:242
-lib/presentation/pages/customer/customer_list_page.dart:246
-lib/presentation/pages/customer/customer_list_page.dart:271
-lib/presentation/pages/customer/customer_list_page.dart:272
-lib/presentation/pages/customer/customer_list_page.dart:273
-lib/presentation/pages/customer/customer_list_page.dart:279
-lib/presentation/pages/customer/customer_list_page.dart:280
-lib/presentation/pages/customer/customer_list_page.dart:281
-lib/presentation/pages/customer/customer_list_page.dart:302
-lib/presentation/pages/customer/customer_list_page.dart:366
-lib/presentation/pages/customer/customer_list_page.dart:376
-lib/presentation/pages/debt/customer_debts_page.dart:115
-lib/presentation/pages/debt/customer_debts_page.dart:137
-lib/presentation/pages/debt/customer_debts_page.dart:147
-lib/presentation/pages/debt/customer_debts_page.dart:150
-lib/presentation/pages/debt/customer_debts_page.dart:170
-lib/presentation/pages/debt/customer_debts_page.dart:179
-lib/presentation/pages/debt/customer_debts_page.dart:192
-lib/presentation/pages/debt/customer_debts_page.dart:203
-lib/presentation/pages/finance/add_expense_page.dart:108
-lib/presentation/pages/finance/add_expense_page.dart:133
-lib/presentation/pages/finance/add_expense_page.dart:137
-lib/presentation/pages/finance/add_expense_page.dart:138
-lib/presentation/pages/finance/add_expense_page.dart:145
-lib/presentation/pages/finance/add_expense_page.dart:151
-lib/presentation/pages/finance/add_expense_page.dart:183
-lib/presentation/pages/finance/add_expense_page.dart:40
-lib/presentation/pages/finance/add_expense_page.dart:41
-lib/presentation/pages/finance/add_expense_page.dart:42
-lib/presentation/pages/finance/add_expense_page.dart:43
-lib/presentation/pages/finance/add_expense_page.dart:44
-lib/presentation/pages/finance/add_expense_page.dart:45
-lib/presentation/pages/finance/add_expense_page.dart:46
-lib/presentation/pages/finance/add_expense_page.dart:90
-lib/presentation/pages/finance/add_investment_page.dart:125
-lib/presentation/pages/finance/add_investment_page.dart:150
-lib/presentation/pages/finance/add_investment_page.dart:153
-lib/presentation/pages/finance/add_investment_page.dart:160
-lib/presentation/pages/finance/add_investment_page.dart:166
-lib/presentation/pages/finance/add_investment_page.dart:170
-lib/presentation/pages/finance/add_investment_page.dart:172
-lib/presentation/pages/finance/add_investment_page.dart:180
-lib/presentation/pages/finance/add_investment_page.dart:187
-lib/presentation/pages/finance/add_investment_page.dart:191
-lib/presentation/pages/finance/add_investment_page.dart:199
-lib/presentation/pages/finance/add_investment_page.dart:204
-lib/presentation/pages/finance/add_investment_page.dart:234
-lib/presentation/pages/finance/add_investment_page.dart:259
-lib/presentation/pages/finance/add_investment_page.dart:275
-lib/presentation/pages/finance/currencies_page.dart:183
-lib/presentation/pages/finance/currencies_page.dart:210
-lib/presentation/pages/finance/currencies_page.dart:224
-lib/presentation/pages/finance/currencies_page.dart:341
-lib/presentation/pages/finance/currencies_page.dart:378
-lib/presentation/pages/finance/currencies_page.dart:38
-lib/presentation/pages/finance/currencies_page.dart:39
-lib/presentation/pages/finance/currencies_page.dart:40
-lib/presentation/pages/finance/currencies_page.dart:41
-lib/presentation/pages/finance/currencies_page.dart:472
-lib/presentation/pages/finance/currencies_page.dart:488
-lib/presentation/pages/finance/currencies_page.dart:520
-lib/presentation/pages/finance/expense_list_page.dart:100
-lib/presentation/pages/finance/expense_list_page.dart:85
-lib/presentation/pages/finance/expense_list_page.dart:86
-lib/presentation/pages/finance/expense_list_page.dart:90
-lib/presentation/pages/finance/finance_dashboard_page.dart:139
-lib/presentation/pages/finance/finance_dashboard_page.dart:145
-lib/presentation/pages/finance/finance_dashboard_page.dart:151
-lib/presentation/pages/finance/finance_dashboard_page.dart:157
-lib/presentation/pages/finance/finance_dashboard_page.dart:173
-lib/presentation/pages/finance/finance_dashboard_page.dart:184
-lib/presentation/pages/finance/finance_dashboard_page.dart:199
-lib/presentation/pages/finance/finance_dashboard_page.dart:210
-lib/presentation/pages/finance/finance_dashboard_page.dart:221
-lib/presentation/pages/finance/finance_dashboard_page.dart:239
-lib/presentation/pages/finance/finance_dashboard_page.dart:291
-lib/presentation/pages/finance/finance_dashboard_page.dart:318
-lib/presentation/pages/finance/finance_dashboard_page.dart:359
-lib/presentation/pages/finance/finance_dashboard_page.dart:361
-lib/presentation/pages/finance/finance_dashboard_page.dart:363
-lib/presentation/pages/finance/finance_dashboard_page.dart:365
-lib/presentation/pages/finance/finance_dashboard_page.dart:367
-lib/presentation/pages/finance/finance_dashboard_page.dart:369
-lib/presentation/pages/finance/finance_dashboard_page.dart:371
-lib/presentation/pages/finance/finance_dashboard_page.dart:373
-lib/presentation/pages/finance/finance_dashboard_page.dart:88
-lib/presentation/pages/finance/investment_list_page.dart:167
-lib/presentation/pages/finance/investment_list_page.dart:33
-lib/presentation/pages/finance/investment_list_page.dart:34
-lib/presentation/pages/finance/investment_list_page.dart:35
-lib/presentation/pages/finance/investment_list_page.dart:36
-lib/presentation/pages/finance/investment_list_page.dart:62
-lib/presentation/pages/finance/investment_list_page.dart:64
-lib/presentation/pages/finance/investment_list_page.dart:66
-lib/presentation/pages/finance/investment_list_page.dart:80
-lib/presentation/pages/finance/reports_page.dart:1057
-lib/presentation/pages/finance/reports_page.dart:1065
-lib/presentation/pages/finance/reports_page.dart:1073
-lib/presentation/pages/finance/reports_page.dart:1116
-lib/presentation/pages/finance/reports_page.dart:1134
-lib/presentation/pages/finance/reports_page.dart:1285
-lib/presentation/pages/finance/reports_page.dart:1293
-lib/presentation/pages/finance/reports_page.dart:1304
-lib/presentation/pages/finance/reports_page.dart:1321
-lib/presentation/pages/finance/reports_page.dart:1322
-lib/presentation/pages/finance/reports_page.dart:1323
-lib/presentation/pages/finance/reports_page.dart:1324
-lib/presentation/pages/finance/reports_page.dart:1342
-lib/presentation/pages/finance/reports_page.dart:1464
-lib/presentation/pages/finance/reports_page.dart:1492
-lib/presentation/pages/finance/reports_page.dart:1583
-lib/presentation/pages/finance/reports_page.dart:1591
-lib/presentation/pages/finance/reports_page.dart:1603
-lib/presentation/pages/finance/reports_page.dart:1611
-lib/presentation/pages/finance/reports_page.dart:1622
-lib/presentation/pages/finance/reports_page.dart:1693
-lib/presentation/pages/finance/reports_page.dart:1695
-lib/presentation/pages/finance/reports_page.dart:1776
-lib/presentation/pages/finance/reports_page.dart:1797
-lib/presentation/pages/finance/reports_page.dart:1831
-lib/presentation/pages/finance/reports_page.dart:1853
-lib/presentation/pages/finance/reports_page.dart:1871
-lib/presentation/pages/finance/reports_page.dart:1923
-lib/presentation/pages/finance/reports_page.dart:1934
-lib/presentation/pages/finance/reports_page.dart:1999
-lib/presentation/pages/finance/reports_page.dart:2016
-lib/presentation/pages/finance/reports_page.dart:2017
-lib/presentation/pages/finance/reports_page.dart:2018
-lib/presentation/pages/finance/reports_page.dart:2019
-lib/presentation/pages/finance/reports_page.dart:472
-lib/presentation/pages/finance/reports_page.dart:473
-lib/presentation/pages/finance/reports_page.dart:474
-lib/presentation/pages/finance/reports_page.dart:475
-lib/presentation/pages/finance/reports_page.dart:476
-lib/presentation/pages/finance/reports_page.dart:477
-lib/presentation/pages/finance/reports_page.dart:478
-lib/presentation/pages/finance/reports_page.dart:536
-lib/presentation/pages/finance/reports_page.dart:542
-lib/presentation/pages/finance/reports_page.dart:551
-lib/presentation/pages/finance/reports_page.dart:566
-lib/presentation/pages/finance/reports_page.dart:599
-lib/presentation/pages/finance/reports_page.dart:615
-lib/presentation/pages/finance/reports_page.dart:622
-lib/presentation/pages/finance/reports_page.dart:625
-lib/presentation/pages/finance/reports_page.dart:637
-lib/presentation/pages/finance/reports_page.dart:642
-lib/presentation/pages/finance/reports_page.dart:656
-lib/presentation/pages/finance/reports_page.dart:659
-lib/presentation/pages/finance/reports_page.dart:661
-lib/presentation/pages/finance/reports_page.dart:662
-lib/presentation/pages/finance/reports_page.dart:663
-lib/presentation/pages/finance/reports_page.dart:664
-lib/presentation/pages/finance/reports_page.dart:670
-lib/presentation/pages/finance/reports_page.dart:672
-lib/presentation/pages/finance/reports_page.dart:677
-lib/presentation/pages/finance/reports_page.dart:683
-lib/presentation/pages/finance/reports_page.dart:688
-lib/presentation/pages/finance/reports_page.dart:693
-lib/presentation/pages/finance/reports_page.dart:696
-lib/presentation/pages/finance/reports_page.dart:708
-lib/presentation/pages/finance/reports_page.dart:727
-lib/presentation/pages/finance/reports_page.dart:746
-lib/presentation/pages/finance/reports_page.dart:765
-lib/presentation/pages/finance/reports_page.dart:769
-lib/presentation/pages/finance/reports_page.dart:770
-lib/presentation/pages/finance/reports_page.dart:771
-lib/presentation/pages/finance/reports_page.dart:798
-lib/presentation/pages/finance/reports_page.dart:808
-lib/presentation/pages/finance/reports_page.dart:823
-lib/presentation/pages/finance/reports_page.dart:824
-lib/presentation/pages/finance/reports_page.dart:825
-lib/presentation/pages/finance/reports_page.dart:826
-lib/presentation/pages/finance/reports_page.dart:827
-lib/presentation/pages/finance/reports_page.dart:830
-lib/presentation/pages/finance/reports_page.dart:843
-lib/presentation/pages/finance/reports_page.dart:844
-lib/presentation/pages/finance/reports_page.dart:849
-lib/presentation/pages/finance/reports_page.dart:850
-lib/presentation/pages/finance/reports_page.dart:855
-lib/presentation/pages/finance/reports_page.dart:858
-lib/presentation/pages/finance/reports_page.dart:871
-lib/presentation/pages/finance/reports_page.dart:872
-lib/presentation/pages/finance/reports_page.dart:873
-lib/presentation/pages/finance/reports_page.dart:874
-lib/presentation/pages/finance/reports_page.dart:875
-lib/presentation/pages/finance/reports_page.dart:888
-lib/presentation/pages/finance/reports_page.dart:909
-lib/presentation/pages/finance/reports_page.dart:910
-lib/presentation/pages/finance/reports_page.dart:911
-lib/presentation/pages/finance/reports_page.dart:912
-lib/presentation/pages/finance/reports_page.dart:913
-lib/presentation/pages/notifications/notification_settings_page.dart:138
-lib/presentation/pages/notifications/notification_settings_page.dart:150
-lib/presentation/pages/notifications/notification_settings_page.dart:159
-lib/presentation/pages/notifications/notification_settings_page.dart:160
-lib/presentation/pages/notifications/notification_settings_page.dart:166
-lib/presentation/pages/notifications/notification_settings_page.dart:167
-lib/presentation/pages/notifications/notification_settings_page.dart:173
-lib/presentation/pages/notifications/notification_settings_page.dart:174
-lib/presentation/pages/notifications/notification_settings_page.dart:180
-lib/presentation/pages/notifications/notification_settings_page.dart:181
-lib/presentation/pages/notifications/notification_settings_page.dart:187
-lib/presentation/pages/notifications/notification_settings_page.dart:188
-lib/presentation/pages/notifications/notification_settings_page.dart:210
-lib/presentation/pages/notifications/notification_settings_page.dart:218
-lib/presentation/pages/notifications/notification_settings_page.dart:231
-lib/presentation/pages/notifications/notification_settings_page.dart:242
-lib/presentation/pages/notifications/notification_settings_page.dart:266
-lib/presentation/pages/notifications/notifications_page.dart:140
-lib/presentation/pages/notifications/notifications_page.dart:252
-lib/presentation/pages/notifications/notifications_page.dart:262
-lib/presentation/pages/notifications/notifications_page.dart:272
-lib/presentation/pages/notifications/notifications_page.dart:273
-lib/presentation/pages/notifications/notifications_page.dart:274
-lib/presentation/pages/notifications/notifications_page.dart:275
-lib/presentation/pages/notifications/notifications_page.dart:314
-lib/presentation/pages/notifications/notifications_page.dart:322
-lib/presentation/pages/notifications/notifications_page.dart:396
-lib/presentation/pages/notifications/notifications_page.dart:410
-lib/presentation/pages/notifications/notifications_page.dart:532
-lib/presentation/pages/notifications/notifications_page.dart:554
-lib/presentation/pages/payroll/add_adjustment_page.dart:102
-lib/presentation/pages/payroll/add_adjustment_page.dart:111
-lib/presentation/pages/payroll/add_adjustment_page.dart:119
-lib/presentation/pages/payroll/add_adjustment_page.dart:129
-lib/presentation/pages/payroll/add_adjustment_page.dart:141
-lib/presentation/pages/payroll/add_adjustment_page.dart:143
-lib/presentation/pages/payroll/add_adjustment_page.dart:148
-lib/presentation/pages/payroll/add_adjustment_page.dart:152
-lib/presentation/pages/payroll/add_adjustment_page.dart:153
-lib/presentation/pages/payroll/add_adjustment_page.dart:154
-lib/presentation/pages/payroll/add_adjustment_page.dart:161
-lib/presentation/pages/payroll/add_adjustment_page.dart:165
-lib/presentation/pages/payroll/add_adjustment_page.dart:173
-lib/presentation/pages/payroll/add_adjustment_page.dart:63
-lib/presentation/pages/payroll/add_adjustment_page.dart:97
-lib/presentation/pages/payroll/payroll_page.dart:103
-lib/presentation/pages/payroll/payroll_page.dart:104
-lib/presentation/pages/payroll/payroll_page.dart:108
-lib/presentation/pages/payroll/payroll_page.dart:119
-lib/presentation/pages/payroll/payroll_page.dart:130
-lib/presentation/pages/payroll/payroll_page.dart:139
-lib/presentation/pages/payroll/payroll_page.dart:151
-lib/presentation/pages/payroll/payroll_page.dart:169
-lib/presentation/pages/payroll/payroll_page.dart:193
-lib/presentation/pages/payroll/payroll_page.dart:239
-lib/presentation/pages/payroll/payroll_page.dart:240
-lib/presentation/pages/payroll/payroll_page.dart:255
-lib/presentation/pages/payroll/payroll_page.dart:260
-lib/presentation/pages/payroll/payroll_page.dart:307
-lib/presentation/pages/payroll/payroll_page.dart:314
-lib/presentation/pages/payroll/payroll_page.dart:349
-lib/presentation/pages/payroll/payroll_page.dart:365
-lib/presentation/pages/payroll/payroll_page.dart:396
-lib/presentation/pages/payroll/payroll_page.dart:397
-lib/presentation/pages/payroll/payroll_page.dart:398
-lib/presentation/pages/payroll/payroll_page.dart:399
-lib/presentation/pages/payroll/payroll_page.dart:400
-lib/presentation/pages/payroll/payroll_page.dart:401
-lib/presentation/pages/payroll/payroll_page.dart:402
-lib/presentation/pages/payroll/payroll_page.dart:403
-lib/presentation/pages/payroll/payroll_page.dart:404
-lib/presentation/pages/payroll/payroll_page.dart:405
-lib/presentation/pages/payroll/payroll_page.dart:406
-lib/presentation/pages/payroll/payroll_page.dart:407
-lib/presentation/pages/payroll/payroll_page.dart:413
-lib/presentation/pages/payroll/payroll_page.dart:415
-lib/presentation/pages/payroll/payroll_page.dart:417
-lib/presentation/pages/payroll/payroll_page.dart:494
-lib/presentation/pages/payroll/payroll_page.dart:513
-lib/presentation/pages/payroll/payroll_page.dart:533
-lib/presentation/pages/pos/cash_payment_page.dart:119
-lib/presentation/pages/pos/cash_payment_page.dart:132
-lib/presentation/pages/pos/cash_payment_page.dart:186
-lib/presentation/pages/pos/cash_payment_page.dart:209
-lib/presentation/pages/pos/cash_payment_page.dart:246
-lib/presentation/pages/pos/cash_payment_page.dart:94
-lib/presentation/pages/pos/cash_payment_page.dart:98
-lib/presentation/pages/pos/pos_checkout_page.dart:184
-lib/presentation/pages/pos/pos_checkout_page.dart:191
-lib/presentation/pages/pos/pos_checkout_page.dart:206
-lib/presentation/pages/pos/pos_checkout_page.dart:255
-lib/presentation/pages/pos/pos_checkout_page.dart:283
-lib/presentation/pages/pos/pos_checkout_page.dart:311
-lib/presentation/pages/pos/pos_checkout_page.dart:427
-lib/presentation/pages/pos/pos_checkout_page.dart:428
-lib/presentation/pages/pos/pos_checkout_page.dart:484
-lib/presentation/pages/pos/pos_checkout_page.dart:500
-lib/presentation/pages/pos/pos_checkout_page.dart:514
-lib/presentation/pages/pos/pos_checkout_page.dart:525
-lib/presentation/pages/pos/pos_checkout_page.dart:559
-lib/presentation/pages/pos/pos_checkout_page.dart:691
-lib/presentation/pages/pos/pos_checkout_page.dart:693
-lib/presentation/pages/pos/pos_checkout_page.dart:695
-lib/presentation/pages/pos/pos_checkout_page.dart:697
-lib/presentation/pages/pos/pos_checkout_page.dart:705
-lib/presentation/pages/pos/pos_checkout_page.dart:735
-lib/presentation/pages/pos/pos_checkout_page.dart:736
-lib/presentation/pages/pos/pos_checkout_page.dart:764
-lib/presentation/pages/pos/pos_checkout_page.dart:767
-lib/presentation/pages/pos/pos_checkout_page.dart:780
-lib/presentation/pages/pos/pos_checkout_page.dart:791
-lib/presentation/pages/pos/pos_checkout_page.dart:847
-lib/presentation/pages/pos/pos_checkout_page.dart:909
-lib/presentation/pages/pos/pos_checkout_page.dart:922
-lib/presentation/pages/pos/pos_checkout_page.dart:931
-lib/presentation/pages/pos/receipt_preview_page.dart:102
-lib/presentation/pages/pos/receipt_preview_page.dart:111
-lib/presentation/pages/pos/receipt_preview_page.dart:71
-lib/presentation/pages/pos/sale_success_page.dart:120
-lib/presentation/pages/pos/sale_success_page.dart:127
-lib/presentation/pages/pos/sale_success_page.dart:144
-lib/presentation/pages/pos/sale_success_page.dart:162
-lib/presentation/pages/pos/sale_success_page.dart:177
-lib/presentation/pages/pos/sale_success_page.dart:209
-lib/presentation/pages/pos/sale_success_page.dart:217
-lib/presentation/pages/product/add_product_step1_page.dart:135
-lib/presentation/pages/product/add_product_step1_page.dart:150
-lib/presentation/pages/product/add_product_step1_page.dart:152
-lib/presentation/pages/product/add_product_step1_page.dart:154
-lib/presentation/pages/product/add_product_step1_page.dart:202
-lib/presentation/pages/product/add_product_step1_page.dart:209
-lib/presentation/pages/product/add_product_step1_page.dart:219
-lib/presentation/pages/product/add_product_step1_page.dart:222
-lib/presentation/pages/product/add_product_step1_page.dart:229
-lib/presentation/pages/product/add_product_step1_page.dart:235
-lib/presentation/pages/product/add_product_step1_page.dart:252
-lib/presentation/pages/product/add_product_step1_page.dart:273
-lib/presentation/pages/product/add_product_step1_page.dart:285
-lib/presentation/pages/product/add_product_step3_page.dart:124
-lib/presentation/pages/product/add_product_step3_page.dart:126
-lib/presentation/pages/product/add_product_step3_page.dart:128
-lib/presentation/pages/product/add_product_step3_page.dart:142
-lib/presentation/pages/product/add_product_step3_page.dart:150
-lib/presentation/pages/product/add_product_step3_page.dart:157
-lib/presentation/pages/product/add_product_step3_page.dart:174
-lib/presentation/pages/product/add_product_step3_page.dart:193
-lib/presentation/pages/product/add_product_step3_page.dart:223
-lib/presentation/pages/product/add_product_step3_page.dart:242
-lib/presentation/pages/product/add_product_step3_page.dart:253
-lib/presentation/pages/product/add_product_step3_page.dart:80
-lib/presentation/pages/product/add_product_step3_page.dart:91
-lib/presentation/pages/product/categories_page.dart:104
-lib/presentation/pages/product/categories_page.dart:117
-lib/presentation/pages/product/categories_page.dart:141
-lib/presentation/pages/product/categories_page.dart:142
-lib/presentation/pages/product/categories_page.dart:143
-lib/presentation/pages/product/categories_page.dart:27
-lib/presentation/pages/product/categories_page.dart:28
-lib/presentation/pages/product/categories_page.dart:29
-lib/presentation/pages/product/categories_page.dart:41
-lib/presentation/pages/product/categories_page.dart:46
-lib/presentation/pages/product/categories_page.dart:55
-lib/presentation/pages/product/categories_page.dart:77
-lib/presentation/pages/product/categories_page.dart:88
-lib/presentation/pages/product/categories_page.dart:89
-lib/presentation/pages/product/categories_page.dart:93
-lib/presentation/pages/product/product_detail_page.dart:100
-lib/presentation/pages/product/product_detail_page.dart:153
-lib/presentation/pages/product/product_detail_page.dart:170
-lib/presentation/pages/product/product_detail_page.dart:179
-lib/presentation/pages/product/product_detail_page.dart:194
-lib/presentation/pages/product/product_detail_page.dart:203
-lib/presentation/pages/product/product_detail_page.dart:237
-lib/presentation/pages/product/product_detail_page.dart:243
-lib/presentation/pages/product/product_detail_page.dart:245
-lib/presentation/pages/product/product_detail_page.dart:282
-lib/presentation/pages/product/product_detail_page.dart:285
-lib/presentation/pages/product/product_detail_page.dart:287
-lib/presentation/pages/product/product_detail_page.dart:289
-lib/presentation/pages/product/product_detail_page.dart:291
-lib/presentation/pages/product/product_detail_page.dart:333
-lib/presentation/pages/product/product_detail_page.dart:360
-lib/presentation/pages/product/product_detail_page.dart:377
-lib/presentation/pages/product/product_detail_page.dart:378
-lib/presentation/pages/product/product_detail_page.dart:382
-lib/presentation/pages/product/product_detail_page.dart:397
-lib/presentation/pages/product/product_detail_page.dart:43
-lib/presentation/pages/product/product_detail_page.dart:44
-lib/presentation/pages/product/product_detail_page.dart:495
-lib/presentation/pages/product/product_detail_page.dart:515
-lib/presentation/pages/product/product_detail_page.dart:549
-lib/presentation/pages/product/product_detail_page.dart:551
-lib/presentation/pages/product/product_detail_page.dart:553
-lib/presentation/pages/product/product_detail_page.dart:579
-lib/presentation/pages/product/product_detail_page.dart:603
-lib/presentation/pages/product/product_detail_page.dart:749
-lib/presentation/pages/product/product_detail_page.dart:769
-lib/presentation/pages/product/product_detail_page.dart:774
-lib/presentation/pages/product/product_detail_page.dart:779
-lib/presentation/pages/product/product_detail_page.dart:784
-lib/presentation/pages/product/product_detail_page.dart:789
-lib/presentation/pages/product/product_detail_page.dart:793
-lib/presentation/pages/product/product_detail_page.dart:798
-lib/presentation/pages/product/product_detail_page.dart:800
-lib/presentation/pages/product/product_detail_page.dart:815
-lib/presentation/pages/product/product_detail_page.dart:82
-lib/presentation/pages/product/product_list_page.dart:131
-lib/presentation/pages/product/product_list_page.dart:150
-lib/presentation/pages/product/product_list_page.dart:154
-lib/presentation/pages/product/product_list_page.dart:182
-lib/presentation/pages/product/product_list_page.dart:227
-lib/presentation/pages/product/product_list_page.dart:233
-lib/presentation/pages/product/product_list_page.dart:239
-lib/presentation/pages/product/product_list_page.dart:245
-lib/presentation/pages/product/product_list_page.dart:251
-lib/presentation/pages/product/product_list_page.dart:286
-lib/presentation/pages/product/product_list_page.dart:288
-lib/presentation/pages/product/product_list_page.dart:289
-lib/presentation/pages/product/product_list_page.dart:290
-lib/presentation/pages/product/product_list_page.dart:338
-lib/presentation/pages/product/product_list_page.dart:351
-lib/presentation/pages/product/product_list_page.dart:450
-lib/presentation/pages/product/product_list_page.dart:456
-lib/presentation/pages/sales/refund_page.dart:143
-lib/presentation/pages/sales/refund_page.dart:175
-lib/presentation/pages/sales/refund_page.dart:188
-lib/presentation/pages/sales/refund_page.dart:201
-lib/presentation/pages/sales/refund_page.dart:210
-lib/presentation/pages/sales/refund_page.dart:211
-lib/presentation/pages/sales/refund_page.dart:272
-lib/presentation/pages/sales/refund_page.dart:279
-lib/presentation/pages/sales/refund_page.dart:300
-lib/presentation/pages/sales/refund_page.dart:322
-lib/presentation/pages/sales/refund_page.dart:75
-lib/presentation/pages/sales/refund_page.dart:77
-lib/presentation/pages/sales/refund_page.dart:78
-lib/presentation/pages/sales/refund_page.dart:83
-lib/presentation/pages/sales/refund_page.dart:90
-lib/presentation/pages/sales/sales_history_page.dart:138
-lib/presentation/pages/sales/sales_history_page.dart:144
-lib/presentation/pages/sales/sales_history_page.dart:150
-lib/presentation/pages/sales/sales_history_page.dart:156
-lib/presentation/pages/sales/sales_history_page.dart:182
-lib/presentation/pages/sales/sales_history_page.dart:183
-lib/presentation/pages/sales/sales_history_page.dart:205
-lib/presentation/pages/sales/sales_history_page.dart:234
-lib/presentation/pages/sales/sales_history_page.dart:303
-lib/presentation/pages/sales/sales_history_page.dart:304
-lib/presentation/pages/sales/sales_history_page.dart:305
-lib/presentation/pages/sales/sales_history_page.dart:306
-lib/presentation/pages/sales/sales_history_page.dart:356
-lib/presentation/pages/sales/sales_history_page.dart:367
-lib/presentation/pages/sales/sales_history_page.dart:388
-lib/presentation/pages/sales/sales_history_page.dart:411
-lib/presentation/pages/sales/sales_history_page.dart:412
-lib/presentation/pages/sales/sales_history_page.dart:413
-lib/presentation/pages/sales/sales_history_page.dart:414
-lib/presentation/pages/sales/sales_history_page.dart:82
-lib/presentation/pages/sales/transaction_detail_page.dart:117
-lib/presentation/pages/sales/transaction_detail_page.dart:120
-lib/presentation/pages/sales/transaction_detail_page.dart:122
-lib/presentation/pages/sales/transaction_detail_page.dart:124
-lib/presentation/pages/sales/transaction_detail_page.dart:126
-lib/presentation/pages/sales/transaction_detail_page.dart:143
-lib/presentation/pages/sales/transaction_detail_page.dart:150
-lib/presentation/pages/sales/transaction_detail_page.dart:171
-lib/presentation/pages/sales/transaction_detail_page.dart:202
-lib/presentation/pages/sales/transaction_detail_page.dart:205
-lib/presentation/pages/sales/transaction_detail_page.dart:207
-lib/presentation/pages/sales/transaction_detail_page.dart:212
-lib/presentation/pages/sales/transaction_detail_page.dart:214
-lib/presentation/pages/sales/transaction_detail_page.dart:216
-lib/presentation/pages/sales/transaction_detail_page.dart:23
-lib/presentation/pages/sales/transaction_detail_page.dart:24
-lib/presentation/pages/sales/transaction_detail_page.dart:247
-lib/presentation/pages/sales/transaction_detail_page.dart:25
-lib/presentation/pages/sales/transaction_detail_page.dart:26
-lib/presentation/pages/sales/transaction_detail_page.dart:265
-lib/presentation/pages/sales/transaction_detail_page.dart:33
-lib/presentation/pages/sales/transaction_detail_page.dart:34
-lib/presentation/pages/sales/transaction_detail_page.dart:35
-lib/presentation/pages/sales/transaction_detail_page.dart:76
-lib/presentation/pages/settings/discounts_page.dart:131
-lib/presentation/pages/settings/discounts_page.dart:137
-lib/presentation/pages/settings/discounts_page.dart:145
-lib/presentation/pages/settings/discounts_page.dart:146
-lib/presentation/pages/settings/discounts_page.dart:159
-lib/presentation/pages/settings/discounts_page.dart:168
-lib/presentation/pages/settings/discounts_page.dart:192
-lib/presentation/pages/settings/discounts_page.dart:238
-lib/presentation/pages/settings/discounts_page.dart:257
-lib/presentation/pages/settings/discounts_page.dart:263
-lib/presentation/pages/settings/discounts_page.dart:79
-lib/presentation/pages/settings/discounts_page.dart:80
-lib/presentation/pages/settings/discounts_page.dart:84
-lib/presentation/pages/settings/discounts_page.dart:91
-lib/presentation/pages/settings/edit_profile_page.dart:156
-lib/presentation/pages/settings/edit_profile_page.dart:161
-lib/presentation/pages/settings/edit_profile_page.dart:185
-lib/presentation/pages/settings/edit_profile_page.dart:193
-lib/presentation/pages/settings/edit_profile_page.dart:194
-lib/presentation/pages/settings/edit_profile_page.dart:198
-lib/presentation/pages/settings/edit_profile_page.dart:203
-lib/presentation/pages/settings/edit_profile_page.dart:232
-lib/presentation/pages/settings/edit_profile_page.dart:244
-lib/presentation/pages/settings/edit_profile_page.dart:266
-lib/presentation/pages/settings/kkm_settings_page.dart:132
-lib/presentation/pages/settings/kkm_settings_page.dart:133
-lib/presentation/pages/settings/kkm_settings_page.dart:145
-lib/presentation/pages/settings/kkm_settings_page.dart:169
-lib/presentation/pages/settings/kkm_settings_page.dart:170
-lib/presentation/pages/settings/kkm_settings_page.dart:180
-lib/presentation/pages/settings/kkm_settings_page.dart:215
-lib/presentation/pages/settings/kkm_settings_page.dart:234
-lib/presentation/pages/settings/kkm_settings_page.dart:260
-lib/presentation/pages/settings/kkm_settings_page.dart:267
-lib/presentation/pages/settings/kkm_settings_page.dart:310
-lib/presentation/pages/settings/kkm_settings_page.dart:320
-lib/presentation/pages/settings/kkm_settings_page.dart:346
-lib/presentation/pages/settings/kkm_settings_page.dart:380
-lib/presentation/pages/settings/language_settings_page.dart:177
-lib/presentation/pages/settings/language_settings_page.dart:20
-lib/presentation/pages/settings/language_settings_page.dart:200
-lib/presentation/pages/settings/language_settings_page.dart:21
-lib/presentation/pages/settings/language_settings_page.dart:22
-lib/presentation/pages/settings/language_settings_page.dart:59
-lib/presentation/pages/settings/language_settings_page.dart:70
-lib/presentation/pages/settings/my_stores_page.dart:111
-lib/presentation/pages/settings/my_stores_page.dart:121
-lib/presentation/pages/settings/my_stores_page.dart:126
-lib/presentation/pages/settings/my_stores_page.dart:133
-lib/presentation/pages/settings/my_stores_page.dart:152
-lib/presentation/pages/settings/my_stores_page.dart:160
-lib/presentation/pages/settings/my_stores_page.dart:195
-lib/presentation/pages/settings/my_stores_page.dart:259
-lib/presentation/pages/settings/my_stores_page.dart:280
-lib/presentation/pages/settings/my_stores_page.dart:297
-lib/presentation/pages/settings/my_stores_page.dart:307
-lib/presentation/pages/settings/my_stores_page.dart:393
-lib/presentation/pages/settings/my_stores_page.dart:62
-lib/presentation/pages/settings/my_stores_page.dart:63
-lib/presentation/pages/settings/my_stores_page.dart:64
-lib/presentation/pages/settings/my_stores_page.dart:65
-lib/presentation/pages/settings/my_stores_page.dart:66
-lib/presentation/pages/settings/my_stores_page.dart:67
-lib/presentation/pages/settings/offline_mode_page.dart:189
-lib/presentation/pages/settings/offline_mode_page.dart:233
-lib/presentation/pages/settings/offline_mode_page.dart:234
-lib/presentation/pages/settings/offline_mode_page.dart:248
-lib/presentation/pages/settings/offline_mode_page.dart:256
-lib/presentation/pages/settings/offline_mode_page.dart:287
-lib/presentation/pages/settings/offline_mode_page.dart:296
-lib/presentation/pages/settings/offline_mode_page.dart:327
-lib/presentation/pages/settings/offline_mode_page.dart:331
-lib/presentation/pages/settings/offline_mode_page.dart:364
-lib/presentation/pages/settings/offline_mode_page.dart:365
-lib/presentation/pages/settings/offline_mode_page.dart:366
-lib/presentation/pages/settings/offline_mode_page.dart:378
-lib/presentation/pages/settings/offline_mode_page.dart:97
-lib/presentation/pages/settings/receipt_template_page.dart:117
-lib/presentation/pages/settings/receipt_template_page.dart:119
-lib/presentation/pages/settings/receipt_template_page.dart:122
-lib/presentation/pages/settings/receipt_template_page.dart:125
-lib/presentation/pages/settings/receipt_template_page.dart:137
-lib/presentation/pages/settings/receipt_template_page.dart:159
-lib/presentation/pages/settings/receipt_template_page.dart:169
-lib/presentation/pages/settings/receipt_template_page.dart:191
-lib/presentation/pages/settings/receipt_template_page.dart:204
-lib/presentation/pages/settings/receipt_template_page.dart:222
-lib/presentation/pages/settings/receipt_template_page.dart:224
-lib/presentation/pages/settings/receipt_template_page.dart:232
-lib/presentation/pages/settings/receipt_template_page.dart:234
-lib/presentation/pages/settings/receipt_template_page.dart:243
-lib/presentation/pages/settings/receipt_template_page.dart:260
-lib/presentation/pages/settings/receipt_template_page.dart:261
-lib/presentation/pages/settings/receipt_template_page.dart:262
-lib/presentation/pages/settings/receipt_template_page.dart:275
-lib/presentation/pages/settings/receipt_template_page.dart:292
-lib/presentation/pages/settings/receipt_template_page.dart:293
-lib/presentation/pages/settings/receipt_template_page.dart:306
-lib/presentation/pages/settings/receipt_template_page.dart:319
-lib/presentation/pages/settings/receipt_template_page.dart:322
-lib/presentation/pages/settings/receipt_template_page.dart:325
-lib/presentation/pages/settings/receipt_template_page.dart:328
-lib/presentation/pages/settings/receipt_template_page.dart:349
-lib/presentation/pages/settings/receipt_template_page.dart:94
-lib/presentation/pages/settings/receipt_template_page.dart:95
-lib/presentation/pages/settings/scanner_settings_page.dart:116
-lib/presentation/pages/settings/scanner_settings_page.dart:119
-lib/presentation/pages/settings/scanner_settings_page.dart:135
-lib/presentation/pages/settings/scanner_settings_page.dart:138
-lib/presentation/pages/settings/scanner_settings_page.dart:158
-lib/presentation/pages/settings/scanner_settings_page.dart:173
-lib/presentation/pages/settings/scanner_settings_page.dart:180
-lib/presentation/pages/settings/scanner_settings_page.dart:187
-lib/presentation/pages/settings/scanner_settings_page.dart:197
-lib/presentation/pages/settings/scanner_settings_page.dart:262
-lib/presentation/pages/settings/scanner_settings_page.dart:74
-lib/presentation/pages/settings/scanner_settings_page.dart:84
-lib/presentation/pages/settings/scanner_settings_page.dart:98
-lib/presentation/pages/settings/settings_page.dart:145
-lib/presentation/pages/settings/settings_page.dart:147
-lib/presentation/pages/settings/settings_page.dart:150
-lib/presentation/pages/settings/settings_page.dart:169
-lib/presentation/pages/settings/settings_page.dart:171
-lib/presentation/pages/settings/settings_page.dart:173
-lib/presentation/pages/settings/settings_page.dart:183
-lib/presentation/pages/settings/settings_page.dart:184
-lib/presentation/pages/settings/settings_page.dart:188
-lib/presentation/pages/settings/settings_page.dart:197
-lib/presentation/pages/settings/settings_page.dart:208
-lib/presentation/pages/settings/settings_page.dart:210
-lib/presentation/pages/settings/settings_page.dart:215
-lib/presentation/pages/settings/settings_page.dart:222
-lib/presentation/pages/settings/settings_page.dart:242
-lib/presentation/pages/settings/settings_page.dart:321
-lib/presentation/pages/settings/settings_page.dart:324
-lib/presentation/pages/settings/settings_page.dart:327
-lib/presentation/pages/settings/settings_page.dart:330
-lib/presentation/pages/settings/settings_page.dart:333
-lib/presentation/pages/settings/settings_page.dart:336
-lib/presentation/pages/settings/settings_page.dart:339
-lib/presentation/pages/settings/settings_page.dart:345
-lib/presentation/pages/settings/settings_page.dart:348
-lib/presentation/pages/settings/settings_page.dart:350
-lib/presentation/pages/settings/settings_page.dart:357
-lib/presentation/pages/settings/settings_page.dart:360
-lib/presentation/pages/settings/settings_page.dart:363
-lib/presentation/pages/settings/settings_page.dart:375
-lib/presentation/pages/settings/settings_page.dart:390
-lib/presentation/pages/settings/settings_page.dart:393
-lib/presentation/pages/settings/settings_page.dart:415
-lib/presentation/pages/settings/settings_page.dart:427
-lib/presentation/pages/settings/settings_page.dart:432
-lib/presentation/pages/settings/settings_page.dart:444
-lib/presentation/pages/settings/settings_page.dart:445
-lib/presentation/pages/settings/settings_page.dart:458
-lib/presentation/pages/settings/settings_page.dart:462
-lib/presentation/pages/settings/settings_page.dart:466
-lib/presentation/pages/settings/settings_page.dart:471
-lib/presentation/pages/settings/settings_page.dart:490
-lib/presentation/pages/settings/subscription_page.dart:120
-lib/presentation/pages/settings/subscription_page.dart:122
-lib/presentation/pages/settings/subscription_page.dart:124
-lib/presentation/pages/settings/subscription_page.dart:126
-lib/presentation/pages/settings/subscription_page.dart:135
-lib/presentation/pages/settings/subscription_page.dart:137
-lib/presentation/pages/settings/subscription_page.dart:139
-lib/presentation/pages/settings/subscription_page.dart:181
-lib/presentation/pages/settings/subscription_page.dart:184
-lib/presentation/pages/settings/subscription_page.dart:258
-lib/presentation/pages/settings/subscription_page.dart:287
-lib/presentation/pages/settings/subscription_page.dart:35
-lib/presentation/pages/settings/subscription_page.dart:354
-lib/presentation/pages/settings/subscription_page.dart:36
-lib/presentation/pages/settings/subscription_page.dart:376
-lib/presentation/pages/settings/subscription_page.dart:38
-lib/presentation/pages/settings/subscription_page.dart:39
-lib/presentation/pages/settings/subscription_page.dart:40
-lib/presentation/pages/settings/subscription_page.dart:41
-lib/presentation/pages/settings/subscription_page.dart:411
-lib/presentation/pages/settings/subscription_page.dart:42
-lib/presentation/pages/settings/subscription_page.dart:429
-lib/presentation/pages/settings/subscription_page.dart:433
-lib/presentation/pages/settings/subscription_page.dart:437
-lib/presentation/pages/settings/subscription_page.dart:47
-lib/presentation/pages/settings/subscription_page.dart:48
-lib/presentation/pages/settings/subscription_page.dart:491
-lib/presentation/pages/settings/subscription_page.dart:50
-lib/presentation/pages/settings/subscription_page.dart:51
-lib/presentation/pages/settings/subscription_page.dart:52
-lib/presentation/pages/settings/subscription_page.dart:528
-lib/presentation/pages/settings/subscription_page.dart:53
-lib/presentation/pages/settings/subscription_page.dart:533
-lib/presentation/pages/settings/subscription_page.dart:536
-lib/presentation/pages/settings/subscription_page.dart:538
-lib/presentation/pages/settings/subscription_page.dart:54
-lib/presentation/pages/settings/subscription_page.dart:540
-lib/presentation/pages/settings/subscription_page.dart:543
-lib/presentation/pages/settings/subscription_page.dart:547
-lib/presentation/pages/settings/subscription_page.dart:55
-lib/presentation/pages/settings/subscription_page.dart:558
-lib/presentation/pages/settings/subscription_page.dart:56
-lib/presentation/pages/settings/subscription_page.dart:569
-lib/presentation/pages/settings/subscription_page.dart:57
-lib/presentation/pages/settings/subscription_page.dart:592
-lib/presentation/pages/settings/subscription_page.dart:617
-lib/presentation/pages/settings/subscription_page.dart:62
-lib/presentation/pages/settings/subscription_page.dart:63
-lib/presentation/pages/settings/subscription_page.dart:65
-lib/presentation/pages/settings/subscription_page.dart:653
-lib/presentation/pages/settings/subscription_page.dart:66
-lib/presentation/pages/settings/subscription_page.dart:67
-lib/presentation/pages/settings/subscription_page.dart:68
-lib/presentation/pages/settings/subscription_page.dart:69
-lib/presentation/pages/settings/subscription_page.dart:713
-lib/presentation/pages/settings/subscription_page.dart:718
-lib/presentation/pages/settings/subscription_page.dart:785
-lib/presentation/pages/settings/subscription_page.dart:800
-lib/presentation/pages/settings/subscription_page.dart:806
-lib/presentation/pages/settings/subscription_page.dart:820
-lib/presentation/pages/settings/subscription_page.dart:824
-lib/presentation/pages/settings/subscription_page.dart:826
-lib/presentation/pages/settings/subscription_page.dart:828
-lib/presentation/pages/settings/subscription_page.dart:854
-lib/presentation/pages/settings/subscription_page.dart:860
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:135
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:181
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:199
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:215
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:217
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:220
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:223
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:273
-lib/presentation/pages/settings/telegram_bot_settings_page.dart:74
-lib/presentation/pages/shifts/open_shift_page.dart:100
-lib/presentation/pages/shifts/open_shift_page.dart:101
-lib/presentation/pages/shifts/open_shift_page.dart:109
-lib/presentation/pages/shifts/open_shift_page.dart:46
-lib/presentation/pages/shifts/open_shift_page.dart:80
-lib/presentation/pages/shifts/open_shift_page.dart:85
-lib/presentation/pages/shifts/open_shift_page.dart:95
-lib/presentation/pages/shifts/open_shift_page.dart:99
-lib/presentation/pages/shifts/shifts_page.dart:101
-lib/presentation/pages/shifts/shifts_page.dart:118
-lib/presentation/pages/shifts/shifts_page.dart:133
-lib/presentation/pages/shifts/shifts_page.dart:178
-lib/presentation/pages/shifts/shifts_page.dart:188
-lib/presentation/pages/shifts/shifts_page.dart:189
-lib/presentation/pages/shifts/shifts_page.dart:226
-lib/presentation/pages/shifts/shifts_page.dart:235
-lib/presentation/pages/shifts/shifts_page.dart:241
-lib/presentation/pages/shifts/shifts_page.dart:244
-lib/presentation/pages/shifts/shifts_page.dart:247
-lib/presentation/pages/shifts/shifts_page.dart:259
-lib/presentation/pages/shifts/shifts_page.dart:300
-lib/presentation/pages/shifts/shifts_page.dart:315
-lib/presentation/pages/shifts/shifts_page.dart:49
-lib/presentation/pages/shifts/shifts_page.dart:55
-lib/presentation/pages/shifts/shifts_page.dart:59
-lib/presentation/pages/shifts/shifts_page.dart:63
-lib/presentation/pages/shifts/shifts_page.dart:64
-lib/presentation/pages/shifts/shifts_page.dart:65
-lib/presentation/pages/shifts/shifts_page.dart:75
-lib/presentation/pages/shifts/shifts_page.dart:89
-lib/presentation/pages/staff/staff_detail_page.dart:164
-lib/presentation/pages/staff/staff_detail_page.dart:168
-lib/presentation/pages/staff/staff_detail_page.dart:172
-lib/presentation/pages/staff/staff_detail_page.dart:173
-lib/presentation/pages/staff/staff_detail_page.dart:187
-lib/presentation/pages/staff/staff_detail_page.dart:188
-lib/presentation/pages/staff/staff_detail_page.dart:251
-lib/presentation/pages/staff/staff_detail_page.dart:283
-lib/presentation/pages/staff/staff_detail_page.dart:285
-lib/presentation/pages/staff/staff_detail_page.dart:44
-lib/presentation/pages/staff/staff_detail_page.dart:46
-lib/presentation/pages/staff/staff_detail_page.dart:48
-lib/presentation/pages/staff/staff_detail_page.dart:50
-lib/presentation/pages/staff/staff_detail_page.dart:76
-lib/presentation/pages/staff/staff_list_page.dart:121
-lib/presentation/pages/staff/staff_list_page.dart:122
-lib/presentation/pages/staff/staff_list_page.dart:123
-lib/presentation/pages/staff/staff_list_page.dart:198
-lib/presentation/pages/staff/staff_list_page.dart:207
-lib/presentation/pages/staff/staff_list_page.dart:65
-lib/presentation/pages/staff/staff_list_page.dart:66
-lib/presentation/pages/staff/staff_list_page.dart:67
-lib/presentation/pages/staff/staff_list_page.dart:68
-lib/presentation/pages/staff/staff_list_page.dart:92
-lib/presentation/pages/stock/stock_intake_page.dart:103
-lib/presentation/pages/stock/stock_intake_page.dart:111
-lib/presentation/pages/stock/stock_intake_page.dart:155
-lib/presentation/pages/stock/stock_intake_page.dart:196
-lib/presentation/pages/stock/stock_intake_page.dart:261
-lib/presentation/pages/stock/stock_intake_page.dart:338
-lib/presentation/pages/stock/stock_intake_page.dart:342
-lib/presentation/pages/stock/stock_intake_page.dart:363
-lib/presentation/pages/stock/stock_intake_page.dart:375
-lib/presentation/pages/stock/stock_intake_page.dart:393
-lib/presentation/pages/stock/stock_intake_page.dart:407
-lib/presentation/pages/stock/stock_intake_page.dart:435
-lib/presentation/pages/stock/stock_intake_page.dart:455
-lib/presentation/pages/supplier/supplier_detail_page.dart:152
-lib/presentation/pages/supplier/supplier_list_page.dart:110
-lib/presentation/pages/supplier/supplier_list_page.dart:143
-lib/presentation/pages/supplier/supplier_list_page.dart:169
-lib/presentation/pages/supplier/supplier_list_page.dart:193
-lib/presentation/pages/supplier/supplier_list_page.dart:222
-lib/presentation/pages/supplier/supplier_list_page.dart:223
-lib/presentation/pages/supplier/supplier_list_page.dart:224
-lib/presentation/pages/supplier/supplier_list_page.dart:246
-lib/presentation/pages/supplier/supplier_list_page.dart:82
-lib/presentation/pages/supplier/supplier_list_page.dart:89
-lib/presentation/pages/supplier/supplier_list_page.dart:90
-lib/presentation/pages/supplier/supplier_list_page.dart:99
-lib/presentation/pages/zakat/zakat_calculator_page.dart:130
-lib/presentation/pages/zakat/zakat_calculator_page.dart:139
-lib/presentation/pages/zakat/zakat_calculator_page.dart:151
-lib/presentation/pages/zakat/zakat_calculator_page.dart:154
-lib/presentation/pages/zakat/zakat_calculator_page.dart:155
-lib/presentation/pages/zakat/zakat_calculator_page.dart:162
-lib/presentation/pages/zakat/zakat_calculator_page.dart:165
-lib/presentation/pages/zakat/zakat_calculator_page.dart:166
-lib/presentation/pages/zakat/zakat_calculator_page.dart:173
-lib/presentation/pages/zakat/zakat_calculator_page.dart:185
-lib/presentation/pages/zakat/zakat_calculator_page.dart:190
-lib/presentation/pages/zakat/zakat_calculator_page.dart:191
-lib/presentation/pages/zakat/zakat_calculator_page.dart:214
-lib/presentation/pages/zakat/zakat_calculator_page.dart:224
-lib/presentation/pages/zakat/zakat_calculator_page.dart:234
-lib/presentation/pages/zakat/zakat_calculator_page.dart:245
-lib/presentation/pages/zakat/zakat_calculator_page.dart:268
-lib/presentation/pages/zakat/zakat_calculator_page.dart:299
-lib/presentation/pages/zakat/zakat_calculator_page.dart:314
-lib/presentation/pages/zakat/zakat_calculator_page.dart:315
-lib/presentation/pages/zakat/zakat_calculator_page.dart:316
-lib/presentation/pages/zakat/zakat_calculator_page.dart:326
-lib/presentation/pages/zakat/zakat_calculator_page.dart:81
-lib/presentation/pages/zakat/zakat_history_page.dart:122
-lib/presentation/pages/zakat/zakat_history_page.dart:132
-lib/presentation/pages/zakat/zakat_history_page.dart:166
-lib/presentation/pages/zakat/zakat_history_page.dart:169
-lib/presentation/pages/zakat/zakat_history_page.dart:180
-lib/presentation/pages/zakat/zakat_history_page.dart:203
-lib/presentation/pages/zakat/zakat_history_page.dart:65
-lib/presentation/pages/zakat/zakat_history_page.dart:96
-lib/presentation/pages/zakat/zakat_history_page.dart:97
-lib/presentation/pages/zakat/zakat_settings_page.dart:145
-lib/presentation/pages/zakat/zakat_settings_page.dart:190
-lib/presentation/pages/zakat/zakat_settings_page.dart:198
-lib/presentation/pages/zakat/zakat_settings_page.dart:202
-lib/presentation/pages/zakat/zakat_settings_page.dart:209
-lib/presentation/pages/zakat/zakat_settings_page.dart:227
-lib/presentation/pages/zakat/zakat_settings_page.dart:234
-lib/presentation/pages/zakat/zakat_settings_page.dart:236
-lib/presentation/pages/zakat/zakat_settings_page.dart:237
-lib/presentation/pages/zakat/zakat_settings_page.dart:277
-lib/presentation/pages/zakat/zakat_settings_page.dart:286
-lib/presentation/pages/zakat/zakat_settings_page.dart:287
-lib/presentation/pages/zakat/zakat_settings_page.dart:291
-lib/presentation/pages/zakat/zakat_settings_page.dart:304
-lib/presentation/pages/zakat/zakat_settings_page.dart:328
-lib/presentation/pages/zakat/zakat_settings_page.dart:334
-lib/presentation/pages/zakat/zakat_settings_page.dart:364
-lib/presentation/pages/zakat/zakat_settings_page.dart:366
-lib/presentation/pages/zakat/zakat_settings_page.dart:383
-lib/presentation/pages/zakat/zakat_settings_page.dart:386
-lib/presentation/pages/zakat/zakat_settings_page.dart:390
-lib/presentation/pages/zakat/zakat_settings_page.dart:394
-lib/presentation/pages/zakat/zakat_settings_page.dart:398
-lib/presentation/pages/zakat/zakat_settings_page.dart:416
-lib/presentation/widgets/common/app_bottom_sheet.dart:105
-lib/presentation/widgets/common/app_dialog.dart:13
-lib/presentation/widgets/common/app_dialog.dart:14
-lib/presentation/widgets/common/app_error_widget.dart:33
-lib/presentation/widgets/common/app_search_bar.dart:14
-lib/presentation/widgets/common/barcode_scanner_sheet.dart:111
-lib/presentation/widgets/common/barcode_scanner_sheet.dart:152
-lib/presentation/widgets/common/barcode_scanner_sheet.dart:94
-lib/presentation/widgets/common/offline_banner.dart:100
-lib/presentation/widgets/common/offline_banner.dart:133
-lib/presentation/widgets/common/offline_banner.dart:87
-lib/presentation/widgets/common/offline_banner.dart:88
-lib/presentation/widgets/common/offline_banner.dart:92
-lib/presentation/widgets/common/offline_banner.dart:96
-lib/presentation/widgets/common/phone_input_field.dart:29
-lib/presentation/widgets/dashboard/sale_list_item.dart:107
-lib/presentation/widgets/dashboard/sale_list_item.dart:111
-lib/presentation/widgets/dashboard/sale_list_item.dart:115
-lib/presentation/widgets/debt/payment_form.dart:50
-lib/presentation/widgets/debt/payment_form.dart:52
-lib/presentation/widgets/debt/payment_form.dart:56
-lib/presentation/widgets/debt/payment_form.dart:78
-lib/presentation/widgets/debt/payment_form.dart:87
-lib/presentation/widgets/debt/payment_form.dart:90
-lib/presentation/widgets/finance/expense_card.dart:17
-lib/presentation/widgets/finance/expense_card.dart:18
-lib/presentation/widgets/finance/expense_card.dart:19
-lib/presentation/widgets/finance/expense_card.dart:20
-lib/presentation/widgets/finance/expense_card.dart:21
-lib/presentation/widgets/finance/expense_card.dart:22
-lib/presentation/widgets/finance/expense_card.dart:23
-lib/presentation/widgets/finance/period_selector.dart:15
-lib/presentation/widgets/finance/period_selector.dart:16
-lib/presentation/widgets/finance/period_selector.dart:17
-lib/presentation/widgets/finance/period_selector.dart:18
-lib/presentation/widgets/finance/profit_summary_card.dart:26
-lib/presentation/widgets/finance/profit_summary_card.dart:28
-lib/presentation/widgets/finance/profit_summary_card.dart:30
-lib/presentation/widgets/finance/stat_summary_row.dart:23
-lib/presentation/widgets/finance/stat_summary_row.dart:36
-lib/presentation/widgets/home/impersonation_banner.dart:101
-lib/presentation/widgets/home/impersonation_banner.dart:124
-lib/presentation/widgets/payroll/month_selector.dart:18
-lib/presentation/widgets/payroll/month_selector.dart:19
-lib/presentation/widgets/payroll/month_selector.dart:20
-lib/presentation/widgets/payroll/month_selector.dart:21
-lib/presentation/widgets/payroll/month_selector.dart:22
-lib/presentation/widgets/payroll/month_selector.dart:23
-lib/presentation/widgets/payroll/month_selector.dart:24
-lib/presentation/widgets/payroll/month_selector.dart:25
-lib/presentation/widgets/payroll/month_selector.dart:26
-lib/presentation/widgets/payroll/month_selector.dart:27
-lib/presentation/widgets/payroll/month_selector.dart:28
-lib/presentation/widgets/payroll/month_selector.dart:29
-lib/presentation/widgets/payroll/payroll_staff_card.dart:100
-lib/presentation/widgets/payroll/payroll_staff_card.dart:135
-lib/presentation/widgets/payroll/payroll_staff_card.dart:155
-lib/presentation/widgets/payroll/payroll_staff_card.dart:26
-lib/presentation/widgets/payroll/payroll_staff_card.dart:28
-lib/presentation/widgets/payroll/payroll_staff_card.dart:30
-lib/presentation/widgets/payroll/payroll_staff_card.dart:32
-lib/presentation/widgets/payroll/payroll_staff_card.dart:82
-lib/presentation/widgets/payroll/payroll_staff_card.dart:97
-lib/presentation/widgets/payroll/payroll_staff_card.dart:98
-lib/presentation/widgets/pos/receipt_widget.dart:155
-lib/presentation/widgets/pos/receipt_widget.dart:157
-lib/presentation/widgets/pos/receipt_widget.dart:162
-lib/presentation/widgets/pos/receipt_widget.dart:171
-lib/presentation/widgets/pos/receipt_widget.dart:172
-lib/presentation/widgets/pos/receipt_widget.dart:174
-lib/presentation/widgets/pos/receipt_widget.dart:178
-lib/presentation/widgets/pos/receipt_widget.dart:70
-lib/presentation/widgets/pos/receipt_widget.dart:81
-lib/presentation/widgets/pos/receipt_widget.dart:94
-lib/presentation/widgets/pos/sales_filter_sheet.dart:244
-lib/presentation/widgets/pos/sales_filter_sheet.dart:256
-lib/presentation/widgets/pos/sales_filter_sheet.dart:271
-lib/presentation/widgets/pos/sales_filter_sheet.dart:292
-lib/presentation/widgets/pos/sales_filter_sheet.dart:299
-lib/presentation/widgets/pos/sales_filter_sheet.dart:308
-lib/presentation/widgets/pos/sales_filter_sheet.dart:317
-lib/presentation/widgets/pos/sales_filter_sheet.dart:326
-lib/presentation/widgets/pos/sales_filter_sheet.dart:339
-lib/presentation/widgets/pos/sales_filter_sheet.dart:346
-lib/presentation/widgets/pos/sales_filter_sheet.dart:351
-lib/presentation/widgets/pos/sales_filter_sheet.dart:356
-lib/presentation/widgets/pos/sales_filter_sheet.dart:361
-lib/presentation/widgets/pos/sales_filter_sheet.dart:371
-lib/presentation/widgets/pos/sales_filter_sheet.dart:378
-lib/presentation/widgets/pos/sales_filter_sheet.dart:383
-lib/presentation/widgets/pos/sales_filter_sheet.dart:388
-lib/presentation/widgets/pos/sales_filter_sheet.dart:393
-lib/presentation/widgets/pos/sales_filter_sheet.dart:428
-lib/presentation/widgets/shifts/current_shift_card.dart:100
-lib/presentation/widgets/shifts/current_shift_card.dart:109
-lib/presentation/widgets/shifts/current_shift_card.dart:110
-lib/presentation/widgets/shifts/current_shift_card.dart:111
-lib/presentation/widgets/shifts/current_shift_card.dart:112
-lib/presentation/widgets/shifts/current_shift_card.dart:121
-lib/presentation/widgets/shifts/current_shift_card.dart:55
-lib/presentation/widgets/shifts/current_shift_card.dart:82
-lib/presentation/widgets/shifts/current_shift_card.dart:87
-lib/presentation/widgets/shifts/shift_card.dart:105
-lib/presentation/widgets/shifts/shift_card.dart:33
-lib/presentation/widgets/shifts/shift_card.dart:68
-lib/presentation/widgets/shifts/shift_card.dart:79
-lib/presentation/widgets/staff/permission_toggle_row.dart:27
-lib/presentation/widgets/staff/permission_toggle_row.dart:29
-lib/presentation/widgets/staff/permission_toggle_row.dart:31
-lib/presentation/widgets/staff/permission_toggle_row.dart:33
-lib/presentation/widgets/staff/permission_toggle_row.dart:35
-lib/presentation/widgets/staff/permission_toggle_row.dart:37
-lib/presentation/widgets/staff/permission_toggle_row.dart:39
-lib/presentation/widgets/staff/permission_toggle_row.dart:41
-lib/presentation/widgets/staff/permission_toggle_row.dart:43
-lib/presentation/widgets/staff/permission_toggle_row.dart:45
-lib/presentation/widgets/staff/permission_toggle_row.dart:47
-lib/presentation/widgets/staff/permission_toggle_row.dart:49
-lib/presentation/widgets/staff/permission_toggle_row.dart:51
-lib/presentation/widgets/staff/permission_toggle_row.dart:53
-lib/presentation/widgets/staff/staff_card.dart:126
-lib/presentation/widgets/staff/staff_card.dart:18
-lib/presentation/widgets/staff/staff_card.dart:20
-lib/presentation/widgets/staff/staff_card.dart:22
-lib/presentation/widgets/staff/staff_card.dart:24
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:19
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:21
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:22
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:23
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:25
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:27
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:32
-lib/presentation/widgets/zakat/zakat_breakdown_card.dart:41
+lib/presentation/blocs/debt/debt_bloc.dart::'Оплата записана'
+lib/presentation/blocs/debt/debt_bloc.dart::'Оплата принята'
+lib/presentation/blocs/expense/expense_bloc.dart::'Расход добавлен'
+lib/presentation/blocs/expense/expense_bloc.dart::'Расход обновлён'
+lib/presentation/blocs/expense/expense_bloc.dart::'Расход удалён'
+lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось напечатать'
+lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось подключиться'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка печати: ${mapErrorToUserMessage(e)}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка подключения: ${mapErrorToUserMessage(e)}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка поиска: ${mapErrorToUserMessage(e)}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Подключено к ${event.device.name}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Принтер отключён'
+lib/presentation/blocs/printer/printer_bloc.dart::'Принтер по умолчанию: ${event.name}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Тестовая печать выполнена'
+lib/presentation/blocs/settings/settings_bloc.dart::'Пароль изменён'
+lib/presentation/blocs/settings/settings_bloc.dart::'Профиль обновлён'
+lib/presentation/blocs/subscription/subscription_bloc.dart::'Заявка отправлена, ожидайте подтверждения'
+lib/presentation/blocs/zakat/zakat_bloc.dart::'Выплата закята записана'
+lib/presentation/blocs/zakat/zakat_bloc.dart::'Настройки закята сохранены'
+lib/presentation/pages/customer/customer_detail_page.dart::'$sign${tx.points} баллов'
+lib/presentation/pages/customer/customer_detail_page.dart::'Баллы'
+lib/presentation/pages/customer/customer_detail_page.dart::'В долг'
+lib/presentation/pages/customer/customer_detail_page.dart::'Долг'
+lib/presentation/pages/customer/customer_detail_page.dart::'Звонок'
+lib/presentation/pages/customer/customer_detail_page.dart::'Изменить'
+lib/presentation/pages/customer/customer_detail_page.dart::'История баллов'
+lib/presentation/pages/customer/customer_detail_page.dart::'Карта'
+lib/presentation/pages/customer/customer_detail_page.dart::'Клиент'
+lib/presentation/pages/customer/customer_detail_page.dart::'Наличные'
+lib/presentation/pages/customer/customer_detail_page.dart::'Нет покупок'
+lib/presentation/pages/customer/customer_detail_page.dart::'Последние покупки'
+lib/presentation/pages/customer/customer_detail_page.dart::'Посмотреть долги'
+lib/presentation/pages/customer/customer_detail_page.dart::'Потрачено'
+lib/presentation/pages/customer/customer_detail_page.dart::'Продажа'
+lib/presentation/pages/customer/customer_detail_page.dart::'СМС'
+lib/presentation/pages/customer/customer_detail_page.dart::'Чек #${sale['
+lib/presentation/pages/customer/customer_detail_page.dart::'до ${_formatDate(tx.expiresAt!.toIso8601String())}'
+lib/presentation/pages/customer/customer_list_page.dart::'${customers.length} клиентов  |  Долг: ${_formatPrice(totalDebt)}'
+lib/presentation/pages/customer/customer_list_page.dart::'Введите имя клиента'
+lib/presentation/pages/customer/customer_list_page.dart::'Все'
+lib/presentation/pages/customer/customer_list_page.dart::'Добавить клиента'
+lib/presentation/pages/customer/customer_list_page.dart::'Добавить'
+lib/presentation/pages/customer/customer_list_page.dart::'Добавьте первого клиента, чтобы отслеживать продажи и долги'
+lib/presentation/pages/customer/customer_list_page.dart::'Имя'
+lib/presentation/pages/customer/customer_list_page.dart::'Клиентов пока нет'
+lib/presentation/pages/customer/customer_list_page.dart::'Клиенты'
+lib/presentation/pages/customer/customer_list_page.dart::'Нет долга'
+lib/presentation/pages/customer/customer_list_page.dart::'Нет клиентов по этому фильтру'
+lib/presentation/pages/customer/customer_list_page.dart::'Новые'
+lib/presentation/pages/customer/customer_list_page.dart::'Новый клиент'
+lib/presentation/pages/customer/customer_list_page.dart::'Отмена'
+lib/presentation/pages/customer/customer_list_page.dart::'Поиск клиента'
+lib/presentation/pages/customer/customer_list_page.dart::'Покупок: ${_formatPrice(customer.totalSpent)}'
+lib/presentation/pages/customer/customer_list_page.dart::'Попробуйте выбрать другой фильтр'
+lib/presentation/pages/customer/customer_list_page.dart::'С долгом'
+lib/presentation/pages/customer/customer_list_page.dart::'Сбросить фильтр'
+lib/presentation/pages/customer/customer_list_page.dart::'Телефон'
+lib/presentation/pages/debt/customer_debts_page.dart::'Итого: ${total.toStringAsFixed(2)} TJS'
+lib/presentation/pages/debt/customer_debts_page.dart::'Нет продаж с долгом'
+lib/presentation/pages/debt/customer_debts_page.dart::'Общий долг'
+lib/presentation/pages/debt/customer_debts_page.dart::'Платёж сохранён офлайн — отправим при подключении'
+lib/presentation/pages/debt/customer_debts_page.dart::'Принять оплату'
+lib/presentation/pages/debt/customer_debts_page.dart::'Продажи с долгом'
+lib/presentation/pages/debt/customer_debts_page.dart::'Просрочено'
+lib/presentation/pages/debt/customer_debts_page.dart::'Чек #$receiptNo'
+lib/presentation/pages/finance/add_expense_page.dart::'Аренда'
+lib/presentation/pages/finance/add_expense_page.dart::'Введите сумму'
+lib/presentation/pages/finance/add_expense_page.dart::'Добавить расход'
+lib/presentation/pages/finance/add_expense_page.dart::'Другое'
+lib/presentation/pages/finance/add_expense_page.dart::'Закупка'
+lib/presentation/pages/finance/add_expense_page.dart::'Заметки'
+lib/presentation/pages/finance/add_expense_page.dart::'Зарплата'
+lib/presentation/pages/finance/add_expense_page.dart::'Категория'
+lib/presentation/pages/finance/add_expense_page.dart::'Коммунальные'
+lib/presentation/pages/finance/add_expense_page.dart::'Маркетинг'
+lib/presentation/pages/finance/add_expense_page.dart::'Некорректная сумма'
+lib/presentation/pages/finance/add_expense_page.dart::'Описание'
+lib/presentation/pages/finance/add_expense_page.dart::'Сохранить'
+lib/presentation/pages/finance/add_expense_page.dart::'Сумма'
+lib/presentation/pages/finance/add_expense_page.dart::'Транспорт'
+lib/presentation/pages/finance/add_investment_page.dart::'Введите имя инвестора'
+lib/presentation/pages/finance/add_investment_page.dart::'Введите название'
+lib/presentation/pages/finance/add_investment_page.dart::'Введите сумму'
+lib/presentation/pages/finance/add_investment_page.dart::'Дата начала'
+lib/presentation/pages/finance/add_investment_page.dart::'Дата окончания (необязательно)'
+lib/presentation/pages/finance/add_investment_page.dart::'Добавить вложение'
+lib/presentation/pages/finance/add_investment_page.dart::'Имя инвестора *'
+lib/presentation/pages/finance/add_investment_page.dart::'Название *'
+lib/presentation/pages/finance/add_investment_page.dart::'Не выбрана'
+lib/presentation/pages/finance/add_investment_page.dart::'Некорректная сумма'
+lib/presentation/pages/finance/add_investment_page.dart::'Описание'
+lib/presentation/pages/finance/add_investment_page.dart::'Сохранить'
+lib/presentation/pages/finance/add_investment_page.dart::'Сумма *'
+lib/presentation/pages/finance/add_investment_page.dart::'Сумма возврата'
+lib/presentation/pages/finance/add_investment_page.dart::'Телефон инвестора'
+lib/presentation/pages/finance/currencies_page.dart::'Динамика за 30 дней'
+lib/presentation/pages/finance/currencies_page.dart::'Доллар США'
+lib/presentation/pages/finance/currencies_page.dart::'Евро'
+lib/presentation/pages/finance/currencies_page.dart::'Китайский юань'
+lib/presentation/pages/finance/currencies_page.dart::'Конвертер'
+lib/presentation/pages/finance/currencies_page.dart::'Курсы валют'
+lib/presentation/pages/finance/currencies_page.dart::'НБТ — Национальный банк Таджикистана'
+lib/presentation/pages/finance/currencies_page.dart::'Нет данных за 30 дней'
+lib/presentation/pages/finance/currencies_page.dart::'Повторить'
+lib/presentation/pages/finance/currencies_page.dart::'Результат (в TJS):'
+lib/presentation/pages/finance/currencies_page.dart::'Российский рубль'
+lib/presentation/pages/finance/currencies_page.dart::'Сумма'
+lib/presentation/pages/finance/expense_list_page.dart::'Отмена'
+lib/presentation/pages/finance/expense_list_page.dart::'Удалить расход?'
+lib/presentation/pages/finance/expense_list_page.dart::'Удалить'
+lib/presentation/pages/finance/expense_list_page.dart::'Это действие нельзя отменить.'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'${s.topProducts[i].quantity} шт'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'6 мес'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Баланс'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Валовая прибыль'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Валюты'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Вложения'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'День'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Динамика'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Доставка'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Доход'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Закят'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Кредиты'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Месяц'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Неделя'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Общие расходы'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Общий доход'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Отчёт'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Расходы'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Топ товары'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Финансы'
+lib/presentation/pages/finance/finance_dashboard_page.dart::'Чистая прибыль'
+lib/presentation/pages/finance/investment_list_page.dart::'Активно'
+lib/presentation/pages/finance/investment_list_page.dart::'Вложений пока нет'
+lib/presentation/pages/finance/investment_list_page.dart::'Вложения'
+lib/presentation/pages/finance/investment_list_page.dart::'Все'
+lib/presentation/pages/finance/investment_list_page.dart::'Завершено'
+lib/presentation/pages/finance/investment_list_page.dart::'Отменено'
+lib/presentation/pages/finance/reports_page.dart::'${p.qty} шт'
+lib/presentation/pages/finance/reports_page.dart::'${rod.toY.toInt()} продаж'
+lib/presentation/pages/finance/reports_page.dart::'=== Залёжные товары ==='
+lib/presentation/pages/finance/reports_page.dart::'=== Топ товары ==='
+lib/presentation/pages/finance/reports_page.dart::'Аренда'
+lib/presentation/pages/finance/reports_page.dart::'В магазине'
+lib/presentation/pages/finance/reports_page.dart::'Все каналы'
+lib/presentation/pages/finance/reports_page.dart::'Выручка'
+lib/presentation/pages/finance/reports_page.dart::'Данные по продажам'
+lib/presentation/pages/finance/reports_page.dart::'Дата'
+lib/presentation/pages/finance/reports_page.dart::'Детализация'
+lib/presentation/pages/finance/reports_page.dart::'Доход vs Расходы по месяцам'
+lib/presentation/pages/finance/reports_page.dart::'Доход'
+lib/presentation/pages/finance/reports_page.dart::'Другое'
+lib/presentation/pages/finance/reports_page.dart::'Закупка'
+lib/presentation/pages/finance/reports_page.dart::'Залёжные товары (30+ дней)'
+lib/presentation/pages/finance/reports_page.dart::'Залёжные товары'
+lib/presentation/pages/finance/reports_page.dart::'Зарплата'
+lib/presentation/pages/finance/reports_page.dart::'Кассир'
+lib/presentation/pages/finance/reports_page.dart::'Категория'
+lib/presentation/pages/finance/reports_page.dart::'Клиенты'
+lib/presentation/pages/finance/reports_page.dart::'Коммунальные'
+lib/presentation/pages/finance/reports_page.dart::'Маржа %'
+lib/presentation/pages/finance/reports_page.dart::'Маржа'
+lib/presentation/pages/finance/reports_page.dart::'Маркетинг'
+lib/presentation/pages/finance/reports_page.dart::'Месяц'
+lib/presentation/pages/finance/reports_page.dart::'Нет данных'
+lib/presentation/pages/finance/reports_page.dart::'Онлайн'
+lib/presentation/pages/finance/reports_page.dart::'Отчёт $tabName ($period)'
+lib/presentation/pages/finance/reports_page.dart::'Отчёт $tabName'
+lib/presentation/pages/finance/reports_page.dart::'Отчёты'
+lib/presentation/pages/finance/reports_page.dart::'Период: $period'
+lib/presentation/pages/finance/reports_page.dart::'Повторить'
+lib/presentation/pages/finance/reports_page.dart::'Показатель'
+lib/presentation/pages/finance/reports_page.dart::'Прибыль'
+lib/presentation/pages/finance/reports_page.dart::'Продаж'
+lib/presentation/pages/finance/reports_page.dart::'Продажи по кассирам'
+lib/presentation/pages/finance/reports_page.dart::'Продажи'
+lib/presentation/pages/finance/reports_page.dart::'Расходы по категориям'
+lib/presentation/pages/finance/reports_page.dart::'Расходы'
+lib/presentation/pages/finance/reports_page.dart::'Скачать Excel (все данные)'
+lib/presentation/pages/finance/reports_page.dart::'Скачать Excel (локальный)'
+lib/presentation/pages/finance/reports_page.dart::'Скачать PDF'
+lib/presentation/pages/finance/reports_page.dart::'Сотрудники'
+lib/presentation/pages/finance/reports_page.dart::'Ср. чек'
+lib/presentation/pages/finance/reports_page.dart::'Стоимость склада'
+lib/presentation/pages/finance/reports_page.dart::'Товар'
+lib/presentation/pages/finance/reports_page.dart::'Товары'
+lib/presentation/pages/finance/reports_page.dart::'Топ продажи'
+lib/presentation/pages/finance/reports_page.dart::'Топ товары'
+lib/presentation/pages/finance/reports_page.dart::'Топ-5 товаров по выручке'
+lib/presentation/pages/finance/reports_page.dart::'Транспорт'
+lib/presentation/pages/finance/reports_page.dart::'Чистая прибыль'
+lib/presentation/pages/finance/reports_page.dart::'Что экспортировать?'
+lib/presentation/pages/finance/reports_page.dart::'Экспорт $type'
+lib/presentation/pages/finance/reports_page.dart::'Экспорт отчёта'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Выберите какие уведомления вы хотите получать'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Дней без продаж'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Доставка выполнена'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Закрытие смены'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Залежалый товар'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Когда кассир оформляет продажу'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Когда курьер доставил заказ'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Когда смена закрывается'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Когда товар заканчивается на складе'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Напоминание о долге'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Настройки уведомлений'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Низкий остаток'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Новая продажа'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Остаток, % от партии'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Просроченные долги клиентов (> 7 дней)'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Сохранить'
+lib/presentation/pages/notifications/notification_settings_page.dart::'Уведомлять, если товар не продаётся N дней и остаток ещё большой'
+lib/presentation/pages/notifications/notifications_page.dart::'${diff.inDays} д назад'
+lib/presentation/pages/notifications/notifications_page.dart::'${diff.inHours} ч назад'
+lib/presentation/pages/notifications/notifications_page.dart::'${diff.inMinutes} мин назад'
+lib/presentation/pages/notifications/notifications_page.dart::'Доступ предоставлен'
+lib/presentation/pages/notifications/notifications_page.dart::'Магазин не выбран'
+lib/presentation/pages/notifications/notifications_page.dart::'Настройки'
+lib/presentation/pages/notifications/notifications_page.dart::'Не удалось обработать запрос — возможно, он уже неактивен'
+lib/presentation/pages/notifications/notifications_page.dart::'Нет уведомлений'
+lib/presentation/pages/notifications/notifications_page.dart::'Отклонить'
+lib/presentation/pages/notifications/notifications_page.dart::'Повторить'
+lib/presentation/pages/notifications/notifications_page.dart::'Разрешить'
+lib/presentation/pages/notifications/notifications_page.dart::'Уведомления'
+lib/presentation/pages/notifications/notifications_page.dart::'только что'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'ID сотрудника (необязательно)'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Бонус'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Введите описание'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Введите сумму'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Добавить корректировку'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Добавить'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Корректировка'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Некорректная сумма'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Описание'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Оставьте пустым для всех'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Сумма (TJS)'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Сумма должна быть больше 0'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Тип корректировки'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Удержание'
+lib/presentation/pages/payroll/add_adjustment_page.dart::'Укажите тип, сумму и описание корректировки'
+lib/presentation/pages/payroll/payroll_page.dart::'Август'
+lib/presentation/pages/payroll/payroll_page.dart::'Апрель'
+lib/presentation/pages/payroll/payroll_page.dart::'Вы уверены, что хотите выплатить зарплату всем сотрудникам?'
+lib/presentation/pages/payroll/payroll_page.dart::'Выберите месяц и нажмите "
+lib/presentation/pages/payroll/payroll_page.dart::'Выплатить всем'
+lib/presentation/pages/payroll/payroll_page.dart::'Выплатить'
+lib/presentation/pages/payroll/payroll_page.dart::'Выплачено'
+lib/presentation/pages/payroll/payroll_page.dart::'Декабрь'
+lib/presentation/pages/payroll/payroll_page.dart::'Добавить корректировку'
+lib/presentation/pages/payroll/payroll_page.dart::'Зарплата'
+lib/presentation/pages/payroll/payroll_page.dart::'Итого'
+lib/presentation/pages/payroll/payroll_page.dart::'Итого: ${period.totalAmount.toStringAsFixed(2)} TJS'
+lib/presentation/pages/payroll/payroll_page.dart::'Июль'
+lib/presentation/pages/payroll/payroll_page.dart::'Июнь'
+lib/presentation/pages/payroll/payroll_page.dart::'Май'
+lib/presentation/pages/payroll/payroll_page.dart::'Март'
+lib/presentation/pages/payroll/payroll_page.dart::'Нет данных по зарплате'
+lib/presentation/pages/payroll/payroll_page.dart::'Нет данных по сотрудникам'
+lib/presentation/pages/payroll/payroll_page.dart::'Ноябрь'
+lib/presentation/pages/payroll/payroll_page.dart::'Октябрь'
+lib/presentation/pages/payroll/payroll_page.dart::'Оплачено'
+lib/presentation/pages/payroll/payroll_page.dart::'Отмена'
+lib/presentation/pages/payroll/payroll_page.dart::'Рассчитано'
+lib/presentation/pages/payroll/payroll_page.dart::'Рассчитать'
+lib/presentation/pages/payroll/payroll_page.dart::'Расчёт зарплаты'
+lib/presentation/pages/payroll/payroll_page.dart::'Сентябрь'
+lib/presentation/pages/payroll/payroll_page.dart::'Сотрудники'
+lib/presentation/pages/payroll/payroll_page.dart::'Удалить корректировку?'
+lib/presentation/pages/payroll/payroll_page.dart::'Удалить'
+lib/presentation/pages/payroll/payroll_page.dart::'Февраль'
+lib/presentation/pages/payroll/payroll_page.dart::'Частично оплачено'
+lib/presentation/pages/payroll/payroll_page.dart::'Январь'
+lib/presentation/pages/pos/cash_payment_page.dart::'Без сдачи'
+lib/presentation/pages/pos/cash_payment_page.dart::'Назад'
+lib/presentation/pages/pos/cash_payment_page.dart::'Обработка...'
+lib/presentation/pages/pos/cash_payment_page.dart::'Оплата наличными'
+lib/presentation/pages/pos/cash_payment_page.dart::'Получено от клиента'
+lib/presentation/pages/pos/cash_payment_page.dart::'Сдача'
+lib/presentation/pages/pos/cash_payment_page.dart::'Сумма к оплате'
+lib/presentation/pages/pos/pos_checkout_page.dart::'${cart.customerLoyaltyPoints} баллов доступно'
+lib/presentation/pages/pos/pos_checkout_page.dart::'${cart.redemptionPoints} баллов = -$redeemValue сом'
+lib/presentation/pages/pos/pos_checkout_page.dart::'${product.quantity} шт'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Без клиента'
+lib/presentation/pages/pos/pos_checkout_page.dart::'В долг'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Выберите клиента'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Доступно: ${cart.customerLoyaltyPoints} баллов'
+lib/presentation/pages/pos/pos_checkout_page.dart::'ИТОГО'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Карта'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Касса'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Корзина (${cartState.itemCount} товаров)'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Корзина пуста'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Магазин'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Найдите товар через поиск или выберите из списка выше'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Наличные'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Нет клиентов'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Оформить продажу — ${_formatPrice(cartState.total)}'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Подытог'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Поиск по названию'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Применить'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Процент'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Сбросить'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Скидка'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Скидка: -${(selected * cart.loyaltyPointValue).toStringAsFixed(2)} сом'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Смешанная'
+lib/presentation/pages/pos/pos_checkout_page.dart::'Списать баллы'
+lib/presentation/pages/pos/receipt_preview_page.dart::'Печать'
+lib/presentation/pages/pos/receipt_preview_page.dart::'Поделиться'
+lib/presentation/pages/pos/receipt_preview_page.dart::'Чек'
+lib/presentation/pages/pos/sale_success_page.dart::'Новая продажа'
+lib/presentation/pages/pos/sale_success_page.dart::'Отправить в Telegram'
+lib/presentation/pages/pos/sale_success_page.dart::'Печатать чек'
+lib/presentation/pages/pos/sale_success_page.dart::'Продажа оформлена!'
+lib/presentation/pages/pos/sale_success_page.dart::'Сдача: ${_formatPrice(sale.change)}'
+lib/presentation/pages/pos/sale_success_page.dart::'Чек #${sale.receiptNo}, Итого: ${sale.total.toStringAsFixed(2)} сом.'
+lib/presentation/pages/pos/sale_success_page.dart::'Чек #${sale.receiptNo}\nИтого: ${sale.total.toStringAsFixed(2)} сом.'
+lib/presentation/pages/product/add_product_step1_page.dart::'JPG, PNG до 5MB'
+lib/presentation/pages/product/add_product_step1_page.dart::'Артикул (SKU)'
+lib/presentation/pages/product/add_product_step1_page.dart::'Введите название'
+lib/presentation/pages/product/add_product_step1_page.dart::'Далее'
+lib/presentation/pages/product/add_product_step1_page.dart::'Добавить фото'
+lib/presentation/pages/product/add_product_step1_page.dart::'Категория'
+lib/presentation/pages/product/add_product_step1_page.dart::'Название товара *'
+lib/presentation/pages/product/add_product_step1_page.dart::'Описание'
+lib/presentation/pages/product/add_product_step1_page.dart::'Основное'
+lib/presentation/pages/product/add_product_step1_page.dart::'Редактировать товар'
+lib/presentation/pages/product/add_product_step1_page.dart::'Склад'
+lib/presentation/pages/product/add_product_step1_page.dart::'Цены'
+lib/presentation/pages/product/add_product_step1_page.dart::'Штрихкод'
+lib/presentation/pages/product/add_product_step3_page.dart::'Введите количество'
+lib/presentation/pages/product/add_product_step3_page.dart::'Добавить товар'
+lib/presentation/pages/product/add_product_step3_page.dart::'Минимальный остаток'
+lib/presentation/pages/product/add_product_step3_page.dart::'Нажмите для загрузки'
+lib/presentation/pages/product/add_product_step3_page.dart::'Назад'
+lib/presentation/pages/product/add_product_step3_page.dart::'Начальное количество *'
+lib/presentation/pages/product/add_product_step3_page.dart::'Новый товар'
+lib/presentation/pages/product/add_product_step3_page.dart::'Основное'
+lib/presentation/pages/product/add_product_step3_page.dart::'Поставщик'
+lib/presentation/pages/product/add_product_step3_page.dart::'Склад'
+lib/presentation/pages/product/add_product_step3_page.dart::'Товар сохранён. Синхронизация в фоне.'
+lib/presentation/pages/product/add_product_step3_page.dart::'Фото товара'
+lib/presentation/pages/product/add_product_step3_page.dart::'Цены'
+lib/presentation/pages/product/categories_page.dart::'Вы уверены, что хотите удалить "
+lib/presentation/pages/product/categories_page.dart::'Категории'
+lib/presentation/pages/product/categories_page.dart::'Название'
+lib/presentation/pages/product/categories_page.dart::'Нет категорий'
+lib/presentation/pages/product/categories_page.dart::'Отмена'
+lib/presentation/pages/product/categories_page.dart::'Редактировать категорию'
+lib/presentation/pages/product/categories_page.dart::'Создайте первую категорию для ваших товаров'
+lib/presentation/pages/product/categories_page.dart::'Создать категорию'
+lib/presentation/pages/product/categories_page.dart::'Сохранить'
+lib/presentation/pages/product/categories_page.dart::'Удалить категорию?'
+lib/presentation/pages/product/categories_page.dart::'Удалить'
+lib/presentation/pages/product/categories_page.dart::'товар'
+lib/presentation/pages/product/categories_page.dart::'товара'
+lib/presentation/pages/product/categories_page.dart::'товаров'
+lib/presentation/pages/product/product_detail_page.dart::'${paybackPercent.toStringAsFixed(0)}% окупаемости'
+lib/presentation/pages/product/product_detail_page.dart::'] as num?)?.round() ?? 0} шт. на ${_formatMoney((data['
+lib/presentation/pages/product/product_detail_page.dart::'Активен'
+lib/presentation/pages/product/product_detail_page.dart::'Артикул'
+lib/presentation/pages/product/product_detail_page.dart::'Выручка от партии'
+lib/presentation/pages/product/product_detail_page.dart::'До окупаемости партии'
+lib/presentation/pages/product/product_detail_page.dart::'Единица'
+lib/presentation/pages/product/product_detail_page.dart::'Информация'
+lib/presentation/pages/product/product_detail_page.dart::'История движений'
+lib/presentation/pages/product/product_detail_page.dart::'Категория'
+lib/presentation/pages/product/product_detail_page.dart::'Корректировка'
+lib/presentation/pages/product/product_detail_page.dart::'Магазин не выбран'
+lib/presentation/pages/product/product_detail_page.dart::'Маржа'
+lib/presentation/pages/product/product_detail_page.dart::'Минимальный: ${product.minQuantity} $unitName'
+lib/presentation/pages/product/product_detail_page.dart::'Наличие на складе'
+lib/presentation/pages/product/product_detail_page.dart::'Не удалось загрузить историю движений'
+lib/presentation/pages/product/product_detail_page.dart::'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.'
+lib/presentation/pages/product/product_detail_page.dart::'Нет движений'
+lib/presentation/pages/product/product_detail_page.dart::'Окупаемость партии'
+lib/presentation/pages/product/product_detail_page.dart::'Остаток'
+lib/presentation/pages/product/product_detail_page.dart::'Отмена'
+lib/presentation/pages/product/product_detail_page.dart::'Партия окупилась'
+lib/presentation/pages/product/product_detail_page.dart::'Прибыль заработана'
+lib/presentation/pages/product/product_detail_page.dart::'Прибыль'
+lib/presentation/pages/product/product_detail_page.dart::'Приход'
+lib/presentation/pages/product/product_detail_page.dart::'Продать'
+lib/presentation/pages/product/product_detail_page.dart::'Расход'
+lib/presentation/pages/product/product_detail_page.dart::'Себестоимость партии'
+lib/presentation/pages/product/product_detail_page.dart::'Себестоимость'
+lib/presentation/pages/product/product_detail_page.dart::'Текущий остаток: ${product.quantity} $unitName'
+lib/presentation/pages/product/product_detail_page.dart::'Товар не найден'
+lib/presentation/pages/product/product_detail_page.dart::'Товар'
+lib/presentation/pages/product/product_detail_page.dart::'Удалить товар?'
+lib/presentation/pages/product/product_detail_page.dart::'Удалить'
+lib/presentation/pages/product/product_detail_page.dart::'Цена продажи'
+lib/presentation/pages/product/product_detail_page.dart::'Штрих-код'
+lib/presentation/pages/product/product_detail_page.dart::'Это действие нельзя отменить.'
+lib/presentation/pages/product/product_list_page.dart::'Арт: ${product.sku}'
+lib/presentation/pages/product/product_list_page.dart::'В наличии'
+lib/presentation/pages/product/product_list_page.dart::'Все'
+lib/presentation/pages/product/product_list_page.dart::'Добавить товар'
+lib/presentation/pages/product/product_list_page.dart::'Добавьте первый товар в каталог'
+lib/presentation/pages/product/product_list_page.dart::'Заканчивается'
+lib/presentation/pages/product/product_list_page.dart::'Импорт из Excel'
+lib/presentation/pages/product/product_list_page.dart::'Категории'
+lib/presentation/pages/product/product_list_page.dart::'На складе: '
+lib/presentation/pages/product/product_list_page.dart::'Нет в наличии'
+lib/presentation/pages/product/product_list_page.dart::'Нет товаров'
+lib/presentation/pages/product/product_list_page.dart::'Общая сумма'
+lib/presentation/pages/product/product_list_page.dart::'Поиск товара'
+lib/presentation/pages/product/product_list_page.dart::'Попробуйте изменить фильтр или поисковый запрос'
+lib/presentation/pages/product/product_list_page.dart::'Себестоимость'
+lib/presentation/pages/product/product_list_page.dart::'Товары'
+lib/presentation/pages/product/product_list_page.dart::'Требует внимания'
+lib/presentation/pages/sales/refund_page.dart::'Возврат'
+lib/presentation/pages/sales/refund_page.dart::'Выберите товары для возврата'
+lib/presentation/pages/sales/refund_page.dart::'Выбрано позиций: ${_selectedItems.length}'
+lib/presentation/pages/sales/refund_page.dart::'Выбрать все'
+lib/presentation/pages/sales/refund_page.dart::'Отмена'
+lib/presentation/pages/sales/refund_page.dart::'Оформить возврат'
+lib/presentation/pages/sales/refund_page.dart::'Подтвердить возврат?'
+lib/presentation/pages/sales/refund_page.dart::'Подтвердить'
+lib/presentation/pages/sales/refund_page.dart::'Причина возврата'
+lib/presentation/pages/sales/refund_page.dart::'Снять все'
+lib/presentation/pages/sales/refund_page.dart::'Сумма возврата: ${Formatters.price(_refundTotal)}\n'
+lib/presentation/pages/sales/refund_page.dart::'Сумма возврата:'
+lib/presentation/pages/sales/refund_page.dart::'Товары'
+lib/presentation/pages/sales/refund_page.dart::'Укажите причину возврата'
+lib/presentation/pages/sales/refund_page.dart::'Чек ${widget.sale.receiptNo}'
+lib/presentation/pages/sales/sales_history_page.dart::'$totalSales продаж  |  ${_formatPrice(totalAmount)}'
+lib/presentation/pages/sales/sales_history_page.dart::'${state.skippedRows} ${_pluralRecord(state.skippedRows)} пропущено'
+lib/presentation/pages/sales/sales_history_page.dart::'В долг'
+lib/presentation/pages/sales/sales_history_page.dart::'Возврат'
+lib/presentation/pages/sales/sales_history_page.dart::'Выбрать'
+lib/presentation/pages/sales/sales_history_page.dart::'История продаж появится здесь после первой транзакции'
+lib/presentation/pages/sales/sales_history_page.dart::'История продаж'
+lib/presentation/pages/sales/sales_history_page.dart::'Карта'
+lib/presentation/pages/sales/sales_history_page.dart::'Месяц'
+lib/presentation/pages/sales/sales_history_page.dart::'Наличные'
+lib/presentation/pages/sales/sales_history_page.dart::'Неделя'
+lib/presentation/pages/sales/sales_history_page.dart::'Нет продаж'
+lib/presentation/pages/sales/sales_history_page.dart::'Розничный'
+lib/presentation/pages/sales/sales_history_page.dart::'Сегодня'
+lib/presentation/pages/sales/sales_history_page.dart::'Смешанная'
+lib/presentation/pages/sales/sales_history_page.dart::'Чек ${sale.receiptNo}'
+lib/presentation/pages/sales/sales_history_page.dart::'записей'
+lib/presentation/pages/sales/sales_history_page.dart::'записи'
+lib/presentation/pages/sales/sales_history_page.dart::'запись'
+lib/presentation/pages/sales/transaction_detail_page.dart::'${item.quantity} шт × ${_formatPrice(item.unitPrice)}'
+lib/presentation/pages/sales/transaction_detail_page.dart::'В долг'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Возврат'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Возвращён'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Дата'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Информация'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Итого'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Карта'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Кассир'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Клиент'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Наличные'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Нет данных о товарах'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Оплата'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Оплачен'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Оплачено'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Печатать чек'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Подытог'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Сдача'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Скидка'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Смешанная'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Товары'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Частичный возврат'
+lib/presentation/pages/sales/transaction_detail_page.dart::'Чек ${sale.receiptNo}'
+lib/presentation/pages/settings/discounts_page.dart::'% Процент'
+lib/presentation/pages/settings/discounts_page.dart::'Вы уверены, что хотите удалить "
+lib/presentation/pages/settings/discounts_page.dart::'Значение (%)'
+lib/presentation/pages/settings/discounts_page.dart::'Мин. сумма заказа (условие, необязательно)'
+lib/presentation/pages/settings/discounts_page.dart::'Название'
+lib/presentation/pages/settings/discounts_page.dart::'Нет скидок. Нажмите + для создания.'
+lib/presentation/pages/settings/discounts_page.dart::'Отмена'
+lib/presentation/pages/settings/discounts_page.dart::'Повторить'
+lib/presentation/pages/settings/discounts_page.dart::'Редактировать скидку'
+lib/presentation/pages/settings/discounts_page.dart::'Скидки'
+lib/presentation/pages/settings/discounts_page.dart::'Сохранить'
+lib/presentation/pages/settings/discounts_page.dart::'Сум Фиксированная'
+lib/presentation/pages/settings/discounts_page.dart::'Удалить скидку?'
+lib/presentation/pages/settings/discounts_page.dart::'Удалить'
+lib/presentation/pages/settings/edit_profile_page.dart::'Безопасность'
+lib/presentation/pages/settings/edit_profile_page.dart::'Введите имя'
+lib/presentation/pages/settings/edit_profile_page.dart::'Изменить фото'
+lib/presentation/pages/settings/edit_profile_page.dart::'Имя'
+lib/presentation/pages/settings/edit_profile_page.dart::'Профиль'
+lib/presentation/pages/settings/edit_profile_page.dart::'Сменить пароль'
+lib/presentation/pages/settings/edit_profile_page.dart::'Сохранение...'
+lib/presentation/pages/settings/edit_profile_page.dart::'Сохранить'
+lib/presentation/pages/settings/edit_profile_page.dart::'Телефон'
+lib/presentation/pages/settings/edit_profile_page.dart::'Фамилия'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Bluetooth принтер'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Автопечать при продаже'
+lib/presentation/pages/settings/kkm_settings_page.dart::'ККМ / Фискализация'
+lib/presentation/pages/settings/kkm_settings_page.dart::'ККМ/Фискализация\n'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Найденные устройства'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Настройки'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Отключить'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Печать...'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Подключить'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Подключён'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Поиск...'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Тестовая печать\n'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Убедитесь, что устройство зарегистрировано в налоговой.'
+lib/presentation/pages/settings/kkm_settings_page.dart::'Фискализация чеков через подключённый ККМ-принтер. '
+lib/presentation/pages/settings/language_settings_page.dart::'Ўзбекча'
+lib/presentation/pages/settings/language_settings_page.dart::'Выберите язык'
+lib/presentation/pages/settings/language_settings_page.dart::'Для применения языка перезапустите приложение.'
+lib/presentation/pages/settings/language_settings_page.dart::'Русский'
+lib/presentation/pages/settings/language_settings_page.dart::'Сохранить'
+lib/presentation/pages/settings/language_settings_page.dart::'Тоҷикӣ'
+lib/presentation/pages/settings/language_settings_page.dart::'Язык интерфейса'
+lib/presentation/pages/settings/my_stores_page.dart::'Адрес'
+lib/presentation/pages/settings/my_stores_page.dart::'Активный'
+lib/presentation/pages/settings/my_stores_page.dart::'Аптека'
+lib/presentation/pages/settings/my_stores_page.dart::'Введите название'
+lib/presentation/pages/settings/my_stores_page.dart::'Добавить магазин'
+lib/presentation/pages/settings/my_stores_page.dart::'Другое'
+lib/presentation/pages/settings/my_stores_page.dart::'Категория *'
+lib/presentation/pages/settings/my_stores_page.dart::'Мои магазины'
+lib/presentation/pages/settings/my_stores_page.dart::'Название *'
+lib/presentation/pages/settings/my_stores_page.dart::'Нет магазинов'
+lib/presentation/pages/settings/my_stores_page.dart::'Одежда'
+lib/presentation/pages/settings/my_stores_page.dart::'Повторить'
+lib/presentation/pages/settings/my_stores_page.dart::'Продукты'
+lib/presentation/pages/settings/my_stores_page.dart::'Редактировать магазин'
+lib/presentation/pages/settings/my_stores_page.dart::'Сохранить'
+lib/presentation/pages/settings/my_stores_page.dart::'Стройматериалы'
+lib/presentation/pages/settings/my_stores_page.dart::'Телефон'
+lib/presentation/pages/settings/my_stores_page.dart::'Электроника'
+lib/presentation/pages/settings/offline_mode_page.dart::'$_pendingOps операций в очереди'
+lib/presentation/pages/settings/offline_mode_page.dart::'Авто-синхронизация'
+lib/presentation/pages/settings/offline_mode_page.dart::'В офлайн-режиме все операции сохраняются локально '
+lib/presentation/pages/settings/offline_mode_page.dart::'Всё синхронизировано'
+lib/presentation/pages/settings/offline_mode_page.dart::'Данные'
+lib/presentation/pages/settings/offline_mode_page.dart::'Настройки'
+lib/presentation/pages/settings/offline_mode_page.dart::'Офлайн-режим'
+lib/presentation/pages/settings/offline_mode_page.dart::'Последняя синхронизация: ${_formatDate(_lastSync!)}'
+lib/presentation/pages/settings/offline_mode_page.dart::'Синхронизация ещё не выполнялась'
+lib/presentation/pages/settings/offline_mode_page.dart::'Синхронизация...'
+lib/presentation/pages/settings/offline_mode_page.dart::'Синхронизировать при подключении к сети'
+lib/presentation/pages/settings/offline_mode_page.dart::'и автоматически синхронизируются при восстановлении '
+lib/presentation/pages/settings/offline_mode_page.dart::'не удалось синхронизировать часть операций'
+lib/presentation/pages/settings/offline_mode_page.dart::'подключения к интернету.'
+lib/presentation/pages/settings/receipt_template_page.dart::'58 мм'
+lib/presentation/pages/settings/receipt_template_page.dart::'80 мм'
+lib/presentation/pages/settings/receipt_template_page.dart::'QR-код'
+lib/presentation/pages/settings/receipt_template_page.dart::'Бол.'
+lib/presentation/pages/settings/receipt_template_page.dart::'Ваш магазин'
+lib/presentation/pages/settings/receipt_template_page.dart::'Дата и время'
+lib/presentation/pages/settings/receipt_template_page.dart::'Заголовок чека'
+lib/presentation/pages/settings/receipt_template_page.dart::'ИТОГО                   75.00 TJS'
+lib/presentation/pages/settings/receipt_template_page.dart::'Кассир'
+lib/presentation/pages/settings/receipt_template_page.dart::'Кассир: Иванов И.'
+lib/presentation/pages/settings/receipt_template_page.dart::'Мал.'
+lib/presentation/pages/settings/receipt_template_page.dart::'Название магазина или приветствие'
+lib/presentation/pages/settings/receipt_template_page.dart::'Подвал чека'
+lib/presentation/pages/settings/receipt_template_page.dart::'Показывать на чеке'
+lib/presentation/pages/settings/receipt_template_page.dart::'Предпросмотр'
+lib/presentation/pages/settings/receipt_template_page.dart::'Размер шрифта'
+lib/presentation/pages/settings/receipt_template_page.dart::'Скидка                  -5.00 TJS'
+lib/presentation/pages/settings/receipt_template_page.dart::'Скидка'
+lib/presentation/pages/settings/receipt_template_page.dart::'Сохранить шаблон'
+lib/presentation/pages/settings/receipt_template_page.dart::'Сохранить'
+lib/presentation/pages/settings/receipt_template_page.dart::'Спасибо за покупку!'
+lib/presentation/pages/settings/receipt_template_page.dart::'Ср.'
+lib/presentation/pages/settings/receipt_template_page.dart::'Текст'
+lib/presentation/pages/settings/receipt_template_page.dart::'Товар 1                 50.00 TJS'
+lib/presentation/pages/settings/receipt_template_page.dart::'Товар 2                 30.00 TJS'
+lib/presentation/pages/settings/receipt_template_page.dart::'Шаблон чека'
+lib/presentation/pages/settings/receipt_template_page.dart::'Ширина бумаги'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Авто-добавление в корзину'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Вибрация при сканировании'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Задняя камера'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Звук при сканировании'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Камера'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Передняя камера'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Поведение'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Рекомендуется для сканирования'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Сканер штрихкодов'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Сохранить настройки'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Сохранить'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Форматы штрихкодов'
+lib/presentation/pages/settings/scanner_settings_page.dart::'Фронтальная камера'
+lib/presentation/pages/settings/settings_page.dart::'$_pendingSyncOps в очереди'
+lib/presentation/pages/settings/settings_page.dart::'$planLabel до ${DateFormat('
+lib/presentation/pages/settings/settings_page.dart::'Telegram-бот'
+lib/presentation/pages/settings/settings_page.dart::'Ўзбекча'
+lib/presentation/pages/settings/settings_page.dart::'Бизнес'
+lib/presentation/pages/settings/settings_page.dart::'Вы уверены, что хотите выйти?'
+lib/presentation/pages/settings/settings_page.dart::'Выйти из аккаунта'
+lib/presentation/pages/settings/settings_page.dart::'Выйти'
+lib/presentation/pages/settings/settings_page.dart::'Выход'
+lib/presentation/pages/settings/settings_page.dart::'Доступно на тарифе PREMIUM'
+lib/presentation/pages/settings/settings_page.dart::'Интеграции'
+lib/presentation/pages/settings/settings_page.dart::'Интеграция с интернет-магазином доступна на тарифе PREMIUM. Перейдите на PREMIUM, чтобы синхронизировать остатки и заказы с вашим сайтом.'
+lib/presentation/pages/settings/settings_page.dart::'Интернет-магазин'
+lib/presentation/pages/settings/settings_page.dart::'ККМ / Фискализация'
+lib/presentation/pages/settings/settings_page.dart::'Магазин'
+lib/presentation/pages/settings/settings_page.dart::'Мои магазины'
+lib/presentation/pages/settings/settings_page.dart::'Настройки'
+lib/presentation/pages/settings/settings_page.dart::'Отмена'
+lib/presentation/pages/settings/settings_page.dart::'Офлайн-режим'
+lib/presentation/pages/settings/settings_page.dart::'Перейти к тарифам'
+lib/presentation/pages/settings/settings_page.dart::'Подключён'
+lib/presentation/pages/settings/settings_page.dart::'Подписка'
+lib/presentation/pages/settings/settings_page.dart::'Позже'
+lib/presentation/pages/settings/settings_page.dart::'Премиум'
+lib/presentation/pages/settings/settings_page.dart::'Приложение'
+lib/presentation/pages/settings/settings_page.dart::'Принтер чеков'
+lib/presentation/pages/settings/settings_page.dart::'Программа лояльности'
+lib/presentation/pages/settings/settings_page.dart::'Продавцы'
+lib/presentation/pages/settings/settings_page.dart::'Роли и доступы'
+lib/presentation/pages/settings/settings_page.dart::'Русский'
+lib/presentation/pages/settings/settings_page.dart::'Синхронизировано'
+lib/presentation/pages/settings/settings_page.dart::'Сканер'
+lib/presentation/pages/settings/settings_page.dart::'Скидки'
+lib/presentation/pages/settings/settings_page.dart::'Сменить тариф'
+lib/presentation/pages/settings/settings_page.dart::'Старт'
+lib/presentation/pages/settings/settings_page.dart::'Тариф'
+lib/presentation/pages/settings/settings_page.dart::'Тоҷикӣ'
+lib/presentation/pages/settings/settings_page.dart::'Тёмная тема'
+lib/presentation/pages/settings/settings_page.dart::'Уведомления'
+lib/presentation/pages/settings/settings_page.dart::'Шаблоны чеков'
+lib/presentation/pages/settings/settings_page.dart::'Язык'
+lib/presentation/pages/settings/subscription_page.dart::'1 магазин'
+lib/presentation/pages/settings/subscription_page.dart::'10 сотрудников'
+lib/presentation/pages/settings/subscription_page.dart::'149 TJS/мес'
+lib/presentation/pages/settings/subscription_page.dart::'2 сотрудника'
+lib/presentation/pages/settings/subscription_page.dart::'2000 товаров'
+lib/presentation/pages/settings/subscription_page.dart::'299 TJS/мес'
+lib/presentation/pages/settings/subscription_page.dart::'3 магазина'
+lib/presentation/pages/settings/subscription_page.dart::'49 TJS/мес'
+lib/presentation/pages/settings/subscription_page.dart::'5 магазинов'
+lib/presentation/pages/settings/subscription_page.dart::'5 скидок'
+lib/presentation/pages/settings/subscription_page.dart::'500 товаров'
+lib/presentation/pages/settings/subscription_page.dart::'Telegram-бот'
+lib/presentation/pages/settings/subscription_page.dart::'Активна'
+lib/presentation/pages/settings/subscription_page.dart::'Банк'
+lib/presentation/pages/settings/subscription_page.dart::'Безлимит скидок'
+lib/presentation/pages/settings/subscription_page.dart::'Безлимит товаров/сотрудников'
+lib/presentation/pages/settings/subscription_page.dart::'Бизнес'
+lib/presentation/pages/settings/subscription_page.dart::'Валюты'
+lib/presentation/pages/settings/subscription_page.dart::'Все отчёты'
+lib/presentation/pages/settings/subscription_page.dart::'Выбрать'
+lib/presentation/pages/settings/subscription_page.dart::'Галерея'
+lib/presentation/pages/settings/subscription_page.dart::'Дата: ${DateFormat('
+lib/presentation/pages/settings/subscription_page.dart::'Доставки'
+lib/presentation/pages/settings/subscription_page.dart::'Загрузка...'
+lib/presentation/pages/settings/subscription_page.dart::'Закрыть'
+lib/presentation/pages/settings/subscription_page.dart::'Изображение недоступно'
+lib/presentation/pages/settings/subscription_page.dart::'Инвентаризация'
+lib/presentation/pages/settings/subscription_page.dart::'Истекла'
+lib/presentation/pages/settings/subscription_page.dart::'История оплат'
+lib/presentation/pages/settings/subscription_page.dart::'Камера'
+lib/presentation/pages/settings/subscription_page.dart::'Карта'
+lib/presentation/pages/settings/subscription_page.dart::'Метод: ${payment.method == '
+lib/presentation/pages/settings/subscription_page.dart::'Назад'
+lib/presentation/pages/settings/subscription_page.dart::'Наличные'
+lib/presentation/pages/settings/subscription_page.dart::'Ожидает подтверждения оплаты'
+lib/presentation/pages/settings/subscription_page.dart::'Ожидает'
+lib/presentation/pages/settings/subscription_page.dart::'Оплата тарифа «${planInfo.label}»'
+lib/presentation/pages/settings/subscription_page.dart::'Отклонено'
+lib/presentation/pages/settings/subscription_page.dart::'Отменена'
+lib/presentation/pages/settings/subscription_page.dart::'Отчёт продаж'
+lib/presentation/pages/settings/subscription_page.dart::'Перевод на карту'
+lib/presentation/pages/settings/subscription_page.dart::'Платёж — ${_planLabel(payment.plan)}'
+lib/presentation/pages/settings/subscription_page.dart::'Повторить'
+lib/presentation/pages/settings/subscription_page.dart::'Подписка'
+lib/presentation/pages/settings/subscription_page.dart::'Подтверждено'
+lib/presentation/pages/settings/subscription_page.dart::'Получатель'
+lib/presentation/pages/settings/subscription_page.dart::'Премиум'
+lib/presentation/pages/settings/subscription_page.dart::'Примечание: ${payment.adminNote}'
+lib/presentation/pages/settings/subscription_page.dart::'Приоритетная поддержка'
+lib/presentation/pages/settings/subscription_page.dart::'Пробный период'
+lib/presentation/pages/settings/subscription_page.dart::'Пробный период: осталось ${state.trialDaysLeft} дней'
+lib/presentation/pages/settings/subscription_page.dart::'Реквизиты для перевода'
+lib/presentation/pages/settings/subscription_page.dart::'Скидка ${state.adminDiscount!.toStringAsFixed(0)}%'
+lib/presentation/pages/settings/subscription_page.dart::'Старт'
+lib/presentation/pages/settings/subscription_page.dart::'Статус: ${payment.status}'
+lib/presentation/pages/settings/subscription_page.dart::'Сумма: ${payment.amount.toStringAsFixed(0)} TJS'
+lib/presentation/pages/settings/subscription_page.dart::'Тарифные планы'
+lib/presentation/pages/settings/subscription_page.dart::'Текущий план'
+lib/presentation/pages/settings/subscription_page.dart::'Чек:'
+lib/presentation/pages/settings/subscription_page.dart::'Экспорт PDF/Excel'
+lib/presentation/pages/settings/subscription_page.dart::'до $formatted'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Telegram-бот'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Бот проверяет номер в базе клиентов и связывает аккаунт'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Как подключить клиентов'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Клиент находит бота $_botUsername в Telegram'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Клиент получает уведомления о продажах и долгах'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Нажимает /start и вводит свой номер телефона'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Отправка...'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Подключён'
+lib/presentation/pages/settings/telegram_bot_settings_page.dart::'Подключённых клиентов'
+lib/presentation/pages/shifts/open_shift_page.dart::'Введите сумму'
+lib/presentation/pages/shifts/open_shift_page.dart::'Начало смены'
+lib/presentation/pages/shifts/open_shift_page.dart::'Некорректная сумма'
+lib/presentation/pages/shifts/open_shift_page.dart::'Открыть смену'
+lib/presentation/pages/shifts/open_shift_page.dart::'Сумма наличных (TJS)'
+lib/presentation/pages/shifts/open_shift_page.dart::'Сумма не может быть отрицательной'
+lib/presentation/pages/shifts/open_shift_page.dart::'Укажите сумму наличных в кассе на начало смены'
+lib/presentation/pages/shifts/shifts_page.dart::'$hoursч $minutesм'
+lib/presentation/pages/shifts/shifts_page.dart::'}  •  ${shift.salesCount} продаж  •  ${_formatPrice(shift.salesTotal)}'
+lib/presentation/pages/shifts/shifts_page.dart::'Активна'
+lib/presentation/pages/shifts/shifts_page.dart::'Введите сумму наличных в кассе:'
+lib/presentation/pages/shifts/shifts_page.dart::'Введите сумму'
+lib/presentation/pages/shifts/shifts_page.dart::'Закрыть смену'
+lib/presentation/pages/shifts/shifts_page.dart::'Закрыть'
+lib/presentation/pages/shifts/shifts_page.dart::'История смен'
+lib/presentation/pages/shifts/shifts_page.dart::'Кассир: ${shift.staffName ?? '
+lib/presentation/pages/shifts/shifts_page.dart::'Некорректная сумма'
+lib/presentation/pages/shifts/shifts_page.dart::'Нет смен'
+lib/presentation/pages/shifts/shifts_page.dart::'Откройте смену, чтобы начать приём платежей'
+lib/presentation/pages/shifts/shifts_page.dart::'Открыта: ${timeFormat.format(shift.openedAt)}  •  Время работы: ${_formatDuration(shift.openedAt)}'
+lib/presentation/pages/shifts/shifts_page.dart::'Открыть смену'
+lib/presentation/pages/shifts/shifts_page.dart::'Отмена'
+lib/presentation/pages/shifts/shifts_page.dart::'Продаж: ${shift.salesCount}  |  Сумма: ${_formatPrice(shift.salesTotal)}'
+lib/presentation/pages/shifts/shifts_page.dart::'Сдано'
+lib/presentation/pages/shifts/shifts_page.dart::'Смены'
+lib/presentation/pages/shifts/shifts_page.dart::'Сумма наличных'
+lib/presentation/pages/shifts/shifts_page.dart::'Сумма не может быть отрицательной'
+lib/presentation/pages/shifts/shifts_page.dart::'Текущая смена'
+lib/presentation/pages/staff/staff_detail_page.dart::'Админ'
+lib/presentation/pages/staff/staff_detail_page.dart::'Владелец'
+lib/presentation/pages/staff/staff_detail_page.dart::'Дата регистрации'
+lib/presentation/pages/staff/staff_detail_page.dart::'Кассир'
+lib/presentation/pages/staff/staff_detail_page.dart::'Комиссия'
+lib/presentation/pages/staff/staff_detail_page.dart::'На смене'
+lib/presentation/pages/staff/staff_detail_page.dart::'Нет смен'
+lib/presentation/pages/staff/staff_detail_page.dart::'Оклад'
+lib/presentation/pages/staff/staff_detail_page.dart::'Продажи сегодня'
+lib/presentation/pages/staff/staff_detail_page.dart::'Профиль сотрудника'
+lib/presentation/pages/staff/staff_detail_page.dart::'Складовщик'
+lib/presentation/pages/staff/staff_detail_page.dart::'Смены'
+lib/presentation/pages/staff/staff_detail_page.dart::'Статистика'
+lib/presentation/pages/staff/staff_detail_page.dart::'Статус'
+lib/presentation/pages/staff/staff_list_page.dart::'Администратор'
+lib/presentation/pages/staff/staff_list_page.dart::'Владелец'
+lib/presentation/pages/staff/staff_list_page.dart::'Добавить сотрудника'
+lib/presentation/pages/staff/staff_list_page.dart::'Добавьте сотрудников для учёта смен и зарплаты'
+lib/presentation/pages/staff/staff_list_page.dart::'Кассир'
+lib/presentation/pages/staff/staff_list_page.dart::'На смене'
+lib/presentation/pages/staff/staff_list_page.dart::'Сегодня: ${_formatPrice(staff.todaySales!)}'
+lib/presentation/pages/staff/staff_list_page.dart::'Склад'
+lib/presentation/pages/staff/staff_list_page.dart::'Сотрудники'
+lib/presentation/pages/staff/staff_list_page.dart::'Сотрудников пока нет'
+lib/presentation/pages/stock/stock_intake_page.dart::'Введите количество'
+lib/presentation/pages/stock/stock_intake_page.dart::'Введите себестоимость'
+lib/presentation/pages/stock/stock_intake_page.dart::'Итоговая стоимость'
+lib/presentation/pages/stock/stock_intake_page.dart::'Количество'
+lib/presentation/pages/stock/stock_intake_page.dart::'Найдите товар для оформления прихода'
+lib/presentation/pages/stock/stock_intake_page.dart::'Найти товар для прихода'
+lib/presentation/pages/stock/stock_intake_page.dart::'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}'
+lib/presentation/pages/stock/stock_intake_page.dart::'Приход товара'
+lib/presentation/pages/stock/stock_intake_page.dart::'Себестоимость (за единицу)'
+lib/presentation/pages/stock/stock_intake_page.dart::'Сохранить'
+lib/presentation/pages/stock/stock_intake_page.dart::'Товары не найдены'
+lib/presentation/pages/stock/stock_intake_page.dart::'Цена: ${Formatters.price(product.sellPrice, currency: currency)}'
+lib/presentation/pages/supplier/supplier_detail_page.dart::'Изменить'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Введите название поставщика'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Добавить поставщика'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Добавить'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Добавьте первого поставщика, чтобы отслеживать поставки и долги'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Название'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Наш долг'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Новый поставщик'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Отмена'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Поиск поставщика'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Поставщики'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Поставщиков пока нет'
+lib/presentation/pages/supplier/supplier_list_page.dart::'Телефон'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'АКТИВЫ МАГАЗИНА'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Авто'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Автоматически из каталога'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Автоматически из модуля'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Активы ниже нисаба. Закят не обязателен.'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'ВЫЧЕТЫ'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Дебиторская задолженность'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Долги клиентов'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Долги поставщикам'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Закят — ${calc.zakatRate.toStringAsFixed(1)}% от имущества, хранящегося 1 лунный год'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Закят: ${c.zakatDue.toStringAsFixed(2)} сом.\n'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Калькулятор закята'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Нисаб (85г золота):'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Облагаемая сумма:'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Отметить как оплачено'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Поделиться расчётом'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Превышен'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'СУММА ЗАКЯТА (${calc.zakatRate.toStringAsFixed(1)}%):'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Товарные остатки'
+lib/presentation/pages/zakat/zakat_calculator_page.dart::'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Всего выплачено:'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Выплата закята'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Загрузить ещё'
+lib/presentation/pages/zakat/zakat_history_page.dart::'История закята'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Нет расчётов закята'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Облагаемая: ${_formatPrice(payment.totalAssets)}'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Оплачен $dateStr'
+lib/presentation/pages/zakat/zakat_history_page.dart::'Рассчитайте закят в калькуляторе, чтобы история появилась здесь'
+lib/presentation/pages/zakat/zakat_history_page.dart::'за ${state.total > 0 ? state.total : state.payments.length} выплат'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'АВТОМАТИЧЕСКИЕ ДАННЫЕ'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Введите число'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Дата начала хавля'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Дебиторская задолженность'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Долги поставщикам (вычет)'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'За 30 дней до окончания хавля'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Курс золота (за 1g)'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'ЛУННЫЙ ГОД (ХАВЛЬ)'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'МЕТОД РАСЧЁТА'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Наличные в кассе'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Напоминание'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Настройки закята'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Не выбрана'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Не может быть отрицательным'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Обязательное поле'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'По золоту (85g)'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'По серебру (595g)'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Сохранение...'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Стандарт нисаба'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Товарные остатки магазина'
+lib/presentation/pages/zakat/zakat_settings_page.dart::'Учитывается в активах при расчёте закята'
+lib/presentation/widgets/common/app_bottom_sheet.dart::'Пӯшидан'
+lib/presentation/widgets/common/app_dialog.dart::'Бекор'
+lib/presentation/widgets/common/app_dialog.dart::'Тасдиқ'
+lib/presentation/widgets/common/app_error_widget.dart::'Повторить'
+lib/presentation/widgets/common/app_search_bar.dart::'Поиск...'
+lib/presentation/widgets/common/barcode_scanner_sheet.dart::'Наведите камеру на штрихкод'
+lib/presentation/widgets/common/barcode_scanner_sheet.dart::'Пӯшидан'
+lib/presentation/widgets/common/barcode_scanner_sheet.dart::'Сканер штрихкода'
+lib/presentation/widgets/common/offline_banner.dart::'$_pendingCount операций ожидают синхронизации'
+lib/presentation/widgets/common/offline_banner.dart::'Нет подключения к интернету'
+lib/presentation/widgets/common/offline_banner.dart::'Офлайн режим · $_pendingCount в очереди'
+lib/presentation/widgets/common/offline_banner.dart::'Ошибка синхронизации · $_pendingCount не отправлено'
+lib/presentation/widgets/common/offline_banner.dart::'Повторить'
+lib/presentation/widgets/common/offline_banner.dart::'Синхронизация...'
+lib/presentation/widgets/common/phone_input_field.dart::'Номер телефона'
+lib/presentation/widgets/dashboard/sale_list_item.dart::'В долг'
+lib/presentation/widgets/dashboard/sale_list_item.dart::'Карта'
+lib/presentation/widgets/dashboard/sale_list_item.dart::'Наличные'
+lib/presentation/widgets/debt/payment_form.dart::'Заметки'
+lib/presentation/widgets/debt/payment_form.dart::'Максимум: ${widget.maxAmount.toStringAsFixed(2)} TJS'
+lib/presentation/widgets/debt/payment_form.dart::'Наличные'
+lib/presentation/widgets/debt/payment_form.dart::'Принять оплату'
+lib/presentation/widgets/debt/payment_form.dart::'Сумма'
+lib/presentation/widgets/finance/expense_card.dart::'Аренда'
+lib/presentation/widgets/finance/expense_card.dart::'Другое'
+lib/presentation/widgets/finance/expense_card.dart::'Закупка'
+lib/presentation/widgets/finance/expense_card.dart::'Зарплата'
+lib/presentation/widgets/finance/expense_card.dart::'Коммунальные'
+lib/presentation/widgets/finance/expense_card.dart::'Маркетинг'
+lib/presentation/widgets/finance/expense_card.dart::'Транспорт'
+lib/presentation/widgets/finance/period_selector.dart::'Год'
+lib/presentation/widgets/finance/period_selector.dart::'День'
+lib/presentation/widgets/finance/period_selector.dart::'Месяц'
+lib/presentation/widgets/finance/period_selector.dart::'Неделя'
+lib/presentation/widgets/finance/profit_summary_card.dart::'Доход'
+lib/presentation/widgets/finance/profit_summary_card.dart::'Прибыль'
+lib/presentation/widgets/finance/profit_summary_card.dart::'Расходы'
+lib/presentation/widgets/finance/stat_summary_row.dart::'Продаж'
+lib/presentation/widgets/finance/stat_summary_row.dart::'Средний чек'
+lib/presentation/widgets/home/impersonation_banner.dart::'Вы вошли как поддержка Dukon'
+lib/presentation/widgets/home/impersonation_banner.dart::'Завершить сессию'
+lib/presentation/widgets/payroll/month_selector.dart::'Август'
+lib/presentation/widgets/payroll/month_selector.dart::'Апрель'
+lib/presentation/widgets/payroll/month_selector.dart::'Декабрь'
+lib/presentation/widgets/payroll/month_selector.dart::'Июль'
+lib/presentation/widgets/payroll/month_selector.dart::'Июнь'
+lib/presentation/widgets/payroll/month_selector.dart::'Май'
+lib/presentation/widgets/payroll/month_selector.dart::'Март'
+lib/presentation/widgets/payroll/month_selector.dart::'Ноябрь'
+lib/presentation/widgets/payroll/month_selector.dart::'Октябрь'
+lib/presentation/widgets/payroll/month_selector.dart::'Сентябрь'
+lib/presentation/widgets/payroll/month_selector.dart::'Февраль'
+lib/presentation/widgets/payroll/month_selector.dart::'Январь'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Админ'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Владелец'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Выплатить'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Итого'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Кассир'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Комиссия'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Оклад'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Оплачено'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Складовщик'
+lib/presentation/widgets/payroll/payroll_staff_card.dart::'Удалить'
+lib/presentation/widgets/pos/receipt_widget.dart::'ИТОГО'
+lib/presentation/widgets/pos/receipt_widget.dart::'Кол.'
+lib/presentation/widgets/pos/receipt_widget.dart::'Оплата'
+lib/presentation/widgets/pos/receipt_widget.dart::'Оплачено'
+lib/presentation/widgets/pos/receipt_widget.dart::'Подытог'
+lib/presentation/widgets/pos/receipt_widget.dart::'Сдача'
+lib/presentation/widgets/pos/receipt_widget.dart::'Скидка'
+lib/presentation/widgets/pos/receipt_widget.dart::'Спасибо за покупку!'
+lib/presentation/widgets/pos/receipt_widget.dart::'Сумма'
+lib/presentation/widgets/pos/receipt_widget.dart::'Товар'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Возврат'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Все'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Выбрать даты'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Выполнен'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Долг'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Карта'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Месяц'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Наличные'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Неделя'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Отменён'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Период'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Применить'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Пӯшидан'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Сбросить'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Сегодня'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Статус'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Тип оплаты'
+lib/presentation/widgets/pos/sales_filter_sheet.dart::'Фильтры'
+lib/presentation/widgets/shifts/current_shift_card.dart::"Сотрудник"
+lib/presentation/widgets/shifts/current_shift_card.dart::'${hours}ч ${minutes}м'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Активна'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Закрыть смену'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Карта'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Кол-во'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Наличные'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Продажи'
+lib/presentation/widgets/shifts/current_shift_card.dart::'Текущая смена'
+lib/presentation/widgets/shifts/shift_card.dart::'${hours}ч ${minutes}м'
+lib/presentation/widgets/shifts/shift_card.dart::'${shift.salesCount} продаж'
+lib/presentation/widgets/shifts/shift_card.dart::'Открыта'
+lib/presentation/widgets/shifts/shift_card.dart::'Сотрудник'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Возвраты'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Настройки магазина'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Открытие/закрытие смены'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Применение скидок'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Продажи'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Просмотр отчётов'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление долгами'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление зарплатой'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление персоналом'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление покупателями'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление поставщиками'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление расходами'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление складом'
+lib/presentation/widgets/staff/permission_toggle_row.dart::'Управление товарами'
+lib/presentation/widgets/staff/staff_card.dart::'Админ'
+lib/presentation/widgets/staff/staff_card.dart::'Владелец'
+lib/presentation/widgets/staff/staff_card.dart::'Кассир'
+lib/presentation/widgets/staff/staff_card.dart::'Складовщик'
+lib/presentation/widgets/staff/staff_card.dart::'сегодня'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Активы ниже нисаба. Закят не обязателен.'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Дебиторская задолженность'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Закят (2.5%)'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Кредиторская задолженность'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Нисаб'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Разбивка активов'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Товарные запасы'
+lib/presentation/widgets/zakat/zakat_breakdown_card.dart::'Чистые активы'
