@@ -308,6 +308,24 @@ class AppLocalizationsUz extends AppLocalizations {
   String get currency => 'Valyuta';
 
   @override
+  String get myStoresEditTitle => 'Редактировать магазин';
+
+  @override
+  String get myStoresAddTitle => 'Добавить магазин';
+
+  @override
+  String get myStoresNameLabel => 'Название *';
+
+  @override
+  String get myStoresCategoryLabel => 'Категория *';
+
+  @override
+  String get myStoresEmptyState => 'Нет магазинов';
+
+  @override
+  String get myStoresActiveStatus => 'Активный';
+
+  @override
   String get products => 'Tovarlar';
 
   @override

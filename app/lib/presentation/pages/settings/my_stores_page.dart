@@ -58,14 +58,17 @@ class _MyStoresPageState extends State<MyStoresPage> {
     return storeState is StoreLoaded ? storeState.selectedStore?.id : null;
   }
 
-  static const _categories = {
-    'GROCERY': 'Продукты',
-    'CLOTHING': 'Одежда',
-    'ELECTRONICS': 'Электроника',
-    'HARDWARE': 'Стройматериалы',
-    'PHARMACY': 'Аптека',
-    'OTHER': 'Другое',
-  };
+  Map<String, String> _categoryLabels(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return {
+      'GROCERY': l10n.grocery,
+      'CLOTHING': l10n.clothing,
+      'ELECTRONICS': l10n.electronics,
+      'HARDWARE': l10n.hardware,
+      'PHARMACY': l10n.pharmacy,
+      'OTHER': l10n.other,
+    };
+  }
 
   void _showStoreForm({Map<String, dynamic>? existing}) {
     final formKey = GlobalKey<FormState>();
@@ -108,7 +111,9 @@ class _MyStoresPageState extends State<MyStoresPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isEdit ? 'Редактировать магазин' : 'Добавить магазин',
+                  isEdit
+                      ? AppLocalizations.of(context)!.myStoresEditTitle
+                      : AppLocalizations.of(context)!.myStoresAddTitle,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -117,23 +122,23 @@ class _MyStoresPageState extends State<MyStoresPage> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: nameCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Название *',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.myStoresNameLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'Введите название'
+                      ? AppLocalizations.of(context)!.createStoreNameRequiredError
                       : null,
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   initialValue: selectedCategory,
-                  decoration: const InputDecoration(
-                    labelText: 'Категория *',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.myStoresCategoryLabel,
+                    border: const OutlineInputBorder(),
                   ),
-                  items: _categories.entries
+                  items: _categoryLabels(context).entries
                       .map(
                         (e) => DropdownMenuItem(
                           value: e.key,
@@ -148,17 +153,17 @@ class _MyStoresPageState extends State<MyStoresPage> {
                 const SizedBox(height: 12),
                 TextField(
                   controller: addressCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Адрес',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.address,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: phoneCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Телефон',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.phoneLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.phone,
                 ),
@@ -192,7 +197,9 @@ class _MyStoresPageState extends State<MyStoresPage> {
                       if (success && ctx.mounted) Navigator.pop(ctx);
                     },
                     child: Text(
-                      isEdit ? 'Сохранить' : 'Создать',
+                      isEdit
+                          ? AppLocalizations.of(context)!.save
+                          : AppLocalizations.of(context)!.create,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -256,7 +263,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Мои магазины'),
+        title: Text(l10n.moreMyStores),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -277,7 +284,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: _loadStores,
-                    child: const Text('Повторить'),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),
@@ -294,7 +301,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Нет магазинов',
+                    l10n.myStoresEmptyState,
                     style: TextStyle(
                       fontSize: 16,
                       color: context.textSecondary,
@@ -304,7 +311,7 @@ class _MyStoresPageState extends State<MyStoresPage> {
                   ElevatedButton.icon(
                     onPressed: () => _showStoreForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Добавить магазин'),
+                    label: Text(l10n.myStoresAddTitle),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: AppColors.onPrimary,
@@ -389,9 +396,9 @@ class _MyStoresPageState extends State<MyStoresPage> {
                                             AppConstants.radiusSm,
                                           ),
                                         ),
-                                        child: const Text(
-                                          'Активный',
-                                          style: TextStyle(
+                                        child: Text(
+                                          l10n.myStoresActiveStatus,
+                                          style: const TextStyle(
                                             fontSize: 12,
                                             color: AppColors.primary,
                                             fontWeight: FontWeight.w600,

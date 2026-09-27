@@ -658,6 +658,42 @@ abstract class AppLocalizations {
   /// **'Валюта'**
   String get currency;
 
+  /// My-stores create/edit bottom sheet header when editing an existing store — same wording as the `a11yEditStore` tooltip but a different UI role (sheet header vs. icon-button tooltip), kept as a separate key
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать магазин'**
+  String get myStoresEditTitle;
+
+  /// My-stores create/edit bottom sheet header when adding a new store — also reused as the empty-state 'add store' button label on the same page, since both refer to the identical add-store action with identical wording
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить магазин'**
+  String get myStoresAddTitle;
+
+  /// My-stores create/edit form's required name field label — distinct from `storeName` ("Название магазина") and `itemName` ("Название"), which are worded differently
+  ///
+  /// In ru, this message translates to:
+  /// **'Название *'**
+  String get myStoresNameLabel;
+
+  /// My-stores create/edit form's required category field label — distinct from the bare `category` ("Категория", no asterisk) used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Категория *'**
+  String get myStoresCategoryLabel;
+
+  /// My-stores page — message shown when the user has no stores yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет магазинов'**
+  String get myStoresEmptyState;
+
+  /// My-stores page — badge label marking the currently selected/active store in the list
+  ///
+  /// In ru, this message translates to:
+  /// **'Активный'**
+  String get myStoresActiveStatus;
+
   /// Products section title
   ///
   /// In ru, this message translates to:
