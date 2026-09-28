@@ -802,6 +802,37 @@ class AppLocalizationsTg extends AppLocalizations {
   String get salesHistory => 'Таърихи фурӯш';
 
   @override
+  String get salesHistoryCustomDateChip => 'Выбрать';
+
+  @override
+  String get salesHistoryEmptySubtitle =>
+      'История продаж появится здесь после первой транзакции';
+
+  @override
+  String salesHistoryStatsLine(String count, String amount) {
+    return '$count продаж  |  $amount';
+  }
+
+  @override
+  String salesHistorySkippedRowsLine(String count, String word) {
+    return '$count $word пропущено';
+  }
+
+  @override
+  String salesHistorySaleSummaryLine(String customer, String itemsCount) {
+    return '$customer  •  $itemsCount товаров';
+  }
+
+  @override
+  String get recordsCountOne => 'запись';
+
+  @override
+  String get recordsCountFew => 'записи';
+
+  @override
+  String get recordsCountMany => 'записей';
+
+  @override
   String get todaySales => 'Фурӯши имрӯза';
 
   @override

@@ -79,8 +79,8 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 children: [
-                  const Text('История продаж',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.salesHistory,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.filter_list_outlined),
@@ -135,25 +135,25 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
                     AppChip(
-                      label: 'Сегодня',
+                      label: l10n.today,
                       isSelected: _selectedPeriod == SalesFilterPeriod.today,
                       onTap: () => _onPeriodSelected(SalesFilterPeriod.today),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Неделя',
+                      label: l10n.week,
                       isSelected: _selectedPeriod == SalesFilterPeriod.week,
                       onTap: () => _onPeriodSelected(SalesFilterPeriod.week),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Месяц',
+                      label: l10n.month,
                       isSelected: _selectedPeriod == SalesFilterPeriod.month,
                       onTap: () => _onPeriodSelected(SalesFilterPeriod.month),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Выбрать',
+                      label: l10n.salesHistoryCustomDateChip,
                       isSelected: _selectedPeriod == SalesFilterPeriod.custom,
                       onTap: _showDatePicker,
                     ),
@@ -177,10 +177,10 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   }
                   if (state is SalesHistoryLoaded) {
                     if (state.sales.isEmpty) {
-                      return const AppEmptyState(
+                      return AppEmptyState(
                         icon: Icons.receipt_long_outlined,
-                        title: 'Нет продаж',
-                        subtitle: 'История продаж появится здесь после первой транзакции',
+                        title: l10n.noSales,
+                        subtitle: l10n.salesHistoryEmptySubtitle,
                       );
                     }
 
@@ -202,7 +202,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
                             child: Text(
-                              '$totalSales продаж  |  ${_formatPrice(totalAmount)}',
+                              l10n.salesHistoryStatsLine(totalSales.toString(), _formatPrice(totalAmount)),
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -231,7 +231,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 16),
                               child: Text(
-                                '${state.skippedRows} ${_pluralRecord(state.skippedRows)} пропущено',
+                                l10n.salesHistorySkippedRowsLine(state.skippedRows.toString(), _pluralRecord(state.skippedRows, l10n)),
                                 style: TextStyle(
                                   color: context.textSecondary,
                                   fontSize: 12,
@@ -298,12 +298,13 @@ class _SaleCard extends StatelessWidget {
     return context.successBg;
   }
 
-  String _paymentLabel() {
+  String _paymentLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (sale.paymentType.toUpperCase()) {
-      case 'CASH': return 'Наличные';
-      case 'CARD': return 'Карта';
-      case 'DEBT': return 'В долг';
-      case 'MIXED': return 'Смешанная';
+      case 'CASH': return l10n.cash;
+      case 'CARD': return l10n.card;
+      case 'DEBT': return l10n.debt;
+      case 'MIXED': return l10n.paymentMixedShort;
       default: return sale.paymentType;
     }
   }
@@ -319,6 +320,7 @@ class _SaleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('dd.MM HH:mm');
     final isRefund = sale.status == 'REFUNDED';
 
@@ -353,7 +355,7 @@ class _SaleCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Чек ${sale.receiptNo}',
+                      Text(l10n.transactionDetailReceiptTitle(sale.receiptNo),
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(dateFormat.format(sale.createdAt),
                         style: TextStyle(fontSize: 12, color: context.textSecondary)),
@@ -364,7 +366,7 @@ class _SaleCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${sale.customerName ?? 'Розничный'}  •  ${sale.items.length} товаров',
+                        l10n.salesHistorySaleSummaryLine(sale.customerName ?? l10n.transactionDetailRetailCustomerFallback, sale.items.length.toString()),
                         style: TextStyle(fontSize: 12, color: context.textSecondary),
                       ),
                     ],
@@ -385,7 +387,7 @@ class _SaleCard extends StatelessWidget {
                         children: [
                           Icon(_paymentIcon(), size: 14, color: context.textSecondary),
                           const SizedBox(width: 4),
-                          Text(isRefund ? 'Возврат' : _paymentLabel(),
+                          Text(isRefund ? l10n.refund : _paymentLabel(context),
                             style: TextStyle(
                               fontSize: 12,
                               color: isRefund ? AppColors.error : context.textSecondary,
@@ -404,12 +406,12 @@ class _SaleCard extends StatelessWidget {
   }
 }
 
-String _pluralRecord(int n) {
+String _pluralRecord(int n, AppLocalizations l10n) {
   // 1 запись, 2-4 записи, 5+ записей. Russian plural rules.
   final mod10 = n % 10;
   final mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'записей';
-  if (mod10 == 1) return 'запись';
-  if (mod10 >= 2 && mod10 <= 4) return 'записи';
-  return 'записей';
+  if (mod100 >= 11 && mod100 <= 14) return l10n.recordsCountMany;
+  if (mod10 == 1) return l10n.recordsCountOne;
+  if (mod10 >= 2 && mod10 <= 4) return l10n.recordsCountFew;
+  return l10n.recordsCountMany;
 }

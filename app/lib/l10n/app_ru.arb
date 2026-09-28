@@ -534,6 +534,40 @@
   "@sales": { "description": "Sales section title" },
   "salesHistory": "История продаж",
   "@salesHistory": { "description": "Sales history section" },
+  "salesHistoryCustomDateChip": "Выбрать",
+  "@salesHistoryCustomDateChip": { "description": "Sales-history period-filter chip for opening a custom date-range picker (bare \"Выбрать\") — distinct from `salesFilterCustomDates` (\"Выбрать даты\"), the fuller wording used in the sales-filter bottom sheet's period section" },
+  "salesHistoryEmptySubtitle": "История продаж появится здесь после первой транзакции",
+  "@salesHistoryEmptySubtitle": { "description": "Sales-history empty-state subtitle shown when there are no sales yet" },
+  "salesHistoryStatsLine": "{count} продаж  |  {amount}",
+  "@salesHistoryStatsLine": {
+    "description": "Stats banner above the sales list — sale count and total amount, both pre-formatted strings",
+    "placeholders": {
+      "count": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+  "salesHistorySkippedRowsLine": "{count} {word} пропущено",
+  "@salesHistorySkippedRowsLine": {
+    "description": "Shown when the sales import parser skipped rows (BUG #28 warning banner); `word` is the already-pluralized Russian noun form (записей/запись/записи), pre-formatted at the call site via _pluralRecord",
+    "placeholders": {
+      "count": { "type": "String" },
+      "word": { "type": "String" }
+    }
+  },
+  "salesHistorySaleSummaryLine": "{customer}  •  {itemsCount} товаров",
+  "@salesHistorySaleSummaryLine": {
+    "description": "Sales-history list row's second line — customer name (or the retail-customer fallback, reusing `transactionDetailRetailCustomerFallback`) bullet-separated from the item count",
+    "placeholders": {
+      "customer": { "type": "String" },
+      "itemsCount": { "type": "String" }
+    }
+  },
+  "recordsCountOne": "запись",
+  "recordsCountFew": "записи",
+  "recordsCountMany": "записей",
+  "@recordsCountOne": { "description": "Russian singular form of 'record(s)', used in the skipped-rows warning on the sales-history import screen" },
+  "@recordsCountFew": { "description": "Russian few-form (2-4) of 'record(s)', same usage as recordsCountOne" },
+  "@recordsCountMany": { "description": "Russian many-form (0, 5+, 11-14) of 'record(s)', same usage as recordsCountOne — deliberately three separate keys rather than ICU plural, per this file's String-only placeholder convention" },
   "todaySales": "Продажи за сегодня",
   "@todaySales": { "description": "Today's sales" },
   "transactionDetail": "Детали операции",

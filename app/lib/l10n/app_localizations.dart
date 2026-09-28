@@ -1552,6 +1552,54 @@ abstract class AppLocalizations {
   /// **'История продаж'**
   String get salesHistory;
 
+  /// Sales-history period-filter chip for opening a custom date-range picker (bare "Выбрать") — distinct from `salesFilterCustomDates` ("Выбрать даты"), the fuller wording used in the sales-filter bottom sheet's period section
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать'**
+  String get salesHistoryCustomDateChip;
+
+  /// Sales-history empty-state subtitle shown when there are no sales yet
+  ///
+  /// In ru, this message translates to:
+  /// **'История продаж появится здесь после первой транзакции'**
+  String get salesHistoryEmptySubtitle;
+
+  /// Stats banner above the sales list — sale count and total amount, both pre-formatted strings
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж  |  {amount}'**
+  String salesHistoryStatsLine(String count, String amount);
+
+  /// Shown when the sales import parser skipped rows (BUG #28 warning banner); `word` is the already-pluralized Russian noun form (записей/запись/записи), pre-formatted at the call site via _pluralRecord
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} {word} пропущено'**
+  String salesHistorySkippedRowsLine(String count, String word);
+
+  /// Sales-history list row's second line — customer name (or the retail-customer fallback, reusing `transactionDetailRetailCustomerFallback`) bullet-separated from the item count
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer}  •  {itemsCount} товаров'**
+  String salesHistorySaleSummaryLine(String customer, String itemsCount);
+
+  /// Russian singular form of 'record(s)', used in the skipped-rows warning on the sales-history import screen
+  ///
+  /// In ru, this message translates to:
+  /// **'запись'**
+  String get recordsCountOne;
+
+  /// Russian few-form (2-4) of 'record(s)', same usage as recordsCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'записи'**
+  String get recordsCountFew;
+
+  /// Russian many-form (0, 5+, 11-14) of 'record(s)', same usage as recordsCountOne — deliberately three separate keys rather than ICU plural, per this file's String-only placeholder convention
+  ///
+  /// In ru, this message translates to:
+  /// **'записей'**
+  String get recordsCountMany;
+
   /// Today's sales
   ///
   /// In ru, this message translates to:
