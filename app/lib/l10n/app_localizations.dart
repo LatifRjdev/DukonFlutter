@@ -220,6 +220,12 @@ abstract class AppLocalizations {
   /// **'Восстановить'**
   String get restore;
 
+  /// Generic 'Reset' action — deliberately unprefixed, same class of generic action word as cancel/save/delete/create/retry
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить'**
+  String get reset;
+
   /// Relative time — event happened less than a minute ago
   ///
   /// In ru, this message translates to:
@@ -291,6 +297,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Список пуст'**
   String get emptyList;
+
+  /// Generic empty state for a customer picker list — deliberately unprefixed since any customer-selection UI could plausibly reuse it
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет клиентов'**
+  String get noCustomers;
 
   /// Generic singular 'product' label, e.g. a table column header
   ///
@@ -1341,6 +1353,90 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Смешанная оплата'**
   String get mixed;
+
+  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Shared across pos_checkout_page.dart and transaction_detail_page.dart (a later task in this plan), both of which use the bare form for the same UI role (a compact payment-method chip/label).
+  ///
+  /// In ru, this message translates to:
+  /// **'Смешанная'**
+  String get paymentMixedShort;
+
+  /// No description provided for @posCheckoutNoCustomerOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без клиента'**
+  String get posCheckoutNoCustomerOption;
+
+  /// No description provided for @posCheckoutSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск по названию'**
+  String get posCheckoutSearchHint;
+
+  /// No description provided for @posCheckoutEmptyCartSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Найдите товар через поиск или выберите из списка выше'**
+  String get posCheckoutEmptyCartSubtitle;
+
+  /// No description provided for @posCheckoutCartHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'Корзина ({count} товаров)'**
+  String posCheckoutCartHeader(String count);
+
+  /// All-caps totals-row label on the checkout screen, used for visual emphasis — distinct from `total` ("Итого", title case) used elsewhere; do not merge, the case difference is a deliberate style choice on this screen
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО'**
+  String get posCheckoutTotalCaps;
+
+  /// No description provided for @posCheckoutCta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформить продажу — {total}'**
+  String posCheckoutCta(String total);
+
+  /// No description provided for @posCheckoutPointsRedeemPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'{points} баллов = -{value} сом'**
+  String posCheckoutPointsRedeemPreview(String points, String value);
+
+  /// No description provided for @posCheckoutPointsAvailableInline.
+  ///
+  /// In ru, this message translates to:
+  /// **'{points} баллов доступно'**
+  String posCheckoutPointsAvailableInline(String points);
+
+  /// No description provided for @posCheckoutRedeemPointsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списать баллы'**
+  String get posCheckoutRedeemPointsTitle;
+
+  /// No description provided for @posCheckoutPointsAvailableLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно: {points} баллов'**
+  String posCheckoutPointsAvailableLabel(String points);
+
+  /// No description provided for @posCheckoutDiscountPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка: -{amount} сом'**
+  String posCheckoutDiscountPreview(String amount);
+
+  /// No description provided for @posCheckoutDiscountPercentHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Процент'**
+  String get posCheckoutDiscountPercentHint;
+
+  /// No description provided for @posCheckoutDiscountAmountHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма'**
+  String get posCheckoutDiscountAmountHint;
 
   /// Bank transfer payment method option (distinct from the POS cash/card/debt/mixed payment methods)
   ///

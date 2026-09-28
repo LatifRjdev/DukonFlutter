@@ -69,6 +69,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get restore => 'Восстановить';
 
   @override
+  String get reset => 'Сбросить';
+
+  @override
   String get justNow => 'только что';
 
   @override
@@ -109,6 +112,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get emptyList => 'Рӯйхат холӣ аст';
+
+  @override
+  String get noCustomers => 'Нет клиентов';
 
   @override
   String get product => 'Товар';
@@ -680,6 +686,61 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get mixed => 'Пардохти омехта';
+
+  @override
+  String get paymentMixedShort => 'Смешанная';
+
+  @override
+  String get posCheckoutNoCustomerOption => 'Без клиента';
+
+  @override
+  String get posCheckoutSearchHint => 'Поиск по названию';
+
+  @override
+  String get posCheckoutEmptyCartSubtitle =>
+      'Найдите товар через поиск или выберите из списка выше';
+
+  @override
+  String posCheckoutCartHeader(String count) {
+    return 'Корзина ($count товаров)';
+  }
+
+  @override
+  String get posCheckoutTotalCaps => 'ИТОГО';
+
+  @override
+  String posCheckoutCta(String total) {
+    return 'Оформить продажу — $total';
+  }
+
+  @override
+  String posCheckoutPointsRedeemPreview(String points, String value) {
+    return '$points баллов = -$value сом';
+  }
+
+  @override
+  String posCheckoutPointsAvailableInline(String points) {
+    return '$points баллов доступно';
+  }
+
+  @override
+  String get posCheckoutRedeemPointsTitle => 'Списать баллы';
+
+  @override
+  String posCheckoutPointsAvailableLabel(String points) {
+    return 'Доступно: $points баллов';
+  }
+
+  @override
+  String posCheckoutDiscountPreview(String amount) {
+    return 'Скидка: -$amount сом';
+  }
+
+  @override
+  String get posCheckoutDiscountPercentHint => 'Процент';
+
+  @override
+  String get posCheckoutDiscountAmountHint => 'Сумма';
 
   @override
   String get transfer => 'Перевод';

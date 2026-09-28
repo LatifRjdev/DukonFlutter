@@ -156,6 +156,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   }
 
   void _showCustomerSelection() {
+    final l10n = AppLocalizations.of(context)!;
     final storeId = _storeId;
     if (storeId == null) return;
 
@@ -181,14 +182,14 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Выберите клиента',
+                      Text(l10n.selectCustomer,
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                       TextButton(
                         onPressed: () {
                           this.context.read<CartBloc>().add(const CartCustomerSelected(customerId: null));
                           Navigator.pop(bottomSheetContext);
                         },
-                        child: const Text('Без клиента'),
+                        child: Text(l10n.posCheckoutNoCustomerOption),
                       ),
                     ],
                   ),
@@ -203,7 +204,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                       if (state is CustomerListLoaded) {
                         if (state.customers.isEmpty) {
                           return Center(
-                            child: Text('Нет клиентов', style: TextStyle(color: context.textSecondary)),
+                            child: Text(l10n.noCustomers, style: TextStyle(color: context.textSecondary)),
                           );
                         }
                         return ListView.separated(
@@ -252,7 +253,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     final storeState = context.watch<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
-        : 'Магазин';
+        : l10n.dashboardStoreFallback;
 
     if (storeState is StoreLoaded && storeState.selectedStore != null) {
       _storeId = storeState.selectedStore!.id;
@@ -280,7 +281,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Касса',
+                        Text(l10n.pos,
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         Text(storeName,
                           style: TextStyle(fontSize: 13, color: context.textSecondary)),
@@ -308,7 +309,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
-                            hintText: 'Поиск по названию',
+                            hintText: l10n.posCheckoutSearchHint,
                             hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
                             prefixIcon: Icon(Icons.search, color: context.textSecondary),
                             border: InputBorder.none,
@@ -354,7 +355,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     });
                   }
                 },
-                child: _showSearchResults ? _buildSearchResults() : const SizedBox.shrink(),
+                child: _showSearchResults ? _buildSearchResults(l10n) : const SizedBox.shrink(),
               ),
 
               // Quick products horizontal scroll. Height bumped from 72→84
@@ -422,10 +423,10 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 child: BlocBuilder<CartBloc, CartState>(
                   builder: (context, cartState) {
                     if (cartState.isEmpty) {
-                      return const AppEmptyState(
+                      return AppEmptyState(
                         icon: Icons.shopping_cart_outlined,
-                        title: 'Корзина пуста',
-                        subtitle: 'Найдите товар через поиск или выберите из списка выше',
+                        title: l10n.emptyCart,
+                        subtitle: l10n.posCheckoutEmptyCartSubtitle,
                       );
                     }
                     return _buildCartContent(cartState, l10n);
@@ -437,7 +438,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               BlocBuilder<CartBloc, CartState>(
                 builder: (context, cartState) {
                   if (cartState.isEmpty) return const SizedBox.shrink();
-                  return _buildBottomSection(cartState);
+                  return _buildBottomSection(cartState, l10n);
                 },
               ),
             ],
@@ -447,7 +448,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     );
   }
 
-  Widget _buildSearchResults() {
+  Widget _buildSearchResults(AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       constraints: const BoxConstraints(maxHeight: 200),
@@ -481,7 +482,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   : const Icon(Icons.inventory_2_outlined, size: 20, color: AppColors.disabled),
             ),
             title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
-            subtitle: Text('${product.quantity} шт', style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Text('${product.quantity} ${l10n.pcs}', style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
             trailing: Text(_formatPrice(product.sellPrice),
               style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary, fontSize: 14)),
           );
@@ -497,7 +498,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Cart header
-          Text('Корзина (${cartState.itemCount} товаров)',
+          Text(l10n.posCheckoutCartHeader(cartState.itemCount.toString()),
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           // Cart items
@@ -511,7 +512,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Подытог', style: TextStyle(fontSize: 14, color: context.textSecondary)),
+                    Text(l10n.subtotal, style: TextStyle(fontSize: 14, color: context.textSecondary)),
                     Text(_formatPrice(cartState.subtotal),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                   ],
@@ -522,7 +523,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   children: [
                     Row(
                       children: [
-                        Text('Скидка', style: TextStyle(fontSize: 14, color: context.textSecondary)),
+                        Text(l10n.discount, style: TextStyle(fontSize: 14, color: context.textSecondary)),
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () => _showDiscountDialog(cartState),
@@ -556,7 +557,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('ИТОГО', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                    Text(l10n.posCheckoutTotalCaps, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                     Text(_formatPrice(cartState.total),
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                   ],
@@ -675,7 +676,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     );
   }
 
-  Widget _buildBottomSection(CartState cartState) {
+  Widget _buildBottomSection(CartState cartState, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
@@ -688,21 +689,21 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
           // 4 payment method buttons
           Row(
             children: [
-              _paymentMethodButton('CASH', 'Наличные', Icons.money),
+              _paymentMethodButton('CASH', l10n.cash, Icons.money),
               const SizedBox(width: 6),
-              _paymentMethodButton('CARD', 'Карта', Icons.credit_card),
+              _paymentMethodButton('CARD', l10n.card, Icons.credit_card),
               const SizedBox(width: 6),
-              _paymentMethodButton('DEBT', 'В долг', Icons.access_time),
+              _paymentMethodButton('DEBT', l10n.debt, Icons.access_time),
               const SizedBox(width: 6),
-              _paymentMethodButton('MIXED', 'Смешанная', Icons.compare_arrows),
+              _paymentMethodButton('MIXED', l10n.paymentMixedShort, Icons.compare_arrows),
             ],
           ),
           const SizedBox(height: 8),
-          _buildLoyaltyWidget(context, cartState),
+          _buildLoyaltyWidget(context, cartState, l10n),
           const SizedBox(height: 4),
           // CTA button using AppButton for gradient rendering
           AppButton(
-            text: 'Оформить продажу — ${_formatPrice(cartState.total)}',
+            text: l10n.posCheckoutCta(_formatPrice(cartState.total)),
             onPressed: () => _initCheckoutAndProceed(cartState),
             height: 50,
           ),
@@ -711,7 +712,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
     );
   }
 
-  Widget _buildLoyaltyWidget(BuildContext context, CartState cart) {
+  Widget _buildLoyaltyWidget(BuildContext context, CartState cart, AppLocalizations l10n) {
     if (cart.customerLoyaltyPoints <= 0 || cart.loyaltyPointValue <= 0) {
       return const SizedBox.shrink();
     }
@@ -732,8 +733,8 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             Expanded(
               child: Text(
                 cart.redemptionPoints > 0
-                    ? '${cart.redemptionPoints} баллов = -$redeemValue сом'
-                    : '${cart.customerLoyaltyPoints} баллов доступно',
+                    ? l10n.posCheckoutPointsRedeemPreview(cart.redemptionPoints.toString(), redeemValue)
+                    : l10n.posCheckoutPointsAvailableInline(cart.customerLoyaltyPoints.toString()),
                 style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
               ),
             ),
@@ -745,6 +746,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   }
 
   void _showRedemptionSheet(BuildContext context, CartState cart) {
+    final l10n = AppLocalizations.of(context)!;
     int selected = cart.redemptionPoints;
     final maxByBalance = cart.customerLoyaltyPoints;
     final maxByTotal = cart.loyaltyPointValue > 0
@@ -761,10 +763,10 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Списать баллы',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(l10n.posCheckoutRedeemPointsTitle,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text('Доступно: ${cart.customerLoyaltyPoints} баллов'),
+              Text(l10n.posCheckoutPointsAvailableLabel(cart.customerLoyaltyPoints.toString())),
               const SizedBox(height: 16),
               Slider(
                 value: selected.toDouble(),
@@ -777,7 +779,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     : null,
               ),
               Text(
-                'Скидка: -${(selected * cart.loyaltyPointValue).toStringAsFixed(2)} сом',
+                l10n.posCheckoutDiscountPreview((selected * cart.loyaltyPointValue).toStringAsFixed(2)),
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 16),
@@ -788,7 +790,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                     context.read<CartBloc>().add(RedemptionPointsChanged(selected));
                     Navigator.pop(ctx);
                   },
-                  child: const Text('Применить'),
+                  child: Text(l10n.apply),
                 ),
               ),
             ],
@@ -835,6 +837,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   }
 
   void _showDiscountDialog(CartState cart) {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController(
       text: cart.discount > 0 ? cart.discount.toStringAsFixed(0) : '',
     );
@@ -844,7 +847,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          title: const Text('Скидка'),
+          title: Text(l10n.discount),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -906,7 +909,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 controller: controller,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
-                  hintText: discountType == 'PERCENTAGE' ? 'Процент' : 'Сумма',
+                  hintText: discountType == 'PERCENTAGE' ? l10n.posCheckoutDiscountPercentHint : l10n.posCheckoutDiscountAmountHint,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                 ),
               ),
@@ -919,7 +922,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   const CartDiscountApplied(discount: 0, type: 'FIXED'));
                 Navigator.pop(ctx);
               },
-              child: const Text('Сбросить'),
+              child: Text(l10n.reset),
             ),
             TextButton(
               onPressed: () {
@@ -928,7 +931,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                   CartDiscountApplied(discount: value, type: discountType));
                 Navigator.pop(ctx);
               },
-              child: const Text('Применить'),
+              child: Text(l10n.apply),
             ),
           ],
         ),
