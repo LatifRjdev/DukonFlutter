@@ -2012,6 +2012,79 @@ class AppLocalizationsTg extends AppLocalizations {
   String get printerSettingsSetDefaultButton => 'По умолч.';
 
   @override
+  String get receiptTemplatePageTitle => 'Шаблон чека';
+
+  @override
+  String get receiptTemplateSaveButton => 'Сохранить шаблон';
+
+  @override
+  String get receiptTemplatePreviewLabel => 'Предпросмотр';
+
+  @override
+  String get receiptTemplateTextSectionLabel => 'Текст';
+
+  @override
+  String get receiptTemplateHeaderFieldLabel => 'Заголовок чека';
+
+  @override
+  String get receiptTemplateHeaderFieldHint =>
+      'Название магазина или приветствие';
+
+  @override
+  String get receiptTemplateFooterFieldLabel => 'Подвал чека';
+
+  @override
+  String get receiptPreviewDefaultFooter => 'Спасибо за покупку!';
+
+  @override
+  String get receiptTemplateFontSizeLabel => 'Размер шрифта';
+
+  @override
+  String get receiptTemplateFontSizeSmall => 'Мал.';
+
+  @override
+  String get receiptTemplateFontSizeMedium => 'Ср.';
+
+  @override
+  String get receiptTemplateFontSizeLarge => 'Бол.';
+
+  @override
+  String get receiptTemplatePaperWidthLabel => 'Ширина бумаги';
+
+  @override
+  String get receiptTemplatePaperWidth58mm => '58 мм';
+
+  @override
+  String get receiptTemplatePaperWidth80mm => '80 мм';
+
+  @override
+  String get receiptTemplateShowOnReceiptLabel => 'Показывать на чеке';
+
+  @override
+  String get receiptTemplateQrToggleLabel => 'QR-код';
+
+  @override
+  String get receiptTemplateDateTimeToggleLabel => 'Дата и время';
+
+  @override
+  String get receiptPreviewDefaultHeader => 'Ваш магазин';
+
+  @override
+  String get receiptPreviewItemLine1 => 'Товар 1                 50.00 TJS';
+
+  @override
+  String get receiptPreviewItemLine2 => 'Товар 2                 30.00 TJS';
+
+  @override
+  String get receiptPreviewDiscountLine => 'Скидка                  -5.00 TJS';
+
+  @override
+  String get receiptPreviewTotalLine => 'ИТОГО                   75.00 TJS';
+
+  @override
+  String get receiptPreviewCashierLine => 'Кассир: Иванов И.';
+
+  @override
   String get ecommerceSettingsTitle => 'Интернет-магазин';
 
   @override

@@ -3844,6 +3844,150 @@ abstract class AppLocalizations {
   /// **'По умолч.'**
   String get printerSettingsSetDefaultButton;
 
+  /// Receipt template settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Шаблон чека'**
+  String get receiptTemplatePageTitle;
+
+  /// Receipt template settings screen — full-width save button at the bottom of the page; distinct from `save` ("Сохранить"), the bare AppBar action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить шаблон'**
+  String get receiptTemplateSaveButton;
+
+  /// Receipt template settings screen — section header above the live receipt mockup preview
+  ///
+  /// In ru, this message translates to:
+  /// **'Предпросмотр'**
+  String get receiptTemplatePreviewLabel;
+
+  /// Receipt template settings screen — section header above the header/footer text fields
+  ///
+  /// In ru, this message translates to:
+  /// **'Текст'**
+  String get receiptTemplateTextSectionLabel;
+
+  /// Receipt template settings screen — label for the receipt header text field
+  ///
+  /// In ru, this message translates to:
+  /// **'Заголовок чека'**
+  String get receiptTemplateHeaderFieldLabel;
+
+  /// Receipt template settings screen — hint text for the receipt header field
+  ///
+  /// In ru, this message translates to:
+  /// **'Название магазина или приветствие'**
+  String get receiptTemplateHeaderFieldHint;
+
+  /// Receipt template settings screen — label for the receipt footer text field
+  ///
+  /// In ru, this message translates to:
+  /// **'Подвал чека'**
+  String get receiptTemplateFooterFieldLabel;
+
+  /// Default receipt-footer preview text — reused verbatim as the footer text field's hint, since the hint suggests exactly this same fallback value
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо за покупку!'**
+  String get receiptPreviewDefaultFooter;
+
+  /// Receipt template settings screen — section header above the font-size selector
+  ///
+  /// In ru, this message translates to:
+  /// **'Размер шрифта'**
+  String get receiptTemplateFontSizeLabel;
+
+  /// Receipt template settings screen — abbreviated "small" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Мал.'**
+  String get receiptTemplateFontSizeSmall;
+
+  /// Receipt template settings screen — abbreviated "medium" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср.'**
+  String get receiptTemplateFontSizeMedium;
+
+  /// Receipt template settings screen — abbreviated "large" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Бол.'**
+  String get receiptTemplateFontSizeLarge;
+
+  /// Receipt template settings screen — section header above the paper-width selector
+  ///
+  /// In ru, this message translates to:
+  /// **'Ширина бумаги'**
+  String get receiptTemplatePaperWidthLabel;
+
+  /// Receipt template settings screen — 58mm paper-width segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'58 мм'**
+  String get receiptTemplatePaperWidth58mm;
+
+  /// Receipt template settings screen — 80mm paper-width segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'80 мм'**
+  String get receiptTemplatePaperWidth80mm;
+
+  /// Receipt template settings screen — section header above the show/hide toggles list
+  ///
+  /// In ru, this message translates to:
+  /// **'Показывать на чеке'**
+  String get receiptTemplateShowOnReceiptLabel;
+
+  /// Receipt template settings screen — toggle label for showing a QR code on the receipt
+  ///
+  /// In ru, this message translates to:
+  /// **'QR-код'**
+  String get receiptTemplateQrToggleLabel;
+
+  /// Receipt template settings screen — toggle label for showing the date and time on the receipt
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата и время'**
+  String get receiptTemplateDateTimeToggleLabel;
+
+  /// Receipt template settings screen — fallback header text shown in the preview when the user hasn't typed a custom header
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш магазин'**
+  String get receiptPreviewDefaultHeader;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар 1                 50.00 TJS'**
+  String get receiptPreviewItemLine1;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар 2                 30.00 TJS'**
+  String get receiptPreviewItemLine2;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка                  -5.00 TJS'**
+  String get receiptPreviewDiscountLine;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО                   75.00 TJS'**
+  String get receiptPreviewTotalLine;
+
+  /// Fixed demo content for the receipt-mockup preview — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Кассир: Иванов И.'**
+  String get receiptPreviewCashierLine;
+
   /// Ecommerce settings screen — AppBar title
   ///
   /// In ru, this message translates to:
