@@ -1096,6 +1096,168 @@ class AppLocalizationsTg extends AppLocalizations {
   String get settingsLogoutButton => 'Выйти из аккаунта';
 
   @override
+  String get subscriptionFeatureStores1 => '1 магазин';
+
+  @override
+  String get subscriptionFeatureProducts500 => '500 товаров';
+
+  @override
+  String get subscriptionFeatureEmployees2 => '2 сотрудника';
+
+  @override
+  String get subscriptionFeatureSalesReport => 'Отчёт продаж';
+
+  @override
+  String get subscriptionFeatureCurrencies => 'Валюты';
+
+  @override
+  String get subscriptionPriceStart => '49 TJS/мес';
+
+  @override
+  String get subscriptionFeatureStores3 => '3 магазина';
+
+  @override
+  String get subscriptionFeatureProducts2000 => '2000 товаров';
+
+  @override
+  String get subscriptionFeatureEmployees10 => '10 сотрудников';
+
+  @override
+  String get subscriptionFeatureAllReports => 'Все отчёты';
+
+  @override
+  String get subscriptionFeatureDiscounts5 => '5 скидок';
+
+  @override
+  String get subscriptionPriceBusiness => '149 TJS/мес';
+
+  @override
+  String get subscriptionFeatureStores5 => '5 магазинов';
+
+  @override
+  String get subscriptionFeatureUnlimitedProductsEmployees =>
+      'Безлимит товаров/сотрудников';
+
+  @override
+  String get subscriptionFeatureExportPdfExcel => 'Экспорт PDF/Excel';
+
+  @override
+  String get subscriptionFeatureUnlimitedDiscounts => 'Безлимит скидок';
+
+  @override
+  String get subscriptionFeaturePrioritySupport => 'Приоритетная поддержка';
+
+  @override
+  String get subscriptionPricePremium => '299 TJS/мес';
+
+  @override
+  String get subscriptionActiveStatus => 'Активна';
+
+  @override
+  String get subscriptionTrialStatus => 'Пробный период';
+
+  @override
+  String get subscriptionExpiredStatus => 'Истекла';
+
+  @override
+  String subscriptionTrialDaysLeftLine(String days) {
+    return 'Пробный период: осталось $days дней';
+  }
+
+  @override
+  String subscriptionExpiryUntilLine(String date) {
+    return 'до $date';
+  }
+
+  @override
+  String subscriptionAdminDiscountBadge(String percent) {
+    return 'Скидка $percent%';
+  }
+
+  @override
+  String get subscriptionPendingBannerText => 'Ожидает подтверждения оплаты';
+
+  @override
+  String get subscriptionCurrentPlanBadge => 'Текущий план';
+
+  @override
+  String get subscriptionSelectPlanButton => 'Выбрать';
+
+  @override
+  String get subscriptionPaymentPendingStatus => 'Ожидает';
+
+  @override
+  String get subscriptionPaymentConfirmedStatus => 'Подтверждено';
+
+  @override
+  String get subscriptionPaymentRejectedStatus => 'Отклонено';
+
+  @override
+  String subscriptionPaymentDialogTitle(String plan) {
+    return 'Платёж — $plan';
+  }
+
+  @override
+  String subscriptionPaymentAmountLine(String amount) {
+    return 'Сумма: $amount TJS';
+  }
+
+  @override
+  String get subscriptionCardTransferMethod => 'Перевод на карту';
+
+  @override
+  String subscriptionPaymentMethodLine(String method) {
+    return 'Метод: $method';
+  }
+
+  @override
+  String subscriptionPaymentStatusLine(String status) {
+    return 'Статус: $status';
+  }
+
+  @override
+  String subscriptionPaymentDateLine(String date) {
+    return 'Дата: $date';
+  }
+
+  @override
+  String subscriptionAdminNoteLine(String note) {
+    return 'Примечание: $note';
+  }
+
+  @override
+  String get subscriptionReceiptLabel => 'Чек:';
+
+  @override
+  String get subscriptionReceiptImageUnavailable => 'Изображение недоступно';
+
+  @override
+  String get subscriptionPlansSectionTitle => 'Тарифные планы';
+
+  @override
+  String get subscriptionCameraSource => 'Камера';
+
+  @override
+  String get subscriptionGallerySource => 'Галерея';
+
+  @override
+  String subscriptionPaymentSheetTitle(String plan) {
+    return 'Оплата тарифа «$plan»';
+  }
+
+  @override
+  String get subscriptionTransferDetailsTitle => 'Реквизиты для перевода';
+
+  @override
+  String get subscriptionRecipientLabel => 'Получатель';
+
+  @override
+  String get subscriptionBankLabel => 'Банк';
+
+  @override
+  String get subscriptionUploadReceiptButton => 'Я перевёл — загрузить чек';
+
+  @override
   String get finances => 'Молия';
 
   @override

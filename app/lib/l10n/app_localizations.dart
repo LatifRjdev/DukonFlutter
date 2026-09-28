@@ -2134,6 +2134,288 @@ abstract class AppLocalizations {
   /// **'Выйти из аккаунта'**
   String get settingsLogoutButton;
 
+  /// No description provided for @subscriptionFeatureStores1.
+  ///
+  /// In ru, this message translates to:
+  /// **'1 магазин'**
+  String get subscriptionFeatureStores1;
+
+  /// No description provided for @subscriptionFeatureProducts500.
+  ///
+  /// In ru, this message translates to:
+  /// **'500 товаров'**
+  String get subscriptionFeatureProducts500;
+
+  /// No description provided for @subscriptionFeatureEmployees2.
+  ///
+  /// In ru, this message translates to:
+  /// **'2 сотрудника'**
+  String get subscriptionFeatureEmployees2;
+
+  /// No description provided for @subscriptionFeatureSalesReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт продаж'**
+  String get subscriptionFeatureSalesReport;
+
+  /// No description provided for @subscriptionFeatureCurrencies.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валюты'**
+  String get subscriptionFeatureCurrencies;
+
+  /// No description provided for @subscriptionPriceStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'49 TJS/мес'**
+  String get subscriptionPriceStart;
+
+  /// No description provided for @subscriptionFeatureStores3.
+  ///
+  /// In ru, this message translates to:
+  /// **'3 магазина'**
+  String get subscriptionFeatureStores3;
+
+  /// No description provided for @subscriptionFeatureProducts2000.
+  ///
+  /// In ru, this message translates to:
+  /// **'2000 товаров'**
+  String get subscriptionFeatureProducts2000;
+
+  /// No description provided for @subscriptionFeatureEmployees10.
+  ///
+  /// In ru, this message translates to:
+  /// **'10 сотрудников'**
+  String get subscriptionFeatureEmployees10;
+
+  /// No description provided for @subscriptionFeatureAllReports.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все отчёты'**
+  String get subscriptionFeatureAllReports;
+
+  /// No description provided for @subscriptionFeatureDiscounts5.
+  ///
+  /// In ru, this message translates to:
+  /// **'5 скидок'**
+  String get subscriptionFeatureDiscounts5;
+
+  /// No description provided for @subscriptionPriceBusiness.
+  ///
+  /// In ru, this message translates to:
+  /// **'149 TJS/мес'**
+  String get subscriptionPriceBusiness;
+
+  /// No description provided for @subscriptionFeatureStores5.
+  ///
+  /// In ru, this message translates to:
+  /// **'5 магазинов'**
+  String get subscriptionFeatureStores5;
+
+  /// No description provided for @subscriptionFeatureUnlimitedProductsEmployees.
+  ///
+  /// In ru, this message translates to:
+  /// **'Безлимит товаров/сотрудников'**
+  String get subscriptionFeatureUnlimitedProductsEmployees;
+
+  /// No description provided for @subscriptionFeatureExportPdfExcel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт PDF/Excel'**
+  String get subscriptionFeatureExportPdfExcel;
+
+  /// No description provided for @subscriptionFeatureUnlimitedDiscounts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Безлимит скидок'**
+  String get subscriptionFeatureUnlimitedDiscounts;
+
+  /// No description provided for @subscriptionFeaturePrioritySupport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приоритетная поддержка'**
+  String get subscriptionFeaturePrioritySupport;
+
+  /// No description provided for @subscriptionPricePremium.
+  ///
+  /// In ru, this message translates to:
+  /// **'299 TJS/мес'**
+  String get subscriptionPricePremium;
+
+  /// Subscription-status badge — near-duplicate value to `loyaltySettingsActive` ("Активна", loyalty-toggle label) and `shiftsActiveStatus` ("Активна", shift-status badge); kept as its own key per this ARB's established pattern of not merging same-value keys across unrelated features
+  ///
+  /// In ru, this message translates to:
+  /// **'Активна'**
+  String get subscriptionActiveStatus;
+
+  /// No description provided for @subscriptionTrialStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пробный период'**
+  String get subscriptionTrialStatus;
+
+  /// No description provided for @subscriptionExpiredStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Истекла'**
+  String get subscriptionExpiredStatus;
+
+  /// No description provided for @subscriptionTrialDaysLeftLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пробный период: осталось {days} дней'**
+  String subscriptionTrialDaysLeftLine(String days);
+
+  /// No description provided for @subscriptionExpiryUntilLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'до {date}'**
+  String subscriptionExpiryUntilLine(String date);
+
+  /// No description provided for @subscriptionAdminDiscountBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка {percent}%'**
+  String subscriptionAdminDiscountBadge(String percent);
+
+  /// No description provided for @subscriptionPendingBannerText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает подтверждения оплаты'**
+  String get subscriptionPendingBannerText;
+
+  /// No description provided for @subscriptionCurrentPlanBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий план'**
+  String get subscriptionCurrentPlanBadge;
+
+  /// No description provided for @subscriptionSelectPlanButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать'**
+  String get subscriptionSelectPlanButton;
+
+  /// Payment-record status badge, default/pending case — distinct from `subscriptionPendingBannerText`, the fuller pending-payment banner sentence shown elsewhere on the same page
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает'**
+  String get subscriptionPaymentPendingStatus;
+
+  /// No description provided for @subscriptionPaymentConfirmedStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждено'**
+  String get subscriptionPaymentConfirmedStatus;
+
+  /// No description provided for @subscriptionPaymentRejectedStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонено'**
+  String get subscriptionPaymentRejectedStatus;
+
+  /// No description provided for @subscriptionPaymentDialogTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж — {plan}'**
+  String subscriptionPaymentDialogTitle(String plan);
+
+  /// No description provided for @subscriptionPaymentAmountLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма: {amount} TJS'**
+  String subscriptionPaymentAmountLine(String amount);
+
+  /// No description provided for @subscriptionCardTransferMethod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перевод на карту'**
+  String get subscriptionCardTransferMethod;
+
+  /// No description provided for @subscriptionPaymentMethodLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Метод: {method}'**
+  String subscriptionPaymentMethodLine(String method);
+
+  /// Preserves existing behavior of interpolating the raw backend status code (e.g. "CONFIRMED"), not the already-localized status badge text used elsewhere on this page — not a behavior fix, just the literal migrated as-is
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус: {status}'**
+  String subscriptionPaymentStatusLine(String status);
+
+  /// No description provided for @subscriptionPaymentDateLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата: {date}'**
+  String subscriptionPaymentDateLine(String date);
+
+  /// No description provided for @subscriptionAdminNoteLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Примечание: {note}'**
+  String subscriptionAdminNoteLine(String note);
+
+  /// No description provided for @subscriptionReceiptLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек:'**
+  String get subscriptionReceiptLabel;
+
+  /// No description provided for @subscriptionReceiptImageUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изображение недоступно'**
+  String get subscriptionReceiptImageUnavailable;
+
+  /// No description provided for @subscriptionPlansSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тарифные планы'**
+  String get subscriptionPlansSectionTitle;
+
+  /// No description provided for @subscriptionCameraSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Камера'**
+  String get subscriptionCameraSource;
+
+  /// No description provided for @subscriptionGallerySource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Галерея'**
+  String get subscriptionGallerySource;
+
+  /// No description provided for @subscriptionPaymentSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата тарифа «{plan}»'**
+  String subscriptionPaymentSheetTitle(String plan);
+
+  /// No description provided for @subscriptionTransferDetailsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Реквизиты для перевода'**
+  String get subscriptionTransferDetailsTitle;
+
+  /// No description provided for @subscriptionRecipientLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получатель'**
+  String get subscriptionRecipientLabel;
+
+  /// No description provided for @subscriptionBankLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк'**
+  String get subscriptionBankLabel;
+
+  /// Lint-tool blind spot fix — check_i18n.dart's regex only flags the first Cyrillic string literal per line, and this one sits on the same line as the already-flagged 'Загрузка...' ternary branch, so it never appeared in tool/i18n-allowlist.txt; migrated together with its sibling for consistency
+  ///
+  /// In ru, this message translates to:
+  /// **'Я перевёл — загрузить чек'**
+  String get subscriptionUploadReceiptButton;
+
   /// No description provided for @finances.
   ///
   /// In ru, this message translates to:
