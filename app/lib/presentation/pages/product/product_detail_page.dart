@@ -40,8 +40,8 @@ class ProductDetailPage extends StatelessWidget {
 
     if (product == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Товар')),
-        body: const Center(child: Text('Товар не найден')),
+        appBar: AppBar(title: Text(l10n.product)),
+        body: Center(child: Text(l10n.productNotFound)),
       );
     }
 
@@ -79,8 +79,8 @@ class ProductDetailPage extends StatelessWidget {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
-                  const Text('Товар',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.product,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     tooltip: l10n.editProduct,
@@ -95,9 +95,9 @@ class ProductDetailPage extends StatelessWidget {
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'delete',
-                        child: Text('Удалить', style: TextStyle(color: AppColors.error)),
+                        child: Text(l10n.delete, style: const TextStyle(color: AppColors.error)),
                       ),
                     ],
                   ),
@@ -150,7 +150,7 @@ class ProductDetailPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                           ),
                           child: Text(
-                            product.isActive ? 'Активен' : 'Неактивен',
+                            product.isActive ? l10n.productStatusActive : l10n.productStatusInactive,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -167,7 +167,7 @@ class ProductDetailPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _MiniMetricCard(
-                            label: 'Цена продажи',
+                            label: l10n.sellPrice,
                             value: _formatPrice(product.sellPrice),
                             bgColor: context.successBg,
                             textColor: AppColors.success,
@@ -176,7 +176,7 @@ class ProductDetailPage extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _MiniMetricCard(
-                            label: 'Себестоимость',
+                            label: l10n.dashboardCost,
                             value: product.costPrice != null
                                 ? _formatPrice(product.costPrice!)
                                 : '—',
@@ -191,7 +191,7 @@ class ProductDetailPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _MiniMetricCard(
-                            label: 'Прибыль',
+                            label: l10n.profit,
                             value: profit != null ? _formatPrice(profit) : '—',
                             bgColor: context.warningBg,
                             textColor: AppColors.warning,
@@ -200,7 +200,7 @@ class ProductDetailPage extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _MiniMetricCard(
-                            label: 'Маржа',
+                            label: l10n.margin,
                             value: margin != null ? '${margin.toStringAsFixed(0)}%' : '—',
                             bgColor: context.infoBg,
                             textColor: AppColors.info,
@@ -234,15 +234,15 @@ class ProductDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Наличие на складе',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(l10n.productDetailStockAvailabilityTitle,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Текущий остаток: ${product.quantity} $unitName',
+                              Text(l10n.productDetailCurrentStockLine('${product.quantity}', unitName),
                                 style: const TextStyle(fontSize: 14)),
-                              Text('Минимальный: ${product.minQuantity} $unitName',
+                              Text(l10n.productDetailMinStockLine('${product.minQuantity}', unitName),
                                 style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             ],
                           ),
@@ -279,16 +279,16 @@ class ProductDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Информация',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(l10n.productDetailInfoSectionTitle,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _InfoRow(label: 'Артикул', value: product.sku ?? '—'),
+                          _InfoRow(label: l10n.sku, value: product.sku ?? '—'),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Штрих-код', value: product.barcode ?? '—'),
+                          _InfoRow(label: l10n.productDetailBarcodeLabel, value: product.barcode ?? '—'),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Категория', value: product.categoryName ?? '—'),
+                          _InfoRow(label: l10n.category, value: product.categoryName ?? '—'),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Единица', value: unitName),
+                          _InfoRow(label: l10n.productDetailUnitLabel, value: unitName),
                         ],
                       ),
                     ),
@@ -330,8 +330,8 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.add_circle_outline, size: 20),
-                      label: const Text('Приход',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      label: Text(l10n.intakeType,
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -357,8 +357,8 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.shopping_cart_outlined, size: 20),
-                      label: const Text('Продать',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      label: Text(l10n.productDetailSellButton,
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -374,12 +374,12 @@ class ProductDetailPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Удалить товар?'),
-        content: const Text('Это действие нельзя отменить.'),
+        title: Text(AppLocalizations.of(ctx)!.productDetailDeleteConfirmTitle),
+        content: Text(AppLocalizations.of(ctx)!.actionCannotBeUndone),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -394,8 +394,8 @@ class ProductDetailPage extends StatelessWidget {
               ));
               context.pop();
             },
-            child: const Text('Удалить',
-              style: TextStyle(color: AppColors.error)),
+            child: Text(AppLocalizations.of(ctx)!.delete,
+              style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -492,7 +492,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
     if (widget.storeId.isEmpty) {
       setState(() {
         _loading = false;
-        _error = 'Магазин не выбран';
+        _error = AppLocalizations.of(context)!.productDetailStoreNotSelectedError;
       });
       return;
     }
@@ -512,7 +512,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
     } catch (_) {
       setState(() {
         _loading = false;
-        _error = 'Не удалось загрузить историю движений';
+        _error = AppLocalizations.of(context)!.productDetailMovementHistoryLoadError;
       });
     }
   }
@@ -546,11 +546,11 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
   String _typeLabel(String type) {
     switch (type.toUpperCase()) {
       case 'IN':
-        return 'Приход';
+        return AppLocalizations.of(context)!.intakeType;
       case 'OUT':
-        return 'Расход';
+        return AppLocalizations.of(context)!.outflowType;
       case 'ADJUSTMENT':
-        return 'Корректировка';
+        return AppLocalizations.of(context)!.adjustment;
       default:
         return type;
     }
@@ -576,8 +576,8 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('История движений',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          Text(AppLocalizations.of(context)!.productDetailMovementHistoryTitle,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
           if (_loading)
             const Center(
@@ -600,7 +600,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: Text('Нет движений',
+                child: Text(AppLocalizations.of(context)!.productDetailNoMovements,
                     style: TextStyle(
                         color: context.textSecondary, fontSize: 13)),
               ),
@@ -746,7 +746,7 @@ class _BatchProfitabilitySectionState
           boxShadow: AppShadows.md,
         ),
         child: Text(
-          'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.',
+          AppLocalizations.of(context)!.productDetailBatchNoDataMessage,
           style: TextStyle(color: context.textSecondary, fontSize: 13),
         ),
       );
@@ -765,39 +765,40 @@ class _BatchProfitabilitySectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Окупаемость партии',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          Text(
+            AppLocalizations.of(context)!.productDetailBatchPayabilityTitle,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           _InfoRow(
-            label: 'Себестоимость партии',
+            label: AppLocalizations.of(context)!.productDetailBatchCostLabel,
             value: _formatMoney((data['batchCost'] as num?)),
           ),
           const Divider(height: 20),
           _InfoRow(
-            label: 'Выручка от партии',
+            label: AppLocalizations.of(context)!.productDetailBatchRevenueLabel,
             value: _formatMoney((data['revenue'] as num?)),
           ),
           const Divider(height: 20),
           _InfoRow(
-            label: 'Прибыль заработана',
+            label: AppLocalizations.of(context)!.productDetailBatchProfitEarnedLabel,
             value: _formatMoney((data['profitEarned'] as num?)),
           ),
           const Divider(height: 20),
           _InfoRow(
-            label: 'До окупаемости партии',
+            label: AppLocalizations.of(context)!.productDetailBatchTimeToPaybackLabel,
             value: paybackShortfall == null
                 ? '—'
                 : paybackShortfall >= 0
-                    ? 'Партия окупилась'
+                    ? AppLocalizations.of(context)!.productDetailBatchPaidOffLabel
                     : _formatMoney(paybackShortfall),
           ),
           const Divider(height: 20),
           _InfoRow(
-            label: 'Остаток',
-            value:
-                '${(data['remainingQuantity'] as num?)?.round() ?? 0} шт. на ${_formatMoney((data['remainingStockValue'] as num?))}',
+            label: AppLocalizations.of(context)!.productDetailStockRemainingLabel,
+            value: AppLocalizations.of(context)!.productDetailStockRemainingValue(
+                '${(data['remainingQuantity'] as num?)?.round() ?? 0}',
+                _formatMoney((data['remainingStockValue'] as num?))),
           ),
           if (paybackPercent != null) ...[
             const SizedBox(height: 12),
@@ -812,7 +813,7 @@ class _BatchProfitabilitySectionState
             ),
             const SizedBox(height: 4),
             Text(
-              '${paybackPercent.toStringAsFixed(0)}% окупаемости',
+              AppLocalizations.of(context)!.productDetailBatchPaybackPercentLine(paybackPercent.toStringAsFixed(0)),
               style: TextStyle(fontSize: 12, color: context.textSecondary),
             ),
           ],

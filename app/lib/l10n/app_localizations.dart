@@ -1120,6 +1120,150 @@ abstract class AppLocalizations {
   /// **'Импорт из Excel'**
   String get importFromExcel;
 
+  /// Product active-status badge, masculine grammatical agreement (product = 'товар', masculine) — distinct from the feminine-agreement 'Активна' forms used elsewhere (subscription/loyalty/shift status badges), which cannot be reused here without breaking Russian grammar
+  ///
+  /// In ru, this message translates to:
+  /// **'Активен'**
+  String get productStatusActive;
+
+  /// Lint-tool blind spot fix — companion to `productStatusActive` on the same ternary line, never flagged by check_i18n.dart's one-match-per-line regex
+  ///
+  /// In ru, this message translates to:
+  /// **'Неактивен'**
+  String get productStatusInactive;
+
+  /// Product detail page — info-row label for the product's unit of measurement, short form; distinct from `unit` ("Единица измерения", the fuller field label used in forms)
+  ///
+  /// In ru, this message translates to:
+  /// **'Единица'**
+  String get productDetailUnitLabel;
+
+  /// Product detail page — current stock quantity line above the stock progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий остаток: {qty} {unit}'**
+  String productDetailCurrentStockLine(String qty, String unit);
+
+  /// Product detail page — minimum stock quantity line above the stock progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'Минимальный: {qty} {unit}'**
+  String productDetailMinStockLine(String qty, String unit);
+
+  /// Product detail page — info-row label for barcode, spelled with a hyphen; distinct from `barcode` ("Штрихкод", no hyphen) used elsewhere — different literal, kept separate rather than reconciled here
+  ///
+  /// In ru, this message translates to:
+  /// **'Штрих-код'**
+  String get productDetailBarcodeLabel;
+
+  /// Product detail page — stock section card title
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличие на складе'**
+  String get productDetailStockAvailabilityTitle;
+
+  /// Product detail page — general info section card title
+  ///
+  /// In ru, this message translates to:
+  /// **'Информация'**
+  String get productDetailInfoSectionTitle;
+
+  /// Product detail page — bottom button to add the product to the cart
+  ///
+  /// In ru, this message translates to:
+  /// **'Продать'**
+  String get productDetailSellButton;
+
+  /// Product detail page — delete confirmation dialog title
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить товар?'**
+  String get productDetailDeleteConfirmTitle;
+
+  /// Product detail page — error shown when stock movements can't load because no store is selected
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин не выбран'**
+  String get productDetailStoreNotSelectedError;
+
+  /// Product detail page — error shown when the stock movement history fails to load
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось загрузить историю движений'**
+  String get productDetailMovementHistoryLoadError;
+
+  /// Product detail page — stock movement history section title
+  ///
+  /// In ru, this message translates to:
+  /// **'История движений'**
+  String get productDetailMovementHistoryTitle;
+
+  /// Product detail page — empty state for the stock movement history list
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет движений'**
+  String get productDetailNoMovements;
+
+  /// Product detail page — shown in the batch profitability card when the product has no batch data yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.'**
+  String get productDetailBatchNoDataMessage;
+
+  /// Product detail page — batch profitability card title
+  ///
+  /// In ru, this message translates to:
+  /// **'Окупаемость партии'**
+  String get productDetailBatchPayabilityTitle;
+
+  /// Product detail page — batch profitability card, cost-of-batch info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость партии'**
+  String get productDetailBatchCostLabel;
+
+  /// Product detail page — batch profitability card, revenue-from-batch info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка от партии'**
+  String get productDetailBatchRevenueLabel;
+
+  /// Product detail page — batch profitability card, profit-earned info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Прибыль заработана'**
+  String get productDetailBatchProfitEarnedLabel;
+
+  /// Product detail page — batch profitability card, remaining-amount-until-payback info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'До окупаемости партии'**
+  String get productDetailBatchTimeToPaybackLabel;
+
+  /// Product detail page — batch profitability card, shown once the batch has fully paid off
+  ///
+  /// In ru, this message translates to:
+  /// **'Партия окупилась'**
+  String get productDetailBatchPaidOffLabel;
+
+  /// Product detail page — batch profitability card, remaining-stock info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток'**
+  String get productDetailStockRemainingLabel;
+
+  /// Product detail page — batch profitability card, remaining-stock info row value (quantity and its monetary value)
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт. на {value}'**
+  String productDetailStockRemainingValue(String qty, String value);
+
+  /// Product detail page — batch profitability card, percent-paid-off caption under the progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'{percent}% окупаемости'**
+  String productDetailBatchPaybackPercentLine(String percent);
+
   /// Point of Sale section
   ///
   /// In ru, this message translates to:
@@ -1419,6 +1563,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Списание'**
   String get writeOff;
+
+  /// Stock movement type — goods arriving (IN), bare short form; distinct from `stockIntake` ("Приход товара"), the fuller action-button label used elsewhere. Also reused here for the page's own 'record an intake' bottom button, since it's the same bare word in the same underlying concept.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приход'**
+  String get intakeType;
+
+  /// Stock movement type — goods leaving (OUT/sold), bare short form. Distinct from `expense` ("Расход", a financial-ledger transaction-type fallback label used in balance_page.dart) — identical Russian spelling, different domain; do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расход'**
+  String get outflowType;
 
   /// Supplier label
   ///

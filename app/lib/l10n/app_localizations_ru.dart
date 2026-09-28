@@ -558,6 +558,88 @@ class AppLocalizationsRu extends AppLocalizations {
   String get importFromExcel => 'Импорт из Excel';
 
   @override
+  String get productStatusActive => 'Активен';
+
+  @override
+  String get productStatusInactive => 'Неактивен';
+
+  @override
+  String get productDetailUnitLabel => 'Единица';
+
+  @override
+  String productDetailCurrentStockLine(String qty, String unit) {
+    return 'Текущий остаток: $qty $unit';
+  }
+
+  @override
+  String productDetailMinStockLine(String qty, String unit) {
+    return 'Минимальный: $qty $unit';
+  }
+
+  @override
+  String get productDetailBarcodeLabel => 'Штрих-код';
+
+  @override
+  String get productDetailStockAvailabilityTitle => 'Наличие на складе';
+
+  @override
+  String get productDetailInfoSectionTitle => 'Информация';
+
+  @override
+  String get productDetailSellButton => 'Продать';
+
+  @override
+  String get productDetailDeleteConfirmTitle => 'Удалить товар?';
+
+  @override
+  String get productDetailStoreNotSelectedError => 'Магазин не выбран';
+
+  @override
+  String get productDetailMovementHistoryLoadError =>
+      'Не удалось загрузить историю движений';
+
+  @override
+  String get productDetailMovementHistoryTitle => 'История движений';
+
+  @override
+  String get productDetailNoMovements => 'Нет движений';
+
+  @override
+  String get productDetailBatchNoDataMessage =>
+      'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.';
+
+  @override
+  String get productDetailBatchPayabilityTitle => 'Окупаемость партии';
+
+  @override
+  String get productDetailBatchCostLabel => 'Себестоимость партии';
+
+  @override
+  String get productDetailBatchRevenueLabel => 'Выручка от партии';
+
+  @override
+  String get productDetailBatchProfitEarnedLabel => 'Прибыль заработана';
+
+  @override
+  String get productDetailBatchTimeToPaybackLabel => 'До окупаемости партии';
+
+  @override
+  String get productDetailBatchPaidOffLabel => 'Партия окупилась';
+
+  @override
+  String get productDetailStockRemainingLabel => 'Остаток';
+
+  @override
+  String productDetailStockRemainingValue(String qty, String value) {
+    return '$qty шт. на $value';
+  }
+
+  @override
+  String productDetailBatchPaybackPercentLine(String percent) {
+    return '$percent% окупаемости';
+  }
+
+  @override
   String get pos => 'Касса';
 
   @override
@@ -711,6 +793,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get writeOff => 'Списание';
+
+  @override
+  String get intakeType => 'Приход';
+
+  @override
+  String get outflowType => 'Расход';
 
   @override
   String get supplier => 'Поставщик';
