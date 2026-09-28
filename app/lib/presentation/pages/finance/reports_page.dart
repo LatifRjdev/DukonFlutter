@@ -40,11 +40,11 @@ class _SalesRow {
     required this.avgCheck,
   });
   factory _SalesRow.fromJson(Map<String, dynamic> j) => _SalesRow(
-        date: j['date'] as String? ?? '',
-        count: (j['count'] as num?)?.toInt() ?? 0,
-        revenue: (j['revenue'] as num?)?.toDouble() ?? 0,
-        avgCheck: (j['avgCheck'] as num?)?.toDouble() ?? 0,
-      );
+    date: j['date'] as String? ?? '',
+    count: (j['count'] as num?)?.toInt() ?? 0,
+    revenue: (j['revenue'] as num?)?.toDouble() ?? 0,
+    avgCheck: (j['avgCheck'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 class _TopProduct {
@@ -52,9 +52,9 @@ class _TopProduct {
   final double revenue;
   const _TopProduct({required this.name, required this.revenue});
   factory _TopProduct.fromJson(Map<String, dynamic> j) => _TopProduct(
-        name: j['productName'] as String? ?? '',
-        revenue: (j['totalRevenue'] as num?)?.toDouble() ?? 0,
-      );
+    name: j['productName'] as String? ?? '',
+    revenue: (j['totalRevenue'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 class _ChannelRevenue {
@@ -67,10 +67,10 @@ class _ChannelRevenue {
     required this.count,
   });
   factory _ChannelRevenue.fromJson(Map<String, dynamic> j) => _ChannelRevenue(
-        channel: j['channel'] as String? ?? '',
-        revenue: (j['revenue'] as num?)?.toDouble() ?? 0,
-        count: (j['count'] as num?)?.toInt() ?? 0,
-      );
+    channel: j['channel'] as String? ?? '',
+    revenue: (j['revenue'] as num?)?.toDouble() ?? 0,
+    count: (j['count'] as num?)?.toInt() ?? 0,
+  );
 }
 
 class _SalesData {
@@ -100,10 +100,10 @@ class _ProfitMonthItem {
     required this.expenses,
   });
   factory _ProfitMonthItem.fromJson(Map<String, dynamic> j) => _ProfitMonthItem(
-        month: j['month'] as String? ?? '',
-        income: (j['income'] as num?)?.toDouble() ?? 0,
-        expenses: (j['expenses'] as num?)?.toDouble() ?? 0,
-      );
+    month: j['month'] as String? ?? '',
+    income: (j['income'] as num?)?.toDouble() ?? 0,
+    expenses: (j['expenses'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 class _ProfitData {
@@ -164,11 +164,11 @@ class _StaffRow {
     required this.avgCheck,
   });
   factory _StaffRow.fromJson(Map<String, dynamic> j) => _StaffRow(
-        name: j['name'] as String? ?? '',
-        salesCount: (j['salesCount'] as num?)?.toInt() ?? 0,
-        totalRevenue: (j['totalRevenue'] as num?)?.toDouble() ?? 0,
-        avgCheck: (j['avgCheck'] as num?)?.toDouble() ?? 0,
-      );
+    name: j['name'] as String? ?? '',
+    salesCount: (j['salesCount'] as num?)?.toInt() ?? 0,
+    totalRevenue: (j['totalRevenue'] as num?)?.toDouble() ?? 0,
+    avgCheck: (j['avgCheck'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -260,8 +260,7 @@ class _ReportsPageState extends State<ReportsPage>
   }
 
   String _fmt(DateTime d) => DateFormat('yyyy-MM-dd').format(d);
-  String _fmtPrice(double v) =>
-      '${NumberFormat('#,##0', 'ru').format(v)} TJS';
+  String _fmtPrice(double v) => '${NumberFormat('#,##0', 'ru').format(v)} TJS';
   String _fmtDate(DateTime d) => DateFormat('dd.MM.yyyy').format(d);
 
   // ── Fetch helpers ──────────────────────────────────────────────────────────
@@ -283,9 +282,13 @@ class _ReportsPageState extends State<ReportsPage>
         },
       );
       final body = resp.data ?? {};
-      final rowsJson = (body['byDate'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-      final topJson = (body['topProducts'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-      final channelJson = (body['channelBreakdown'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final rowsJson =
+          (body['byDate'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final topJson =
+          (body['topProducts'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final channelJson =
+          (body['channelBreakdown'] as List?)?.cast<Map<String, dynamic>>() ??
+          [];
       setState(() {
         _salesData = _SalesData(
           rows: rowsJson.map(_SalesRow.fromJson).toList(),
@@ -317,18 +320,20 @@ class _ReportsPageState extends State<ReportsPage>
         },
       );
       final body = resp.data ?? {};
-      final items =
-          (body['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final items = (body['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       final grouped = <String, double>{};
       for (final item in items) {
         final cat = item['category'] as String? ?? 'OTHER';
         final amount = (item['amount'] as num?)?.toDouble() ?? 0;
         grouped[cat] = (grouped[cat] ?? 0) + amount;
       }
-      final cats = grouped.entries
-          .map((e) => _ExpenseCategory(name: _catLabel(e.key), total: e.value))
-          .toList()
-        ..sort((a, b) => b.total.compareTo(a.total));
+      final cats =
+          grouped.entries
+              .map(
+                (e) => _ExpenseCategory(name: _catLabel(e.key), total: e.value),
+              )
+              .toList()
+            ..sort((a, b) => b.total.compareTo(a.total));
       setState(() => _expenseCategories = cats);
     } catch (e) {
       setState(() => _expensesError = _errMsg(e));
@@ -393,8 +398,9 @@ class _ReportsPageState extends State<ReportsPage>
       setState(() {
         _productsData = _ProductsData(
           topSellers: topJson.map((j) => _ProductItem.fromJson(j)).toList(),
-          deadStock:
-              deadJson.map((j) => _ProductItem.fromJson(j, dead: true)).toList(),
+          deadStock: deadJson
+              .map((j) => _ProductItem.fromJson(j, dead: true))
+              .toList(),
           stockValue: stockValue,
         );
       });
@@ -418,8 +424,7 @@ class _ReportsPageState extends State<ReportsPage>
         queryParameters: {'from': _fmt(_from), 'to': _fmt(_to)},
       );
       final body = resp.data ?? {};
-      final rows =
-          (body['staff'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final rows = (body['staff'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       setState(() => _staffRows = rows.map(_StaffRow.fromJson).toList());
     } catch (e) {
       setState(() => _staffError = _errMsg(e));
@@ -450,8 +455,9 @@ class _ReportsPageState extends State<ReportsPage>
     }
 
     final statusCode = e.response?.statusCode;
-    final rawMessage =
-        (e.response?.data is Map) ? e.response?.data['message'] : null;
+    final rawMessage = (e.response?.data is Map)
+        ? e.response?.data['message']
+        : null;
     final String message;
     if (rawMessage is List) {
       message = rawMessage.join(', ');
@@ -468,16 +474,19 @@ class _ReportsPageState extends State<ReportsPage>
     return ServerException(message, statusCode: statusCode);
   }
 
-  String _catLabel(String key) => const {
-        'PURCHASE': 'Закупка',
-        'RENT': 'Аренда',
-        'SALARY': 'Зарплата',
-        'UTILITIES': 'Коммунальные',
-        'TRANSPORT': 'Транспорт',
-        'MARKETING': 'Маркетинг',
-        'OTHER': 'Другое',
-      }[key] ??
-      key;
+  String _catLabel(String key) {
+    final l10n = AppLocalizations.of(context)!;
+    return {
+          'PURCHASE': l10n.purchase,
+          'RENT': l10n.rent,
+          'SALARY': l10n.salary,
+          'UTILITIES': l10n.utilities,
+          'TRANSPORT': l10n.transport,
+          'MARKETING': l10n.marketing,
+          'OTHER': l10n.other,
+        }[key] ??
+        key;
+  }
 
   // ── Date picker helpers ────────────────────────────────────────────────────
 
@@ -514,13 +523,15 @@ class _ReportsPageState extends State<ReportsPage>
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppConstants.radiusXxl)),
+          top: Radius.circular(AppConstants.radiusXxl),
+        ),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.spacingMd,
-              vertical: AppConstants.spacingLg),
+            horizontal: AppConstants.spacingMd,
+            vertical: AppConstants.spacingLg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -533,13 +544,17 @@ class _ReportsPageState extends State<ReportsPage>
                 ),
               ),
               const SizedBox(height: AppConstants.spacingMd),
-              const Text('Экспорт отчёта',
-                  style: TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w700)),
+              Text(
+                AppLocalizations.of(ctx)!.reportsExportSheetTitle,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(height: AppConstants.spacingMd),
               _ExportTile(
                 icon: Icons.picture_as_pdf_outlined,
-                label: 'Скачать PDF',
+                label: AppLocalizations.of(ctx)!.reportsExportPdf,
                 onTap: () {
                   Navigator.pop(ctx);
                   _exportPdf();
@@ -548,7 +563,7 @@ class _ReportsPageState extends State<ReportsPage>
               const SizedBox(height: AppConstants.spacingSm),
               _ExportTile(
                 icon: Icons.table_chart_outlined,
-                label: 'Скачать Excel (локальный)',
+                label: AppLocalizations.of(ctx)!.reportsExportExcelLocal,
                 onTap: () {
                   Navigator.pop(ctx);
                   _exportExcel();
@@ -556,14 +571,17 @@ class _ReportsPageState extends State<ReportsPage>
               ),
               BlocBuilder<SubscriptionBloc, SubscriptionState>(
                 builder: (_, sub) {
-                  final hasExport = sub is SubscriptionLoaded && sub.features.hasExport;
+                  final hasExport =
+                      sub is SubscriptionLoaded && sub.features.hasExport;
                   if (!hasExport) return const SizedBox.shrink();
                   return Column(
                     children: [
                       const SizedBox(height: AppConstants.spacingSm),
                       _ExportTile(
                         icon: Icons.cloud_download_outlined,
-                        label: 'Скачать Excel (все данные)',
+                        label: AppLocalizations.of(
+                          ctx,
+                        )!.reportsExportExcelAllData,
                         onTap: () {
                           Navigator.pop(ctx);
                           _showExportTypeSheet();
@@ -581,150 +599,189 @@ class _ReportsPageState extends State<ReportsPage>
   }
 
   Future<void> _exportPdf() async {
+    final l10n = AppLocalizations.of(
+      context,
+    )!; // capture BEFORE the pw.Page closure — its own `context` param shadows BuildContext
     final doc = pw.Document();
     final tabName = _tabName(_tabController.index);
-    final period =
-        '${_fmtDate(_from)} — ${_fmtDate(_to)}';
+    final period = '${_fmtDate(_from)} — ${_fmtDate(_to)}';
 
-    doc.addPage(pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text('DukonPro — $tabName',
+    doc.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                'DukonPro — $tabName',
                 style: pw.TextStyle(
-                    fontSize: 20, fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 8),
-            pw.Text('Период: $period',
-                style: const pw.TextStyle(fontSize: 12)),
-            pw.Divider(),
-            pw.SizedBox(height: 8),
-            ..._buildPdfContent(),
-          ],
-        );
-      },
-    ));
+                  fontSize: 20,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 8),
+              pw.Text(
+                l10n.reportsPdfPeriodLabel(period),
+                style: const pw.TextStyle(fontSize: 12),
+              ),
+              pw.Divider(),
+              pw.SizedBox(height: 8),
+              ..._buildPdfContent(l10n),
+            ],
+          );
+        },
+      ),
+    );
 
     final bytes = await doc.save();
     final dir = await getApplicationDocumentsDirectory();
-    final file =
-        File('${dir.path}/report_${_tabController.index}_${DateTime.now().millisecondsSinceEpoch}.pdf');
+    final file = File(
+      '${dir.path}/report_${_tabController.index}_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
     await file.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(file.path)],
-        text: 'Отчёт $tabName ($period)');
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], text: l10n.reportsShareSubjectWithPeriod(tabName, period));
   }
 
-  List<pw.Widget> _buildPdfContent() {
+  List<pw.Widget> _buildPdfContent(AppLocalizations l10n) {
     switch (_tabController.index) {
       case 0:
         final rows = _salesData?.rows ?? [];
-        if (rows.isEmpty) return [pw.Text('Нет данных')];
+        if (rows.isEmpty) return [pw.Text(l10n.noData)];
         return [
           pw.TableHelper.fromTextArray(
-            headers: ['Дата', 'Продаж', 'Выручка', 'Средний чек'],
+            headers: [
+              l10n.date,
+              l10n.reportsSalesCountColumnLabel,
+              l10n.reportsRevenueColumnLabel,
+              l10n.avgCheck,
+            ],
             data: rows
-                .map((r) => [
-                      r.date,
-                      r.count.toString(),
-                      _fmtPrice(r.revenue),
-                      _fmtPrice(r.avgCheck),
-                    ])
+                .map(
+                  (r) => [
+                    r.date,
+                    r.count.toString(),
+                    _fmtPrice(r.revenue),
+                    _fmtPrice(r.avgCheck),
+                  ],
+                )
                 .toList(),
           ),
         ];
       case 1:
-        if (_expenseCategories.isEmpty) return [pw.Text('Нет данных')];
-        final total =
-            _expenseCategories.fold(0.0, (s, e) => s + e.total);
+        if (_expenseCategories.isEmpty) return [pw.Text(l10n.noData)];
+        final total = _expenseCategories.fold(0.0, (s, e) => s + e.total);
         return [
           pw.TableHelper.fromTextArray(
-            headers: ['Категория', 'Сумма', '%'],
+            headers: [l10n.category, l10n.amount, '%'],
             data: _expenseCategories
-                .map((e) => [
-                      e.name,
-                      _fmtPrice(e.total),
-                      total > 0
-                          ? '${(e.total / total * 100).toStringAsFixed(1)}%'
-                          : '0%',
-                    ])
+                .map(
+                  (e) => [
+                    e.name,
+                    _fmtPrice(e.total),
+                    total > 0
+                        ? '${(e.total / total * 100).toStringAsFixed(1)}%'
+                        : '0%',
+                  ],
+                )
                 .toList(),
           ),
         ];
       case 2:
         final p = _profitData;
-        if (p == null) return [pw.Text('Нет данных')];
+        if (p == null) return [pw.Text(l10n.noData)];
         return [
           pw.TableHelper.fromTextArray(
-            headers: ['Показатель', 'Значение'],
+            headers: [
+              l10n.reportsMetricColumnLabel,
+              l10n.reportsValueColumnLabel,
+            ],
             data: [
-              ['Доход', _fmtPrice(p.totalIncome)],
-              ['Расходы', _fmtPrice(p.totalExpenses)],
-              ['Чистая прибыль', _fmtPrice(p.netProfit)],
-              ['Маржа', '${p.margin.toStringAsFixed(1)}%'],
+              [l10n.income, _fmtPrice(p.totalIncome)],
+              [l10n.expenses, _fmtPrice(p.totalExpenses)],
+              [l10n.reportsNetProfitLabel, _fmtPrice(p.netProfit)],
+              [l10n.margin, '${p.margin.toStringAsFixed(1)}%'],
             ],
           ),
         ];
       case 3:
         final d = _productsData;
-        if (d == null) return [pw.Text('Нет данных')];
+        if (d == null) return [pw.Text(l10n.noData)];
         return [
-          pw.Text('Топ товары',
-              style:
-                  pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            l10n.topProducts,
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 4),
           pw.TableHelper.fromTextArray(
-            headers: ['Товар', 'Кол-во', 'Выручка'],
+            headers: [
+              l10n.product,
+              l10n.quantityShort,
+              l10n.reportsRevenueColumnLabel,
+            ],
             data: d.topSellers
                 .map((p) => [p.name, p.qty.toString(), _fmtPrice(p.revenue)])
                 .toList(),
           ),
           pw.SizedBox(height: 12),
-          pw.Text('Залёжные товары',
-              style:
-                  pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            l10n.reportsDeadStockPdfLabel,
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 4),
           pw.TableHelper.fromTextArray(
-            headers: ['Товар'],
+            headers: [l10n.product],
             data: d.deadStock.map((p) => [p.name]).toList(),
           ),
         ];
       case 4:
-        if (_staffRows.isEmpty) return [pw.Text('Нет данных')];
+        if (_staffRows.isEmpty) return [pw.Text(l10n.noData)];
         return [
           pw.TableHelper.fromTextArray(
-            headers: ['Кассир', 'Продаж', 'Выручка', 'Средний чек'],
+            headers: [
+              l10n.cashier,
+              l10n.reportsSalesCountColumnLabel,
+              l10n.reportsRevenueColumnLabel,
+              l10n.avgCheck,
+            ],
             data: _staffRows
-                .map((r) => [
-                      r.name,
-                      r.salesCount.toString(),
-                      _fmtPrice(r.totalRevenue),
-                      _fmtPrice(r.avgCheck),
-                    ])
+                .map(
+                  (r) => [
+                    r.name,
+                    r.salesCount.toString(),
+                    _fmtPrice(r.totalRevenue),
+                    _fmtPrice(r.avgCheck),
+                  ],
+                )
                 .toList(),
           ),
         ];
       default:
-        return [pw.Text('Нет данных')];
+        return [pw.Text(l10n.noData)];
     }
   }
 
   Future<void> _exportExcel() async {
+    final l10n = AppLocalizations.of(context)!;
     final excel = xl.Excel.createExcel();
     final tabName = _tabName(_tabController.index);
     final sheet = excel[tabName];
 
-    _buildExcelContent(sheet);
+    _buildExcelContent(sheet, l10n);
 
     final bytes = excel.save();
     if (bytes == null) return;
 
     final dir = await getApplicationDocumentsDirectory();
     final file = File(
-        '${dir.path}/report_${_tabController.index}_${DateTime.now().millisecondsSinceEpoch}.xlsx');
+      '${dir.path}/report_${_tabController.index}_${DateTime.now().millisecondsSinceEpoch}.xlsx',
+    );
     await file.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(file.path)],
-        text: 'Отчёт $tabName');
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], text: l10n.reportsShareSubject(tabName));
   }
 
   Future<void> _exportServerExcel(String type) async {
@@ -740,10 +797,16 @@ class _ReportsPageState extends State<ReportsPage>
       if (bytes == null) return;
       final dir = await getApplicationDocumentsDirectory();
       final file = File(
-          '${dir.path}/export_${type}_${DateTime.now().millisecondsSinceEpoch}.xlsx');
+        '${dir.path}/export_${type}_${DateTime.now().millisecondsSinceEpoch}.xlsx',
+      );
       await file.writeAsBytes(bytes);
       if (mounted) {
-        await Share.shareXFiles([XFile(file.path)], text: 'Экспорт $type');
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: AppLocalizations.of(
+            context,
+          )!.reportsExportTypeShareSubject(type),
+        );
       }
     } catch (e) {
       if (mounted) AppSnackbar.error(context, _errMsg(e));
@@ -754,37 +817,47 @@ class _ReportsPageState extends State<ReportsPage>
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusXxl)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.spacingMd),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Что экспортировать?',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-              const SizedBox(height: AppConstants.spacingMd),
-              for (final entry in [
-                ('Продажи', 'sales'),
-                ('Товары', 'products'),
-                ('Клиенты', 'customers'),
-              ])
-                ListTile(
-                  title: Text(entry.$1),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _exportServerExcel(entry.$2);
-                  },
-                ),
-            ],
-          ),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppConstants.radiusXxl),
         ),
       ),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.spacingMd),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.reportsExportTypeSheetTitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                for (final entry in [
+                  (l10n.sales, 'sales'),
+                  (l10n.products, 'products'),
+                  (l10n.moreClients, 'customers'),
+                ])
+                  ListTile(
+                    title: Text(entry.$1),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _exportServerExcel(entry.$2);
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  void _buildExcelContent(xl.Sheet sheet) {
+  void _buildExcelContent(xl.Sheet sheet, AppLocalizations l10n) {
     void addRow(List<String> cells) {
       final row = <xl.CellValue?>[];
       for (final c in cells) {
@@ -795,44 +868,46 @@ class _ReportsPageState extends State<ReportsPage>
 
     switch (_tabController.index) {
       case 0:
-        addRow(['Дата', 'Продаж', 'Выручка', 'Средний чек']);
+        addRow([
+          l10n.date,
+          l10n.reportsSalesCountColumnLabel,
+          l10n.reportsRevenueColumnLabel,
+          l10n.avgCheck,
+        ]);
         for (final r in _salesData?.rows ?? []) {
           addRow([
             r.date,
             r.count.toString(),
             r.revenue.toStringAsFixed(2),
-            r.avgCheck.toStringAsFixed(2)
+            r.avgCheck.toStringAsFixed(2),
           ]);
         }
       case 1:
-        addRow(['Категория', 'Сумма', '%']);
-        final total =
-            _expenseCategories.fold(0.0, (s, e) => s + e.total);
+        addRow([l10n.category, l10n.amount, '%']);
+        final total = _expenseCategories.fold(0.0, (s, e) => s + e.total);
         for (final e in _expenseCategories) {
           addRow([
             e.name,
             e.total.toStringAsFixed(2),
-            total > 0
-                ? '${(e.total / total * 100).toStringAsFixed(1)}%'
-                : '0%'
+            total > 0 ? '${(e.total / total * 100).toStringAsFixed(1)}%' : '0%',
           ]);
         }
       case 2:
         final p = _profitData;
         if (p != null) {
-          addRow(['Показатель', 'Значение']);
-          addRow(['Доход', p.totalIncome.toStringAsFixed(2)]);
-          addRow(['Расходы', p.totalExpenses.toStringAsFixed(2)]);
-          addRow(['Чистая прибыль', p.netProfit.toStringAsFixed(2)]);
-          addRow(['Маржа %', p.margin.toStringAsFixed(1)]);
+          addRow([l10n.reportsMetricColumnLabel, l10n.reportsValueColumnLabel]);
+          addRow([l10n.income, p.totalIncome.toStringAsFixed(2)]);
+          addRow([l10n.expenses, p.totalExpenses.toStringAsFixed(2)]);
+          addRow([l10n.reportsNetProfitLabel, p.netProfit.toStringAsFixed(2)]);
+          addRow([l10n.reportsMarginPercentLabel, p.margin.toStringAsFixed(1)]);
           if (p.monthly.isNotEmpty) {
             addRow([]);
-            addRow(['Месяц', 'Доход', 'Расходы']);
+            addRow([l10n.month, l10n.income, l10n.expenses]);
             for (final m in p.monthly) {
               addRow([
                 m.month,
                 m.income.toStringAsFixed(2),
-                m.expenses.toStringAsFixed(2)
+                m.expenses.toStringAsFixed(2),
               ]);
             }
           }
@@ -840,52 +915,72 @@ class _ReportsPageState extends State<ReportsPage>
       case 3:
         final d = _productsData;
         if (d != null) {
-          addRow(['=== Топ товары ===']);
-          addRow(['Товар', 'Кол-во', 'Выручка']);
+          addRow([l10n.reportsExcelTopProductsSectionHeader]);
+          addRow([
+            l10n.product,
+            l10n.quantityShort,
+            l10n.reportsRevenueColumnLabel,
+          ]);
           for (final p in d.topSellers) {
             addRow([p.name, p.qty.toString(), p.revenue.toStringAsFixed(2)]);
           }
           addRow([]);
-          addRow(['=== Залёжные товары ===']);
-          addRow(['Товар', 'Кол-во', 'Выручка']);
+          addRow([l10n.reportsExcelDeadStockSectionHeader]);
+          addRow([
+            l10n.product,
+            l10n.quantityShort,
+            l10n.reportsRevenueColumnLabel,
+          ]);
           for (final p in d.deadStock) {
             addRow([p.name, p.qty.toString(), p.revenue.toStringAsFixed(2)]);
           }
           addRow([]);
-          addRow(['Стоимость склада', d.stockValue.toStringAsFixed(2)]);
+          addRow([
+            l10n.reportsStockValueLabel,
+            d.stockValue.toStringAsFixed(2),
+          ]);
         }
       case 4:
-        addRow(['Кассир', 'Продаж', 'Выручка', 'Средний чек']);
+        addRow([
+          l10n.cashier,
+          l10n.reportsSalesCountColumnLabel,
+          l10n.reportsRevenueColumnLabel,
+          l10n.avgCheck,
+        ]);
         for (final r in _staffRows) {
           addRow([
             r.name,
             r.salesCount.toString(),
             r.totalRevenue.toStringAsFixed(2),
-            r.avgCheck.toStringAsFixed(2)
+            r.avgCheck.toStringAsFixed(2),
           ]);
         }
     }
   }
 
-  String _tabName(int index) => const [
-        'Продажи',
-        'Расходы',
-        'Прибыль',
-        'Товары',
-        'Сотрудники',
-      ][index];
+  String _tabName(int index) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      l10n.sales,
+      l10n.expenses,
+      l10n.profit,
+      l10n.products,
+      l10n.employees,
+    ][index];
+  }
 
   // ── Build ──────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
         backgroundColor: context.bg,
         elevation: 0,
         title: Text(
-          'Отчёты',
+          l10n.reportsPageTitle,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -905,12 +1000,12 @@ class _ReportsPageState extends State<ReportsPage>
             fontFamily: 'Inter',
             fontSize: 13,
           ),
-          tabs: const [
-            Tab(text: 'Продажи'),
-            Tab(text: 'Расходы'),
-            Tab(text: 'Прибыль'),
-            Tab(text: 'Товары'),
-            Tab(text: 'Сотрудники'),
+          tabs: [
+            Tab(text: l10n.sales),
+            Tab(text: l10n.expenses),
+            Tab(text: l10n.profit),
+            Tab(text: l10n.products),
+            Tab(text: l10n.employees),
           ],
         ),
       ),
@@ -981,8 +1076,11 @@ class _ReportsPageState extends State<ReportsPage>
       ),
       child: Row(
         children: [
-          Icon(Icons.calendar_today_outlined,
-              size: 16, color: context.textSecondary),
+          Icon(
+            Icons.calendar_today_outlined,
+            size: 16,
+            color: context.textSecondary,
+          ),
           const SizedBox(width: 8),
           Semantics(
             label: AppLocalizations.of(context)!.a11ySelectPeriod,
@@ -1006,8 +1104,7 @@ class _ReportsPageState extends State<ReportsPage>
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: Text('—',
-                style: TextStyle(color: context.textSecondary)),
+            child: Text('—', style: TextStyle(color: context.textSecondary)),
           ),
           Semantics(
             label: AppLocalizations.of(context)!.a11ySelectPeriod,
@@ -1032,8 +1129,11 @@ class _ReportsPageState extends State<ReportsPage>
           const Spacer(),
           IconButton(
             tooltip: AppLocalizations.of(context)!.a11yRefresh,
-            icon: Icon(Icons.refresh_outlined,
-                size: 18, color: context.textSecondary),
+            icon: Icon(
+              Icons.refresh_outlined,
+              size: 18,
+              color: context.textSecondary,
+            ),
             onPressed: _loadCurrentTab,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
@@ -1044,6 +1144,7 @@ class _ReportsPageState extends State<ReportsPage>
   }
 
   Widget _buildChannelFilterBar() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: context.surfaceMuted,
       padding: const EdgeInsets.symmetric(
@@ -1054,7 +1155,7 @@ class _ReportsPageState extends State<ReportsPage>
         spacing: 8,
         children: [
           ChoiceChip(
-            label: const Text('Все каналы'),
+            label: Text(l10n.reportsChannelAll),
             selected: _selectedChannel == null,
             onSelected: (_) {
               setState(() => _selectedChannel = null);
@@ -1062,7 +1163,7 @@ class _ReportsPageState extends State<ReportsPage>
             },
           ),
           ChoiceChip(
-            label: const Text('В магазине'),
+            label: Text(l10n.reportsChannelInStore),
             selected: _selectedChannel == 'IN_STORE',
             onSelected: (_) {
               setState(() => _selectedChannel = 'IN_STORE');
@@ -1070,7 +1171,7 @@ class _ReportsPageState extends State<ReportsPage>
             },
           ),
           ChoiceChip(
-            label: const Text('Онлайн'),
+            label: Text(l10n.reportsChannelOnline),
             selected: _selectedChannel == 'ONLINE',
             onSelected: (_) {
               setState(() => _selectedChannel = 'ONLINE');
@@ -1107,13 +1208,16 @@ class _ErrorView extends StatelessWidget {
         children: [
           Icon(Icons.error_outline, color: context.danger, size: 40),
           const SizedBox(height: 12),
-          Text(message,
-              style: TextStyle(
-                  color: context.textSecondary,
-                  fontFamily: 'Inter'),
-              textAlign: TextAlign.center),
+          Text(
+            message,
+            style: TextStyle(color: context.textSecondary, fontFamily: 'Inter'),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 16),
-          TextButton(onPressed: onRetry, child: const Text('Повторить')),
+          TextButton(
+            onPressed: onRetry,
+            child: Text(AppLocalizations.of(context)!.retry),
+          ),
         ],
       ),
     );
@@ -1128,14 +1232,16 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bar_chart_outlined,
-              size: 48, color: context.textMuted),
+          Icon(Icons.bar_chart_outlined, size: 48, color: context.textMuted),
           const SizedBox(height: 12),
-          Text('Нет данных',
-              style: TextStyle(
-                  color: context.textSecondary,
-                  fontFamily: 'Inter',
-                  fontSize: 16)),
+          Text(
+            AppLocalizations.of(context)!.noData,
+            style: TextStyle(
+              color: context.textSecondary,
+              fontFamily: 'Inter',
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );
@@ -1158,12 +1264,15 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
-                  color: context.textPrimary)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Inter',
+              color: context.textPrimary,
+            ),
+          ),
           const SizedBox(height: AppConstants.spacingMd),
           child,
         ],
@@ -1176,8 +1285,11 @@ class _KpiCard extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
-  const _KpiCard(
-      {required this.label, required this.value, required this.color});
+  const _KpiCard({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1191,19 +1303,25 @@ class _KpiCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: color,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: color,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
-                  color: color)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Inter',
+              color: color,
+            ),
+          ),
         ],
       ),
     );
@@ -1214,8 +1332,11 @@ class _ExportTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _ExportTile(
-      {required this.icon, required this.label, required this.onTap});
+  const _ExportTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1229,14 +1350,21 @@ class _ExportTile extends StatelessWidget {
         ),
         child: Icon(icon, color: AppColors.primary),
       ),
-      title: Text(label,
-          style: const TextStyle(
-              fontFamily: 'Inter', fontWeight: FontWeight.w500)),
-      trailing: Icon(Icons.chevron_right_outlined,
-          color: context.textSecondary),
+      title: Text(
+        label,
+        style: const TextStyle(
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: Icon(
+        Icons.chevron_right_outlined,
+        color: context.textSecondary,
+      ),
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          side: BorderSide(color: context.border)),
+        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+        side: BorderSide(color: context.border),
+      ),
     );
   }
 }
@@ -1270,38 +1398,41 @@ class _SalesTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
-        Builder(builder: (context) {
-          final breakdown = d.channelBreakdown;
-          double revenueFor(String channel) => breakdown
-              .firstWhere(
-                (c) => c.channel == channel,
-                orElse: () => const _ChannelRevenue(channel: '', revenue: 0, count: 0),
-              )
-              .revenue;
-          return Row(
-            children: [
-              Expanded(
-                child: _KpiCard(
-                  label: 'В магазине',
-                  value: fmtPrice(revenueFor('IN_STORE')),
-                  color: AppColors.primary,
+        Builder(
+          builder: (context) {
+            final breakdown = d.channelBreakdown;
+            double revenueFor(String channel) => breakdown
+                .firstWhere(
+                  (c) => c.channel == channel,
+                  orElse: () =>
+                      const _ChannelRevenue(channel: '', revenue: 0, count: 0),
+                )
+                .revenue;
+            return Row(
+              children: [
+                Expanded(
+                  child: _KpiCard(
+                    label: AppLocalizations.of(context)!.reportsChannelInStore,
+                    value: fmtPrice(revenueFor('IN_STORE')),
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppConstants.spacingSm),
-              Expanded(
-                child: _KpiCard(
-                  label: 'Онлайн',
-                  value: fmtPrice(revenueFor('ONLINE')),
-                  color: context.success,
+                const SizedBox(width: AppConstants.spacingSm),
+                Expanded(
+                  child: _KpiCard(
+                    label: AppLocalizations.of(context)!.reportsChannelOnline,
+                    value: fmtPrice(revenueFor('ONLINE')),
+                    color: context.success,
+                  ),
                 ),
-              ),
-            ],
-          );
-        }),
+              ],
+            );
+          },
+        ),
         const SizedBox(height: AppConstants.spacingSm),
         // Data table
         _SectionCard(
-          title: 'Данные по продажам',
+          title: AppLocalizations.of(context)!.reportsSalesDataSectionTitle,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
@@ -1317,19 +1448,38 @@ class _SalesTab extends StatelessWidget {
                 color: context.textPrimary,
               ),
               columnSpacing: 20,
-              columns: const [
-                DataColumn(label: Text('Дата')),
-                DataColumn(label: Text('Продаж'), numeric: true),
-                DataColumn(label: Text('Выручка'), numeric: true),
-                DataColumn(label: Text('Ср. чек'), numeric: true),
+              columns: [
+                DataColumn(label: Text(AppLocalizations.of(context)!.date)),
+                DataColumn(
+                  label: Text(
+                    AppLocalizations.of(context)!.reportsSalesCountColumnLabel,
+                  ),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text(
+                    AppLocalizations.of(context)!.reportsRevenueColumnLabel,
+                  ),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text(
+                    AppLocalizations.of(context)!.reportsAvgCheckColumnLabel,
+                  ),
+                  numeric: true,
+                ),
               ],
               rows: d.rows
-                  .map((r) => DataRow(cells: [
+                  .map(
+                    (r) => DataRow(
+                      cells: [
                         DataCell(Text(r.date)),
                         DataCell(Text(r.count.toString())),
                         DataCell(Text(fmtPrice(r.revenue))),
                         DataCell(Text(fmtPrice(r.avgCheck))),
-                      ]))
+                      ],
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -1339,13 +1489,14 @@ class _SalesTab extends StatelessWidget {
         // Bar chart: top 5 by revenue
         if (d.top5.isNotEmpty)
           _SectionCard(
-            title: 'Топ-5 товаров по выручке',
+            title: AppLocalizations.of(context)!.reportsTop5ByRevenueChartTitle,
             child: SizedBox(
               height: 220,
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: d.top5
+                  maxY:
+                      d.top5
                           .map((p) => p.revenue)
                           .reduce((a, b) => a > b ? a : b) *
                       1.2,
@@ -1353,12 +1504,13 @@ class _SalesTab extends StatelessWidget {
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                           BarTooltipItem(
-                        fmtPrice(rod.toY),
-                        TextStyle(
-                            color: context.onPrimary,
-                            fontFamily: 'Inter',
-                            fontSize: 12),
-                      ),
+                            fmtPrice(rod.toY),
+                            TextStyle(
+                              color: context.onPrimary,
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                            ),
+                          ),
                     ),
                   ),
                   titlesData: FlTitlesData(
@@ -1379,20 +1531,24 @@ class _SalesTab extends StatelessWidget {
                                   ? '${name.substring(0, 7)}…'
                                   : name,
                               style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  color: context.textSecondary),
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                color: context.textSecondary,
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
                     leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   gridData: const FlGridData(show: false),
@@ -1405,7 +1561,9 @@ class _SalesTab extends StatelessWidget {
                           toY: d.top5[i].revenue,
                           color: AppColors.primary,
                           width: 28,
-                          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusSm,
+                          ),
                         ),
                       ],
                     ),
@@ -1461,7 +1619,9 @@ class _ExpensesTab extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
         _SectionCard(
-          title: 'Расходы по категориям',
+          title: AppLocalizations.of(
+            context,
+          )!.reportsExpensesByCategoryChartTitle,
           child: SizedBox(
             height: 220,
             child: PieChart(
@@ -1477,10 +1637,11 @@ class _ExpensesTab extends StatelessWidget {
                     title: '${pct.toStringAsFixed(1)}%',
                     radius: 60,
                     titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                        color: Colors.white),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                    ),
                   );
                 }),
               ),
@@ -1489,7 +1650,7 @@ class _ExpensesTab extends StatelessWidget {
         ),
         const SizedBox(height: AppConstants.spacingMd),
         _SectionCard(
-          title: 'Детализация',
+          title: AppLocalizations.of(context)!.reportsDetailsSectionTitle,
           child: Column(
             children: List.generate(categories.length, (i) {
               final cat = categories[i];
@@ -1511,15 +1672,21 @@ class _ExpensesTab extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(cat.name,
-                              style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500)),
-                        ),
-                        Text(fmtPrice(cat.total),
+                          child: Text(
+                            cat.name,
                             style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600)),
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          fmtPrice(cat.total),
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         const SizedBox(width: 8),
                         SizedBox(
                           width: 48,
@@ -1527,9 +1694,10 @@ class _ExpensesTab extends StatelessWidget {
                             '${pct.toStringAsFixed(1)}%',
                             textAlign: TextAlign.right,
                             style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                color: context.textSecondary),
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: context.textSecondary,
+                            ),
                           ),
                         ),
                       ],
@@ -1571,6 +1739,7 @@ class _ProfitTab extends StatelessWidget {
     if (error != null) return _ErrorView(message: error!, onRetry: onRetry);
     final d = data;
     if (d == null) return const _EmptyView();
+    final l10n = AppLocalizations.of(context)!;
 
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -1580,7 +1749,7 @@ class _ProfitTab extends StatelessWidget {
           children: [
             Expanded(
               child: _KpiCard(
-                label: 'Доход',
+                label: l10n.income,
                 value: fmtPrice(d.totalIncome),
                 color: AppColors.primary,
               ),
@@ -1588,7 +1757,7 @@ class _ProfitTab extends StatelessWidget {
             const SizedBox(width: AppConstants.spacingSm),
             Expanded(
               child: _KpiCard(
-                label: 'Расходы',
+                label: l10n.expenses,
                 value: fmtPrice(d.totalExpenses),
                 color: context.danger,
               ),
@@ -1600,7 +1769,7 @@ class _ProfitTab extends StatelessWidget {
           children: [
             Expanded(
               child: _KpiCard(
-                label: 'Чистая прибыль',
+                label: l10n.reportsNetProfitLabel,
                 value: fmtPrice(d.netProfit),
                 color: context.success,
               ),
@@ -1608,7 +1777,7 @@ class _ProfitTab extends StatelessWidget {
             const SizedBox(width: AppConstants.spacingSm),
             Expanded(
               child: _KpiCard(
-                label: 'Маржа',
+                label: l10n.margin,
                 value: '${d.margin.toStringAsFixed(1)}%',
                 color: context.warning,
               ),
@@ -1619,13 +1788,14 @@ class _ProfitTab extends StatelessWidget {
         if (d.monthly.isNotEmpty) ...[
           const SizedBox(height: AppConstants.spacingMd),
           _SectionCard(
-            title: 'Доход vs Расходы по месяцам',
+            title: l10n.reportsIncomeVsExpensesChartTitle,
             child: SizedBox(
               height: 240,
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: d.monthly
+                  maxY:
+                      d.monthly
                           .expand((m) => [m.income, m.expenses])
                           .reduce((a, b) => a > b ? a : b) *
                       1.2,
@@ -1645,20 +1815,24 @@ class _ProfitTab extends StatelessWidget {
                             child: Text(
                               d.monthly[idx].month,
                               style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  color: context.textSecondary),
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                color: context.textSecondary,
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
                     leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   gridData: const FlGridData(show: false),
@@ -1672,13 +1846,17 @@ class _ProfitTab extends StatelessWidget {
                           toY: d.monthly[i].income,
                           color: AppColors.primary,
                           width: 14,
-                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusXs,
+                          ),
                         ),
                         BarChartRodData(
                           toY: d.monthly[i].expenses,
                           color: context.danger,
                           width: 14,
-                          borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusXs,
+                          ),
                         ),
                       ],
                     ),
@@ -1690,9 +1868,9 @@ class _ProfitTab extends StatelessWidget {
           const SizedBox(height: AppConstants.spacingSm),
           Row(
             children: [
-              _LegendDot(color: AppColors.primary, label: 'Доход'),
+              _LegendDot(color: AppColors.primary, label: l10n.income),
               const SizedBox(width: AppConstants.spacingMd),
-              _LegendDot(color: context.danger, label: 'Расходы'),
+              _LegendDot(color: context.danger, label: l10n.expenses),
             ],
           ),
         ],
@@ -1713,15 +1891,19 @@ class _LegendDot extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 4),
-        Text(label,
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                color: context.textSecondary)),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 12,
+            color: context.textSecondary,
+          ),
+        ),
       ],
     );
   }
@@ -1767,23 +1949,32 @@ class _ProductsTab extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(Icons.inventory_2_outlined,
-                  color: Colors.white, size: 32),
+              const Icon(
+                Icons.inventory_2_outlined,
+                color: Colors.white,
+                size: 32,
+              ),
               const SizedBox(width: AppConstants.spacingMd),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Стоимость склада',
-                      style: TextStyle(
-                          color: Colors.white70,
-                          fontFamily: 'Inter',
-                          fontSize: 13)),
-                  Text(fmtPrice(d.stockValue),
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Inter',
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700)),
+                  Text(
+                    AppLocalizations.of(context)!.reportsStockValueLabel,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                    ),
+                  ),
+                  Text(
+                    fmtPrice(d.stockValue),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -1794,7 +1985,7 @@ class _ProductsTab extends StatelessWidget {
         // Top sellers
         if (d.topSellers.isNotEmpty)
           _SectionCard(
-            title: 'Топ продажи',
+            title: AppLocalizations.of(context)!.reportsTopSalesSectionTitle,
             child: Column(
               children: List.generate(d.topSellers.length, (i) {
                 final p = d.topSellers[i];
@@ -1810,34 +2001,47 @@ class _ProductsTab extends StatelessWidget {
                             height: 28,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color:
-                                  AppColors.primary.withValues(alpha: 0.1),
+                              color: AppColors.primary.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Text('${i + 1}',
-                                style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.primary,
-                                    fontSize: 12)),
+                            child: Text(
+                              '${i + 1}',
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primary,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: Text(p.name,
-                                style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                          Text('${p.qty} шт',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  color: context.textSecondary)),
-                          const SizedBox(width: 8),
-                          Text(fmtPrice(p.revenue),
+                            child: Text(
+                              p.name,
                               style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600)),
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.reportsQuantityUnitsLine('${p.qty}'),
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: context.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            fmtPrice(p.revenue),
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1850,7 +2054,7 @@ class _ProductsTab extends StatelessWidget {
         if (d.deadStock.isNotEmpty) ...[
           const SizedBox(height: AppConstants.spacingMd),
           _SectionCard(
-            title: 'Залёжные товары (30+ дней)',
+            title: AppLocalizations.of(context)!.reportsDeadStockSectionTitle,
             child: Column(
               children: List.generate(d.deadStock.length, (i) {
                 final p = d.deadStock[i];
@@ -1861,18 +2065,28 @@ class _ProductsTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Row(
                         children: [
-                          const Icon(Icons.warning_amber_outlined,
-                              size: 18, color: AppColors.warning),
+                          const Icon(
+                            Icons.warning_amber_outlined,
+                            size: 18,
+                            color: AppColors.warning,
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
-                              child: Text(p.name,
-                                  style: const TextStyle(
-                                      fontFamily: 'Inter'))),
-                          Text('${p.qty} шт',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  color: context.textSecondary)),
+                            child: Text(
+                              p.name,
+                              style: const TextStyle(fontFamily: 'Inter'),
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.reportsQuantityUnitsLine('${p.qty}'),
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: context.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1912,15 +2126,18 @@ class _StaffTab extends StatelessWidget {
     if (loading) return const _LoadingView();
     if (error != null) return _ErrorView(message: error!, onRetry: onRetry);
     if (rows.isEmpty) return const _EmptyView();
+    final l10n = AppLocalizations.of(context)!;
 
-    final maxSales = rows.map((r) => r.salesCount).reduce((a, b) => a > b ? a : b);
+    final maxSales = rows
+        .map((r) => r.salesCount)
+        .reduce((a, b) => a > b ? a : b);
 
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
         // Bar chart: sales per cashier
         _SectionCard(
-          title: 'Продажи по кассирам',
+          title: l10n.reportsSalesByCashierChartTitle,
           child: SizedBox(
             height: 220,
             child: BarChart(
@@ -1931,12 +2148,13 @@ class _StaffTab extends StatelessWidget {
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                         BarTooltipItem(
-                      '${rod.toY.toInt()} продаж',
-                      TextStyle(
-                          color: context.onPrimary,
-                          fontFamily: 'Inter',
-                          fontSize: 12),
-                    ),
+                          l10n.reportsSalesCountTooltip('${rod.toY.toInt()}'),
+                          TextStyle(
+                            color: context.onPrimary,
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                          ),
+                        ),
                   ),
                 ),
                 titlesData: FlTitlesData(
@@ -1953,24 +2171,26 @@ class _StaffTab extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.only(top: 6),
                           child: Text(
-                            name.length > 8
-                                ? '${name.substring(0, 7)}…'
-                                : name,
+                            name.length > 8 ? '${name.substring(0, 7)}…' : name,
                             style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                color: context.textSecondary),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              color: context.textSecondary,
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
                   leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 gridData: const FlGridData(show: false),
@@ -1983,7 +2203,9 @@ class _StaffTab extends StatelessWidget {
                         toY: rows[i].salesCount.toDouble(),
                         color: AppColors.primary,
                         width: 28,
-                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusSm,
+                        ),
                       ),
                     ],
                   ),
@@ -1996,7 +2218,7 @@ class _StaffTab extends StatelessWidget {
 
         // Table
         _SectionCard(
-          title: 'Детализация',
+          title: l10n.reportsDetailsSectionTitle,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
@@ -2012,19 +2234,32 @@ class _StaffTab extends StatelessWidget {
                 color: context.textPrimary,
               ),
               columnSpacing: 20,
-              columns: const [
-                DataColumn(label: Text('Кассир')),
-                DataColumn(label: Text('Продаж'), numeric: true),
-                DataColumn(label: Text('Выручка'), numeric: true),
-                DataColumn(label: Text('Ср. чек'), numeric: true),
+              columns: [
+                DataColumn(label: Text(l10n.cashier)),
+                DataColumn(
+                  label: Text(l10n.reportsSalesCountColumnLabel),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text(l10n.reportsRevenueColumnLabel),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text(l10n.reportsAvgCheckColumnLabel),
+                  numeric: true,
+                ),
               ],
               rows: rows
-                  .map((r) => DataRow(cells: [
+                  .map(
+                    (r) => DataRow(
+                      cells: [
                         DataCell(Text(r.name)),
                         DataCell(Text(r.salesCount.toString())),
                         DataCell(Text(fmtPrice(r.totalRevenue))),
                         DataCell(Text(fmtPrice(r.avgCheck))),
-                      ]))
+                      ],
+                    ),
+                  )
                   .toList(),
             ),
           ),

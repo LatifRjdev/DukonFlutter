@@ -740,6 +740,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profit => 'Прибыль';
 
   @override
+  String get margin => 'Маржа';
+
+  @override
   String get more => 'Ещё';
 
   @override
@@ -1255,6 +1258,120 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get subscriptionUploadReceiptButton => 'Я перевёл — загрузить чек';
+
+  @override
+  String get reportsSalesCountColumnLabel => 'Продаж';
+
+  @override
+  String get reportsExportSheetTitle => 'Экспорт отчёта';
+
+  @override
+  String get reportsExportPdf => 'Скачать PDF';
+
+  @override
+  String get reportsExportExcelLocal => 'Скачать Excel (локальный)';
+
+  @override
+  String get reportsExportExcelAllData => 'Скачать Excel (все данные)';
+
+  @override
+  String reportsPdfPeriodLabel(String period) {
+    return 'Период: $period';
+  }
+
+  @override
+  String reportsShareSubjectWithPeriod(String tabName, String period) {
+    return 'Отчёт $tabName ($period)';
+  }
+
+  @override
+  String get reportsRevenueColumnLabel => 'Выручка';
+
+  @override
+  String get reportsMetricColumnLabel => 'Показатель';
+
+  @override
+  String get reportsValueColumnLabel => 'Значение';
+
+  @override
+  String get reportsNetProfitLabel => 'Чистая прибыль';
+
+  @override
+  String get reportsMarginPercentLabel => 'Маржа %';
+
+  @override
+  String get reportsDeadStockPdfLabel => 'Залёжные товары';
+
+  @override
+  String reportsShareSubject(String tabName) {
+    return 'Отчёт $tabName';
+  }
+
+  @override
+  String reportsExportTypeShareSubject(String type) {
+    return 'Экспорт $type';
+  }
+
+  @override
+  String get reportsExportTypeSheetTitle => 'Что экспортировать?';
+
+  @override
+  String get reportsExcelTopProductsSectionHeader => '=== Топ товары ===';
+
+  @override
+  String get reportsExcelDeadStockSectionHeader => '=== Залёжные товары ===';
+
+  @override
+  String get reportsStockValueLabel => 'Стоимость склада';
+
+  @override
+  String get reportsPageTitle => 'Отчёты';
+
+  @override
+  String get reportsChannelAll => 'Все каналы';
+
+  @override
+  String get reportsChannelInStore => 'В магазине';
+
+  @override
+  String get reportsChannelOnline => 'Онлайн';
+
+  @override
+  String get reportsSalesDataSectionTitle => 'Данные по продажам';
+
+  @override
+  String get reportsAvgCheckColumnLabel => 'Ср. чек';
+
+  @override
+  String get reportsTop5ByRevenueChartTitle => 'Топ-5 товаров по выручке';
+
+  @override
+  String get reportsExpensesByCategoryChartTitle => 'Расходы по категориям';
+
+  @override
+  String get reportsDetailsSectionTitle => 'Детализация';
+
+  @override
+  String get reportsIncomeVsExpensesChartTitle => 'Доход vs Расходы по месяцам';
+
+  @override
+  String get reportsTopSalesSectionTitle => 'Топ продажи';
+
+  @override
+  String reportsQuantityUnitsLine(String qty) {
+    return '$qty шт';
+  }
+
+  @override
+  String get reportsDeadStockSectionTitle => 'Залёжные товары (30+ дней)';
+
+  @override
+  String get reportsSalesByCashierChartTitle => 'Продажи по кассирам';
+
+  @override
+  String reportsSalesCountTooltip(String count) {
+    return '$count продаж';
+  }
 
   @override
   String get finances => 'Финансы';

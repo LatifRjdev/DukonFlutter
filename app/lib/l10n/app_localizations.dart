@@ -1474,6 +1474,12 @@ abstract class AppLocalizations {
   /// **'Прибыль'**
   String get profit;
 
+  /// Bare 'Margin' metric label — reused verbatim by product_detail_page.dart's batch-profitability mini-card; mint here once, do not duplicate in that file's task
+  ///
+  /// In ru, this message translates to:
+  /// **'Маржа'**
+  String get margin;
+
   /// More button
   ///
   /// In ru, this message translates to:
@@ -2415,6 +2421,210 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Я перевёл — загрузить чек'**
   String get subscriptionUploadReceiptButton;
+
+  /// Abbreviated table/PDF/Excel column header for a sales count — distinct from the plural noun `sales` ("Продажи", a tab/section name)
+  ///
+  /// In ru, this message translates to:
+  /// **'Продаж'**
+  String get reportsSalesCountColumnLabel;
+
+  /// No description provided for @reportsExportSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт отчёта'**
+  String get reportsExportSheetTitle;
+
+  /// No description provided for @reportsExportPdf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать PDF'**
+  String get reportsExportPdf;
+
+  /// No description provided for @reportsExportExcelLocal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать Excel (локальный)'**
+  String get reportsExportExcelLocal;
+
+  /// No description provided for @reportsExportExcelAllData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать Excel (все данные)'**
+  String get reportsExportExcelAllData;
+
+  /// No description provided for @reportsPdfPeriodLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период: {period}'**
+  String reportsPdfPeriodLabel(String period);
+
+  /// No description provided for @reportsShareSubjectWithPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт {tabName} ({period})'**
+  String reportsShareSubjectWithPeriod(String tabName, String period);
+
+  /// No description provided for @reportsRevenueColumnLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка'**
+  String get reportsRevenueColumnLabel;
+
+  /// No description provided for @reportsMetricColumnLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показатель'**
+  String get reportsMetricColumnLabel;
+
+  /// Lint-tool blind spot fix — companion header to `reportsMetricColumnLabel` on the same array literal, never flagged by check_i18n.dart's one-match-per-line regex
+  ///
+  /// In ru, this message translates to:
+  /// **'Значение'**
+  String get reportsValueColumnLabel;
+
+  /// No description provided for @reportsNetProfitLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чистая прибыль'**
+  String get reportsNetProfitLabel;
+
+  /// Distinct literal from bare `margin` ("Маржа") — this one already includes the percent sign as part of the string, used only in the Excel-export row
+  ///
+  /// In ru, this message translates to:
+  /// **'Маржа %'**
+  String get reportsMarginPercentLabel;
+
+  /// Bare PDF section label — distinct from `reportsDeadStockSectionTitle` ("Залёжные товары (30+ дней)"), the fuller in-app section title
+  ///
+  /// In ru, this message translates to:
+  /// **'Залёжные товары'**
+  String get reportsDeadStockPdfLabel;
+
+  /// No description provided for @reportsShareSubject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт {tabName}'**
+  String reportsShareSubject(String tabName);
+
+  /// No description provided for @reportsExportTypeShareSubject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт {type}'**
+  String reportsExportTypeShareSubject(String type);
+
+  /// No description provided for @reportsExportTypeSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что экспортировать?'**
+  String get reportsExportTypeSheetTitle;
+
+  /// No description provided for @reportsExcelTopProductsSectionHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'=== Топ товары ==='**
+  String get reportsExcelTopProductsSectionHeader;
+
+  /// No description provided for @reportsExcelDeadStockSectionHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'=== Залёжные товары ==='**
+  String get reportsExcelDeadStockSectionHeader;
+
+  /// No description provided for @reportsStockValueLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стоимость склада'**
+  String get reportsStockValueLabel;
+
+  /// No description provided for @reportsPageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёты'**
+  String get reportsPageTitle;
+
+  /// No description provided for @reportsChannelAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все каналы'**
+  String get reportsChannelAll;
+
+  /// No description provided for @reportsChannelInStore.
+  ///
+  /// In ru, this message translates to:
+  /// **'В магазине'**
+  String get reportsChannelInStore;
+
+  /// No description provided for @reportsChannelOnline.
+  ///
+  /// In ru, this message translates to:
+  /// **'Онлайн'**
+  String get reportsChannelOnline;
+
+  /// No description provided for @reportsSalesDataSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные по продажам'**
+  String get reportsSalesDataSectionTitle;
+
+  /// Abbreviated column header — distinct from the full-word `avgCheck` ("Средний чек") used in the PDF/Excel export headers
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср. чек'**
+  String get reportsAvgCheckColumnLabel;
+
+  /// No description provided for @reportsTop5ByRevenueChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ-5 товаров по выручке'**
+  String get reportsTop5ByRevenueChartTitle;
+
+  /// No description provided for @reportsExpensesByCategoryChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расходы по категориям'**
+  String get reportsExpensesByCategoryChartTitle;
+
+  /// No description provided for @reportsDetailsSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Детализация'**
+  String get reportsDetailsSectionTitle;
+
+  /// No description provided for @reportsIncomeVsExpensesChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доход vs Расходы по месяцам'**
+  String get reportsIncomeVsExpensesChartTitle;
+
+  /// No description provided for @reportsTopSalesSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ продажи'**
+  String get reportsTopSalesSectionTitle;
+
+  /// No description provided for @reportsQuantityUnitsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт'**
+  String reportsQuantityUnitsLine(String qty);
+
+  /// No description provided for @reportsDeadStockSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Залёжные товары (30+ дней)'**
+  String get reportsDeadStockSectionTitle;
+
+  /// No description provided for @reportsSalesByCashierChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи по кассирам'**
+  String get reportsSalesByCashierChartTitle;
+
+  /// No description provided for @reportsSalesCountTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String reportsSalesCountTooltip(String count);
 
   /// No description provided for @finances.
   ///
