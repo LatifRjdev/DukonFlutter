@@ -1799,6 +1799,61 @@ class AppLocalizationsUz extends AppLocalizations {
   String get zakatCalculator => 'Zakot kalkulyatori';
 
   @override
+  String get zakatCalculatorAssetsSection => 'АКТИВЫ МАГАЗИНА';
+
+  @override
+  String get zakatCalculatorStockValueLabel => 'Товарные остатки';
+
+  @override
+  String get zakatCalculatorAutoFromCatalog => 'Автоматически из каталога';
+
+  @override
+  String get zakatCalculatorAutoBadge => 'Авто';
+
+  @override
+  String get zakatCalculatorSupplierDebtsLabel => 'Долги поставщикам';
+
+  @override
+  String get zakatCalculatorAutoFromSupplierModule => 'Автоматически из модуля';
+
+  @override
+  String get zakatCalculatorDeductionsSection => 'ВЫЧЕТЫ';
+
+  @override
+  String get zakatCalculatorTaxableAmountLabel => 'Облагаемая сумма:';
+
+  @override
+  String get zakatCalculatorNisabLabel => 'Нисаб (85г золота):';
+
+  @override
+  String get zakatCalculatorNisabExceededBadge => 'Превышен';
+
+  @override
+  String zakatCalculatorZakatAmountLabel(String rate) {
+    return 'СУММА ЗАКЯТА ($rate%):';
+  }
+
+  @override
+  String get zakatCalculatorBelowNisabNotice =>
+      'Активы ниже нисаба. Закят не обязателен.';
+
+  @override
+  String get zakatCalculatorMarkPaidButton => 'Отметить как оплачено';
+
+  @override
+  String zakatCalculatorInfoBanner(String rate) {
+    return 'Закят — $rate% от имущества, хранящегося 1 лунный год';
+  }
+
+  @override
+  String zakatCalculatorShareText(String due, String nisab, String netAssets) {
+    return 'Закят: $due сом.\nНисаб: $nisab сом.\nЧистые активы: $netAssets сом.';
+  }
+
+  @override
+  String get zakatCalculatorShareButton => 'Поделиться расчётом';
+
+  @override
   String get zakatSettings => 'Zakot sozlamalari';
 
   @override

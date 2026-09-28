@@ -3406,6 +3406,102 @@ abstract class AppLocalizations {
   /// **'Калькулятор закята'**
   String get zakatCalculator;
 
+  /// No description provided for @zakatCalculatorAssetsSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'АКТИВЫ МАГАЗИНА'**
+  String get zakatCalculatorAssetsSection;
+
+  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsStockValueToggleTitle` ("Товарные остатки магазина", with a 'магазина' suffix) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные остатки'**
+  String get zakatCalculatorStockValueLabel;
+
+  /// No description provided for @zakatCalculatorAutoFromCatalog.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автоматически из каталога'**
+  String get zakatCalculatorAutoFromCatalog;
+
+  /// No description provided for @zakatCalculatorAutoBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто'**
+  String get zakatCalculatorAutoBadge;
+
+  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsSupplierDebtsToggleTitle` ("Долги поставщикам (вычет)", with a '(вычет)' suffix) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги поставщикам'**
+  String get zakatCalculatorSupplierDebtsLabel;
+
+  /// No description provided for @zakatCalculatorAutoFromSupplierModule.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автоматически из модуля'**
+  String get zakatCalculatorAutoFromSupplierModule;
+
+  /// No description provided for @zakatCalculatorDeductionsSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВЫЧЕТЫ'**
+  String get zakatCalculatorDeductionsSection;
+
+  /// No description provided for @zakatCalculatorTaxableAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Облагаемая сумма:'**
+  String get zakatCalculatorTaxableAmountLabel;
+
+  /// No description provided for @zakatCalculatorNisabLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нисаб (85г золота):'**
+  String get zakatCalculatorNisabLabel;
+
+  /// No description provided for @zakatCalculatorNisabExceededBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Превышен'**
+  String get zakatCalculatorNisabExceededBadge;
+
+  /// No description provided for @zakatCalculatorZakatAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'СУММА ЗАКЯТА ({rate}%):'**
+  String zakatCalculatorZakatAmountLabel(String rate);
+
+  /// No description provided for @zakatCalculatorBelowNisabNotice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активы ниже нисаба. Закят не обязателен.'**
+  String get zakatCalculatorBelowNisabNotice;
+
+  /// No description provided for @zakatCalculatorMarkPaidButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить как оплачено'**
+  String get zakatCalculatorMarkPaidButton;
+
+  /// No description provided for @zakatCalculatorInfoBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят — {rate}% от имущества, хранящегося 1 лунный год'**
+  String zakatCalculatorInfoBanner(String rate);
+
+  /// Full multi-line text passed to the OS share sheet — combines what were three separate concatenated string literals into one full-sentence key per the label+separator+value composite convention
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят: {due} сом.\nНисаб: {nisab} сом.\nЧистые активы: {netAssets} сом.'**
+  String zakatCalculatorShareText(String due, String nisab, String netAssets);
+
+  /// No description provided for @zakatCalculatorShareButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться расчётом'**
+  String get zakatCalculatorShareButton;
+
   /// No description provided for @zakatSettings.
   ///
   /// In ru, this message translates to:
