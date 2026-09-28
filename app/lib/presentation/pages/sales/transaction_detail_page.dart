@@ -18,21 +18,21 @@ class TransactionDetailPage extends StatelessWidget {
     return '${formatter.format(value)} TJS';
   }
 
-  String _paymentTypeLabel(String type) {
+  String _paymentTypeLabel(AppLocalizations l10n, String type) {
     switch (type.toUpperCase()) {
-      case 'CASH': return 'Наличные';
-      case 'CARD': return 'Карта';
-      case 'DEBT': return 'В долг';
-      case 'MIXED': return 'Смешанная';
+      case 'CASH': return l10n.cash;
+      case 'CARD': return l10n.card;
+      case 'DEBT': return l10n.debt;
+      case 'MIXED': return l10n.paymentMixedShort;
       default: return type;
     }
   }
 
-  String _statusLabel(String status) {
+  String _statusLabel(AppLocalizations l10n, String status) {
     switch (status.toUpperCase()) {
-      case 'COMPLETED': return 'Оплачен';
-      case 'RETURNED': return 'Возвращён';
-      case 'PARTIALLY_RETURNED': return 'Частичный возврат';
+      case 'COMPLETED': return l10n.transactionDetailStatusPaid;
+      case 'RETURNED': return l10n.transactionDetailStatusReturned;
+      case 'PARTIALLY_RETURNED': return l10n.partiallyReturned;
       default: return status;
     }
   }
@@ -73,7 +73,7 @@ class TransactionDetailPage extends StatelessWidget {
                     tooltip: l10n.back,
                     onPressed: () => context.pop(),
                   ),
-                  Text('Чек ${sale.receiptNo}',
+                  Text(l10n.transactionDetailReceiptTitle(sale.receiptNo),
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -93,7 +93,7 @@ class TransactionDetailPage extends StatelessWidget {
                           color: _statusColor(context, sale.status),
                           borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                         ),
-                        child: Text(_statusLabel(sale.status),
+                        child: Text(_statusLabel(l10n, sale.status),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 13,
@@ -114,16 +114,16 @@ class TransactionDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Информация',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(l10n.transactionDetailInfoSectionTitle,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _InfoRow(label: 'Дата', value: dateFormat.format(sale.createdAt)),
+                          _InfoRow(label: l10n.date, value: dateFormat.format(sale.createdAt)),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Кассир', value: sale.staffId ?? '—'),
+                          _InfoRow(label: l10n.cashier, value: sale.staffId ?? '—'),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Клиент', value: sale.customerName ?? 'Розничный'),
+                          _InfoRow(label: l10n.deliveryDetailCustomerLabel, value: sale.customerName ?? l10n.transactionDetailRetailCustomerFallback),
                           const Divider(height: 20),
-                          _InfoRow(label: 'Оплата', value: _paymentTypeLabel(sale.paymentType)),
+                          _InfoRow(label: l10n.payment, value: _paymentTypeLabel(l10n, sale.paymentType)),
                         ],
                       ),
                     ),
@@ -140,14 +140,14 @@ class TransactionDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Товары',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(l10n.products,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           if (sale.items.isEmpty)
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(16),
-                                child: Text('Нет данных о товарах',
+                                child: Text(l10n.transactionDetailNoItemsData,
                                   style: TextStyle(color: context.textSecondary)),
                               ),
                             )
@@ -168,7 +168,7 @@ class TransactionDetailPage extends StatelessWidget {
                                             Text(item.productName,
                                               style: const TextStyle(fontWeight: FontWeight.w500)),
                                             const SizedBox(height: 2),
-                                            Text('${item.quantity} шт × ${_formatPrice(item.unitPrice)}',
+                                            Text(l10n.transactionDetailItemQtyLine(item.quantity.toString(), _formatPrice(item.unitPrice)),
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 color: context.textSecondary,
@@ -199,21 +199,21 @@ class TransactionDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Итого',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(l10n.total,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
-                          _TotalRow(label: 'Подытог', value: _formatPrice(sale.subtotal)),
+                          _TotalRow(label: l10n.subtotal, value: _formatPrice(sale.subtotal)),
                           const SizedBox(height: 8),
-                          _TotalRow(label: 'Скидка', value: _formatPrice(sale.discount)),
+                          _TotalRow(label: l10n.discount, value: _formatPrice(sale.discount)),
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 8),
                             child: Divider(),
                           ),
-                          _TotalRow(label: 'Итого', value: _formatPrice(sale.total), isBold: true),
+                          _TotalRow(label: l10n.total, value: _formatPrice(sale.total), isBold: true),
                           const SizedBox(height: 8),
-                          _TotalRow(label: 'Оплачено', value: _formatPrice(sale.paidAmount)),
+                          _TotalRow(label: l10n.paid, value: _formatPrice(sale.paidAmount)),
                           const SizedBox(height: 8),
-                          _TotalRow(label: 'Сдача', value: _formatPrice(sale.change)),
+                          _TotalRow(label: l10n.change, value: _formatPrice(sale.change)),
                         ],
                       ),
                     ),
@@ -244,8 +244,8 @@ class TransactionDetailPage extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.print_outlined, size: 20),
-                      label: const Text('Печатать чек',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      label: Text(l10n.transactionDetailPrintReceiptButton,
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),
                   if (canRefund) ...[
@@ -262,8 +262,8 @@ class TransactionDetailPage extends StatelessWidget {
                           ),
                         ),
                         icon: const Icon(Icons.undo, size: 20),
-                        label: const Text('Возврат',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                        label: Text(l10n.refund,
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                       ),
                     ),
                   ],

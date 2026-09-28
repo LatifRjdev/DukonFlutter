@@ -808,6 +808,34 @@ class AppLocalizationsTg extends AppLocalizations {
   String get transactionDetail => 'Тафсилоти амалиёт';
 
   @override
+  String transactionDetailItemQtyLine(String quantity, String price) {
+    return '$quantity шт × $price';
+  }
+
+  @override
+  String get transactionDetailStatusReturned => 'Возвращён';
+
+  @override
+  String get transactionDetailInfoSectionTitle => 'Информация';
+
+  @override
+  String get transactionDetailNoItemsData => 'Нет данных о товарах';
+
+  @override
+  String get transactionDetailStatusPaid => 'Оплачен';
+
+  @override
+  String get transactionDetailPrintReceiptButton => 'Печатать чек';
+
+  @override
+  String transactionDetailReceiptTitle(String receiptNo) {
+    return 'Чек $receiptNo';
+  }
+
+  @override
+  String get transactionDetailRetailCustomerFallback => 'Розничный';
+
+  @override
   String get refund => 'Баргардонӣ';
 
   @override

@@ -1564,6 +1564,54 @@ abstract class AppLocalizations {
   /// **'Детали операции'**
   String get transactionDetail;
 
+  /// No description provided for @transactionDetailItemQtyLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{quantity} шт × {price}'**
+  String transactionDetailItemQtyLine(String quantity, String price);
+
+  /// Sale status badge — 'Returned' (masculine form, agrees with 'чек'). Distinct from `returned` ("Возвращена", feminine form used elsewhere) — different grammatical gender, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращён'**
+  String get transactionDetailStatusReturned;
+
+  /// No description provided for @transactionDetailInfoSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Информация'**
+  String get transactionDetailInfoSectionTitle;
+
+  /// No description provided for @transactionDetailNoItemsData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных о товарах'**
+  String get transactionDetailNoItemsData;
+
+  /// Sale status badge — 'Paid/Completed'. Distinct from `completed` ("Завершена", a different word) and `paid` ("Оплачено", a different grammatical form used for the paid-amount value row on this same screen) — do not merge any of the three.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачен'**
+  String get transactionDetailStatusPaid;
+
+  /// Imperative-form 'Print receipt' button label. Distinct from `printReceipt` ("Печать чека", noun form used elsewhere) — different grammatical form, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печатать чек'**
+  String get transactionDetailPrintReceiptButton;
+
+  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек {receiptNo}'**
+  String transactionDetailReceiptTitle(String receiptNo);
+
+  /// Fallback customer name shown when a sale has no linked customer (walk-in/retail sale)
+  ///
+  /// In ru, this message translates to:
+  /// **'Розничный'**
+  String get transactionDetailRetailCustomerFallback;
+
   /// Refund action
   ///
   /// In ru, this message translates to:
