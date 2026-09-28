@@ -3508,6 +3508,132 @@ abstract class AppLocalizations {
   /// **'Включить долги'**
   String get includeDebts;
 
+  /// No description provided for @zakatSettingsMethodSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'МЕТОД РАСЧЁТА'**
+  String get zakatSettingsMethodSection;
+
+  /// No description provided for @zakatSettingsNisabStandardLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стандарт нисаба'**
+  String get zakatSettingsNisabStandardLabel;
+
+  /// No description provided for @zakatSettingsNisabGoldOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'По золоту (85g)'**
+  String get zakatSettingsNisabGoldOption;
+
+  /// No description provided for @zakatSettingsNisabSilverOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'По серебру (595g)'**
+  String get zakatSettingsNisabSilverOption;
+
+  /// No description provided for @zakatSettingsGoldPriceLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс золота (за 1g)'**
+  String get zakatSettingsGoldPriceLabel;
+
+  /// Generic required-field form validation message — deliberately unprefixed, reusable across any form field in the app
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательное поле'**
+  String get requiredFieldError;
+
+  /// Generic 'enter a valid number' form validation message — deliberately unprefixed
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите число'**
+  String get requiredNumberError;
+
+  /// Generic 'value cannot be negative' form validation message — deliberately unprefixed
+  ///
+  /// In ru, this message translates to:
+  /// **'Не может быть отрицательным'**
+  String get cannotBeNegativeError;
+
+  /// No description provided for @zakatSettingsCashOnHandLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличные в кассе'**
+  String get zakatSettingsCashOnHandLabel;
+
+  /// No description provided for @zakatSettingsCashHelperText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Учитывается в активах при расчёте закята'**
+  String get zakatSettingsCashHelperText;
+
+  /// No description provided for @zakatSettingsHaulSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'ЛУННЫЙ ГОД (ХАВЛЬ)'**
+  String get zakatSettingsHaulSection;
+
+  /// Haul (lunar year) start-date field label. NOTE: spelled 'хавля' here, matching this screen's current source text exactly — the existing `haulStartDate` key holds a differently-spelled 'хауля'. This discrepancy is pre-existing in the app and out of scope to reconcile in this migration; do not merge the two keys.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата начала хавля'**
+  String get zakatSettingsHaulStartDateLabel;
+
+  /// No description provided for @zakatSettingsDateNotSelected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не выбрана'**
+  String get zakatSettingsDateNotSelected;
+
+  /// No description provided for @zakatSettingsReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминание'**
+  String get zakatSettingsReminderTitle;
+
+  /// No description provided for @zakatSettingsReminderSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'За 30 дней до окончания хавля'**
+  String get zakatSettingsReminderSubtitle;
+
+  /// No description provided for @zakatSettingsAutoDataSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'АВТОМАТИЧЕСКИЕ ДАННЫЕ'**
+  String get zakatSettingsAutoDataSection;
+
+  /// Zakat-settings toggle row title. Distinct from zakat_calculator_page.dart's `zakatCalculatorStockValueLabel` ("Товарные остатки", no 'магазина' suffix, to be minted in a later task) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные остатки магазина'**
+  String get zakatSettingsStockValueToggleTitle;
+
+  /// No description provided for @zakatSettingsStockAutoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто из каталога'**
+  String get zakatSettingsStockAutoSubtitle;
+
+  /// Zakat-settings toggle row title. Distinct from zakat_calculator_page.dart's `zakatCalculatorSupplierDebtsLabel` ("Долги поставщикам", no '(вычет)' suffix, to be minted in a later task) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги поставщикам (вычет)'**
+  String get zakatSettingsSupplierDebtsToggleTitle;
+
+  /// No description provided for @zakatSettingsSupplierDebtsAutoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто из модуля поставщиков'**
+  String get zakatSettingsSupplierDebtsAutoSubtitle;
+
+  /// Generic in-flight 'Saving...' button label — deliberately unprefixed, reusable on any save-button loading state
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранение...'**
+  String get savingEllipsis;
+
   /// No description provided for @editProfile.
   ///
   /// In ru, this message translates to:

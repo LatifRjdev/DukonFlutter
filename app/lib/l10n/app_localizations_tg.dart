@@ -1850,6 +1850,72 @@ class AppLocalizationsTg extends AppLocalizations {
   String get includeDebts => 'Қарзҳо дохил карда шавад';
 
   @override
+  String get zakatSettingsMethodSection => 'МЕТОД РАСЧЁТА';
+
+  @override
+  String get zakatSettingsNisabStandardLabel => 'Стандарт нисаба';
+
+  @override
+  String get zakatSettingsNisabGoldOption => 'По золоту (85g)';
+
+  @override
+  String get zakatSettingsNisabSilverOption => 'По серебру (595g)';
+
+  @override
+  String get zakatSettingsGoldPriceLabel => 'Курс золота (за 1g)';
+
+  @override
+  String get requiredFieldError => 'Обязательное поле';
+
+  @override
+  String get requiredNumberError => 'Введите число';
+
+  @override
+  String get cannotBeNegativeError => 'Не может быть отрицательным';
+
+  @override
+  String get zakatSettingsCashOnHandLabel => 'Наличные в кассе';
+
+  @override
+  String get zakatSettingsCashHelperText =>
+      'Учитывается в активах при расчёте закята';
+
+  @override
+  String get zakatSettingsHaulSection => 'ЛУННЫЙ ГОД (ХАВЛЬ)';
+
+  @override
+  String get zakatSettingsHaulStartDateLabel => 'Дата начала хавля';
+
+  @override
+  String get zakatSettingsDateNotSelected => 'Не выбрана';
+
+  @override
+  String get zakatSettingsReminderTitle => 'Напоминание';
+
+  @override
+  String get zakatSettingsReminderSubtitle => 'За 30 дней до окончания хавля';
+
+  @override
+  String get zakatSettingsAutoDataSection => 'АВТОМАТИЧЕСКИЕ ДАННЫЕ';
+
+  @override
+  String get zakatSettingsStockValueToggleTitle => 'Товарные остатки магазина';
+
+  @override
+  String get zakatSettingsStockAutoSubtitle => 'Авто из каталога';
+
+  @override
+  String get zakatSettingsSupplierDebtsToggleTitle =>
+      'Долги поставщикам (вычет)';
+
+  @override
+  String get zakatSettingsSupplierDebtsAutoSubtitle =>
+      'Авто из модуля поставщиков';
+
+  @override
+  String get savingEllipsis => 'Сохранение...';
+
+  @override
   String get editProfile => 'Таҳрири профил';
 
   @override
