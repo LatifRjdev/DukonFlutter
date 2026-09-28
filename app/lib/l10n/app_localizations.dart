@@ -1552,6 +1552,54 @@ abstract class AppLocalizations {
   /// **'История продаж'**
   String get salesHistory;
 
+  /// No description provided for @salesFilterSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтры'**
+  String get salesFilterSheetTitle;
+
+  /// Sales-filter bottom sheet's reset-all-filters button — distinct from `offlineResetSyncStatusConfirm` ("Сбросить"), a different screen's dialog-confirm button that happens to share the same Russian word
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить'**
+  String get salesFilterReset;
+
+  /// Sales-filter bottom sheet's period-section chip for opening a custom date-range picker ("Выбрать даты") — distinct from `salesHistoryCustomDateChip` ("Выбрать"), the shorter wording used on the sales-history page's own period chips
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать даты'**
+  String get salesFilterCustomDates;
+
+  /// No description provided for @salesFilterPaymentTypeSectionLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тип оплаты'**
+  String get salesFilterPaymentTypeSectionLabel;
+
+  /// Generic bare 'Debt' label — shared between this sheet's payment-type filter chip and customer_detail_page.dart's debt stat card; distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Долг'**
+  String get debtLabel;
+
+  /// No description provided for @salesFilterStatusSectionLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get salesFilterStatusSectionLabel;
+
+  /// No description provided for @salesFilterStatusCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнен'**
+  String get salesFilterStatusCompleted;
+
+  /// No description provided for @salesFilterStatusCancelled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменён'**
+  String get salesFilterStatusCancelled;
+
   /// Sales-history period-filter chip for opening a custom date-range picker (bare "Выбрать") — distinct from `salesFilterCustomDates` ("Выбрать даты"), the fuller wording used in the sales-filter bottom sheet's period section
   ///
   /// In ru, this message translates to:

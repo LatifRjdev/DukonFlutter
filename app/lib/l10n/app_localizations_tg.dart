@@ -802,6 +802,30 @@ class AppLocalizationsTg extends AppLocalizations {
   String get salesHistory => 'Таърихи фурӯш';
 
   @override
+  String get salesFilterSheetTitle => 'Фильтры';
+
+  @override
+  String get salesFilterReset => 'Сбросить';
+
+  @override
+  String get salesFilterCustomDates => 'Выбрать даты';
+
+  @override
+  String get salesFilterPaymentTypeSectionLabel => 'Тип оплаты';
+
+  @override
+  String get debtLabel => 'Долг';
+
+  @override
+  String get salesFilterStatusSectionLabel => 'Статус';
+
+  @override
+  String get salesFilterStatusCompleted => 'Выполнен';
+
+  @override
+  String get salesFilterStatusCancelled => 'Отменён';
+
+  @override
   String get salesHistoryCustomDateChip => 'Выбрать';
 
   @override

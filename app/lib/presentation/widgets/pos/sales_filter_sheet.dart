@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Enums
@@ -201,6 +202,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final maxHeight = MediaQuery.of(context).size.height * 0.9;
 
     return Container(
@@ -241,7 +243,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'Фильтры',
+                    l10n.salesFilterSheetTitle,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -252,8 +254,8 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                 ),
                 TextButton(
                   onPressed: _reset,
-                  child: const Text(
-                    'Сбросить',
+                  child: Text(
+                    l10n.salesFilterReset,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -268,7 +270,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                     color: context.textSecondary,
                   ),
                   splashRadius: 20,
-                  tooltip: 'Пӯшидан',
+                  tooltip: l10n.close,
                 ),
               ],
             ),
@@ -289,14 +291,14 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- Period section ---
-                  _SectionLabel(label: 'Период'),
+                  _SectionLabel(label: l10n.period),
                   const SizedBox(height: AppConstants.spacingSm),
                   Wrap(
                     spacing: AppConstants.spacingSm,
                     runSpacing: AppConstants.spacingSm,
                     children: [
                       _FilterChip(
-                        label: 'Сегодня',
+                        label: l10n.today,
                         isSelected: _period == SalesFilterPeriod.today,
                         onTap: () => setState(() {
                           _period = SalesFilterPeriod.today;
@@ -305,7 +307,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                         }),
                       ),
                       _FilterChip(
-                        label: 'Неделя',
+                        label: l10n.week,
                         isSelected: _period == SalesFilterPeriod.week,
                         onTap: () => setState(() {
                           _period = SalesFilterPeriod.week;
@@ -314,7 +316,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                         }),
                       ),
                       _FilterChip(
-                        label: 'Месяц',
+                        label: l10n.month,
                         isSelected: _period == SalesFilterPeriod.month,
                         onTap: () => setState(() {
                           _period = SalesFilterPeriod.month;
@@ -323,7 +325,7 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                         }),
                       ),
                       _FilterChip(
-                        label: 'Выбрать даты',
+                        label: l10n.salesFilterCustomDates,
                         isSelected: _period == SalesFilterPeriod.custom,
                         onTap: () async {
                           setState(() => _period = SalesFilterPeriod.custom);
@@ -336,29 +338,29 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                   const SizedBox(height: AppConstants.spacingMd),
 
                   // --- Payment type section ---
-                  _SectionLabel(label: 'Тип оплаты'),
+                  _SectionLabel(label: l10n.salesFilterPaymentTypeSectionLabel),
                   const SizedBox(height: AppConstants.spacingSm),
                   Wrap(
                     spacing: AppConstants.spacingSm,
                     runSpacing: AppConstants.spacingSm,
                     children: [
                       _FilterChip(
-                        label: 'Все',
+                        label: l10n.all,
                         isSelected: _payment == SalesFilterPayment.all,
                         onTap: () => setState(() => _payment = SalesFilterPayment.all),
                       ),
                       _FilterChip(
-                        label: 'Наличные',
+                        label: l10n.cash,
                         isSelected: _payment == SalesFilterPayment.cash,
                         onTap: () => setState(() => _payment = SalesFilterPayment.cash),
                       ),
                       _FilterChip(
-                        label: 'Карта',
+                        label: l10n.card,
                         isSelected: _payment == SalesFilterPayment.card,
                         onTap: () => setState(() => _payment = SalesFilterPayment.card),
                       ),
                       _FilterChip(
-                        label: 'Долг',
+                        label: l10n.debtLabel,
                         isSelected: _payment == SalesFilterPayment.debt,
                         onTap: () => setState(() => _payment = SalesFilterPayment.debt),
                       ),
@@ -368,29 +370,29 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                   const SizedBox(height: AppConstants.spacingMd),
 
                   // --- Status section ---
-                  _SectionLabel(label: 'Статус'),
+                  _SectionLabel(label: l10n.salesFilterStatusSectionLabel),
                   const SizedBox(height: AppConstants.spacingSm),
                   Wrap(
                     spacing: AppConstants.spacingSm,
                     runSpacing: AppConstants.spacingSm,
                     children: [
                       _FilterChip(
-                        label: 'Все',
+                        label: l10n.all,
                         isSelected: _status == SalesFilterStatus.all,
                         onTap: () => setState(() => _status = SalesFilterStatus.all),
                       ),
                       _FilterChip(
-                        label: 'Выполнен',
+                        label: l10n.salesFilterStatusCompleted,
                         isSelected: _status == SalesFilterStatus.completed,
                         onTap: () => setState(() => _status = SalesFilterStatus.completed),
                       ),
                       _FilterChip(
-                        label: 'Возврат',
+                        label: l10n.refund,
                         isSelected: _status == SalesFilterStatus.returned,
                         onTap: () => setState(() => _status = SalesFilterStatus.returned),
                       ),
                       _FilterChip(
-                        label: 'Отменён',
+                        label: l10n.salesFilterStatusCancelled,
                         isSelected: _status == SalesFilterStatus.cancelled,
                         onTap: () => setState(() => _status = SalesFilterStatus.cancelled),
                       ),
@@ -424,8 +426,8 @@ class _SalesFilterSheetState extends State<SalesFilterSheet> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Применить',
+                child: Text(
+                  l10n.apply,
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 16,
