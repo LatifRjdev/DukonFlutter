@@ -2938,6 +2938,66 @@ abstract class AppLocalizations {
   /// **'Финансовый дашборд'**
   String get financeDashboard;
 
+  /// No description provided for @financeDashboardPeriodHalfYear.
+  ///
+  /// In ru, this message translates to:
+  /// **'6 мес'**
+  String get financeDashboardPeriodHalfYear;
+
+  /// No description provided for @financeTotalIncome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Общий доход'**
+  String get financeTotalIncome;
+
+  /// No description provided for @financeTotalExpenses.
+  ///
+  /// In ru, this message translates to:
+  /// **'Общие расходы'**
+  String get financeTotalExpenses;
+
+  /// No description provided for @financeGrossProfit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валовая прибыль'**
+  String get financeGrossProfit;
+
+  /// No description provided for @financeNetProfit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чистая прибыль'**
+  String get financeNetProfit;
+
+  /// Top-products list row — quantity sold with the abbreviated units suffix; quantity is pre-formatted to a string at the call site
+  ///
+  /// In ru, this message translates to:
+  /// **'{quantity} шт'**
+  String financeDashboardQuantityUnit(String quantity);
+
+  /// No description provided for @financeDashboardInvestments.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложения'**
+  String get financeDashboardInvestments;
+
+  /// No description provided for @financeDashboardCurrencies.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валюты'**
+  String get financeDashboardCurrencies;
+
+  /// No description provided for @financeDashboardDelivery.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставка'**
+  String get financeDashboardDelivery;
+
+  /// No description provided for @financeDashboardReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт'**
+  String get financeDashboardReport;
+
   /// Generic 'Balance' label — used as the balance screen's AppBar title
   ///
   /// In ru, this message translates to:

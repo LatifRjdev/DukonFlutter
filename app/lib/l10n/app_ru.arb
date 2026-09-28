@@ -971,6 +971,20 @@
 
   "finances": "Финансы",
   "financeDashboard": "Финансовый дашборд",
+  "financeDashboardPeriodHalfYear": "6 мес",
+  "financeTotalIncome": "Общий доход",
+  "financeTotalExpenses": "Общие расходы",
+  "financeGrossProfit": "Валовая прибыль",
+  "financeNetProfit": "Чистая прибыль",
+  "financeDashboardQuantityUnit": "{quantity} шт",
+  "@financeDashboardQuantityUnit": {
+    "description": "Top-products list row — quantity sold with the abbreviated units suffix; quantity is pre-formatted to a string at the call site",
+    "placeholders": { "quantity": { "type": "String" } }
+  },
+  "financeDashboardInvestments": "Вложения",
+  "financeDashboardCurrencies": "Валюты",
+  "financeDashboardDelivery": "Доставка",
+  "financeDashboardReport": "Отчёт",
   "balance": "Баланс",
   "@balance": { "description": "Generic 'Balance' label — used as the balance screen's AppBar title" },
   "currentBalance": "Текущий баланс",

@@ -1558,6 +1558,38 @@ class AppLocalizationsUz extends AppLocalizations {
   String get financeDashboard => 'Moliyaviy boshqaruv paneli';
 
   @override
+  String get financeDashboardPeriodHalfYear => '6 мес';
+
+  @override
+  String get financeTotalIncome => 'Общий доход';
+
+  @override
+  String get financeTotalExpenses => 'Общие расходы';
+
+  @override
+  String get financeGrossProfit => 'Валовая прибыль';
+
+  @override
+  String get financeNetProfit => 'Чистая прибыль';
+
+  @override
+  String financeDashboardQuantityUnit(String quantity) {
+    return '$quantity шт';
+  }
+
+  @override
+  String get financeDashboardInvestments => 'Вложения';
+
+  @override
+  String get financeDashboardCurrencies => 'Валюты';
+
+  @override
+  String get financeDashboardDelivery => 'Доставка';
+
+  @override
+  String get financeDashboardReport => 'Отчёт';
+
+  @override
   String get balance => 'Баланс';
 
   @override

@@ -85,8 +85,8 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
                 child: Row(
                   children: [
-                    const Text('Финансы',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                    Text(l10n.finances,
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     IconButton(
                       tooltip: l10n.a11yOpenReports,
@@ -136,25 +136,25 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                   scrollDirection: Axis.horizontal,
                                   children: [
                                     AppChip(
-                                      label: 'День',
+                                      label: l10n.day,
                                       isSelected: _period == 'day',
                                       onTap: () => _setPeriod('day'),
                                     ),
                                     const SizedBox(width: 8),
                                     AppChip(
-                                      label: 'Неделя',
+                                      label: l10n.week,
                                       isSelected: _period == 'week',
                                       onTap: () => _setPeriod('week'),
                                     ),
                                     const SizedBox(width: 8),
                                     AppChip(
-                                      label: 'Месяц',
+                                      label: l10n.month,
                                       isSelected: _period == 'month',
                                       onTap: () => _setPeriod('month'),
                                     ),
                                     const SizedBox(width: 8),
                                     AppChip(
-                                      label: '6 мес',
+                                      label: l10n.financeDashboardPeriodHalfYear,
                                       isSelected: _period == 'half_year',
                                       onTap: () => _setPeriod('half_year'),
                                     ),
@@ -170,7 +170,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                     child: GlassCard(
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
-                                        label: 'Общий доход',
+                                        label: l10n.financeTotalIncome,
                                         value: _formatPrice(clampRevenueCard(s.totalIncome)),
                                         textColor: AppColors.primary,
                                       ),
@@ -181,7 +181,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                     child: GlassCard(
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
-                                        label: 'Общие расходы',
+                                        label: l10n.financeTotalExpenses,
                                         value: _formatPrice(clampRevenueCard(s.totalExpenses)),
                                         textColor: context.danger,
                                       ),
@@ -196,7 +196,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                     child: GlassCard(
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
-                                        label: 'Валовая прибыль',
+                                        label: l10n.financeGrossProfit,
                                         value: _formatPrice(s.profit),
                                         textColor: context.warning,
                                       ),
@@ -207,7 +207,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                     child: GlassCard(
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
-                                        label: 'Чистая прибыль',
+                                        label: l10n.financeNetProfit,
                                         value: _formatPrice(s.profit - s.totalExpenses),
                                         textColor: context.success,
                                       ),
@@ -218,8 +218,8 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                               const SizedBox(height: 20),
 
                               // Bar chart
-                              const Text('Динамика',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                              Text(l10n.dynamics,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                               const SizedBox(height: 12),
                               GlassCard(
                                 padding: const EdgeInsets.all(16),
@@ -236,7 +236,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                           sideTitles: SideTitles(
                                             showTitles: true,
                                             getTitlesWidget: (value, meta) {
-                                              const labels = ['Доход', 'Расход', 'Прибыль'];
+                                              final labels = [l10n.income, l10n.expense, l10n.profit];
                                               if (value.toInt() >= 0 && value.toInt() < labels.length) {
                                                 return Padding(
                                                   padding: const EdgeInsets.only(top: 8),
@@ -288,8 +288,8 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
 
                               // Top products
                               if (s.topProducts.isNotEmpty) ...[
-                                const Text('Топ товары',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                                Text(l10n.topProducts,
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                                 const SizedBox(height: 8),
                                 Container(
                                   decoration: BoxDecoration(
@@ -315,7 +315,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                                 child: Text(s.topProducts[i].name,
                                                   style: const TextStyle(fontWeight: FontWeight.w500)),
                                               ),
-                                              Text('${s.topProducts[i].quantity} шт',
+                                              Text(l10n.financeDashboardQuantityUnit(s.topProducts[i].quantity.toString()),
                                                 style: TextStyle(fontSize: 13, color: context.textSecondary)),
                                               const SizedBox(width: 12),
                                               Text(_formatPrice(s.topProducts[i].revenue),
@@ -354,23 +354,24 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
   }
 
   Widget _buildSectionsGrid() {
+    final l10n = AppLocalizations.of(context)!;
     final storeId = _storeId ?? '';
     final sections = [
-      _SectionItem('Баланс', Icons.account_balance_wallet_outlined,
+      _SectionItem(l10n.balance, Icons.account_balance_wallet_outlined,
           () => context.push('/finance/balance', extra: storeId)),
-      _SectionItem('Кредиты', Icons.credit_card_outlined,
+      _SectionItem(l10n.credits, Icons.credit_card_outlined,
           () => context.push('/finance/credits', extra: storeId)),
-      _SectionItem('Вложения', Icons.trending_up_outlined,
+      _SectionItem(l10n.financeDashboardInvestments, Icons.trending_up_outlined,
           () => context.push(RouteNames.investments, extra: storeId)),
-      _SectionItem('Закят', Icons.volunteer_activism_outlined,
+      _SectionItem(l10n.zakat, Icons.volunteer_activism_outlined,
           () => context.push('/zakat', extra: storeId)),
-      _SectionItem('Валюты', Icons.currency_exchange_outlined,
+      _SectionItem(l10n.financeDashboardCurrencies, Icons.currency_exchange_outlined,
           () => context.push('/finance/currencies', extra: storeId)),
-      _SectionItem('Доставка', Icons.local_shipping_outlined,
+      _SectionItem(l10n.financeDashboardDelivery, Icons.local_shipping_outlined,
           () => context.push('/deliveries', extra: storeId)),
-      _SectionItem('Отчёт', Icons.bar_chart_outlined,
+      _SectionItem(l10n.financeDashboardReport, Icons.bar_chart_outlined,
           () => context.push('/finance/reports', extra: storeId)),
-      _SectionItem('Расходы', Icons.money_off_outlined,
+      _SectionItem(l10n.expenses, Icons.money_off_outlined,
           () => context.push(RouteNames.expenses, extra: storeId)),
     ];
 
