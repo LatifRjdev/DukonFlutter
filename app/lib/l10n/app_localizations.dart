@@ -1132,6 +1132,54 @@ abstract class AppLocalizations {
   /// **'Импорт из Excel'**
   String get importFromExcel;
 
+  /// Product list page — search field hint text
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск товара'**
+  String get productSearchHint;
+
+  /// Product list page — stock filter chip for products running low; distinct from `lowStock` ("Мало на складе"), a differently-worded low-stock warning used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Заканчивается'**
+  String get productFilterLowStock;
+
+  /// Product list page — stock filter chip for the combined low-stock + out-of-stock 'needs attention' filter (see the file's BUG #26 comments)
+  ///
+  /// In ru, this message translates to:
+  /// **'Требует внимания'**
+  String get productFilterAttention;
+
+  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. NOTE: this string was NOT in check_i18n.dart's original allow-list dump for this file — it shares a source line with `noProducts` and check_i18n only flags the first Cyrillic match per line — but it must still be migrated in this same pass
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет товаров по фильтру'**
+  String get productsEmptyFilteredTitle;
+
+  /// Product list page — empty-state subtitle shown when the store has zero products at all; distinct from `emptyProductsSubtitle` ("Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом"), differently-worded text on another products screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первый товар в каталог'**
+  String get productsEmptyAddSubtitle;
+
+  /// Product list page — empty-state subtitle shown when a filter/search hides all products
+  ///
+  /// In ru, this message translates to:
+  /// **'Попробуйте изменить фильтр или поисковый запрос'**
+  String get productsEmptyFilteredSubtitle;
+
+  /// Product list card — SKU line
+  ///
+  /// In ru, this message translates to:
+  /// **'Арт: {sku}'**
+  String productSkuLine(String sku);
+
+  /// Product list card — in-stock quantity line. {value} is the pre-formatted '<quantity> <unit>' string. This collapses what was previously two separately-styled Text widgets (grey label + stock-status-colored value) into one Text per the label+separator+value composite-string rule (.claude/rules/mobile-l10n.md) — the merged Text keeps the stock-status color since that's the more important visual signal
+  ///
+  /// In ru, this message translates to:
+  /// **'На складе: {value}'**
+  String productStockQuantityLine(String value);
+
   /// Product active-status badge, masculine grammatical agreement (product = 'товар', masculine) — distinct from the feminine-agreement 'Активна' forms used elsewhere (subscription/loyalty/shift status badges), which cannot be reused here without breaking Russian grammar
   ///
   /// In ru, this message translates to:

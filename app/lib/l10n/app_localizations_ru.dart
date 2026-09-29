@@ -564,6 +564,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get importFromExcel => 'Импорт из Excel';
 
   @override
+  String get productSearchHint => 'Поиск товара';
+
+  @override
+  String get productFilterLowStock => 'Заканчивается';
+
+  @override
+  String get productFilterAttention => 'Требует внимания';
+
+  @override
+  String get productsEmptyFilteredTitle => 'Нет товаров по фильтру';
+
+  @override
+  String get productsEmptyAddSubtitle => 'Добавьте первый товар в каталог';
+
+  @override
+  String get productsEmptyFilteredSubtitle =>
+      'Попробуйте изменить фильтр или поисковый запрос';
+
+  @override
+  String productSkuLine(String sku) {
+    return 'Арт: $sku';
+  }
+
+  @override
+  String productStockQuantityLine(String value) {
+    return 'На складе: $value';
+  }
+
+  @override
   String get productStatusActive => 'Активен';
 
   @override
