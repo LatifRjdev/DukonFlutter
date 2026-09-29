@@ -43,6 +43,10 @@
   "@close": { "description": "Close button" },
   "confirm": "Подтвердить",
   "@confirm": { "description": "Confirm button" },
+  "allow": "Разрешить",
+  "@allow": { "description": "Generic 'Allow' / grant-permission action button — deliberately unprefixed, the affirmative half of any approval prompt (first use: approving an impersonation-access request from the notifications list). Distinct from `confirm` (\"Подтвердить\"), which confirms the user's own pending action rather than granting a third party access." },
+  "decline": "Отклонить",
+  "@decline": { "description": "Generic 'Decline' / reject action button — deliberately unprefixed, the negative half of any approval prompt and the counterpart of `allow` (first use: rejecting an impersonation-access request from the notifications list). Distinct from `cancel` (\"Отмена\"), which aborts the user's own action rather than refusing someone else's request." },
   "apply": "Применить",
   "@apply": { "description": "Apply button (e.g. apply filters, apply inventory count results)" },
   "retry": "Повторить",
@@ -72,6 +76,11 @@
     "description": "Relative time — N days ago; placeholder is a pre-formatted String",
     "placeholders": { "days": { "type": "String" } }
   },
+  "daysAgoShort": "{days} д назад",
+  "@daysAgoShort": {
+    "description": "Relative time — N days ago, abbreviated to a single-letter day unit (\"д\"). Distinct from `daysAgo` (\"{days} дн назад\"), which uses the two-letter \"дн\" abbreviation: both render N-days-ago, but the two wordings are pre-existing and used by different screens (this one by the notifications list), so they are kept as separate keys rather than one wording being silently changed to match the other. Placeholder is a pre-formatted String.",
+    "placeholders": { "days": { "type": "String" } }
+  },
   "loading": "Загрузка...",
   "@loading": { "description": "Loading indicator text" },
   "processing": "Обработка...",
@@ -94,6 +103,8 @@
   "@product": { "description": "Generic singular 'product' label, e.g. a table column header" },
   "productNotFound": "Товар не найден",
   "@productNotFound": { "description": "Shown when a scanned/looked-up product cannot be matched" },
+  "storeNotSelectedError": "Магазин не выбран",
+  "@storeNotSelectedError": { "description": "Generic error shown when a screen cannot load store-scoped data because no store is selected — deliberately unprefixed, since nothing about the message is specific to one screen (promoted from the former `productDetailStoreNotSelectedError`, same value, when the notifications list needed the identical message)." },
   "difference": "Разница",
   "@difference": { "description": "Generic 'difference' label (e.g. expected vs actual quantity), distinct from cashDifference which is specifically a cash-amount context" },
   "all": "Все",
@@ -489,8 +500,6 @@
   "@productDetailSellButton": { "description": "Product detail page — bottom button to add the product to the cart" },
   "productDetailDeleteConfirmTitle": "Удалить товар?",
   "@productDetailDeleteConfirmTitle": { "description": "Product detail page — delete confirmation dialog title" },
-  "productDetailStoreNotSelectedError": "Магазин не выбран",
-  "@productDetailStoreNotSelectedError": { "description": "Product detail page — error shown when stock movements can't load because no store is selected" },
   "productDetailMovementHistoryLoadError": "Не удалось загрузить историю движений",
   "@productDetailMovementHistoryLoadError": { "description": "Product detail page — error shown when the stock movement history fails to load" },
   "productDetailMovementHistoryTitle": "История движений",
@@ -1070,6 +1079,16 @@
   "@notificationSettingsDaysWithoutSaleLabel": { "description": "Notification settings — label of the numeric field setting how many days without a sale marks a product as stale" },
   "notificationSettingsRemainingPercentLabel": "Остаток, % от партии",
   "@notificationSettingsRemainingPercentLabel": { "description": "Notification settings — label of the numeric field setting the minimum remaining stock, as a percentage of the original batch, for the stale-product alert to fire" },
+
+  "notificationsEmptyState": "Нет уведомлений",
+  "@notificationsEmptyState": { "description": "Notifications list page — empty state shown when the user has no notifications" },
+
+  "impersonationAccessGranted": "Доступ предоставлен",
+  "@impersonationAccessGranted": { "description": "Notifications list page — snackbar confirming the user approved a support agent's impersonation-access request" },
+  "impersonationRequestRejected": "Запрос отклонён",
+  "@impersonationRequestRejected": { "description": "Notifications list page — snackbar confirming the user rejected a support agent's impersonation-access request" },
+  "impersonationRequestFailedMessage": "Не удалось обработать запрос — возможно, он уже неактивен",
+  "@impersonationRequestFailedMessage": { "description": "Notifications list page — snackbar shown when responding to an impersonation-access request fails, most often because the request already expired or was withdrawn" },
 
   "settingsLogoutTitle": "Выход",
   "@settingsLogoutTitle": { "description": "Settings page — logout confirmation dialog title" },

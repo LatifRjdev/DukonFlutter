@@ -208,6 +208,18 @@ abstract class AppLocalizations {
   /// **'Подтвердить'**
   String get confirm;
 
+  /// Generic 'Allow' / grant-permission action button — deliberately unprefixed, the affirmative half of any approval prompt (first use: approving an impersonation-access request from the notifications list). Distinct from `confirm` ("Подтвердить"), which confirms the user's own pending action rather than granting a third party access.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разрешить'**
+  String get allow;
+
+  /// Generic 'Decline' / reject action button — deliberately unprefixed, the negative half of any approval prompt and the counterpart of `allow` (first use: rejecting an impersonation-access request from the notifications list). Distinct from `cancel` ("Отмена"), which aborts the user's own action rather than refusing someone else's request.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонить'**
+  String get decline;
+
   /// Apply button (e.g. apply filters, apply inventory count results)
   ///
   /// In ru, this message translates to:
@@ -267,6 +279,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{days} дн назад'**
   String daysAgo(String days);
+
+  /// Relative time — N days ago, abbreviated to a single-letter day unit ("д"). Distinct from `daysAgo` ("{days} дн назад"), which uses the two-letter "дн" abbreviation: both render N-days-ago, but the two wordings are pre-existing and used by different screens (this one by the notifications list), so they are kept as separate keys rather than one wording being silently changed to match the other. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'{days} д назад'**
+  String daysAgoShort(String days);
 
   /// Loading indicator text
   ///
@@ -333,6 +351,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Товар не найден'**
   String get productNotFound;
+
+  /// Generic error shown when a screen cannot load store-scoped data because no store is selected — deliberately unprefixed, since nothing about the message is specific to one screen (promoted from the former `productDetailStoreNotSelectedError`, same value, when the notifications list needed the identical message).
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин не выбран'**
+  String get storeNotSelectedError;
 
   /// Generic 'difference' label (e.g. expected vs actual quantity), distinct from cashDifference which is specifically a cash-amount context
   ///
@@ -1389,12 +1413,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить товар?'**
   String get productDetailDeleteConfirmTitle;
-
-  /// Product detail page — error shown when stock movements can't load because no store is selected
-  ///
-  /// In ru, this message translates to:
-  /// **'Магазин не выбран'**
-  String get productDetailStoreNotSelectedError;
 
   /// Product detail page — error shown when the stock movement history fails to load
   ///
@@ -2943,6 +2961,30 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Остаток, % от партии'**
   String get notificationSettingsRemainingPercentLabel;
+
+  /// Notifications list page — empty state shown when the user has no notifications
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет уведомлений'**
+  String get notificationsEmptyState;
+
+  /// Notifications list page — snackbar confirming the user approved a support agent's impersonation-access request
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступ предоставлен'**
+  String get impersonationAccessGranted;
+
+  /// Notifications list page — snackbar confirming the user rejected a support agent's impersonation-access request
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрос отклонён'**
+  String get impersonationRequestRejected;
+
+  /// Notifications list page — snackbar shown when responding to an impersonation-access request fails, most often because the request already expired or was withdrawn
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось обработать запрос — возможно, он уже неактивен'**
+  String get impersonationRequestFailedMessage;
 
   /// Settings page — logout confirmation dialog title
   ///

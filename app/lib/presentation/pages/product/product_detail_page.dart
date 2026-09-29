@@ -492,7 +492,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
     if (widget.storeId.isEmpty) {
       setState(() {
         _loading = false;
-        _error = AppLocalizations.of(context)!.productDetailStoreNotSelectedError;
+        _error = AppLocalizations.of(context)!.storeNotSelectedError;
       });
       return;
     }

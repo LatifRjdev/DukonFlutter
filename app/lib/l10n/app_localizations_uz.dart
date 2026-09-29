@@ -65,6 +65,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get confirm => 'Tasdiqlash';
 
   @override
+  String get allow => 'Разрешить';
+
+  @override
+  String get decline => 'Отклонить';
+
+  @override
   String get apply => 'Применить';
 
   @override
@@ -101,6 +107,11 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
+  String daysAgoShort(String days) {
+    return '$days д назад';
+  }
+
+  @override
   String get loading => 'Yuklanmoqda...';
 
   @override
@@ -132,6 +143,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get productNotFound => 'Товар не найден';
+
+  @override
+  String get storeNotSelectedError => 'Магазин не выбран';
 
   @override
   String get difference => 'Разница';
@@ -705,9 +719,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get productDetailDeleteConfirmTitle => 'Удалить товар?';
-
-  @override
-  String get productDetailStoreNotSelectedError => 'Магазин не выбран';
 
   @override
   String get productDetailMovementHistoryLoadError =>
@@ -1571,6 +1582,19 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get notificationSettingsRemainingPercentLabel =>
       'Остаток, % от партии';
+
+  @override
+  String get notificationsEmptyState => 'Нет уведомлений';
+
+  @override
+  String get impersonationAccessGranted => 'Доступ предоставлен';
+
+  @override
+  String get impersonationRequestRejected => 'Запрос отклонён';
+
+  @override
+  String get impersonationRequestFailedMessage =>
+      'Не удалось обработать запрос — возможно, он уже неактивен';
 
   @override
   String get settingsLogoutTitle => 'Выход';
