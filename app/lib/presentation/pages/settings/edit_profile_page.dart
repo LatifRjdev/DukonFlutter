@@ -153,13 +153,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Row(
                     children: [
                       IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-                      const Text('Профиль',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                      Text(l10n.profile,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                       const Spacer(),
                       TextButton(
                         onPressed: _save,
-                        child: const Text('Сохранить',
-                          style: TextStyle(color: AppColors.primary, fontSize: 15, fontWeight: FontWeight.w600)),
+                        child: Text(l10n.save,
+                          style: const TextStyle(color: AppColors.primary, fontSize: 15, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ),
@@ -182,25 +182,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   child: const Icon(Icons.person, size: 40, color: AppColors.primary),
                                 ),
                                 const SizedBox(height: 8),
-                                const Text('Изменить фото',
-                                  style: TextStyle(fontSize: 13, color: AppColors.primary)),
+                                Text(l10n.editProfileChangePhotoLabel,
+                                  style: const TextStyle(fontSize: 13, color: AppColors.primary)),
                               ],
                             ),
                           ),
                           const SizedBox(height: 24),
 
                           // Name fields
-                          _buildField('Имя', _firstNameController, validator: (v) {
-                            if (v == null || v.isEmpty) return 'Введите имя';
+                          _buildField(l10n.name, _firstNameController, validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.enterName;
                             return null;
                           }),
                           const SizedBox(height: 16),
-                          _buildField('Фамилия', _lastNameController),
+                          _buildField(l10n.editProfileLastNameLabel, _lastNameController),
                           const SizedBox(height: 16),
                           _buildField('Email', _emailController,
                             keyboardType: TextInputType.emailAddress),
                           const SizedBox(height: 16),
-                          _buildField('Телефон', _phoneController,
+                          _buildField(l10n.phoneLabel, _phoneController,
                             keyboardType: TextInputType.phone, enabled: false),
                           const SizedBox(height: 16),
 
@@ -229,7 +229,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           // Security section
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('Безопасность',
+                            child: Text(l10n.editProfileSecuritySectionLabel,
                               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textSecondary)),
                           ),
                           const SizedBox(height: 8),
@@ -241,8 +241,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             child: Column(
                               children: [
                                 ListTile(
-                                  title: const Text('Сменить пароль',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                  title: Text(l10n.changePassword,
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                   trailing: Icon(Icons.chevron_right, color: context.textSecondary, size: 20),
                                   onTap: () => context.push('/settings/password'),
                                 ),
@@ -263,7 +263,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                               ),
                               child: Text(
-                                state is SettingsLoading ? 'Сохранение...' : 'Сохранить изменения',
+                                state is SettingsLoading ? l10n.savingEllipsis : l10n.editProfileSaveChangesButton,
                                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                               ),
                             ),

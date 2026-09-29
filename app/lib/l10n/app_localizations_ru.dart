@@ -2233,6 +2233,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editProfile => 'Редактировать профиль';
 
   @override
+  String get editProfileChangePhotoLabel => 'Изменить фото';
+
+  @override
+  String get editProfileLastNameLabel => 'Фамилия';
+
+  @override
+  String get editProfileSecuritySectionLabel => 'Безопасность';
+
+  @override
+  String get editProfileSaveChangesButton => 'Сохранить изменения';
+
+  @override
   String get changePassword => 'Сменить пароль';
 
   @override
@@ -2646,6 +2658,45 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ecommerceMappingExternalIdHint => 'Внешний ID';
+
+  @override
+  String get telegramLinkedCustomersLabel => 'Подключённых клиентов';
+
+  @override
+  String get telegramHowToConnectTitle => 'Как подключить клиентов';
+
+  @override
+  String telegramStep1Text(String username) {
+    return 'Клиент находит бота $username в Telegram';
+  }
+
+  @override
+  String get telegramStep2Text =>
+      'Нажимает /start и вводит свой номер телефона';
+
+  @override
+  String get telegramStep3Text =>
+      'Бот проверяет номер в базе клиентов и связывает аккаунт';
+
+  @override
+  String get telegramStep4Text =>
+      'Клиент получает уведомления о продажах и долгах';
+
+  @override
+  String get telegramSendingButton => 'Отправка...';
+
+  @override
+  String get telegramTestMessageButton => 'Тестовое сообщение';
+
+  @override
+  String get languageSettingsPageTitle => 'Язык интерфейса';
+
+  @override
+  String get languageSettingsChooseLabel => 'Выберите язык';
+
+  @override
+  String get languageSettingsRestartNotice =>
+      'Для применения языка перезапустите приложение.';
 
   @override
   String get employees => 'Сотрудники';

@@ -4174,7 +4174,7 @@ abstract class AppLocalizations {
   /// **'Авто из модуля поставщиков'**
   String get zakatSettingsSupplierDebtsAutoSubtitle;
 
-  /// Generic in-flight 'Saving...' button label — deliberately unprefixed, reusable on any save-button loading state
+  /// Generic in-flight 'Saving...' button label — deliberately unprefixed, reusable on any save-button loading state. Consumers so far: zakat_settings_page.dart and edit_profile_page.dart (whose non-saving counterpart is `editProfileSaveChangesButton`)
   ///
   /// In ru, this message translates to:
   /// **'Сохранение...'**
@@ -4185,6 +4185,30 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Редактировать профиль'**
   String get editProfile;
+
+  /// Edit-profile screen — tappable caption under the avatar that opens the photo picker
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить фото'**
+  String get editProfileChangePhotoLabel;
+
+  /// Edit-profile screen — surname field label; its given-name counterpart on the same form is the generic `name` ("Имя")
+  ///
+  /// In ru, this message translates to:
+  /// **'Фамилия'**
+  String get editProfileLastNameLabel;
+
+  /// Edit-profile screen — section header above the change-password row
+  ///
+  /// In ru, this message translates to:
+  /// **'Безопасность'**
+  String get editProfileSecuritySectionLabel;
+
+  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, which shares the same source line in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить изменения'**
+  String get editProfileSaveChangesButton;
 
   /// No description provided for @changePassword.
   ///
@@ -4983,6 +5007,72 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Внешний ID'**
   String get ecommerceMappingExternalIdHint;
+
+  /// Telegram-bot settings screen — label of the stat row counting customers who have linked their Telegram account to the store
+  ///
+  /// In ru, this message translates to:
+  /// **'Подключённых клиентов'**
+  String get telegramLinkedCustomersLabel;
+
+  /// Telegram-bot settings screen — section header above the numbered connection instructions
+  ///
+  /// In ru, this message translates to:
+  /// **'Как подключить клиентов'**
+  String get telegramHowToConnectTitle;
+
+  /// Telegram-bot settings screen — connection instruction step 1; username is the bot handle, e.g. @dukonpro_bot
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент находит бота {username} в Telegram'**
+  String telegramStep1Text(String username);
+
+  /// Telegram-bot settings screen — connection instruction step 2
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажимает /start и вводит свой номер телефона'**
+  String get telegramStep2Text;
+
+  /// Telegram-bot settings screen — connection instruction step 3
+  ///
+  /// In ru, this message translates to:
+  /// **'Бот проверяет номер в базе клиентов и связывает аккаунт'**
+  String get telegramStep3Text;
+
+  /// Telegram-bot settings screen — connection instruction step 4
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент получает уведомления о продажах и долгах'**
+  String get telegramStep4Text;
+
+  /// Telegram-bot settings screen — test-message button label while the message is in flight
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправка...'**
+  String get telegramSendingButton;
+
+  /// Telegram-bot settings screen — test-message button's default (non-sending) label; shares a source line with `telegramSendingButton` in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовое сообщение'**
+  String get telegramTestMessageButton;
+
+  /// Language settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык интерфейса'**
+  String get languageSettingsPageTitle;
+
+  /// Language settings screen — section header above the list of selectable UI languages
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите язык'**
+  String get languageSettingsChooseLabel;
+
+  /// Language settings screen — info banner telling the user to restart the app for the newly picked language to take effect
+  ///
+  /// In ru, this message translates to:
+  /// **'Для применения языка перезапустите приложение.'**
+  String get languageSettingsRestartNotice;
 
   /// No description provided for @employees.
   ///
