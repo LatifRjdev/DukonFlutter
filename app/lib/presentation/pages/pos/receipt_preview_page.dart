@@ -108,7 +108,7 @@ class ReceiptPreviewPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
-                      text: l10n.receiptPreviewPrintButton,
+                      text: l10n.printLabel,
                       icon: Icons.print_outlined,
                       onPressed: () => _printReceipt(context),
                     ),

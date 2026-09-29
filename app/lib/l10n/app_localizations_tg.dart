@@ -56,6 +56,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get share => 'Поделиться';
 
   @override
+  String get printLabel => 'Печать';
+
+  @override
   String get close => 'Пӯшидан';
 
   @override
@@ -2723,9 +2726,6 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get receiptPreviewCashierLine => 'Кассир: Иванов И.';
-
-  @override
-  String get receiptPreviewPrintButton => 'Печать';
 
   @override
   String get ecommerceSettingsTitle => 'Интернет-магазин';

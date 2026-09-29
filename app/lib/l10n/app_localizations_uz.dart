@@ -56,6 +56,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get share => 'Поделиться';
 
   @override
+  String get printLabel => 'Печать';
+
+  @override
   String get close => 'Yopish';
 
   @override
@@ -2723,9 +2726,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get receiptPreviewCashierLine => 'Кассир: Иванов И.';
-
-  @override
-  String get receiptPreviewPrintButton => 'Печать';
 
   @override
   String get ecommerceSettingsTitle => 'Интернет-магазин';

@@ -37,6 +37,8 @@
   "@done": { "description": "Done button" },
   "share": "Поделиться",
   "@share": { "description": "Share action button (distinct from a11yShare, which is a tooltip/semantic label)" },
+  "printLabel": "Печать",
+  "@printLabel": { "description": "Bare 'Print' action button label — deliberately unprefixed and generic (sibling of `share` on the receipt-preview screen). Distinct from `printReceipt` (\"Печать чека\"), the longer noun phrase, and from `printReceiptButton` (\"Печатать чек\"), the imperative form." },
   "close": "Закрыть",
   "@close": { "description": "Close button" },
   "confirm": "Подтвердить",
@@ -1657,8 +1659,6 @@
   "@receiptPreviewTotalLine": { "description": "Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed" },
   "receiptPreviewCashierLine": "Кассир: Иванов И.",
   "@receiptPreviewCashierLine": { "description": "Fixed demo content for the receipt-mockup preview — not real transaction data, no placeholders needed" },
-  "receiptPreviewPrintButton": "Печать",
-  "@receiptPreviewPrintButton": { "description": "Receipt-preview screen (receipt_preview_page.dart) — bare \"Print\" label on the action button next to the generic `share` button. Distinct from `printReceipt` (\"Печать чека\") and `printReceiptButton` (\"Печатать чек\"), both longer phrases; this button sits in a narrow two-button row and names only the action." },
 
   "ecommerceSettingsTitle": "Интернет-магазин",
   "@ecommerceSettingsTitle": { "description": "Ecommerce settings screen — AppBar title" },

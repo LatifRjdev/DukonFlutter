@@ -190,6 +190,12 @@ abstract class AppLocalizations {
   /// **'Поделиться'**
   String get share;
 
+  /// Bare 'Print' action button label — deliberately unprefixed and generic (sibling of `share` on the receipt-preview screen). Distinct from `printReceipt` ("Печать чека"), the longer noun phrase, and from `printReceiptButton` ("Печатать чек"), the imperative form.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать'**
+  String get printLabel;
+
   /// Close button
   ///
   /// In ru, this message translates to:
@@ -5121,12 +5127,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Кассир: Иванов И.'**
   String get receiptPreviewCashierLine;
-
-  /// Receipt-preview screen (receipt_preview_page.dart) — bare "Print" label on the action button next to the generic `share` button. Distinct from `printReceipt` ("Печать чека") and `printReceiptButton` ("Печатать чек"), both longer phrases; this button sits in a narrow two-button row and names only the action.
-  ///
-  /// In ru, this message translates to:
-  /// **'Печать'**
-  String get receiptPreviewPrintButton;
 
   /// Ecommerce settings screen — AppBar title
   ///
