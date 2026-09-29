@@ -122,7 +122,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Добавить вложение')),
+            appBar: AppBar(title: Text(l10n.investmentAddPageTitle)),
             body: BlocListener<InvestmentBloc, InvestmentState>(
               listener: (context, state) {
                 if (state is InvestmentActionSuccess) {
@@ -147,29 +147,29 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                     children: [
                       AppTextField(
                         controller: _nameController,
-                        label: 'Название *',
+                        label: l10n.myStoresNameLabel,
                         prefixIcon: Icons.label_outline,
                         validator: (v) {
-                          if (v == null || v.isEmpty) return 'Введите название';
+                          if (v == null || v.isEmpty) return l10n.createStoreNameRequiredError;
                           return null;
                         },
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _descriptionController,
-                        label: 'Описание',
+                        label: l10n.description,
                         prefixIcon: Icons.description,
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _amountController,
-                        label: 'Сумма *',
+                        label: l10n.investmentAmountLabel,
                         keyboardType: TextInputType.number,
                         prefixIcon: Icons.attach_money,
                         validator: (v) {
-                          if (v == null || v.isEmpty) return 'Введите сумму';
+                          if (v == null || v.isEmpty) return l10n.shiftsCashAmountRequired;
                           if (double.tryParse(v) == null) {
-                            return 'Некорректная сумма';
+                            return l10n.invalidAmount;
                           }
                           return null;
                         },
@@ -177,18 +177,18 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _returnAmountController,
-                        label: 'Сумма возврата',
+                        label: l10n.investmentReturnAmountLabel,
                         keyboardType: TextInputType.number,
                         prefixIcon: Icons.money,
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _investorNameController,
-                        label: 'Имя инвестора *',
+                        label: l10n.investmentInvestorNameLabel,
                         prefixIcon: Icons.person_outline,
                         validator: (v) {
                           if (v == null || v.isEmpty) {
-                            return 'Введите имя инвестора';
+                            return l10n.investmentInvestorNameRequiredError;
                           }
                           return null;
                         },
@@ -196,13 +196,13 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                       const SizedBox(height: AppConstants.spacingMd),
                       AppTextField(
                         controller: _investorPhoneController,
-                        label: 'Телефон инвестора',
+                        label: l10n.investmentInvestorPhoneLabel,
                         keyboardType: TextInputType.phone,
                         prefixIcon: Icons.phone_outlined,
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
-                      const Text('Дата начала',
-                          style: TextStyle(
+                      Text(l10n.investmentStartDateLabel,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
                       Semantics(
@@ -231,8 +231,8 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                         ),
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
-                      const Text('Дата окончания (необязательно)',
-                          style: TextStyle(
+                      Text(l10n.investmentEndDateLabel,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: AppConstants.spacingSm),
                       Semantics(
@@ -256,7 +256,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                                 Text(
                                   _endDate != null
                                       ? _formatDate(_endDate!)
-                                      : 'Не выбрана',
+                                      : l10n.dateNotSelected,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: _endDate != null
@@ -272,7 +272,7 @@ class _AddInvestmentPageState extends State<AddInvestmentPage> {
                       BlocBuilder<InvestmentBloc, InvestmentState>(
                         builder: (context, state) {
                           return AppButton(
-                            text: 'Сохранить',
+                            text: l10n.save,
                             isLoading: state is InvestmentLoading,
                             onPressed: () => _submit(context),
                           );

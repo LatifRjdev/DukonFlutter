@@ -1903,6 +1903,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get date => 'Дата';
 
   @override
+  String get dateNotSelected => 'Не выбрана';
+
+  @override
   String get debts => 'Долги';
 
   @override
@@ -2156,9 +2159,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get zakatSettingsHaulStartDateLabel => 'Дата начала хавля';
-
-  @override
-  String get zakatSettingsDateNotSelected => 'Не выбрана';
 
   @override
   String get zakatSettingsReminderTitle => 'Напоминание';
@@ -3259,4 +3259,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get investmentDeleted => 'Вложение удалено';
+
+  @override
+  String get investmentAddPageTitle => 'Добавить вложение';
+
+  @override
+  String get investmentInvestorNameRequiredError => 'Введите имя инвестора';
+
+  @override
+  String get investmentStartDateLabel => 'Дата начала';
+
+  @override
+  String get investmentEndDateLabel => 'Дата окончания (необязательно)';
+
+  @override
+  String get investmentInvestorNameLabel => 'Имя инвестора *';
+
+  @override
+  String get investmentAmountLabel => 'Сумма *';
+
+  @override
+  String get investmentReturnAmountLabel => 'Сумма возврата';
+
+  @override
+  String get investmentInvestorPhoneLabel => 'Телефон инвестора';
 }

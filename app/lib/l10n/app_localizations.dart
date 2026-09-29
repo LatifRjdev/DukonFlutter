@@ -3574,6 +3574,12 @@ abstract class AppLocalizations {
   /// **'Дата'**
   String get date;
 
+  /// Generic placeholder shown in a date-picker slot when no date has been chosen yet — deliberately unprefixed and shared across screens (zakat haul-start field, investment end-date field). Feminine short-form adjective agreeing with "дата".
+  ///
+  /// In ru, this message translates to:
+  /// **'Не выбрана'**
+  String get dateNotSelected;
+
   /// No description provided for @debts.
   ///
   /// In ru, this message translates to:
@@ -4053,12 +4059,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Дата начала хавля'**
   String get zakatSettingsHaulStartDateLabel;
-
-  /// No description provided for @zakatSettingsDateNotSelected.
-  ///
-  /// In ru, this message translates to:
-  /// **'Не выбрана'**
-  String get zakatSettingsDateNotSelected;
 
   /// No description provided for @zakatSettingsReminderTitle.
   ///
@@ -6110,6 +6110,54 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Вложение удалено'**
   String get investmentDeleted;
+
+  /// No description provided for @investmentAddPageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить вложение'**
+  String get investmentAddPageTitle;
+
+  /// No description provided for @investmentInvestorNameRequiredError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите имя инвестора'**
+  String get investmentInvestorNameRequiredError;
+
+  /// No description provided for @investmentStartDateLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата начала'**
+  String get investmentStartDateLabel;
+
+  /// No description provided for @investmentEndDateLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата окончания (необязательно)'**
+  String get investmentEndDateLabel;
+
+  /// No description provided for @investmentInvestorNameLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя инвестора *'**
+  String get investmentInvestorNameLabel;
+
+  /// No description provided for @investmentAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма *'**
+  String get investmentAmountLabel;
+
+  /// Add-investment form field label — the amount to be returned to the investor. Bare label with no trailing punctuation. Distinct from `refundTotalLabel` ("Сумма возврата:", with a trailing colon) which is a sale-refund total display label on the refund page — same words, different domain, and the values differ character-for-character, so the two must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата'**
+  String get investmentReturnAmountLabel;
+
+  /// No description provided for @investmentInvestorPhoneLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон инвестора'**
+  String get investmentInvestorPhoneLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -407,6 +407,7 @@
     "monthNovember",
     "monthDecember",
     "amountTjs",
+    "dateNotSelected",
     "credits",
     "paymentQueuedOfflineMessage",
     "paymentHistory",
@@ -457,7 +458,6 @@
     "zakatSettingsCashHelperText",
     "zakatSettingsHaulSection",
     "zakatSettingsHaulStartDateLabel",
-    "zakatSettingsDateNotSelected",
     "zakatSettingsReminderTitle",
     "zakatSettingsReminderSubtitle",
     "zakatSettingsAutoDataSection",
@@ -636,7 +636,15 @@
     "discountsValueFixedLabel",
     "discountsMinOrderLabel",
     "snackSyncStatusReset",
-    "snackLoadError"
+    "snackLoadError",
+    "investmentAddPageTitle",
+    "investmentInvestorNameRequiredError",
+    "investmentStartDateLabel",
+    "investmentEndDateLabel",
+    "investmentInvestorNameLabel",
+    "investmentAmountLabel",
+    "investmentReturnAmountLabel",
+    "investmentInvestorPhoneLabel"
   ],
 
   "uz": [
@@ -1047,6 +1055,7 @@
     "monthNovember",
     "monthDecember",
     "amountTjs",
+    "dateNotSelected",
     "credits",
     "paymentQueuedOfflineMessage",
     "paymentHistory",
@@ -1097,7 +1106,6 @@
     "zakatSettingsCashHelperText",
     "zakatSettingsHaulSection",
     "zakatSettingsHaulStartDateLabel",
-    "zakatSettingsDateNotSelected",
     "zakatSettingsReminderTitle",
     "zakatSettingsReminderSubtitle",
     "zakatSettingsAutoDataSection",
@@ -1276,6 +1284,14 @@
     "discountsValueFixedLabel",
     "discountsMinOrderLabel",
     "snackSyncStatusReset",
-    "snackLoadError"
+    "snackLoadError",
+    "investmentAddPageTitle",
+    "investmentInvestorNameRequiredError",
+    "investmentStartDateLabel",
+    "investmentEndDateLabel",
+    "investmentInvestorNameLabel",
+    "investmentAmountLabel",
+    "investmentReturnAmountLabel",
+    "investmentInvestorPhoneLabel"
   ]
 }

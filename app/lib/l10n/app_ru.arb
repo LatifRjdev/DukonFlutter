@@ -1163,6 +1163,8 @@
   "description": "Описание",
   "notes": "Заметки",
   "date": "Дата",
+  "dateNotSelected": "Не выбрана",
+  "@dateNotSelected": { "description": "Generic placeholder shown in a date-picker slot when no date has been chosen yet — deliberately unprefixed and shared across screens (zakat haul-start field, investment end-date field). Feminine short-form adjective agreeing with \"дата\"." },
   "debts": "Долги",
   "credits": "Кредиты",
   "@credits": { "description": "Credits/loans feature name — used as the credits screen's AppBar title; the same word also labels this feature's entry on the finance dashboard" },
@@ -1292,7 +1294,6 @@
   "zakatSettingsHaulSection": "ЛУННЫЙ ГОД (ХАВЛЬ)",
   "zakatSettingsHaulStartDateLabel": "Дата начала хавля",
   "@zakatSettingsHaulStartDateLabel": { "description": "Haul (lunar year) start-date field label. NOTE: spelled 'хавля' here, matching this screen's current source text exactly — the existing `haulStartDate` key holds a differently-spelled 'хауля'. This discrepancy is pre-existing in the app and out of scope to reconcile in this migration; do not merge the two keys." },
-  "zakatSettingsDateNotSelected": "Не выбрана",
   "zakatSettingsReminderTitle": "Напоминание",
   "zakatSettingsReminderSubtitle": "За 30 дней до окончания хавля",
   "zakatSettingsAutoDataSection": "АВТОМАТИЧЕСКИЕ ДАННЫЕ",
@@ -1905,5 +1906,14 @@
   "investmentUpdated": "Вложение обновлено",
   "@investmentUpdated": { "description": "Snackbar after an investment is updated" },
   "investmentDeleted": "Вложение удалено",
-  "@investmentDeleted": { "description": "Snackbar after an investment is deleted" }
+  "@investmentDeleted": { "description": "Snackbar after an investment is deleted" },
+  "investmentAddPageTitle": "Добавить вложение",
+  "investmentInvestorNameRequiredError": "Введите имя инвестора",
+  "investmentStartDateLabel": "Дата начала",
+  "investmentEndDateLabel": "Дата окончания (необязательно)",
+  "investmentInvestorNameLabel": "Имя инвестора *",
+  "investmentAmountLabel": "Сумма *",
+  "investmentReturnAmountLabel": "Сумма возврата",
+  "@investmentReturnAmountLabel": { "description": "Add-investment form field label — the amount to be returned to the investor. Bare label with no trailing punctuation. Distinct from `refundTotalLabel` (\"Сумма возврата:\", with a trailing colon) which is a sale-refund total display label on the refund page — same words, different domain, and the values differ character-for-character, so the two must not be merged." },
+  "investmentInvestorPhoneLabel": "Телефон инвестора"
 }

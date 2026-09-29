@@ -331,7 +331,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                       Text(
                                         _haulStartDate != null
                                             ? '${_haulStartDate!.day.toString().padLeft(2, '0')}.${_haulStartDate!.month.toString().padLeft(2, '0')}.${_haulStartDate!.year}'
-                                            : l10n.zakatSettingsDateNotSelected,
+                                            : l10n.dateNotSelected,
                                         style: TextStyle(fontSize: 12, color: context.textSecondary),
                                       ),
                                     ],
