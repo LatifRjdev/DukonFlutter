@@ -62,8 +62,8 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
-                  const Text('История закята',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.zakatHistoryPageTitle,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -89,12 +89,12 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                         onRefresh: _refresh,
                         child: ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          children: const [
-                            SizedBox(height: 120),
+                          children: [
+                            const SizedBox(height: 120),
                             AppEmptyState(
                               icon: Icons.nightlight_round,
-                              title: 'Нет расчётов закята',
-                              subtitle: 'Рассчитайте закят в калькуляторе, чтобы история появилась здесь',
+                              title: l10n.zakatHistoryEmptyTitle,
+                              subtitle: l10n.zakatHistoryEmptySubtitle,
                             ),
                           ],
                         ),
@@ -119,7 +119,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                           ),
                           child: Column(
                             children: [
-                              Text('Всего выплачено:',
+                              Text(l10n.zakatHistoryTotalPaidLabel,
                                 style: TextStyle(fontSize: 13, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text(_formatPrice(totalPaid),
@@ -129,7 +129,9 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                 // Spec E B.1: prefer the server-known
                                 // total over the locally-buffered count
                                 // so users see "of 47" not "of 20".
-                                'за ${state.total > 0 ? state.total : state.payments.length} выплат',
+                                l10n.zakatHistoryPaymentsCountLine(
+                                  '${state.total > 0 ? state.total : state.payments.length}',
+                                ),
                                 style: TextStyle(fontSize: 12, color: context.textSecondary),
                               ),
                             ],
@@ -163,10 +165,10 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Выплата закята',
+                                      Text(l10n.zakatHistoryPaymentTitle,
                                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                                       const SizedBox(height: 2),
-                                      Text('Оплачен $dateStr',
+                                      Text(l10n.zakatHistoryPaidOnLine(dateStr),
                                         style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     ],
                                   ),
@@ -177,7 +179,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                     Text(_formatPrice(payment.amount),
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
                                     const SizedBox(height: 2),
-                                    Text('Облагаемая: ${_formatPrice(payment.totalAssets)}',
+                                    Text(l10n.zakatHistoryTaxableLine(_formatPrice(payment.totalAssets)),
                                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
@@ -200,7 +202,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                                   page: state.currentPage + 1,
                                 ),
                               ),
-                              child: const Text('Загрузить ещё'),
+                              child: Text(l10n.loadMore),
                             ),
                           ),
                         ],

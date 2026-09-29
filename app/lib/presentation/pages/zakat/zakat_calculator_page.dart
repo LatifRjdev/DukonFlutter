@@ -265,7 +265,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 const Icon(Icons.info_outline, size: 18, color: AppColors.warning),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text(l10n.zakatCalculatorBelowNisabNotice,
+                                  child: Text(l10n.belowNisabNotice,
                                     style: const TextStyle(fontSize: 13, color: AppColors.warning)),
                                 ),
                               ],

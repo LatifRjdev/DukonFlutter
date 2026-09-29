@@ -238,6 +238,12 @@ abstract class AppLocalizations {
   /// **'Сбросить'**
   String get reset;
 
+  /// Generic pagination button that appends the next page of results to an already-rendered list — deliberately unprefixed, same class of generic action word as retry/apply/reset. Distinct from `more` ("Ещё"), which is a bare 'More' navigation entry rather than a load-next-page action.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузить ещё'**
+  String get loadMore;
+
   /// Relative time — event happened less than a minute ago
   ///
   /// In ru, this message translates to:
@@ -4120,12 +4126,6 @@ abstract class AppLocalizations {
   /// **'СУММА ЗАКЯТА ({rate}%):'**
   String zakatCalculatorZakatAmountLabel(String rate);
 
-  /// No description provided for @zakatCalculatorBelowNisabNotice.
-  ///
-  /// In ru, this message translates to:
-  /// **'Активы ниже нисаба. Закят не обязателен.'**
-  String get zakatCalculatorBelowNisabNotice;
-
   /// No description provided for @zakatCalculatorMarkPaidButton.
   ///
   /// In ru, this message translates to:
@@ -4150,6 +4150,30 @@ abstract class AppLocalizations {
   /// **'Поделиться расчётом'**
   String get zakatCalculatorShareButton;
 
+  /// Zakat asset-breakdown card — card title. Distinct from `salesBreakdown` ("Разбивка продаж"), the Z-report sales breakdown heading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разбивка активов'**
+  String get zakatBreakdownTitle;
+
+  /// Zakat asset-breakdown card — stock/inventory asset row label. Distinct from `stockValue` ("Стоимость товаров"), `zakatCalculatorStockValueLabel` ("Товарные остатки") and `includeStock` ("Включить товарные запасы") — three different wordings for the same concept, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные запасы'**
+  String get zakatBreakdownStockLabel;
+
+  /// Zakat asset-breakdown card — bare 'Nisab' row label. Distinct from `nisabAmount` ("Сумма нисаба"), `nisabThreshold` ("Порог нисаба") and `zakatCalculatorNisabLabel` ("Нисаб (85г золота):"): this one is the bare noun with no qualifier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нисаб'**
+  String get zakatBreakdownNisabLabel;
+
+  /// Zakat asset-breakdown card — zakat-owed row label with the rate baked into the literal. Distinct from `zakatDue` ("Сумма закята"), the bare amount label, and from `zakatCalculatorZakatAmountLabel` ("СУММА ЗАКЯТА ({rate}%):"), which is upper-case and interpolates the configured rate; this widget hardcodes 2.5%.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят (2.5%)'**
+  String get zakatBreakdownDueLabel;
+
   /// No description provided for @zakatSettings.
   ///
   /// In ru, this message translates to:
@@ -4161,6 +4185,54 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'История выплат'**
   String get zakatHistory;
+
+  /// Zakat payment-history page — header title. Distinct from `zakatHistory` ("История выплат", literally 'payment history'), a differently-worded label used elsewhere for the same screen concept.
+  ///
+  /// In ru, this message translates to:
+  /// **'История закята'**
+  String get zakatHistoryPageTitle;
+
+  /// Zakat payment-history page — empty-state title shown when the store has no zakat calculations/payments yet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет расчётов закята'**
+  String get zakatHistoryEmptyTitle;
+
+  /// Zakat payment-history page — empty-state subtitle pointing the user at the calculator.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассчитайте закят в калькуляторе, чтобы история появилась здесь'**
+  String get zakatHistoryEmptySubtitle;
+
+  /// Zakat payment-history page — stats card label above the total-paid amount. Kept as a standalone colon-suffixed label key (not collapsed into a composite with the amount) because the amount sits in its own vertically-stacked slot at a larger type scale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всего выплачено:'**
+  String get zakatHistoryTotalPaidLabel;
+
+  /// Zakat payment-history page — stats card caption under the total amount, e.g. 'за 47 выплат'; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'за {count} выплат'**
+  String zakatHistoryPaymentsCountLine(String count);
+
+  /// Zakat payment-history page — title on each payment row. Distinct from `recordZakatPayment` ("Записать выплату закята"), the imperative action label.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплата закята'**
+  String get zakatHistoryPaymentTitle;
+
+  /// Zakat payment-history page — payment row subtitle giving the payment date; placeholder is a pre-formatted date String
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачен {date}'**
+  String zakatHistoryPaidOnLine(String date);
+
+  /// Zakat payment-history page — payment row trailing caption giving the taxable asset base. Full-sentence composite (label + separator + value) so the colon stays translatable; distinct from `zakatCalculatorTaxableAmountLabel` ("Облагаемая сумма:"), the calculator's standalone label. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'Облагаемая: {amount}'**
+  String zakatHistoryTaxableLine(String amount);
 
   /// No description provided for @stockValue.
   ///
@@ -4209,6 +4281,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Ниже нисаба'**
   String get belowNisab;
+
+  /// Notice shown when net assets fall below the nisab threshold, so no zakat is owed. Promoted from `zakatCalculatorBelowNisabNotice` (value unchanged) once the shared ZakatBreakdownCard widget became a second consumer alongside zakat_calculator_page.dart — a `zakatCalculator*` page prefix disagreed with a page-independent widget's scope. Distinct from `belowNisab` ("Ниже нисаба"), the bare status badge label.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активы ниже нисаба. Закят не обязателен.'**
+  String get belowNisabNotice;
 
   /// No description provided for @recordZakatPayment.
   ///
@@ -5272,6 +5350,12 @@ abstract class AppLocalizations {
   /// **'Сотрудники'**
   String get employees;
 
+  /// Fallback shown in place of a staff member's name when the record has none — the bare noun 'Employee'. Deliberately unprefixed and shared by the current-shift card and the shift history card. Distinct from `shiftsUnknownCashier` ("Не указан", literally 'not specified'), the differently-worded fallback used inside `shiftsCashierLine`, and from `employees` ("Сотрудники", plural).
+  ///
+  /// In ru, this message translates to:
+  /// **'Сотрудник'**
+  String get unknownStaffLabel;
+
   /// No description provided for @addEmployee.
   ///
   /// In ru, this message translates to:
@@ -5452,6 +5536,24 @@ abstract class AppLocalizations {
   /// **'Открыть смену'**
   String get openShift;
 
+  /// Open-shift page — hero card heading ('Start of shift'). Distinct from `openShift` ("Открыть смену"), the imperative AppBar title / submit button on the same screen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начало смены'**
+  String get openShiftHeading;
+
+  /// Open-shift page — hero card subtitle asking for the opening cash amount. Distinct from `shiftsCloseCashPrompt` ("Введите сумму наличных в кассе:"), the close-shift dialog's prompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите сумму наличных в кассе на начало смены'**
+  String get openShiftSubtitle;
+
+  /// Open-shift page — opening cash field label with currency suffix. Distinct from `shiftsCashAmountLabel` ("Сумма наличных"), the same label without the '(TJS)' suffix; same pattern as `baseSalaryTjs` vs `baseSalary`.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма наличных (TJS)'**
+  String get openShiftCashLabel;
+
   /// No description provided for @closeShift.
   ///
   /// In ru, this message translates to:
@@ -5600,6 +5702,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Открыта'**
   String get shiftsOpenStatus;
+
+  /// Shift history card status badge for a closed shift — the adjective 'Closed', paired with `shiftsOpenStatus` ("Открыта") in the same ternary. Distinct from `shiftsClosedStatus` ("Сдано", literally 'handed over'), a differently-worded closed-shift badge, and from `close`/`closeShift` action labels.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыта'**
+  String get shiftCardClosedStatus;
+
+  /// Shift history card — trailing sales-count caption, e.g. '12 продаж'. Shares its value with `dashboardSalesCountLabel` and `reportsSalesCountTooltip`, but those prefixes are scoped to the dashboard and the reports page respectively, so neither can be reused here; a generic promotion would have to repoint all three at once. Distinct from `salesCountAbbrev` ("Продаж"), the bare noun with no numeral. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String shiftCardSalesCountLine(String count);
 
   /// No description provided for @zReport.
   ///

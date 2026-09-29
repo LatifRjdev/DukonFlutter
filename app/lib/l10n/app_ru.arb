@@ -53,6 +53,8 @@
   "@restore": { "description": "Generic 'Restore' action button (e.g. restoring a previously saved/persisted state)" },
   "reset": "Сбросить",
   "@reset": { "description": "Generic 'Reset' action — deliberately unprefixed, same class of generic action word as cancel/save/delete/create/retry" },
+  "loadMore": "Загрузить ещё",
+  "@loadMore": { "description": "Generic pagination button that appends the next page of results to an already-rendered list — deliberately unprefixed, same class of generic action word as retry/apply/reset. Distinct from `more` (\"Ещё\"), which is a bare 'More' navigation entry rather than a load-next-page action." },
   "justNow": "только что",
   "@justNow": { "description": "Relative time — event happened less than a minute ago" },
   "minutesAgo": "{minutes} мин назад",
@@ -1356,7 +1358,6 @@
   "@zakatCalculatorZakatAmountLabel": {
     "placeholders": { "rate": { "type": "String" } }
   },
-  "zakatCalculatorBelowNisabNotice": "Активы ниже нисаба. Закят не обязателен.",
   "zakatCalculatorMarkPaidButton": "Отметить как оплачено",
   "zakatCalculatorInfoBanner": "Закят — {rate}% от имущества, хранящегося 1 лунный год",
   "@zakatCalculatorInfoBanner": {
@@ -1372,8 +1373,44 @@
     }
   },
   "zakatCalculatorShareButton": "Поделиться расчётом",
+
+  "zakatBreakdownTitle": "Разбивка активов",
+  "@zakatBreakdownTitle": { "description": "Zakat asset-breakdown card — card title. Distinct from `salesBreakdown` (\"Разбивка продаж\"), the Z-report sales breakdown heading." },
+  "zakatBreakdownStockLabel": "Товарные запасы",
+  "@zakatBreakdownStockLabel": { "description": "Zakat asset-breakdown card — stock/inventory asset row label. Distinct from `stockValue` (\"Стоимость товаров\"), `zakatCalculatorStockValueLabel` (\"Товарные остатки\") and `includeStock` (\"Включить товарные запасы\") — three different wordings for the same concept, do not merge." },
+  "zakatBreakdownNisabLabel": "Нисаб",
+  "@zakatBreakdownNisabLabel": { "description": "Zakat asset-breakdown card — bare 'Nisab' row label. Distinct from `nisabAmount` (\"Сумма нисаба\"), `nisabThreshold` (\"Порог нисаба\") and `zakatCalculatorNisabLabel` (\"Нисаб (85г золота):\"): this one is the bare noun with no qualifier." },
+  "zakatBreakdownDueLabel": "Закят (2.5%)",
+  "@zakatBreakdownDueLabel": { "description": "Zakat asset-breakdown card — zakat-owed row label with the rate baked into the literal. Distinct from `zakatDue` (\"Сумма закята\"), the bare amount label, and from `zakatCalculatorZakatAmountLabel` (\"СУММА ЗАКЯТА ({rate}%):\"), which is upper-case and interpolates the configured rate; this widget hardcodes 2.5%." },
+
   "zakatSettings": "Настройки закята",
   "zakatHistory": "История выплат",
+  "zakatHistoryPageTitle": "История закята",
+  "@zakatHistoryPageTitle": { "description": "Zakat payment-history page — header title. Distinct from `zakatHistory` (\"История выплат\", literally 'payment history'), a differently-worded label used elsewhere for the same screen concept." },
+  "zakatHistoryEmptyTitle": "Нет расчётов закята",
+  "@zakatHistoryEmptyTitle": { "description": "Zakat payment-history page — empty-state title shown when the store has no zakat calculations/payments yet." },
+  "zakatHistoryEmptySubtitle": "Рассчитайте закят в калькуляторе, чтобы история появилась здесь",
+  "@zakatHistoryEmptySubtitle": { "description": "Zakat payment-history page — empty-state subtitle pointing the user at the calculator." },
+  "zakatHistoryTotalPaidLabel": "Всего выплачено:",
+  "@zakatHistoryTotalPaidLabel": { "description": "Zakat payment-history page — stats card label above the total-paid amount. Kept as a standalone colon-suffixed label key (not collapsed into a composite with the amount) because the amount sits in its own vertically-stacked slot at a larger type scale." },
+  "zakatHistoryPaymentsCountLine": "за {count} выплат",
+  "@zakatHistoryPaymentsCountLine": {
+    "description": "Zakat payment-history page — stats card caption under the total amount, e.g. 'за 47 выплат'; placeholder is a pre-formatted String",
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "zakatHistoryPaymentTitle": "Выплата закята",
+  "@zakatHistoryPaymentTitle": { "description": "Zakat payment-history page — title on each payment row. Distinct from `recordZakatPayment` (\"Записать выплату закята\"), the imperative action label." },
+  "zakatHistoryPaidOnLine": "Оплачен {date}",
+  "@zakatHistoryPaidOnLine": {
+    "description": "Zakat payment-history page — payment row subtitle giving the payment date; placeholder is a pre-formatted date String",
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "zakatHistoryTaxableLine": "Облагаемая: {amount}",
+  "@zakatHistoryTaxableLine": {
+    "description": "Zakat payment-history page — payment row trailing caption giving the taxable asset base. Full-sentence composite (label + separator + value) so the colon stays translatable; distinct from `zakatCalculatorTaxableAmountLabel` (\"Облагаемая сумма:\"), the calculator's standalone label. Placeholder is a pre-formatted String.",
+    "placeholders": { "amount": { "type": "String" } }
+  },
+
   "stockValue": "Стоимость товаров",
   "receivables": "Дебиторская задолженность",
   "payables": "Кредиторская задолженность",
@@ -1382,6 +1419,8 @@
   "zakatDue": "Сумма закята",
   "aboveNisab": "Выше нисаба",
   "belowNisab": "Ниже нисаба",
+  "belowNisabNotice": "Активы ниже нисаба. Закят не обязателен.",
+  "@belowNisabNotice": { "description": "Notice shown when net assets fall below the nisab threshold, so no zakat is owed. Promoted from `zakatCalculatorBelowNisabNotice` (value unchanged) once the shared ZakatBreakdownCard widget became a second consumer alongside zakat_calculator_page.dart — a `zakatCalculator*` page prefix disagreed with a page-independent widget's scope. Distinct from `belowNisab` (\"Ниже нисаба\"), the bare status badge label." },
   "recordZakatPayment": "Записать выплату закята",
   "nisabAmount": "Сумма нисаба",
   "zakatRate": "Ставка закята",
@@ -1718,6 +1757,8 @@
   "@languageSettingsRestartNotice": { "description": "Language settings screen — info banner telling the user to restart the app for the newly picked language to take effect" },
 
   "employees": "Сотрудники",
+  "unknownStaffLabel": "Сотрудник",
+  "@unknownStaffLabel": { "description": "Fallback shown in place of a staff member's name when the record has none — the bare noun 'Employee'. Deliberately unprefixed and shared by the current-shift card and the shift history card. Distinct from `shiftsUnknownCashier` (\"Не указан\", literally 'not specified'), the differently-worded fallback used inside `shiftsCashierLine`, and from `employees` (\"Сотрудники\", plural)." },
   "addEmployee": "Добавить сотрудника",
   "editEmployee": "Редактировать сотрудника",
   "employeeDetail": "Профиль сотрудника",
@@ -1770,6 +1811,12 @@
 
   "shifts": "Смены",
   "openShift": "Открыть смену",
+  "openShiftHeading": "Начало смены",
+  "@openShiftHeading": { "description": "Open-shift page — hero card heading ('Start of shift'). Distinct from `openShift` (\"Открыть смену\"), the imperative AppBar title / submit button on the same screen." },
+  "openShiftSubtitle": "Укажите сумму наличных в кассе на начало смены",
+  "@openShiftSubtitle": { "description": "Open-shift page — hero card subtitle asking for the opening cash amount. Distinct from `shiftsCloseCashPrompt` (\"Введите сумму наличных в кассе:\"), the close-shift dialog's prompt." },
+  "openShiftCashLabel": "Сумма наличных (TJS)",
+  "@openShiftCashLabel": { "description": "Open-shift page — opening cash field label with currency suffix. Distinct from `shiftsCashAmountLabel` (\"Сумма наличных\"), the same label without the '(TJS)' suffix; same pattern as `baseSalaryTjs` vs `baseSalary`." },
   "closeShift": "Закрыть смену",
   "currentShift": "Текущая смена",
   "shiftHistory": "История смен",
@@ -1824,6 +1871,14 @@
   "@shiftsClosedStatus": { "description": "Shift history row status badge for a closed shift" },
   "shiftsOpenStatus": "Открыта",
   "@shiftsOpenStatus": { "description": "Shift history row status badge for a still-open shift — distinct from `shiftsActiveStatus` (\"Активна\"), different wording used in the history list vs. the current-shift card" },
+
+  "shiftCardClosedStatus": "Закрыта",
+  "@shiftCardClosedStatus": { "description": "Shift history card status badge for a closed shift — the adjective 'Closed', paired with `shiftsOpenStatus` (\"Открыта\") in the same ternary. Distinct from `shiftsClosedStatus` (\"Сдано\", literally 'handed over'), a differently-worded closed-shift badge, and from `close`/`closeShift` action labels." },
+  "shiftCardSalesCountLine": "{count} продаж",
+  "@shiftCardSalesCountLine": {
+    "description": "Shift history card — trailing sales-count caption, e.g. '12 продаж'. Shares its value with `dashboardSalesCountLabel` and `reportsSalesCountTooltip`, but those prefixes are scoped to the dashboard and the reports page respectively, so neither can be reused here; a generic promotion would have to repoint all three at once. Distinct from `salesCountAbbrev` (\"Продаж\"), the bare noun with no numeral. Placeholder is a pre-formatted String.",
+    "placeholders": { "count": { "type": "String" } }
+  },
 
   "zReport": "Z-отчёт",
   "salesBreakdown": "Разбивка продаж",

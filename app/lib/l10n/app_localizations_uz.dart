@@ -80,6 +80,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get reset => 'Сбросить';
 
   @override
+  String get loadMore => 'Загрузить ещё';
+
+  @override
   String get justNow => 'только что';
 
   @override
@@ -2203,10 +2206,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get zakatCalculatorBelowNisabNotice =>
-      'Активы ниже нисаба. Закят не обязателен.';
-
-  @override
   String get zakatCalculatorMarkPaidButton => 'Отметить как оплачено';
 
   @override
@@ -2223,10 +2222,53 @@ class AppLocalizationsUz extends AppLocalizations {
   String get zakatCalculatorShareButton => 'Поделиться расчётом';
 
   @override
+  String get zakatBreakdownTitle => 'Разбивка активов';
+
+  @override
+  String get zakatBreakdownStockLabel => 'Товарные запасы';
+
+  @override
+  String get zakatBreakdownNisabLabel => 'Нисаб';
+
+  @override
+  String get zakatBreakdownDueLabel => 'Закят (2.5%)';
+
+  @override
   String get zakatSettings => 'Zakot sozlamalari';
 
   @override
   String get zakatHistory => 'To\'lovlar tarixi';
+
+  @override
+  String get zakatHistoryPageTitle => 'История закята';
+
+  @override
+  String get zakatHistoryEmptyTitle => 'Нет расчётов закята';
+
+  @override
+  String get zakatHistoryEmptySubtitle =>
+      'Рассчитайте закят в калькуляторе, чтобы история появилась здесь';
+
+  @override
+  String get zakatHistoryTotalPaidLabel => 'Всего выплачено:';
+
+  @override
+  String zakatHistoryPaymentsCountLine(String count) {
+    return 'за $count выплат';
+  }
+
+  @override
+  String get zakatHistoryPaymentTitle => 'Выплата закята';
+
+  @override
+  String zakatHistoryPaidOnLine(String date) {
+    return 'Оплачен $date';
+  }
+
+  @override
+  String zakatHistoryTaxableLine(String amount) {
+    return 'Облагаемая: $amount';
+  }
 
   @override
   String get stockValue => 'Tovarlar qiymati';
@@ -2251,6 +2293,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get belowNisab => 'Nisob ostida';
+
+  @override
+  String get belowNisabNotice => 'Активы ниже нисаба. Закят не обязателен.';
 
   @override
   String get recordZakatPayment => 'Zakot to\'lovini qayd qilish';
@@ -2809,6 +2854,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get employees => 'Xodimlar';
 
   @override
+  String get unknownStaffLabel => 'Сотрудник';
+
+  @override
   String get addEmployee => 'Xodim qo\'shish';
 
   @override
@@ -2902,6 +2950,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get openShift => 'Smenani ochish';
 
   @override
+  String get openShiftHeading => 'Начало смены';
+
+  @override
+  String get openShiftSubtitle =>
+      'Укажите сумму наличных в кассе на начало смены';
+
+  @override
+  String get openShiftCashLabel => 'Сумма наличных (TJS)';
+
+  @override
   String get closeShift => 'Smenani yopish';
 
   @override
@@ -2988,6 +3046,14 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftsOpenStatus => 'Открыта';
+
+  @override
+  String get shiftCardClosedStatus => 'Закрыта';
+
+  @override
+  String shiftCardSalesCountLine(String count) {
+    return '$count продаж';
+  }
 
   @override
   String get zReport => 'Z-hisobot';

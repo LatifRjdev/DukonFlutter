@@ -42,8 +42,9 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Открыть смену')),
+      appBar: AppBar(title: Text(l10n.openShift)),
       body: BlocListener<ShiftBloc, ShiftState>(
         listener: (context, state) {
           if (state is ShiftOpened) {
@@ -76,13 +77,13 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                         color: AppColors.primary,
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
-                      const Text(
-                        'Начало смены',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      Text(
+                        l10n.openShiftHeading,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
                       Text(
-                        'Укажите сумму наличных в кассе на начало смены',
+                        l10n.openShiftSubtitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: context.textSecondary, fontSize: 14),
                       ),
@@ -92,13 +93,13 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                 const SizedBox(height: AppConstants.spacingLg),
                 AppTextField(
                   controller: _cashController,
-                  label: 'Сумма наличных (TJS)',
+                  label: l10n.openShiftCashLabel,
                   prefixIcon: Icons.attach_money,
                   keyboardType: TextInputType.number,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Введите сумму';
-                    if (double.tryParse(v) == null) return 'Некорректная сумма';
-                    if (double.parse(v) < 0) return 'Сумма не может быть отрицательной';
+                    if (v == null || v.isEmpty) return l10n.amountRequired;
+                    if (double.tryParse(v) == null) return l10n.invalidAmount;
+                    if (double.parse(v) < 0) return l10n.shiftsCashAmountNegative;
                     return null;
                   },
                 ),
@@ -106,7 +107,7 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
                 BlocBuilder<ShiftBloc, ShiftState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Открыть смену',
+                      text: l10n.openShift,
                       icon: Icons.play_arrow,
                       isLoading: state is ShiftLoading,
                       onPressed: _submit,
