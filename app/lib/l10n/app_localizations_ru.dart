@@ -2894,6 +2894,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get payrollPaidLabel => 'Выплачено';
 
   @override
+  String get payrollAdjustmentPageTitle => 'Корректировка';
+
+  @override
+  String get payrollAdjustmentInstructions =>
+      'Укажите тип, сумму и описание корректировки';
+
+  @override
+  String get payrollAdjustmentTypeLabel => 'Тип корректировки';
+
+  @override
+  String get payrollDeductionTypeLabel => 'Удержание';
+
+  @override
+  String get payrollAdjustmentStaffIdLabel => 'ID сотрудника (необязательно)';
+
+  @override
+  String get payrollAdjustmentStaffIdHint => 'Оставьте пустым для всех';
+
+  @override
+  String get payrollAdjustmentDescriptionRequiredError => 'Введите описание';
+
+  @override
+  String get payrollAdjustmentAmountMustBePositiveError =>
+      'Сумма должна быть больше 0';
+
+  @override
+  String get payrollAdjustmentSubmit => 'Добавить';
+
+  @override
   String get permissions => 'Права доступа';
 
   @override

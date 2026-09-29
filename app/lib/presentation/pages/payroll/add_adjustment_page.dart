@@ -59,8 +59,9 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Корректировка')),
+      appBar: AppBar(title: Text(l10n.payrollAdjustmentPageTitle)),
       body: BlocListener<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollPeriodDetailLoaded) {
@@ -93,13 +94,13 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                         color: AppColors.primary,
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
-                      const Text(
-                        'Добавить корректировку',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      Text(
+                        l10n.payrollAddAdjustmentTooltip,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
                       Text(
-                        'Укажите тип, сумму и описание корректировки',
+                        l10n.payrollAdjustmentInstructions,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: context.textSecondary, fontSize: 14),
                       ),
@@ -107,16 +108,16 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                   ),
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
-                const Text(
-                  'Тип корректировки',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                Text(
+                  l10n.payrollAdjustmentTypeLabel,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                 ),
                 const SizedBox(height: AppConstants.spacingSm),
                 Row(
                   children: [
                     Expanded(
                       child: _TypeToggle(
-                        label: 'Бонус',
+                        label: l10n.bonus,
                         icon: Icons.add_circle_outline,
                         color: AppColors.success,
                         isSelected: _type == 'BONUS',
@@ -126,7 +127,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                     const SizedBox(width: AppConstants.spacingSm),
                     Expanded(
                       child: _TypeToggle(
-                        label: 'Удержание',
+                        label: l10n.payrollDeductionTypeLabel,
                         icon: Icons.remove_circle_outline,
                         color: AppColors.error,
                         isSelected: _type == 'DEDUCTION',
@@ -138,31 +139,31 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                 const SizedBox(height: AppConstants.spacingLg),
                 AppTextField(
                   controller: _staffIdController,
-                  label: 'ID сотрудника (необязательно)',
+                  label: l10n.payrollAdjustmentStaffIdLabel,
                   prefixIcon: Icons.person_outline,
-                  hint: 'Оставьте пустым для всех',
+                  hint: l10n.payrollAdjustmentStaffIdHint,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _amountController,
-                  label: 'Сумма (TJS)',
+                  label: l10n.amountTjs,
                   prefixIcon: Icons.attach_money,
                   keyboardType: TextInputType.number,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Введите сумму';
-                    if (double.tryParse(v) == null) return 'Некорректная сумма';
-                    if (double.parse(v) <= 0) return 'Сумма должна быть больше 0';
+                    if (v == null || v.isEmpty) return l10n.shiftsCashAmountRequired;
+                    if (double.tryParse(v) == null) return l10n.invalidAmount;
+                    if (double.parse(v) <= 0) return l10n.payrollAdjustmentAmountMustBePositiveError;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _descriptionController,
-                  label: 'Описание',
+                  label: l10n.description,
                   prefixIcon: Icons.description_outlined,
                   maxLines: 3,
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Введите описание';
+                    if (v == null || v.trim().isEmpty) return l10n.payrollAdjustmentDescriptionRequiredError;
                     return null;
                   },
                 ),
@@ -170,7 +171,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                 BlocBuilder<PayrollBloc, PayrollState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Добавить',
+                      text: l10n.payrollAdjustmentSubmit,
                       icon: Icons.check,
                       isLoading: state is PayrollLoading,
                       onPressed: _submit,

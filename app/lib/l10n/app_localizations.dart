@@ -5445,6 +5445,60 @@ abstract class AppLocalizations {
   /// **'Выплачено'**
   String get payrollPaidLabel;
 
+  /// AppBar title of the add-payroll-adjustment screen; distinct from `adjustment` ("Корректировка"), the inventory stock-movement type — identical Russian spelling, different domain (salary adjustment vs. stock adjustment), so do not merge (same precedent as `outflowType` vs `expense`)
+  ///
+  /// In ru, this message translates to:
+  /// **'Корректировка'**
+  String get payrollAdjustmentPageTitle;
+
+  /// No description provided for @payrollAdjustmentInstructions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите тип, сумму и описание корректировки'**
+  String get payrollAdjustmentInstructions;
+
+  /// No description provided for @payrollAdjustmentTypeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тип корректировки'**
+  String get payrollAdjustmentTypeLabel;
+
+  /// Add-adjustment form's deduction-type toggle label; distinct from `deduction` ("Вычет"), a different Russian word used elsewhere for the same underlying concept — do not merge, values differ character-for-character
+  ///
+  /// In ru, this message translates to:
+  /// **'Удержание'**
+  String get payrollDeductionTypeLabel;
+
+  /// No description provided for @payrollAdjustmentStaffIdLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'ID сотрудника (необязательно)'**
+  String get payrollAdjustmentStaffIdLabel;
+
+  /// No description provided for @payrollAdjustmentStaffIdHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставьте пустым для всех'**
+  String get payrollAdjustmentStaffIdHint;
+
+  /// No description provided for @payrollAdjustmentDescriptionRequiredError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите описание'**
+  String get payrollAdjustmentDescriptionRequiredError;
+
+  /// No description provided for @payrollAdjustmentAmountMustBePositiveError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма должна быть больше 0'**
+  String get payrollAdjustmentAmountMustBePositiveError;
+
+  /// Add-adjustment form's bare submit button label; same bare verb as `customerListAddConfirm` ("Добавить"), which is scoped to the add-customer dialog — no unprefixed generic `add` key exists in this ARB, so each bare-"Добавить" confirm button stays feature-scoped
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get payrollAdjustmentSubmit;
+
   /// No description provided for @permissions.
   ///
   /// In ru, this message translates to:
