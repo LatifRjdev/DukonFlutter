@@ -5445,7 +5445,7 @@ abstract class AppLocalizations {
   /// **'Выплачено'**
   String get payrollPaidLabel;
 
-  /// AppBar title of the add-payroll-adjustment screen; distinct from `adjustment` ("Корректировка"), the inventory stock-movement type — identical Russian spelling, different domain (salary adjustment vs. stock adjustment), so do not merge (same precedent as `outflowType` vs `expense`)
+  /// AppBar title of the add-payroll-adjustment screen. Do not merge with `adjustment` ("Корректировка"), despite the identical Russian: `adjustment` is an enum-member label bound to the ADJUSTMENT stock-movement type, used in product_detail_page.dart's _typeLabel() switch alongside `intakeType`/`outflowType`. Its meaning is tied to that closed {IN, OUT, ADJUSTMENT} classification, so disambiguating or shortening that inventory badge must not silently retitle this payroll screen.
   ///
   /// In ru, this message translates to:
   /// **'Корректировка'**
