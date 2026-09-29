@@ -361,7 +361,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
           () => context.push('/finance/balance', extra: storeId)),
       _SectionItem(l10n.credits, Icons.credit_card_outlined,
           () => context.push('/finance/credits', extra: storeId)),
-      _SectionItem(l10n.financeDashboardInvestments, Icons.trending_up_outlined,
+      _SectionItem(l10n.investments, Icons.trending_up_outlined,
           () => context.push(RouteNames.investments, extra: storeId)),
       _SectionItem(l10n.zakat, Icons.volunteer_activism_outlined,
           () => context.push('/zakat', extra: storeId)),

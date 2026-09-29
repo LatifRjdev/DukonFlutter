@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -20,14 +21,15 @@ class ProfitSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AppCard(
       child: Column(
         children: [
-          _buildRow(context, 'Доход', income, AppColors.success),
+          _buildRow(context, l10n.income, income, AppColors.success),
           const SizedBox(height: AppConstants.spacingSm),
-          _buildRow(context, 'Расходы', expenses, AppColors.error),
+          _buildRow(context, l10n.expenses, expenses, AppColors.error),
           const Divider(),
-          _buildRow(context, 'Прибыль', profit, profit >= 0 ? AppColors.success : AppColors.error, isBold: true),
+          _buildRow(context, l10n.profit, profit, profit >= 0 ? AppColors.success : AppColors.error, isBold: true),
         ],
       ),
     );

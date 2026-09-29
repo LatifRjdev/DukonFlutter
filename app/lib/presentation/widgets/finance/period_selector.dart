@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -11,11 +12,12 @@ class PeriodSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final periods = [
-      ('day', 'День'),
-      ('week', 'Неделя'),
-      ('month', 'Месяц'),
-      ('year', 'Год'),
+      ('day', l10n.day),
+      ('week', l10n.week),
+      ('month', l10n.month),
+      ('year', l10n.year),
     ];
 
     return Row(

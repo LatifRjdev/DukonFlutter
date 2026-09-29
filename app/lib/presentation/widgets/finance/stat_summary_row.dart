@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -11,6 +12,7 @@ class StatSummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
@@ -20,7 +22,7 @@ class StatSummaryRow extends StatelessWidget {
                 const Icon(Icons.receipt_long, color: AppColors.primary),
                 const SizedBox(height: 4),
                 Text('$salesCount', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                Text('Продаж', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                Text(l10n.salesCountAbbrev, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),
@@ -33,7 +35,7 @@ class StatSummaryRow extends StatelessWidget {
                 const Icon(Icons.trending_up, color: AppColors.primary),
                 const SizedBox(height: 4),
                 Text(avgCheck.toStringAsFixed(0), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                Text('Средний чек', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                Text(l10n.avgCheck, style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
           ),

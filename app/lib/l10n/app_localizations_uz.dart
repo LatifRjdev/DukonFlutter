@@ -1754,9 +1754,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get subscriptionUploadReceiptButton => 'Я перевёл — загрузить чек';
 
   @override
-  String get reportsSalesCountColumnLabel => 'Продаж';
-
-  @override
   String get reportsExportSheetTitle => 'Экспорт отчёта';
 
   @override
@@ -1894,9 +1891,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get financeDashboardInvestments => 'Вложения';
-
-  @override
   String get financeDashboardCurrencies => 'Валюты';
 
   @override
@@ -1934,6 +1928,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get salesCount => 'Sotuvlar soni';
+
+  @override
+  String get salesCountAbbrev => 'Продаж';
 
   @override
   String get avgCheck => 'O\'rtacha chek';
@@ -3594,4 +3591,49 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get investmentInvestorPhoneLabel => 'Телефон инвестора';
+
+  @override
+  String get investments => 'Вложения';
+
+  @override
+  String get investmentEmptyState => 'Вложений пока нет';
+
+  @override
+  String get investmentStatusActive => 'Активно';
+
+  @override
+  String get investmentStatusCompleted => 'Завершено';
+
+  @override
+  String get investmentStatusCancelled => 'Отменено';
+
+  @override
+  String get currenciesPageTitle => 'Курсы валют';
+
+  @override
+  String get currenciesHistoryChartTitle => 'Динамика за 30 дней';
+
+  @override
+  String get currenciesNoHistoryData => 'Нет данных за 30 дней';
+
+  @override
+  String get currenciesConverterTitle => 'Конвертер';
+
+  @override
+  String get currenciesConvertedResultLabel => 'Результат (в TJS):';
+
+  @override
+  String get nbtBankLabel => 'НБТ — Национальный банк Таджикистана';
+
+  @override
+  String get currencyUsd => 'Доллар США';
+
+  @override
+  String get currencyRub => 'Российский рубль';
+
+  @override
+  String get currencyEur => 'Евро';
+
+  @override
+  String get currencyCny => 'Китайский юань';
 }

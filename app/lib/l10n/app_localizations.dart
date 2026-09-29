@@ -3268,12 +3268,6 @@ abstract class AppLocalizations {
   /// **'Я перевёл — загрузить чек'**
   String get subscriptionUploadReceiptButton;
 
-  /// Abbreviated table/PDF/Excel column header for a sales count — distinct from the plural noun `sales` ("Продажи", a tab/section name)
-  ///
-  /// In ru, this message translates to:
-  /// **'Продаж'**
-  String get reportsSalesCountColumnLabel;
-
   /// No description provided for @reportsExportSheetTitle.
   ///
   /// In ru, this message translates to:
@@ -3520,12 +3514,6 @@ abstract class AppLocalizations {
   /// **'{quantity} шт'**
   String financeDashboardQuantityUnit(String quantity);
 
-  /// No description provided for @financeDashboardInvestments.
-  ///
-  /// In ru, this message translates to:
-  /// **'Вложения'**
-  String get financeDashboardInvestments;
-
   /// No description provided for @financeDashboardCurrencies.
   ///
   /// In ru, this message translates to:
@@ -3603,6 +3591,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Кол-во продаж'**
   String get salesCount;
+
+  /// Abbreviated sales-count label — the bare genitive-plural noun used directly under or beside a numeral (stat tiles, table/PDF/Excel column headers). Distinct from `sales` ("Продажи", nominative plural, a tab/section name) and from `salesCount` ("Кол-во продаж", the full 'number of sales' phrase). Promoted from `reportsSalesCountColumnLabel` once a second consumer outside the reports page (the shared StatSummaryRow widget) appeared, since a `reports*` prefix disagreed with that scope.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продаж'**
+  String get salesCountAbbrev;
 
   /// No description provided for @avgCheck.
   ///
@@ -6728,6 +6722,96 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Телефон инвестора'**
   String get investmentInvestorPhoneLabel;
+
+  /// Generic 'Investments' label — the investments list page's AppBar title and the finance-dashboard section-grid item. Promoted from `financeDashboardInvestments` once the investments page itself needed it, since a `financeDashboard*` prefix disagreed with a page-level title scope.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложения'**
+  String get investments;
+
+  /// Empty state shown when the investments list has no items
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложений пока нет'**
+  String get investmentEmptyState;
+
+  /// Investment status label for ACTIVE — used both as a filter chip and as the per-row status badge
+  ///
+  /// In ru, this message translates to:
+  /// **'Активно'**
+  String get investmentStatusActive;
+
+  /// Investment status label for COMPLETED — neuter gender ("Завершено") agreeing with 'вложение'. Distinct from `completed` ("Завершена", feminine); the two differ character-for-character and must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершено'**
+  String get investmentStatusCompleted;
+
+  /// Investment status label for CANCELLED — neuter gender ("Отменено") agreeing with 'вложение'. Distinct from `cancelled` ("Отменена", feminine); the two differ character-for-character and must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменено'**
+  String get investmentStatusCancelled;
+
+  /// Exchange-rates page AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Курсы валют'**
+  String get currenciesPageTitle;
+
+  /// Title above the 30-day exchange-rate history line chart — distinct from the bare generic `dynamics` ("Динамика")
+  ///
+  /// In ru, this message translates to:
+  /// **'Динамика за 30 дней'**
+  String get currenciesHistoryChartTitle;
+
+  /// Empty state shown inside an expanded currency card when no 30-day rate history is available
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных за 30 дней'**
+  String get currenciesNoHistoryData;
+
+  /// Section title of the currency-converter card at the bottom of the exchange-rates page
+  ///
+  /// In ru, this message translates to:
+  /// **'Конвертер'**
+  String get currenciesConverterTitle;
+
+  /// Label above the converter's result figure. The result is always expressed in TJS, so the currency code is part of the string; kept as a standalone colon-suffixed label because layout puts the value in its own filled container below, not in the same text run.
+  ///
+  /// In ru, this message translates to:
+  /// **'Результат (в TJS):'**
+  String get currenciesConvertedResultLabel;
+
+  /// Full name of the National Bank of Tajikistan (NBT), shown as the rate-source attribution line above the exchange-rate list. Generic (unprefixed) since the same attribution plausibly belongs anywhere a NBT-sourced rate is displayed.
+  ///
+  /// In ru, this message translates to:
+  /// **'НБТ — Национальный банк Таджикистана'**
+  String get nbtBankLabel;
+
+  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. NOTE: the same four currency names are also hardcoded in lib/data/datasources/remote/currency_remote_datasource.dart, which sits outside lib/presentation and so is invisible to tool/check_i18n.dart — migrating that layer needs a context-free lookup and is tracked as a separate follow-up.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доллар США'**
+  String get currencyUsd;
+
+  /// Currency display name — Russian Ruble
+  ///
+  /// In ru, this message translates to:
+  /// **'Российский рубль'**
+  String get currencyRub;
+
+  /// Currency display name — Euro
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyEur;
+
+  /// Currency display name — Chinese Yuan
+  ///
+  /// In ru, this message translates to:
+  /// **'Китайский юань'**
+  String get currencyCny;
 }
 
 class _AppLocalizationsDelegate

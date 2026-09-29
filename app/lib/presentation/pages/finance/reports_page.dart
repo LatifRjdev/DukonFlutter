@@ -654,7 +654,7 @@ class _ReportsPageState extends State<ReportsPage>
           pw.TableHelper.fromTextArray(
             headers: [
               l10n.date,
-              l10n.reportsSalesCountColumnLabel,
+              l10n.salesCountAbbrev,
               l10n.reportsRevenueColumnLabel,
               l10n.avgCheck,
             ],
@@ -742,7 +742,7 @@ class _ReportsPageState extends State<ReportsPage>
           pw.TableHelper.fromTextArray(
             headers: [
               l10n.cashier,
-              l10n.reportsSalesCountColumnLabel,
+              l10n.salesCountAbbrev,
               l10n.reportsRevenueColumnLabel,
               l10n.avgCheck,
             ],
@@ -870,7 +870,7 @@ class _ReportsPageState extends State<ReportsPage>
       case 0:
         addRow([
           l10n.date,
-          l10n.reportsSalesCountColumnLabel,
+          l10n.salesCountAbbrev,
           l10n.reportsRevenueColumnLabel,
           l10n.avgCheck,
         ]);
@@ -943,7 +943,7 @@ class _ReportsPageState extends State<ReportsPage>
       case 4:
         addRow([
           l10n.cashier,
-          l10n.reportsSalesCountColumnLabel,
+          l10n.salesCountAbbrev,
           l10n.reportsRevenueColumnLabel,
           l10n.avgCheck,
         ]);
@@ -1452,7 +1452,7 @@ class _SalesTab extends StatelessWidget {
                 DataColumn(label: Text(AppLocalizations.of(context)!.date)),
                 DataColumn(
                   label: Text(
-                    AppLocalizations.of(context)!.reportsSalesCountColumnLabel,
+                    AppLocalizations.of(context)!.salesCountAbbrev,
                   ),
                   numeric: true,
                 ),
@@ -2237,7 +2237,7 @@ class _StaffTab extends StatelessWidget {
               columns: [
                 DataColumn(label: Text(l10n.cashier)),
                 DataColumn(
-                  label: Text(l10n.reportsSalesCountColumnLabel),
+                  label: Text(l10n.salesCountAbbrev),
                   numeric: true,
                 ),
                 DataColumn(
