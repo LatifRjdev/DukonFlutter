@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/data/datasources/local/auth_local_datasource.dart';
 import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/auth/auth_bloc.dart';
 import 'package:dukonpro/presentation/blocs/auth/auth_event.dart';
 import 'package:dukonpro/presentation/blocs/auth/auth_state.dart';
@@ -57,6 +58,9 @@ void main() {
   });
 
   Widget wrap(Widget child) => MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('ru'),
         home: BlocProvider<AuthBloc>.value(
           value: authBloc,
           child: Scaffold(body: child),

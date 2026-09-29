@@ -29,6 +29,8 @@
   "@create": { "description": "Generic 'Create' button — often toggled with `save` in the same slot (e.g. \"Сохранить\" when editing, \"Создать\" when adding new)" },
   "search": "Поиск",
   "@search": { "description": "Search action/label" },
+  "searchPlaceholder": "Поиск...",
+  "@searchPlaceholder": { "description": "Default hint/placeholder text inside a search input field (AppSearchBar). Distinct from `search` (\"Поиск\", the bare search action/label with no ellipsis) and from `printerSettingsScanningButton` (\"Поиск...\"), a coincidentally identical value that labels a printer-discovery button while a Bluetooth scan runs — not a text-field placeholder" },
   "back": "Назад",
   "@back": { "description": "Back button" },
   "next": "Далее",
@@ -293,6 +295,10 @@
   "@itemName": { "description": "Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment/discount name) — distinct from `name` (\"Имя\", a person's name) and `productName` (\"Название товара\", the fuller product-specific label)" },
   "barcode": "Штрихкод",
   "@barcode": { "description": "Barcode field" },
+  "barcodeScannerTitle": "Сканер штрихкода",
+  "@barcodeScannerTitle": { "description": "Barcode scanner bottom sheet — sheet title" },
+  "barcodeScannerHint": "Наведите камеру на штрихкод",
+  "@barcodeScannerHint": { "description": "Barcode scanner bottom sheet — hint under the camera preview telling the user to aim the camera at a barcode" },
   "costPrice": "Цена закупки",
   "@costPrice": { "description": "Cost/purchase price" },
   "sellPrice": "Цена продажи",
@@ -825,6 +831,31 @@
   "@moreMyStores": { "description": "More page — menu item linking to the user's store list" },
   "offline": "Нет подключения к интернету. Работаем офлайн.",
   "@offline": { "description": "Offline mode message" },
+  "offlineBannerNoConnection": "Нет подключения к интернету",
+  "@offlineBannerNoConnection": { "description": "Offline banner — message while the device is offline and the sync queue is empty. Distinct from `offline` (\"Нет подключения к интернету. Работаем офлайн.\"), the longer two-sentence variant used elsewhere" },
+  "offlineBannerQueuedMessage": "Офлайн режим · {count} в очереди",
+  "@offlineBannerQueuedMessage": {
+    "description": "Offline banner — message while the device is offline and operations are queued. The separator is U+00B7 MIDDLE DOT",
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "offlineBannerSyncing": "Синхронизация...",
+  "@offlineBannerSyncing": { "description": "Offline banner — message while a sync is in progress. Distinct from `offlineSyncingButton` (\"Синхронизация...\"), a coincidentally identical value that labels the manual-sync *button* on the offline mode settings page" },
+  "offlineBannerSyncErrorMessage": "Ошибка синхронизации · {count} не отправлено",
+  "@offlineBannerSyncErrorMessage": {
+    "description": "Offline banner — message after a sync failed, with the number of operations still unsent. The separator is U+00B7 MIDDLE DOT. Distinct from `snackSyncError` (\"Ошибка синхронизации: {error}\"), a colon-plus-error-detail snackbar template",
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "offlineBannerPendingMessage": "{count} операций ожидают синхронизации",
+  "@offlineBannerPendingMessage": {
+    "description": "Offline banner — message while online with operations still waiting to sync. Distinct from `offlinePendingOpsCount` (\"{count} операций в очереди\"), the offline mode settings page's shorter queue-count line",
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
   "offlineResetSyncStatusButton": "Сбросить статус синхронизации",
   "@offlineResetSyncStatusButton": { "description": "Offline mode page — button that clears the locally displayed last-synced timestamp. Does NOT reset the pending-ops count (a live read from the real sync queue as of the 2026-09-23 SyncEngine rewiring — it can't be honestly reset without discarding real queued data) and does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased" },
   "offlineResetSyncStatusTitle": "Сбросить статус синхронизации?",
@@ -1089,6 +1120,10 @@
   "@impersonationRequestRejected": { "description": "Notifications list page — snackbar confirming the user rejected a support agent's impersonation-access request" },
   "impersonationRequestFailedMessage": "Не удалось обработать запрос — возможно, он уже неактивен",
   "@impersonationRequestFailedMessage": { "description": "Notifications list page — snackbar shown when responding to an impersonation-access request fails, most often because the request already expired or was withdrawn" },
+  "impersonationBannerMessage": "Вы вошли как поддержка Dukon",
+  "@impersonationBannerMessage": { "description": "Impersonation banner — persistent banner text shown while the app runs on a support (impersonation) session token" },
+  "impersonationBannerEndSession": "Завершить сессию",
+  "@impersonationBannerEndSession": { "description": "Impersonation banner — button that ends the support (impersonation) session and logs the device out" },
 
   "settingsLogoutTitle": "Выход",
   "@settingsLogoutTitle": { "description": "Settings page — logout confirmation dialog title" },

@@ -44,6 +44,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get search => 'Ҷустуҷӯ';
 
   @override
+  String get searchPlaceholder => 'Поиск...';
+
+  @override
   String get back => 'Бозгашт';
 
   @override
@@ -428,6 +431,12 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get barcode => 'Штрихкод';
+
+  @override
+  String get barcodeScannerTitle => 'Сканер штрихкода';
+
+  @override
+  String get barcodeScannerHint => 'Наведите камеру на штрихкод';
 
   @override
   String get costPrice => 'Нархи харид';
@@ -1202,6 +1211,27 @@ class AppLocalizationsTg extends AppLocalizations {
   String get offline => 'Пайвасти интернет нест. Офлайн кор мекунем.';
 
   @override
+  String get offlineBannerNoConnection => 'Нет подключения к интернету';
+
+  @override
+  String offlineBannerQueuedMessage(String count) {
+    return 'Офлайн режим · $count в очереди';
+  }
+
+  @override
+  String get offlineBannerSyncing => 'Синхронизация...';
+
+  @override
+  String offlineBannerSyncErrorMessage(String count) {
+    return 'Ошибка синхронизации · $count не отправлено';
+  }
+
+  @override
+  String offlineBannerPendingMessage(String count) {
+    return '$count операций ожидают синхронизации';
+  }
+
+  @override
   String get offlineResetSyncStatusButton => 'Сбросить статус синхронизации';
 
   @override
@@ -1595,6 +1625,12 @@ class AppLocalizationsTg extends AppLocalizations {
   @override
   String get impersonationRequestFailedMessage =>
       'Не удалось обработать запрос — возможно, он уже неактивен';
+
+  @override
+  String get impersonationBannerMessage => 'Вы вошли как поддержка Dukon';
+
+  @override
+  String get impersonationBannerEndSession => 'Завершить сессию';
 
   @override
   String get settingsLogoutTitle => 'Выход';

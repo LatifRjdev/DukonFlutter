@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/widgets/common/barcode_scanner_sheet.dart';
 
 void main() {
@@ -10,6 +11,9 @@ void main() {
     }) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('ru'),
           home: Scaffold(
             body: Builder(
               builder: (context) => TextButton(

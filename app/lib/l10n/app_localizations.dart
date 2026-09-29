@@ -166,6 +166,12 @@ abstract class AppLocalizations {
   /// **'Поиск'**
   String get search;
 
+  /// Default hint/placeholder text inside a search input field (AppSearchBar). Distinct from `search` ("Поиск", the bare search action/label with no ellipsis) and from `printerSettingsScanningButton` ("Поиск..."), a coincidentally identical value that labels a printer-discovery button while a Bluetooth scan runs — not a text-field placeholder
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск...'**
+  String get searchPlaceholder;
+
   /// Back button
   ///
   /// In ru, this message translates to:
@@ -891,6 +897,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Штрихкод'**
   String get barcode;
+
+  /// Barcode scanner bottom sheet — sheet title
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер штрихкода'**
+  String get barcodeScannerTitle;
+
+  /// Barcode scanner bottom sheet — hint under the camera preview telling the user to aim the camera at a barcode
+  ///
+  /// In ru, this message translates to:
+  /// **'Наведите камеру на штрихкод'**
+  String get barcodeScannerHint;
 
   /// Cost/purchase price
   ///
@@ -2278,6 +2296,36 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
+  /// Offline banner — message while the device is offline and the sync queue is empty. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the longer two-sentence variant used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет подключения к интернету'**
+  String get offlineBannerNoConnection;
+
+  /// Offline banner — message while the device is offline and operations are queued. The separator is U+00B7 MIDDLE DOT
+  ///
+  /// In ru, this message translates to:
+  /// **'Офлайн режим · {count} в очереди'**
+  String offlineBannerQueuedMessage(String count);
+
+  /// Offline banner — message while a sync is in progress. Distinct from `offlineSyncingButton` ("Синхронизация..."), a coincidentally identical value that labels the manual-sync *button* on the offline mode settings page
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация...'**
+  String get offlineBannerSyncing;
+
+  /// Offline banner — message after a sync failed, with the number of operations still unsent. The separator is U+00B7 MIDDLE DOT. Distinct from `snackSyncError` ("Ошибка синхронизации: {error}"), a colon-plus-error-detail snackbar template
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка синхронизации · {count} не отправлено'**
+  String offlineBannerSyncErrorMessage(String count);
+
+  /// Offline banner — message while online with operations still waiting to sync. Distinct from `offlinePendingOpsCount` ("{count} операций в очереди"), the offline mode settings page's shorter queue-count line
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} операций ожидают синхронизации'**
+  String offlineBannerPendingMessage(String count);
+
   /// Offline mode page — button that clears the locally displayed last-synced timestamp. Does NOT reset the pending-ops count (a live read from the real sync queue as of the 2026-09-23 SyncEngine rewiring — it can't be honestly reset without discarding real queued data) and does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased
   ///
   /// In ru, this message translates to:
@@ -2985,6 +3033,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Не удалось обработать запрос — возможно, он уже неактивен'**
   String get impersonationRequestFailedMessage;
+
+  /// Impersonation banner — persistent banner text shown while the app runs on a support (impersonation) session token
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы вошли как поддержка Dukon'**
+  String get impersonationBannerMessage;
+
+  /// Impersonation banner — button that ends the support (impersonation) session and logs the device out
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить сессию'**
+  String get impersonationBannerEndSession;
 
   /// Settings page — logout confirmation dialog title
   ///

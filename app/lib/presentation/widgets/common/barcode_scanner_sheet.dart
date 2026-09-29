@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -52,6 +53,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final maxHeight = MediaQuery.of(context).size.height * 0.85;
 
     return Container(
@@ -91,7 +93,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'Сканер штрихкода',
+                    l10n.barcodeScannerTitle,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -108,7 +110,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
                     Icons.close_rounded,
                     color: context.textSecondary,
                   ),
-                  tooltip: 'Пӯшидан',
+                  tooltip: l10n.close,
                 ),
               ],
             ),
@@ -149,7 +151,7 @@ class _BarcodeScannerSheetState extends State<BarcodeScannerSheet> {
                   MediaQuery.of(context).viewPadding.bottom,
             ),
             child: Text(
-              'Наведите камеру на штрихкод',
+              l10n.barcodeScannerHint,
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Inter',

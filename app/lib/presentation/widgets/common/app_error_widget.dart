@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import 'app_button.dart';
 
@@ -14,6 +15,7 @@ class AppErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -30,7 +32,7 @@ class AppErrorWidget extends StatelessWidget {
             if (onRetry != null) ...[
               const SizedBox(height: 16),
               AppButton(
-                text: 'Повторить',
+                text: l10n.retry,
                 type: AppButtonType.outlined,
                 onPressed: onRetry,
                 width: 160,

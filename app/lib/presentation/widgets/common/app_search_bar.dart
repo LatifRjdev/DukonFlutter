@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_shadows.dart';
 
 class AppSearchBar extends StatefulWidget {
   final TextEditingController? controller;
-  final String hint;
+  final String? hint;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onScanTap;
 
   const AppSearchBar({
     super.key,
     this.controller,
-    this.hint = 'Поиск...',
+    this.hint,
     this.onChanged,
     this.onScanTap,
   });
@@ -60,6 +61,8 @@ class _AppSearchBarState extends State<AppSearchBar> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final showClear = widget.onScanTap == null && _controller.text.isNotEmpty;
+    final resolvedHint =
+        widget.hint ?? AppLocalizations.of(context)!.searchPlaceholder;
 
     return Container(
       decoration: BoxDecoration(
@@ -72,7 +75,7 @@ class _AppSearchBarState extends State<AppSearchBar> {
         controller: _controller,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
-          hintText: widget.hint,
+          hintText: resolvedHint,
           prefixIcon: Icon(Icons.search, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
           suffixIcon: widget.onScanTap != null
               ? IconButton(
