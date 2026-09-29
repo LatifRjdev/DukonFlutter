@@ -134,7 +134,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   keyboardType: TextInputType.number,
                   prefixIcon: Icons.attach_money,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return l10n.shiftsCashAmountRequired;
+                    if (v == null || v.isEmpty) return l10n.amountRequired;
                     if (double.tryParse(v) == null) return l10n.invalidAmount;
                     return null;
                   },

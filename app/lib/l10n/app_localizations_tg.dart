@@ -1892,6 +1892,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get amount => 'Маблағ';
 
   @override
+  String get amountRequired => 'Введите сумму';
+
+  @override
   String get amountTjs => 'Сумма (TJS)';
 
   @override
@@ -2654,9 +2657,6 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get shiftsCashAmountLabel => 'Сумма наличных';
-
-  @override
-  String get shiftsCashAmountRequired => 'Введите сумму';
 
   @override
   String get shiftsCashAmountNegative => 'Сумма не может быть отрицательной';

@@ -1158,6 +1158,8 @@
   "transport": "Транспорт",
   "marketing": "Маркетинг",
   "amount": "Сумма",
+  "amountRequired": "Введите сумму",
+  "@amountRequired": { "description": "Generic validation error when an amount field is left empty — deliberately unprefixed and shared across screens (close-shift dialog, add-expense, add-investment, payroll adjustment)." },
   "amountTjs": "Сумма (TJS)",
   "@amountTjs": { "description": "Generic 'Amount (TJS)' field label with currency suffix — distinct from bare `amount` (\"Сумма\"); this exact literal also recurs verbatim on other payment-amount fields (e.g. the payroll adjustment screen)" },
   "description": "Описание",
@@ -1579,8 +1581,6 @@
   "shiftsCloseCashPrompt": "Введите сумму наличных в кассе:",
   "@shiftsCloseCashPrompt": { "description": "Close-shift dialog — prompt above the closing cash amount field" },
   "shiftsCashAmountLabel": "Сумма наличных",
-  "shiftsCashAmountRequired": "Введите сумму",
-  "@shiftsCashAmountRequired": { "description": "Close-shift dialog — validation error when the cash amount field is left empty" },
   "shiftsCashAmountNegative": "Сумма не может быть отрицательной",
   "shiftsDurationFormat": "{hours}ч {minutes}м",
   "@shiftsDurationFormat": {

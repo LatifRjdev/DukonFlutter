@@ -3550,6 +3550,12 @@ abstract class AppLocalizations {
   /// **'Сумма'**
   String get amount;
 
+  /// Generic validation error when an amount field is left empty — deliberately unprefixed and shared across screens (close-shift dialog, add-expense, add-investment, payroll adjustment).
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму'**
+  String get amountRequired;
+
   /// Generic 'Amount (TJS)' field label with currency suffix — distinct from bare `amount` ("Сумма"); this exact literal also recurs verbatim on other payment-amount fields (e.g. the payroll adjustment screen)
   ///
   /// In ru, this message translates to:
@@ -5013,12 +5019,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сумма наличных'**
   String get shiftsCashAmountLabel;
-
-  /// Close-shift dialog — validation error when the cash amount field is left empty
-  ///
-  /// In ru, this message translates to:
-  /// **'Введите сумму'**
-  String get shiftsCashAmountRequired;
 
   /// No description provided for @shiftsCashAmountNegative.
   ///

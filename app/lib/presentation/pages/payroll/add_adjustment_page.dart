@@ -150,7 +150,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
                   prefixIcon: Icons.attach_money,
                   keyboardType: TextInputType.number,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return l10n.shiftsCashAmountRequired;
+                    if (v == null || v.isEmpty) return l10n.amountRequired;
                     if (double.tryParse(v) == null) return l10n.invalidAmount;
                     if (double.parse(v) <= 0) return l10n.payrollAdjustmentAmountMustBePositiveError;
                     return null;

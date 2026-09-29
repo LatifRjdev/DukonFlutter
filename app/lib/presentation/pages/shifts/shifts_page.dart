@@ -60,7 +60,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                 prefixIcon: Icons.attach_money,
                 keyboardType: TextInputType.number,
                 validator: (v) {
-                  if (v == null || v.isEmpty) return AppLocalizations.of(ctx)!.shiftsCashAmountRequired;
+                  if (v == null || v.isEmpty) return AppLocalizations.of(ctx)!.amountRequired;
                   if (double.tryParse(v) == null) return AppLocalizations.of(ctx)!.invalidAmount;
                   if (double.parse(v) < 0) return AppLocalizations.of(ctx)!.shiftsCashAmountNegative;
                   return null;

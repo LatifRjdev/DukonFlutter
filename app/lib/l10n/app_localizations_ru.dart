@@ -1891,6 +1891,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get amount => 'Сумма';
 
   @override
+  String get amountRequired => 'Введите сумму';
+
+  @override
   String get amountTjs => 'Сумма (TJS)';
 
   @override
@@ -2653,9 +2656,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftsCashAmountLabel => 'Сумма наличных';
-
-  @override
-  String get shiftsCashAmountRequired => 'Введите сумму';
 
   @override
   String get shiftsCashAmountNegative => 'Сумма не может быть отрицательной';
