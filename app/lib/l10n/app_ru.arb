@@ -1635,6 +1635,7 @@
   "zReportTotalSales": "Итого продаж",
   "zReportReturnsCount": "Количество возвратов",
   "zReportReturnsAmount": "Сумма возвратов",
+  "@zReportReturnsAmount": { "description": "Z-report line — aggregate total of all refunds in the shift (plural genitive \"возвратов\"). Distinct from `refundTotalLabel` (\"Сумма возврата:\", singular) on the refund page, which is one individual refund's total." },
   "zReportOpeningAmount": "Начальная сумма",
   "zReportCashSalesLabel": "Продажи (нал.)",
   "zReportCashReturnsLabel": "Возвраты (нал.)",

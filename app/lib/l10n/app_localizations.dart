@@ -5169,7 +5169,7 @@ abstract class AppLocalizations {
   /// **'Количество возвратов'**
   String get zReportReturnsCount;
 
-  /// No description provided for @zReportReturnsAmount.
+  /// Z-report line — aggregate total of all refunds in the shift (plural genitive "возвратов"). Distinct from `refundTotalLabel` ("Сумма возврата:", singular) on the refund page, which is one individual refund's total.
   ///
   /// In ru, this message translates to:
   /// **'Сумма возвратов'**
