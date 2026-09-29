@@ -928,6 +928,18 @@ abstract class AppLocalizations {
   /// **'Введите имя'**
   String get enterName;
 
+  /// Placeholder/hint text shown inside an empty quantity input field. Deliberately unprefixed — the same hint fits any quantity field. Same Russian text as `addProductQuantityRequiredError` ("Введите количество") but a different UI role: that key is the validation error returned when the add-product quantity field is submitted empty, this one is the field's own inline hint. Kept separate so translators can phrase an inviting hint and a validation error differently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите количество'**
+  String get enterQuantityHint;
+
+  /// Placeholder/hint text shown inside an empty cost-price (себестоимость) input field. Deliberately unprefixed — the same hint fits any cost-price field. Same Russian text as `costPriceRequiredError` ("Введите себестоимость") but a different UI role: that key is the validation error returned by a form validator when the cost-price field is empty, this one is the field's own inline hint. Kept separate so translators can phrase an inviting hint and a validation error differently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите себестоимость'**
+  String get enterCostPriceHint;
+
   /// Generic 'phone number is required' validation error, used across multiple auth/contact forms
   ///
   /// In ru, this message translates to:
@@ -1246,6 +1258,12 @@ abstract class AppLocalizations {
   /// **'Нет товаров'**
   String get noProducts;
 
+  /// Empty state shown when a product *search* returns no matches. Deliberately unprefixed and shared across search surfaces. Distinct from `noProducts` ("Нет товаров", the store has no products at all — not a search result) and from `noResults` ("Ничего не найдено", a subject-less generic used where the searched entity isn't products).
+  ///
+  /// In ru, this message translates to:
+  /// **'Товары не найдены'**
+  String get noProductsFound;
+
   /// Empty products page — headline shown when the store has no products yet
   ///
   /// In ru, this message translates to:
@@ -1503,6 +1521,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'ИТОГО'**
   String get totalCaps;
+
+  /// Composite 'total' row: label + separator + a pre-formatted amount followed by a hardcoded TJS currency suffix. Full-sentence key so the colon stays translatable. Deliberately unprefixed and shared — it is the payroll period-detail header total and the per-sale total caption on the customer-debts screen (promoted from the former `payrollTotalLine`, same value, when a second feature needed it). Do not use where the amount may be in a non-TJS currency, since the suffix is baked in; use `total` ("Итого") plus a separately formatted value there.
+  ///
+  /// In ru, this message translates to:
+  /// **'Итого: {amount} TJS'**
+  String totalTjsLine(String amount);
 
   /// Cash payment method
   ///
@@ -2037,6 +2061,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Приход товара'**
   String get stockIntake;
+
+  /// Stock-intake screen — search field hint for finding the product to record an intake against
+  ///
+  /// In ru, this message translates to:
+  /// **'Найти товар для прихода'**
+  String get stockIntakeSearchHint;
+
+  /// Stock-intake screen — initial empty state prompting the user to search for a product before any search has been typed; distinct from `stockIntakeSearchHint`, which is the search field's own inline hint
+  ///
+  /// In ru, this message translates to:
+  /// **'Найдите товар для оформления прихода'**
+  String get stockIntakeEmptyState;
+
+  /// Stock-intake screen — current on-hand stock caption on a product row and on the selected-product card. Full-sentence composite (label + separator + value) so the colon stays translatable. Distinct from `productStockQuantityLine` ("На складе: {value}", different Russian wording on the product list) and from `productDetailStockRemainingLabel` ("Остаток", a bare standalone label). Both placeholders are pre-formatted Strings; `unit` is an already-localised unit display name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток: {quantity} {unit}'**
+  String stockIntakeRemainingLine(String quantity, String unit);
+
+  /// Stock-intake screen — sell-price caption on the selected-product card. Full-sentence composite (label + separator + value) so the colon stays translatable; distinct from the bare `price` ("Цена") label. Placeholder is a pre-formatted, currency-bearing String.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена: {price}'**
+  String stockIntakePriceLine(String price);
+
+  /// Stock-intake screen — section label above the unit cost-price field, with an explicit per-unit qualifier. Distinct from `costPriceRequiredLabel` ("Себестоимость *", the add-product field label with a required asterisk), `dashboardCost` ("Себестоимость", a dashboard metric tile) and `productDetailBatchCostLabel` ("Себестоимость партии", the cost of a whole batch rather than per unit)
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость (за единицу)'**
+  String get stockIntakeCostPerUnitLabel;
+
+  /// Stock-intake screen — label on the computed total-cost summary card (quantity x unit cost). Distinct from `total` ("Итого") and `stockValue` ("Стоимость товаров", the whole inventory's value)
+  ///
+  /// In ru, this message translates to:
+  /// **'Итоговая стоимость'**
+  String get stockIntakeTotalCostLabel;
 
   /// Stock movement section
   ///
@@ -2715,6 +2775,36 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Поставщик обновлён'**
   String get supplierUpdated;
+
+  /// Supplier-list screen — search field hint; mirrors `customerListSearchHint` ("Поиск клиента") on the customer list
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск поставщика'**
+  String get supplierListSearchHint;
+
+  /// Supplier-list screen — empty-state headline when the store has no suppliers yet; mirrors `customerListEmptyTitle`
+  ///
+  /// In ru, this message translates to:
+  /// **'Поставщиков пока нет'**
+  String get supplierListEmptyTitle;
+
+  /// Supplier-list screen — empty-state subtitle explaining the benefit of adding a supplier; mirrors `customerListEmptySubtitle`
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первого поставщика, чтобы отслеживать поставки и долги'**
+  String get supplierListEmptySubtitle;
+
+  /// Supplier-list screen — hint text in the name field of the add-supplier dialog; mirrors `customerListNameHint` ("Введите имя клиента")
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите название поставщика'**
+  String get supplierListNameHint;
+
+  /// Confirm button on the add-supplier dialog — distinct from `addSupplier` ("Добавить поставщика"), which labels the nav action/tooltip that opens this dialog. Bare verb deliberately kept feature-scoped, matching the convention recorded on `payrollAdjustmentSubmit` and `customerListAddConfirm`: no unprefixed generic `add` key exists in this ARB, so each bare-"Добавить" confirm button gets its own scoped key.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get supplierListAddConfirm;
 
   /// Generic address field label, used on forms such as the supplier create/edit form — distinct from `storeAddress` ("Адрес магазина", the store's own address) and `deliveryDetailAddressLabel` (an info-row label on the delivery detail screen)
   ///
@@ -3844,6 +3934,18 @@ abstract class AppLocalizations {
   /// **'Долги клиентов'**
   String get customerDebts;
 
+  /// Customer-debts screen — section heading above the list of that customer's sales that still carry an outstanding debt
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи с долгом'**
+  String get customerDebtsSalesTitle;
+
+  /// Customer-debts screen — shown in place of the sales list when the customer has no sales with an outstanding debt; distinct from `noDebts` ("Нет активных долгов"), the store-wide debts empty state
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет продаж с долгом'**
+  String get customerDebtsEmptyState;
+
   /// No description provided for @supplierDebts.
   ///
   /// In ru, this message translates to:
@@ -3855,6 +3957,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Нет активных долгов'**
   String get noDebts;
+
+  /// Badge text marking an item as past its due date (e.g. a debt-bearing sale older than the overdue threshold). Deliberately unprefixed — the same badge wording fits any overdue item. Neuter short-form adjective; distinct from `notificationSettingsDebtReminderSubtitle`, which contains the plural adjective "Просроченные" inside a longer sentence.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просрочено'**
+  String get overdueLabel;
+
+  /// Button label and form heading for taking a payment against an outstanding debt — used on the customer-debts screen's per-sale action button and as the heading and submit button of the debt payment form. Distinct from `creditsAcceptPayment` ("Принять платёж"): same intent but different Russian noun (оплата vs платёж), and that key is the credits screen's receivables-tab button and dialog title; the two literals differ in the source design, so they must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять оплату'**
+  String get acceptDebtPayment;
 
   /// No description provided for @recordPayment.
   ///
@@ -3891,6 +4005,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Платёж сохранён офлайн — отправим при подключении'**
   String get paymentQueuedOfflineMessage;
+
+  /// Debt payment form — caption under the heading stating the largest payment that may be entered (the remaining debt). Full-sentence composite (label + separator + value) so the colon stays translatable. Distinct from `amountExceedsMax` ("Сумма не может превышать {maxAmount}"), the validation error raised once that ceiling is exceeded. Placeholder is a pre-formatted String; the TJS suffix is baked in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Максимум: {amount} TJS'**
+  String paymentFormMaxAmountLine(String amount);
 
   /// No description provided for @paymentHistory.
   ///
@@ -6032,12 +6152,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выберите месяц и нажмите \"Рассчитать\"'**
   String get payrollNoDataSubtitle;
-
-  /// Payroll period detail header — total payroll amount for the selected period
-  ///
-  /// In ru, this message translates to:
-  /// **'Итого: {amount} TJS'**
-  String payrollTotalLine(String amount);
 
   /// No description provided for @payrollAddAdjustmentTooltip.
   ///

@@ -41,19 +41,20 @@ class _PaymentFormState extends State<PaymentForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Принять оплату', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+          Text(l10n.acceptDebtPayment, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
           const SizedBox(height: AppConstants.spacingMd),
-          Text('Максимум: ${widget.maxAmount.toStringAsFixed(2)} TJS', style: TextStyle(color: context.textSecondary, fontSize: 13)),
+          Text(l10n.paymentFormMaxAmountLine(widget.maxAmount.toStringAsFixed(2)), style: TextStyle(color: context.textSecondary, fontSize: 13)),
           const SizedBox(height: AppConstants.spacingSm),
           AppTextField(
             controller: _amountController,
-            label: 'Сумма',
+            label: l10n.amount,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.attach_money,
             validator: _validateAmount,
@@ -75,7 +76,7 @@ class _PaymentFormState extends State<PaymentForm> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      m == 'CASH' ? 'Наличные' : 'Карта',
+                      m == 'CASH' ? l10n.cash : l10n.card,
                       style: TextStyle(color: isSelected ? context.onPrimary : context.textPrimary, fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -84,10 +85,10 @@ class _PaymentFormState extends State<PaymentForm> {
             }).toList(),
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          AppTextField(controller: _notesController, label: 'Заметки', maxLines: 2),
+          AppTextField(controller: _notesController, label: l10n.notes, maxLines: 2),
           const SizedBox(height: AppConstants.spacingLg),
           AppButton(
-            text: 'Принять оплату',
+            text: l10n.acceptDebtPayment,
             onPressed: () {
               if (!_formKey.currentState!.validate()) return;
               final amount = double.parse(_amountController.text);

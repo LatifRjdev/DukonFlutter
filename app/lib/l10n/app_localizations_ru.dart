@@ -445,6 +445,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get enterName => 'Введите имя';
 
   @override
+  String get enterQuantityHint => 'Введите количество';
+
+  @override
+  String get enterCostPriceHint => 'Введите себестоимость';
+
+  @override
   String get phoneRequired => 'Введите номер телефона';
 
   @override
@@ -624,6 +630,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noProducts => 'Нет товаров';
 
   @override
+  String get noProductsFound => 'Товары не найдены';
+
+  @override
   String get emptyProductsTitle => 'Добавьте свой первый товар';
 
   @override
@@ -767,6 +776,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get totalCaps => 'ИТОГО';
+
+  @override
+  String totalTjsLine(String amount) {
+    return 'Итого: $amount TJS';
+  }
 
   @override
   String get cash => 'Наличные';
@@ -1071,6 +1085,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get stockIntake => 'Приход товара';
+
+  @override
+  String get stockIntakeSearchHint => 'Найти товар для прихода';
+
+  @override
+  String get stockIntakeEmptyState => 'Найдите товар для оформления прихода';
+
+  @override
+  String stockIntakeRemainingLine(String quantity, String unit) {
+    return 'Остаток: $quantity $unit';
+  }
+
+  @override
+  String stockIntakePriceLine(String price) {
+    return 'Цена: $price';
+  }
+
+  @override
+  String get stockIntakeCostPerUnitLabel => 'Себестоимость (за единицу)';
+
+  @override
+  String get stockIntakeTotalCostLabel => 'Итоговая стоимость';
 
   @override
   String get stockMovement => 'Движение товара';
@@ -1441,6 +1477,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get supplierUpdated => 'Поставщик обновлён';
+
+  @override
+  String get supplierListSearchHint => 'Поиск поставщика';
+
+  @override
+  String get supplierListEmptyTitle => 'Поставщиков пока нет';
+
+  @override
+  String get supplierListEmptySubtitle =>
+      'Добавьте первого поставщика, чтобы отслеживать поставки и долги';
+
+  @override
+  String get supplierListNameHint => 'Введите название поставщика';
+
+  @override
+  String get supplierListAddConfirm => 'Добавить';
 
   @override
   String get address => 'Адрес';
@@ -2055,10 +2107,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customerDebts => 'Долги клиентов';
 
   @override
+  String get customerDebtsSalesTitle => 'Продажи с долгом';
+
+  @override
+  String get customerDebtsEmptyState => 'Нет продаж с долгом';
+
+  @override
   String get supplierDebts => 'Наши долги поставщикам';
 
   @override
   String get noDebts => 'Нет активных долгов';
+
+  @override
+  String get overdueLabel => 'Просрочено';
+
+  @override
+  String get acceptDebtPayment => 'Принять оплату';
 
   @override
   String get recordPayment => 'Записать оплату';
@@ -2078,6 +2142,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get paymentQueuedOfflineMessage =>
       'Платёж сохранён офлайн — отправим при подключении';
+
+  @override
+  String paymentFormMaxAmountLine(String amount) {
+    return 'Максимум: $amount TJS';
+  }
 
   @override
   String get paymentHistory => 'История оплат';
@@ -3220,11 +3289,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get payrollNoDataSubtitle => 'Выберите месяц и нажмите \"Рассчитать\"';
-
-  @override
-  String payrollTotalLine(String amount) {
-    return 'Итого: $amount TJS';
-  }
 
   @override
   String get payrollAddAdjustmentTooltip => 'Добавить корректировку';

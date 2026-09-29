@@ -112,7 +112,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
             AppSnackbar.success(context, state.message);
             context.read<DebtBloc>().add(CustomerDebtsRequested(storeId: widget.storeId, customerId: widget.customerId));
           } else if (state is DebtPaymentQueued) {
-            AppSnackbar.info(context, 'Платёж сохранён офлайн — отправим при подключении');
+            AppSnackbar.info(context, l10n.paymentQueuedOfflineMessage);
           } else if (state is DebtError) {
             AppSnackbar.error(context, state.message);
           }
@@ -134,7 +134,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                   ),
                   child: Column(
                     children: [
-                      Text('Общий долг', style: TextStyle(fontSize: 14, color: context.textSecondary)),
+                      Text(l10n.totalDebt, style: TextStyle(fontSize: 14, color: context.textSecondary)),
                       const SizedBox(height: 4),
                       Text(
                         '${state.totalDebt.toStringAsFixed(2)} TJS',
@@ -144,10 +144,10 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                   ),
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
-                const Text('Продажи с долгом', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(l10n.customerDebtsSalesTitle, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppConstants.spacingSm),
                 if (state.sales.isEmpty)
-                  Center(child: Text('Нет продаж с долгом', style: TextStyle(color: context.textSecondary)))
+                  Center(child: Text(l10n.customerDebtsEmptyState, style: TextStyle(color: context.textSecondary)))
                 else
                   ...state.sales.map((sale) {
                     final saleId = sale['id'] as String? ?? '';
@@ -167,7 +167,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Text('Чек #$receiptNo', style: const TextStyle(fontWeight: FontWeight.w600)),
+                                    Text(l10n.dashboardSaleReceiptLabel(receiptNo), style: const TextStyle(fontWeight: FontWeight.w600)),
                                     if (_isOverdue(date)) ...[
                                       const SizedBox(width: 8),
                                       Container(
@@ -176,8 +176,8 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                                           color: AppColors.error,
                                           borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                                         ),
-                                        child: const Text('Просрочено',
-                                          style: TextStyle(fontSize: 12, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
+                                        child: Text(l10n.overdueLabel,
+                                          style: const TextStyle(fontSize: 12, color: AppColors.onPrimary, fontWeight: FontWeight.w500)),
                                       ),
                                     ],
                                   ],
@@ -189,7 +189,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Итого: ${total.toStringAsFixed(2)} TJS', style: TextStyle(fontSize: 13, color: context.textSecondary)),
+                                Text(l10n.totalTjsLine(total.toStringAsFixed(2)), style: TextStyle(fontSize: 13, color: context.textSecondary)),
                                 if (date.isNotEmpty)
                                   Text(date.substring(0, 10), style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               ],
@@ -200,7 +200,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
                               child: OutlinedButton.icon(
                                 onPressed: () => _showPaymentSheet(saleId, debtAmount),
                                 icon: const Icon(Icons.payment, size: 18),
-                                label: const Text('Принять оплату'),
+                                label: Text(l10n.acceptDebtPayment),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.primary,
                                   side: const BorderSide(color: AppColors.primary),
