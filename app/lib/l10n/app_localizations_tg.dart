@@ -923,6 +923,35 @@ class AppLocalizationsTg extends AppLocalizations {
   String get refund => 'Баргардонӣ';
 
   @override
+  String get refundConfirmTitle => 'Подтвердить возврат?';
+
+  @override
+  String refundConfirmBody(String amount, String count) {
+    return 'Сумма возврата: $amount\nВыбрано позиций: $count';
+  }
+
+  @override
+  String get refundInstructionBanner => 'Выберите товары для возврата';
+
+  @override
+  String get refundSelectAll => 'Выбрать все';
+
+  @override
+  String get refundDeselectAll => 'Снять все';
+
+  @override
+  String get refundReasonLabel => 'Причина возврата';
+
+  @override
+  String get refundReasonHint => 'Укажите причину возврата';
+
+  @override
+  String get refundTotalLabel => 'Сумма возврата:';
+
+  @override
+  String get refundSubmitButton => 'Оформить возврат';
+
+  @override
   String get completed => 'Анҷом дода шуд';
 
   @override

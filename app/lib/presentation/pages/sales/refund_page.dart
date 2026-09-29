@@ -72,23 +72,25 @@ class _RefundPageState extends State<RefundPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Подтвердить возврат?'),
+        title: Text(AppLocalizations.of(ctx)!.refundConfirmTitle),
         content: Text(
-          'Сумма возврата: ${Formatters.price(_refundTotal)}\n'
-          'Выбрано позиций: ${_selectedItems.length}',
+          AppLocalizations.of(ctx)!.refundConfirmBody(
+            Formatters.price(_refundTotal),
+            _selectedItems.length.toString(),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(AppLocalizations.of(ctx)!.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               _processRefund();
             },
-            child: const Text('Подтвердить',
-                style: TextStyle(color: AppColors.error)),
+            child: Text(AppLocalizations.of(ctx)!.confirm,
+                style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -121,6 +123,7 @@ class _RefundPageState extends State<RefundPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<SalesHistoryBloc, SalesHistoryState>(
       listener: (context, state) {
         if (state is SalesHistoryLoaded && !state.isRefunding) {
@@ -140,7 +143,7 @@ class _RefundPageState extends State<RefundPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Возврат'),
+          title: Text(l10n.refund),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => context.pop(),
@@ -172,7 +175,7 @@ class _RefundPageState extends State<RefundPage> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Выберите товары для возврата',
+                                l10n.refundInstructionBanner,
                                 style: TextStyle(
                                     color: context.textPrimary,
                                     fontSize: 14),
@@ -185,7 +188,8 @@ class _RefundPageState extends State<RefundPage> {
 
                       // Receipt info
                       Text(
-                        'Чек ${widget.sale.receiptNo}',
+                        l10n.transactionDetailReceiptTitle(
+                            widget.sale.receiptNo),
                         style: TextStyle(
                           fontSize: 14,
                           color: context.textSecondary,
@@ -198,8 +202,8 @@ class _RefundPageState extends State<RefundPage> {
                         mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Товары',
-                              style: TextStyle(
+                          Text(l10n.products,
+                              style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600)),
                           TextButton(
@@ -207,8 +211,8 @@ class _RefundPageState extends State<RefundPage> {
                             child: Text(
                               _selectedItems.length ==
                                       widget.sale.items.length
-                                  ? 'Снять все'
-                                  : 'Выбрать все',
+                                  ? l10n.refundDeselectAll
+                                  : l10n.refundSelectAll,
                             ),
                           ),
                         ],
@@ -269,14 +273,14 @@ class _RefundPageState extends State<RefundPage> {
                       const SizedBox(height: 16),
 
                       // Reason
-                      const Text('Причина возврата',
-                          style: TextStyle(
+                      Text(l10n.refundReasonLabel,
+                          style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600)),
                       const SizedBox(height: 8),
                       AppTextField(
                         controller: _reasonController,
-                        hint: 'Укажите причину возврата',
+                        hint: l10n.refundReasonHint,
                         maxLines: 3,
                       ),
                     ],
@@ -297,7 +301,7 @@ class _RefundPageState extends State<RefundPage> {
                       mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Сумма возврата:',
+                        Text(l10n.refundTotalLabel,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: context.textSecondary)),
@@ -319,7 +323,7 @@ class _RefundPageState extends State<RefundPage> {
                                 is SalesHistoryLoaded &&
                             state.isRefunding;
                         return AppButton(
-                          text: 'Оформить возврат',
+                          text: l10n.refundSubmitButton,
                           type: AppButtonType.danger,
                           icon: Icons.undo,
                           onPressed: _selectedItems.isNotEmpty

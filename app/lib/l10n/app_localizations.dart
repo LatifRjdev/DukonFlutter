@@ -1762,6 +1762,60 @@ abstract class AppLocalizations {
   /// **'Возврат'**
   String get refund;
 
+  /// Refund page — confirmation dialog title. Distinct from `confirm` ("Подтвердить"), the dialog's own bare action button on the same dialog — do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтвердить возврат?'**
+  String get refundConfirmTitle;
+
+  /// Refund confirmation dialog body — combines the refund total and selected-item count into one translatable sentence (was two adjacent Dart string literals forming one Text)
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата: {amount}\nВыбрано позиций: {count}'**
+  String refundConfirmBody(String amount, String count);
+
+  /// Refund page — info banner instructing the cashier to pick which line items to refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите товары для возврата'**
+  String get refundInstructionBanner;
+
+  /// Refund page — toggle-button label that selects every line item for refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать все'**
+  String get refundSelectAll;
+
+  /// Refund page — toggle-button label that clears the line-item selection (shown when all items are already selected)
+  ///
+  /// In ru, this message translates to:
+  /// **'Снять все'**
+  String get refundDeselectAll;
+
+  /// Refund page — section header above the free-text reason field
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина возврата'**
+  String get refundReasonLabel;
+
+  /// Refund page — placeholder text inside the reason field. Distinct from `refundReasonLabel` ("Причина возврата"), the section header above it — imperative prompt vs noun label, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите причину возврата'**
+  String get refundReasonHint;
+
+  /// Refund page — bottom-bar total row label, rendered as its own Text at the left edge of a spaceBetween Row with the refund amount right-aligned opposite it (same two-Text pattern as `zakatCalculatorTaxableAmountLabel`/`zakatCalculatorZakatAmountLabel`); the trailing colon is part of the value so translators control it. Distinct from `zReportReturnsAmount` ("Сумма возвратов", plural — a Z-report aggregate over many refunds, not this single refund's total).
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата:'**
+  String get refundTotalLabel;
+
+  /// Refund page — bottom-bar primary action button that submits the refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформить возврат'**
+  String get refundSubmitButton;
+
   /// Completed sale status
   ///
   /// In ru, this message translates to:
