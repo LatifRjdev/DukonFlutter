@@ -23,10 +23,10 @@ class CategoriesPage extends StatelessWidget {
     return storeState is StoreLoaded ? storeState.selectedStore?.id ?? '' : '';
   }
 
-  String _pluralizeProducts(int count) {
-    if (count == 1) return 'товар';
-    if (count >= 2 && count <= 4) return 'товара';
-    return 'товаров';
+  String _pluralizeProducts(AppLocalizations l10n, int count) {
+    if (count == 1) return l10n.productCountOne;
+    if (count >= 2 && count <= 4) return l10n.productCountFew;
+    return l10n.productCountMany;
   }
 
   void _showCategoryDialog(BuildContext context, {String? id, String? currentName}) {
@@ -37,75 +37,82 @@ class CategoriesPage extends StatelessWidget {
     // widget tree never holds a detached controller (FE-P1-004).
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(isEditing ? 'Редактировать категорию' : 'Новая категория'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            labelText: 'Название',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
+          title: Text(
+              isEditing ? l10n.categoriesEditTitle : l10n.categoriesNewTitle),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              labelText: l10n.itemName,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+              ),
             ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) {
-                final storeId = _getStoreId(context);
-                if (isEditing) {
-                  context.read<CategoryBloc>().add(CategoryUpdateRequested(
-                    storeId: storeId,
-                    id: id,
-                    name: name,
-                  ));
-                } else {
-                  context.read<CategoryBloc>().add(CategoryCreateRequested(
-                    storeId: storeId,
-                    name: name,
-                  ));
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                final name = controller.text.trim();
+                if (name.isNotEmpty) {
+                  final storeId = _getStoreId(context);
+                  if (isEditing) {
+                    context.read<CategoryBloc>().add(CategoryUpdateRequested(
+                      storeId: storeId,
+                      id: id,
+                      name: name,
+                    ));
+                  } else {
+                    context.read<CategoryBloc>().add(CategoryCreateRequested(
+                      storeId: storeId,
+                      name: name,
+                    ));
+                  }
+                  Navigator.pop(ctx);
                 }
-                Navigator.pop(ctx);
-              }
-            },
-            child: Text(isEditing ? 'Сохранить' : 'Создать'),
-          ),
-        ],
-      ),
+              },
+              child: Text(isEditing ? l10n.save : l10n.create),
+            ),
+          ],
+        );
+      },
     ).whenComplete(controller.dispose);
   }
 
   void _confirmDelete(BuildContext context, String categoryId, String name) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Удалить категорию?'),
-        content: Text('Вы уверены, что хотите удалить "$name"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              final storeId = _getStoreId(context);
-              context.read<CategoryBloc>().add(CategoryDeleteRequested(
-                storeId: storeId,
-                id: categoryId,
-              ));
-              Navigator.pop(ctx);
-            },
-            child: const Text('Удалить',
-                style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
+          title: Text(l10n.categoriesDeleteTitle),
+          content: Text(l10n.deleteConfirmBody(name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                final storeId = _getStoreId(context);
+                context.read<CategoryBloc>().add(CategoryDeleteRequested(
+                  storeId: storeId,
+                  id: categoryId,
+                ));
+                Navigator.pop(ctx);
+              },
+              child: Text(l10n.delete,
+                  style: const TextStyle(color: AppColors.error)),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -114,7 +121,7 @@ class CategoriesPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Категории'),
+        title: Text(l10n.categories),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -138,9 +145,9 @@ class CategoriesPage extends StatelessWidget {
             if (state.categories.isEmpty) {
               return AppEmptyState(
                 icon: Icons.category_outlined,
-                title: 'Нет категорий',
-                subtitle: 'Создайте первую категорию для ваших товаров',
-                buttonText: 'Создать категорию',
+                title: l10n.categoriesEmptyTitle,
+                subtitle: l10n.categoriesEmptySubtitle,
+                buttonText: l10n.categoriesEmptyButton,
                 onButtonPressed: () => _showCategoryDialog(context),
               );
             }
@@ -173,7 +180,7 @@ class CategoriesPage extends StatelessWidget {
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 2),
-                            Text('${category.productCount} ${_pluralizeProducts(category.productCount)}',
+                            Text('${category.productCount} ${_pluralizeProducts(l10n, category.productCount)}',
                                 style: TextStyle(
                                     fontSize: 13,
                                     color: context.textSecondary)),

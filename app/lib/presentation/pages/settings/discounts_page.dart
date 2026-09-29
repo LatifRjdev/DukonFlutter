@@ -77,7 +77,7 @@ class _DiscountsPageState extends State<DiscountsPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(AppLocalizations.of(ctx)!.discountsDeleteTitle),
-        content: Text(AppLocalizations.of(ctx)!.discountsDeleteConfirmBody(name)),
+        content: Text(AppLocalizations.of(ctx)!.deleteConfirmBody(name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),

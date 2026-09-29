@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'Это действие нельзя отменить.'**
   String get actionCannotBeUndone;
 
+  /// Generic delete-confirmation dialog body naming the item being deleted — reused by the discounts and categories list screens. Was `discountsDeleteConfirmBody`; promoted to an unprefixed generic key (value unchanged) when the categories screen needed the identical wording, rather than minting a duplicate value. Distinct from `actionCannotBeUndone` ("Это действие нельзя отменить."), which warns about irreversibility without naming the item
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы уверены, что хотите удалить \"{name}\"?'**
+  String deleteConfirmBody(String name);
+
   /// Edit button
   ///
   /// In ru, this message translates to:
@@ -754,11 +760,89 @@ abstract class AppLocalizations {
   /// **'Склад'**
   String get addProductStepStock;
 
+  /// Add-product step 1 — product name form field label with a required-field asterisk; distinct from `productName` ("Название товара", the same wording without the asterisk, used where the field is not marked required)
+  ///
+  /// In ru, this message translates to:
+  /// **'Название товара *'**
+  String get addProductNameRequiredLabel;
+
+  /// Add-product step 1 — SKU field label including the parenthetical latin hint; distinct from the bare `sku` key ("Артикул")
+  ///
+  /// In ru, this message translates to:
+  /// **'Артикул (SKU)'**
+  String get addProductSkuLabel;
+
+  /// Add-product step 1 — accepted image formats and size limit hint under the photo upload zone
+  ///
+  /// In ru, this message translates to:
+  /// **'JPG, PNG до 5MB'**
+  String get addProductImageSizeHint;
+
+  /// Add-product step 3 — opening stock quantity form field label with a required-field asterisk; distinct from `quantity` ("Количество"), the bare generic label
+  ///
+  /// In ru, this message translates to:
+  /// **'Начальное количество *'**
+  String get addProductInitialQuantityLabel;
+
+  /// Validation error shown when the add-product initial quantity field is left empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите количество'**
+  String get addProductQuantityRequiredError;
+
+  /// Add-product step 3 — minimum stock threshold form field label; distinct from `productDetailMinStockLine` ("Минимальный: {qty} {unit}"), a product detail read-out line
+  ///
+  /// In ru, this message translates to:
+  /// **'Минимальный остаток'**
+  String get addProductMinStockLabel;
+
+  /// Add-product step 3 — section heading above the product photo upload zone
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото товара'**
+  String get addProductPhotoSectionLabel;
+
+  /// Add-product step 3 — hint inside the empty photo upload zone prompting the user to tap it
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите для загрузки'**
+  String get addProductTapToUploadHint;
+
+  /// Success snackbar after the add-product wizard submits — tells the user the product is saved locally and will sync in the background
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар сохранён. Синхронизация в фоне.'**
+  String get addProductSavedSyncingMessage;
+
+  /// Generic 'Add photo' call-to-action inside an empty image upload zone (add-product step 1) — distinct from `a11yUploadPhoto` ("Загрузить фото", the screen-reader label on that same zone) and `editProfileChangePhotoLabel` ("Изменить фото", replacing an existing photo)
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить фото'**
+  String get addPhotoLabel;
+
   /// Product name field
   ///
   /// In ru, this message translates to:
   /// **'Название товара'**
   String get productName;
+
+  /// Russian singular form of 'product(s)' used after a count on the categories list (e.g. "1 товар") — deliberately three separate keys rather than an ICU plural, per this file's String-only placeholder convention (mirrors recordsCountOne/Few/Many)
+  ///
+  /// In ru, this message translates to:
+  /// **'товар'**
+  String get productCountOne;
+
+  /// Russian few-form (2-4) of 'product(s)', same usage as productCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'товара'**
+  String get productCountFew;
+
+  /// Russian many-form (0, 5+, 11-14) of 'product(s)', same usage as productCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'товаров'**
+  String get productCountMany;
 
   /// Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment/discount name) — distinct from `name` ("Имя", a person's name) and `productName` ("Название товара", the fuller product-specific label)
   ///
@@ -903,6 +987,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Категории'**
   String get categories;
+
+  /// Category create/edit dialog title when editing an existing category — same wording as the `a11yEditCategory` tooltip but a different UI role (dialog title vs. icon-button tooltip), kept as a separate key (mirrors the discountsEditTitle / a11yEditDiscount split)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать категорию'**
+  String get categoriesEditTitle;
+
+  /// Category create/edit dialog title when creating a new category — shared a source line with categoriesEditTitle in a ternary, so it was missed by check_i18n.dart's one-match-per-line scan
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая категория'**
+  String get categoriesNewTitle;
+
+  /// Delete-confirmation dialog title on the categories list page — distinct from `a11yDeleteCategory` ("Удалить категорию", no question mark), which is the row's delete icon-button tooltip
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить категорию?'**
+  String get categoriesDeleteTitle;
+
+  /// Categories list empty-state heading
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет категорий'**
+  String get categoriesEmptyTitle;
+
+  /// Categories list empty-state body text
+  ///
+  /// In ru, this message translates to:
+  /// **'Создайте первую категорию для ваших товаров'**
+  String get categoriesEmptySubtitle;
+
+  /// Categories list empty-state call-to-action button — distinct from `create` ("Создать"), the bare generic verb
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать категорию'**
+  String get categoriesEmptyButton;
 
   /// All categories filter
   ///
@@ -5990,12 +6110,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить скидку?'**
   String get discountsDeleteTitle;
-
-  /// No description provided for @discountsDeleteConfirmBody.
-  ///
-  /// In ru, this message translates to:
-  /// **'Вы уверены, что хотите удалить \"{name}\"?'**
-  String discountsDeleteConfirmBody(String name);
 
   /// Discount create/edit bottom sheet header when editing an existing discount — same wording as the `a11yEditDiscount` tooltip but a different UI role (sheet header vs. icon-button tooltip), kept as a separate key
   ///

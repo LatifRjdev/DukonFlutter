@@ -27,6 +27,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get actionCannotBeUndone => 'Это действие нельзя отменить.';
 
   @override
+  String deleteConfirmBody(String name) {
+    return 'Вы уверены, что хотите удалить \"$name\"?';
+  }
+
+  @override
   String get edit => 'Редактировать';
 
   @override
@@ -355,7 +360,47 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addProductStepStock => 'Склад';
 
   @override
+  String get addProductNameRequiredLabel => 'Название товара *';
+
+  @override
+  String get addProductSkuLabel => 'Артикул (SKU)';
+
+  @override
+  String get addProductImageSizeHint => 'JPG, PNG до 5MB';
+
+  @override
+  String get addProductInitialQuantityLabel => 'Начальное количество *';
+
+  @override
+  String get addProductQuantityRequiredError => 'Введите количество';
+
+  @override
+  String get addProductMinStockLabel => 'Минимальный остаток';
+
+  @override
+  String get addProductPhotoSectionLabel => 'Фото товара';
+
+  @override
+  String get addProductTapToUploadHint => 'Нажмите для загрузки';
+
+  @override
+  String get addProductSavedSyncingMessage =>
+      'Товар сохранён. Синхронизация в фоне.';
+
+  @override
+  String get addPhotoLabel => 'Добавить фото';
+
+  @override
   String get productName => 'Название товара';
+
+  @override
+  String get productCountOne => 'товар';
+
+  @override
+  String get productCountFew => 'товара';
+
+  @override
+  String get productCountMany => 'товаров';
 
   @override
   String get itemName => 'Название';
@@ -430,6 +475,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get categories => 'Категории';
+
+  @override
+  String get categoriesEditTitle => 'Редактировать категорию';
+
+  @override
+  String get categoriesNewTitle => 'Новая категория';
+
+  @override
+  String get categoriesDeleteTitle => 'Удалить категорию?';
+
+  @override
+  String get categoriesEmptyTitle => 'Нет категорий';
+
+  @override
+  String get categoriesEmptySubtitle =>
+      'Создайте первую категорию для ваших товаров';
+
+  @override
+  String get categoriesEmptyButton => 'Создать категорию';
 
   @override
   String get allCategories => 'Все категории';
@@ -3181,11 +3245,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get discountsDeleteTitle => 'Удалить скидку?';
-
-  @override
-  String discountsDeleteConfirmBody(String name) {
-    return 'Вы уверены, что хотите удалить \"$name\"?';
-  }
 
   @override
   String get discountsEditTitle => 'Редактировать скидку';
