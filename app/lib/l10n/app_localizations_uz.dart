@@ -1305,6 +1305,59 @@ class AppLocalizationsUz extends AppLocalizations {
   String get about => 'Ilova haqida';
 
   @override
+  String get notificationSettingsPageTitle => 'Настройки уведомлений';
+
+  @override
+  String get notificationSettingsSubtitle =>
+      'Выберите какие уведомления вы хотите получать';
+
+  @override
+  String get notificationSettingsLowStockTitle => 'Низкий остаток';
+
+  @override
+  String get notificationSettingsLowStockSubtitle =>
+      'Когда товар заканчивается на складе';
+
+  @override
+  String get notificationSettingsNewSaleSubtitle =>
+      'Когда кассир оформляет продажу';
+
+  @override
+  String get notificationSettingsShiftClosedTitle => 'Закрытие смены';
+
+  @override
+  String get notificationSettingsShiftClosedSubtitle =>
+      'Когда смена закрывается';
+
+  @override
+  String get notificationSettingsDeliveryTitle => 'Доставка выполнена';
+
+  @override
+  String get notificationSettingsDeliverySubtitle =>
+      'Когда курьер доставил заказ';
+
+  @override
+  String get notificationSettingsDebtReminderTitle => 'Напоминание о долге';
+
+  @override
+  String get notificationSettingsDebtReminderSubtitle =>
+      'Просроченные долги клиентов (> 7 дней)';
+
+  @override
+  String get notificationSettingsStaleProductTitle => 'Залежалый товар';
+
+  @override
+  String get notificationSettingsStaleProductSubtitle =>
+      'Уведомлять, если товар не продаётся N дней и остаток ещё большой';
+
+  @override
+  String get notificationSettingsDaysWithoutSaleLabel => 'Дней без продаж';
+
+  @override
+  String get notificationSettingsRemainingPercentLabel =>
+      'Остаток, % от партии';
+
+  @override
   String get settingsLogoutTitle => 'Выход';
 
   @override

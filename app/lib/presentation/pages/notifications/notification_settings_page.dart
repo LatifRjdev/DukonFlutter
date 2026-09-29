@@ -132,10 +132,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.surface,
       appBar: AppBar(
-        title: const Text('Настройки уведомлений'),
+        title: Text(l10n.notificationSettingsPageTitle),
         backgroundColor: context.surface,
         elevation: 0,
       ),
@@ -147,7 +148,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 padding: const EdgeInsets.all(AppConstants.spacingMd),
                 children: [
                   Text(
-                    'Выберите какие уведомления вы хотите получать',
+                    l10n.notificationSettingsSubtitle,
                     style: TextStyle(
                       fontSize: 14,
                       color: context.textSecondary,
@@ -156,36 +157,36 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
                   _buildSwitch(
-                    'Низкий остаток',
-                    'Когда товар заканчивается на складе',
+                    l10n.notificationSettingsLowStockTitle,
+                    l10n.notificationSettingsLowStockSubtitle,
                     Icons.inventory_2_outlined,
                     _lowStock,
                     (v) => setState(() => _lowStock = v),
                   ),
                   _buildSwitch(
-                    'Новая продажа',
-                    'Когда кассир оформляет продажу',
+                    l10n.newSale,
+                    l10n.notificationSettingsNewSaleSubtitle,
                     Icons.shopping_cart_outlined,
                     _newSale,
                     (v) => setState(() => _newSale = v),
                   ),
                   _buildSwitch(
-                    'Закрытие смены',
-                    'Когда смена закрывается',
+                    l10n.notificationSettingsShiftClosedTitle,
+                    l10n.notificationSettingsShiftClosedSubtitle,
                     Icons.access_time_outlined,
                     _shiftClosed,
                     (v) => setState(() => _shiftClosed = v),
                   ),
                   _buildSwitch(
-                    'Доставка выполнена',
-                    'Когда курьер доставил заказ',
+                    l10n.notificationSettingsDeliveryTitle,
+                    l10n.notificationSettingsDeliverySubtitle,
                     Icons.local_shipping_outlined,
                     _deliveryCompleted,
                     (v) => setState(() => _deliveryCompleted = v),
                   ),
                   _buildSwitch(
-                    'Напоминание о долге',
-                    'Просроченные долги клиентов (> 7 дней)',
+                    l10n.notificationSettingsDebtReminderTitle,
+                    l10n.notificationSettingsDebtReminderSubtitle,
                     Icons.warning_amber_outlined,
                     _debtReminder,
                     (v) => setState(() => _debtReminder = v),
@@ -206,16 +207,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Залежалый товар',
-                            style: TextStyle(
+                          Text(
+                            l10n.notificationSettingsStaleProductTitle,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Inter',
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Уведомлять, если товар не продаётся N дней и остаток ещё большой',
+                            l10n.notificationSettingsStaleProductSubtitle,
                             style: TextStyle(
                               fontSize: 12,
                               color: context.textSecondary,
@@ -227,9 +228,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                             keyboardType: TextInputType.number,
                             validator: _validateDaysThreshold,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                              labelText: 'Дней без продаж',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText:
+                                  l10n.notificationSettingsDaysWithoutSaleLabel,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -238,9 +240,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                             keyboardType: TextInputType.number,
                             validator: _validatePercentThreshold,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                              labelText: 'Остаток, % от партии',
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              labelText:
+                                  l10n.notificationSettingsRemainingPercentLabel,
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                         ],
@@ -263,7 +266,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       ),
                       child: Builder(
                         builder: (ctx) => Text(
-                          'Сохранить',
+                          l10n.save,
                           style: TextStyle(
                             color: ctx.onPrimary,
                             fontSize: 16,

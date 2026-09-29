@@ -2476,6 +2476,96 @@ abstract class AppLocalizations {
   /// **'О приложении'**
   String get about;
 
+  /// Notification settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки уведомлений'**
+  String get notificationSettingsPageTitle;
+
+  /// Notification settings screen — intro subtitle above the switch list
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите какие уведомления вы хотите получать'**
+  String get notificationSettingsSubtitle;
+
+  /// Notification settings — low-stock alert switch title; distinct from `lowStock` ("Мало на складе"), a differently-worded stock-status label used on the product list page
+  ///
+  /// In ru, this message translates to:
+  /// **'Низкий остаток'**
+  String get notificationSettingsLowStockTitle;
+
+  /// No description provided for @notificationSettingsLowStockSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда товар заканчивается на складе'**
+  String get notificationSettingsLowStockSubtitle;
+
+  /// Notification settings — new-sale alert switch subtitle (the switch title itself reuses `newSale`, "Новая продажа")
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда кассир оформляет продажу'**
+  String get notificationSettingsNewSaleSubtitle;
+
+  /// No description provided for @notificationSettingsShiftClosedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрытие смены'**
+  String get notificationSettingsShiftClosedTitle;
+
+  /// No description provided for @notificationSettingsShiftClosedSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда смена закрывается'**
+  String get notificationSettingsShiftClosedSubtitle;
+
+  /// No description provided for @notificationSettingsDeliveryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставка выполнена'**
+  String get notificationSettingsDeliveryTitle;
+
+  /// No description provided for @notificationSettingsDeliverySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда курьер доставил заказ'**
+  String get notificationSettingsDeliverySubtitle;
+
+  /// No description provided for @notificationSettingsDebtReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминание о долге'**
+  String get notificationSettingsDebtReminderTitle;
+
+  /// No description provided for @notificationSettingsDebtReminderSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просроченные долги клиентов (> 7 дней)'**
+  String get notificationSettingsDebtReminderSubtitle;
+
+  /// No description provided for @notificationSettingsStaleProductTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Залежалый товар'**
+  String get notificationSettingsStaleProductTitle;
+
+  /// No description provided for @notificationSettingsStaleProductSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомлять, если товар не продаётся N дней и остаток ещё большой'**
+  String get notificationSettingsStaleProductSubtitle;
+
+  /// Notification settings — label of the numeric field setting how many days without a sale marks a product as stale
+  ///
+  /// In ru, this message translates to:
+  /// **'Дней без продаж'**
+  String get notificationSettingsDaysWithoutSaleLabel;
+
+  /// Notification settings — label of the numeric field setting the minimum remaining stock, as a percentage of the original batch, for the stale-product alert to fire
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток, % от партии'**
+  String get notificationSettingsRemainingPercentLabel;
+
   /// Settings page — logout confirmation dialog title
   ///
   /// In ru, this message translates to:
