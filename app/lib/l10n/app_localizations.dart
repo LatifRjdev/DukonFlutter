@@ -754,7 +754,7 @@ abstract class AppLocalizations {
   /// **'Цены'**
   String get addProductStepPrices;
 
-  /// Add-product wizard step indicator label — step 3 (stock)
+  /// Add-product wizard step indicator label — step 3 (stock). Distinct from `staffRoleWarehouseShort` (literally the same word "Склад" but meaning the warehouse staff role on the staff list page)
   ///
   /// In ru, this message translates to:
   /// **'Склад'**
@@ -1750,7 +1750,7 @@ abstract class AppLocalizations {
   /// **'Долг'**
   String get debtLabel;
 
-  /// No description provided for @salesFilterStatusSectionLabel.
+  /// Sales-filter bottom sheet — section header above the order-status filter chips. Distinct from `staffStatusLabel` ("Статус"), the staff detail page's on-shift stat-column label
   ///
   /// In ru, this message translates to:
   /// **'Статус'**
@@ -1816,7 +1816,7 @@ abstract class AppLocalizations {
   /// **'записей'**
   String get recordsCountMany;
 
-  /// Today's sales
+  /// Today's sales ("Продажи за сегодня"). Distinct from `staffTodaySalesLabel` ("Продажи сегодня", without the preposition "за"), the staff detail page's stats-row label
   ///
   /// In ru, this message translates to:
   /// **'Продажи за сегодня'**
@@ -3586,7 +3586,7 @@ abstract class AppLocalizations {
   /// **'День'**
   String get day;
 
-  /// No description provided for @today.
+  /// Generic capitalised "Today" period label/chip. Distinct from `staffCardTodayLabel` ("сегодня", lowercase), the caption under the staff card's today-sales amount
   ///
   /// In ru, this message translates to:
   /// **'Сегодня'**
@@ -5224,6 +5224,66 @@ abstract class AppLocalizations {
   /// **'Имя сотрудника'**
   String get staffFormNameLabel;
 
+  /// Short warehouse-role badge label on the staff list page ("Склад"). Distinct from `warehouse` ("Складовщик"), the person-noun form of the same role used on the staff card/detail badges, and from `addProductStepStock` (literally the same word "Склад" but meaning the add-product wizard's stock/quantity step, not a staff role)
+  ///
+  /// In ru, this message translates to:
+  /// **'Склад'**
+  String get staffRoleWarehouseShort;
+
+  /// Staff detail page — label under the on-shift/off-shift stat column. Distinct from `salesFilterStatusSectionLabel` ("Статус"), which is the sales-filter bottom sheet's section header above the order-status chips
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get staffStatusLabel;
+
+  /// Staff detail page — value of the status stat column when the employee has no open shift ("Нет смены", literally 'no shift'). Distinct from `notOnShift` ("Не на смене", literally 'not on shift'), the differently-worded form the staff list page shows next to its status dot
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет смены'**
+  String get staffNotOnShiftStatusDetail;
+
+  /// Staff detail page — title of the statistics tab, alongside the shifts tab (`shifts`)
+  ///
+  /// In ru, this message translates to:
+  /// **'Статистика'**
+  String get staffStatsTabLabel;
+
+  /// Staff detail page statistics tab — row label for the employee's sales total today. Distinct from `todaySales` ("Продажи за сегодня"), the fuller wording with the preposition "за" used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи сегодня'**
+  String get staffTodaySalesLabel;
+
+  /// Staff detail page statistics tab — row label for the date the employee record was created
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата регистрации'**
+  String get staffRegistrationDateLabel;
+
+  /// Staff list page empty-state title shown when the store has no employees yet. Distinct from `noEmployees` ("Нет сотрудников"), the shorter wording used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Сотрудников пока нет'**
+  String get staffListEmptyTitle;
+
+  /// Staff list page empty-state subtitle explaining why to add employees (shift and payroll tracking)
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте сотрудников для учёта смен и зарплаты'**
+  String get staffListEmptySubtitle;
+
+  /// Staff list page — inline "today's sales" line next to an on-shift employee's status dot; a single contiguous text run, so label and pre-formatted amount share one key
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня: {amount}'**
+  String staffListTodaySalesLine(String amount);
+
+  /// Staff card widget — lowercase caption under the employee's today-sales amount ("сегодня"). Distinct from `today` ("Сегодня", capitalised), which is used as a standalone period label/chip
+  ///
+  /// In ru, this message translates to:
+  /// **'сегодня'**
+  String get staffCardTodayLabel;
+
   /// No description provided for @role.
   ///
   /// In ru, this message translates to:
@@ -5248,7 +5308,7 @@ abstract class AppLocalizations {
   /// **'Кассир'**
   String get cashier;
 
-  /// No description provided for @warehouse.
+  /// Warehouse-keeper role label as a person noun ("Складовщик"), used on the staff card and staff detail badges. Distinct from `staffRoleWarehouseShort` ("Склад"), the shortened form the staff list page's badge uses
   ///
   /// In ru, this message translates to:
   /// **'Складовщик'**
@@ -5302,7 +5362,7 @@ abstract class AppLocalizations {
   /// **'На смене'**
   String get isOnShift;
 
-  /// No description provided for @notOnShift.
+  /// Off-shift status text next to the staff list page's status dot ("Не на смене"). Distinct from `staffNotOnShiftStatusDetail` ("Нет смены"), the differently-worded value the staff detail page's status stat column shows
   ///
   /// In ru, this message translates to:
   /// **'Не на смене'**
@@ -5925,13 +5985,13 @@ abstract class AppLocalizations {
   /// **'Добавление расходов'**
   String get addExpenses;
 
-  /// No description provided for @manageCustomers.
+  /// Permission label "Управление клиентами" (clients). Distinct from `permissionManageCustomersLabel` ("Управление покупателями", buyers/shoppers) — the roles screen's permission matrix uses that differently-worded variant for the same underlying `manage_customers` permission
   ///
   /// In ru, this message translates to:
   /// **'Управление клиентами'**
   String get manageCustomers;
 
-  /// No description provided for @manageStaff.
+  /// Permission label "Управление сотрудниками" (employees). Distinct from `permissionManageStaffLabel` ("Управление персоналом", personnel) — the roles screen's permission matrix uses that differently-worded variant for the same underlying `manage_staff` permission
   ///
   /// In ru, this message translates to:
   /// **'Управление сотрудниками'**
@@ -5942,6 +6002,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Просмотр отчётов'**
   String get viewReports;
+
+  /// Roles screen permission-matrix label for the `manage_staff` permission ("Управление персоналом", personnel). Distinct from `manageStaff` ("Управление сотрудниками", employees), the wording used by the older staff-permissions UI for the same permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление персоналом'**
+  String get permissionManageStaffLabel;
+
+  /// Roles screen permission-matrix label for the `manage_expenses` permission. Distinct from `addExpenses` ("Добавление расходов"), which names only the add-expense capability
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление расходами'**
+  String get permissionManageExpensesLabel;
+
+  /// Roles screen permission-matrix label for the `manage_customers` permission ("Управление покупателями", buyers/shoppers). Distinct from `manageCustomers` ("Управление клиентами", clients), the wording used by the older staff-permissions UI for the same permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление покупателями'**
+  String get permissionManageCustomersLabel;
+
+  /// Roles screen permission-matrix label for the `manage_suppliers` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление поставщиками'**
+  String get permissionManageSuppliersLabel;
+
+  /// Roles screen permission-matrix label for the `manage_stock` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление складом'**
+  String get permissionManageStockLabel;
+
+  /// Roles screen permission-matrix label for the `manage_debts` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление долгами'**
+  String get permissionManageDebtsLabel;
+
+  /// Roles screen permission-matrix label for the `manage_settings` permission — worded as "Настройки магазина" (store settings) rather than as a manage-* phrase
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки магазина'**
+  String get permissionManageSettingsLabel;
+
+  /// Roles screen permission-matrix label for the `open_close_shift` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Открытие/закрытие смены'**
+  String get permissionOpenCloseShiftLabel;
+
+  /// Roles screen permission-matrix label for the `apply_discounts` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Применение скидок'**
+  String get permissionApplyDiscountsLabel;
+
+  /// Roles screen permission-matrix label for the `manage_payroll` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление зарплатой'**
+  String get permissionManagePayrollLabel;
 
   /// No description provided for @employeeCreated.
   ///

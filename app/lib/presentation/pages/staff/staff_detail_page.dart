@@ -39,15 +39,16 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
   }
 
   String _roleLabel(String role) {
+    final l10n = AppLocalizations.of(context)!;
     switch (role) {
       case 'OWNER':
-        return 'Владелец';
+        return l10n.owner;
       case 'ADMIN':
-        return 'Админ';
+        return l10n.adminRoleShort;
       case 'CASHIER':
-        return 'Кассир';
+        return l10n.cashier;
       case 'WAREHOUSE':
-        return 'Складовщик';
+        return l10n.warehouse;
       default:
         return role;
     }
@@ -73,7 +74,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Профиль сотрудника'),
+        title: Text(l10n.employeeDetail),
         actions: [
           BlocBuilder<StaffBloc, StaffState>(
             builder: (context, state) {
@@ -161,16 +162,16 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           _InfoColumn(
-                            label: 'Оклад',
+                            label: l10n.baseSalary,
                             value: member.salary != null ? '${member.salary!.toStringAsFixed(0)} TJS' : '-',
                           ),
                           _InfoColumn(
-                            label: 'Комиссия',
+                            label: l10n.commission,
                             value: member.commission != null ? '${member.commission!.toStringAsFixed(1)}%' : '-',
                           ),
                           _InfoColumn(
-                            label: 'Статус',
-                            value: member.isOnShift ? 'На смене' : 'Нет смены',
+                            label: l10n.staffStatusLabel,
+                            value: member.isOnShift ? l10n.isOnShift : l10n.staffNotOnShiftStatusDetail,
                             valueColor: member.isOnShift ? AppColors.success : context.textSecondary,
                           ),
                         ],
@@ -183,9 +184,9 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
                   labelColor: AppColors.primary,
                   unselectedLabelColor: context.textSecondary,
                   indicatorColor: AppColors.primary,
-                  tabs: const [
-                    Tab(text: 'Смены'),
-                    Tab(text: 'Статистика'),
+                  tabs: [
+                    Tab(text: l10n.shifts),
+                    Tab(text: l10n.staffStatsTabLabel),
                   ],
                 ),
                 Expanded(
@@ -240,6 +241,7 @@ class _ShiftsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<ShiftBloc, ShiftState>(
       builder: (context, state) {
         if (state is ShiftLoading) {
@@ -248,7 +250,7 @@ class _ShiftsTab extends StatelessWidget {
         if (state is ShiftLoaded) {
           if (state.shifts.isEmpty) {
             return Center(
-              child: Text('Нет смен', style: TextStyle(color: context.textSecondary, fontSize: 16)),
+              child: Text(l10n.noShifts, style: TextStyle(color: context.textSecondary, fontSize: 16)),
             );
           }
           return ListView.separated(
@@ -276,13 +278,14 @@ class _StatsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       child: Column(
         children: [
-          _StatRow(label: 'Продажи сегодня', value: '${member.todaySales?.toStringAsFixed(0) ?? "0"} TJS'),
+          _StatRow(label: l10n.staffTodaySalesLabel, value: '${member.todaySales?.toStringAsFixed(0) ?? "0"} TJS'),
           Divider(height: 1, color: context.border),
-          _StatRow(label: 'Дата регистрации', value: '${member.createdAt.day.toString().padLeft(2, '0')}.${member.createdAt.month.toString().padLeft(2, '0')}.${member.createdAt.year}'),
+          _StatRow(label: l10n.staffRegistrationDateLabel, value: '${member.createdAt.day.toString().padLeft(2, '0')}.${member.createdAt.month.toString().padLeft(2, '0')}.${member.createdAt.year}'),
         ],
       ),
     );

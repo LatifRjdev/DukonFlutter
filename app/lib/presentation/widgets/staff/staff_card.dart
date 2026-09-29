@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/staff_member.dart';
 import '../common/app_card.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class StaffCard extends StatelessWidget {
   final StaffMember staff;
@@ -12,16 +13,17 @@ class StaffCard extends StatelessWidget {
 
   const StaffCard({super.key, required this.staff, this.onTap, this.onDelete});
 
-  String _roleLabel(String role) {
+  String _roleLabel(BuildContext context, String role) {
+    final l10n = AppLocalizations.of(context)!;
     switch (role) {
       case 'OWNER':
-        return 'Владелец';
+        return l10n.owner;
       case 'ADMIN':
-        return 'Админ';
+        return l10n.adminRoleShort;
       case 'CASHIER':
-        return 'Кассир';
+        return l10n.cashier;
       case 'WAREHOUSE':
-        return 'Складовщик';
+        return l10n.warehouse;
       default:
         return role;
     }
@@ -44,6 +46,7 @@ class StaffCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final roleColor = _roleColor(context, staff.role);
 
     return AppCard(
@@ -98,7 +101,7 @@ class StaffCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                       ),
                       child: Text(
-                        _roleLabel(staff.role),
+                        _roleLabel(context, staff.role),
                         style: TextStyle(color: roleColor, fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -123,7 +126,7 @@ class StaffCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.success),
                 ),
                 Text(
-                  'сегодня',
+                  l10n.staffCardTodayLabel,
                   style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],

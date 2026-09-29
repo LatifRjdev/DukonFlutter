@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class PermissionToggleRow extends StatelessWidget {
   final String permissionKey;
@@ -21,36 +22,37 @@ class PermissionToggleRow extends StatelessWidget {
     this.onChanged,
   });
 
-  static String permissionLabel(String key) {
+  static String permissionLabel(BuildContext context, String key) {
+    final l10n = AppLocalizations.of(context)!;
     switch (key) {
       case 'manage_products':
-        return 'Управление товарами';
+        return l10n.manageProducts;
       case 'manage_sales':
-        return 'Продажи';
+        return l10n.sales;
       case 'manage_returns':
-        return 'Возвраты';
+        return l10n.returns;
       case 'view_reports':
-        return 'Просмотр отчётов';
+        return l10n.viewReports;
       case 'manage_staff':
-        return 'Управление персоналом';
+        return l10n.permissionManageStaffLabel;
       case 'manage_expenses':
-        return 'Управление расходами';
+        return l10n.permissionManageExpensesLabel;
       case 'manage_customers':
-        return 'Управление покупателями';
+        return l10n.permissionManageCustomersLabel;
       case 'manage_suppliers':
-        return 'Управление поставщиками';
+        return l10n.permissionManageSuppliersLabel;
       case 'manage_stock':
-        return 'Управление складом';
+        return l10n.permissionManageStockLabel;
       case 'manage_debts':
-        return 'Управление долгами';
+        return l10n.permissionManageDebtsLabel;
       case 'manage_settings':
-        return 'Настройки магазина';
+        return l10n.permissionManageSettingsLabel;
       case 'open_close_shift':
-        return 'Открытие/закрытие смены';
+        return l10n.permissionOpenCloseShiftLabel;
       case 'apply_discounts':
-        return 'Применение скидок';
+        return l10n.permissionApplyDiscountsLabel;
       case 'manage_payroll':
-        return 'Управление зарплатой';
+        return l10n.permissionManagePayrollLabel;
       default:
         return key;
     }

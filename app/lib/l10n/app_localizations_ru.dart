@@ -2778,6 +2778,39 @@ class AppLocalizationsRu extends AppLocalizations {
   String get staffFormNameLabel => 'Имя сотрудника';
 
   @override
+  String get staffRoleWarehouseShort => 'Склад';
+
+  @override
+  String get staffStatusLabel => 'Статус';
+
+  @override
+  String get staffNotOnShiftStatusDetail => 'Нет смены';
+
+  @override
+  String get staffStatsTabLabel => 'Статистика';
+
+  @override
+  String get staffTodaySalesLabel => 'Продажи сегодня';
+
+  @override
+  String get staffRegistrationDateLabel => 'Дата регистрации';
+
+  @override
+  String get staffListEmptyTitle => 'Сотрудников пока нет';
+
+  @override
+  String get staffListEmptySubtitle =>
+      'Добавьте сотрудников для учёта смен и зарплаты';
+
+  @override
+  String staffListTodaySalesLine(String amount) {
+    return 'Сегодня: $amount';
+  }
+
+  @override
+  String get staffCardTodayLabel => 'сегодня';
+
+  @override
   String get role => 'Роль';
 
   @override
@@ -3161,6 +3194,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get viewReports => 'Просмотр отчётов';
+
+  @override
+  String get permissionManageStaffLabel => 'Управление персоналом';
+
+  @override
+  String get permissionManageExpensesLabel => 'Управление расходами';
+
+  @override
+  String get permissionManageCustomersLabel => 'Управление покупателями';
+
+  @override
+  String get permissionManageSuppliersLabel => 'Управление поставщиками';
+
+  @override
+  String get permissionManageStockLabel => 'Управление складом';
+
+  @override
+  String get permissionManageDebtsLabel => 'Управление долгами';
+
+  @override
+  String get permissionManageSettingsLabel => 'Настройки магазина';
+
+  @override
+  String get permissionOpenCloseShiftLabel => 'Открытие/закрытие смены';
+
+  @override
+  String get permissionApplyDiscountsLabel => 'Применение скидок';
+
+  @override
+  String get permissionManagePayrollLabel => 'Управление зарплатой';
 
   @override
   String get employeeCreated => 'Сотрудник создан';
