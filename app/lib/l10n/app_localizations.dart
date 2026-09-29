@@ -2326,6 +2326,36 @@ abstract class AppLocalizations {
   /// **'Покупок: {amount}'**
   String customerListPurchasesLine(String amount);
 
+  /// Customer-detail screen's AppBar title — same Russian text as `deliveryDetailCustomerLabel` ("Клиент") but a different UI role (page title vs. an info-row label on the delivery-detail screen); kept as a separate key per convention for near-duplicate values used in different roles
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент'**
+  String get customerDetailPageTitle;
+
+  /// No description provided for @customerDetailSpentLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Потрачено'**
+  String get customerDetailSpentLabel;
+
+  /// No description provided for @customerDetailLoyaltyHistoryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'История баллов'**
+  String get customerDetailLoyaltyHistoryTitle;
+
+  /// Loyalty-history row title — signed points delta (sign is '+' or empty, both pre-formatted strings)
+  ///
+  /// In ru, this message translates to:
+  /// **'{sign}{points} баллов'**
+  String customerDetailPointsLine(String sign, String points);
+
+  /// Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site
+  ///
+  /// In ru, this message translates to:
+  /// **'до {date}'**
+  String customerDetailPointsExpiryLine(String date);
+
   /// Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode
   ///
   /// In ru, this message translates to:

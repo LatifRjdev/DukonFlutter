@@ -1221,6 +1221,25 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
+  String get customerDetailPageTitle => 'Клиент';
+
+  @override
+  String get customerDetailSpentLabel => 'Потрачено';
+
+  @override
+  String get customerDetailLoyaltyHistoryTitle => 'История баллов';
+
+  @override
+  String customerDetailPointsLine(String sign, String points) {
+    return '$sign$points баллов';
+  }
+
+  @override
+  String customerDetailPointsExpiryLine(String date) {
+    return 'до $date';
+  }
+
+  @override
   String get newSupplier => 'Новый поставщик';
 
   @override

@@ -825,6 +825,23 @@
       "amount": { "type": "String" }
     }
   },
+  "customerDetailPageTitle": "Клиент",
+  "@customerDetailPageTitle": { "description": "Customer-detail screen's AppBar title — same Russian text as `deliveryDetailCustomerLabel` (\"Клиент\") but a different UI role (page title vs. an info-row label on the delivery-detail screen); kept as a separate key per convention for near-duplicate values used in different roles" },
+  "customerDetailSpentLabel": "Потрачено",
+  "customerDetailLoyaltyHistoryTitle": "История баллов",
+  "customerDetailPointsLine": "{sign}{points} баллов",
+  "@customerDetailPointsLine": {
+    "description": "Loyalty-history row title — signed points delta (sign is '+' or empty, both pre-formatted strings)",
+    "placeholders": {
+      "sign": { "type": "String" },
+      "points": { "type": "String" }
+    }
+  },
+  "customerDetailPointsExpiryLine": "до {date}",
+  "@customerDetailPointsExpiryLine": {
+    "description": "Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site",
+    "placeholders": { "date": { "type": "String" } }
+  },
   "newSupplier": "Новый поставщик",
   "@newSupplier": { "description": "Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode" },
   "editSupplier": "Редактировать поставщика",
