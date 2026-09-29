@@ -91,12 +91,12 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                     child: Row(
                       children: [
                         IconButton(
-                          tooltip: 'Назад',
+                          tooltip: l10n.back,
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () => context.pop(),
                         ),
-                        const Text('Оплата наличными',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                        Text(l10n.cashPaymentPageTitle,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),
@@ -116,7 +116,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                             ),
                             child: Column(
                               children: [
-                                Text('Сумма к оплате',
+                                Text(l10n.cashPaymentAmountToPayLabel,
                                   style: TextStyle(fontSize: 14, color: context.textSecondary),),
                                 const SizedBox(height: 8),
                                 Text(_formatPrice(total),
@@ -129,7 +129,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           // Received amount input
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('Получено от клиента',
+                            child: Text(l10n.cashPaymentReceivedFromCustomerLabel,
                               style: TextStyle(fontSize: 14, color: context.textSecondary)),
                           ),
                           const SizedBox(height: 8),
@@ -183,8 +183,8 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                                         border: Border.all(color: context.border),
                                         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                                       ),
-                                      child: const Text('Без сдачи',
-                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                                      child: Text(l10n.cashPaymentNoChangeButton,
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                     ),
                                   ),
                                 ),
@@ -206,7 +206,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                               ),
                               child: Column(
                                 children: [
-                                  Text(change >= 0 ? 'Сдача' : 'Недостаточно',
+                                  Text(change >= 0 ? l10n.change : l10n.cashPaymentInsufficientLabel,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: change >= 0 ? AppColors.success : AppColors.error,
@@ -243,7 +243,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                         ),
                         child: Text(
-                          isProcessing ? 'Обработка...' : 'Завершить и печатать чек',
+                          isProcessing ? l10n.processing : l10n.cashPaymentCompleteButton,
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                         ),
                       ),

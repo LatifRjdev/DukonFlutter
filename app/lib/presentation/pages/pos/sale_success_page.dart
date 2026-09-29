@@ -94,6 +94,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
   @override
   Widget build(BuildContext context) {
     final sale = widget.sale;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: context.surface,
@@ -117,14 +118,14 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Продажа оформлена!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+              Text(l10n.saleSuccessTitle,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Text(_formatPrice(sale.total),
                 style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
               if (sale.change > 0) ...[
                 const SizedBox(height: 8),
-                Text('Сдача: ${_formatPrice(sale.change)}',
+                Text(l10n.saleSuccessChangeLine(_formatPrice(sale.change)),
                   style: TextStyle(fontSize: 16, color: context.textSecondary)),
               ],
               const Spacer(),
@@ -141,8 +142,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   icon: const Icon(Icons.print_outlined, size: 20),
-                  label: const Text('Печатать чек',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  label: Text(l10n.printReceiptButton,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -159,8 +160,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
                   icon: const Icon(Icons.send_outlined, size: 20),
-                  label: const Text('Отправить в Telegram',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  label: Text(l10n.saleSuccessSendToTelegramButton,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -174,8 +175,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
                     foregroundColor: context.onPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                   ),
-                  child: const Text('Новая продажа',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  child: Text(l10n.newSale,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 ),
               ),
             ],
@@ -187,6 +188,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
 
   void _showShareOptions(BuildContext context) {
     final sale = widget.sale;
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (_) => SafeArea(
@@ -206,7 +208,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
               title: const Text('WhatsApp'),
               onTap: () {
                 Navigator.pop(context);
-                Share.share('Чек #${sale.receiptNo}\nИтого: ${sale.total.toStringAsFixed(2)} сом.');
+                Share.share(l10n.saleSuccessReceiptShareTextWhatsapp(
+                    sale.receiptNo, sale.total.toStringAsFixed(2)));
               },
             ),
             ListTile(
@@ -214,7 +217,8 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
               title: const Text('SMS'),
               onTap: () {
                 Navigator.pop(context);
-                Share.share('Чек #${sale.receiptNo}, Итого: ${sale.total.toStringAsFixed(2)} сом.');
+                Share.share(l10n.saleSuccessReceiptShareTextSms(
+                    sale.receiptNo, sale.total.toStringAsFixed(2)));
               },
             ),
           ],

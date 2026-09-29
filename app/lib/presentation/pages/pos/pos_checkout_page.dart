@@ -557,7 +557,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(l10n.posCheckoutTotalCaps, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                    Text(l10n.totalCaps, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                     Text(_formatPrice(cartState.total),
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                   ],

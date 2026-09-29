@@ -1486,6 +1486,12 @@ abstract class AppLocalizations {
   /// **'Итого'**
   String get total;
 
+  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed: the same all-caps form is the grand-total label on the POS checkout screen, in the on-screen receipt widget, and in the printed/PDF receipt, so the caps form is a shared visual convention rather than one screen's choice (promoted from the former `posCheckoutTotalCaps`, same value).
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО'**
+  String get totalCaps;
+
   /// Cash payment method
   ///
   /// In ru, this message translates to:
@@ -1551,12 +1557,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Корзина ({count} товаров)'**
   String posCheckoutCartHeader(String count);
-
-  /// All-caps totals-row label on the checkout screen, used for visual emphasis — distinct from `total` ("Итого", title case) used elsewhere; do not merge, the case difference is a deliberate style choice on this screen
-  ///
-  /// In ru, this message translates to:
-  /// **'ИТОГО'**
-  String get posCheckoutTotalCaps;
 
   /// No description provided for @posCheckoutCta.
   ///
@@ -1672,17 +1672,59 @@ abstract class AppLocalizations {
   /// **'Продажа оформлена'**
   String get saleSuccess;
 
+  /// Sale-success screen — the large headline under the green checkmark. Exclamative form; distinct from `saleSuccess` ("Продажа оформлена", no exclamation mark) which is the neutral status/confirmation wording used elsewhere. Do not merge — the trailing "!" is part of this screen's celebratory copy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа оформлена!'**
+  String get saleSuccessTitle;
+
+  /// Sale-success screen — the change-due line, rendered as one contiguous text run inside a single Text widget (label, separator and value share one style), so it is one full-sentence key rather than the bare `change` label plus manual interpolation. {amount} is the pre-formatted change amount including currency.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сдача: {amount}'**
+  String saleSuccessChangeLine(String amount);
+
+  /// Sale-success screen — button that opens the share sheet for sending the receipt (labelled for Telegram, the primary option). Distinct from `shareReceipt` ("Отправить чек", the generic share-receipt action) and from `snackReceiptSentToTelegram` (the success snackbar).
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить в Telegram'**
+  String get saleSuccessSendToTelegramButton;
+
+  /// Sale-success screen — receipt body shared via the WhatsApp option of the share sheet. Newline-separated (receipt number on the first line, total on the second), because WhatsApp preserves line breaks. Distinct from `saleSuccessReceiptShareTextSms`, which carries the same information comma-separated on a single line for SMS. {receiptNo} is the receipt number, {total} the total formatted to two decimals.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек #{receiptNo}\nИтого: {total} сом.'**
+  String saleSuccessReceiptShareTextWhatsapp(String receiptNo, String total);
+
+  /// Sale-success screen — receipt body shared via the SMS option of the share sheet. Single line, comma-separated, to stay compact in an SMS. Distinct from `saleSuccessReceiptShareTextWhatsapp`, which is the same information split across two lines with a newline. {receiptNo} is the receipt number, {total} the total formatted to two decimals.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек #{receiptNo}, Итого: {total} сом.'**
+  String saleSuccessReceiptShareTextSms(String receiptNo, String total);
+
   /// Receipt number label
   ///
   /// In ru, this message translates to:
   /// **'Чек №'**
   String get receiptNo;
 
+  /// Abbreviated quantity column header on a receipt's item table, shortened to fit a narrow receipt column — distinct from `quantity` ("Количество", the full word used where space allows). Shared by the on-screen receipt widget and the PDF receipt, which use the same abbreviated header.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол.'**
+  String get receiptQtyAbbrev;
+
   /// Print receipt action
   ///
   /// In ru, this message translates to:
   /// **'Печать чека'**
   String get printReceipt;
+
+  /// Imperative-form 'Print receipt' button label. Distinct from `printReceipt` ("Печать чека", noun form used as an action/title name) — different grammatical form, do not merge. Deliberately unprefixed: used as the print button on both the transaction-detail screen and the sale-success screen (promoted from the former `transactionDetailPrintReceiptButton`, same value).
+  ///
+  /// In ru, this message translates to:
+  /// **'Печатать чек'**
+  String get printReceiptButton;
 
   /// Share receipt action
   ///
@@ -1857,12 +1899,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Оплачен'**
   String get transactionDetailStatusPaid;
-
-  /// Imperative-form 'Print receipt' button label. Distinct from `printReceipt` ("Печать чека", noun form used elsewhere) — different grammatical form, do not merge.
-  ///
-  /// In ru, this message translates to:
-  /// **'Печатать чек'**
-  String get transactionDetailPrintReceiptButton;
 
   /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge.
   ///
@@ -3916,6 +3952,42 @@ abstract class AppLocalizations {
   /// **'Введите корректную сумму'**
   String get creditsInvalidAmountError;
 
+  /// Cash-payment screen — header title. Distinct from `cash` ("Наличные", the bare payment-method name) — this is the full screen title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата наличными'**
+  String get cashPaymentPageTitle;
+
+  /// Cash-payment screen — caption above the amount due, in its own layout slot above the large amount value (kept as a standalone label rather than a composite key, since the label and value have different type scales). Same wording as the `cardPaymentConfirmMessage` dialog body but that key is a full sentence with the amount interpolated, so they are not interchangeable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма к оплате'**
+  String get cashPaymentAmountToPayLabel;
+
+  /// Cash-payment screen — field label above the input for the cash amount handed over by the customer
+  ///
+  /// In ru, this message translates to:
+  /// **'Получено от клиента'**
+  String get cashPaymentReceivedFromCustomerLabel;
+
+  /// Cash-payment screen — visible label on the quick-amount chip that fills in the exact total so no change is due. Same Russian value as `a11yWithoutChange`, which is the Semantics label wrapping this same chip; kept as a separate key because this codebase keeps visible copy out of the `a11y*` block (cf. `share` vs `a11yShare`) so the accessibility string can be reworded independently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без сдачи'**
+  String get cashPaymentNoChangeButton;
+
+  /// Cash-payment screen — caption on the change card when the amount received is less than the total (the shortfall is shown below). The positive branch of the same ternary uses `change` ("Сдача").
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно'**
+  String get cashPaymentInsufficientLabel;
+
+  /// Cash-payment screen — primary button that completes the sale and prints the receipt (shows `processing` instead while the request is in flight)
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить и печатать чек'**
+  String get cashPaymentCompleteButton;
+
   /// Credit-sale screen — app bar title. Distinct from `debtSales` ("Продажи в долг", plural, the Z-report category label)
   ///
   /// In ru, this message translates to:
@@ -5049,6 +5121,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Кассир: Иванов И.'**
   String get receiptPreviewCashierLine;
+
+  /// Receipt-preview screen (receipt_preview_page.dart) — bare "Print" label on the action button next to the generic `share` button. Distinct from `printReceipt` ("Печать чека") and `printReceiptButton` ("Печатать чек"), both longer phrases; this button sits in a narrow two-button row and names only the action.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать'**
+  String get receiptPreviewPrintButton;
 
   /// Ecommerce settings screen — AppBar title
   ///

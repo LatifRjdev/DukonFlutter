@@ -3,6 +3,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/sale.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class ReceiptWidget extends StatelessWidget {
   final Sale sale;
@@ -16,6 +17,7 @@ class ReceiptWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingLg),
       decoration: BoxDecoration(
@@ -67,7 +69,7 @@ class ReceiptWidget extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Text(
-                  'Товар',
+                  l10n.product,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -78,7 +80,7 @@ class ReceiptWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  'Кол.',
+                  l10n.receiptQtyAbbrev,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
@@ -91,7 +93,7 @@ class ReceiptWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  'Сумма',
+                  l10n.amount,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 12,
@@ -152,14 +154,14 @@ class ReceiptWidget extends StatelessWidget {
           _buildDashedDivider(context),
           const SizedBox(height: AppConstants.spacingSm),
           // Subtotal
-          _buildTotalRow(context, 'Подытог', Formatters.price(sale.subtotal)),
+          _buildTotalRow(context, l10n.subtotal, Formatters.price(sale.subtotal)),
           if (sale.discount > 0)
-            _buildTotalRow(context, 'Скидка', '- ${Formatters.price(sale.discount)}'),
+            _buildTotalRow(context, l10n.discount, '- ${Formatters.price(sale.discount)}'),
           const SizedBox(height: AppConstants.spacingXs),
           // Total
           _buildTotalRow(
             context,
-            'ИТОГО',
+            l10n.totalCaps,
             Formatters.price(sale.total),
             isBold: true,
             fontSize: 18,
@@ -168,14 +170,14 @@ class ReceiptWidget extends StatelessWidget {
           _buildDashedDivider(context),
           const SizedBox(height: AppConstants.spacingSm),
           // Payment info
-          _buildTotalRow(context, 'Оплата', sale.paymentType),
-          _buildTotalRow(context, 'Оплачено', Formatters.price(sale.paidAmount)),
+          _buildTotalRow(context, l10n.payment, sale.paymentType),
+          _buildTotalRow(context, l10n.paidAmount, Formatters.price(sale.paidAmount)),
           if (sale.change > 0)
-            _buildTotalRow(context, 'Сдача', Formatters.price(sale.change)),
+            _buildTotalRow(context, l10n.change, Formatters.price(sale.change)),
           const SizedBox(height: AppConstants.spacingMd),
           // Footer
           Text(
-            'Спасибо за покупку!',
+            l10n.receiptPreviewDefaultFooter,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

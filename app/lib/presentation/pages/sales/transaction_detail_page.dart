@@ -244,7 +244,7 @@ class TransactionDetailPage extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.print_outlined, size: 20),
-                      label: Text(l10n.transactionDetailPrintReceiptButton,
+                      label: Text(l10n.printReceiptButton,
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                   ),

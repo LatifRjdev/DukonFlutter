@@ -761,6 +761,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get total => 'Ҳамагӣ';
 
   @override
+  String get totalCaps => 'ИТОГО';
+
+  @override
   String get cash => 'Нақд';
 
   @override
@@ -797,9 +800,6 @@ class AppLocalizationsTg extends AppLocalizations {
   String posCheckoutCartHeader(String count) {
     return 'Корзина ($count товаров)';
   }
-
-  @override
-  String get posCheckoutTotalCaps => 'ИТОГО';
 
   @override
   String posCheckoutCta(String total) {
@@ -871,10 +871,37 @@ class AppLocalizationsTg extends AppLocalizations {
   String get saleSuccess => 'Фурӯш анҷом дода шуд';
 
   @override
+  String get saleSuccessTitle => 'Продажа оформлена!';
+
+  @override
+  String saleSuccessChangeLine(String amount) {
+    return 'Сдача: $amount';
+  }
+
+  @override
+  String get saleSuccessSendToTelegramButton => 'Отправить в Telegram';
+
+  @override
+  String saleSuccessReceiptShareTextWhatsapp(String receiptNo, String total) {
+    return 'Чек #$receiptNo\nИтого: $total сом.';
+  }
+
+  @override
+  String saleSuccessReceiptShareTextSms(String receiptNo, String total) {
+    return 'Чек #$receiptNo, Итого: $total сом.';
+  }
+
+  @override
   String get receiptNo => 'Чек №';
 
   @override
+  String get receiptQtyAbbrev => 'Кол.';
+
+  @override
   String get printReceipt => 'Чопи чек';
+
+  @override
+  String get printReceiptButton => 'Печатать чек';
 
   @override
   String get shareReceipt => 'Фиристодани чек';
@@ -971,9 +998,6 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get transactionDetailStatusPaid => 'Оплачен';
-
-  @override
-  String get transactionDetailPrintReceiptButton => 'Печатать чек';
 
   @override
   String transactionDetailReceiptTitle(String receiptNo) {
@@ -2091,6 +2115,24 @@ class AppLocalizationsTg extends AppLocalizations {
   String get creditsInvalidAmountError => 'Введите корректную сумму';
 
   @override
+  String get cashPaymentPageTitle => 'Оплата наличными';
+
+  @override
+  String get cashPaymentAmountToPayLabel => 'Сумма к оплате';
+
+  @override
+  String get cashPaymentReceivedFromCustomerLabel => 'Получено от клиента';
+
+  @override
+  String get cashPaymentNoChangeButton => 'Без сдачи';
+
+  @override
+  String get cashPaymentInsufficientLabel => 'Недостаточно';
+
+  @override
+  String get cashPaymentCompleteButton => 'Завершить и печатать чек';
+
+  @override
   String get creditSaleTitle => 'Продажа в долг';
 
   @override
@@ -2681,6 +2723,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get receiptPreviewCashierLine => 'Кассир: Иванов И.';
+
+  @override
+  String get receiptPreviewPrintButton => 'Печать';
 
   @override
   String get ecommerceSettingsTitle => 'Интернет-магазин';
