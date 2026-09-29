@@ -2056,6 +2056,72 @@ abstract class AppLocalizations {
   /// **'Сбросить'**
   String get offlineResetSyncStatusConfirm;
 
+  /// Detail text passed into the generic `snackSyncError({error})` template when a manual sync partially fails
+  ///
+  /// In ru, this message translates to:
+  /// **'не удалось синхронизировать часть операций'**
+  String get offlineSyncErrorPartialDetail;
+
+  /// Offline mode page — status card headline when the sync queue is empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё синхронизировано'**
+  String get offlineAllSynced;
+
+  /// Offline mode page — status card headline when the sync queue still holds unsynced operations
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} операций в очереди'**
+  String offlinePendingOpsCount(String count);
+
+  /// Offline mode page — timestamp of the most recent successful sync
+  ///
+  /// In ru, this message translates to:
+  /// **'Последняя синхронизация: {date}'**
+  String offlineLastSyncLabel(String date);
+
+  /// Offline mode page — shown in place of offlineLastSyncLabel when no sync has ever completed on this device
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация ещё не выполнялась'**
+  String get offlineNeverSynced;
+
+  /// Offline mode page — manual-sync button label while a sync is in progress
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация...'**
+  String get offlineSyncingButton;
+
+  /// Offline mode page — manual-sync button's default (non-syncing) label
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизировать сейчас'**
+  String get offlineSyncNowButton;
+
+  /// Offline mode page — label for the auto-sync toggle
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто-синхронизация'**
+  String get offlineAutoSyncLabel;
+
+  /// Offline mode page — sub-label explaining what the auto-sync toggle does
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизировать при подключении к сети'**
+  String get offlineAutoSyncDescription;
+
+  /// Offline mode page — info banner explaining offline-first behaviour. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the transient no-connection message
+  ///
+  /// In ru, this message translates to:
+  /// **'В офлайн-режиме все операции сохраняются локально и автоматически синхронизируются при восстановлении подключения к интернету.'**
+  String get offlineInfoBody;
+
+  /// Offline mode page — section header above the reset-sync-status button
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные'**
+  String get offlineDataSectionLabel;
+
   /// Dashboard header greeting
   ///
   /// In ru, this message translates to:
@@ -4593,6 +4659,108 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'По умолч.'**
   String get printerSettingsSetDefaultButton;
+
+  /// Line printed on the raw ESC/POS test ticket bytes — includes a literal trailing newline; distinct from settingsTileKkm ("ККМ / Фискализация", with spaces, no newline), used in UI text
+  ///
+  /// In ru, this message translates to:
+  /// **'ККМ/Фискализация\n'**
+  String get kkmTicketHeaderLine;
+
+  /// Line printed on the raw ESC/POS test ticket bytes — includes a literal trailing newline; distinct from printerSettingsTestPrintButton ("Тестовая печать", no newline), the visible button label
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовая печать\n'**
+  String get kkmTestPrintTicketLine;
+
+  /// KKM / fiscalisation settings screen — info banner above the printer controls
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискализация чеков через подключённый ККМ-принтер. Убедитесь, что устройство зарегистрировано в налоговой.'**
+  String get kkmFiscalNoteBody;
+
+  /// KKM / fiscalisation settings screen — section header above the Bluetooth printer connection status
+  ///
+  /// In ru, this message translates to:
+  /// **'Bluetooth принтер'**
+  String get kkmBluetoothPrinterSectionLabel;
+
+  /// KKM / fiscalisation settings screen — label for the toggle that prints a fiscal receipt automatically after each sale
+  ///
+  /// In ru, this message translates to:
+  /// **'Автопечать при продаже'**
+  String get kkmAutoPrintLabel;
+
+  /// Barcode scanner settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер штрихкодов'**
+  String get scannerPageTitle;
+
+  /// Barcode scanner settings screen — section header above the front/back camera choice. Distinct from `subscriptionCameraSource` ("Камера"), which is the take-a-photo action in an image-source picker sheet
+  ///
+  /// In ru, this message translates to:
+  /// **'Камера'**
+  String get scannerCameraSectionLabel;
+
+  /// No description provided for @scannerBackCameraLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задняя камера'**
+  String get scannerBackCameraLabel;
+
+  /// Barcode scanner settings screen — subtitle recommending the rear camera for scanning
+  ///
+  /// In ru, this message translates to:
+  /// **'Рекомендуется для сканирования'**
+  String get scannerBackCameraHint;
+
+  /// No description provided for @scannerFrontCameraLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Передняя камера'**
+  String get scannerFrontCameraLabel;
+
+  /// Barcode scanner settings screen — subtitle of the front-camera option. Deliberately a near-synonym of `scannerFrontCameraLabel` ("Передняя камера"): the tile title and its subtitle are two different phrasings of the same camera, so translations must stay distinct too
+  ///
+  /// In ru, this message translates to:
+  /// **'Фронтальная камера'**
+  String get scannerFrontCameraHint;
+
+  /// Barcode scanner settings screen — section header above the sound/vibration/auto-add toggles
+  ///
+  /// In ru, this message translates to:
+  /// **'Поведение'**
+  String get scannerBehaviorSectionLabel;
+
+  /// No description provided for @scannerSoundLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук при сканировании'**
+  String get scannerSoundLabel;
+
+  /// No description provided for @scannerVibrationLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вибрация при сканировании'**
+  String get scannerVibrationLabel;
+
+  /// Barcode scanner settings screen — label for the toggle that adds a scanned product straight to the cart
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто-добавление в корзину'**
+  String get scannerAutoAddToCartLabel;
+
+  /// Barcode scanner settings screen — section header above the barcode-format checkboxes
+  ///
+  /// In ru, this message translates to:
+  /// **'Форматы штрихкодов'**
+  String get scannerFormatsSectionLabel;
+
+  /// Barcode scanner settings screen — full-width save button at the bottom of the page; distinct from `save` ("Сохранить"), the bare AppBar action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить настройки'**
+  String get scannerSaveSettingsButton;
 
   /// Receipt template settings screen — AppBar title
   ///

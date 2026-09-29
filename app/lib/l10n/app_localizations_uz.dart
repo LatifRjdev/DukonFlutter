@@ -1074,6 +1074,46 @@ class AppLocalizationsUz extends AppLocalizations {
   String get offlineResetSyncStatusConfirm => 'Сбросить';
 
   @override
+  String get offlineSyncErrorPartialDetail =>
+      'не удалось синхронизировать часть операций';
+
+  @override
+  String get offlineAllSynced => 'Всё синхронизировано';
+
+  @override
+  String offlinePendingOpsCount(String count) {
+    return '$count операций в очереди';
+  }
+
+  @override
+  String offlineLastSyncLabel(String date) {
+    return 'Последняя синхронизация: $date';
+  }
+
+  @override
+  String get offlineNeverSynced => 'Синхронизация ещё не выполнялась';
+
+  @override
+  String get offlineSyncingButton => 'Синхронизация...';
+
+  @override
+  String get offlineSyncNowButton => 'Синхронизировать сейчас';
+
+  @override
+  String get offlineAutoSyncLabel => 'Авто-синхронизация';
+
+  @override
+  String get offlineAutoSyncDescription =>
+      'Синхронизировать при подключении к сети';
+
+  @override
+  String get offlineInfoBody =>
+      'В офлайн-режиме все операции сохраняются локально и автоматически синхронизируются при восстановлении подключения к интернету.';
+
+  @override
+  String get offlineDataSectionLabel => 'Данные';
+
+  @override
   String get dashboardGreeting => 'Салом 👋';
 
   @override
@@ -2440,6 +2480,58 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get printerSettingsSetDefaultButton => 'По умолч.';
+
+  @override
+  String get kkmTicketHeaderLine => 'ККМ/Фискализация\n';
+
+  @override
+  String get kkmTestPrintTicketLine => 'Тестовая печать\n';
+
+  @override
+  String get kkmFiscalNoteBody =>
+      'Фискализация чеков через подключённый ККМ-принтер. Убедитесь, что устройство зарегистрировано в налоговой.';
+
+  @override
+  String get kkmBluetoothPrinterSectionLabel => 'Bluetooth принтер';
+
+  @override
+  String get kkmAutoPrintLabel => 'Автопечать при продаже';
+
+  @override
+  String get scannerPageTitle => 'Сканер штрихкодов';
+
+  @override
+  String get scannerCameraSectionLabel => 'Камера';
+
+  @override
+  String get scannerBackCameraLabel => 'Задняя камера';
+
+  @override
+  String get scannerBackCameraHint => 'Рекомендуется для сканирования';
+
+  @override
+  String get scannerFrontCameraLabel => 'Передняя камера';
+
+  @override
+  String get scannerFrontCameraHint => 'Фронтальная камера';
+
+  @override
+  String get scannerBehaviorSectionLabel => 'Поведение';
+
+  @override
+  String get scannerSoundLabel => 'Звук при сканировании';
+
+  @override
+  String get scannerVibrationLabel => 'Вибрация при сканировании';
+
+  @override
+  String get scannerAutoAddToCartLabel => 'Авто-добавление в корзину';
+
+  @override
+  String get scannerFormatsSectionLabel => 'Форматы штрихкодов';
+
+  @override
+  String get scannerSaveSettingsButton => 'Сохранить настройки';
 
   @override
   String get receiptTemplatePageTitle => 'Шаблон чека';

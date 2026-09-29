@@ -68,10 +68,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Сканер штрихкодов'),
+        title: Text(l10n.scannerPageTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         actions: [
@@ -81,8 +82,8 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                 ? const SizedBox(
                     width: 16, height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('Сохранить',
-                    style: TextStyle(
+                : Text(l10n.save,
+                    style: const TextStyle(
                         color: AppColors.primary, fontWeight: FontWeight.w600)),
           ),
         ],
@@ -95,7 +96,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Camera selection
-                  Text('Камера',
+                  Text(l10n.scannerCameraSectionLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -113,11 +114,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                         children: [
                           RadioListTile<String>(
                             value: 'back',
-                            title: const Text('Задняя камера',
-                                style: TextStyle(
+                            title: Text(l10n.scannerBackCameraLabel,
+                                style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
-                            subtitle: const Text('Рекомендуется для сканирования',
-                                style: TextStyle(fontSize: 12)),
+                            subtitle: Text(l10n.scannerBackCameraHint,
+                                style: const TextStyle(fontSize: 12)),
                             secondary: Container(
                               width: 36, height: 36,
                               decoration: BoxDecoration(
@@ -132,11 +133,11 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                           const Divider(height: 1, indent: 52),
                           RadioListTile<String>(
                             value: 'front',
-                            title: const Text('Передняя камера',
-                                style: TextStyle(
+                            title: Text(l10n.scannerFrontCameraLabel,
+                                style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
-                            subtitle: const Text('Фронтальная камера',
-                                style: TextStyle(fontSize: 12)),
+                            subtitle: Text(l10n.scannerFrontCameraHint,
+                                style: const TextStyle(fontSize: 12)),
                             secondary: Container(
                               width: 36, height: 36,
                               decoration: BoxDecoration(
@@ -155,7 +156,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   const SizedBox(height: 20),
 
                   // Behavior toggles
-                  Text('Поведение',
+                  Text(l10n.scannerBehaviorSectionLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -170,21 +171,21 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                       children: [
                         _buildToggle(
                           Icons.volume_up_outlined,
-                          'Звук при сканировании',
+                          l10n.scannerSoundLabel,
                           _sound,
                           (v) => setState(() => _sound = v),
                         ),
                         const Divider(height: 1, indent: 52),
                         _buildToggle(
                           Icons.vibration_outlined,
-                          'Вибрация при сканировании',
+                          l10n.scannerVibrationLabel,
                           _vibration,
                           (v) => setState(() => _vibration = v),
                         ),
                         const Divider(height: 1, indent: 52),
                         _buildToggle(
                           Icons.add_shopping_cart_outlined,
-                          'Авто-добавление в корзину',
+                          l10n.scannerAutoAddToCartLabel,
                           _autoAdd,
                           (v) => setState(() => _autoAdd = v),
                         ),
@@ -194,7 +195,7 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                   const SizedBox(height: 20),
 
                   // Barcode formats
-                  Text('Форматы штрихкодов',
+                  Text(l10n.scannerFormatsSectionLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -259,8 +260,8 @@ class _ScannerSettingsPageState extends State<ScannerSettingsPage> {
                       onPressed: _saving ? null : _save,
                       child: _saving
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Сохранить настройки',
-                              style: TextStyle(
+                          : Text(l10n.scannerSaveSettingsButton,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
