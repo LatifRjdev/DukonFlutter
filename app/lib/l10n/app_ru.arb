@@ -839,7 +839,7 @@
   },
   "customerDetailPointsExpiryLine": "до {date}",
   "@customerDetailPointsExpiryLine": {
-    "description": "Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site",
+    "description": "Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site. Same value as `subscriptionExpiryUntilLine` (\"до {date}\") but scoped to a different screen; kept separate per the feature-prefix convention.",
     "placeholders": { "date": { "type": "String" } }
   },
   "newSupplier": "Новый поставщик",
@@ -946,7 +946,7 @@
   "subscriptionTrialDaysLeftLine": "Пробный период: осталось {days} дней",
   "@subscriptionTrialDaysLeftLine": { "placeholders": { "days": { "type": "String" } } },
   "subscriptionExpiryUntilLine": "до {date}",
-  "@subscriptionExpiryUntilLine": { "placeholders": { "date": { "type": "String" } } },
+  "@subscriptionExpiryUntilLine": { "description": "Subscription-card trailing text — plan expiry date, pre-formatted at the call site. Same value as `customerDetailPointsExpiryLine` (\"до {date}\") but scoped to a different screen; kept separate per the feature-prefix convention.", "placeholders": { "date": { "type": "String" } } },
   "subscriptionAdminDiscountBadge": "Скидка {percent}%",
   "@subscriptionAdminDiscountBadge": { "placeholders": { "percent": { "type": "String" } } },
   "subscriptionPendingBannerText": "Ожидает подтверждения оплаты",

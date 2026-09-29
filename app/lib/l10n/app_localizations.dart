@@ -2350,7 +2350,7 @@ abstract class AppLocalizations {
   /// **'{sign}{points} баллов'**
   String customerDetailPointsLine(String sign, String points);
 
-  /// Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site
+  /// Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site. Same value as `subscriptionExpiryUntilLine` ("до {date}") but scoped to a different screen; kept separate per the feature-prefix convention.
   ///
   /// In ru, this message translates to:
   /// **'до {date}'**
@@ -2698,7 +2698,7 @@ abstract class AppLocalizations {
   /// **'Пробный период: осталось {days} дней'**
   String subscriptionTrialDaysLeftLine(String days);
 
-  /// No description provided for @subscriptionExpiryUntilLine.
+  /// Subscription-card trailing text — plan expiry date, pre-formatted at the call site. Same value as `customerDetailPointsExpiryLine` ("до {date}") but scoped to a different screen; kept separate per the feature-prefix convention.
   ///
   /// In ru, this message translates to:
   /// **'до {date}'**
