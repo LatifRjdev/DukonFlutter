@@ -1060,7 +1060,7 @@ abstract class AppLocalizations {
   /// **'Редактировать категорию'**
   String get categoriesEditTitle;
 
-  /// Category create/edit dialog title when creating a new category — shared a source line with categoriesEditTitle in a ternary, so it was missed by check_i18n.dart's one-match-per-line scan
+  /// Category create/edit dialog title when creating a new category — the non-editing branch of a ternary whose other branch is `categoriesEditTitle`
   ///
   /// In ru, this message translates to:
   /// **'Новая категория'**
@@ -1348,7 +1348,7 @@ abstract class AppLocalizations {
   /// **'Требует внимания'**
   String get productFilterAttention;
 
-  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. NOTE: this string was NOT in check_i18n.dart's original allow-list dump for this file — it shares a source line with `noProducts` and check_i18n only flags the first Cyrillic match per line — but it must still be migrated in this same pass
+  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. Rendered as the filtered branch of a ternary whose other branch is `noProducts`, the headline used when the store has no products at all.
   ///
   /// In ru, this message translates to:
   /// **'Нет товаров по фильтру'**
@@ -1384,7 +1384,7 @@ abstract class AppLocalizations {
   /// **'Активен'**
   String get productStatusActive;
 
-  /// Lint-tool blind spot fix — companion to `productStatusActive` on the same ternary line, never flagged by check_i18n.dart's one-match-per-line regex
+  /// Product inactive-status badge — the other branch of the same ternary as `productStatusActive`, and in the same masculine grammatical agreement (product = 'товар', masculine)
   ///
   /// In ru, this message translates to:
   /// **'Неактивен'**
@@ -1558,7 +1558,7 @@ abstract class AppLocalizations {
   /// **'Итого'**
   String get total;
 
-  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because two unrelated screens share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value). CAVEAT: the printed and PDF receipts render the same all-caps label from their own hardcoded 'ИТОГО' — thermal_printer_service.dart and receipt_pdf_service.dart live outside lib/presentation, which check_i18n does not scan and which has no BuildContext. So this key does NOT yet cover those surfaces, and they will stay Russian once tg/uz translations land. Route them through this key when that layer is localized.
+  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because four unrelated surfaces share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value), plus the two service-layer receipt renderers core/services/thermal_printer_service.dart and core/services/receipt_pdf_service.dart, which were routed through this key in ADR-0002 Track 2b (they previously each carried their own hardcoded 'ИТОГО').
   ///
   /// In ru, this message translates to:
   /// **'ИТОГО'**
@@ -1882,7 +1882,7 @@ abstract class AppLocalizations {
   /// **'Тип оплаты'**
   String get salesFilterPaymentTypeSectionLabel;
 
-  /// Generic bare 'Debt' label — shared between this sheet's payment-type filter chip and customer_detail_page.dart's debt stat card; distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere
+  /// Generic bare 'Debt' label — shared by three surfaces: this sheet's payment-type filter chip, customer_detail_page.dart's debt stat card, and the debt row of the PDF receipt (core/services/receipt_pdf_service.dart, added in ADR-0002 Track 2b). Distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere — including `_paymentTypeName` inside that same PDF service, so both keys coexist in one file and must not be merged
   ///
   /// In ru, this message translates to:
   /// **'Долг'**
@@ -3526,7 +3526,7 @@ abstract class AppLocalizations {
   /// **'Банк'**
   String get subscriptionBankLabel;
 
-  /// Lint-tool blind spot fix — check_i18n.dart's regex only flags the first Cyrillic string literal per line, and this one sits on the same line as the already-flagged 'Загрузка...' ternary branch, so it never appeared in tool/i18n-allowlist.txt; migrated together with its sibling for consistency
+  /// Subscription payment screen — upload-receipt button's default (non-uploading) label; its in-flight counterpart is the generic `loading` ("Загрузка..."), the other branch of the same ternary
   ///
   /// In ru, this message translates to:
   /// **'Я перевёл — загрузить чек'**
@@ -3580,7 +3580,7 @@ abstract class AppLocalizations {
   /// **'Показатель'**
   String get reportsMetricColumnLabel;
 
-  /// Lint-tool blind spot fix — companion header to `reportsMetricColumnLabel` on the same array literal, never flagged by check_i18n.dart's one-match-per-line regex
+  /// Reports export — second column header of the metric/value table, companion to `reportsMetricColumnLabel` in the same header array; used by both the PDF and the Excel export
   ///
   /// In ru, this message translates to:
   /// **'Значение'**
@@ -4762,7 +4762,7 @@ abstract class AppLocalizations {
   /// **'Безопасность'**
   String get editProfileSecuritySectionLabel;
 
-  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, which shares the same source line in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
+  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, the other branch of the same ternary. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
   ///
   /// In ru, this message translates to:
   /// **'Сохранить изменения'**
@@ -5386,7 +5386,7 @@ abstract class AppLocalizations {
   /// **'Подвал чека'**
   String get receiptTemplateFooterFieldLabel;
 
-  /// Default receipt-footer preview text — reused verbatim as the footer text field's hint, since the hint suggests exactly this same fallback value
+  /// Default receipt-footer text, five consumers. On the receipt-template settings screen it is both the preview fallback when the footer field is empty and, verbatim, that field's hint (the hint suggests exactly this fallback value). It is also the footer rendered by widgets/pos/receipt_widget.dart and by the two service-layer receipt renderers, core/services/thermal_printer_service.dart and core/services/receipt_pdf_service.dart
   ///
   /// In ru, this message translates to:
   /// **'Спасибо за покупку!'**
@@ -5608,7 +5608,7 @@ abstract class AppLocalizations {
   /// **'Отправка...'**
   String get telegramSendingButton;
 
-  /// Telegram-bot settings screen — test-message button's default (non-sending) label; shares a source line with `telegramSendingButton` in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
+  /// Telegram-bot settings screen — test-message button's default (non-sending) label; its in-flight counterpart is `telegramSendingButton`, the other branch of the same ternary. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
   ///
   /// In ru, this message translates to:
   /// **'Тестовое сообщение'**

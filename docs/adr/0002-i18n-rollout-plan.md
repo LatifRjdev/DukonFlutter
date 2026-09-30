@@ -133,3 +133,27 @@ this ADR was discovered mid-branch. Reconciling now, after the fact:
   40-something screens/blocs/widgets by the mid-branch ~78-file
   estimate minus what's done here. Left for future Track 2 batches, in
   whatever order is convenient at that time.
+
+## Scan-root update — 2026-09-30 (Track 2b)
+
+Track 1's rule as written above is scoped to `app/lib/presentation/`.
+That scoping is **no longer current** — do not read the Decision
+section as describing today's lint. Track 2b widened
+`tool/check_i18n.dart`'s scan root to all of `app/lib/`, excluding only
+the generated `lib/l10n/`, and it now scans 344 files. The trigger was
+finding user-facing Russian literals in `lib/core/services/` (thermal
+printer, PDF receipt, share, debt-reminder notifications) that the
+narrower root had never reported; those are migrated in the same
+branch. Two related notes:
+
+- The tool's earlier one-match-per-line limitation (it used
+  `firstMatch`, so a second Cyrillic literal on the same source line
+  was invisible) was fixed separately in `269e497` during Track 2 —
+  it now uses `allMatches`, guarded by a test. Plan and spec documents
+  written before that commit describe the old behaviour as current;
+  read them as dated records.
+- The acceptance criterion "`tool/check_i18n.dart` allow-list is empty
+  → i18n is done" is unchanged, but the bar is now higher, since the
+  allow-list covers a larger tree. The remaining entries are grouped
+  and justified in four commented blocks at the top of
+  `app/tool/i18n-allowlist.txt`.

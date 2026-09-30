@@ -98,4 +98,19 @@ lib/data/repositories/debt_repository_impl.dart::'Ошибка сервера'
 # 'сом.' is the somoni abbreviation, the same category as '$' and '₽'.
 # Localizing it would thread AppLocalizations through Formatters.price and its
 # 32 call sites for no translation benefit. Decided 2026-09-30.
+#
+# KNOWN CONSISTENCY RISK from that decision, recorded here so it is not
+# rediscovered as a bug later: 13 app_ru.arb values bake сом/сом. directly into
+# translatable strings (posCheckoutPointsRedeemPreview,
+# posCheckoutDiscountPreview, saleSuccessReceiptShareTextWhatsapp,
+# saleSuccessReceiptShareTextSms, the three debtReminder*Body keys,
+# creditSaleAmountLabel, zakatCalculatorShareText,
+# loyaltySettingsAmountForPointsLabel, loyaltySettingsPointValueLabel,
+# loyaltyAnalyticsSavingsValue, zReportPdfTotalLine). Once tg/uz ship, a
+# translator CAN localize the abbreviation in those 13 keys but CANNOT in
+# Formatters.price output, which reads Currency.symbol from this allowlisted
+# literal. The same screen could then render the unit two different ways. If
+# that becomes user-visible, the fix is to align in one direction — either
+# localize Currency.symbol too, or strip сом from those 13 values and let
+# Formatters.price own the unit everywhere — not to patch individual keys.
 lib/core/constants/enums.dart::'сом.'
