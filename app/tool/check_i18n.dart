@@ -53,7 +53,12 @@ Future<int> run(List<String> args, {String? repoRootOverride}) async {
           .toSet()
       : <String>{};
 
-  final cyrillicInString = RegExp(r'''['"][^'"]*[а-яА-ЯёЁ][^'"]*['"]''');
+  // Character class is the full Cyrillic block + supplement (U+0400-U+052F),
+  // not just [а-яА-ЯёЁ]: the Russian-only class cannot see Tajik/Uzbek letters
+  // (ӯ қ ғ ҳ ҷ ӣ), which let genuine wrong-language bugs through — e.g. the
+  // Tajik 'Пӯшидан' tooltips that sat in this Russian-locale codebase until
+  // they were found by hand.
+  final cyrillicInString = RegExp(r'''['"][^'"]*[Ѐ-ԯ][^'"]*['"]''');
 
   // Track key and display text as a record pair rather than concatenating
   // them into one string and splitting it back apart later: the matched
@@ -72,12 +77,8 @@ Future<int> run(List<String> args, {String? repoRootOverride}) async {
     final lines = entity.readAsLinesSync();
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
-      final match = cyrillicInString.firstMatch(line);
-      if (match == null) continue;
-      final content = match.group(0)!;
-      final key = '$rel::$content';
-      if (allowlist.contains(key)) continue;
-      // Skip debugPrint / log / comments
+      // Skip debugPrint / log / comments before matching, so a skipped line
+      // costs nothing regardless of how many literals it holds.
       final trimmed = line.trimLeft();
       if (trimmed.startsWith('//') ||
           trimmed.startsWith('debugPrint(') ||
@@ -85,7 +86,18 @@ Future<int> run(List<String> args, {String? repoRootOverride}) async {
           trimmed.startsWith('print(')) {
         continue;
       }
-      offenders.add((key: key, display: trimmed));
+      // allMatches, not firstMatch: a line can hold several literals (most
+      // often a ternary's two branches, e.g.
+      // `isOpen ? 'Открыта' : 'Закрыта'`). Reporting only the first meant the
+      // siblings were invisible — and worse, fixing the first one promoted an
+      // unreported sibling into the "first" slot, so the lint appeared to
+      // regress on a line that had just been partially fixed.
+      for (final match in cyrillicInString.allMatches(line)) {
+        final content = match.group(0)!;
+        final key = '$rel::$content';
+        if (allowlist.contains(key)) continue;
+        offenders.add((key: key, display: trimmed));
+      }
     }
   }
 

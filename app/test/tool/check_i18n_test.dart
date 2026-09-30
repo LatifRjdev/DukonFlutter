@@ -64,6 +64,41 @@ void main() {
     );
   });
 
+  test('every literal on a line is reported, not just the first (ternary siblings)', () async {
+    // Regression guard: the scanner used firstMatch, so the second branch of a
+    // ternary was invisible. Worse, allow-listing only the first one made the
+    // sibling look like a brand-new offender the moment the first was fixed.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "final s = isOpen ? 'Открыта' : 'Закрыта';\n",
+    );
+    // Allow-list ONLY the first literal; the second must still be reported.
+    File('${tempDir.path}/tool/i18n-allowlist.txt')
+        .writeAsStringSync("lib/presentation/sample.dart::'Открыта'\n");
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: "the ternary's second branch must still be flagged");
+  });
+
+  test('a literal made only of extended Cyrillic letters is detected', () async {
+    // Regression guard for the character class. The old class was
+    // [а-яА-ЯёЁ] (Russian only), which omits the Tajik/Uzbek letters
+    // ӯ қ ғ ҳ ҷ ӣ.
+    //
+    // Note the practical exposure was small: real Tajik words almost always
+    // mix in at least one base-range letter, so e.g. 'Пӯшидан' was already
+    // caught via its П/ш/и/д/а/н. This uses a literal composed *only* of
+    // extended letters, which is the only input that actually distinguishes
+    // the two classes — artificial, but it's what pins the behaviour.
+    File('${tempDir.path}/lib/presentation/sample.dart')
+        .writeAsStringSync("const s = 'ӯғқҳ';\n");
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: 'extended Cyrillic must be treated as Cyrillic');
+  });
+
   test('a matched string containing a double space (the label  separator  value convention) round-trips through dump and check without truncation', () async {
     // Regression test for a bug caught during implementation: recovering
     // the allow-list key by splitting the offender report string on a
