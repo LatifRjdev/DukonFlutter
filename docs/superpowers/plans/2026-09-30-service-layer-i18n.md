@@ -630,7 +630,11 @@ Expected: all tests pass, including the two new ones.
 
 - [ ] **Step 5: Seed Sub-project B's literals and `'сом.'` into the allowlist**
 
-Run `dart run tool/check_i18n.dart` — it will now report the 14 error-path literals plus `'сом.'`. Add them under a new block in `app/tool/i18n-allowlist.txt`, preserving the existing comment structure:
+Run `dart run tool/check_i18n.dart` — it will now report the error-path literals plus `'сом.'`.
+
+**Expect 13 allowlist lines for 14 occurrences.** `'Не удалось выполнить операцию'` appears twice in `error_messages.dart` (the 400-and-below fallback and the unknown-exception fallback), and entries are keyed `<path>::<literal>`, so both occurrences collapse into one line. That is correct, not a miscount — and it is also a known limitation: one entry whitelists unlimited occurrences of that literal in that file, so re-adding it elsewhere in the same file would not be caught.
+
+Add them under a new block in `app/tool/i18n-allowlist.txt`, preserving the existing comment structure:
 
 ```
 # ---------------------------------------------------------------------------
