@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:bluetooth_print_plus/bluetooth_print_plus.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../domain/entities/sale.dart';
 import '../utils/formatters.dart';
 import '../utils/cp1251_codec.dart';
@@ -49,6 +50,7 @@ class ThermalPrinterService {
   Future<bool> printReceipt({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
     int paperWidth = 80,
@@ -59,6 +61,7 @@ class ThermalPrinterService {
       final bytes = await _buildReceiptBytes(
         sale: sale,
         storeName: storeName,
+        l10n: l10n,
         storeAddress: storeAddress,
         storePhone: storePhone,
         paperWidth: paperWidth,
@@ -105,6 +108,7 @@ class ThermalPrinterService {
   Future<List<int>> buildReceiptBytesForTest({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
     int paperWidth = 80,
@@ -112,6 +116,7 @@ class ThermalPrinterService {
       _buildReceiptBytes(
         sale: sale,
         storeName: storeName,
+        l10n: l10n,
         storeAddress: storeAddress,
         storePhone: storePhone,
         paperWidth: paperWidth,
@@ -120,6 +125,7 @@ class ThermalPrinterService {
   Future<List<int>> _buildReceiptBytes({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
     int paperWidth = 80,
@@ -146,9 +152,9 @@ class ThermalPrinterService {
     bytes += generator.hr(ch: '-');
 
     bytes += generator.row([
-      PosColumn(text: 'Товар', width: 6, styles: const PosStyles(bold: true)),
-      PosColumn(text: 'Кол', width: 2, styles: const PosStyles(bold: true, align: PosAlign.center)),
-      PosColumn(text: 'Сумма', width: 4, styles: const PosStyles(bold: true, align: PosAlign.right)),
+      PosColumn(text: l10n.product, width: 6, styles: const PosStyles(bold: true)),
+      PosColumn(text: l10n.receiptQtyAbbrevShort, width: 2, styles: const PosStyles(bold: true, align: PosAlign.center)),
+      PosColumn(text: l10n.amount, width: 4, styles: const PosStyles(bold: true, align: PosAlign.right)),
     ]);
 
     for (final item in sale.items) {
@@ -162,33 +168,33 @@ class ThermalPrinterService {
 
     bytes += generator.hr(ch: '-');
     bytes += generator.row([
-      PosColumn(text: 'Подытог', width: 6),
+      PosColumn(text: l10n.subtotal, width: 6),
       PosColumn(text: Formatters.price(sale.subtotal), width: 6, styles: const PosStyles(align: PosAlign.right)),
     ]);
     if (sale.discount > 0) {
       bytes += generator.row([
-        PosColumn(text: 'Скидка', width: 6),
+        PosColumn(text: l10n.discount, width: 6),
         PosColumn(text: '- ${Formatters.price(sale.discount)}', width: 6, styles: const PosStyles(align: PosAlign.right)),
       ]);
     }
     bytes += generator.row([
-      PosColumn(text: 'ИТОГО', width: 6, styles: const PosStyles(bold: true, height: PosTextSize.size2)),
+      PosColumn(text: l10n.totalCaps, width: 6, styles: const PosStyles(bold: true, height: PosTextSize.size2)),
       PosColumn(text: Formatters.price(sale.total), width: 6,
           styles: const PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size2)),
     ]);
     bytes += generator.hr(ch: '-');
 
     bytes += generator.row([
-      PosColumn(text: 'Оплата', width: 6),
-      PosColumn(text: _paymentTypeName(sale.paymentType), width: 6, styles: const PosStyles(align: PosAlign.right)),
+      PosColumn(text: l10n.payment, width: 6),
+      PosColumn(text: _paymentTypeName(sale.paymentType, l10n), width: 6, styles: const PosStyles(align: PosAlign.right)),
     ]);
     bytes += generator.row([
-      PosColumn(text: 'Оплачено', width: 6),
+      PosColumn(text: l10n.paidAmount, width: 6),
       PosColumn(text: Formatters.price(sale.paidAmount), width: 6, styles: const PosStyles(align: PosAlign.right)),
     ]);
     if (sale.change > 0) {
       bytes += generator.row([
-        PosColumn(text: 'Сдача', width: 6),
+        PosColumn(text: l10n.change, width: 6),
         PosColumn(text: Formatters.price(sale.change), width: 6, styles: const PosStyles(align: PosAlign.right)),
       ]);
     }
@@ -196,29 +202,29 @@ class ThermalPrinterService {
     if (sale.pointsEarned > 0) {
       bytes += generator.hr(ch: '-');
       bytes += generator.text(
-        'Начислено баллов: +${sale.pointsEarned}',
+        l10n.receiptPointsEarnedLine(sale.pointsEarned.toString()),
         styles: const PosStyles(align: PosAlign.left),
       );
       bytes += generator.text(
-        'Ваш баланс: ${sale.pointsBalance} баллов',
+        l10n.receiptPointsBalanceLine(sale.pointsBalance.toString()),
         styles: const PosStyles(align: PosAlign.left),
       );
     }
 
     bytes += generator.feed(1);
-    bytes += generator.text('Спасибо за покупку!', styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(l10n.receiptPreviewDefaultFooter, styles: const PosStyles(align: PosAlign.center));
     bytes += generator.feed(2);
     bytes += generator.cut();
 
     return bytes;
   }
 
-  String _paymentTypeName(String type) {
+  String _paymentTypeName(String type, AppLocalizations l10n) {
     switch (type) {
-      case 'CASH': return 'Наличные';
-      case 'CARD': return 'Карта';
-      case 'DEBT': return 'В долг';
-      case 'MIXED': return 'Смешанная';
+      case 'CASH': return l10n.cash;
+      case 'CARD': return l10n.card;
+      case 'DEBT': return l10n.debt;
+      case 'MIXED': return l10n.paymentMixedShort;
       default: return type;
     }
   }

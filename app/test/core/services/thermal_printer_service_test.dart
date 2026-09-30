@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dukonpro/core/services/thermal_printer_service.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/domain/entities/sale_item.dart';
 
@@ -18,6 +20,11 @@ import 'package:dukonpro/domain/entities/sale_item.dart';
 /// suite via `flutter test --tags=hardware`.
 void main() {
   late ThermalPrinterService service;
+  late AppLocalizations l10n;
+
+  setUpAll(() async {
+    l10n = await AppLocalizations.delegate.load(const Locale('ru'));
+  });
 
   setUp(() {
     service = ThermalPrinterService();
@@ -75,6 +82,7 @@ void main() {
       final bytes = await service.buildReceiptBytesForTest(
         sale: buildSale(items: [item(name: 'Bread')]),
         storeName: 'Shop',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
     });
@@ -93,6 +101,7 @@ void main() {
       final bytes = await service.buildReceiptBytesForTest(
         sale: buildSale(items: [item(name: 'Молоко 3.2%')]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
       // CP1251 encoding produces non-empty bytes for valid Cyrillic.
@@ -104,6 +113,7 @@ void main() {
       final bytes = await service.buildReceiptBytesForTest(
         sale: buildSale(items: [item(name: 'Чойи сабз ҳамчун ёд')]),
         storeName: 'Дӯкон',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
     });
@@ -115,6 +125,7 @@ void main() {
       final bytes = await service.buildReceiptBytesForTest(
         sale: buildSale(items: []),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
     });
@@ -127,6 +138,7 @@ void main() {
           discount: 2,
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
     });
@@ -140,6 +152,7 @@ void main() {
       final bytes = await service.buildReceiptBytesForTest(
         sale: buildSale(items: manyItems, total: 500),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expect(bytes, isNotEmpty);
       // 100 items × ~40 bytes/line + headers ≈ reasonable budget < 100 KB

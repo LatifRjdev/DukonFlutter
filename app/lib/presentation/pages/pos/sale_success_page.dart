@@ -66,6 +66,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
   }
 
   Future<void> _printReceipt() async {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
@@ -81,6 +82,7 @@ class _SaleSuccessPageState extends State<SaleSuccessPage>
     final success = await printerService.printReceipt(
       sale: widget.sale,
       storeName: storeName,
+      l10n: l10n,
     );
 
     if (!mounted) return;

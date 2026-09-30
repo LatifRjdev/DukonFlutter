@@ -36,6 +36,7 @@ class ReceiptPreviewPage extends StatelessWidget {
   }
 
   Future<void> _printReceipt(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
@@ -49,6 +50,7 @@ class ReceiptPreviewPage extends StatelessWidget {
     final success = await printerService.printReceipt(
       sale: sale,
       storeName: storeName,
+      l10n: l10n,
     );
 
     if (!context.mounted) return;
