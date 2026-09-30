@@ -79,7 +79,8 @@ void main() {
       expect(report.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z'));
       expect(report.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z'));
       // duration isn't sent by the backend — computed from openedAt/closedAt.
-      expect(report.duration, '12ч 0м');
+      expect(report.durationHours, 12);
+      expect(report.durationMinutes, 0);
       expect(report.salesCount, 42);
       expect(report.cashTotal, 750);
       expect(report.cardTotal, 2000);
@@ -177,7 +178,8 @@ void main() {
           staffName: 'Ali',
           openedAt: DateTime(2026, 7, 17, 8),
           closedAt: DateTime(2026, 7, 17, 20),
-          duration: '12h 00m',
+          durationHours: 12,
+          durationMinutes: 0,
           salesTotal: salesTotal,
         );
 

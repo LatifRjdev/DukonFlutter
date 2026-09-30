@@ -82,7 +82,8 @@ void main() {
         staffName: 'Иван',
         openedAt: DateTime(2026, 8, 1, 9),
         closedAt: DateTime(2026, 8, 1, 18),
-        duration: '9ч',
+        durationHours: 9,
+        durationMinutes: 0,
         salesCount: 3,
         salesTotal: 1500,
         returnsCount: 1,
@@ -104,5 +105,8 @@ void main() {
     expect(find.text('В долг'), findsOneWidget); // reused debt
     expect(find.text('Касса'), findsOneWidget); // reused pos
     expect(find.text('Поделиться'), findsOneWidget); // new share
+    // ZReport now carries duration as numbers; the "Nч Nм" rendering comes
+    // from the reused shiftsDurationFormat key, not the entity.
+    expect(find.text('Длительность: 9ч 0м'), findsOneWidget);
   });
 }

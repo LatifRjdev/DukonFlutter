@@ -1,11 +1,16 @@
 import '../../../core/network/dio_client.dart';
 
+/// Raw exchange-rate data for one currency.
+///
+/// Carries no display name: the human-readable currency label is localized and
+/// so has to be resolved from a [BuildContext] at the render site (see
+/// `_currencyLabel` in `presentation/pages/finance/currencies_page.dart`).
+/// [flag] stays here because it's a locale-independent emoji.
 class CurrencyRate {
   final String code;
   final double rate;
   final String flag;
-  final String label;
-  const CurrencyRate({required this.code, required this.rate, required this.flag, required this.label});
+  const CurrencyRate({required this.code, required this.rate, required this.flag});
 }
 
 class CurrencyRateHistory {
@@ -24,7 +29,6 @@ class CurrencyRemoteDatasourceImpl implements CurrencyRemoteDatasource {
   CurrencyRemoteDatasourceImpl({required DioClient dioClient}) : _dioClient = dioClient;
 
   static const _flags = {'USD': '🇺🇸', 'RUB': '🇷🇺', 'EUR': '🇪🇺', 'CNY': '🇨🇳'};
-  static const _labels = {'USD': 'Доллар США', 'RUB': 'Российский рубль', 'EUR': 'Евро', 'CNY': 'Китайский юань'};
 
   @override
   Future<List<CurrencyRate>> getLatestRates() async {
@@ -35,7 +39,6 @@ class CurrencyRemoteDatasourceImpl implements CurrencyRemoteDatasource {
       code: e.key,
       rate: (e.value as num).toDouble(),
       flag: _flags[e.key] ?? '',
-      label: _labels[e.key] ?? e.key,
     )).toList();
   }
 
