@@ -482,7 +482,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
         (u) => u.name.toUpperCase() == unit.toUpperCase(),
         orElse: () => ProductUnit.pcs,
       );
-      return productUnit.displayName;
+      return productUnit.displayName(AppLocalizations.of(context)!);
     } catch (e) {
       return unit;
     }

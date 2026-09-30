@@ -32,11 +32,4 @@ class Formatters {
     }
     return phone;
   }
-
-  static String quantity(double qty, ProductUnit unit) {
-    if (unit == ProductUnit.pcs) {
-      return '${qty.toInt()} ${unit.displayName}';
-    }
-    return '${qty.toStringAsFixed(qty == qty.roundToDouble() ? 0 : 2)} ${unit.displayName}';
-  }
 }

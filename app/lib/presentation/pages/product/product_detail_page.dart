@@ -59,7 +59,7 @@ class ProductDetailPage extends StatelessWidget {
         (u) => u.name.toUpperCase() == product.unit.toUpperCase(),
         orElse: () => ProductUnit.pcs,
       );
-      unitName = productUnit.displayName;
+      unitName = productUnit.displayName(l10n);
     } catch (e) {
       unitName = product.unit;
     }

@@ -74,7 +74,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                   spacing: 8,
                   runSpacing: 8,
                   children: StoreCategory.values.map((cat) => AppChip(
-                    label: cat.displayName,
+                    label: cat.displayName(l10n),
                     isSelected: _selectedCategory == cat,
                     onTap: () => setState(() => _selectedCategory = cat),
                   )).toList(),
