@@ -20,6 +20,7 @@ class ReceiptPreviewPage extends StatelessWidget {
   const ReceiptPreviewPage({super.key, required this.sale});
 
   Future<void> _shareReceipt(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final storeState = context.read<StoreBloc>().state;
     final storeName = storeState is StoreLoaded && storeState.selectedStore != null
         ? storeState.selectedStore!.name
@@ -28,6 +29,7 @@ class ReceiptPreviewPage extends StatelessWidget {
       await sl<ReceiptShareService>().shareReceipt(
         sale: sale,
         storeName: storeName,
+        l10n: l10n,
       );
     } catch (e) {
       if (!context.mounted) return;
