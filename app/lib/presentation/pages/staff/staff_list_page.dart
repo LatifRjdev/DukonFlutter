@@ -61,11 +61,12 @@ class _StaffListPageState extends State<StaffListPage> {
   }
 
   String _roleLabel(String role) {
+    final l10n = AppLocalizations.of(context)!;
     switch (role.toUpperCase()) {
-      case 'ADMIN': return 'Администратор';
-      case 'CASHIER': return 'Кассир';
-      case 'WAREHOUSE': return 'Склад';
-      case 'OWNER': return 'Владелец';
+      case 'ADMIN': return l10n.admin;
+      case 'CASHIER': return l10n.cashier;
+      case 'WAREHOUSE': return l10n.staffRoleWarehouseShort;
+      case 'OWNER': return l10n.owner;
       default: return role;
     }
   }
@@ -89,8 +90,8 @@ class _StaffListPageState extends State<StaffListPage> {
               child: Row(
                 children: [
                   IconButton(icon: const Icon(Icons.arrow_back), tooltip: l10n.back, onPressed: () => context.pop()),
-                  const Text('Сотрудники',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.employees,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.add, color: AppColors.primary),
@@ -118,9 +119,9 @@ class _StaffListPageState extends State<StaffListPage> {
                     if (state.staff.isEmpty) {
                       return AppEmptyState(
                         icon: Icons.people_outline,
-                        title: 'Сотрудников пока нет',
-                        subtitle: 'Добавьте сотрудников для учёта смен и зарплаты',
-                        buttonText: 'Добавить сотрудника',
+                        title: l10n.staffListEmptyTitle,
+                        subtitle: l10n.staffListEmptySubtitle,
+                        buttonText: l10n.addEmployee,
                         onButtonPressed: () => context.push('/staff/add', extra: widget.storeId),
                       );
                     }
@@ -195,7 +196,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              isOnShift ? 'На смене' : 'Не на смене',
+                                              isOnShift ? l10n.isOnShift : l10n.notOnShift,
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: isOnShift ? AppColors.success : context.textSecondary,
@@ -204,7 +205,7 @@ class _StaffListPageState extends State<StaffListPage> {
                                             if (isOnShift && staff.todaySales != null && staff.todaySales! > 0) ...[
                                               const SizedBox(width: 12),
                                               Text(
-                                                'Сегодня: ${_formatPrice(staff.todaySales!)}',
+                                                l10n.staffListTodaySalesLine(_formatPrice(staff.todaySales!)),
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500,

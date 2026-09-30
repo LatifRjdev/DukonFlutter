@@ -29,12 +29,17 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
     return '${formatter.format(value)} TJS';
   }
 
-  final _statuses = [
-    (null, 'Все'),
-    ('ACTIVE', 'Активно'),
-    ('COMPLETED', 'Завершено'),
-    ('CANCELLED', 'Отменено'),
-  ];
+  /// Built per-call rather than held in a `final` field: the field initializer
+  /// runs before mount, where no [BuildContext] is available for lookup.
+  List<(String?, String)> _statuses(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      (null, l10n.all),
+      ('ACTIVE', l10n.investmentStatusActive),
+      ('COMPLETED', l10n.investmentStatusCompleted),
+      ('CANCELLED', l10n.investmentStatusCancelled),
+    ];
+  }
 
   void _loadInvestments(BuildContext context) {
     context.read<InvestmentBloc>().add(InvestmentListRequested(
@@ -56,14 +61,15 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
     }
   }
 
-  String _statusLabel(String status) {
+  String _statusLabel(BuildContext context, String status) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case 'ACTIVE':
-        return 'Активно';
+        return l10n.investmentStatusActive;
       case 'COMPLETED':
-        return 'Завершено';
+        return l10n.investmentStatusCompleted;
       case 'CANCELLED':
-        return 'Отменено';
+        return l10n.investmentStatusCancelled;
       default:
         return status;
     }
@@ -76,8 +82,10 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
         ..add(InvestmentListRequested(storeId: widget.storeId)),
       child: Builder(
         builder: (context) {
+          final statuses = _statuses(context);
           return Scaffold(
-            appBar: AppBar(title: const Text('Вложения')),
+            appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.investments)),
             floatingActionButton: FloatingActionButton(
               backgroundColor: AppColors.primary,
               onPressed: () async {
@@ -101,10 +109,10 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                       horizontal: AppConstants.spacingMd,
                       vertical: AppConstants.spacingSm,
                     ),
-                    itemCount: _statuses.length,
+                    itemCount: statuses.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
-                      final s = _statuses[index];
+                      final s = statuses[index];
                       final isSelected = s.$1 == _selectedStatus;
                       return GestureDetector(
                         onTap: () {
@@ -164,7 +172,9 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                     Icon(Icons.trending_up,
                                         size: 64, color: AppColors.disabled),
                                     const SizedBox(height: AppConstants.spacingMd),
-                                    Text('Вложений пока нет',
+                                    Text(
+                                        AppLocalizations.of(context)!
+                                            .investmentEmptyState,
                                         style: TextStyle(
                                             color: context.textSecondary,
                                             fontSize: 16)),
@@ -244,7 +254,7 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                                                 BorderRadius.circular(AppConstants.radiusMd),
                                           ),
                                           child: Text(
-                                            _statusLabel(inv.status),
+                                            _statusLabel(context, inv.status),
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600,

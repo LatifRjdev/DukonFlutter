@@ -91,8 +91,9 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
   }
 
   Widget _buildReceiptPreview() {
-    final headerText = _headerCtrl.text.isEmpty ? 'Ваш магазин' : _headerCtrl.text;
-    final footerText = _footerCtrl.text.isEmpty ? 'Спасибо за покупку!' : _footerCtrl.text;
+    final l10n = AppLocalizations.of(context)!;
+    final headerText = _headerCtrl.text.isEmpty ? l10n.receiptPreviewDefaultHeader : _headerCtrl.text;
+    final footerText = _footerCtrl.text.isEmpty ? l10n.receiptPreviewDefaultFooter : _footerCtrl.text;
     final double fSize = _fontSize == 'small' ? 10 : _fontSize == 'large' ? 14 : 12;
     final double width = _paperWidth == '58mm' ? 180 : 240;
 
@@ -114,15 +115,15 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                     fontWeight: FontWeight.w700,
                     color: Colors.black)),
             const Divider(color: Colors.black26),
-            Text('Товар 1                 50.00 TJS',
+            Text(l10n.receiptPreviewItemLine1,
                 style: TextStyle(fontSize: fSize, color: Colors.black87, fontFamily: 'monospace')),
-            Text('Товар 2                 30.00 TJS',
+            Text(l10n.receiptPreviewItemLine2,
                 style: TextStyle(fontSize: fSize, color: Colors.black87, fontFamily: 'monospace')),
             if (_showDiscount)
-              Text('Скидка                  -5.00 TJS',
+              Text(l10n.receiptPreviewDiscountLine,
                   style: TextStyle(fontSize: fSize, color: Colors.red, fontFamily: 'monospace')),
             const Divider(color: Colors.black26),
-            Text('ИТОГО                   75.00 TJS',
+            Text(l10n.receiptPreviewTotalLine,
                 style: TextStyle(
                     fontSize: fSize + 1,
                     fontWeight: FontWeight.w700,
@@ -134,7 +135,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   style: TextStyle(fontSize: fSize - 1, color: Colors.black54)),
             ],
             if (_showCashier) ...[
-              Text('Кассир: Иванов И.',
+              Text(l10n.receiptPreviewCashierLine,
                   style: TextStyle(fontSize: fSize - 1, color: Colors.black54)),
             ],
             if (_showQr) ...[
@@ -153,10 +154,11 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Шаблон чека'),
+        title: Text(l10n.receiptTemplatePageTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         actions: [
@@ -166,8 +168,8 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                 ? const SizedBox(
                     width: 16, height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('Сохранить',
-                    style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                : Text(l10n.save,
+                    style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -188,7 +190,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                     ),
                     child: Column(
                       children: [
-                        Text('Предпросмотр',
+                        Text(l10n.receiptTemplatePreviewLabel,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -201,7 +203,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Header/Footer
-                  Text('Текст',
+                  Text(l10n.receiptTemplateTextSectionLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -218,20 +220,20 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                         TextField(
                           controller: _headerCtrl,
                           onChanged: (v) => setState(() {}),
-                          decoration: const InputDecoration(
-                            labelText: 'Заголовок чека',
-                            border: OutlineInputBorder(),
-                            hintText: 'Название магазина или приветствие',
+                          decoration: InputDecoration(
+                            labelText: l10n.receiptTemplateHeaderFieldLabel,
+                            border: const OutlineInputBorder(),
+                            hintText: l10n.receiptTemplateHeaderFieldHint,
                           ),
                         ),
                         const SizedBox(height: 12),
                         TextField(
                           controller: _footerCtrl,
                           onChanged: (v) => setState(() {}),
-                          decoration: const InputDecoration(
-                            labelText: 'Подвал чека',
-                            border: OutlineInputBorder(),
-                            hintText: 'Спасибо за покупку!',
+                          decoration: InputDecoration(
+                            labelText: l10n.receiptTemplateFooterFieldLabel,
+                            border: const OutlineInputBorder(),
+                            hintText: l10n.receiptPreviewDefaultFooter,
                           ),
                         ),
                       ],
@@ -240,7 +242,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Font size
-                  Text('Размер шрифта',
+                  Text(l10n.receiptTemplateFontSizeLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -256,10 +258,10 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                       children: [
                         Expanded(
                           child: SegmentedButton<String>(
-                            segments: const [
-                              ButtonSegment(value: 'small', label: Text('Мал.')),
-                              ButtonSegment(value: 'medium', label: Text('Ср.')),
-                              ButtonSegment(value: 'large', label: Text('Бол.')),
+                            segments: [
+                              ButtonSegment(value: 'small', label: Text(l10n.receiptTemplateFontSizeSmall)),
+                              ButtonSegment(value: 'medium', label: Text(l10n.receiptTemplateFontSizeMedium)),
+                              ButtonSegment(value: 'large', label: Text(l10n.receiptTemplateFontSizeLarge)),
                             ],
                             selected: {_fontSize},
                             onSelectionChanged: (s) =>
@@ -272,7 +274,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 16),
 
                   // Paper width
-                  Text('Ширина бумаги',
+                  Text(l10n.receiptTemplatePaperWidthLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -288,9 +290,9 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                       children: [
                         Expanded(
                           child: SegmentedButton<String>(
-                            segments: const [
-                              ButtonSegment(value: '58mm', label: Text('58 мм')),
-                              ButtonSegment(value: '80mm', label: Text('80 мм')),
+                            segments: [
+                              ButtonSegment(value: '58mm', label: Text(l10n.receiptTemplatePaperWidth58mm)),
+                              ButtonSegment(value: '80mm', label: Text(l10n.receiptTemplatePaperWidth80mm)),
                             ],
                             selected: {_paperWidth},
                             onSelectionChanged: (s) =>
@@ -303,7 +305,7 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                   const SizedBox(height: 20),
 
                   // Toggles
-                  Text('Показывать на чеке',
+                  Text(l10n.receiptTemplateShowOnReceiptLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -316,16 +318,16 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                     ),
                     child: Column(
                       children: [
-                        _buildToggle(Icons.qr_code_outlined, 'QR-код', _showQr,
+                        _buildToggle(Icons.qr_code_outlined, l10n.receiptTemplateQrToggleLabel, _showQr,
                             (v) => setState(() => _showQr = v)),
                         const Divider(height: 1, indent: 52),
-                        _buildToggle(Icons.calendar_today_outlined, 'Дата и время',
+                        _buildToggle(Icons.calendar_today_outlined, l10n.receiptTemplateDateTimeToggleLabel,
                             _showDate, (v) => setState(() => _showDate = v)),
                         const Divider(height: 1, indent: 52),
-                        _buildToggle(Icons.person_outline, 'Кассир', _showCashier,
+                        _buildToggle(Icons.person_outline, l10n.cashier, _showCashier,
                             (v) => setState(() => _showCashier = v)),
                         const Divider(height: 1, indent: 52),
-                        _buildToggle(Icons.discount_outlined, 'Скидка', _showDiscount,
+                        _buildToggle(Icons.discount_outlined, l10n.discount, _showDiscount,
                             (v) => setState(() => _showDiscount = v)),
                       ],
                     ),
@@ -346,8 +348,8 @@ class _ReceiptTemplatePageState extends State<ReceiptTemplatePage> {
                       onPressed: _saving ? null : _save,
                       child: _saving
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Сохранить шаблон',
-                              style: TextStyle(
+                          : Text(l10n.receiptTemplateSaveButton,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),

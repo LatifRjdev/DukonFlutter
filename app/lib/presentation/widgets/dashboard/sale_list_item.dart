@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/sale.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class SaleListItem extends StatelessWidget {
   final Sale sale;
@@ -98,21 +99,22 @@ class SaleListItem extends StatelessWidget {
   }
 
   Widget _buildPaymentBadge(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Color badgeColor;
     String badgeLabel;
 
     switch (sale.paymentType) {
       case 'CASH':
         badgeColor = context.success;
-        badgeLabel = 'Наличные';
+        badgeLabel = l10n.cash;
         break;
       case 'CARD':
         badgeColor = context.info;
-        badgeLabel = 'Карта';
+        badgeLabel = l10n.card;
         break;
       case 'DEBT':
         badgeColor = context.warning;
-        badgeLabel = 'В долг';
+        badgeLabel = l10n.debt;
         break;
       default:
         badgeColor = context.textSecondary;

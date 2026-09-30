@@ -29,44 +29,49 @@ class _PlanInfo {
   });
 }
 
-const _plans = [
+// Built per-build (not `const`) because plan labels/prices/features now come
+// from AppLocalizations, which requires a BuildContext — see
+// docs/superpowers/plans/2026-09-28-adr0002-track2-remaining-i18n-migration.md
+// Task 1. `label` values ('Старт'/'Бизнес'/'Премиум') stay as literal proper
+// nouns (tariff brand names) — see tool/i18n-allowlist.txt.
+List<_PlanInfo> _buildPlans(AppLocalizations l10n) => [
   _PlanInfo(
     key: 'START',
     label: 'Старт',
-    price: '49 TJS/мес',
+    price: l10n.subscriptionPriceStart,
     features: [
-      '1 магазин',
-      '500 товаров',
-      '2 сотрудника',
-      'Отчёт продаж',
-      'Валюты',
+      l10n.subscriptionFeatureStores1,
+      l10n.subscriptionFeatureProducts500,
+      l10n.subscriptionFeatureEmployees2,
+      l10n.subscriptionFeatureSalesReport,
+      l10n.subscriptionFeatureCurrencies,
     ],
   ),
   _PlanInfo(
     key: 'BUSINESS',
     label: 'Бизнес',
-    price: '149 TJS/мес',
+    price: l10n.subscriptionPriceBusiness,
     features: [
-      '3 магазина',
-      '2000 товаров',
-      '10 сотрудников',
-      'Все отчёты',
-      'Telegram-бот',
-      'Доставки',
-      'Инвентаризация',
-      '5 скидок',
+      l10n.subscriptionFeatureStores3,
+      l10n.subscriptionFeatureProducts2000,
+      l10n.subscriptionFeatureEmployees10,
+      l10n.subscriptionFeatureAllReports,
+      l10n.settingsTileTelegramBot,
+      l10n.deliveryListTitle,
+      l10n.inventoryTitle,
+      l10n.subscriptionFeatureDiscounts5,
     ],
   ),
   _PlanInfo(
     key: 'PREMIUM',
     label: 'Премиум',
-    price: '299 TJS/мес',
+    price: l10n.subscriptionPricePremium,
     features: [
-      '5 магазинов',
-      'Безлимит товаров/сотрудников',
-      'Экспорт PDF/Excel',
-      'Безлимит скидок',
-      'Приоритетная поддержка',
+      l10n.subscriptionFeatureStores5,
+      l10n.subscriptionFeatureUnlimitedProductsEmployees,
+      l10n.subscriptionFeatureExportPdfExcel,
+      l10n.subscriptionFeatureUnlimitedDiscounts,
+      l10n.subscriptionFeaturePrioritySupport,
     ],
   ),
 ];
@@ -91,9 +96,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       _storeId = storeState.selectedStore?.id;
     }
     if (_storeId != null) {
-      context
-          .read<SubscriptionBloc>()
-          .add(SubscriptionLoadRequested(storeId: _storeId!));
+      context.read<SubscriptionBloc>().add(
+        SubscriptionLoadRequested(storeId: _storeId!),
+      );
     }
   }
 
@@ -117,13 +122,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   String _statusLabel(String status) {
     switch (status) {
       case 'ACTIVE':
-        return 'Активна';
+        return AppLocalizations.of(context)!.subscriptionActiveStatus;
       case 'TRIAL':
-        return 'Пробный период';
+        return AppLocalizations.of(context)!.subscriptionTrialStatus;
       case 'EXPIRED':
-        return 'Истекла';
+        return AppLocalizations.of(context)!.subscriptionExpiredStatus;
       case 'CANCELLED':
-        return 'Отменена';
+        return AppLocalizations.of(context)!.cancelled;
       default:
         return status;
     }
@@ -178,10 +183,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
     String expiryText = '';
     if (state.status == 'TRIAL' && state.trialDaysLeft != null) {
-      expiryText = 'Пробный период: осталось ${state.trialDaysLeft} дней';
+      expiryText = AppLocalizations.of(
+        context,
+      )!.subscriptionTrialDaysLeftLine('${state.trialDaysLeft}');
     } else if (state.expiresAt != null) {
       final formatted = DateFormat('dd.MM.yyyy').format(state.expiresAt!);
-      expiryText = 'до $formatted';
+      expiryText = AppLocalizations.of(
+        context,
+      )!.subscriptionExpiryUntilLine(formatted);
     }
 
     return Container(
@@ -196,8 +205,11 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.workspace_premium,
-                  color: Colors.amber, size: 28),
+              const Icon(
+                Icons.workspace_premium,
+                color: Colors.amber,
+                size: 28,
+              ),
               const SizedBox(width: 10),
               Text(
                 _planLabel(state.plan),
@@ -211,13 +223,17 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               const Spacer(),
               // Status badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _statusColor(state.status).withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                   border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.4), width: 1),
+                    color: Colors.white.withValues(alpha: 0.4),
+                    width: 1,
+                  ),
                 ),
                 child: Text(
                   _statusLabel(state.status),
@@ -234,28 +250,35 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.calendar_today_outlined,
-                    color: Colors.white70, size: 14),
+                const Icon(
+                  Icons.calendar_today_outlined,
+                  color: Colors.white70,
+                  size: 14,
+                ),
                 const SizedBox(width: 6),
-                Text(expiryText,
-                    style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500)),
+                Text(
+                  expiryText,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
           ],
           if ((state.adminDiscount ?? 0) > 0) ...[
             const SizedBox(height: 8),
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.amber.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(AppConstants.radiusXl),
               ),
               child: Text(
-                'Скидка ${state.adminDiscount!.toStringAsFixed(0)}%',
+                AppLocalizations.of(context)!.subscriptionAdminDiscountBadge(
+                  state.adminDiscount!.toStringAsFixed(0),
+                ),
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.white,
@@ -278,14 +301,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         borderRadius: BorderRadius.circular(AppConstants.radiusLg),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Text('⏳', style: TextStyle(fontSize: 16)),
-          SizedBox(width: 10),
+          const Text('⏳', style: TextStyle(fontSize: 16)),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Ожидает подтверждения оплаты',
-              style: TextStyle(
+              AppLocalizations.of(context)!.subscriptionPendingBannerText,
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: AppColors.warning,
@@ -298,7 +321,11 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget _buildPlanCard(
-      _PlanInfo plan, bool isCurrent, SubscriptionLoaded state) {
+    _PlanInfo plan,
+    bool isCurrent,
+    SubscriptionLoaded state,
+    AppLocalizations l10n,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -345,14 +372,18 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 if (isCurrent)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusXl,
+                      ),
                     ),
-                    child: const Text(
-                      'Текущий план',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.subscriptionCurrentPlanBadge,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
@@ -366,53 +397,73 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusMd,
+                        ),
                       ),
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('Выбрать',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600)),
+                    child: Text(
+                      l10n.subscriptionSelectPlanButton,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
               ],
             ),
             const SizedBox(height: 12),
-            ...plan.features.map((f) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.check_circle_rounded,
-                          size: 15, color: AppColors.success),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(f,
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: context.textSecondary)),
+            ...plan.features.map(
+              (f) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      size: 15,
+                      color: AppColors.success,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        f,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: context.textSecondary,
+                        ),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPaymentHistory(List<PaymentRecord> payments) {
+  Widget _buildPaymentHistory(
+    List<PaymentRecord> payments,
+    AppLocalizations l10n,
+  ) {
     if (payments.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'История оплат',
+          l10n.paymentHistory,
           style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: context.textSecondary),
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: context.textSecondary,
+          ),
         ),
         const SizedBox(height: 8),
         ...payments.map((p) => _buildPaymentTile(p)),
@@ -426,97 +477,120 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     switch (payment.status) {
       case 'CONFIRMED':
         statusColor = AppColors.success;
-        statusLabel = 'Подтверждено';
+        statusLabel = AppLocalizations.of(
+          context,
+        )!.subscriptionPaymentConfirmedStatus;
         break;
       case 'REJECTED':
         statusColor = AppColors.error;
-        statusLabel = 'Отклонено';
+        statusLabel = AppLocalizations.of(
+          context,
+        )!.subscriptionPaymentRejectedStatus;
         break;
       default:
         statusColor = AppColors.warning;
-        statusLabel = 'Ожидает';
+        statusLabel = AppLocalizations.of(
+          context,
+        )!.subscriptionPaymentPendingStatus;
     }
 
     return Semantics(
-      label: AppLocalizations.of(context)!.a11yPaymentOf(_planLabel(payment.plan)),
+      label: AppLocalizations.of(
+        context,
+      )!.a11yPaymentOf(_planLabel(payment.plan)),
       button: true,
       child: GestureDetector(
-      onTap: () => _showPaymentDetail(payment),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _planLabel(payment.plan),
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
-                    style: TextStyle(
-                        fontSize: 12, color: context.textMuted),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${payment.amount.toStringAsFixed(0)} TJS',
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 4),
-                Row(
+        onTap: () => _showPaymentDetail(payment),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: context.bg,
-                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                      ),
-                      child: Text(
-                        payment.method == 'CARD' ? 'Карта' : 'Наличные',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: context.textSecondary),
+                    Text(
+                      _planLabel(payment.plan),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                      ),
-                      child: Text(
-                        statusLabel,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: statusColor,
-                            fontWeight: FontWeight.w600),
-                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
+                      style: TextStyle(fontSize: 12, color: context.textMuted),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${payment.amount.toStringAsFixed(0)} TJS',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.bg,
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusSm,
+                          ),
+                        ),
+                        child: Text(
+                          payment.method == 'CARD'
+                              ? AppLocalizations.of(context)!.card
+                              : AppLocalizations.of(context)!.cash,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: context.textSecondary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: statusColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusSm,
+                          ),
+                        ),
+                        child: Text(
+                          statusLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: statusColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -525,27 +599,55 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Платёж — ${_planLabel(payment.plan)}'),
+        title: Text(
+          AppLocalizations.of(
+            ctx,
+          )!.subscriptionPaymentDialogTitle(_planLabel(payment.plan)),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Сумма: ${payment.amount.toStringAsFixed(0)} TJS'),
+            Text(
+              AppLocalizations.of(ctx)!.subscriptionPaymentAmountLine(
+                payment.amount.toStringAsFixed(0),
+              ),
+            ),
             const SizedBox(height: 6),
             Text(
-                'Метод: ${payment.method == 'CARD' ? 'Перевод на карту' : 'Наличные'}'),
+              AppLocalizations.of(ctx)!.subscriptionPaymentMethodLine(
+                payment.method == 'CARD'
+                    ? AppLocalizations.of(ctx)!.subscriptionCardTransferMethod
+                    : AppLocalizations.of(ctx)!.cash,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text('Статус: ${payment.status}'),
+            Text(
+              AppLocalizations.of(
+                ctx,
+              )!.subscriptionPaymentStatusLine(payment.status),
+            ),
             const SizedBox(height: 6),
-            Text('Дата: ${DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt)}'),
+            Text(
+              AppLocalizations.of(ctx)!.subscriptionPaymentDateLine(
+                DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
+              ),
+            ),
             if (payment.adminNote != null && payment.adminNote!.isNotEmpty) ...[
               const SizedBox(height: 6),
-              Text('Примечание: ${payment.adminNote}'),
+              Text(
+                AppLocalizations.of(
+                  ctx,
+                )!.subscriptionAdminNoteLine(payment.adminNote!),
+              ),
             ],
-            if (payment.receiptUrl != null && payment.receiptUrl!.isNotEmpty) ...[
+            if (payment.receiptUrl != null &&
+                payment.receiptUrl!.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text('Чек:',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                AppLocalizations.of(ctx)!.subscriptionReceiptLabel,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppConstants.radiusSm),
@@ -555,7 +657,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (ctx2, err, st) => Text(
-                    'Изображение недоступно',
+                    AppLocalizations.of(
+                      ctx,
+                    )!.subscriptionReceiptImageUnavailable,
                     style: TextStyle(color: context.textMuted),
                   ),
                 ),
@@ -566,7 +670,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Закрыть'),
+            child: Text(AppLocalizations.of(ctx)!.close),
           ),
         ],
       ),
@@ -577,6 +681,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<SubscriptionBloc, SubscriptionState>(
       listener: (context, state) {
         if (state is SubscriptionActionSuccess) {
@@ -589,7 +694,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       child: Scaffold(
         backgroundColor: context.bg,
         appBar: AppBar(
-          title: const Text('Подписка'),
+          title: Text(l10n.settingsSectionSubscription),
           backgroundColor: Theme.of(context).colorScheme.surface,
           elevation: 0,
         ),
@@ -605,16 +710,17 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(state.message,
-                        style: const TextStyle(color: AppColors.error)),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
                     const SizedBox(height: 16),
                     if (_storeId != null)
                       TextButton(
-                        onPressed: () => context
-                            .read<SubscriptionBloc>()
-                            .add(SubscriptionLoadRequested(
-                                storeId: _storeId!)),
-                        child: const Text('Повторить'),
+                        onPressed: () => context.read<SubscriptionBloc>().add(
+                          SubscriptionLoadRequested(storeId: _storeId!),
+                        ),
+                        child: Text(l10n.retry),
                       ),
                   ],
                 ),
@@ -629,7 +735,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               onRefresh: () async {
                 if (_storeId != null) {
                   context.read<SubscriptionBloc>().add(
-                      SubscriptionLoadRequested(storeId: _storeId!));
+                    SubscriptionLoadRequested(storeId: _storeId!),
+                  );
                 }
               },
               child: SingleChildScrollView(
@@ -650,23 +757,27 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
                     // ── Plan selection ─────────────────────────────────
                     Text(
-                      'Тарифные планы',
+                      l10n.subscriptionPlansSectionTitle,
                       style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: context.textSecondary),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: context.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    ..._plans.map((plan) => _buildPlanCard(
-                          plan,
-                          plan.key == state.plan,
-                          state,
-                        )),
+                    ..._buildPlans(l10n).map(
+                      (plan) => _buildPlanCard(
+                        plan,
+                        plan.key == state.plan,
+                        state,
+                        l10n,
+                      ),
+                    ),
 
                     const SizedBox(height: 8),
 
                     // ── Payment history ────────────────────────────────
-                    _buildPaymentHistory(state.payments),
+                    _buildPaymentHistory(state.payments, l10n),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -710,12 +821,12 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt_outlined),
-              title: const Text('Камера'),
+              title: Text(AppLocalizations.of(ctx)!.subscriptionCameraSource),
               onTap: () => Navigator.pop(ctx, ImageSource.camera),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Галерея'),
+              title: Text(AppLocalizations.of(ctx)!.subscriptionGallerySource),
               onTap: () => Navigator.pop(ctx, ImageSource.gallery),
             ),
           ],
@@ -731,12 +842,14 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
     if (!mounted) return;
     setState(() => _uploading = true);
 
-    widget.bloc.add(SubscriptionReceiptUploaded(
-      storeId: widget.storeId,
-      plan: widget.planKey,
-      paymentMethod: 'CARD',
-      receiptPath: picked.path,
-    ));
+    widget.bloc.add(
+      SubscriptionReceiptUploaded(
+        storeId: widget.storeId,
+        plan: widget.planKey,
+        paymentMethod: 'CARD',
+        receiptPath: picked.path,
+      ),
+    );
 
     if (mounted) {
       Navigator.pop(context);
@@ -744,19 +857,23 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
   }
 
   void _submitCash() {
-    widget.bloc.add(SubscriptionPlanChangeRequested(
-      storeId: widget.storeId,
-      plan: widget.planKey,
-      paymentMethod: 'CASH',
-    ));
+    widget.bloc.add(
+      SubscriptionPlanChangeRequested(
+        storeId: widget.storeId,
+        plan: widget.planKey,
+        paymentMethod: 'CASH',
+      ),
+    );
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final planInfo = _plans.firstWhere(
+    final l10n = AppLocalizations.of(context)!;
+    final plans = _buildPlans(l10n);
+    final planInfo = plans.firstWhere(
       (p) => p.key == widget.planKey,
-      orElse: () => _plans.first,
+      orElse: () => plans.first,
     );
 
     return Padding(
@@ -782,14 +899,15 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Оплата тарифа «${planInfo.label}»',
+            AppLocalizations.of(
+              context,
+            )!.subscriptionPaymentSheetTitle(planInfo.label),
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Text(
             planInfo.price,
-            style: TextStyle(
-                fontSize: 14, color: context.textSecondary),
+            style: TextStyle(fontSize: 14, color: context.textSecondary),
           ),
           const SizedBox(height: 20),
 
@@ -797,13 +915,15 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
             // Method selection
             _MethodTile(
               icon: Icons.credit_card_outlined,
-              label: 'Перевод на карту',
+              label: AppLocalizations.of(
+                context,
+              )!.subscriptionCardTransferMethod,
               onTap: () => setState(() => _showCardDetails = true),
             ),
             const SizedBox(height: 10),
             _MethodTile(
               icon: Icons.payments_outlined,
-              label: 'Наличные',
+              label: AppLocalizations.of(context)!.cash,
               onTap: _submitCash,
             ),
           ] else ...[
@@ -814,18 +934,35 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
                 color: context.bg,
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Реквизиты для перевода',
-                      style: TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w700)),
-                  SizedBox(height: 10),
-                  _CardDetailRow(label: 'Карта', value: '4276 3800 1234 5678'),
-                  SizedBox(height: 6),
-                  _CardDetailRow(label: 'Получатель', value: 'DukonPro LLC'),
-                  SizedBox(height: 6),
-                  _CardDetailRow(label: 'Банк', value: 'Эсхата'),
+                  Text(
+                    AppLocalizations.of(
+                      context,
+                    )!.subscriptionTransferDetailsTitle,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _CardDetailRow(
+                    label: AppLocalizations.of(context)!.card,
+                    value: '4276 3800 1234 5678',
+                  ),
+                  const SizedBox(height: 6),
+                  _CardDetailRow(
+                    label: AppLocalizations.of(
+                      context,
+                    )!.subscriptionRecipientLabel,
+                    value: 'DukonPro LLC',
+                  ),
+                  const SizedBox(height: 6),
+                  _CardDetailRow(
+                    label: AppLocalizations.of(context)!.subscriptionBankLabel,
+                    value: 'Эсхата',
+                  ),
                 ],
               ),
             ),
@@ -839,8 +976,7 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppConstants.radiusLg),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                   ),
                 ),
                 icon: _uploading
@@ -848,16 +984,24 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.upload_outlined, size: 18),
-                label: Text(_uploading ? 'Загрузка...' : 'Я перевёл — загрузить чек'),
+                label: Text(
+                  _uploading
+                      ? AppLocalizations.of(context)!.loading
+                      : AppLocalizations.of(
+                          context,
+                        )!.subscriptionUploadReceiptButton,
+                ),
               ),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => setState(() => _showCardDetails = false),
-              child: const Text('Назад'),
+              child: Text(AppLocalizations.of(context)!.back),
             ),
           ],
           const SizedBox(height: 8),
@@ -888,22 +1032,23 @@ class _MethodTile extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           border: Border.all(
-              color: Theme.of(context)
-                  .colorScheme
-                  .outline
-                  .withValues(alpha: 0.2)),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          ),
         ),
         child: Row(
           children: [
             Icon(icon, color: AppColors.primary, size: 22),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(label,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w500)),
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
-            Icon(Icons.chevron_right_rounded,
-                color: context.textMuted),
+            Icon(Icons.chevron_right_rounded, color: context.textMuted),
           ],
         ),
       ),
@@ -923,14 +1068,16 @@ class _CardDetailRow extends StatelessWidget {
       children: [
         SizedBox(
           width: 90,
-          child: Text(label,
-              style: TextStyle(
-                  fontSize: 12, color: context.textSecondary)),
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 12, color: context.textSecondary),
+          ),
         ),
         Expanded(
-          child: Text(value,
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w600)),
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );

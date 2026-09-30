@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class MonthSelector extends StatelessWidget {
   final int month;
@@ -14,20 +15,23 @@ class MonthSelector extends StatelessWidget {
     required this.onChanged,
   });
 
-  static const _monthNames = [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь',
-  ];
+  List<String> _monthNames(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      l10n.monthJanuary,
+      l10n.monthFebruary,
+      l10n.monthMarch,
+      l10n.monthApril,
+      l10n.monthMay,
+      l10n.monthJune,
+      l10n.monthJuly,
+      l10n.monthAugust,
+      l10n.monthSeptember,
+      l10n.monthOctober,
+      l10n.monthNovember,
+      l10n.monthDecember,
+    ];
+  }
 
   void _previous() {
     if (month == 1) {
@@ -65,7 +69,7 @@ class MonthSelector extends StatelessWidget {
             icon: Icon(Icons.chevron_left, color: context.textPrimary),
           ),
           Text(
-            '${_monthNames[month - 1]} $year',
+            '${_monthNames(context)[month - 1]} $year',
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,

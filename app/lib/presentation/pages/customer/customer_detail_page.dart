@@ -64,8 +64,9 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Клиент')),
+      appBar: AppBar(title: Text(l10n.customerDetailPageTitle)),
       body: BlocBuilder<CustomerDetailBloc, CustomerDetailState>(
         builder: (context, state) {
           if (state is CustomerDetailLoading) {
@@ -133,20 +134,20 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       if (customer.phone != null && customer.phone!.isNotEmpty)
                         _ActionButton(
                           icon: Icons.phone_outlined,
-                          label: 'Звонок',
+                          label: l10n.call,
                           color: AppColors.success,
                           onTap: () => _launchPhone(customer.phone!),
                         ),
                       if (customer.phone != null && customer.phone!.isNotEmpty)
                         _ActionButton(
                           icon: Icons.message_outlined,
-                          label: 'СМС',
+                          label: l10n.sms,
                           color: AppColors.info,
                           onTap: () => _launchSms(customer.phone!),
                         ),
                       _ActionButton(
                         icon: Icons.shopping_cart_outlined,
-                        label: 'Продажа',
+                        label: l10n.sale,
                         color: AppColors.primary,
                         onTap: () {
                           context.read<CartBloc>().add(CartCustomerSelected(
@@ -160,7 +161,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       ),
                       _ActionButton(
                         icon: Icons.edit_outlined,
-                        label: 'Изменить',
+                        label: l10n.modify,
                         color: context.textSecondary,
                         onTap: () => _showEditCustomerDialog(customer),
                       ),
@@ -174,7 +175,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              Text('Потрачено', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                              Text(l10n.customerDetailSpentLabel, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.totalSpent.toStringAsFixed(0)} TJS', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.success)),
                             ],
@@ -186,7 +187,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              Text('Долг', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                              Text(l10n.debtLabel, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.debt.toStringAsFixed(0)} TJS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: customer.debt > 0 ? AppColors.error : context.textPrimary)),
                             ],
@@ -198,7 +199,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         child: AppCard(
                           child: Column(
                             children: [
-                              Text('Баллы', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                              Text(l10n.loyaltyPoints, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 4),
                               Text('${customer.loyaltyPoints}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.primary)),
                             ],
@@ -211,7 +212,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
 
                   if (customer.debt > 0)
                     AppButton(
-                      text: 'Посмотреть долги',
+                      text: l10n.viewDebts,
                       type: AppButtonType.outlined,
                       icon: Icons.account_balance_wallet,
                       onPressed: () => context.push('/debts/customer', extra: {
@@ -224,8 +225,8 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     const SizedBox(height: AppConstants.spacingMd),
                     ExpansionTile(
                       tilePadding: EdgeInsets.zero,
-                      title: const Text('История баллов',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                      title: Text(l10n.customerDetailLoyaltyHistoryTitle,
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                       children: _loyaltyTxs.take(10).map((tx) {
                         final sign = tx.points > 0 ? '+' : '';
                         final color = tx.type == 'EARN'
@@ -245,13 +246,13 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                             color: color,
                             size: 20,
                           ),
-                          title: Text('$sign${tx.points} баллов',
+                          title: Text(l10n.customerDetailPointsLine(sign, tx.points.toString()),
                               style: TextStyle(
                                   color: color, fontWeight: FontWeight.w600)),
                           subtitle: Text(_formatDate(tx.createdAt.toIso8601String())),
                           trailing: tx.expiresAt != null && tx.type == 'EARN'
                               ? Text(
-                                  'до ${_formatDate(tx.expiresAt!.toIso8601String())}',
+                                  l10n.customerDetailPointsExpiryLine(_formatDate(tx.expiresAt!.toIso8601String())),
                                   style: const TextStyle(
                                       fontSize: 11, color: Colors.orange),
                                 )
@@ -262,13 +263,13 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                   ],
                   const SizedBox(height: AppConstants.spacingLg),
 
-                  const Text('Последние покупки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  Text(l10n.recentPurchases, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   const SizedBox(height: AppConstants.spacingSm),
                   if (recentSales.isEmpty)
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(AppConstants.spacingXl),
-                        child: Text('Нет покупок', style: TextStyle(color: context.textSecondary)),
+                        child: Text(l10n.noPurchases, style: TextStyle(color: context.textSecondary)),
                       ),
                     )
                   else
@@ -281,7 +282,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Чек #${sale['receiptNo'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                                Text(l10n.dashboardSaleReceiptLabel((sale['receiptNo'] ?? '').toString()), style: const TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
                                   _formatDate(sale['createdAt'] as String? ?? ''),
                                   style: TextStyle(fontSize: 12, color: context.textSecondary),
@@ -319,10 +320,11 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
   }
 
   String _paymentLabel(String type) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
-      case 'CASH': return 'Наличные';
-      case 'CARD': return 'Карта';
-      case 'CREDIT': return 'В долг';
+      case 'CASH': return l10n.cash;
+      case 'CARD': return l10n.card;
+      case 'CREDIT': return l10n.debt;
       default: return type;
     }
   }

@@ -68,7 +68,7 @@ class ReceiptPreviewPage extends StatelessWidget {
         : 'DukonPro';
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Чек'),
+        title: Text(l10n.receipt),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -99,7 +99,7 @@ class ReceiptPreviewPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      text: 'Поделиться',
+                      text: l10n.share,
                       icon: Icons.share_outlined,
                       type: AppButtonType.outlined,
                       onPressed: () => _shareReceipt(context),
@@ -108,7 +108,7 @@ class ReceiptPreviewPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
-                      text: 'Печать',
+                      text: l10n.printLabel,
                       icon: Icons.print_outlined,
                       onPressed: () => _printReceipt(context),
                     ),

@@ -101,23 +101,27 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
 
   Future<void> _testPrint() async {
     if (_connectedDevice == null) return;
+    // Resolved before the first await so the ticket copy and both snackbars
+    // read from a context that is still guaranteed mounted.
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isPrinting = true);
     try {
-      final ticket = await _buildTestTicket();
+      final ticket = await _buildTestTicket(l10n);
       await BluetoothPrintPlus.write(Uint8List.fromList(ticket));
       if (mounted) {
-        AppSnackbar.success(context, AppLocalizations.of(context)!.snackTestPrintDone);
+        AppSnackbar.success(context, l10n.snackTestPrintDone);
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackPrintErrorDetails(mapErrorToUserMessage(e)));
+        AppSnackbar.error(
+            context, l10n.snackPrintErrorDetails(mapErrorToUserMessage(e)));
       }
     } finally {
       if (mounted) setState(() => _isPrinting = false);
     }
   }
 
-  Future<List<int>> _buildTestTicket() async {
+  Future<List<int>> _buildTestTicket(AppLocalizations l10n) async {
     // Simple raw ESC/POS bytes for test print
     final List<int> bytes = [];
     // Initialize printer
@@ -129,8 +133,8 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
     bytes.addAll('DukonPro\n'.codeUnits);
     // Bold off
     bytes.addAll([0x1B, 0x45, 0x00]);
-    bytes.addAll('Тестовая печать\n'.codeUnits);
-    bytes.addAll('ККМ/Фискализация\n'.codeUnits);
+    bytes.addAll(l10n.kkmTestPrintTicketLine.codeUnits);
+    bytes.addAll(l10n.kkmTicketHeaderLine.codeUnits);
     bytes.addAll([0x0A, 0x0A, 0x0A]);
     // Cut
     bytes.addAll([0x1D, 0x56, 0x41, 0x10]);
@@ -139,10 +143,11 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('ККМ / Фискализация'),
+        title: Text(l10n.settingsTileKkm),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -160,15 +165,16 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                 borderRadius: BorderRadius.circular(AppConstants.radiusLg),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: AppColors.info, size: 20),
-                  SizedBox(width: 10),
+                  const Icon(Icons.info_outline,
+                      color: AppColors.info, size: 20),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Фискализация чеков через подключённый ККМ-принтер. '
-                      'Убедитесь, что устройство зарегистрировано в налоговой.',
-                      style: TextStyle(fontSize: 13, color: AppColors.info),
+                      l10n.kkmFiscalNoteBody,
+                      style: const TextStyle(
+                          fontSize: 13, color: AppColors.info),
                     ),
                   ),
                 ],
@@ -177,7 +183,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
             const SizedBox(height: 20),
 
             // Connection status
-            Text('Bluetooth принтер',
+            Text(l10n.kkmBluetoothPrinterSectionLabel,
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -212,7 +218,9 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _connectedDevice != null ? 'Подключён' : 'Не подключён',
+                          _connectedDevice != null
+                              ? l10n.printerSettingsConnected
+                              : l10n.printerSettingsNotConnected,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -231,8 +239,8 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                   if (_connectedDevice != null)
                     TextButton(
                       onPressed: _disconnect,
-                      child: const Text('Отключить',
-                          style: TextStyle(color: AppColors.error)),
+                      child: Text(l10n.printerSettingsDisconnectButton,
+                          style: const TextStyle(color: AppColors.error)),
                     ),
                 ],
               ),
@@ -257,14 +265,16 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                         child: CircularProgressIndicator(strokeWidth: 2,
                             color: AppColors.primary))
                     : const Icon(Icons.search),
-                label: Text(_isScanning ? 'Поиск...' : 'Найти принтеры'),
+                label: Text(_isScanning
+                    ? l10n.printerSettingsScanningButton
+                    : l10n.printerSettingsScanButton),
               ),
             ),
             const SizedBox(height: 16),
 
             // Found devices
             if (_devices.isNotEmpty) ...[
-              Text('Найденные устройства',
+              Text(l10n.printerSettingsFoundDevicesTitle,
                   style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -307,7 +317,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                       if (!isConnected)
                         TextButton(
                           onPressed: () => _connect(device),
-                          child: const Text('Подключить'),
+                          child: Text(l10n.printerSettingsConnectButton),
                         ),
                     ],
                   ),
@@ -317,7 +327,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
             ],
 
             // Auto-print toggle
-            Text('Настройки',
+            Text(l10n.settings,
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -342,9 +352,10 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                           color: AppColors.primary, size: 18),
                     ),
                     const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text('Автопечать при продаже',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    Expanded(
+                      child: Text(l10n.kkmAutoPrintLabel,
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
                     ),
                     Switch(
                       value: _autoPrint,
@@ -377,7 +388,9 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
                           child: CircularProgressIndicator(
                               strokeWidth: 2, color: Colors.white))
                       : const Icon(Icons.print),
-                  label: Text(_isPrinting ? 'Печать...' : 'Тестовая печать'),
+                  label: Text(_isPrinting
+                      ? l10n.printerSettingsPrintingButton
+                      : l10n.printerSettingsTestPrintButton),
                 ),
               ),
             ],

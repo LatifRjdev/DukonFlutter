@@ -132,7 +132,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактировать товар' : 'Новый товар'),
+        title: Text(_isEditing ? l10n.editProduct : l10n.newProductTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -147,11 +147,20 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                   horizontal: AppConstants.spacingLg, vertical: AppConstants.spacingMd),
               child: Row(
                 children: [
-                  _StepDot(index: 1, label: 'Основное', isActive: true),
+                  _StepDot(
+                      index: 1,
+                      label: l10n.addProductStepBasic,
+                      isActive: true),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 2, label: 'Цены', isActive: false),
+                  _StepDot(
+                      index: 2,
+                      label: l10n.addProductStepPrices,
+                      isActive: false),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 3, label: 'Склад', isActive: false),
+                  _StepDot(
+                      index: 3,
+                      label: l10n.addProductStepStock,
+                      isActive: false),
                 ],
               ),
             ),
@@ -199,14 +208,14 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                                         color: AppColors.primary, size: 28),
                                     ),
                                     const SizedBox(height: 8),
-                                    Text('Добавить фото',
+                                    Text(l10n.addPhotoLabel,
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: context.textSecondary,
                                       )),
                                     const SizedBox(height: 4),
-                                    Text('JPG, PNG до 5MB',
+                                    Text(l10n.addProductImageSizeHint,
                                       style: TextStyle(fontSize: 12, color: context.textMuted)),
                                   ],
                                 ),
@@ -216,23 +225,25 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _nameController,
-                        label: 'Название товара *',
+                        label: l10n.addProductNameRequiredLabel,
                         prefixIcon: Icons.inventory_2_outlined,
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Введите название';
+                          if (v == null || v.trim().isEmpty) {
+                            return l10n.createStoreNameRequiredError;
+                          }
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _skuController,
-                        label: 'Артикул (SKU)',
+                        label: l10n.addProductSkuLabel,
                         prefixIcon: Icons.tag,
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _barcodeController,
-                        label: 'Штрихкод',
+                        label: l10n.barcode,
                         prefixIcon: Icons.qr_code,
                         suffix: IconButton(
                           tooltip: l10n.scanBarcode,
@@ -249,7 +260,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                           return DropdownButtonFormField<String>(
                             initialValue: _selectedCategoryId,
                             decoration: InputDecoration(
-                              labelText: 'Категория',
+                              labelText: l10n.category,
                               prefixIcon: const Icon(Icons.category_outlined),
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -270,7 +281,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _descriptionController,
-                        label: 'Описание',
+                        label: l10n.description,
                         prefixIcon: Icons.description_outlined,
                         maxLines: 3,
                       ),
@@ -282,7 +293,7 @@ class _AddProductStep1PageState extends State<AddProductStep1Page> {
             Padding(
               padding: const EdgeInsets.all(AppConstants.spacingLg),
               child: AppButton(
-                text: 'Далее',
+                text: l10n.next,
                 icon: Icons.arrow_forward,
                 onPressed: _next,
               ),

@@ -5,6 +5,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/shift.dart';
 import '../common/app_card.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class CurrentShiftCard extends StatefulWidget {
   final ShiftModel shift;
@@ -48,15 +49,15 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
     super.dispose();
   }
 
-  String _formatElapsed(Duration d) {
+  String _formatElapsed(AppLocalizations l10n, Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes.remainder(60);
-    // ignore: unnecessary_brace_in_string_interps
-    return '${hours}ч ${minutes}м';
+    return l10n.shiftsDurationFormat('$hours', '$minutes');
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AppCard(
       color: AppColors.primary.withValues(alpha: 0.05),
       child: Column(
@@ -78,13 +79,13 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Текущая смена',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    Text(
+                      l10n.currentShift,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${widget.shift.staffName ?? "Сотрудник"} - ${_formatElapsed(_elapsed)}',
+                      '${widget.shift.staffName ?? l10n.unknownStaffLabel} - ${_formatElapsed(l10n, _elapsed)}',
                       style: TextStyle(fontSize: 13, color: context.textSecondary),
                     ),
                   ],
@@ -96,9 +97,9 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
                   color: AppColors.success.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                 ),
-                child: const Text(
-                  'Активна',
-                  style: TextStyle(color: AppColors.success, fontSize: 12, fontWeight: FontWeight.w600),
+                child: Text(
+                  l10n.shiftsActiveStatus,
+                  style: const TextStyle(color: AppColors.success, fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -106,10 +107,10 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
           const SizedBox(height: AppConstants.spacingMd),
           Row(
             children: [
-              _StatItem(label: 'Продажи', value: '${widget.shift.salesTotal.toStringAsFixed(0)} TJS'),
-              _StatItem(label: 'Кол-во', value: '${widget.shift.salesCount}'),
-              _StatItem(label: 'Наличные', value: '${widget.shift.cashSales.toStringAsFixed(0)} TJS'),
-              _StatItem(label: 'Карта', value: '${widget.shift.cardSales.toStringAsFixed(0)} TJS'),
+              _StatItem(label: l10n.sales, value: '${widget.shift.salesTotal.toStringAsFixed(0)} TJS'),
+              _StatItem(label: l10n.quantityShort, value: '${widget.shift.salesCount}'),
+              _StatItem(label: l10n.cash, value: '${widget.shift.cashSales.toStringAsFixed(0)} TJS'),
+              _StatItem(label: l10n.card, value: '${widget.shift.cardSales.toStringAsFixed(0)} TJS'),
             ],
           ),
           const SizedBox(height: AppConstants.spacingMd),
@@ -118,7 +119,7 @@ class _CurrentShiftCardState extends State<CurrentShiftCard> {
             child: OutlinedButton.icon(
               onPressed: widget.onClose,
               icon: const Icon(Icons.stop_circle_outlined, size: 18),
-              label: const Text('Закрыть смену'),
+              label: Text(l10n.closeShift),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
                 side: const BorderSide(color: AppColors.error),

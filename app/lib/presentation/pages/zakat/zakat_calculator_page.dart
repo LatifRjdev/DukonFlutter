@@ -78,7 +78,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
-                  Text('Калькулятор закята',
+                  Text(l10n.zakatCalculator,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
@@ -127,7 +127,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                             border: Border(left: BorderSide(color: AppColors.info, width: 3)),
                           ),
                           child: Text(
-                            'Закят — ${calc.zakatRate.toStringAsFixed(1)}% от имущества, хранящегося 1 лунный год',
+                            l10n.zakatCalculatorInfoBanner(calc.zakatRate.toStringAsFixed(1)),
                             style: const TextStyle(fontSize: 12, color: AppColors.info),
                           ),
                         ),
@@ -136,7 +136,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         // Assets section
                         Row(
                           children: [
-                            Text('АКТИВЫ МАГАЗИНА',
+                            Text(l10n.zakatCalculatorAssetsSection,
                               style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text(_formatPrice(totalAssets, currency),
@@ -148,29 +148,29 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         // Stock value card
                         _buildAssetCard(
                           icon: Icons.inventory_2_outlined,
-                          title: 'Товарные остатки',
+                          title: l10n.zakatCalculatorStockValueLabel,
                           amount: calc.stockValue,
                           currency: currency,
-                          subtitle: 'Автоматически из каталога',
-                          badge: 'Авто',
+                          subtitle: l10n.zakatCalculatorAutoFromCatalog,
+                          badge: l10n.zakatCalculatorAutoBadge,
                         ),
                         const SizedBox(height: 8),
 
                         // Receivables card
                         _buildAssetCard(
                           icon: Icons.people_outlined,
-                          title: 'Дебиторская задолженность',
+                          title: l10n.receivables,
                           amount: calc.receivables,
                           currency: currency,
-                          subtitle: 'Долги клиентов',
-                          badge: 'Авто',
+                          subtitle: l10n.customerDebts,
+                          badge: l10n.zakatCalculatorAutoBadge,
                         ),
                         const SizedBox(height: 20),
 
                         // Deductions section
                         Row(
                           children: [
-                            Text('ВЫЧЕТЫ',
+                            Text(l10n.zakatCalculatorDeductionsSection,
                               style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w600)),
                             const Spacer(),
                             Text('-${_formatPrice(calc.payables, currency)}',
@@ -182,13 +182,13 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         _buildAssetCard(
                           icon: Icons.remove_circle_outline,
                           iconColor: AppColors.error,
-                          title: 'Долги поставщикам',
+                          title: l10n.zakatCalculatorSupplierDebtsLabel,
                           amount: calc.payables,
                           currency: currency,
                           amountColor: AppColors.error,
                           amountPrefix: '-',
-                          subtitle: 'Автоматически из модуля',
-                          badge: 'Авто',
+                          subtitle: l10n.zakatCalculatorAutoFromSupplierModule,
+                          badge: l10n.zakatCalculatorAutoBadge,
                         ),
                         const SizedBox(height: 20),
 
@@ -211,7 +211,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Облагаемая сумма:',
+                                  Text(l10n.zakatCalculatorTaxableAmountLabel,
                                     style: TextStyle(fontSize: 14, color: context.textSecondary)),
                                   Text(_formatPrice(calc.netAssets, currency),
                                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -221,7 +221,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Нисаб (85г золота):',
+                                  Text(l10n.zakatCalculatorNisabLabel,
                                     style: TextStyle(fontSize: 14, color: context.textSecondary)),
                                   Row(
                                     children: [
@@ -231,8 +231,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                         const SizedBox(width: 6),
                                         const Icon(Icons.check_circle, size: 14, color: AppColors.success),
                                         const SizedBox(width: 2),
-                                        const Text('Превышен',
-                                          style: TextStyle(fontSize: 12, color: AppColors.success)),
+                                        Text(l10n.zakatCalculatorNisabExceededBadge,
+                                          style: const TextStyle(fontSize: 12, color: AppColors.success)),
                                       ],
                                     ],
                                   ),
@@ -242,7 +242,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('СУММА ЗАКЯТА (${calc.zakatRate.toStringAsFixed(1)}%):',
+                                  Text(l10n.zakatCalculatorZakatAmountLabel(calc.zakatRate.toStringAsFixed(1)),
                                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                                   Text(_formatPrice(calc.zakatDue, currency),
                                     style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.primary)),
@@ -260,13 +260,13 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               color: context.warningBg,
                               borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Icon(Icons.info_outline, size: 18, color: AppColors.warning),
-                                SizedBox(width: 8),
+                                const Icon(Icons.info_outline, size: 18, color: AppColors.warning),
+                                const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text('Активы ниже нисаба. Закят не обязателен.',
-                                    style: TextStyle(fontSize: 13, color: AppColors.warning)),
+                                  child: Text(l10n.belowNisabNotice,
+                                    style: const TextStyle(fontSize: 13, color: AppColors.warning)),
                                 ),
                               ],
                             ),
@@ -296,8 +296,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 foregroundColor: AppColors.onPrimary,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                               ),
-                              child: const Text('Отметить как оплачено',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                              child: Text(l10n.zakatCalculatorMarkPaidButton,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                             ),
                           ),
                         const SizedBox(height: 12),
@@ -311,9 +311,11 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               final state = context.read<ZakatBloc>().state;
                               if (state is ZakatCalculated) {
                                 final c = state.calculation;
-                                final text = 'Закят: ${c.zakatDue.toStringAsFixed(2)} сом.\n'
-                                    'Нисаб: ${c.nisabAmount.toStringAsFixed(2)} сом.\n'
-                                    'Чистые активы: ${c.netAssets.toStringAsFixed(2)} сом.';
+                                final text = l10n.zakatCalculatorShareText(
+                                  c.zakatDue.toStringAsFixed(2),
+                                  c.nisabAmount.toStringAsFixed(2),
+                                  c.netAssets.toStringAsFixed(2),
+                                );
                                 Share.share(text);
                               }
                             },
@@ -323,8 +325,8 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                             ),
                             icon: const Icon(Icons.share_outlined, size: 18),
-                            label: const Text('Поделиться расчётом',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                            label: Text(l10n.zakatCalculatorShareButton,
+                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           ),
                         ),
                         const SizedBox(height: 16),

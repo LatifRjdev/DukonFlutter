@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'Это действие нельзя отменить.'**
   String get actionCannotBeUndone;
 
+  /// Generic delete-confirmation dialog body naming the item being deleted — reused by the discounts and categories list screens. Was `discountsDeleteConfirmBody`; promoted to an unprefixed generic key (value unchanged) when the categories screen needed the identical wording, rather than minting a duplicate value. Distinct from `actionCannotBeUndone` ("Это действие нельзя отменить."), which warns about irreversibility without naming the item
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы уверены, что хотите удалить \"{name}\"?'**
+  String deleteConfirmBody(String name);
+
   /// Edit button
   ///
   /// In ru, this message translates to:
@@ -159,6 +165,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Поиск'**
   String get search;
+
+  /// Default hint/placeholder text inside a search input field (AppSearchBar). Distinct from `search` ("Поиск", the bare search action/label with no ellipsis) and from `printerSettingsScanningButton` ("Поиск..."), a coincidentally identical value that labels a printer-discovery button while a Bluetooth scan runs — not a text-field placeholder
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск...'**
+  String get searchPlaceholder;
 
   /// Back button
   ///
@@ -184,6 +196,12 @@ abstract class AppLocalizations {
   /// **'Поделиться'**
   String get share;
 
+  /// Bare 'Print' action button label — deliberately unprefixed and generic (sibling of `share` on the receipt-preview screen). Distinct from `printReceipt` ("Печать чека"), the longer noun phrase, and from `printReceiptButton` ("Печатать чек"), the imperative form.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать'**
+  String get printLabel;
+
   /// Close button
   ///
   /// In ru, this message translates to:
@@ -195,6 +213,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Подтвердить'**
   String get confirm;
+
+  /// Generic 'Allow' / grant-permission action button — deliberately unprefixed, the affirmative half of any approval prompt (first use: approving an impersonation-access request from the notifications list). Distinct from `confirm` ("Подтвердить"), which confirms the user's own pending action rather than granting a third party access.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разрешить'**
+  String get allow;
+
+  /// Generic 'Decline' / reject action button — deliberately unprefixed, the negative half of any approval prompt and the counterpart of `allow` (first use: rejecting an impersonation-access request from the notifications list). Distinct from `cancel` ("Отмена"), which aborts the user's own action rather than refusing someone else's request.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонить'**
+  String get decline;
 
   /// Apply button (e.g. apply filters, apply inventory count results)
   ///
@@ -220,6 +250,18 @@ abstract class AppLocalizations {
   /// **'Восстановить'**
   String get restore;
 
+  /// Generic 'Reset' action — deliberately unprefixed, same class of generic action word as cancel/save/delete/create/retry
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить'**
+  String get reset;
+
+  /// Generic pagination button that appends the next page of results to an already-rendered list — deliberately unprefixed, same class of generic action word as retry/apply/reset. Distinct from `more` ("Ещё"), which is a bare 'More' navigation entry rather than a load-next-page action.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузить ещё'**
+  String get loadMore;
+
   /// Relative time — event happened less than a minute ago
   ///
   /// In ru, this message translates to:
@@ -243,6 +285,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{days} дн назад'**
   String daysAgo(String days);
+
+  /// Relative time — N days ago, abbreviated to a single-letter day unit ("д"). Distinct from `daysAgo` ("{days} дн назад"), which uses the two-letter "дн" abbreviation: both render N-days-ago, but the two wordings are pre-existing and used by different screens (this one by the notifications list), so they are kept as separate keys rather than one wording being silently changed to match the other. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'{days} д назад'**
+  String daysAgoShort(String days);
 
   /// Loading indicator text
   ///
@@ -292,6 +340,12 @@ abstract class AppLocalizations {
   /// **'Список пуст'**
   String get emptyList;
 
+  /// Generic empty state for a customer picker list — deliberately unprefixed since any customer-selection UI could plausibly reuse it
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет клиентов'**
+  String get noCustomers;
+
   /// Generic singular 'product' label, e.g. a table column header
   ///
   /// In ru, this message translates to:
@@ -303,6 +357,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Товар не найден'**
   String get productNotFound;
+
+  /// Generic error shown when a screen cannot load store-scoped data because no store is selected — deliberately unprefixed, since nothing about the message is specific to one screen (promoted from the former `productDetailStoreNotSelectedError`, same value, when the notifications list needed the identical message).
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазин не выбран'**
+  String get storeNotSelectedError;
 
   /// Generic 'difference' label (e.g. expected vs actual quantity), distinct from cashDifference which is specifically a cash-amount context
   ///
@@ -736,17 +796,95 @@ abstract class AppLocalizations {
   /// **'Цены'**
   String get addProductStepPrices;
 
-  /// Add-product wizard step indicator label — step 3 (stock)
+  /// Add-product wizard step indicator label — step 3 (stock). Distinct from `staffRoleWarehouseShort` (literally the same word "Склад" but meaning the warehouse staff role on the staff list page)
   ///
   /// In ru, this message translates to:
   /// **'Склад'**
   String get addProductStepStock;
+
+  /// Add-product step 1 — product name form field label with a required-field asterisk; distinct from `productName` ("Название товара", the same wording without the asterisk, used where the field is not marked required)
+  ///
+  /// In ru, this message translates to:
+  /// **'Название товара *'**
+  String get addProductNameRequiredLabel;
+
+  /// Add-product step 1 — SKU field label including the parenthetical latin hint; distinct from the bare `sku` key ("Артикул")
+  ///
+  /// In ru, this message translates to:
+  /// **'Артикул (SKU)'**
+  String get addProductSkuLabel;
+
+  /// Add-product step 1 — accepted image formats and size limit hint under the photo upload zone
+  ///
+  /// In ru, this message translates to:
+  /// **'JPG, PNG до 5MB'**
+  String get addProductImageSizeHint;
+
+  /// Add-product step 3 — opening stock quantity form field label with a required-field asterisk; distinct from `quantity` ("Количество"), the bare generic label
+  ///
+  /// In ru, this message translates to:
+  /// **'Начальное количество *'**
+  String get addProductInitialQuantityLabel;
+
+  /// Validation error shown when the add-product initial quantity field is left empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите количество'**
+  String get addProductQuantityRequiredError;
+
+  /// Add-product step 3 — minimum stock threshold form field label; distinct from `productDetailMinStockLine` ("Минимальный: {qty} {unit}"), a product detail read-out line
+  ///
+  /// In ru, this message translates to:
+  /// **'Минимальный остаток'**
+  String get addProductMinStockLabel;
+
+  /// Add-product step 3 — section heading above the product photo upload zone
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото товара'**
+  String get addProductPhotoSectionLabel;
+
+  /// Add-product step 3 — hint inside the empty photo upload zone prompting the user to tap it
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите для загрузки'**
+  String get addProductTapToUploadHint;
+
+  /// Success snackbar after the add-product wizard submits — tells the user the product is saved locally and will sync in the background
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар сохранён. Синхронизация в фоне.'**
+  String get addProductSavedSyncingMessage;
+
+  /// Generic 'Add photo' call-to-action inside an empty image upload zone (add-product step 1) — distinct from `a11yUploadPhoto` ("Загрузить фото", the screen-reader label on that same zone) and `editProfileChangePhotoLabel` ("Изменить фото", replacing an existing photo)
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить фото'**
+  String get addPhotoLabel;
 
   /// Product name field
   ///
   /// In ru, this message translates to:
   /// **'Название товара'**
   String get productName;
+
+  /// Russian singular form of 'product(s)' used after a count on the categories list (e.g. "1 товар") — deliberately three separate keys rather than an ICU plural, per this file's String-only placeholder convention (mirrors recordsCountOne/Few/Many)
+  ///
+  /// In ru, this message translates to:
+  /// **'товар'**
+  String get productCountOne;
+
+  /// Russian few-form (2-4) of 'product(s)', same usage as productCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'товара'**
+  String get productCountFew;
+
+  /// Russian many-form (0, 5+, 11-14) of 'product(s)', same usage as productCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'товаров'**
+  String get productCountMany;
 
   /// Generic bare 'Name' field/column label (e.g. table column header, form field for a category/supplier/investment/discount name) — distinct from `name` ("Имя", a person's name) and `productName` ("Название товара", the fuller product-specific label)
   ///
@@ -759,6 +897,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Штрихкод'**
   String get barcode;
+
+  /// Barcode scanner bottom sheet — sheet title
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер штрихкода'**
+  String get barcodeScannerTitle;
+
+  /// Barcode scanner bottom sheet — hint under the camera preview telling the user to aim the camera at a barcode
+  ///
+  /// In ru, this message translates to:
+  /// **'Наведите камеру на штрихкод'**
+  String get barcodeScannerHint;
 
   /// Cost/purchase price
   ///
@@ -819,6 +969,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Введите имя'**
   String get enterName;
+
+  /// Placeholder/hint text shown inside an empty quantity input field. Deliberately unprefixed — the same hint fits any quantity field. Same Russian text as `addProductQuantityRequiredError` ("Введите количество") but a different UI role: that key is the validation error returned when the add-product quantity field is submitted empty, this one is the field's own inline hint. Kept separate so translators can phrase an inviting hint and a validation error differently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите количество'**
+  String get enterQuantityHint;
+
+  /// Placeholder/hint text shown inside an empty cost-price (себестоимость) input field. Deliberately unprefixed — the same hint fits any cost-price field. Same Russian text as `costPriceRequiredError` ("Введите себестоимость") but a different UI role: that key is the validation error returned by a form validator when the cost-price field is empty, this one is the field's own inline hint. Kept separate so translators can phrase an inviting hint and a validation error differently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите себестоимость'**
+  String get enterCostPriceHint;
 
   /// Generic 'phone number is required' validation error, used across multiple auth/contact forms
   ///
@@ -891,6 +1053,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Категории'**
   String get categories;
+
+  /// Category create/edit dialog title when editing an existing category — same wording as the `a11yEditCategory` tooltip but a different UI role (dialog title vs. icon-button tooltip), kept as a separate key (mirrors the discountsEditTitle / a11yEditDiscount split)
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать категорию'**
+  String get categoriesEditTitle;
+
+  /// Category create/edit dialog title when creating a new category — shared a source line with categoriesEditTitle in a ternary, so it was missed by check_i18n.dart's one-match-per-line scan
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая категория'**
+  String get categoriesNewTitle;
+
+  /// Delete-confirmation dialog title on the categories list page — distinct from `a11yDeleteCategory` ("Удалить категорию", no question mark), which is the row's delete icon-button tooltip
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить категорию?'**
+  String get categoriesDeleteTitle;
+
+  /// Categories list empty-state heading
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет категорий'**
+  String get categoriesEmptyTitle;
+
+  /// Categories list empty-state body text
+  ///
+  /// In ru, this message translates to:
+  /// **'Создайте первую категорию для ваших товаров'**
+  String get categoriesEmptySubtitle;
+
+  /// Categories list empty-state call-to-action button — distinct from `create` ("Создать"), the bare generic verb
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать категорию'**
+  String get categoriesEmptyButton;
 
   /// All categories filter
   ///
@@ -1102,6 +1300,12 @@ abstract class AppLocalizations {
   /// **'Нет товаров'**
   String get noProducts;
 
+  /// Empty state shown when a product *search* returns no matches. Deliberately unprefixed and shared across search surfaces. Distinct from `noProducts` ("Нет товаров", the store has no products at all — not a search result) and from `noResults` ("Ничего не найдено", a subject-less generic used where the searched entity isn't products).
+  ///
+  /// In ru, this message translates to:
+  /// **'Товары не найдены'**
+  String get noProductsFound;
+
   /// Empty products page — headline shown when the store has no products yet
   ///
   /// In ru, this message translates to:
@@ -1119,6 +1323,192 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Импорт из Excel'**
   String get importFromExcel;
+
+  /// Product list page — search field hint text
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск товара'**
+  String get productSearchHint;
+
+  /// Product list page — stock filter chip for products running low; distinct from `lowStock` ("Мало на складе"), a differently-worded low-stock warning used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Заканчивается'**
+  String get productFilterLowStock;
+
+  /// Product list page — stock filter chip for the combined low-stock + out-of-stock 'needs attention' filter (see the file's BUG #26 comments)
+  ///
+  /// In ru, this message translates to:
+  /// **'Требует внимания'**
+  String get productFilterAttention;
+
+  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. NOTE: this string was NOT in check_i18n.dart's original allow-list dump for this file — it shares a source line with `noProducts` and check_i18n only flags the first Cyrillic match per line — but it must still be migrated in this same pass
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет товаров по фильтру'**
+  String get productsEmptyFilteredTitle;
+
+  /// Product list page — empty-state subtitle shown when the store has zero products at all; distinct from `emptyProductsSubtitle` ("Начните добавлять товары в ваш магазин, чтобы управлять продажами и складом"), differently-worded text on another products screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первый товар в каталог'**
+  String get productsEmptyAddSubtitle;
+
+  /// Product list page — empty-state subtitle shown when a filter/search hides all products
+  ///
+  /// In ru, this message translates to:
+  /// **'Попробуйте изменить фильтр или поисковый запрос'**
+  String get productsEmptyFilteredSubtitle;
+
+  /// Product list card — SKU line
+  ///
+  /// In ru, this message translates to:
+  /// **'Арт: {sku}'**
+  String productSkuLine(String sku);
+
+  /// Product list card — in-stock quantity line. {value} is the pre-formatted '<quantity> <unit>' string. This collapses what was previously two separately-styled Text widgets (grey label + stock-status-colored value) into one Text per the label+separator+value composite-string rule (.claude/rules/mobile-l10n.md) — the merged Text keeps the stock-status color since that's the more important visual signal
+  ///
+  /// In ru, this message translates to:
+  /// **'На складе: {value}'**
+  String productStockQuantityLine(String value);
+
+  /// Product active-status badge, masculine grammatical agreement (product = 'товар', masculine) — distinct from the feminine-agreement 'Активна' forms used elsewhere (subscription/loyalty/shift status badges), which cannot be reused here without breaking Russian grammar
+  ///
+  /// In ru, this message translates to:
+  /// **'Активен'**
+  String get productStatusActive;
+
+  /// Lint-tool blind spot fix — companion to `productStatusActive` on the same ternary line, never flagged by check_i18n.dart's one-match-per-line regex
+  ///
+  /// In ru, this message translates to:
+  /// **'Неактивен'**
+  String get productStatusInactive;
+
+  /// Product detail page — info-row label for the product's unit of measurement, short form; distinct from `unit` ("Единица измерения", the fuller field label used in forms)
+  ///
+  /// In ru, this message translates to:
+  /// **'Единица'**
+  String get productDetailUnitLabel;
+
+  /// Product detail page — current stock quantity line above the stock progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий остаток: {qty} {unit}'**
+  String productDetailCurrentStockLine(String qty, String unit);
+
+  /// Product detail page — minimum stock quantity line above the stock progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'Минимальный: {qty} {unit}'**
+  String productDetailMinStockLine(String qty, String unit);
+
+  /// Product detail page — info-row label for barcode, spelled with a hyphen; distinct from `barcode` ("Штрихкод", no hyphen) used elsewhere — different literal, kept separate rather than reconciled here
+  ///
+  /// In ru, this message translates to:
+  /// **'Штрих-код'**
+  String get productDetailBarcodeLabel;
+
+  /// Product detail page — stock section card title
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличие на складе'**
+  String get productDetailStockAvailabilityTitle;
+
+  /// Product detail page — general info section card title. Same value as `transactionDetailInfoSectionTitle` ("Информация") on the transaction-detail screen; each screen's info card lists different fields, so they may diverge in tg/uz. Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Информация'**
+  String get productDetailInfoSectionTitle;
+
+  /// Product detail page — bottom button to add the product to the cart
+  ///
+  /// In ru, this message translates to:
+  /// **'Продать'**
+  String get productDetailSellButton;
+
+  /// Product detail page — delete confirmation dialog title
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить товар?'**
+  String get productDetailDeleteConfirmTitle;
+
+  /// Product detail page — error shown when the stock movement history fails to load
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось загрузить историю движений'**
+  String get productDetailMovementHistoryLoadError;
+
+  /// Product detail page — stock movement history section title
+  ///
+  /// In ru, this message translates to:
+  /// **'История движений'**
+  String get productDetailMovementHistoryTitle;
+
+  /// Product detail page — empty state for the stock movement history list
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет движений'**
+  String get productDetailNoMovements;
+
+  /// Product detail page — shown in the batch profitability card when the product has no batch data yet
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.'**
+  String get productDetailBatchNoDataMessage;
+
+  /// Product detail page — batch profitability card title
+  ///
+  /// In ru, this message translates to:
+  /// **'Окупаемость партии'**
+  String get productDetailBatchPayabilityTitle;
+
+  /// Product detail page — batch profitability card, cost-of-batch info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость партии'**
+  String get productDetailBatchCostLabel;
+
+  /// Product detail page — batch profitability card, revenue-from-batch info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка от партии'**
+  String get productDetailBatchRevenueLabel;
+
+  /// Product detail page — batch profitability card, profit-earned info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Прибыль заработана'**
+  String get productDetailBatchProfitEarnedLabel;
+
+  /// Product detail page — batch profitability card, remaining-amount-until-payback info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'До окупаемости партии'**
+  String get productDetailBatchTimeToPaybackLabel;
+
+  /// Product detail page — batch profitability card, shown once the batch has fully paid off
+  ///
+  /// In ru, this message translates to:
+  /// **'Партия окупилась'**
+  String get productDetailBatchPaidOffLabel;
+
+  /// Product detail page — batch profitability card, remaining-stock info row label
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток'**
+  String get productDetailStockRemainingLabel;
+
+  /// Product detail page — batch profitability card, remaining-stock info row value (quantity and its monetary value)
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт. на {value}'**
+  String productDetailStockRemainingValue(String qty, String value);
+
+  /// Product detail page — batch profitability card, percent-paid-off caption under the progress bar
+  ///
+  /// In ru, this message translates to:
+  /// **'{percent}% окупаемости'**
+  String productDetailBatchPaybackPercentLine(String percent);
 
   /// Point of Sale section
   ///
@@ -1162,6 +1552,18 @@ abstract class AppLocalizations {
   /// **'Итого'**
   String get total;
 
+  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because two unrelated screens share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value). CAVEAT: the printed and PDF receipts render the same all-caps label from their own hardcoded 'ИТОГО' — thermal_printer_service.dart and receipt_pdf_service.dart live outside lib/presentation, which check_i18n does not scan and which has no BuildContext. So this key does NOT yet cover those surfaces, and they will stay Russian once tg/uz translations land. Route them through this key when that layer is localized.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО'**
+  String get totalCaps;
+
+  /// Composite 'total' row: label + separator + a pre-formatted amount followed by a hardcoded TJS currency suffix. Full-sentence key so the colon stays translatable. Deliberately unprefixed and shared — it is the payroll period-detail header total and the per-sale total caption on the customer-debts screen (promoted from the former `payrollTotalLine`, same value, when a second feature needed it). Do not use where the amount may be in a non-TJS currency, since the suffix is baked in; use `total` ("Итого") plus a separately formatted value there.
+  ///
+  /// In ru, this message translates to:
+  /// **'Итого: {amount} TJS'**
+  String totalTjsLine(String amount);
+
   /// Cash payment method
   ///
   /// In ru, this message translates to:
@@ -1197,6 +1599,84 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Смешанная оплата'**
   String get mixed;
+
+  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Shared across pos_checkout_page.dart and transaction_detail_page.dart (a later task in this plan), both of which use the bare form for the same UI role (a compact payment-method chip/label).
+  ///
+  /// In ru, this message translates to:
+  /// **'Смешанная'**
+  String get paymentMixedShort;
+
+  /// No description provided for @posCheckoutNoCustomerOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без клиента'**
+  String get posCheckoutNoCustomerOption;
+
+  /// No description provided for @posCheckoutSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск по названию'**
+  String get posCheckoutSearchHint;
+
+  /// No description provided for @posCheckoutEmptyCartSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Найдите товар через поиск или выберите из списка выше'**
+  String get posCheckoutEmptyCartSubtitle;
+
+  /// No description provided for @posCheckoutCartHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'Корзина ({count} товаров)'**
+  String posCheckoutCartHeader(String count);
+
+  /// No description provided for @posCheckoutCta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформить продажу — {total}'**
+  String posCheckoutCta(String total);
+
+  /// No description provided for @posCheckoutPointsRedeemPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'{points} баллов = -{value} сом'**
+  String posCheckoutPointsRedeemPreview(String points, String value);
+
+  /// No description provided for @posCheckoutPointsAvailableInline.
+  ///
+  /// In ru, this message translates to:
+  /// **'{points} баллов доступно'**
+  String posCheckoutPointsAvailableInline(String points);
+
+  /// No description provided for @posCheckoutRedeemPointsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списать баллы'**
+  String get posCheckoutRedeemPointsTitle;
+
+  /// No description provided for @posCheckoutPointsAvailableLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно: {points} баллов'**
+  String posCheckoutPointsAvailableLabel(String points);
+
+  /// No description provided for @posCheckoutDiscountPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка: -{amount} сом'**
+  String posCheckoutDiscountPreview(String amount);
+
+  /// No description provided for @posCheckoutDiscountPercentHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Процент'**
+  String get posCheckoutDiscountPercentHint;
+
+  /// No description provided for @posCheckoutDiscountAmountHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма'**
+  String get posCheckoutDiscountAmountHint;
 
   /// Bank transfer payment method option (distinct from the POS cash/card/debt/mixed payment methods)
   ///
@@ -1264,17 +1744,59 @@ abstract class AppLocalizations {
   /// **'Продажа оформлена'**
   String get saleSuccess;
 
+  /// Sale-success screen — the large headline under the green checkmark. Exclamative form; distinct from `saleSuccess` ("Продажа оформлена", no exclamation mark) which is the neutral status/confirmation wording used elsewhere. Do not merge — the trailing "!" is part of this screen's celebratory copy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа оформлена!'**
+  String get saleSuccessTitle;
+
+  /// Sale-success screen — the change-due line, rendered as one contiguous text run inside a single Text widget (label, separator and value share one style), so it is one full-sentence key rather than the bare `change` label plus manual interpolation. {amount} is the pre-formatted change amount including currency.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сдача: {amount}'**
+  String saleSuccessChangeLine(String amount);
+
+  /// Sale-success screen — button that opens the share sheet for sending the receipt (labelled for Telegram, the primary option). Distinct from `shareReceipt` ("Отправить чек", the generic share-receipt action) and from `snackReceiptSentToTelegram` (the success snackbar).
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить в Telegram'**
+  String get saleSuccessSendToTelegramButton;
+
+  /// Sale-success screen — receipt body shared via the WhatsApp option of the share sheet. Newline-separated (receipt number on the first line, total on the second), because WhatsApp preserves line breaks. Distinct from `saleSuccessReceiptShareTextSms`, which carries the same information comma-separated on a single line for SMS. {receiptNo} is the receipt number, {total} the total formatted to two decimals.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек #{receiptNo}\nИтого: {total} сом.'**
+  String saleSuccessReceiptShareTextWhatsapp(String receiptNo, String total);
+
+  /// Sale-success screen — receipt body shared via the SMS option of the share sheet. Single line, comma-separated, to stay compact in an SMS. Distinct from `saleSuccessReceiptShareTextWhatsapp`, which is the same information split across two lines with a newline. {receiptNo} is the receipt number, {total} the total formatted to two decimals.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек #{receiptNo}, Итого: {total} сом.'**
+  String saleSuccessReceiptShareTextSms(String receiptNo, String total);
+
   /// Receipt number label
   ///
   /// In ru, this message translates to:
   /// **'Чек №'**
   String get receiptNo;
 
+  /// Abbreviated quantity column header on a receipt's item table, shortened to fit a narrow receipt column — distinct from `quantity` ("Количество", the full word used where space allows). Shared by the on-screen receipt widget and the PDF receipt, which use the same abbreviated header.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол.'**
+  String get receiptQtyAbbrev;
+
   /// Print receipt action
   ///
   /// In ru, this message translates to:
   /// **'Печать чека'**
   String get printReceipt;
+
+  /// Imperative-form 'Print receipt' button label. Distinct from `printReceipt` ("Печать чека", noun form used as an action/title name) — different grammatical form, do not merge. Deliberately unprefixed: used as the print button on both the transaction-detail screen and the sale-success screen (promoted from the former `transactionDetailPrintReceiptButton`, same value).
+  ///
+  /// In ru, this message translates to:
+  /// **'Печатать чек'**
+  String get printReceiptButton;
 
   /// Share receipt action
   ///
@@ -1312,7 +1834,103 @@ abstract class AppLocalizations {
   /// **'История продаж'**
   String get salesHistory;
 
-  /// Today's sales
+  /// Sales-filter bottom sheet heading. Same value as the pre-existing `a11yFilters` ("Фильтры"), which is a screen-reader/tooltip label — visible chrome and a11y labels are kept as separate keys in this ARB (cf. `share`/`a11yShare`). Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фильтры'**
+  String get salesFilterSheetTitle;
+
+  /// Sales-filter bottom sheet's reset-all-filters button — distinct from `offlineResetSyncStatusConfirm` ("Сбросить"), a different screen's dialog-confirm button that happens to share the same Russian word
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить'**
+  String get salesFilterReset;
+
+  /// Sales-filter bottom sheet's period-section chip for opening a custom date-range picker ("Выбрать даты") — distinct from `salesHistoryCustomDateChip` ("Выбрать"), the shorter wording used on the sales-history page's own period chips
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать даты'**
+  String get salesFilterCustomDates;
+
+  /// No description provided for @salesFilterPaymentTypeSectionLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тип оплаты'**
+  String get salesFilterPaymentTypeSectionLabel;
+
+  /// Generic bare 'Debt' label — shared between this sheet's payment-type filter chip and customer_detail_page.dart's debt stat card; distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Долг'**
+  String get debtLabel;
+
+  /// Sales-filter bottom sheet — section header above the order-status filter chips. Distinct from `staffStatusLabel` ("Статус"), the staff detail page's on-shift stat-column label
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get salesFilterStatusSectionLabel;
+
+  /// No description provided for @salesFilterStatusCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнен'**
+  String get salesFilterStatusCompleted;
+
+  /// No description provided for @salesFilterStatusCancelled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменён'**
+  String get salesFilterStatusCancelled;
+
+  /// Sales-history period-filter chip for opening a custom date-range picker (bare "Выбрать") — distinct from `salesFilterCustomDates` ("Выбрать даты"), the fuller wording used in the sales-filter bottom sheet's period section. Also shares its bare value with `subscriptionSelectPlanButton` ("Выбрать"), a plan-selection button — unrelated actions that coincide in Russian and may not in tg/uz. Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать'**
+  String get salesHistoryCustomDateChip;
+
+  /// Sales-history empty-state subtitle shown when there are no sales yet
+  ///
+  /// In ru, this message translates to:
+  /// **'История продаж появится здесь после первой транзакции'**
+  String get salesHistoryEmptySubtitle;
+
+  /// Stats banner above the sales list — sale count and total amount, both pre-formatted strings
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж  |  {amount}'**
+  String salesHistoryStatsLine(String count, String amount);
+
+  /// Shown when the sales import parser skipped rows (BUG #28 warning banner); `word` is the already-pluralized Russian noun form (записей/запись/записи), pre-formatted at the call site via _pluralRecord
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} {word} пропущено'**
+  String salesHistorySkippedRowsLine(String count, String word);
+
+  /// Sales-history list row's second line — customer name (or the retail-customer fallback, reusing `transactionDetailRetailCustomerFallback`) bullet-separated from the item count
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer}  •  {itemsCount} товаров'**
+  String salesHistorySaleSummaryLine(String customer, String itemsCount);
+
+  /// Russian singular form of 'record(s)', used in the skipped-rows warning on the sales-history import screen
+  ///
+  /// In ru, this message translates to:
+  /// **'запись'**
+  String get recordsCountOne;
+
+  /// Russian few-form (2-4) of 'record(s)', same usage as recordsCountOne
+  ///
+  /// In ru, this message translates to:
+  /// **'записи'**
+  String get recordsCountFew;
+
+  /// Russian many-form (0, 5+, 11-14) of 'record(s)', same usage as recordsCountOne — deliberately three separate keys rather than ICU plural, per this file's String-only placeholder convention
+  ///
+  /// In ru, this message translates to:
+  /// **'записей'**
+  String get recordsCountMany;
+
+  /// Today's sales ("Продажи за сегодня"). Distinct from `staffTodaySalesLabel` ("Продажи сегодня", without the preposition "за"), the staff detail page's stats-row label
   ///
   /// In ru, this message translates to:
   /// **'Продажи за сегодня'**
@@ -1324,11 +1942,107 @@ abstract class AppLocalizations {
   /// **'Детали операции'**
   String get transactionDetail;
 
+  /// No description provided for @transactionDetailItemQtyLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{quantity} шт × {price}'**
+  String transactionDetailItemQtyLine(String quantity, String price);
+
+  /// Sale status badge — 'Returned' (masculine form, agrees with 'чек'). Distinct from `returned` ("Возвращена", feminine form used elsewhere) — different grammatical gender, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращён'**
+  String get transactionDetailStatusReturned;
+
+  /// No description provided for @transactionDetailInfoSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Информация'**
+  String get transactionDetailInfoSectionTitle;
+
+  /// No description provided for @transactionDetailNoItemsData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных о товарах'**
+  String get transactionDetailNoItemsData;
+
+  /// Sale status badge — 'Paid/Completed'. Distinct from `completed` ("Завершена", a different word) and `paid` ("Оплачено", a different grammatical form used for the paid-amount value row on this same screen) — do not merge any of the three.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачен'**
+  String get transactionDetailStatusPaid;
+
+  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек {receiptNo}'**
+  String transactionDetailReceiptTitle(String receiptNo);
+
+  /// Fallback customer name shown when a sale has no linked customer (walk-in/retail sale)
+  ///
+  /// In ru, this message translates to:
+  /// **'Розничный'**
+  String get transactionDetailRetailCustomerFallback;
+
   /// Refund action
   ///
   /// In ru, this message translates to:
   /// **'Возврат'**
   String get refund;
+
+  /// Refund page — confirmation dialog title. Distinct from `confirm` ("Подтвердить"), the dialog's own bare action button on the same dialog — do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтвердить возврат?'**
+  String get refundConfirmTitle;
+
+  /// Refund confirmation dialog body — combines the refund total and selected-item count into one translatable sentence (was two adjacent Dart string literals forming one Text)
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата: {amount}\nВыбрано позиций: {count}'**
+  String refundConfirmBody(String amount, String count);
+
+  /// Refund page — info banner instructing the cashier to pick which line items to refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите товары для возврата'**
+  String get refundInstructionBanner;
+
+  /// Refund page — toggle-button label that selects every line item for refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать все'**
+  String get refundSelectAll;
+
+  /// Refund page — toggle-button label that clears the line-item selection (shown when all items are already selected)
+  ///
+  /// In ru, this message translates to:
+  /// **'Снять все'**
+  String get refundDeselectAll;
+
+  /// Refund page — section header above the free-text reason field
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина возврата'**
+  String get refundReasonLabel;
+
+  /// Refund page — placeholder text inside the reason field. Distinct from `refundReasonLabel` ("Причина возврата"), the section header above it — imperative prompt vs noun label, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите причину возврата'**
+  String get refundReasonHint;
+
+  /// Refund page — bottom-bar total row label, rendered as its own Text at the left edge of a spaceBetween Row with the refund amount right-aligned opposite it (same two-Text pattern as `zakatCalculatorTaxableAmountLabel`/`zakatCalculatorZakatAmountLabel`); the trailing colon is part of the value so translators control it. Distinct from `zReportReturnsAmount` ("Сумма возвратов", plural — a Z-report aggregate over many refunds, not this single refund's total).
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата:'**
+  String get refundTotalLabel;
+
+  /// Refund page — bottom-bar primary action button that submits the refund
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформить возврат'**
+  String get refundSubmitButton;
 
   /// Completed sale status
   ///
@@ -1384,6 +2098,42 @@ abstract class AppLocalizations {
   /// **'Приход товара'**
   String get stockIntake;
 
+  /// Stock-intake screen — search field hint for finding the product to record an intake against
+  ///
+  /// In ru, this message translates to:
+  /// **'Найти товар для прихода'**
+  String get stockIntakeSearchHint;
+
+  /// Stock-intake screen — initial empty state prompting the user to search for a product before any search has been typed; distinct from `stockIntakeSearchHint`, which is the search field's own inline hint
+  ///
+  /// In ru, this message translates to:
+  /// **'Найдите товар для оформления прихода'**
+  String get stockIntakeEmptyState;
+
+  /// Stock-intake screen — current on-hand stock caption on a product row and on the selected-product card. Full-sentence composite (label + separator + value) so the colon stays translatable. Distinct from `productStockQuantityLine` ("На складе: {value}", different Russian wording on the product list) and from `productDetailStockRemainingLabel` ("Остаток", a bare standalone label). Both placeholders are pre-formatted Strings; `unit` is an already-localised unit display name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток: {quantity} {unit}'**
+  String stockIntakeRemainingLine(String quantity, String unit);
+
+  /// Stock-intake screen — sell-price caption on the selected-product card. Full-sentence composite (label + separator + value) so the colon stays translatable; distinct from the bare `price` ("Цена") label. Placeholder is a pre-formatted, currency-bearing String.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена: {price}'**
+  String stockIntakePriceLine(String price);
+
+  /// Stock-intake screen — section label above the unit cost-price field, with an explicit per-unit qualifier. Distinct from `costPriceRequiredLabel` ("Себестоимость *", the add-product field label with a required asterisk), `dashboardCost` ("Себестоимость", a dashboard metric tile) and `productDetailBatchCostLabel` ("Себестоимость партии", the cost of a whole batch rather than per unit)
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость (за единицу)'**
+  String get stockIntakeCostPerUnitLabel;
+
+  /// Stock-intake screen — label on the computed total-cost summary card (quantity x unit cost). Distinct from `total` ("Итого") and `stockValue` ("Стоимость товаров", the whole inventory's value)
+  ///
+  /// In ru, this message translates to:
+  /// **'Итоговая стоимость'**
+  String get stockIntakeTotalCostLabel;
+
   /// Stock movement section
   ///
   /// In ru, this message translates to:
@@ -1419,6 +2169,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Списание'**
   String get writeOff;
+
+  /// Stock movement type — goods arriving (IN), bare short form; distinct from `stockIntake` ("Приход товара"), the fuller action-button label used elsewhere. Also reused here for the page's own 'record an intake' bottom button, since it's the same bare word in the same underlying concept.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приход'**
+  String get intakeType;
+
+  /// Stock movement type — goods leaving (OUT/sold), bare short form. Distinct from `expense` ("Расход", a financial-ledger transaction-type fallback label used in balance_page.dart) — identical Russian spelling, different domain; do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расход'**
+  String get outflowType;
 
   /// Supplier label
   ///
@@ -1474,6 +2236,12 @@ abstract class AppLocalizations {
   /// **'Прибыль'**
   String get profit;
 
+  /// Bare 'Margin' metric label — reused verbatim by product_detail_page.dart's batch-profitability mini-card; mint here once, do not duplicate in that file's task
+  ///
+  /// In ru, this message translates to:
+  /// **'Маржа'**
+  String get margin;
+
   /// More button
   ///
   /// In ru, this message translates to:
@@ -1528,6 +2296,36 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
+  /// Offline banner — message while the device is offline and the sync queue is empty. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the longer two-sentence variant used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет подключения к интернету'**
+  String get offlineBannerNoConnection;
+
+  /// Offline banner — message while the device is offline and operations are queued. The separator is U+00B7 MIDDLE DOT
+  ///
+  /// In ru, this message translates to:
+  /// **'Офлайн режим · {count} в очереди'**
+  String offlineBannerQueuedMessage(String count);
+
+  /// Offline banner — message while a sync is in progress. Distinct from `offlineSyncingButton` ("Синхронизация..."), a coincidentally identical value that labels the manual-sync *button* on the offline mode settings page
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация...'**
+  String get offlineBannerSyncing;
+
+  /// Offline banner — message after a sync failed, with the number of operations still unsent. The separator is U+00B7 MIDDLE DOT. Distinct from `snackSyncError` ("Ошибка синхронизации: {error}"), a colon-plus-error-detail snackbar template
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка синхронизации · {count} не отправлено'**
+  String offlineBannerSyncErrorMessage(String count);
+
+  /// Offline banner — message while online with operations still waiting to sync. Distinct from `offlinePendingOpsCount` ("{count} операций в очереди"), the offline mode settings page's shorter queue-count line
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} операций ожидают синхронизации'**
+  String offlineBannerPendingMessage(String count);
+
   /// Offline mode page — button that clears the locally displayed last-synced timestamp. Does NOT reset the pending-ops count (a live read from the real sync queue as of the 2026-09-23 SyncEngine rewiring — it can't be honestly reset without discarding real queued data) and does NOT delete any cached product/category/sale data (that data doubles as the offline-first read source and may hold unsynced local writes), so the label must not say anything implying data is erased
   ///
   /// In ru, this message translates to:
@@ -1551,6 +2349,72 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сбросить'**
   String get offlineResetSyncStatusConfirm;
+
+  /// Detail text passed into the generic `snackSyncError({error})` template when a manual sync partially fails
+  ///
+  /// In ru, this message translates to:
+  /// **'не удалось синхронизировать часть операций'**
+  String get offlineSyncErrorPartialDetail;
+
+  /// Offline mode page — status card headline when the sync queue is empty
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё синхронизировано'**
+  String get offlineAllSynced;
+
+  /// Offline mode page — status card headline when the sync queue still holds unsynced operations
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} операций в очереди'**
+  String offlinePendingOpsCount(String count);
+
+  /// Offline mode page — timestamp of the most recent successful sync
+  ///
+  /// In ru, this message translates to:
+  /// **'Последняя синхронизация: {date}'**
+  String offlineLastSyncLabel(String date);
+
+  /// Offline mode page — shown in place of offlineLastSyncLabel when no sync has ever completed on this device
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация ещё не выполнялась'**
+  String get offlineNeverSynced;
+
+  /// Offline mode page — manual-sync button label while a sync is in progress
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация...'**
+  String get offlineSyncingButton;
+
+  /// Offline mode page — manual-sync button's default (non-syncing) label
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизировать сейчас'**
+  String get offlineSyncNowButton;
+
+  /// Offline mode page — label for the auto-sync toggle
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто-синхронизация'**
+  String get offlineAutoSyncLabel;
+
+  /// Offline mode page — sub-label explaining what the auto-sync toggle does
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизировать при подключении к сети'**
+  String get offlineAutoSyncDescription;
+
+  /// Offline mode page — info banner explaining offline-first behaviour. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the transient no-connection message
+  ///
+  /// In ru, this message translates to:
+  /// **'В офлайн-режиме все операции сохраняются локально и автоматически синхронизируются при восстановлении подключения к интернету.'**
+  String get offlineInfoBody;
+
+  /// Offline mode page — section header above the reset-sync-status button
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные'**
+  String get offlineDataSectionLabel;
 
   /// Dashboard header greeting
   ///
@@ -1924,6 +2788,36 @@ abstract class AppLocalizations {
   /// **'Покупок: {amount}'**
   String customerListPurchasesLine(String amount);
 
+  /// Customer-detail screen's AppBar title — same Russian text as `deliveryDetailCustomerLabel` ("Клиент") but a different UI role (page title vs. an info-row label on the delivery-detail screen); kept as a separate key per convention for near-duplicate values used in different roles
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент'**
+  String get customerDetailPageTitle;
+
+  /// No description provided for @customerDetailSpentLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Потрачено'**
+  String get customerDetailSpentLabel;
+
+  /// No description provided for @customerDetailLoyaltyHistoryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'История баллов'**
+  String get customerDetailLoyaltyHistoryTitle;
+
+  /// Loyalty-history row title — signed points delta (sign is '+' or empty, both pre-formatted strings)
+  ///
+  /// In ru, this message translates to:
+  /// **'{sign}{points} баллов'**
+  String customerDetailPointsLine(String sign, String points);
+
+  /// Loyalty-history row trailing text — expiry date for earned points, pre-formatted at the call site. Same value as `subscriptionExpiryUntilLine` ("до {date}") but scoped to a different screen; kept separate per the feature-prefix convention.
+  ///
+  /// In ru, this message translates to:
+  /// **'до {date}'**
+  String customerDetailPointsExpiryLine(String date);
+
   /// Title for creating a new supplier (screen), or the fallback title when a supplier form isn't in edit mode
   ///
   /// In ru, this message translates to:
@@ -1947,6 +2841,36 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Поставщик обновлён'**
   String get supplierUpdated;
+
+  /// Supplier-list screen — search field hint; mirrors `customerListSearchHint` ("Поиск клиента") on the customer list
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск поставщика'**
+  String get supplierListSearchHint;
+
+  /// Supplier-list screen — empty-state headline when the store has no suppliers yet; mirrors `customerListEmptyTitle`
+  ///
+  /// In ru, this message translates to:
+  /// **'Поставщиков пока нет'**
+  String get supplierListEmptyTitle;
+
+  /// Supplier-list screen — empty-state subtitle explaining the benefit of adding a supplier; mirrors `customerListEmptySubtitle`
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте первого поставщика, чтобы отслеживать поставки и долги'**
+  String get supplierListEmptySubtitle;
+
+  /// Supplier-list screen — hint text in the name field of the add-supplier dialog; mirrors `customerListNameHint` ("Введите имя клиента")
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите название поставщика'**
+  String get supplierListNameHint;
+
+  /// Confirm button on the add-supplier dialog — distinct from `addSupplier` ("Добавить поставщика"), which labels the nav action/tooltip that opens this dialog. Bare verb deliberately kept feature-scoped, matching the convention recorded on `payrollAdjustmentSubmit` and `customerListAddConfirm`: no unprefixed generic `add` key exists in this ARB, so each bare-"Добавить" confirm button gets its own scoped key.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get supplierListAddConfirm;
 
   /// Generic address field label, used on forms such as the supplier create/edit form — distinct from `storeAddress` ("Адрес магазина", the store's own address) and `deliveryDetailAddressLabel` (an info-row label on the delivery detail screen)
   ///
@@ -1995,6 +2919,132 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'О приложении'**
   String get about;
+
+  /// Notification settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки уведомлений'**
+  String get notificationSettingsPageTitle;
+
+  /// Notification settings screen — intro subtitle above the switch list
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите какие уведомления вы хотите получать'**
+  String get notificationSettingsSubtitle;
+
+  /// Notification settings — low-stock alert switch title; distinct from `lowStock` ("Мало на складе"), a differently-worded stock-status label used on the product list page
+  ///
+  /// In ru, this message translates to:
+  /// **'Низкий остаток'**
+  String get notificationSettingsLowStockTitle;
+
+  /// No description provided for @notificationSettingsLowStockSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда товар заканчивается на складе'**
+  String get notificationSettingsLowStockSubtitle;
+
+  /// Notification settings — new-sale alert switch subtitle (the switch title itself reuses `newSale`, "Новая продажа")
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда кассир оформляет продажу'**
+  String get notificationSettingsNewSaleSubtitle;
+
+  /// No description provided for @notificationSettingsShiftClosedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрытие смены'**
+  String get notificationSettingsShiftClosedTitle;
+
+  /// No description provided for @notificationSettingsShiftClosedSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда смена закрывается'**
+  String get notificationSettingsShiftClosedSubtitle;
+
+  /// No description provided for @notificationSettingsDeliveryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставка выполнена'**
+  String get notificationSettingsDeliveryTitle;
+
+  /// No description provided for @notificationSettingsDeliverySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда курьер доставил заказ'**
+  String get notificationSettingsDeliverySubtitle;
+
+  /// No description provided for @notificationSettingsDebtReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминание о долге'**
+  String get notificationSettingsDebtReminderTitle;
+
+  /// No description provided for @notificationSettingsDebtReminderSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просроченные долги клиентов (> 7 дней)'**
+  String get notificationSettingsDebtReminderSubtitle;
+
+  /// No description provided for @notificationSettingsStaleProductTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Залежалый товар'**
+  String get notificationSettingsStaleProductTitle;
+
+  /// No description provided for @notificationSettingsStaleProductSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомлять, если товар не продаётся N дней и остаток ещё большой'**
+  String get notificationSettingsStaleProductSubtitle;
+
+  /// Notification settings — label of the numeric field setting how many days without a sale marks a product as stale
+  ///
+  /// In ru, this message translates to:
+  /// **'Дней без продаж'**
+  String get notificationSettingsDaysWithoutSaleLabel;
+
+  /// Notification settings — label of the numeric field setting the minimum remaining stock, as a percentage of the original batch, for the stale-product alert to fire
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток, % от партии'**
+  String get notificationSettingsRemainingPercentLabel;
+
+  /// Notifications list page — empty state shown when the user has no notifications
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет уведомлений'**
+  String get notificationsEmptyState;
+
+  /// Notifications list page — snackbar confirming the user approved a support agent's impersonation-access request
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступ предоставлен'**
+  String get impersonationAccessGranted;
+
+  /// Notifications list page — snackbar confirming the user rejected a support agent's impersonation-access request
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрос отклонён'**
+  String get impersonationRequestRejected;
+
+  /// Notifications list page — snackbar shown when responding to an impersonation-access request fails, most often because the request already expired or was withdrawn
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось обработать запрос — возможно, он уже неактивен'**
+  String get impersonationRequestFailedMessage;
+
+  /// Impersonation banner — persistent banner text shown while the app runs on a support (impersonation) session token
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы вошли как поддержка Dukon'**
+  String get impersonationBannerMessage;
+
+  /// Impersonation banner — button that ends the support (impersonation) session and logs the device out
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить сессию'**
+  String get impersonationBannerEndSession;
 
   /// Settings page — logout confirmation dialog title
   ///
@@ -2134,6 +3184,486 @@ abstract class AppLocalizations {
   /// **'Выйти из аккаунта'**
   String get settingsLogoutButton;
 
+  /// No description provided for @subscriptionFeatureStores1.
+  ///
+  /// In ru, this message translates to:
+  /// **'1 магазин'**
+  String get subscriptionFeatureStores1;
+
+  /// No description provided for @subscriptionFeatureProducts500.
+  ///
+  /// In ru, this message translates to:
+  /// **'500 товаров'**
+  String get subscriptionFeatureProducts500;
+
+  /// No description provided for @subscriptionFeatureEmployees2.
+  ///
+  /// In ru, this message translates to:
+  /// **'2 сотрудника'**
+  String get subscriptionFeatureEmployees2;
+
+  /// No description provided for @subscriptionFeatureSalesReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт продаж'**
+  String get subscriptionFeatureSalesReport;
+
+  /// No description provided for @subscriptionFeatureCurrencies.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валюты'**
+  String get subscriptionFeatureCurrencies;
+
+  /// No description provided for @subscriptionPriceStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'49 TJS/мес'**
+  String get subscriptionPriceStart;
+
+  /// No description provided for @subscriptionFeatureStores3.
+  ///
+  /// In ru, this message translates to:
+  /// **'3 магазина'**
+  String get subscriptionFeatureStores3;
+
+  /// No description provided for @subscriptionFeatureProducts2000.
+  ///
+  /// In ru, this message translates to:
+  /// **'2000 товаров'**
+  String get subscriptionFeatureProducts2000;
+
+  /// No description provided for @subscriptionFeatureEmployees10.
+  ///
+  /// In ru, this message translates to:
+  /// **'10 сотрудников'**
+  String get subscriptionFeatureEmployees10;
+
+  /// No description provided for @subscriptionFeatureAllReports.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все отчёты'**
+  String get subscriptionFeatureAllReports;
+
+  /// No description provided for @subscriptionFeatureDiscounts5.
+  ///
+  /// In ru, this message translates to:
+  /// **'5 скидок'**
+  String get subscriptionFeatureDiscounts5;
+
+  /// No description provided for @subscriptionPriceBusiness.
+  ///
+  /// In ru, this message translates to:
+  /// **'149 TJS/мес'**
+  String get subscriptionPriceBusiness;
+
+  /// No description provided for @subscriptionFeatureStores5.
+  ///
+  /// In ru, this message translates to:
+  /// **'5 магазинов'**
+  String get subscriptionFeatureStores5;
+
+  /// No description provided for @subscriptionFeatureUnlimitedProductsEmployees.
+  ///
+  /// In ru, this message translates to:
+  /// **'Безлимит товаров/сотрудников'**
+  String get subscriptionFeatureUnlimitedProductsEmployees;
+
+  /// No description provided for @subscriptionFeatureExportPdfExcel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт PDF/Excel'**
+  String get subscriptionFeatureExportPdfExcel;
+
+  /// No description provided for @subscriptionFeatureUnlimitedDiscounts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Безлимит скидок'**
+  String get subscriptionFeatureUnlimitedDiscounts;
+
+  /// No description provided for @subscriptionFeaturePrioritySupport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приоритетная поддержка'**
+  String get subscriptionFeaturePrioritySupport;
+
+  /// No description provided for @subscriptionPricePremium.
+  ///
+  /// In ru, this message translates to:
+  /// **'299 TJS/мес'**
+  String get subscriptionPricePremium;
+
+  /// Subscription-status badge — near-duplicate value to `loyaltySettingsActive` ("Активна", loyalty-toggle label) and `shiftsActiveStatus` ("Активна", shift-status badge); kept as its own key per this ARB's established pattern of not merging same-value keys across unrelated features
+  ///
+  /// In ru, this message translates to:
+  /// **'Активна'**
+  String get subscriptionActiveStatus;
+
+  /// No description provided for @subscriptionTrialStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пробный период'**
+  String get subscriptionTrialStatus;
+
+  /// No description provided for @subscriptionExpiredStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Истекла'**
+  String get subscriptionExpiredStatus;
+
+  /// No description provided for @subscriptionTrialDaysLeftLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пробный период: осталось {days} дней'**
+  String subscriptionTrialDaysLeftLine(String days);
+
+  /// Subscription-card trailing text — plan expiry date, pre-formatted at the call site. Same value as `customerDetailPointsExpiryLine` ("до {date}") but scoped to a different screen; kept separate per the feature-prefix convention.
+  ///
+  /// In ru, this message translates to:
+  /// **'до {date}'**
+  String subscriptionExpiryUntilLine(String date);
+
+  /// No description provided for @subscriptionAdminDiscountBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка {percent}%'**
+  String subscriptionAdminDiscountBadge(String percent);
+
+  /// No description provided for @subscriptionPendingBannerText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает подтверждения оплаты'**
+  String get subscriptionPendingBannerText;
+
+  /// No description provided for @subscriptionCurrentPlanBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий план'**
+  String get subscriptionCurrentPlanBadge;
+
+  /// No description provided for @subscriptionSelectPlanButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать'**
+  String get subscriptionSelectPlanButton;
+
+  /// Payment-record status badge, default/pending case — distinct from `subscriptionPendingBannerText`, the fuller pending-payment banner sentence shown elsewhere on the same page
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает'**
+  String get subscriptionPaymentPendingStatus;
+
+  /// No description provided for @subscriptionPaymentConfirmedStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждено'**
+  String get subscriptionPaymentConfirmedStatus;
+
+  /// No description provided for @subscriptionPaymentRejectedStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонено'**
+  String get subscriptionPaymentRejectedStatus;
+
+  /// No description provided for @subscriptionPaymentDialogTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж — {plan}'**
+  String subscriptionPaymentDialogTitle(String plan);
+
+  /// No description provided for @subscriptionPaymentAmountLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма: {amount} TJS'**
+  String subscriptionPaymentAmountLine(String amount);
+
+  /// No description provided for @subscriptionCardTransferMethod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перевод на карту'**
+  String get subscriptionCardTransferMethod;
+
+  /// No description provided for @subscriptionPaymentMethodLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Метод: {method}'**
+  String subscriptionPaymentMethodLine(String method);
+
+  /// Preserves existing behavior of interpolating the raw backend status code (e.g. "CONFIRMED"), not the already-localized status badge text used elsewhere on this page — not a behavior fix, just the literal migrated as-is
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус: {status}'**
+  String subscriptionPaymentStatusLine(String status);
+
+  /// No description provided for @subscriptionPaymentDateLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата: {date}'**
+  String subscriptionPaymentDateLine(String date);
+
+  /// No description provided for @subscriptionAdminNoteLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Примечание: {note}'**
+  String subscriptionAdminNoteLine(String note);
+
+  /// No description provided for @subscriptionReceiptLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек:'**
+  String get subscriptionReceiptLabel;
+
+  /// No description provided for @subscriptionReceiptImageUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изображение недоступно'**
+  String get subscriptionReceiptImageUnavailable;
+
+  /// No description provided for @subscriptionPlansSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тарифные планы'**
+  String get subscriptionPlansSectionTitle;
+
+  /// No description provided for @subscriptionCameraSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Камера'**
+  String get subscriptionCameraSource;
+
+  /// No description provided for @subscriptionGallerySource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Галерея'**
+  String get subscriptionGallerySource;
+
+  /// No description provided for @subscriptionPaymentSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата тарифа «{plan}»'**
+  String subscriptionPaymentSheetTitle(String plan);
+
+  /// No description provided for @subscriptionTransferDetailsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Реквизиты для перевода'**
+  String get subscriptionTransferDetailsTitle;
+
+  /// No description provided for @subscriptionRecipientLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получатель'**
+  String get subscriptionRecipientLabel;
+
+  /// No description provided for @subscriptionBankLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк'**
+  String get subscriptionBankLabel;
+
+  /// Lint-tool blind spot fix — check_i18n.dart's regex only flags the first Cyrillic string literal per line, and this one sits on the same line as the already-flagged 'Загрузка...' ternary branch, so it never appeared in tool/i18n-allowlist.txt; migrated together with its sibling for consistency
+  ///
+  /// In ru, this message translates to:
+  /// **'Я перевёл — загрузить чек'**
+  String get subscriptionUploadReceiptButton;
+
+  /// No description provided for @reportsExportSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт отчёта'**
+  String get reportsExportSheetTitle;
+
+  /// No description provided for @reportsExportPdf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать PDF'**
+  String get reportsExportPdf;
+
+  /// No description provided for @reportsExportExcelLocal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать Excel (локальный)'**
+  String get reportsExportExcelLocal;
+
+  /// No description provided for @reportsExportExcelAllData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать Excel (все данные)'**
+  String get reportsExportExcelAllData;
+
+  /// No description provided for @reportsPdfPeriodLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период: {period}'**
+  String reportsPdfPeriodLabel(String period);
+
+  /// No description provided for @reportsShareSubjectWithPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт {tabName} ({period})'**
+  String reportsShareSubjectWithPeriod(String tabName, String period);
+
+  /// No description provided for @reportsRevenueColumnLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка'**
+  String get reportsRevenueColumnLabel;
+
+  /// No description provided for @reportsMetricColumnLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показатель'**
+  String get reportsMetricColumnLabel;
+
+  /// Lint-tool blind spot fix — companion header to `reportsMetricColumnLabel` on the same array literal, never flagged by check_i18n.dart's one-match-per-line regex
+  ///
+  /// In ru, this message translates to:
+  /// **'Значение'**
+  String get reportsValueColumnLabel;
+
+  /// No description provided for @reportsNetProfitLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чистая прибыль'**
+  String get reportsNetProfitLabel;
+
+  /// Distinct literal from bare `margin` ("Маржа") — this one already includes the percent sign as part of the string, used only in the Excel-export row
+  ///
+  /// In ru, this message translates to:
+  /// **'Маржа %'**
+  String get reportsMarginPercentLabel;
+
+  /// Bare PDF section label — distinct from `reportsDeadStockSectionTitle` ("Залёжные товары (30+ дней)"), the fuller in-app section title
+  ///
+  /// In ru, this message translates to:
+  /// **'Залёжные товары'**
+  String get reportsDeadStockPdfLabel;
+
+  /// No description provided for @reportsShareSubject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт {tabName}'**
+  String reportsShareSubject(String tabName);
+
+  /// No description provided for @reportsExportTypeShareSubject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт {type}'**
+  String reportsExportTypeShareSubject(String type);
+
+  /// No description provided for @reportsExportTypeSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что экспортировать?'**
+  String get reportsExportTypeSheetTitle;
+
+  /// No description provided for @reportsExcelTopProductsSectionHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'=== Топ товары ==='**
+  String get reportsExcelTopProductsSectionHeader;
+
+  /// No description provided for @reportsExcelDeadStockSectionHeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'=== Залёжные товары ==='**
+  String get reportsExcelDeadStockSectionHeader;
+
+  /// No description provided for @reportsStockValueLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стоимость склада'**
+  String get reportsStockValueLabel;
+
+  /// No description provided for @reportsPageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёты'**
+  String get reportsPageTitle;
+
+  /// No description provided for @reportsChannelAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все каналы'**
+  String get reportsChannelAll;
+
+  /// No description provided for @reportsChannelInStore.
+  ///
+  /// In ru, this message translates to:
+  /// **'В магазине'**
+  String get reportsChannelInStore;
+
+  /// No description provided for @reportsChannelOnline.
+  ///
+  /// In ru, this message translates to:
+  /// **'Онлайн'**
+  String get reportsChannelOnline;
+
+  /// No description provided for @reportsSalesDataSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные по продажам'**
+  String get reportsSalesDataSectionTitle;
+
+  /// Abbreviated column header — distinct from the full-word `avgCheck` ("Средний чек") used in the PDF/Excel export headers
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср. чек'**
+  String get reportsAvgCheckColumnLabel;
+
+  /// No description provided for @reportsTop5ByRevenueChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ-5 товаров по выручке'**
+  String get reportsTop5ByRevenueChartTitle;
+
+  /// No description provided for @reportsExpensesByCategoryChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расходы по категориям'**
+  String get reportsExpensesByCategoryChartTitle;
+
+  /// No description provided for @reportsDetailsSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Детализация'**
+  String get reportsDetailsSectionTitle;
+
+  /// No description provided for @reportsIncomeVsExpensesChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доход vs Расходы по месяцам'**
+  String get reportsIncomeVsExpensesChartTitle;
+
+  /// No description provided for @reportsTopSalesSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ продажи'**
+  String get reportsTopSalesSectionTitle;
+
+  /// No description provided for @reportsQuantityUnitsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт'**
+  String reportsQuantityUnitsLine(String qty);
+
+  /// No description provided for @reportsDeadStockSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Залёжные товары (30+ дней)'**
+  String get reportsDeadStockSectionTitle;
+
+  /// No description provided for @reportsSalesByCashierChartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи по кассирам'**
+  String get reportsSalesByCashierChartTitle;
+
+  /// No description provided for @reportsSalesCountTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String reportsSalesCountTooltip(String count);
+
   /// No description provided for @finances.
   ///
   /// In ru, this message translates to:
@@ -2145,6 +3675,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Финансовый дашборд'**
   String get financeDashboard;
+
+  /// No description provided for @financeDashboardPeriodHalfYear.
+  ///
+  /// In ru, this message translates to:
+  /// **'6 мес'**
+  String get financeDashboardPeriodHalfYear;
+
+  /// No description provided for @financeTotalIncome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Общий доход'**
+  String get financeTotalIncome;
+
+  /// No description provided for @financeTotalExpenses.
+  ///
+  /// In ru, this message translates to:
+  /// **'Общие расходы'**
+  String get financeTotalExpenses;
+
+  /// No description provided for @financeGrossProfit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валовая прибыль'**
+  String get financeGrossProfit;
+
+  /// Finance-dashboard KPI card label. Same value as `reportsNetProfitLabel` ("Чистая прибыль") on the reports screen; each is feature-scoped to its own screen and they may be worded differently per locale. Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чистая прибыль'**
+  String get financeNetProfit;
+
+  /// Top-products list row — quantity sold with the abbreviated units suffix; quantity is pre-formatted to a string at the call site
+  ///
+  /// In ru, this message translates to:
+  /// **'{quantity} шт'**
+  String financeDashboardQuantityUnit(String quantity);
+
+  /// Finance-dashboard grid tile linking to the currency-rates screen. Same value as `subscriptionFeatureCurrencies` ("Валюты"), which is a bullet in a subscription plan's feature list — a navigation label vs. a feature name. Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Валюты'**
+  String get financeDashboardCurrencies;
+
+  /// No description provided for @financeDashboardDelivery.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доставка'**
+  String get financeDashboardDelivery;
+
+  /// No description provided for @financeDashboardReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт'**
+  String get financeDashboardReport;
 
   /// Generic 'Balance' label — used as the balance screen's AppBar title
   ///
@@ -2206,6 +3790,12 @@ abstract class AppLocalizations {
   /// **'Кол-во продаж'**
   String get salesCount;
 
+  /// Abbreviated sales-count label — the bare genitive-plural noun used directly under or beside a numeral (stat tiles, table/PDF/Excel column headers). Distinct from `sales` ("Продажи", nominative plural, a tab/section name) and from `salesCount` ("Кол-во продаж", the full 'number of sales' phrase). Promoted from `reportsSalesCountColumnLabel` once a second consumer outside the reports page (the shared StatSummaryRow widget) appeared, since a `reports*` prefix disagreed with that scope.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продаж'**
+  String get salesCountAbbrev;
+
   /// No description provided for @avgCheck.
   ///
   /// In ru, this message translates to:
@@ -2230,7 +3820,7 @@ abstract class AppLocalizations {
   /// **'День'**
   String get day;
 
-  /// No description provided for @today.
+  /// Generic capitalised "Today" period label/chip. Distinct from `staffCardTodayLabel` ("сегодня", lowercase), the caption under the staff card's today-sales amount
   ///
   /// In ru, this message translates to:
   /// **'Сегодня'**
@@ -2380,6 +3970,12 @@ abstract class AppLocalizations {
   /// **'Сумма'**
   String get amount;
 
+  /// Generic validation error when an amount field is left empty — deliberately unprefixed and shared across screens (close-shift dialog, add-expense, add-investment, payroll adjustment).
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму'**
+  String get amountRequired;
+
   /// Generic 'Amount (TJS)' field label with currency suffix — distinct from bare `amount` ("Сумма"); this exact literal also recurs verbatim on other payment-amount fields (e.g. the payroll adjustment screen)
   ///
   /// In ru, this message translates to:
@@ -2403,6 +3999,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Дата'**
   String get date;
+
+  /// Generic placeholder shown in a date-picker slot when no date has been chosen yet — deliberately unprefixed and shared across screens (zakat haul-start field, investment end-date field). Feminine short-form adjective agreeing with "дата".
+  ///
+  /// In ru, this message translates to:
+  /// **'Не выбрана'**
+  String get dateNotSelected;
 
   /// No description provided for @debts.
   ///
@@ -2434,6 +4036,18 @@ abstract class AppLocalizations {
   /// **'Долги клиентов'**
   String get customerDebts;
 
+  /// Customer-debts screen — section heading above the list of that customer's sales that still carry an outstanding debt
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи с долгом'**
+  String get customerDebtsSalesTitle;
+
+  /// Customer-debts screen — shown in place of the sales list when the customer has no sales with an outstanding debt; distinct from `noDebts` ("Нет активных долгов"), the store-wide debts empty state
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет продаж с долгом'**
+  String get customerDebtsEmptyState;
+
   /// No description provided for @supplierDebts.
   ///
   /// In ru, this message translates to:
@@ -2445,6 +4059,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Нет активных долгов'**
   String get noDebts;
+
+  /// Badge text marking an item as past its due date (e.g. a debt-bearing sale older than the overdue threshold). Deliberately unprefixed — the same badge wording fits any overdue item. Neuter short-form adjective; distinct from `notificationSettingsDebtReminderSubtitle`, which contains the plural adjective "Просроченные" inside a longer sentence.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просрочено'**
+  String get overdueLabel;
+
+  /// Button label and form heading for taking a payment against an outstanding debt — used on the customer-debts screen's per-sale action button and as the heading and submit button of the debt payment form. Distinct from `creditsAcceptPayment` ("Принять платёж"): same intent but different Russian noun (оплата vs платёж), and that key is the credits screen's receivables-tab button and dialog title; the two literals differ in the source design, so they must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять оплату'**
+  String get acceptDebtPayment;
 
   /// No description provided for @recordPayment.
   ///
@@ -2481,6 +4107,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Платёж сохранён офлайн — отправим при подключении'**
   String get paymentQueuedOfflineMessage;
+
+  /// Debt payment form — caption under the heading stating the largest payment that may be entered (the remaining debt). Full-sentence composite (label + separator + value) so the colon stays translatable. Distinct from `amountExceedsMax` ("Сумма не может превышать {maxAmount}"), the validation error raised once that ceiling is exceeded. Placeholder is a pre-formatted String; the TJS suffix is baked in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Максимум: {amount} TJS'**
+  String paymentFormMaxAmountLine(String amount);
 
   /// No description provided for @paymentHistory.
   ///
@@ -2548,6 +4180,42 @@ abstract class AppLocalizations {
   /// **'Введите корректную сумму'**
   String get creditsInvalidAmountError;
 
+  /// Cash-payment screen — header title. Distinct from `cash` ("Наличные", the bare payment-method name) — this is the full screen title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата наличными'**
+  String get cashPaymentPageTitle;
+
+  /// Cash-payment screen — caption above the amount due, in its own layout slot above the large amount value (kept as a standalone label rather than a composite key, since the label and value have different type scales). Same wording as the `cardPaymentConfirmMessage` dialog body but that key is a full sentence with the amount interpolated, so they are not interchangeable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма к оплате'**
+  String get cashPaymentAmountToPayLabel;
+
+  /// Cash-payment screen — field label above the input for the cash amount handed over by the customer
+  ///
+  /// In ru, this message translates to:
+  /// **'Получено от клиента'**
+  String get cashPaymentReceivedFromCustomerLabel;
+
+  /// Cash-payment screen — visible label on the quick-amount chip that fills in the exact total so no change is due. Same Russian value as `a11yWithoutChange`, which is the Semantics label wrapping this same chip; kept as a separate key because this codebase keeps visible copy out of the `a11y*` block (cf. `share` vs `a11yShare`) so the accessibility string can be reworded independently.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без сдачи'**
+  String get cashPaymentNoChangeButton;
+
+  /// Cash-payment screen — caption on the change card when the amount received is less than the total (the shortfall is shown below). The positive branch of the same ternary uses `change` ("Сдача").
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно'**
+  String get cashPaymentInsufficientLabel;
+
+  /// Cash-payment screen — primary button that completes the sale and prints the receipt (shows `processing` instead while the request is in flight)
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить и печатать чек'**
+  String get cashPaymentCompleteButton;
+
   /// Credit-sale screen — app bar title. Distinct from `debtSales` ("Продажи в долг", plural, the Z-report category label)
   ///
   /// In ru, this message translates to:
@@ -2614,6 +4282,120 @@ abstract class AppLocalizations {
   /// **'Калькулятор закята'**
   String get zakatCalculator;
 
+  /// No description provided for @zakatCalculatorAssetsSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'АКТИВЫ МАГАЗИНА'**
+  String get zakatCalculatorAssetsSection;
+
+  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsStockValueToggleTitle` ("Товарные остатки магазина", with a 'магазина' suffix) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные остатки'**
+  String get zakatCalculatorStockValueLabel;
+
+  /// No description provided for @zakatCalculatorAutoFromCatalog.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автоматически из каталога'**
+  String get zakatCalculatorAutoFromCatalog;
+
+  /// No description provided for @zakatCalculatorAutoBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто'**
+  String get zakatCalculatorAutoBadge;
+
+  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsSupplierDebtsToggleTitle` ("Долги поставщикам (вычет)", with a '(вычет)' suffix) — different text, do not merge. Also shares its exact value with the pre-existing `dashboardSupplierOwedSubtitle` ("Долги поставщикам"), a dashboard card subtitle; kept separate as a row label vs. a card subtitle. Do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги поставщикам'**
+  String get zakatCalculatorSupplierDebtsLabel;
+
+  /// No description provided for @zakatCalculatorAutoFromSupplierModule.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автоматически из модуля'**
+  String get zakatCalculatorAutoFromSupplierModule;
+
+  /// No description provided for @zakatCalculatorDeductionsSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВЫЧЕТЫ'**
+  String get zakatCalculatorDeductionsSection;
+
+  /// No description provided for @zakatCalculatorTaxableAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Облагаемая сумма:'**
+  String get zakatCalculatorTaxableAmountLabel;
+
+  /// No description provided for @zakatCalculatorNisabLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нисаб (85г золота):'**
+  String get zakatCalculatorNisabLabel;
+
+  /// No description provided for @zakatCalculatorNisabExceededBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Превышен'**
+  String get zakatCalculatorNisabExceededBadge;
+
+  /// No description provided for @zakatCalculatorZakatAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'СУММА ЗАКЯТА ({rate}%):'**
+  String zakatCalculatorZakatAmountLabel(String rate);
+
+  /// No description provided for @zakatCalculatorMarkPaidButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить как оплачено'**
+  String get zakatCalculatorMarkPaidButton;
+
+  /// No description provided for @zakatCalculatorInfoBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят — {rate}% от имущества, хранящегося 1 лунный год'**
+  String zakatCalculatorInfoBanner(String rate);
+
+  /// Full multi-line text passed to the OS share sheet — combines what were three separate concatenated string literals into one full-sentence key per the label+separator+value composite convention
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят: {due} сом.\nНисаб: {nisab} сом.\nЧистые активы: {netAssets} сом.'**
+  String zakatCalculatorShareText(String due, String nisab, String netAssets);
+
+  /// No description provided for @zakatCalculatorShareButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться расчётом'**
+  String get zakatCalculatorShareButton;
+
+  /// Zakat asset-breakdown card — card title. Distinct from `salesBreakdown` ("Разбивка продаж"), the Z-report sales breakdown heading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разбивка активов'**
+  String get zakatBreakdownTitle;
+
+  /// Zakat asset-breakdown card — stock/inventory asset row label. Distinct from `stockValue` ("Стоимость товаров"), `zakatCalculatorStockValueLabel` ("Товарные остатки") and `includeStock` ("Включить товарные запасы") — three different wordings for the same concept, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные запасы'**
+  String get zakatBreakdownStockLabel;
+
+  /// Zakat asset-breakdown card — bare 'Nisab' row label. Distinct from `nisabAmount` ("Сумма нисаба"), `nisabThreshold` ("Порог нисаба") and `zakatCalculatorNisabLabel` ("Нисаб (85г золота):"): this one is the bare noun with no qualifier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нисаб'**
+  String get zakatBreakdownNisabLabel;
+
+  /// Zakat asset-breakdown card — zakat-owed row label with the rate baked into the literal. Distinct from `zakatDue` ("Сумма закята"), the bare amount label, and from `zakatCalculatorZakatAmountLabel` ("СУММА ЗАКЯТА ({rate}%):"), which is upper-case and interpolates the configured rate; this widget hardcodes 2.5%.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закят (2.5%)'**
+  String get zakatBreakdownDueLabel;
+
   /// No description provided for @zakatSettings.
   ///
   /// In ru, this message translates to:
@@ -2625,6 +4407,54 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'История выплат'**
   String get zakatHistory;
+
+  /// Zakat payment-history page — header title. Distinct from `zakatHistory` ("История выплат", literally 'payment history'), a differently-worded label used elsewhere for the same screen concept.
+  ///
+  /// In ru, this message translates to:
+  /// **'История закята'**
+  String get zakatHistoryPageTitle;
+
+  /// Zakat payment-history page — empty-state title shown when the store has no zakat calculations/payments yet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет расчётов закята'**
+  String get zakatHistoryEmptyTitle;
+
+  /// Zakat payment-history page — empty-state subtitle pointing the user at the calculator.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассчитайте закят в калькуляторе, чтобы история появилась здесь'**
+  String get zakatHistoryEmptySubtitle;
+
+  /// Zakat payment-history page — stats card label above the total-paid amount. Kept as a standalone colon-suffixed label key (not collapsed into a composite with the amount) because the amount sits in its own vertically-stacked slot at a larger type scale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всего выплачено:'**
+  String get zakatHistoryTotalPaidLabel;
+
+  /// Zakat payment-history page — stats card caption under the total amount, e.g. 'за 47 выплат'; placeholder is a pre-formatted String
+  ///
+  /// In ru, this message translates to:
+  /// **'за {count} выплат'**
+  String zakatHistoryPaymentsCountLine(String count);
+
+  /// Zakat payment-history page — title on each payment row. Distinct from `recordZakatPayment` ("Записать выплату закята"), the imperative action label.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплата закята'**
+  String get zakatHistoryPaymentTitle;
+
+  /// Zakat payment-history page — payment row subtitle giving the payment date; placeholder is a pre-formatted date String
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачен {date}'**
+  String zakatHistoryPaidOnLine(String date);
+
+  /// Zakat payment-history page — payment row trailing caption giving the taxable asset base. Full-sentence composite (label + separator + value) so the colon stays translatable; distinct from `zakatCalculatorTaxableAmountLabel` ("Облагаемая сумма:"), the calculator's standalone label. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'Облагаемая: {amount}'**
+  String zakatHistoryTaxableLine(String amount);
 
   /// No description provided for @stockValue.
   ///
@@ -2674,6 +4504,12 @@ abstract class AppLocalizations {
   /// **'Ниже нисаба'**
   String get belowNisab;
 
+  /// Notice shown when net assets fall below the nisab threshold, so no zakat is owed. Promoted from `zakatCalculatorBelowNisabNotice` (value unchanged) once the shared ZakatBreakdownCard widget became a second consumer alongside zakat_calculator_page.dart — a `zakatCalculator*` page prefix disagreed with a page-independent widget's scope. Distinct from `belowNisab` ("Ниже нисаба"), the bare status badge label.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активы ниже нисаба. Закят не обязателен.'**
+  String get belowNisabNotice;
+
   /// No description provided for @recordZakatPayment.
   ///
   /// In ru, this message translates to:
@@ -2716,11 +4552,155 @@ abstract class AppLocalizations {
   /// **'Включить долги'**
   String get includeDebts;
 
+  /// No description provided for @zakatSettingsMethodSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'МЕТОД РАСЧЁТА'**
+  String get zakatSettingsMethodSection;
+
+  /// No description provided for @zakatSettingsNisabStandardLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стандарт нисаба'**
+  String get zakatSettingsNisabStandardLabel;
+
+  /// No description provided for @zakatSettingsNisabGoldOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'По золоту (85g)'**
+  String get zakatSettingsNisabGoldOption;
+
+  /// No description provided for @zakatSettingsNisabSilverOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'По серебру (595g)'**
+  String get zakatSettingsNisabSilverOption;
+
+  /// No description provided for @zakatSettingsGoldPriceLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс золота (за 1g)'**
+  String get zakatSettingsGoldPriceLabel;
+
+  /// Generic required-field form validation message — deliberately unprefixed, reusable across any form field in the app
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательное поле'**
+  String get requiredFieldError;
+
+  /// Generic 'enter a valid number' form validation message — deliberately unprefixed
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите число'**
+  String get requiredNumberError;
+
+  /// Generic 'value cannot be negative' form validation message — deliberately unprefixed
+  ///
+  /// In ru, this message translates to:
+  /// **'Не может быть отрицательным'**
+  String get cannotBeNegativeError;
+
+  /// No description provided for @zakatSettingsCashOnHandLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличные в кассе'**
+  String get zakatSettingsCashOnHandLabel;
+
+  /// No description provided for @zakatSettingsCashHelperText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Учитывается в активах при расчёте закята'**
+  String get zakatSettingsCashHelperText;
+
+  /// No description provided for @zakatSettingsHaulSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'ЛУННЫЙ ГОД (ХАВЛЬ)'**
+  String get zakatSettingsHaulSection;
+
+  /// Haul (lunar year) start-date field label. NOTE: spelled 'хавля' here, matching this screen's current source text exactly — the existing `haulStartDate` key holds a differently-spelled 'хауля'. This discrepancy is pre-existing in the app and out of scope to reconcile in this migration; do not merge the two keys.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата начала хавля'**
+  String get zakatSettingsHaulStartDateLabel;
+
+  /// No description provided for @zakatSettingsReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминание'**
+  String get zakatSettingsReminderTitle;
+
+  /// No description provided for @zakatSettingsReminderSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'За 30 дней до окончания хавля'**
+  String get zakatSettingsReminderSubtitle;
+
+  /// No description provided for @zakatSettingsAutoDataSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'АВТОМАТИЧЕСКИЕ ДАННЫЕ'**
+  String get zakatSettingsAutoDataSection;
+
+  /// Zakat-settings toggle row title. Distinct from zakat_calculator_page.dart's `zakatCalculatorStockValueLabel` ("Товарные остатки", no 'магазина' suffix, to be minted in a later task) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товарные остатки магазина'**
+  String get zakatSettingsStockValueToggleTitle;
+
+  /// No description provided for @zakatSettingsStockAutoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто из каталога'**
+  String get zakatSettingsStockAutoSubtitle;
+
+  /// Zakat-settings toggle row title. Distinct from zakat_calculator_page.dart's `zakatCalculatorSupplierDebtsLabel` ("Долги поставщикам", no '(вычет)' suffix, to be minted in a later task) — different text, do not merge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Долги поставщикам (вычет)'**
+  String get zakatSettingsSupplierDebtsToggleTitle;
+
+  /// No description provided for @zakatSettingsSupplierDebtsAutoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто из модуля поставщиков'**
+  String get zakatSettingsSupplierDebtsAutoSubtitle;
+
+  /// Generic in-flight 'Saving...' button label — deliberately unprefixed, reusable on any save-button loading state. Consumers so far: zakat_settings_page.dart and edit_profile_page.dart (whose non-saving counterpart is `editProfileSaveChangesButton`)
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранение...'**
+  String get savingEllipsis;
+
   /// No description provided for @editProfile.
   ///
   /// In ru, this message translates to:
   /// **'Редактировать профиль'**
   String get editProfile;
+
+  /// Edit-profile screen — tappable caption under the avatar that opens the photo picker
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить фото'**
+  String get editProfileChangePhotoLabel;
+
+  /// Edit-profile screen — surname field label; its given-name counterpart on the same form is the generic `name` ("Имя")
+  ///
+  /// In ru, this message translates to:
+  /// **'Фамилия'**
+  String get editProfileLastNameLabel;
+
+  /// Edit-profile screen — section header above the change-password row
+  ///
+  /// In ru, this message translates to:
+  /// **'Безопасность'**
+  String get editProfileSecuritySectionLabel;
+
+  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, which shares the same source line in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить изменения'**
+  String get editProfileSaveChangesButton;
 
   /// No description provided for @changePassword.
   ///
@@ -3196,6 +5176,252 @@ abstract class AppLocalizations {
   /// **'По умолч.'**
   String get printerSettingsSetDefaultButton;
 
+  /// Line printed on the raw ESC/POS test ticket bytes — includes a literal trailing newline; distinct from settingsTileKkm ("ККМ / Фискализация", with spaces, no newline), used in UI text
+  ///
+  /// In ru, this message translates to:
+  /// **'ККМ/Фискализация\n'**
+  String get kkmTicketHeaderLine;
+
+  /// Line printed on the raw ESC/POS test ticket bytes — includes a literal trailing newline; distinct from printerSettingsTestPrintButton ("Тестовая печать", no newline), the visible button label
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовая печать\n'**
+  String get kkmTestPrintTicketLine;
+
+  /// KKM / fiscalisation settings screen — info banner above the printer controls
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискализация чеков через подключённый ККМ-принтер. Убедитесь, что устройство зарегистрировано в налоговой.'**
+  String get kkmFiscalNoteBody;
+
+  /// KKM / fiscalisation settings screen — section header above the Bluetooth printer connection status
+  ///
+  /// In ru, this message translates to:
+  /// **'Bluetooth принтер'**
+  String get kkmBluetoothPrinterSectionLabel;
+
+  /// KKM / fiscalisation settings screen — label for the toggle that prints a fiscal receipt automatically after each sale
+  ///
+  /// In ru, this message translates to:
+  /// **'Автопечать при продаже'**
+  String get kkmAutoPrintLabel;
+
+  /// Barcode scanner settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер штрихкодов'**
+  String get scannerPageTitle;
+
+  /// Barcode scanner settings screen — section header above the front/back camera choice. Distinct from `subscriptionCameraSource` ("Камера"), which is the take-a-photo action in an image-source picker sheet
+  ///
+  /// In ru, this message translates to:
+  /// **'Камера'**
+  String get scannerCameraSectionLabel;
+
+  /// No description provided for @scannerBackCameraLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задняя камера'**
+  String get scannerBackCameraLabel;
+
+  /// Barcode scanner settings screen — subtitle recommending the rear camera for scanning
+  ///
+  /// In ru, this message translates to:
+  /// **'Рекомендуется для сканирования'**
+  String get scannerBackCameraHint;
+
+  /// No description provided for @scannerFrontCameraLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Передняя камера'**
+  String get scannerFrontCameraLabel;
+
+  /// Barcode scanner settings screen — subtitle of the front-camera option. Deliberately a near-synonym of `scannerFrontCameraLabel` ("Передняя камера"): the tile title and its subtitle are two different phrasings of the same camera, so translations must stay distinct too
+  ///
+  /// In ru, this message translates to:
+  /// **'Фронтальная камера'**
+  String get scannerFrontCameraHint;
+
+  /// Barcode scanner settings screen — section header above the sound/vibration/auto-add toggles
+  ///
+  /// In ru, this message translates to:
+  /// **'Поведение'**
+  String get scannerBehaviorSectionLabel;
+
+  /// No description provided for @scannerSoundLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук при сканировании'**
+  String get scannerSoundLabel;
+
+  /// No description provided for @scannerVibrationLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вибрация при сканировании'**
+  String get scannerVibrationLabel;
+
+  /// Barcode scanner settings screen — label for the toggle that adds a scanned product straight to the cart
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто-добавление в корзину'**
+  String get scannerAutoAddToCartLabel;
+
+  /// Barcode scanner settings screen — section header above the barcode-format checkboxes
+  ///
+  /// In ru, this message translates to:
+  /// **'Форматы штрихкодов'**
+  String get scannerFormatsSectionLabel;
+
+  /// Barcode scanner settings screen — full-width save button at the bottom of the page; distinct from `save` ("Сохранить"), the bare AppBar action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить настройки'**
+  String get scannerSaveSettingsButton;
+
+  /// Receipt template settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Шаблон чека'**
+  String get receiptTemplatePageTitle;
+
+  /// Receipt template settings screen — full-width save button at the bottom of the page; distinct from `save` ("Сохранить"), the bare AppBar action button on the same screen
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить шаблон'**
+  String get receiptTemplateSaveButton;
+
+  /// Receipt template settings screen — section header above the live receipt mockup preview
+  ///
+  /// In ru, this message translates to:
+  /// **'Предпросмотр'**
+  String get receiptTemplatePreviewLabel;
+
+  /// Receipt template settings screen — section header above the header/footer text fields
+  ///
+  /// In ru, this message translates to:
+  /// **'Текст'**
+  String get receiptTemplateTextSectionLabel;
+
+  /// Receipt template settings screen — label for the receipt header text field
+  ///
+  /// In ru, this message translates to:
+  /// **'Заголовок чека'**
+  String get receiptTemplateHeaderFieldLabel;
+
+  /// Receipt template settings screen — hint text for the receipt header field
+  ///
+  /// In ru, this message translates to:
+  /// **'Название магазина или приветствие'**
+  String get receiptTemplateHeaderFieldHint;
+
+  /// Receipt template settings screen — label for the receipt footer text field
+  ///
+  /// In ru, this message translates to:
+  /// **'Подвал чека'**
+  String get receiptTemplateFooterFieldLabel;
+
+  /// Default receipt-footer preview text — reused verbatim as the footer text field's hint, since the hint suggests exactly this same fallback value
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо за покупку!'**
+  String get receiptPreviewDefaultFooter;
+
+  /// Receipt template settings screen — section header above the font-size selector
+  ///
+  /// In ru, this message translates to:
+  /// **'Размер шрифта'**
+  String get receiptTemplateFontSizeLabel;
+
+  /// Receipt template settings screen — abbreviated "small" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Мал.'**
+  String get receiptTemplateFontSizeSmall;
+
+  /// Receipt template settings screen — abbreviated "medium" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср.'**
+  String get receiptTemplateFontSizeMedium;
+
+  /// Receipt template settings screen — abbreviated "large" font-size segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'Бол.'**
+  String get receiptTemplateFontSizeLarge;
+
+  /// Receipt template settings screen — section header above the paper-width selector
+  ///
+  /// In ru, this message translates to:
+  /// **'Ширина бумаги'**
+  String get receiptTemplatePaperWidthLabel;
+
+  /// Receipt template settings screen — 58mm paper-width segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'58 мм'**
+  String get receiptTemplatePaperWidth58mm;
+
+  /// Receipt template settings screen — 80mm paper-width segment label
+  ///
+  /// In ru, this message translates to:
+  /// **'80 мм'**
+  String get receiptTemplatePaperWidth80mm;
+
+  /// Receipt template settings screen — section header above the show/hide toggles list
+  ///
+  /// In ru, this message translates to:
+  /// **'Показывать на чеке'**
+  String get receiptTemplateShowOnReceiptLabel;
+
+  /// Receipt template settings screen — toggle label for showing a QR code on the receipt
+  ///
+  /// In ru, this message translates to:
+  /// **'QR-код'**
+  String get receiptTemplateQrToggleLabel;
+
+  /// Receipt template settings screen — toggle label for showing the date and time on the receipt
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата и время'**
+  String get receiptTemplateDateTimeToggleLabel;
+
+  /// Receipt template settings screen — fallback header text shown in the preview when the user hasn't typed a custom header
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш магазин'**
+  String get receiptPreviewDefaultHeader;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар 1                 50.00 TJS'**
+  String get receiptPreviewItemLine1;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар 2                 30.00 TJS'**
+  String get receiptPreviewItemLine2;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка                  -5.00 TJS'**
+  String get receiptPreviewDiscountLine;
+
+  /// Fixed demo content for the receipt-mockup preview, monospace-aligned — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО                   75.00 TJS'**
+  String get receiptPreviewTotalLine;
+
+  /// Fixed demo content for the receipt-mockup preview — not real transaction data, no placeholders needed
+  ///
+  /// In ru, this message translates to:
+  /// **'Кассир: Иванов И.'**
+  String get receiptPreviewCashierLine;
+
   /// Ecommerce settings screen — AppBar title
   ///
   /// In ru, this message translates to:
@@ -3274,11 +5500,83 @@ abstract class AppLocalizations {
   /// **'Внешний ID'**
   String get ecommerceMappingExternalIdHint;
 
+  /// Telegram-bot settings screen — label of the stat row counting customers who have linked their Telegram account to the store
+  ///
+  /// In ru, this message translates to:
+  /// **'Подключённых клиентов'**
+  String get telegramLinkedCustomersLabel;
+
+  /// Telegram-bot settings screen — section header above the numbered connection instructions
+  ///
+  /// In ru, this message translates to:
+  /// **'Как подключить клиентов'**
+  String get telegramHowToConnectTitle;
+
+  /// Telegram-bot settings screen — connection instruction step 1; username is the bot handle, e.g. @dukonpro_bot
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент находит бота {username} в Telegram'**
+  String telegramStep1Text(String username);
+
+  /// Telegram-bot settings screen — connection instruction step 2
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажимает /start и вводит свой номер телефона'**
+  String get telegramStep2Text;
+
+  /// Telegram-bot settings screen — connection instruction step 3
+  ///
+  /// In ru, this message translates to:
+  /// **'Бот проверяет номер в базе клиентов и связывает аккаунт'**
+  String get telegramStep3Text;
+
+  /// Telegram-bot settings screen — connection instruction step 4
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент получает уведомления о продажах и долгах'**
+  String get telegramStep4Text;
+
+  /// Telegram-bot settings screen — test-message button label while the message is in flight
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправка...'**
+  String get telegramSendingButton;
+
+  /// Telegram-bot settings screen — test-message button's default (non-sending) label; shares a source line with `telegramSendingButton` in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
+  ///
+  /// In ru, this message translates to:
+  /// **'Тестовое сообщение'**
+  String get telegramTestMessageButton;
+
+  /// Language settings screen — AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык интерфейса'**
+  String get languageSettingsPageTitle;
+
+  /// Language settings screen — section header above the list of selectable UI languages
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите язык'**
+  String get languageSettingsChooseLabel;
+
+  /// Language settings screen — info banner telling the user to restart the app for the newly picked language to take effect
+  ///
+  /// In ru, this message translates to:
+  /// **'Для применения языка перезапустите приложение.'**
+  String get languageSettingsRestartNotice;
+
   /// No description provided for @employees.
   ///
   /// In ru, this message translates to:
   /// **'Сотрудники'**
   String get employees;
+
+  /// Fallback shown in place of a staff member's name when the record has none — the bare noun 'Employee'. Deliberately unprefixed and shared by the current-shift card and the shift history card. Distinct from `shiftsUnknownCashier` ("Не указан", literally 'not specified'), the differently-worded fallback used inside `shiftsCashierLine`, and from `employees` ("Сотрудники", plural).
+  ///
+  /// In ru, this message translates to:
+  /// **'Сотрудник'**
+  String get unknownStaffLabel;
 
   /// No description provided for @addEmployee.
   ///
@@ -3304,6 +5602,66 @@ abstract class AppLocalizations {
   /// **'Имя сотрудника'**
   String get staffFormNameLabel;
 
+  /// Short warehouse-role badge label on the staff list page ("Склад"). Distinct from `warehouse` ("Складовщик"), the person-noun form of the same role used on the staff card/detail badges, and from `addProductStepStock` (literally the same word "Склад" but meaning the add-product wizard's stock/quantity step, not a staff role)
+  ///
+  /// In ru, this message translates to:
+  /// **'Склад'**
+  String get staffRoleWarehouseShort;
+
+  /// Staff detail page — label under the on-shift/off-shift stat column. Distinct from `salesFilterStatusSectionLabel` ("Статус"), which is the sales-filter bottom sheet's section header above the order-status chips
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get staffStatusLabel;
+
+  /// Staff detail page — value of the status stat column when the employee has no open shift ("Нет смены", literally 'no shift'). Distinct from `notOnShift` ("Не на смене", literally 'not on shift'), the differently-worded form the staff list page shows next to its status dot
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет смены'**
+  String get staffNotOnShiftStatusDetail;
+
+  /// Staff detail page — title of the statistics tab, alongside the shifts tab (`shifts`)
+  ///
+  /// In ru, this message translates to:
+  /// **'Статистика'**
+  String get staffStatsTabLabel;
+
+  /// Staff detail page statistics tab — row label for the employee's sales total today. Distinct from `todaySales` ("Продажи за сегодня"), the fuller wording with the preposition "за" used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи сегодня'**
+  String get staffTodaySalesLabel;
+
+  /// Staff detail page statistics tab — row label for the date the employee record was created
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата регистрации'**
+  String get staffRegistrationDateLabel;
+
+  /// Staff list page empty-state title shown when the store has no employees yet. Distinct from `noEmployees` ("Нет сотрудников"), the shorter wording used elsewhere
+  ///
+  /// In ru, this message translates to:
+  /// **'Сотрудников пока нет'**
+  String get staffListEmptyTitle;
+
+  /// Staff list page empty-state subtitle explaining why to add employees (shift and payroll tracking)
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавьте сотрудников для учёта смен и зарплаты'**
+  String get staffListEmptySubtitle;
+
+  /// Staff list page — inline "today's sales" line next to an on-shift employee's status dot; a single contiguous text run, so label and pre-formatted amount share one key
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня: {amount}'**
+  String staffListTodaySalesLine(String amount);
+
+  /// Staff card widget — lowercase caption under the employee's today-sales amount ("сегодня"). Distinct from `today` ("Сегодня", capitalised), which is used as a standalone period label/chip
+  ///
+  /// In ru, this message translates to:
+  /// **'сегодня'**
+  String get staffCardTodayLabel;
+
   /// No description provided for @role.
   ///
   /// In ru, this message translates to:
@@ -3328,7 +5686,7 @@ abstract class AppLocalizations {
   /// **'Кассир'**
   String get cashier;
 
-  /// No description provided for @warehouse.
+  /// Warehouse-keeper role label as a person noun ("Складовщик"), used on the staff card and staff detail badges. Distinct from `staffRoleWarehouseShort` ("Склад"), the shortened form the staff list page's badge uses
   ///
   /// In ru, this message translates to:
   /// **'Складовщик'**
@@ -3382,7 +5740,7 @@ abstract class AppLocalizations {
   /// **'На смене'**
   String get isOnShift;
 
-  /// No description provided for @notOnShift.
+  /// Off-shift status text next to the staff list page's status dot ("Не на смене"). Distinct from `staffNotOnShiftStatusDetail` ("Нет смены"), the differently-worded value the staff detail page's status stat column shows
   ///
   /// In ru, this message translates to:
   /// **'Не на смене'**
@@ -3399,6 +5757,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Открыть смену'**
   String get openShift;
+
+  /// Open-shift page — hero card heading ('Start of shift'). Distinct from `openShift` ("Открыть смену"), the imperative AppBar title / submit button on the same screen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начало смены'**
+  String get openShiftHeading;
+
+  /// Open-shift page — hero card subtitle asking for the opening cash amount. Distinct from `shiftsCloseCashPrompt` ("Введите сумму наличных в кассе:"), the close-shift dialog's prompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите сумму наличных в кассе на начало смены'**
+  String get openShiftSubtitle;
+
+  /// Open-shift page — opening cash field label with currency suffix. Distinct from `shiftsCashAmountLabel` ("Сумма наличных"), the same label without the '(TJS)' suffix; same pattern as `baseSalaryTjs` vs `baseSalary`.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма наличных (TJS)'**
+  String get openShiftCashLabel;
 
   /// No description provided for @closeShift.
   ///
@@ -3478,12 +5854,6 @@ abstract class AppLocalizations {
   /// **'Сумма наличных'**
   String get shiftsCashAmountLabel;
 
-  /// Close-shift dialog — validation error when the cash amount field is left empty
-  ///
-  /// In ru, this message translates to:
-  /// **'Введите сумму'**
-  String get shiftsCashAmountRequired;
-
   /// No description provided for @shiftsCashAmountNegative.
   ///
   /// In ru, this message translates to:
@@ -3554,6 +5924,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Открыта'**
   String get shiftsOpenStatus;
+
+  /// Shift history card status badge for a closed shift — the adjective 'Closed', paired with `shiftsOpenStatus` ("Открыта") in the same ternary. Distinct from `shiftsClosedStatus` ("Сдано", literally 'handed over'), a differently-worded closed-shift badge, and from `close`/`closeShift` action labels.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыта'**
+  String get shiftCardClosedStatus;
+
+  /// Shift history card — trailing sales-count caption, e.g. '12 продаж'. Shares its value with `dashboardSalesCountLabel` and `reportsSalesCountTooltip`, but those prefixes are scoped to the dashboard and the reports page respectively, so neither can be reused here; a generic promotion would have to repoint all three at once. Distinct from `salesCountAbbrev` ("Продаж"), the bare noun with no numeral. Placeholder is a pre-formatted String.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String shiftCardSalesCountLine(String count);
 
   /// No description provided for @zReport.
   ///
@@ -3633,7 +6015,7 @@ abstract class AppLocalizations {
   /// **'Количество возвратов'**
   String get zReportReturnsCount;
 
-  /// No description provided for @zReportReturnsAmount.
+  /// Z-report line — aggregate total of all refunds in the shift (plural genitive "возвратов"). Distinct from `refundTotalLabel` ("Сумма возврата:", singular) on the refund page, which is one individual refund's total.
   ///
   /// In ru, this message translates to:
   /// **'Сумма возвратов'**
@@ -3873,12 +6255,6 @@ abstract class AppLocalizations {
   /// **'Выберите месяц и нажмите \"Рассчитать\"'**
   String get payrollNoDataSubtitle;
 
-  /// Payroll period detail header — total payroll amount for the selected period
-  ///
-  /// In ru, this message translates to:
-  /// **'Итого: {amount} TJS'**
-  String payrollTotalLine(String amount);
-
   /// No description provided for @payrollAddAdjustmentTooltip.
   ///
   /// In ru, this message translates to:
@@ -3908,6 +6284,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выплачено'**
   String get payrollPaidLabel;
+
+  /// AppBar title of the add-payroll-adjustment screen. Do not merge with `adjustment` ("Корректировка"), despite the identical Russian: `adjustment` is an enum-member label bound to the ADJUSTMENT stock-movement type, used in product_detail_page.dart's _typeLabel() switch alongside `intakeType`/`outflowType`. Its meaning is tied to that closed {IN, OUT, ADJUSTMENT} classification, so disambiguating or shortening that inventory badge must not silently retitle this payroll screen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Корректировка'**
+  String get payrollAdjustmentPageTitle;
+
+  /// No description provided for @payrollAdjustmentInstructions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите тип, сумму и описание корректировки'**
+  String get payrollAdjustmentInstructions;
+
+  /// No description provided for @payrollAdjustmentTypeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тип корректировки'**
+  String get payrollAdjustmentTypeLabel;
+
+  /// Add-adjustment form's deduction-type toggle label; distinct from `deduction` ("Вычет"), a different Russian word used elsewhere for the same underlying concept — do not merge, values differ character-for-character
+  ///
+  /// In ru, this message translates to:
+  /// **'Удержание'**
+  String get payrollDeductionTypeLabel;
+
+  /// No description provided for @payrollAdjustmentStaffIdLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'ID сотрудника (необязательно)'**
+  String get payrollAdjustmentStaffIdLabel;
+
+  /// No description provided for @payrollAdjustmentStaffIdHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставьте пустым для всех'**
+  String get payrollAdjustmentStaffIdHint;
+
+  /// No description provided for @payrollAdjustmentDescriptionRequiredError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите описание'**
+  String get payrollAdjustmentDescriptionRequiredError;
+
+  /// No description provided for @payrollAdjustmentAmountMustBePositiveError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма должна быть больше 0'**
+  String get payrollAdjustmentAmountMustBePositiveError;
+
+  /// Add-adjustment form's bare submit button label; same bare verb as `customerListAddConfirm` ("Добавить"), which is scoped to the add-customer dialog — no unprefixed generic `add` key exists in this ARB, so each bare-"Добавить" confirm button stays feature-scoped
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get payrollAdjustmentSubmit;
 
   /// No description provided for @permissions.
   ///
@@ -3957,13 +6387,13 @@ abstract class AppLocalizations {
   /// **'Добавление расходов'**
   String get addExpenses;
 
-  /// No description provided for @manageCustomers.
+  /// Permission label "Управление клиентами" (clients). Distinct from `permissionManageCustomersLabel` ("Управление покупателями", buyers/shoppers) — the roles screen's permission matrix uses that differently-worded variant for the same underlying `manage_customers` permission
   ///
   /// In ru, this message translates to:
   /// **'Управление клиентами'**
   String get manageCustomers;
 
-  /// No description provided for @manageStaff.
+  /// Permission label "Управление сотрудниками" (employees). Distinct from `permissionManageStaffLabel` ("Управление персоналом", personnel) — the roles screen's permission matrix uses that differently-worded variant for the same underlying `manage_staff` permission
   ///
   /// In ru, this message translates to:
   /// **'Управление сотрудниками'**
@@ -3974,6 +6404,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Просмотр отчётов'**
   String get viewReports;
+
+  /// Roles screen permission-matrix label for the `manage_staff` permission ("Управление персоналом", personnel). Distinct from `manageStaff` ("Управление сотрудниками", employees), the wording used by the older staff-permissions UI for the same permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление персоналом'**
+  String get permissionManageStaffLabel;
+
+  /// Roles screen permission-matrix label for the `manage_expenses` permission. Distinct from `addExpenses` ("Добавление расходов"), which names only the add-expense capability
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление расходами'**
+  String get permissionManageExpensesLabel;
+
+  /// Roles screen permission-matrix label for the `manage_customers` permission ("Управление покупателями", buyers/shoppers). Distinct from `manageCustomers` ("Управление клиентами", clients), the wording used by the older staff-permissions UI for the same permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление покупателями'**
+  String get permissionManageCustomersLabel;
+
+  /// Roles screen permission-matrix label for the `manage_suppliers` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление поставщиками'**
+  String get permissionManageSuppliersLabel;
+
+  /// Roles screen permission-matrix label for the `manage_stock` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление складом'**
+  String get permissionManageStockLabel;
+
+  /// Roles screen permission-matrix label for the `manage_debts` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление долгами'**
+  String get permissionManageDebtsLabel;
+
+  /// Roles screen permission-matrix label for the `manage_settings` permission — worded as "Настройки магазина" (store settings) rather than as a manage-* phrase
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки магазина'**
+  String get permissionManageSettingsLabel;
+
+  /// Roles screen permission-matrix label for the `open_close_shift` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Открытие/закрытие смены'**
+  String get permissionOpenCloseShiftLabel;
+
+  /// Roles screen permission-matrix label for the `apply_discounts` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Применение скидок'**
+  String get permissionApplyDiscountsLabel;
+
+  /// Roles screen permission-matrix label for the `manage_payroll` permission
+  ///
+  /// In ru, this message translates to:
+  /// **'Управление зарплатой'**
+  String get permissionManagePayrollLabel;
 
   /// No description provided for @employeeCreated.
   ///
@@ -4142,12 +6632,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить скидку?'**
   String get discountsDeleteTitle;
-
-  /// No description provided for @discountsDeleteConfirmBody.
-  ///
-  /// In ru, this message translates to:
-  /// **'Вы уверены, что хотите удалить \"{name}\"?'**
-  String discountsDeleteConfirmBody(String name);
 
   /// Discount create/edit bottom sheet header when editing an existing discount — same wording as the `a11yEditDiscount` tooltip but a different UI role (sheet header vs. icon-button tooltip), kept as a separate key
   ///
@@ -4520,6 +7004,144 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Вложение удалено'**
   String get investmentDeleted;
+
+  /// No description provided for @investmentAddPageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить вложение'**
+  String get investmentAddPageTitle;
+
+  /// No description provided for @investmentInvestorNameRequiredError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите имя инвестора'**
+  String get investmentInvestorNameRequiredError;
+
+  /// No description provided for @investmentStartDateLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата начала'**
+  String get investmentStartDateLabel;
+
+  /// No description provided for @investmentEndDateLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата окончания (необязательно)'**
+  String get investmentEndDateLabel;
+
+  /// No description provided for @investmentInvestorNameLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя инвестора *'**
+  String get investmentInvestorNameLabel;
+
+  /// No description provided for @investmentAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма *'**
+  String get investmentAmountLabel;
+
+  /// Add-investment form field label — the amount to be returned to the investor. Bare label with no trailing punctuation. Distinct from `refundTotalLabel` ("Сумма возврата:", with a trailing colon) which is a sale-refund total display label on the refund page — same words, different domain, and the values differ character-for-character, so the two must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата'**
+  String get investmentReturnAmountLabel;
+
+  /// No description provided for @investmentInvestorPhoneLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон инвестора'**
+  String get investmentInvestorPhoneLabel;
+
+  /// Generic 'Investments' label — the investments list page's AppBar title and the finance-dashboard section-grid item. Promoted from `financeDashboardInvestments` once the investments page itself needed it, since a `financeDashboard*` prefix disagreed with a page-level title scope.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложения'**
+  String get investments;
+
+  /// Empty state shown when the investments list has no items
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложений пока нет'**
+  String get investmentEmptyState;
+
+  /// Investment status label for ACTIVE — used both as a filter chip and as the per-row status badge
+  ///
+  /// In ru, this message translates to:
+  /// **'Активно'**
+  String get investmentStatusActive;
+
+  /// Investment status label for COMPLETED — neuter gender ("Завершено") agreeing with 'вложение'. Distinct from `completed` ("Завершена", feminine); the two differ character-for-character and must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершено'**
+  String get investmentStatusCompleted;
+
+  /// Investment status label for CANCELLED — neuter gender ("Отменено") agreeing with 'вложение'. Distinct from `cancelled` ("Отменена", feminine); the two differ character-for-character and must not be merged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменено'**
+  String get investmentStatusCancelled;
+
+  /// Exchange-rates page AppBar title
+  ///
+  /// In ru, this message translates to:
+  /// **'Курсы валют'**
+  String get currenciesPageTitle;
+
+  /// Title above the 30-day exchange-rate history line chart — distinct from the bare generic `dynamics` ("Динамика")
+  ///
+  /// In ru, this message translates to:
+  /// **'Динамика за 30 дней'**
+  String get currenciesHistoryChartTitle;
+
+  /// Empty state shown inside an expanded currency card when no 30-day rate history is available
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных за 30 дней'**
+  String get currenciesNoHistoryData;
+
+  /// Section title of the currency-converter card at the bottom of the exchange-rates page
+  ///
+  /// In ru, this message translates to:
+  /// **'Конвертер'**
+  String get currenciesConverterTitle;
+
+  /// Label above the converter's result figure. The result is always expressed in TJS, so the currency code is part of the string; kept as a standalone colon-suffixed label because layout puts the value in its own filled container below, not in the same text run.
+  ///
+  /// In ru, this message translates to:
+  /// **'Результат (в TJS):'**
+  String get currenciesConvertedResultLabel;
+
+  /// Full name of the National Bank of Tajikistan (NBT), shown as the rate-source attribution line above the exchange-rate list. Generic (unprefixed) since the same attribution plausibly belongs anywhere a NBT-sourced rate is displayed.
+  ///
+  /// In ru, this message translates to:
+  /// **'НБТ — Национальный банк Таджикистана'**
+  String get nbtBankLabel;
+
+  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. NOTE: the same four currency names are also hardcoded in lib/data/datasources/remote/currency_remote_datasource.dart, which sits outside lib/presentation and so is invisible to tool/check_i18n.dart — migrating that layer needs a context-free lookup and is tracked as a separate follow-up.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доллар США'**
+  String get currencyUsd;
+
+  /// Currency display name — Russian Ruble
+  ///
+  /// In ru, this message translates to:
+  /// **'Российский рубль'**
+  String get currencyRub;
+
+  /// Currency display name — Euro
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyEur;
+
+  /// Currency display name — Chinese Yuan
+  ///
+  /// In ru, this message translates to:
+  /// **'Китайский юань'**
+  String get currencyCny;
 }
 
 class _AppLocalizationsDelegate

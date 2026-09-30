@@ -137,7 +137,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     if (id.isEmpty) {
       setState(() {
         _loading = false;
-        _error = 'Магазин не выбран';
+        _error = AppLocalizations.of(context)!.storeNotSelectedError;
       });
       return;
     }
@@ -222,6 +222,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
     String decision,
   ) async {
     if (_impersonationRespondingIds.contains(notif.id)) return;
+    // Resolve the localizations up front: every string below is used after
+    // at least one `await`, and reading `context` post-await is the hazard
+    // the `use_build_context_synchronously` lint exists for. The `mounted`
+    // guards keep the ScaffoldMessenger lookups legal, but the l10n lookup
+    // has no reason to happen late — hoist it before the first await.
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _impersonationRespondingIds.add(notif.id));
 
     try {
@@ -249,7 +255,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            decision == 'APPROVED' ? 'Доступ предоставлен' : 'Запрос отклонён',
+            decision == 'APPROVED'
+                ? l10n.impersonationAccessGranted
+                : l10n.impersonationRequestRejected,
           ),
         ),
       );
@@ -257,22 +265,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
       if (mounted) {
         setState(() => _impersonationRespondingIds.remove(notif.id));
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Не удалось обработать запрос — возможно, он уже неактивен',
-            ),
+          SnackBar(
+            content: Text(l10n.impersonationRequestFailedMessage),
           ),
         );
       }
     }
   }
 
-  String _timeAgo(DateTime dt) {
+  String _timeAgo(DateTime dt, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final diff = DateTime.now().difference(dt);
-    if (diff.inSeconds < 60) return 'только что';
-    if (diff.inMinutes < 60) return '${diff.inMinutes} мин назад';
-    if (diff.inHours < 24) return '${diff.inHours} ч назад';
-    if (diff.inDays < 7) return '${diff.inDays} д назад';
+    if (diff.inSeconds < 60) return l10n.justNow;
+    if (diff.inMinutes < 60) return l10n.minutesAgo('${diff.inMinutes}');
+    if (diff.inHours < 24) return l10n.hoursAgo('${diff.inHours}');
+    if (diff.inDays < 7) return l10n.daysAgoShort('${diff.inDays}');
     return DateFormat('dd.MM.yyyy').format(dt);
   }
 
@@ -311,15 +318,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Уведомления',
-            style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+        title: Text(AppLocalizations.of(context)!.notifications,
+            style: const TextStyle(
+                fontFamily: 'Inter', fontWeight: FontWeight.w700)),
         backgroundColor: context.surface,
         foregroundColor: context.textPrimary,
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Настройки',
+            tooltip: AppLocalizations.of(context)!.settings,
             onPressed: () => context.push(
               '/notifications/settings',
               extra: _storeId,
@@ -360,7 +368,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               notification: n,
                               icon: _typeIcon(n.type),
                               iconColor: _typeColor(n.type, context),
-                              timeAgo: _timeAgo(n.createdAt),
+                              timeAgo: _timeAgo(n.createdAt, context),
                               onTap: () => _markRead(i),
                               showImpersonationActions: isImpersonation &&
                                   !_impersonationRespondedIds.contains(n.id),
@@ -393,7 +401,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => _load(refresh: true),
-            child: const Text('Повторить'),
+            child: Text(AppLocalizations.of(context)!.retry),
           ),
         ],
       ),
@@ -407,7 +415,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           Icon(Icons.notifications_none, size: 64, color: context.textMuted),
           const SizedBox(height: 12),
-          Text('Нет уведомлений',
+          Text(AppLocalizations.of(context)!.notificationsEmptyState,
               style: TextStyle(
                   fontSize: 16,
                   color: context.textSecondary,
@@ -529,7 +537,7 @@ class _NotificationCard extends StatelessWidget {
                               onPressed: impersonationActionInFlight
                                   ? null
                                   : onRejectImpersonation,
-                              child: const Text('Отклонить'),
+                              child: Text(l10n.decline),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -551,7 +559,7 @@ class _NotificationCard extends StatelessWidget {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text('Разрешить'),
+                                  : Text(l10n.allow),
                             ),
                           ),
                         ],

@@ -4,6 +4,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../domain/entities/shift.dart';
 import '../common/app_card.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class ShiftCard extends StatelessWidget {
   final ShiftModel shift;
@@ -24,17 +25,17 @@ class ShiftCard extends StatelessWidget {
         '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 
-  String _formatDuration(DateTime open, DateTime? close) {
+  String _formatDuration(AppLocalizations l10n, DateTime open, DateTime? close) {
     final end = close ?? (now ?? DateTime.now)();
     final diff = end.difference(open);
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);
-    // ignore: unnecessary_brace_in_string_interps
-    return '${hours}ч ${minutes}м';
+    return l10n.shiftsDurationFormat('$hours', '$minutes');
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isOpen = shift.status == 'OPEN';
 
     return AppCard(
@@ -65,7 +66,7 @@ class ShiftCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          shift.staffName ?? 'Сотрудник',
+                          shift.staffName ?? l10n.unknownStaffLabel,
                           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                         ),
                         const SizedBox(width: AppConstants.spacingSm),
@@ -76,7 +77,7 @@ class ShiftCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(AppConstants.radiusSm),
                           ),
                           child: Text(
-                            isOpen ? 'Открыта' : 'Закрыта',
+                            isOpen ? l10n.shiftsOpenStatus : l10n.shiftCardClosedStatus,
                             style: TextStyle(
                               color: isOpen ? AppColors.success : context.textSecondary,
                               fontSize: 12,
@@ -88,7 +89,7 @@ class ShiftCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${_formatDateTime(shift.openedAt)} - ${_formatDuration(shift.openedAt, shift.closedAt)}',
+                      '${_formatDateTime(shift.openedAt)} - ${_formatDuration(l10n, shift.openedAt, shift.closedAt)}',
                       style: TextStyle(fontSize: 12, color: context.textSecondary),
                     ),
                   ],
@@ -102,7 +103,7 @@ class ShiftCard extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
                   Text(
-                    '${shift.salesCount} продаж',
+                    l10n.shiftCardSalesCountLine('${shift.salesCount}'),
                     style: TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                 ],

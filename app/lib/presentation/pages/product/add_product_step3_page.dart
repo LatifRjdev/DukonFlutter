@@ -77,7 +77,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Новый товар'),
+        title: Text(l10n.newProductTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -88,7 +88,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
           if (state.isSuccess) {
             AppSnackbar.success(
               context,
-              'Товар сохранён. Синхронизация в фоне.',
+              l10n.addProductSavedSyncingMessage,
             );
             context.read<ProductFormBloc>().add(ProductFormReset());
             // Trigger an explicit reload of the product list so the new
@@ -121,11 +121,18 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                   horizontal: AppConstants.spacingLg, vertical: AppConstants.spacingMd),
               child: Row(
                 children: [
-                  _StepDot(index: 1, label: 'Основное', isCompleted: true),
+                  _StepDot(
+                      index: 1,
+                      label: l10n.addProductStepBasic,
+                      isCompleted: true),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 2, label: 'Цены', isCompleted: true),
+                  _StepDot(
+                      index: 2,
+                      label: l10n.addProductStepPrices,
+                      isCompleted: true),
                   const Expanded(child: Divider()),
-                  _StepDot(index: 3, label: 'Склад', isActive: true),
+                  _StepDot(
+                      index: 3, label: l10n.addProductStepStock, isActive: true),
                 ],
               ),
             ),
@@ -139,7 +146,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                     children: [
                       AppTextField(
                         controller: _quantityController,
-                        label: 'Начальное количество *',
+                        label: l10n.addProductInitialQuantityLabel,
                         hint: '0',
                         prefixIcon: Icons.inventory_outlined,
                         keyboardType: TextInputType.number,
@@ -147,14 +154,16 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Введите количество';
+                          if (v == null || v.trim().isEmpty) {
+                            return l10n.addProductQuantityRequiredError;
+                          }
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AppTextField(
                         controller: _minQuantityController,
-                        label: 'Минимальный остаток',
+                        label: l10n.addProductMinStockLabel,
                         hint: '0',
                         prefixIcon: Icons.warning_amber_outlined,
                         keyboardType: TextInputType.number,
@@ -171,7 +180,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                           return DropdownButtonFormField<String>(
                             initialValue: _selectedSupplierId,
                             decoration: InputDecoration(
-                              labelText: 'Поставщик',
+                              labelText: l10n.supplier,
                               prefixIcon: const Icon(Icons.local_shipping_outlined),
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -190,8 +199,9 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                         },
                       ),
                       const SizedBox(height: 24),
-                      const Text('Фото товара',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text(l10n.addProductPhotoSectionLabel,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 12),
                       Semantics(
                         label: l10n.a11yUploadPhoto,
@@ -220,7 +230,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                                     const Icon(Icons.add_a_photo_outlined,
                                         size: 40, color: AppColors.disabled),
                                     const SizedBox(height: 8),
-                                    Text('Нажмите для загрузки',
+                                    Text(l10n.addProductTapToUploadHint,
                                         style: TextStyle(
                                             color: context.textSecondary)),
                                   ],
@@ -239,7 +249,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                 children: [
                   Expanded(
                     child: AppButton(
-                      text: 'Назад',
+                      text: l10n.back,
                       type: AppButtonType.outlined,
                       onPressed: () => context.pop(),
                     ),
@@ -250,7 +260,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
                     child: BlocBuilder<ProductFormBloc, ProductFormState>(
                       builder: (context, state) {
                         return AppButton(
-                          text: 'Добавить товар',
+                          text: l10n.addProduct,
                           icon: Icons.check,
                           onPressed: _submit,
                           isLoading: state.isSubmitting,

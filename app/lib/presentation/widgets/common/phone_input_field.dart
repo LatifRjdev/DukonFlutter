@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_constants.dart';
 
 class PhoneInputField extends StatelessWidget {
@@ -16,6 +17,7 @@ class PhoneInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: controller,
       validator: validator,
@@ -26,7 +28,7 @@ class PhoneInputField extends StatelessWidget {
         LengthLimitingTextInputFormatter(9),
       ],
       decoration: InputDecoration(
-        labelText: 'Номер телефона',
+        labelText: l10n.phone,
         hintText: '00 000 0000',
         prefixIcon: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),

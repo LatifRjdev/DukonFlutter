@@ -56,7 +56,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Язык интерфейса'),
+        title: Text(l10n.languageSettingsPageTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -67,7 +67,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Выберите язык',
+                  Text(l10n.languageSettingsChooseLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -174,7 +174,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Для применения языка перезапустите приложение.',
+                            l10n.languageSettingsRestartNotice,
                             style: TextStyle(
                                 fontSize: 12, color: context.textSecondary),
                           ),
@@ -197,8 +197,8 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                       onPressed: _saving ? null : _save,
                       child: _saving
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Сохранить',
-                              style: TextStyle(
+                          : Text(l10n.save,
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -85,6 +86,8 @@ class _ImpersonationBannerState extends State<ImpersonationBanner> {
   Widget build(BuildContext context) {
     if (_requestId == null) return const SizedBox.shrink();
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       color: AppColors.warning,
@@ -96,10 +99,10 @@ class _ImpersonationBannerState extends State<ImpersonationBanner> {
         children: [
           const Icon(Icons.support_agent, size: 18, color: Colors.white),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Вы вошли как поддержка Dukon',
-              style: TextStyle(
+              l10n.impersonationBannerMessage,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
@@ -121,7 +124,7 @@ class _ImpersonationBannerState extends State<ImpersonationBanner> {
                       color: Colors.white,
                     ),
                   )
-                : const Text('Завершить сессию'),
+                : Text(l10n.impersonationBannerEndSession),
           ),
         ],
       ),

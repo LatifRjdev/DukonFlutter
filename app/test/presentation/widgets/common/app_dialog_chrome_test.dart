@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dukonpro/core/theme/app_theme.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/widgets/common/app_dialog.dart';
 
 void main() {
@@ -10,6 +11,9 @@ void main() {
     confirmCount = 0;
     return MaterialApp(
       theme: AppTheme.light,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('ru'),
       home: Scaffold(
         body: Builder(
           builder: (ctx) => ElevatedButton(

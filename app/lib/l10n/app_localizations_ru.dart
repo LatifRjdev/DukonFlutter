@@ -27,6 +27,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get actionCannotBeUndone => 'Это действие нельзя отменить.';
 
   @override
+  String deleteConfirmBody(String name) {
+    return 'Вы уверены, что хотите удалить \"$name\"?';
+  }
+
+  @override
   String get edit => 'Редактировать';
 
   @override
@@ -37,6 +42,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get search => 'Поиск';
+
+  @override
+  String get searchPlaceholder => 'Поиск...';
 
   @override
   String get back => 'Назад';
@@ -51,10 +59,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get share => 'Поделиться';
 
   @override
+  String get printLabel => 'Печать';
+
+  @override
   String get close => 'Закрыть';
 
   @override
   String get confirm => 'Подтвердить';
+
+  @override
+  String get allow => 'Разрешить';
+
+  @override
+  String get decline => 'Отклонить';
 
   @override
   String get apply => 'Применить';
@@ -67,6 +84,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restore => 'Восстановить';
+
+  @override
+  String get reset => 'Сбросить';
+
+  @override
+  String get loadMore => 'Загрузить ещё';
 
   @override
   String get justNow => 'только что';
@@ -84,6 +107,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String daysAgo(String days) {
     return '$days дн назад';
+  }
+
+  @override
+  String daysAgoShort(String days) {
+    return '$days д назад';
   }
 
   @override
@@ -111,10 +139,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get emptyList => 'Список пуст';
 
   @override
+  String get noCustomers => 'Нет клиентов';
+
+  @override
   String get product => 'Товар';
 
   @override
   String get productNotFound => 'Товар не найден';
+
+  @override
+  String get storeNotSelectedError => 'Магазин не выбран';
 
   @override
   String get difference => 'Разница';
@@ -349,13 +383,59 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addProductStepStock => 'Склад';
 
   @override
+  String get addProductNameRequiredLabel => 'Название товара *';
+
+  @override
+  String get addProductSkuLabel => 'Артикул (SKU)';
+
+  @override
+  String get addProductImageSizeHint => 'JPG, PNG до 5MB';
+
+  @override
+  String get addProductInitialQuantityLabel => 'Начальное количество *';
+
+  @override
+  String get addProductQuantityRequiredError => 'Введите количество';
+
+  @override
+  String get addProductMinStockLabel => 'Минимальный остаток';
+
+  @override
+  String get addProductPhotoSectionLabel => 'Фото товара';
+
+  @override
+  String get addProductTapToUploadHint => 'Нажмите для загрузки';
+
+  @override
+  String get addProductSavedSyncingMessage =>
+      'Товар сохранён. Синхронизация в фоне.';
+
+  @override
+  String get addPhotoLabel => 'Добавить фото';
+
+  @override
   String get productName => 'Название товара';
+
+  @override
+  String get productCountOne => 'товар';
+
+  @override
+  String get productCountFew => 'товара';
+
+  @override
+  String get productCountMany => 'товаров';
 
   @override
   String get itemName => 'Название';
 
   @override
   String get barcode => 'Штрихкод';
+
+  @override
+  String get barcodeScannerTitle => 'Сканер штрихкода';
+
+  @override
+  String get barcodeScannerHint => 'Наведите камеру на штрихкод';
 
   @override
   String get costPrice => 'Цена закупки';
@@ -386,6 +466,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get enterName => 'Введите имя';
+
+  @override
+  String get enterQuantityHint => 'Введите количество';
+
+  @override
+  String get enterCostPriceHint => 'Введите себестоимость';
 
   @override
   String get phoneRequired => 'Введите номер телефона';
@@ -424,6 +510,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get categories => 'Категории';
+
+  @override
+  String get categoriesEditTitle => 'Редактировать категорию';
+
+  @override
+  String get categoriesNewTitle => 'Новая категория';
+
+  @override
+  String get categoriesDeleteTitle => 'Удалить категорию?';
+
+  @override
+  String get categoriesEmptyTitle => 'Нет категорий';
+
+  @override
+  String get categoriesEmptySubtitle =>
+      'Создайте первую категорию для ваших товаров';
+
+  @override
+  String get categoriesEmptyButton => 'Создать категорию';
 
   @override
   String get allCategories => 'Все категории';
@@ -548,6 +653,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noProducts => 'Нет товаров';
 
   @override
+  String get noProductsFound => 'Товары не найдены';
+
+  @override
   String get emptyProductsTitle => 'Добавьте свой первый товар';
 
   @override
@@ -556,6 +664,114 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get importFromExcel => 'Импорт из Excel';
+
+  @override
+  String get productSearchHint => 'Поиск товара';
+
+  @override
+  String get productFilterLowStock => 'Заканчивается';
+
+  @override
+  String get productFilterAttention => 'Требует внимания';
+
+  @override
+  String get productsEmptyFilteredTitle => 'Нет товаров по фильтру';
+
+  @override
+  String get productsEmptyAddSubtitle => 'Добавьте первый товар в каталог';
+
+  @override
+  String get productsEmptyFilteredSubtitle =>
+      'Попробуйте изменить фильтр или поисковый запрос';
+
+  @override
+  String productSkuLine(String sku) {
+    return 'Арт: $sku';
+  }
+
+  @override
+  String productStockQuantityLine(String value) {
+    return 'На складе: $value';
+  }
+
+  @override
+  String get productStatusActive => 'Активен';
+
+  @override
+  String get productStatusInactive => 'Неактивен';
+
+  @override
+  String get productDetailUnitLabel => 'Единица';
+
+  @override
+  String productDetailCurrentStockLine(String qty, String unit) {
+    return 'Текущий остаток: $qty $unit';
+  }
+
+  @override
+  String productDetailMinStockLine(String qty, String unit) {
+    return 'Минимальный: $qty $unit';
+  }
+
+  @override
+  String get productDetailBarcodeLabel => 'Штрих-код';
+
+  @override
+  String get productDetailStockAvailabilityTitle => 'Наличие на складе';
+
+  @override
+  String get productDetailInfoSectionTitle => 'Информация';
+
+  @override
+  String get productDetailSellButton => 'Продать';
+
+  @override
+  String get productDetailDeleteConfirmTitle => 'Удалить товар?';
+
+  @override
+  String get productDetailMovementHistoryLoadError =>
+      'Не удалось загрузить историю движений';
+
+  @override
+  String get productDetailMovementHistoryTitle => 'История движений';
+
+  @override
+  String get productDetailNoMovements => 'Нет движений';
+
+  @override
+  String get productDetailBatchNoDataMessage =>
+      'Нет данных о последней закупке — оформите приход, чтобы видеть окупаемость партии.';
+
+  @override
+  String get productDetailBatchPayabilityTitle => 'Окупаемость партии';
+
+  @override
+  String get productDetailBatchCostLabel => 'Себестоимость партии';
+
+  @override
+  String get productDetailBatchRevenueLabel => 'Выручка от партии';
+
+  @override
+  String get productDetailBatchProfitEarnedLabel => 'Прибыль заработана';
+
+  @override
+  String get productDetailBatchTimeToPaybackLabel => 'До окупаемости партии';
+
+  @override
+  String get productDetailBatchPaidOffLabel => 'Партия окупилась';
+
+  @override
+  String get productDetailStockRemainingLabel => 'Остаток';
+
+  @override
+  String productDetailStockRemainingValue(String qty, String value) {
+    return '$qty шт. на $value';
+  }
+
+  @override
+  String productDetailBatchPaybackPercentLine(String percent) {
+    return '$percent% окупаемости';
+  }
 
   @override
   String get pos => 'Касса';
@@ -579,6 +795,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get total => 'Итого';
 
   @override
+  String get totalCaps => 'ИТОГО';
+
+  @override
+  String totalTjsLine(String amount) {
+    return 'Итого: $amount TJS';
+  }
+
+  @override
   String get cash => 'Наличные';
 
   @override
@@ -597,6 +821,58 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get mixed => 'Смешанная оплата';
+
+  @override
+  String get paymentMixedShort => 'Смешанная';
+
+  @override
+  String get posCheckoutNoCustomerOption => 'Без клиента';
+
+  @override
+  String get posCheckoutSearchHint => 'Поиск по названию';
+
+  @override
+  String get posCheckoutEmptyCartSubtitle =>
+      'Найдите товар через поиск или выберите из списка выше';
+
+  @override
+  String posCheckoutCartHeader(String count) {
+    return 'Корзина ($count товаров)';
+  }
+
+  @override
+  String posCheckoutCta(String total) {
+    return 'Оформить продажу — $total';
+  }
+
+  @override
+  String posCheckoutPointsRedeemPreview(String points, String value) {
+    return '$points баллов = -$value сом';
+  }
+
+  @override
+  String posCheckoutPointsAvailableInline(String points) {
+    return '$points баллов доступно';
+  }
+
+  @override
+  String get posCheckoutRedeemPointsTitle => 'Списать баллы';
+
+  @override
+  String posCheckoutPointsAvailableLabel(String points) {
+    return 'Доступно: $points баллов';
+  }
+
+  @override
+  String posCheckoutDiscountPreview(String amount) {
+    return 'Скидка: -$amount сом';
+  }
+
+  @override
+  String get posCheckoutDiscountPercentHint => 'Процент';
+
+  @override
+  String get posCheckoutDiscountAmountHint => 'Сумма';
 
   @override
   String get transfer => 'Перевод';
@@ -634,10 +910,37 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saleSuccess => 'Продажа оформлена';
 
   @override
+  String get saleSuccessTitle => 'Продажа оформлена!';
+
+  @override
+  String saleSuccessChangeLine(String amount) {
+    return 'Сдача: $amount';
+  }
+
+  @override
+  String get saleSuccessSendToTelegramButton => 'Отправить в Telegram';
+
+  @override
+  String saleSuccessReceiptShareTextWhatsapp(String receiptNo, String total) {
+    return 'Чек #$receiptNo\nИтого: $total сом.';
+  }
+
+  @override
+  String saleSuccessReceiptShareTextSms(String receiptNo, String total) {
+    return 'Чек #$receiptNo, Итого: $total сом.';
+  }
+
+  @override
   String get receiptNo => 'Чек №';
 
   @override
+  String get receiptQtyAbbrev => 'Кол.';
+
+  @override
   String get printReceipt => 'Печать чека';
+
+  @override
+  String get printReceiptButton => 'Печатать чек';
 
   @override
   String get shareReceipt => 'Отправить чек';
@@ -658,13 +961,122 @@ class AppLocalizationsRu extends AppLocalizations {
   String get salesHistory => 'История продаж';
 
   @override
+  String get salesFilterSheetTitle => 'Фильтры';
+
+  @override
+  String get salesFilterReset => 'Сбросить';
+
+  @override
+  String get salesFilterCustomDates => 'Выбрать даты';
+
+  @override
+  String get salesFilterPaymentTypeSectionLabel => 'Тип оплаты';
+
+  @override
+  String get debtLabel => 'Долг';
+
+  @override
+  String get salesFilterStatusSectionLabel => 'Статус';
+
+  @override
+  String get salesFilterStatusCompleted => 'Выполнен';
+
+  @override
+  String get salesFilterStatusCancelled => 'Отменён';
+
+  @override
+  String get salesHistoryCustomDateChip => 'Выбрать';
+
+  @override
+  String get salesHistoryEmptySubtitle =>
+      'История продаж появится здесь после первой транзакции';
+
+  @override
+  String salesHistoryStatsLine(String count, String amount) {
+    return '$count продаж  |  $amount';
+  }
+
+  @override
+  String salesHistorySkippedRowsLine(String count, String word) {
+    return '$count $word пропущено';
+  }
+
+  @override
+  String salesHistorySaleSummaryLine(String customer, String itemsCount) {
+    return '$customer  •  $itemsCount товаров';
+  }
+
+  @override
+  String get recordsCountOne => 'запись';
+
+  @override
+  String get recordsCountFew => 'записи';
+
+  @override
+  String get recordsCountMany => 'записей';
+
+  @override
   String get todaySales => 'Продажи за сегодня';
 
   @override
   String get transactionDetail => 'Детали операции';
 
   @override
+  String transactionDetailItemQtyLine(String quantity, String price) {
+    return '$quantity шт × $price';
+  }
+
+  @override
+  String get transactionDetailStatusReturned => 'Возвращён';
+
+  @override
+  String get transactionDetailInfoSectionTitle => 'Информация';
+
+  @override
+  String get transactionDetailNoItemsData => 'Нет данных о товарах';
+
+  @override
+  String get transactionDetailStatusPaid => 'Оплачен';
+
+  @override
+  String transactionDetailReceiptTitle(String receiptNo) {
+    return 'Чек $receiptNo';
+  }
+
+  @override
+  String get transactionDetailRetailCustomerFallback => 'Розничный';
+
+  @override
   String get refund => 'Возврат';
+
+  @override
+  String get refundConfirmTitle => 'Подтвердить возврат?';
+
+  @override
+  String refundConfirmBody(String amount, String count) {
+    return 'Сумма возврата: $amount\nВыбрано позиций: $count';
+  }
+
+  @override
+  String get refundInstructionBanner => 'Выберите товары для возврата';
+
+  @override
+  String get refundSelectAll => 'Выбрать все';
+
+  @override
+  String get refundDeselectAll => 'Снять все';
+
+  @override
+  String get refundReasonLabel => 'Причина возврата';
+
+  @override
+  String get refundReasonHint => 'Укажите причину возврата';
+
+  @override
+  String get refundTotalLabel => 'Сумма возврата:';
+
+  @override
+  String get refundSubmitButton => 'Оформить возврат';
 
   @override
   String get completed => 'Завершена';
@@ -695,6 +1107,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stockIntake => 'Приход товара';
 
   @override
+  String get stockIntakeSearchHint => 'Найти товар для прихода';
+
+  @override
+  String get stockIntakeEmptyState => 'Найдите товар для оформления прихода';
+
+  @override
+  String stockIntakeRemainingLine(String quantity, String unit) {
+    return 'Остаток: $quantity $unit';
+  }
+
+  @override
+  String stockIntakePriceLine(String price) {
+    return 'Цена: $price';
+  }
+
+  @override
+  String get stockIntakeCostPerUnitLabel => 'Себестоимость (за единицу)';
+
+  @override
+  String get stockIntakeTotalCostLabel => 'Итоговая стоимость';
+
+  @override
   String get stockMovement => 'Движение товара';
 
   @override
@@ -711,6 +1145,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get writeOff => 'Списание';
+
+  @override
+  String get intakeType => 'Приход';
+
+  @override
+  String get outflowType => 'Расход';
 
   @override
   String get supplier => 'Поставщик';
@@ -740,6 +1180,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profit => 'Прибыль';
 
   @override
+  String get margin => 'Маржа';
+
+  @override
   String get more => 'Ещё';
 
   @override
@@ -767,6 +1210,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get offline => 'Нет подключения к интернету. Работаем офлайн.';
 
   @override
+  String get offlineBannerNoConnection => 'Нет подключения к интернету';
+
+  @override
+  String offlineBannerQueuedMessage(String count) {
+    return 'Офлайн режим · $count в очереди';
+  }
+
+  @override
+  String get offlineBannerSyncing => 'Синхронизация...';
+
+  @override
+  String offlineBannerSyncErrorMessage(String count) {
+    return 'Ошибка синхронизации · $count не отправлено';
+  }
+
+  @override
+  String offlineBannerPendingMessage(String count) {
+    return '$count операций ожидают синхронизации';
+  }
+
+  @override
   String get offlineResetSyncStatusButton => 'Сбросить статус синхронизации';
 
   @override
@@ -778,6 +1242,46 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get offlineResetSyncStatusConfirm => 'Сбросить';
+
+  @override
+  String get offlineSyncErrorPartialDetail =>
+      'не удалось синхронизировать часть операций';
+
+  @override
+  String get offlineAllSynced => 'Всё синхронизировано';
+
+  @override
+  String offlinePendingOpsCount(String count) {
+    return '$count операций в очереди';
+  }
+
+  @override
+  String offlineLastSyncLabel(String date) {
+    return 'Последняя синхронизация: $date';
+  }
+
+  @override
+  String get offlineNeverSynced => 'Синхронизация ещё не выполнялась';
+
+  @override
+  String get offlineSyncingButton => 'Синхронизация...';
+
+  @override
+  String get offlineSyncNowButton => 'Синхронизировать сейчас';
+
+  @override
+  String get offlineAutoSyncLabel => 'Авто-синхронизация';
+
+  @override
+  String get offlineAutoSyncDescription =>
+      'Синхронизировать при подключении к сети';
+
+  @override
+  String get offlineInfoBody =>
+      'В офлайн-режиме все операции сохраняются локально и автоматически синхронизируются при восстановлении подключения к интернету.';
+
+  @override
+  String get offlineDataSectionLabel => 'Данные';
 
   @override
   String get dashboardGreeting => 'Салом 👋';
@@ -985,6 +1489,25 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get customerDetailPageTitle => 'Клиент';
+
+  @override
+  String get customerDetailSpentLabel => 'Потрачено';
+
+  @override
+  String get customerDetailLoyaltyHistoryTitle => 'История баллов';
+
+  @override
+  String customerDetailPointsLine(String sign, String points) {
+    return '$sign$points баллов';
+  }
+
+  @override
+  String customerDetailPointsExpiryLine(String date) {
+    return 'до $date';
+  }
+
+  @override
   String get newSupplier => 'Новый поставщик';
 
   @override
@@ -995,6 +1518,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get supplierUpdated => 'Поставщик обновлён';
+
+  @override
+  String get supplierListSearchHint => 'Поиск поставщика';
+
+  @override
+  String get supplierListEmptyTitle => 'Поставщиков пока нет';
+
+  @override
+  String get supplierListEmptySubtitle =>
+      'Добавьте первого поставщика, чтобы отслеживать поставки и долги';
+
+  @override
+  String get supplierListNameHint => 'Введите название поставщика';
+
+  @override
+  String get supplierListAddConfirm => 'Добавить';
 
   @override
   String get address => 'Адрес';
@@ -1019,6 +1558,78 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get about => 'О приложении';
+
+  @override
+  String get notificationSettingsPageTitle => 'Настройки уведомлений';
+
+  @override
+  String get notificationSettingsSubtitle =>
+      'Выберите какие уведомления вы хотите получать';
+
+  @override
+  String get notificationSettingsLowStockTitle => 'Низкий остаток';
+
+  @override
+  String get notificationSettingsLowStockSubtitle =>
+      'Когда товар заканчивается на складе';
+
+  @override
+  String get notificationSettingsNewSaleSubtitle =>
+      'Когда кассир оформляет продажу';
+
+  @override
+  String get notificationSettingsShiftClosedTitle => 'Закрытие смены';
+
+  @override
+  String get notificationSettingsShiftClosedSubtitle =>
+      'Когда смена закрывается';
+
+  @override
+  String get notificationSettingsDeliveryTitle => 'Доставка выполнена';
+
+  @override
+  String get notificationSettingsDeliverySubtitle =>
+      'Когда курьер доставил заказ';
+
+  @override
+  String get notificationSettingsDebtReminderTitle => 'Напоминание о долге';
+
+  @override
+  String get notificationSettingsDebtReminderSubtitle =>
+      'Просроченные долги клиентов (> 7 дней)';
+
+  @override
+  String get notificationSettingsStaleProductTitle => 'Залежалый товар';
+
+  @override
+  String get notificationSettingsStaleProductSubtitle =>
+      'Уведомлять, если товар не продаётся N дней и остаток ещё большой';
+
+  @override
+  String get notificationSettingsDaysWithoutSaleLabel => 'Дней без продаж';
+
+  @override
+  String get notificationSettingsRemainingPercentLabel =>
+      'Остаток, % от партии';
+
+  @override
+  String get notificationsEmptyState => 'Нет уведомлений';
+
+  @override
+  String get impersonationAccessGranted => 'Доступ предоставлен';
+
+  @override
+  String get impersonationRequestRejected => 'Запрос отклонён';
+
+  @override
+  String get impersonationRequestFailedMessage =>
+      'Не удалось обработать запрос — возможно, он уже неактивен';
+
+  @override
+  String get impersonationBannerMessage => 'Вы вошли как поддержка Dukon';
+
+  @override
+  String get impersonationBannerEndSession => 'Завершить сессию';
 
   @override
   String get settingsLogoutTitle => 'Выход';
@@ -1095,10 +1706,312 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsLogoutButton => 'Выйти из аккаунта';
 
   @override
+  String get subscriptionFeatureStores1 => '1 магазин';
+
+  @override
+  String get subscriptionFeatureProducts500 => '500 товаров';
+
+  @override
+  String get subscriptionFeatureEmployees2 => '2 сотрудника';
+
+  @override
+  String get subscriptionFeatureSalesReport => 'Отчёт продаж';
+
+  @override
+  String get subscriptionFeatureCurrencies => 'Валюты';
+
+  @override
+  String get subscriptionPriceStart => '49 TJS/мес';
+
+  @override
+  String get subscriptionFeatureStores3 => '3 магазина';
+
+  @override
+  String get subscriptionFeatureProducts2000 => '2000 товаров';
+
+  @override
+  String get subscriptionFeatureEmployees10 => '10 сотрудников';
+
+  @override
+  String get subscriptionFeatureAllReports => 'Все отчёты';
+
+  @override
+  String get subscriptionFeatureDiscounts5 => '5 скидок';
+
+  @override
+  String get subscriptionPriceBusiness => '149 TJS/мес';
+
+  @override
+  String get subscriptionFeatureStores5 => '5 магазинов';
+
+  @override
+  String get subscriptionFeatureUnlimitedProductsEmployees =>
+      'Безлимит товаров/сотрудников';
+
+  @override
+  String get subscriptionFeatureExportPdfExcel => 'Экспорт PDF/Excel';
+
+  @override
+  String get subscriptionFeatureUnlimitedDiscounts => 'Безлимит скидок';
+
+  @override
+  String get subscriptionFeaturePrioritySupport => 'Приоритетная поддержка';
+
+  @override
+  String get subscriptionPricePremium => '299 TJS/мес';
+
+  @override
+  String get subscriptionActiveStatus => 'Активна';
+
+  @override
+  String get subscriptionTrialStatus => 'Пробный период';
+
+  @override
+  String get subscriptionExpiredStatus => 'Истекла';
+
+  @override
+  String subscriptionTrialDaysLeftLine(String days) {
+    return 'Пробный период: осталось $days дней';
+  }
+
+  @override
+  String subscriptionExpiryUntilLine(String date) {
+    return 'до $date';
+  }
+
+  @override
+  String subscriptionAdminDiscountBadge(String percent) {
+    return 'Скидка $percent%';
+  }
+
+  @override
+  String get subscriptionPendingBannerText => 'Ожидает подтверждения оплаты';
+
+  @override
+  String get subscriptionCurrentPlanBadge => 'Текущий план';
+
+  @override
+  String get subscriptionSelectPlanButton => 'Выбрать';
+
+  @override
+  String get subscriptionPaymentPendingStatus => 'Ожидает';
+
+  @override
+  String get subscriptionPaymentConfirmedStatus => 'Подтверждено';
+
+  @override
+  String get subscriptionPaymentRejectedStatus => 'Отклонено';
+
+  @override
+  String subscriptionPaymentDialogTitle(String plan) {
+    return 'Платёж — $plan';
+  }
+
+  @override
+  String subscriptionPaymentAmountLine(String amount) {
+    return 'Сумма: $amount TJS';
+  }
+
+  @override
+  String get subscriptionCardTransferMethod => 'Перевод на карту';
+
+  @override
+  String subscriptionPaymentMethodLine(String method) {
+    return 'Метод: $method';
+  }
+
+  @override
+  String subscriptionPaymentStatusLine(String status) {
+    return 'Статус: $status';
+  }
+
+  @override
+  String subscriptionPaymentDateLine(String date) {
+    return 'Дата: $date';
+  }
+
+  @override
+  String subscriptionAdminNoteLine(String note) {
+    return 'Примечание: $note';
+  }
+
+  @override
+  String get subscriptionReceiptLabel => 'Чек:';
+
+  @override
+  String get subscriptionReceiptImageUnavailable => 'Изображение недоступно';
+
+  @override
+  String get subscriptionPlansSectionTitle => 'Тарифные планы';
+
+  @override
+  String get subscriptionCameraSource => 'Камера';
+
+  @override
+  String get subscriptionGallerySource => 'Галерея';
+
+  @override
+  String subscriptionPaymentSheetTitle(String plan) {
+    return 'Оплата тарифа «$plan»';
+  }
+
+  @override
+  String get subscriptionTransferDetailsTitle => 'Реквизиты для перевода';
+
+  @override
+  String get subscriptionRecipientLabel => 'Получатель';
+
+  @override
+  String get subscriptionBankLabel => 'Банк';
+
+  @override
+  String get subscriptionUploadReceiptButton => 'Я перевёл — загрузить чек';
+
+  @override
+  String get reportsExportSheetTitle => 'Экспорт отчёта';
+
+  @override
+  String get reportsExportPdf => 'Скачать PDF';
+
+  @override
+  String get reportsExportExcelLocal => 'Скачать Excel (локальный)';
+
+  @override
+  String get reportsExportExcelAllData => 'Скачать Excel (все данные)';
+
+  @override
+  String reportsPdfPeriodLabel(String period) {
+    return 'Период: $period';
+  }
+
+  @override
+  String reportsShareSubjectWithPeriod(String tabName, String period) {
+    return 'Отчёт $tabName ($period)';
+  }
+
+  @override
+  String get reportsRevenueColumnLabel => 'Выручка';
+
+  @override
+  String get reportsMetricColumnLabel => 'Показатель';
+
+  @override
+  String get reportsValueColumnLabel => 'Значение';
+
+  @override
+  String get reportsNetProfitLabel => 'Чистая прибыль';
+
+  @override
+  String get reportsMarginPercentLabel => 'Маржа %';
+
+  @override
+  String get reportsDeadStockPdfLabel => 'Залёжные товары';
+
+  @override
+  String reportsShareSubject(String tabName) {
+    return 'Отчёт $tabName';
+  }
+
+  @override
+  String reportsExportTypeShareSubject(String type) {
+    return 'Экспорт $type';
+  }
+
+  @override
+  String get reportsExportTypeSheetTitle => 'Что экспортировать?';
+
+  @override
+  String get reportsExcelTopProductsSectionHeader => '=== Топ товары ===';
+
+  @override
+  String get reportsExcelDeadStockSectionHeader => '=== Залёжные товары ===';
+
+  @override
+  String get reportsStockValueLabel => 'Стоимость склада';
+
+  @override
+  String get reportsPageTitle => 'Отчёты';
+
+  @override
+  String get reportsChannelAll => 'Все каналы';
+
+  @override
+  String get reportsChannelInStore => 'В магазине';
+
+  @override
+  String get reportsChannelOnline => 'Онлайн';
+
+  @override
+  String get reportsSalesDataSectionTitle => 'Данные по продажам';
+
+  @override
+  String get reportsAvgCheckColumnLabel => 'Ср. чек';
+
+  @override
+  String get reportsTop5ByRevenueChartTitle => 'Топ-5 товаров по выручке';
+
+  @override
+  String get reportsExpensesByCategoryChartTitle => 'Расходы по категориям';
+
+  @override
+  String get reportsDetailsSectionTitle => 'Детализация';
+
+  @override
+  String get reportsIncomeVsExpensesChartTitle => 'Доход vs Расходы по месяцам';
+
+  @override
+  String get reportsTopSalesSectionTitle => 'Топ продажи';
+
+  @override
+  String reportsQuantityUnitsLine(String qty) {
+    return '$qty шт';
+  }
+
+  @override
+  String get reportsDeadStockSectionTitle => 'Залёжные товары (30+ дней)';
+
+  @override
+  String get reportsSalesByCashierChartTitle => 'Продажи по кассирам';
+
+  @override
+  String reportsSalesCountTooltip(String count) {
+    return '$count продаж';
+  }
+
+  @override
   String get finances => 'Финансы';
 
   @override
   String get financeDashboard => 'Финансовый дашборд';
+
+  @override
+  String get financeDashboardPeriodHalfYear => '6 мес';
+
+  @override
+  String get financeTotalIncome => 'Общий доход';
+
+  @override
+  String get financeTotalExpenses => 'Общие расходы';
+
+  @override
+  String get financeGrossProfit => 'Валовая прибыль';
+
+  @override
+  String get financeNetProfit => 'Чистая прибыль';
+
+  @override
+  String financeDashboardQuantityUnit(String quantity) {
+    return '$quantity шт';
+  }
+
+  @override
+  String get financeDashboardCurrencies => 'Валюты';
+
+  @override
+  String get financeDashboardDelivery => 'Доставка';
+
+  @override
+  String get financeDashboardReport => 'Отчёт';
 
   @override
   String get balance => 'Баланс';
@@ -1129,6 +2042,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get salesCount => 'Кол-во продаж';
+
+  @override
+  String get salesCountAbbrev => 'Продаж';
 
   @override
   String get avgCheck => 'Средний чек';
@@ -1218,6 +2134,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get amount => 'Сумма';
 
   @override
+  String get amountRequired => 'Введите сумму';
+
+  @override
   String get amountTjs => 'Сумма (TJS)';
 
   @override
@@ -1228,6 +2147,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get date => 'Дата';
+
+  @override
+  String get dateNotSelected => 'Не выбрана';
 
   @override
   String get debts => 'Долги';
@@ -1245,10 +2167,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customerDebts => 'Долги клиентов';
 
   @override
+  String get customerDebtsSalesTitle => 'Продажи с долгом';
+
+  @override
+  String get customerDebtsEmptyState => 'Нет продаж с долгом';
+
+  @override
   String get supplierDebts => 'Наши долги поставщикам';
 
   @override
   String get noDebts => 'Нет активных долгов';
+
+  @override
+  String get overdueLabel => 'Просрочено';
+
+  @override
+  String get acceptDebtPayment => 'Принять оплату';
 
   @override
   String get recordPayment => 'Записать оплату';
@@ -1268,6 +2202,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get paymentQueuedOfflineMessage =>
       'Платёж сохранён офлайн — отправим при подключении';
+
+  @override
+  String paymentFormMaxAmountLine(String amount) {
+    return 'Максимум: $amount TJS';
+  }
 
   @override
   String get paymentHistory => 'История оплат';
@@ -1307,6 +2246,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get creditsInvalidAmountError => 'Введите корректную сумму';
 
   @override
+  String get cashPaymentPageTitle => 'Оплата наличными';
+
+  @override
+  String get cashPaymentAmountToPayLabel => 'Сумма к оплате';
+
+  @override
+  String get cashPaymentReceivedFromCustomerLabel => 'Получено от клиента';
+
+  @override
+  String get cashPaymentNoChangeButton => 'Без сдачи';
+
+  @override
+  String get cashPaymentInsufficientLabel => 'Недостаточно';
+
+  @override
+  String get cashPaymentCompleteButton => 'Завершить и печатать чек';
+
+  @override
   String get creditSaleTitle => 'Продажа в долг';
 
   @override
@@ -1342,10 +2299,104 @@ class AppLocalizationsRu extends AppLocalizations {
   String get zakatCalculator => 'Калькулятор закята';
 
   @override
+  String get zakatCalculatorAssetsSection => 'АКТИВЫ МАГАЗИНА';
+
+  @override
+  String get zakatCalculatorStockValueLabel => 'Товарные остатки';
+
+  @override
+  String get zakatCalculatorAutoFromCatalog => 'Автоматически из каталога';
+
+  @override
+  String get zakatCalculatorAutoBadge => 'Авто';
+
+  @override
+  String get zakatCalculatorSupplierDebtsLabel => 'Долги поставщикам';
+
+  @override
+  String get zakatCalculatorAutoFromSupplierModule => 'Автоматически из модуля';
+
+  @override
+  String get zakatCalculatorDeductionsSection => 'ВЫЧЕТЫ';
+
+  @override
+  String get zakatCalculatorTaxableAmountLabel => 'Облагаемая сумма:';
+
+  @override
+  String get zakatCalculatorNisabLabel => 'Нисаб (85г золота):';
+
+  @override
+  String get zakatCalculatorNisabExceededBadge => 'Превышен';
+
+  @override
+  String zakatCalculatorZakatAmountLabel(String rate) {
+    return 'СУММА ЗАКЯТА ($rate%):';
+  }
+
+  @override
+  String get zakatCalculatorMarkPaidButton => 'Отметить как оплачено';
+
+  @override
+  String zakatCalculatorInfoBanner(String rate) {
+    return 'Закят — $rate% от имущества, хранящегося 1 лунный год';
+  }
+
+  @override
+  String zakatCalculatorShareText(String due, String nisab, String netAssets) {
+    return 'Закят: $due сом.\nНисаб: $nisab сом.\nЧистые активы: $netAssets сом.';
+  }
+
+  @override
+  String get zakatCalculatorShareButton => 'Поделиться расчётом';
+
+  @override
+  String get zakatBreakdownTitle => 'Разбивка активов';
+
+  @override
+  String get zakatBreakdownStockLabel => 'Товарные запасы';
+
+  @override
+  String get zakatBreakdownNisabLabel => 'Нисаб';
+
+  @override
+  String get zakatBreakdownDueLabel => 'Закят (2.5%)';
+
+  @override
   String get zakatSettings => 'Настройки закята';
 
   @override
   String get zakatHistory => 'История выплат';
+
+  @override
+  String get zakatHistoryPageTitle => 'История закята';
+
+  @override
+  String get zakatHistoryEmptyTitle => 'Нет расчётов закята';
+
+  @override
+  String get zakatHistoryEmptySubtitle =>
+      'Рассчитайте закят в калькуляторе, чтобы история появилась здесь';
+
+  @override
+  String get zakatHistoryTotalPaidLabel => 'Всего выплачено:';
+
+  @override
+  String zakatHistoryPaymentsCountLine(String count) {
+    return 'за $count выплат';
+  }
+
+  @override
+  String get zakatHistoryPaymentTitle => 'Выплата закята';
+
+  @override
+  String zakatHistoryPaidOnLine(String date) {
+    return 'Оплачен $date';
+  }
+
+  @override
+  String zakatHistoryTaxableLine(String amount) {
+    return 'Облагаемая: $amount';
+  }
 
   @override
   String get stockValue => 'Стоимость товаров';
@@ -1372,6 +2423,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get belowNisab => 'Ниже нисаба';
 
   @override
+  String get belowNisabNotice => 'Активы ниже нисаба. Закят не обязателен.';
+
+  @override
   String get recordZakatPayment => 'Записать выплату закята';
 
   @override
@@ -1393,7 +2447,82 @@ class AppLocalizationsRu extends AppLocalizations {
   String get includeDebts => 'Включить долги';
 
   @override
+  String get zakatSettingsMethodSection => 'МЕТОД РАСЧЁТА';
+
+  @override
+  String get zakatSettingsNisabStandardLabel => 'Стандарт нисаба';
+
+  @override
+  String get zakatSettingsNisabGoldOption => 'По золоту (85g)';
+
+  @override
+  String get zakatSettingsNisabSilverOption => 'По серебру (595g)';
+
+  @override
+  String get zakatSettingsGoldPriceLabel => 'Курс золота (за 1g)';
+
+  @override
+  String get requiredFieldError => 'Обязательное поле';
+
+  @override
+  String get requiredNumberError => 'Введите число';
+
+  @override
+  String get cannotBeNegativeError => 'Не может быть отрицательным';
+
+  @override
+  String get zakatSettingsCashOnHandLabel => 'Наличные в кассе';
+
+  @override
+  String get zakatSettingsCashHelperText =>
+      'Учитывается в активах при расчёте закята';
+
+  @override
+  String get zakatSettingsHaulSection => 'ЛУННЫЙ ГОД (ХАВЛЬ)';
+
+  @override
+  String get zakatSettingsHaulStartDateLabel => 'Дата начала хавля';
+
+  @override
+  String get zakatSettingsReminderTitle => 'Напоминание';
+
+  @override
+  String get zakatSettingsReminderSubtitle => 'За 30 дней до окончания хавля';
+
+  @override
+  String get zakatSettingsAutoDataSection => 'АВТОМАТИЧЕСКИЕ ДАННЫЕ';
+
+  @override
+  String get zakatSettingsStockValueToggleTitle => 'Товарные остатки магазина';
+
+  @override
+  String get zakatSettingsStockAutoSubtitle => 'Авто из каталога';
+
+  @override
+  String get zakatSettingsSupplierDebtsToggleTitle =>
+      'Долги поставщикам (вычет)';
+
+  @override
+  String get zakatSettingsSupplierDebtsAutoSubtitle =>
+      'Авто из модуля поставщиков';
+
+  @override
+  String get savingEllipsis => 'Сохранение...';
+
+  @override
   String get editProfile => 'Редактировать профиль';
+
+  @override
+  String get editProfileChangePhotoLabel => 'Изменить фото';
+
+  @override
+  String get editProfileLastNameLabel => 'Фамилия';
+
+  @override
+  String get editProfileSecuritySectionLabel => 'Безопасность';
+
+  @override
+  String get editProfileSaveChangesButton => 'Сохранить изменения';
 
   @override
   String get changePassword => 'Сменить пароль';
@@ -1644,6 +2773,131 @@ class AppLocalizationsRu extends AppLocalizations {
   String get printerSettingsSetDefaultButton => 'По умолч.';
 
   @override
+  String get kkmTicketHeaderLine => 'ККМ/Фискализация\n';
+
+  @override
+  String get kkmTestPrintTicketLine => 'Тестовая печать\n';
+
+  @override
+  String get kkmFiscalNoteBody =>
+      'Фискализация чеков через подключённый ККМ-принтер. Убедитесь, что устройство зарегистрировано в налоговой.';
+
+  @override
+  String get kkmBluetoothPrinterSectionLabel => 'Bluetooth принтер';
+
+  @override
+  String get kkmAutoPrintLabel => 'Автопечать при продаже';
+
+  @override
+  String get scannerPageTitle => 'Сканер штрихкодов';
+
+  @override
+  String get scannerCameraSectionLabel => 'Камера';
+
+  @override
+  String get scannerBackCameraLabel => 'Задняя камера';
+
+  @override
+  String get scannerBackCameraHint => 'Рекомендуется для сканирования';
+
+  @override
+  String get scannerFrontCameraLabel => 'Передняя камера';
+
+  @override
+  String get scannerFrontCameraHint => 'Фронтальная камера';
+
+  @override
+  String get scannerBehaviorSectionLabel => 'Поведение';
+
+  @override
+  String get scannerSoundLabel => 'Звук при сканировании';
+
+  @override
+  String get scannerVibrationLabel => 'Вибрация при сканировании';
+
+  @override
+  String get scannerAutoAddToCartLabel => 'Авто-добавление в корзину';
+
+  @override
+  String get scannerFormatsSectionLabel => 'Форматы штрихкодов';
+
+  @override
+  String get scannerSaveSettingsButton => 'Сохранить настройки';
+
+  @override
+  String get receiptTemplatePageTitle => 'Шаблон чека';
+
+  @override
+  String get receiptTemplateSaveButton => 'Сохранить шаблон';
+
+  @override
+  String get receiptTemplatePreviewLabel => 'Предпросмотр';
+
+  @override
+  String get receiptTemplateTextSectionLabel => 'Текст';
+
+  @override
+  String get receiptTemplateHeaderFieldLabel => 'Заголовок чека';
+
+  @override
+  String get receiptTemplateHeaderFieldHint =>
+      'Название магазина или приветствие';
+
+  @override
+  String get receiptTemplateFooterFieldLabel => 'Подвал чека';
+
+  @override
+  String get receiptPreviewDefaultFooter => 'Спасибо за покупку!';
+
+  @override
+  String get receiptTemplateFontSizeLabel => 'Размер шрифта';
+
+  @override
+  String get receiptTemplateFontSizeSmall => 'Мал.';
+
+  @override
+  String get receiptTemplateFontSizeMedium => 'Ср.';
+
+  @override
+  String get receiptTemplateFontSizeLarge => 'Бол.';
+
+  @override
+  String get receiptTemplatePaperWidthLabel => 'Ширина бумаги';
+
+  @override
+  String get receiptTemplatePaperWidth58mm => '58 мм';
+
+  @override
+  String get receiptTemplatePaperWidth80mm => '80 мм';
+
+  @override
+  String get receiptTemplateShowOnReceiptLabel => 'Показывать на чеке';
+
+  @override
+  String get receiptTemplateQrToggleLabel => 'QR-код';
+
+  @override
+  String get receiptTemplateDateTimeToggleLabel => 'Дата и время';
+
+  @override
+  String get receiptPreviewDefaultHeader => 'Ваш магазин';
+
+  @override
+  String get receiptPreviewItemLine1 => 'Товар 1                 50.00 TJS';
+
+  @override
+  String get receiptPreviewItemLine2 => 'Товар 2                 30.00 TJS';
+
+  @override
+  String get receiptPreviewDiscountLine => 'Скидка                  -5.00 TJS';
+
+  @override
+  String get receiptPreviewTotalLine => 'ИТОГО                   75.00 TJS';
+
+  @override
+  String get receiptPreviewCashierLine => 'Кассир: Иванов И.';
+
+  @override
   String get ecommerceSettingsTitle => 'Интернет-магазин';
 
   @override
@@ -1686,7 +2940,49 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ecommerceMappingExternalIdHint => 'Внешний ID';
 
   @override
+  String get telegramLinkedCustomersLabel => 'Подключённых клиентов';
+
+  @override
+  String get telegramHowToConnectTitle => 'Как подключить клиентов';
+
+  @override
+  String telegramStep1Text(String username) {
+    return 'Клиент находит бота $username в Telegram';
+  }
+
+  @override
+  String get telegramStep2Text =>
+      'Нажимает /start и вводит свой номер телефона';
+
+  @override
+  String get telegramStep3Text =>
+      'Бот проверяет номер в базе клиентов и связывает аккаунт';
+
+  @override
+  String get telegramStep4Text =>
+      'Клиент получает уведомления о продажах и долгах';
+
+  @override
+  String get telegramSendingButton => 'Отправка...';
+
+  @override
+  String get telegramTestMessageButton => 'Тестовое сообщение';
+
+  @override
+  String get languageSettingsPageTitle => 'Язык интерфейса';
+
+  @override
+  String get languageSettingsChooseLabel => 'Выберите язык';
+
+  @override
+  String get languageSettingsRestartNotice =>
+      'Для применения языка перезапустите приложение.';
+
+  @override
   String get employees => 'Сотрудники';
+
+  @override
+  String get unknownStaffLabel => 'Сотрудник';
 
   @override
   String get addEmployee => 'Добавить сотрудника';
@@ -1699,6 +2995,39 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get staffFormNameLabel => 'Имя сотрудника';
+
+  @override
+  String get staffRoleWarehouseShort => 'Склад';
+
+  @override
+  String get staffStatusLabel => 'Статус';
+
+  @override
+  String get staffNotOnShiftStatusDetail => 'Нет смены';
+
+  @override
+  String get staffStatsTabLabel => 'Статистика';
+
+  @override
+  String get staffTodaySalesLabel => 'Продажи сегодня';
+
+  @override
+  String get staffRegistrationDateLabel => 'Дата регистрации';
+
+  @override
+  String get staffListEmptyTitle => 'Сотрудников пока нет';
+
+  @override
+  String get staffListEmptySubtitle =>
+      'Добавьте сотрудников для учёта смен и зарплаты';
+
+  @override
+  String staffListTodaySalesLine(String amount) {
+    return 'Сегодня: $amount';
+  }
+
+  @override
+  String get staffCardTodayLabel => 'сегодня';
 
   @override
   String get role => 'Роль';
@@ -1749,6 +3078,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get openShift => 'Открыть смену';
 
   @override
+  String get openShiftHeading => 'Начало смены';
+
+  @override
+  String get openShiftSubtitle =>
+      'Укажите сумму наличных в кассе на начало смены';
+
+  @override
+  String get openShiftCashLabel => 'Сумма наличных (TJS)';
+
+  @override
   String get closeShift => 'Закрыть смену';
 
   @override
@@ -1786,9 +3125,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftsCashAmountLabel => 'Сумма наличных';
-
-  @override
-  String get shiftsCashAmountRequired => 'Введите сумму';
 
   @override
   String get shiftsCashAmountNegative => 'Сумма не может быть отрицательной';
@@ -1838,6 +3174,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftsOpenStatus => 'Открыта';
+
+  @override
+  String get shiftCardClosedStatus => 'Закрыта';
+
+  @override
+  String shiftCardSalesCountLine(String count) {
+    return '$count продаж';
+  }
 
   @override
   String get zReport => 'Z-отчёт';
@@ -2007,11 +3351,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get payrollNoDataSubtitle => 'Выберите месяц и нажмите \"Рассчитать\"';
 
   @override
-  String payrollTotalLine(String amount) {
-    return 'Итого: $amount TJS';
-  }
-
-  @override
   String get payrollAddAdjustmentTooltip => 'Добавить корректировку';
 
   @override
@@ -2025,6 +3364,35 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get payrollPaidLabel => 'Выплачено';
+
+  @override
+  String get payrollAdjustmentPageTitle => 'Корректировка';
+
+  @override
+  String get payrollAdjustmentInstructions =>
+      'Укажите тип, сумму и описание корректировки';
+
+  @override
+  String get payrollAdjustmentTypeLabel => 'Тип корректировки';
+
+  @override
+  String get payrollDeductionTypeLabel => 'Удержание';
+
+  @override
+  String get payrollAdjustmentStaffIdLabel => 'ID сотрудника (необязательно)';
+
+  @override
+  String get payrollAdjustmentStaffIdHint => 'Оставьте пустым для всех';
+
+  @override
+  String get payrollAdjustmentDescriptionRequiredError => 'Введите описание';
+
+  @override
+  String get payrollAdjustmentAmountMustBePositiveError =>
+      'Сумма должна быть больше 0';
+
+  @override
+  String get payrollAdjustmentSubmit => 'Добавить';
 
   @override
   String get permissions => 'Права доступа';
@@ -2058,6 +3426,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get viewReports => 'Просмотр отчётов';
+
+  @override
+  String get permissionManageStaffLabel => 'Управление персоналом';
+
+  @override
+  String get permissionManageExpensesLabel => 'Управление расходами';
+
+  @override
+  String get permissionManageCustomersLabel => 'Управление покупателями';
+
+  @override
+  String get permissionManageSuppliersLabel => 'Управление поставщиками';
+
+  @override
+  String get permissionManageStockLabel => 'Управление складом';
+
+  @override
+  String get permissionManageDebtsLabel => 'Управление долгами';
+
+  @override
+  String get permissionManageSettingsLabel => 'Настройки магазина';
+
+  @override
+  String get permissionOpenCloseShiftLabel => 'Открытие/закрытие смены';
+
+  @override
+  String get permissionApplyDiscountsLabel => 'Применение скидок';
+
+  @override
+  String get permissionManagePayrollLabel => 'Управление зарплатой';
 
   @override
   String get employeeCreated => 'Сотрудник создан';
@@ -2142,11 +3540,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get discountsDeleteTitle => 'Удалить скидку?';
-
-  @override
-  String discountsDeleteConfirmBody(String name) {
-    return 'Вы уверены, что хотите удалить \"$name\"?';
-  }
 
   @override
   String get discountsEditTitle => 'Редактировать скидку';
@@ -2363,4 +3756,73 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get investmentDeleted => 'Вложение удалено';
+
+  @override
+  String get investmentAddPageTitle => 'Добавить вложение';
+
+  @override
+  String get investmentInvestorNameRequiredError => 'Введите имя инвестора';
+
+  @override
+  String get investmentStartDateLabel => 'Дата начала';
+
+  @override
+  String get investmentEndDateLabel => 'Дата окончания (необязательно)';
+
+  @override
+  String get investmentInvestorNameLabel => 'Имя инвестора *';
+
+  @override
+  String get investmentAmountLabel => 'Сумма *';
+
+  @override
+  String get investmentReturnAmountLabel => 'Сумма возврата';
+
+  @override
+  String get investmentInvestorPhoneLabel => 'Телефон инвестора';
+
+  @override
+  String get investments => 'Вложения';
+
+  @override
+  String get investmentEmptyState => 'Вложений пока нет';
+
+  @override
+  String get investmentStatusActive => 'Активно';
+
+  @override
+  String get investmentStatusCompleted => 'Завершено';
+
+  @override
+  String get investmentStatusCancelled => 'Отменено';
+
+  @override
+  String get currenciesPageTitle => 'Курсы валют';
+
+  @override
+  String get currenciesHistoryChartTitle => 'Динамика за 30 дней';
+
+  @override
+  String get currenciesNoHistoryData => 'Нет данных за 30 дней';
+
+  @override
+  String get currenciesConverterTitle => 'Конвертер';
+
+  @override
+  String get currenciesConvertedResultLabel => 'Результат (в TJS):';
+
+  @override
+  String get nbtBankLabel => 'НБТ — Национальный банк Таджикистана';
+
+  @override
+  String get currencyUsd => 'Доллар США';
+
+  @override
+  String get currencyRub => 'Российский рубль';
+
+  @override
+  String get currencyEur => 'Евро';
+
+  @override
+  String get currencyCny => 'Китайский юань';
 }

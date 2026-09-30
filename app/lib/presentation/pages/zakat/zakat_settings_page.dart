@@ -142,7 +142,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => context.pop(),
                   ),
-                  const Text('Настройки закята',
+                  Text(l10n.zakatSettings,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -187,26 +187,26 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     padding: const EdgeInsets.all(16),
                     children: [
                       // Method section
-                      _buildSectionLabel('МЕТОД РАСЧЁТА'),
+                      _buildSectionLabel(l10n.zakatSettingsMethodSection),
                       const SizedBox(height: 8),
                       RadioGroup<String>(
                         groupValue: _nisabStandard,
                         onChanged: (v) => setState(() => _nisabStandard = v!),
                         child: _buildCard([
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(14, 12, 14, 4),
-                            child: Text('Стандарт нисаба',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
+                            child: Text(l10n.zakatSettingsNisabStandardLabel,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                           ),
                           RadioListTile<String>(
-                            title: Text('По золоту (85g)', style: TextStyle(fontSize: 14)),
+                            title: Text(l10n.zakatSettingsNisabGoldOption, style: TextStyle(fontSize: 14)),
                             subtitle: Text('~ 78,200 $currency', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             value: 'gold',
                             activeColor: AppColors.primary,
                             dense: true,
                           ),
                           RadioListTile<String>(
-                            title: Text('По серебру (595g)', style: TextStyle(fontSize: 14)),
+                            title: Text(l10n.zakatSettingsNisabSilverOption, style: TextStyle(fontSize: 14)),
                             subtitle: Text('~ 5,400 $currency', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             value: 'silver',
                             activeColor: AppColors.primary,
@@ -224,17 +224,17 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Курс золота (за 1g)',
+                                    Text(l10n.zakatSettingsGoldPriceLabel,
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _goldPriceController,
                                       keyboardType: TextInputType.number,
                                       validator: (v) {
-                                        if (v == null || v.isEmpty) return 'Обязательное поле';
+                                        if (v == null || v.isEmpty) return l10n.requiredFieldError;
                                         final parsed = double.tryParse(v);
-                                        if (parsed == null) return 'Введите число';
-                                        if (parsed < 0) return 'Не может быть отрицательным';
+                                        if (parsed == null) return l10n.requiredNumberError;
+                                        if (parsed < 0) return l10n.cannotBeNegativeError;
                                         return null;
                                       },
                                       decoration: InputDecoration(
@@ -274,7 +274,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Наличные в кассе',
+                              Text(l10n.zakatSettingsCashOnHandLabel,
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                               const SizedBox(height: 8),
                               TextFormField(
@@ -283,12 +283,12 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 validator: (v) {
                                   if (v == null || v.isEmpty) return null;
                                   final parsed = double.tryParse(v);
-                                  if (parsed == null) return 'Введите число';
-                                  if (parsed < 0) return 'Не может быть отрицательным';
+                                  if (parsed == null) return l10n.requiredNumberError;
+                                  if (parsed < 0) return l10n.cannotBeNegativeError;
                                   return null;
                                 },
                                 decoration: InputDecoration(
-                                  helperText: 'Учитывается в активах при расчёте закята',
+                                  helperText: l10n.zakatSettingsCashHelperText,
                                   suffixText: currency,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -301,7 +301,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       const SizedBox(height: 20),
 
                       // Haul section
-                      _buildSectionLabel('ЛУННЫЙ ГОД (ХАВЛЬ)'),
+                      _buildSectionLabel(l10n.zakatSettingsHaulSection),
                       const SizedBox(height: 8),
                       _buildCard([
                         InkWell(
@@ -325,13 +325,13 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text('Дата начала хавля',
+                                      Text(l10n.zakatSettingsHaulStartDateLabel,
                                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 2),
                                       Text(
                                         _haulStartDate != null
                                             ? '${_haulStartDate!.day.toString().padLeft(2, '0')}.${_haulStartDate!.month.toString().padLeft(2, '0')}.${_haulStartDate!.year}'
-                                            : 'Не выбрана',
+                                            : l10n.dateNotSelected,
                                         style: TextStyle(fontSize: 12, color: context.textSecondary),
                                       ),
                                     ],
@@ -361,9 +361,9 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Напоминание',
+                                    Text(l10n.zakatSettingsReminderTitle,
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                                    Text('За 30 дней до окончания хавля',
+                                    Text(l10n.zakatSettingsReminderSubtitle,
                                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                   ],
                                 ),
@@ -380,22 +380,22 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                       const SizedBox(height: 20),
 
                       // Auto data section
-                      _buildSectionLabel('АВТОМАТИЧЕСКИЕ ДАННЫЕ'),
+                      _buildSectionLabel(l10n.zakatSettingsAutoDataSection),
                       const SizedBox(height: 8),
                       _buildCard([
-                        _buildToggleRow('Товарные остатки магазина', 'Авто из каталога',
+                        _buildToggleRow(l10n.zakatSettingsStockValueToggleTitle, l10n.zakatSettingsStockAutoSubtitle,
                           value: _includeStock,
                           onChanged: (v) => setState(() => _includeStock = v)),
                         const Divider(height: 1, indent: 14, endIndent: 14),
-                        _buildToggleRow('Наличные в кассе', null,
+                        _buildToggleRow(l10n.zakatSettingsCashOnHandLabel, null,
                           value: _includeCash,
                           onChanged: (v) => setState(() => _includeCash = v)),
                         const Divider(height: 1, indent: 14, endIndent: 14),
-                        _buildToggleRow('Дебиторская задолженность', 'Долги клиентов',
+                        _buildToggleRow(l10n.receivables, l10n.customerDebts,
                           value: _includeDebts,
                           onChanged: (v) => setState(() => _includeDebts = v)),
                         const Divider(height: 1, indent: 14, endIndent: 14),
-                        _buildToggleRow('Долги поставщикам (вычет)', 'Авто из модуля поставщиков',
+                        _buildToggleRow(l10n.zakatSettingsSupplierDebtsToggleTitle, l10n.zakatSettingsSupplierDebtsAutoSubtitle,
                           value: _includeSupplierDebts,
                           onChanged: (v) => setState(() => _includeSupplierDebts = v)),
                       ]),
@@ -413,7 +413,7 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
                           ),
                           child: Text(
-                            state is ZakatLoading ? 'Сохранение...' : 'Сохранить',
+                            state is ZakatLoading ? l10n.savingEllipsis : l10n.save,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                           ),
                         ),

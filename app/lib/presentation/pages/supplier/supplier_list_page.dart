@@ -78,72 +78,75 @@ class _SupplierListPageState extends State<SupplierListPage> {
     _phoneController.clear();
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Новый поставщик'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Название',
-                hintText: 'Введите название поставщика',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+      builder: (dialogContext) {
+        final dialogL10n = AppLocalizations.of(dialogContext)!;
+        return AlertDialog(
+          title: Text(dialogL10n.newSupplier),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: dialogL10n.itemName,
+                  hintText: dialogL10n.supplierListNameHint,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+                ),
+                textCapitalization: TextCapitalization.words,
               ),
-              textCapitalization: TextCapitalization.words,
+              const SizedBox(height: 12),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: dialogL10n.phoneLabel,
+                  hintText: '+992 XX XXX XXXX',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+                ),
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(dialogL10n.cancel),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                labelText: 'Телефон',
-                hintText: '+992 XX XXX XXXX',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
-              ),
-              keyboardType: TextInputType.phone,
+            FilledButton(
+              onPressed: () async {
+                final name = _nameController.text.trim();
+                if (name.isEmpty) return;
+                final phone = _phoneController.text.trim();
+                // Capture refs before the await so we do not touch BuildContext
+                // across the async gap (FE-P1-003).
+                final navigator = Navigator.of(dialogContext);
+                // Pre-capture BuildContext-derived objects before the
+                // async gap to satisfy use_build_context_synchronously.
+                final messenger = ScaffoldMessenger.of(context);
+                final view = View.of(context);
+                final dir = Directionality.of(context);
+                try {
+                  await sl<SupplierRepository>().createSupplier(
+                    _getStoreId(),
+                    {'name': name, if (phone.isNotEmpty) 'phone': phone},
+                  );
+                  navigator.pop();
+                  if (!mounted) return;
+                  _loadSuppliers();
+                } catch (e) {
+                  navigator.pop();
+                  final msg = mapErrorToUserMessage(e);
+                  messenger.showSnackBar(SnackBar(
+                    content: Text(msg),
+                    backgroundColor: AppColors.error,
+                  ));
+                  SemanticsService.sendAnnouncement(view, msg, dir);
+                }
+              },
+              child: Text(dialogL10n.supplierListAddConfirm),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Отмена'),
-          ),
-          FilledButton(
-            onPressed: () async {
-              final name = _nameController.text.trim();
-              if (name.isEmpty) return;
-              final phone = _phoneController.text.trim();
-              // Capture refs before the await so we do not touch BuildContext
-              // across the async gap (FE-P1-003).
-              final navigator = Navigator.of(dialogContext);
-              // Pre-capture BuildContext-derived objects before the
-              // async gap to satisfy use_build_context_synchronously.
-              final messenger = ScaffoldMessenger.of(context);
-              final view = View.of(context);
-              final dir = Directionality.of(context);
-              try {
-                await sl<SupplierRepository>().createSupplier(
-                  _getStoreId(),
-                  {'name': name, if (phone.isNotEmpty) 'phone': phone},
-                );
-                navigator.pop();
-                if (!mounted) return;
-                _loadSuppliers();
-              } catch (e) {
-                navigator.pop();
-                final msg = mapErrorToUserMessage(e);
-                messenger.showSnackBar(SnackBar(
-                  content: Text(msg),
-                  backgroundColor: AppColors.error,
-                ));
-                SemanticsService.sendAnnouncement(view, msg, dir);
-              }
-            },
-            child: const Text('Добавить'),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -166,8 +169,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
               child: Row(
                 children: [
                   IconButton(tooltip: l10n.back, icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-                  const Text('Поставщики',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  Text(l10n.suppliers,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   IconButton(
                     tooltip: l10n.addSupplier,
@@ -190,7 +193,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   controller: _searchController,
                   onChanged: (_) => _loadSuppliers(),
                   decoration: InputDecoration(
-                    hintText: 'Поиск поставщика',
+                    hintText: l10n.supplierListSearchHint,
                     hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
                     prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     border: InputBorder.none,
@@ -219,9 +222,9 @@ class _SupplierListPageState extends State<SupplierListPage> {
                     if (suppliers.isEmpty) {
                       return AppEmptyState(
                         icon: Icons.local_shipping_outlined,
-                        title: 'Поставщиков пока нет',
-                        subtitle: 'Добавьте первого поставщика, чтобы отслеживать поставки и долги',
-                        buttonText: 'Добавить поставщика',
+                        title: l10n.supplierListEmptyTitle,
+                        subtitle: l10n.supplierListEmptySubtitle,
+                        buttonText: l10n.addSupplier,
                         onButtonPressed: _showAddSupplierDialog,
                       );
                     }
@@ -243,8 +246,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
                             ),
                             child: Column(
                               children: [
-                                const Text('Наш долг',
-                                  style: TextStyle(fontSize: 13, color: AppColors.warning)),
+                                Text(l10n.ourDebt,
+                                  style: const TextStyle(fontSize: 13, color: AppColors.warning)),
                                 const SizedBox(height: 4),
                                 Text(_formatPrice(totalDebt),
                                   style: const TextStyle(

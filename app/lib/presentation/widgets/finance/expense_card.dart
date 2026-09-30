@@ -1,3 +1,4 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -12,15 +13,16 @@ class ExpenseCard extends StatelessWidget {
 
   const ExpenseCard({super.key, required this.expense, this.onTap, this.onDelete});
 
-  String _categoryLabel(String category) {
+  String _categoryLabel(BuildContext context, String category) {
+    final l10n = AppLocalizations.of(context)!;
     switch (category) {
-      case 'PURCHASE': return 'Закупка';
-      case 'RENT': return 'Аренда';
-      case 'SALARY': return 'Зарплата';
-      case 'UTILITIES': return 'Коммунальные';
-      case 'TRANSPORT': return 'Транспорт';
-      case 'MARKETING': return 'Маркетинг';
-      default: return 'Другое';
+      case 'PURCHASE': return l10n.purchase;
+      case 'RENT': return l10n.rent;
+      case 'SALARY': return l10n.salary;
+      case 'UTILITIES': return l10n.utilities;
+      case 'TRANSPORT': return l10n.transport;
+      case 'MARKETING': return l10n.marketing;
+      default: return l10n.other;
     }
   }
 
@@ -56,7 +58,7 @@ class ExpenseCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_categoryLabel(expense.category), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                Text(_categoryLabel(context, expense.category), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 if (expense.description != null)
                   Text(expense.description!, style: TextStyle(fontSize: 12, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],

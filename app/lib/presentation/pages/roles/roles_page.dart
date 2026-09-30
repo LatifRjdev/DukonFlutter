@@ -164,7 +164,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
 
                           return PermissionToggleRow(
                             permissionKey: perm,
-                            label: PermissionToggleRow.permissionLabel(perm),
+                            label: PermissionToggleRow.permissionLabel(context, perm),
                             value: isEnabled,
                             enabled: !isOwner && !_isSaving,
                             onChanged: (isOwner || _isSaving)

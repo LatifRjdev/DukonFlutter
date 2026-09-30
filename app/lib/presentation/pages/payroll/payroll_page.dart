@@ -308,7 +308,7 @@ class _PayrollPageState extends State<PayrollPage> {
               ),
               Expanded(
                 child: Text(
-                  l10n.payrollTotalLine(period.totalAmount.toStringAsFixed(2)),
+                  l10n.totalTjsLine(period.totalAmount.toStringAsFixed(2)),
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

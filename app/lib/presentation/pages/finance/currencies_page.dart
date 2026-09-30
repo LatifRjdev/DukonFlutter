@@ -18,13 +18,11 @@ class _CurrencyRate {
   final String code;
   final double rate;
   final String flag;
-  final String label;
 
   const _CurrencyRate({
     required this.code,
     required this.rate,
     required this.flag,
-    required this.label,
   });
 
   factory _CurrencyRate.fromJson(Map<String, dynamic> j, String code) {
@@ -34,17 +32,10 @@ class _CurrencyRate {
       'EUR': '🇪🇺',
       'CNY': '🇨🇳',
     };
-    const labels = {
-      'USD': 'Доллар США',
-      'RUB': 'Российский рубль',
-      'EUR': 'Евро',
-      'CNY': 'Китайский юань',
-    };
     return _CurrencyRate(
       code: code,
       rate: (j[code] as num?)?.toDouble() ?? 0.0,
       flag: flags[code] ?? '🏳️',
-      label: labels[code] ?? code,
     );
   }
 }
@@ -73,6 +64,25 @@ class CurrenciesPage extends StatefulWidget {
 
 class _CurrenciesPageState extends State<CurrenciesPage> {
   static const _codes = ['USD', 'RUB', 'EUR', 'CNY'];
+
+  /// Localized display name for a currency code. Lives here rather than on
+  /// [_CurrencyRate] because that model is built inside a `factory` from JSON,
+  /// where no [BuildContext] is available.
+  String _currencyLabel(BuildContext context, String code) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code) {
+      case 'USD':
+        return l10n.currencyUsd;
+      case 'RUB':
+        return l10n.currencyRub;
+      case 'EUR':
+        return l10n.currencyEur;
+      case 'CNY':
+        return l10n.currencyCny;
+      default:
+        return code;
+    }
+  }
 
   bool _loading = false;
   String? _error;
@@ -180,7 +190,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Курсы валют'),
+        title: Text(AppLocalizations.of(context)!.currenciesPageTitle),
         backgroundColor: context.surface,
         foregroundColor: context.textPrimary,
         elevation: 0,
@@ -207,7 +217,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
               style: TextStyle(color: context.textSecondary),
               textAlign: TextAlign.center),
           const SizedBox(height: AppConstants.spacingMd),
-          TextButton(onPressed: _loadRates, child: const Text('Повторить')),
+          TextButton(
+              onPressed: _loadRates,
+              child: Text(AppLocalizations.of(context)!.retry)),
         ],
       ),
     );
@@ -221,7 +233,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'НБТ — Национальный банк Таджикистана',
+            AppLocalizations.of(context)!.nbtBankLabel,
             style: TextStyle(fontSize: 12, color: context.textSecondary),
           ),
           const SizedBox(height: AppConstants.spacingMd),
@@ -270,7 +282,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                               ),
                             ),
                             Text(
-                              rate.label,
+                              _currencyLabel(context, rate.code),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.textSecondary,
@@ -338,7 +350,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         padding: const EdgeInsets.all(24),
         child: Center(
           child: Text(
-            'Нет данных за 30 дней',
+            AppLocalizations.of(context)!.currenciesNoHistoryData,
             style: TextStyle(color: context.textSecondary),
           ),
         ),
@@ -375,7 +387,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Динамика за 30 дней',
+            AppLocalizations.of(context)!.currenciesHistoryChartTitle,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -469,7 +481,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Конвертер',
+            AppLocalizations.of(context)!.currenciesConverterTitle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -485,7 +497,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Сумма',
+                    labelText: AppLocalizations.of(context)!.amount,
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(AppConstants.radiusMd),
@@ -517,7 +529,7 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Результат (в TJS):',
+            AppLocalizations.of(context)!.currenciesConvertedResultLabel,
             style: TextStyle(
                 fontSize: 13, color: context.textSecondary),
           ),

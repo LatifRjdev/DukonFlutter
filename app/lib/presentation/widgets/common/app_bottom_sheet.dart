@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 
@@ -44,6 +45,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height * 0.9;
     final sheetHeight = height != null && height! < maxHeight ? height : null;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       height: sheetHeight,
@@ -102,7 +104,7 @@ class _AppBottomSheetContent<T> extends StatelessWidget {
                     color: context.textSecondary,
                   ),
                   splashRadius: 20,
-                  tooltip: 'Пӯшидан',
+                  tooltip: l10n.close,
                 ),
               ],
             ),

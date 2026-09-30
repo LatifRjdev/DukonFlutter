@@ -128,8 +128,8 @@ class _ProductListPageState extends State<ProductListPage> {
               padding: const EdgeInsets.fromLTRB(16, 4, 4, 0),
               child: Row(
                 children: [
-                  const Text('Товары',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                  Text(l10n.products,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                   const Spacer(),
                   PopupMenuButton<String>(
                     icon: const Icon(Icons.more_vert),
@@ -145,13 +145,13 @@ class _ProductListPageState extends State<ProductListPage> {
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'categories',
-                        child: Text('Категории'),
+                        child: Text(l10n.categories),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'import',
-                        child: Text('Импорт из Excel'),
+                        child: Text(l10n.importFromExcel),
                       ),
                     ],
                   ),
@@ -179,7 +179,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     context.read<ProductListBloc>().add(ProductListSearchChanged(query));
                   },
                   decoration: InputDecoration(
-                    hintText: 'Поиск товара',
+                    hintText: l10n.productSearchHint,
                     hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
                     prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     suffixIcon: Row(
@@ -224,31 +224,31 @@ class _ProductListPageState extends State<ProductListPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
                     AppChip(
-                      label: 'Все',
+                      label: l10n.all,
                       isSelected: _stockFilter == _StockFilter.all,
                       onTap: () => setState(() => _stockFilter = _StockFilter.all),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'В наличии',
+                      label: l10n.inStock,
                       isSelected: _stockFilter == _StockFilter.inStock,
                       onTap: () => setState(() => _stockFilter = _StockFilter.inStock),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Заканчивается',
+                      label: l10n.productFilterLowStock,
                       isSelected: _stockFilter == _StockFilter.lowStock,
                       onTap: () => setState(() => _stockFilter = _StockFilter.lowStock),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Нет в наличии',
+                      label: l10n.outOfStock,
                       isSelected: _stockFilter == _StockFilter.outOfStock,
                       onTap: () => setState(() => _stockFilter = _StockFilter.outOfStock),
                     ),
                     const SizedBox(width: 8),
                     AppChip(
-                      label: 'Требует внимания',
+                      label: l10n.productFilterAttention,
                       isSelected: _stockFilter == _StockFilter.attention,
                       onTap: () => setState(() => _stockFilter = _StockFilter.attention),
                     ),
@@ -283,11 +283,11 @@ class _ProductListPageState extends State<ProductListPage> {
                               height: MediaQuery.of(context).size.height * 0.6,
                               child: AppEmptyState(
                                 icon: Icons.inventory_2_outlined,
-                                title: isEmptyOverall ? 'Нет товаров' : 'Нет товаров по фильтру',
+                                title: isEmptyOverall ? l10n.noProducts : l10n.productsEmptyFilteredTitle,
                                 subtitle: isEmptyOverall
-                                    ? 'Добавьте первый товар в каталог'
-                                    : 'Попробуйте изменить фильтр или поисковый запрос',
-                                buttonText: isEmptyOverall ? 'Добавить товар' : null,
+                                    ? l10n.productsEmptyAddSubtitle
+                                    : l10n.productsEmptyFilteredSubtitle,
+                                buttonText: isEmptyOverall ? l10n.addProduct : null,
                                 onButtonPressed: isEmptyOverall
                                     ? () => context.push(RouteNames.addProduct)
                                     : null,
@@ -335,7 +335,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Общая сумма',
+                                    Text(l10n.totalAmount,
                                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalValue),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
@@ -348,7 +348,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Себестоимость',
+                                    Text(l10n.dashboardCost,
                                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
@@ -447,21 +447,17 @@ class _ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis),
                   if (product.sku != null && product.sku!.isNotEmpty) ...[
                     const SizedBox(height: 2),
-                    Text('Арт: ${product.sku}',
+                    Text(l10n.productSkuLine(product.sku!),
                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                   ],
                   const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text('На складе: ',
-                        style: TextStyle(fontSize: 12, color: context.textSecondary)),
-                      Text('${product.quantity} $unitName',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: stockColor,
-                        )),
-                    ],
+                  Text(
+                    l10n.productStockQuantityLine('${product.quantity} $unitName'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: stockColor,
+                    ),
                   ),
                 ],
               ),

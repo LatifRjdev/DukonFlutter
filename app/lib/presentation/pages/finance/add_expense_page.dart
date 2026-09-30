@@ -36,14 +36,14 @@ class _AddExpensePageState extends State<AddExpensePage> {
     _date = _now();
   }
 
-  final _categoryOptions = [
-    ('PURCHASE', 'Закупка'),
-    ('RENT', 'Аренда'),
-    ('SALARY', 'Зарплата'),
-    ('UTILITIES', 'Коммунальные'),
-    ('TRANSPORT', 'Транспорт'),
-    ('MARKETING', 'Маркетинг'),
-    ('OTHER', 'Другое'),
+  List<(String, String)> _categoryOptions(AppLocalizations l10n) => [
+    ('PURCHASE', l10n.purchase),
+    ('RENT', l10n.rent),
+    ('SALARY', l10n.salary),
+    ('UTILITIES', l10n.utilities),
+    ('TRANSPORT', l10n.transport),
+    ('MARKETING', l10n.marketing),
+    ('OTHER', l10n.other),
   ];
 
   @override
@@ -87,7 +87,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Добавить расход')),
+      appBar: AppBar(title: Text(l10n.addExpense)),
       body: BlocListener<ExpenseBloc, ExpenseState>(
         listener: (context, state) {
           if (state is ExpenseActionSuccess) {
@@ -105,7 +105,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('Категория', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                Text(l10n.category, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: AppConstants.spacingSm),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -117,7 +117,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                     child: DropdownButton<String>(
                       value: _category,
                       isExpanded: true,
-                      items: _categoryOptions.map((c) => DropdownMenuItem(
+                      items: _categoryOptions(l10n).map((c) => DropdownMenuItem(
                         value: c.$1,
                         child: Text(c.$2),
                       )).toList(),
@@ -130,25 +130,25 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _amountController,
-                  label: 'Сумма',
+                  label: l10n.amount,
                   keyboardType: TextInputType.number,
                   prefixIcon: Icons.attach_money,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Введите сумму';
-                    if (double.tryParse(v) == null) return 'Некорректная сумма';
+                    if (v == null || v.isEmpty) return l10n.amountRequired;
+                    if (double.tryParse(v) == null) return l10n.invalidAmount;
                     return null;
                   },
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _descriptionController,
-                  label: 'Описание',
+                  label: l10n.description,
                   prefixIcon: Icons.description,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 AppTextField(
                   controller: _notesController,
-                  label: 'Заметки',
+                  label: l10n.notes,
                   maxLines: 3,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
@@ -180,7 +180,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 BlocBuilder<ExpenseBloc, ExpenseState>(
                   builder: (context, state) {
                     return AppButton(
-                      text: 'Сохранить',
+                      text: l10n.save,
                       isLoading: state is ExpenseLoading,
                       onPressed: _submit,
                     );

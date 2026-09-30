@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/network/network_info.dart';
 import '../../../data/sync/sync_engine.dart';
@@ -76,6 +77,7 @@ class _OfflineBannerState extends State<OfflineBanner> {
       return const SizedBox.shrink();
     }
 
+    final l10n = AppLocalizations.of(context)!;
     final Color bgColor;
     final String message;
     final IconData icon;
@@ -84,20 +86,20 @@ class _OfflineBannerState extends State<OfflineBanner> {
       bgColor = AppColors.warning;
       icon = Icons.cloud_off;
       message = _pendingCount > 0
-          ? 'Офлайн режим · $_pendingCount в очереди'
-          : 'Нет подключения к интернету';
+          ? l10n.offlineBannerQueuedMessage('$_pendingCount')
+          : l10n.offlineBannerNoConnection;
     } else if (_syncStatus == SyncStatus.syncing) {
       bgColor = AppColors.info;
       icon = Icons.sync;
-      message = 'Синхронизация...';
+      message = l10n.offlineBannerSyncing;
     } else if (_syncStatus == SyncStatus.error) {
       bgColor = AppColors.error;
       icon = Icons.sync_problem;
-      message = 'Ошибка синхронизации · $_pendingCount не отправлено';
+      message = l10n.offlineBannerSyncErrorMessage('$_pendingCount');
     } else if (_pendingCount > 0) {
       bgColor = AppColors.warning;
       icon = Icons.sync_problem;
-      message = '$_pendingCount операций ожидают синхронизации';
+      message = l10n.offlineBannerPendingMessage('$_pendingCount');
     } else {
       return const SizedBox.shrink();
     }
@@ -129,9 +131,9 @@ class _OfflineBannerState extends State<OfflineBanner> {
               child: Container(
                 constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 alignment: Alignment.center,
-                child: const Text(
-                  'Повторить',
-                  style: TextStyle(
+                child: Text(
+                  l10n.retry,
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

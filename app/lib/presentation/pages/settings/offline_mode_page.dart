@@ -77,6 +77,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
 
   void _onSyncStatus(SyncStatus status) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case SyncStatus.syncing:
         setState(() => _syncing = true);
@@ -85,16 +86,14 @@ class _OfflineModePageState extends State<OfflineModePage> {
         _refreshPendingCount();
         _recordLastSync();
         setState(() => _syncing = false);
-        AppSnackbar.success(
-            context, AppLocalizations.of(context)!.snackSyncCompleted);
+        AppSnackbar.success(context, l10n.snackSyncCompleted);
         break;
       case SyncStatus.error:
         _refreshPendingCount();
         setState(() => _syncing = false);
         AppSnackbar.error(
           context,
-          AppLocalizations.of(context)!
-              .snackSyncError('не удалось синхронизировать часть операций'),
+          l10n.snackSyncError(l10n.offlineSyncErrorPartialDetail),
         );
         break;
       case SyncStatus.idle:
@@ -183,10 +182,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Офлайн-режим'),
+        title: Text(l10n.settingsTileOfflineMode),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -230,8 +230,9 @@ class _OfflineModePageState extends State<OfflineModePage> {
                             const SizedBox(width: 10),
                             Text(
                               _pendingOps == 0
-                                  ? 'Всё синхронизировано'
-                                  : '$_pendingOps операций в очереди',
+                                  ? l10n.offlineAllSynced
+                                  : l10n.offlinePendingOpsCount(
+                                      _pendingOps.toString()),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
@@ -245,7 +246,8 @@ class _OfflineModePageState extends State<OfflineModePage> {
                         if (_lastSync != null) ...[
                           const SizedBox(height: 8),
                           Text(
-                            'Последняя синхронизация: ${_formatDate(_lastSync!)}',
+                            l10n.offlineLastSyncLabel(
+                                _formatDate(_lastSync!)),
                             style: TextStyle(
                                 fontSize: 12,
                                 color: context.textSecondary),
@@ -253,7 +255,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                         ] else ...[
                           const SizedBox(height: 8),
                           Text(
-                            'Синхронизация ещё не выполнялась',
+                            l10n.offlineNeverSynced,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: context.textSecondary),
@@ -284,7 +286,9 @@ class _OfflineModePageState extends State<OfflineModePage> {
                                   strokeWidth: 2, color: Colors.white))
                           : const Icon(Icons.sync),
                       label: Text(
-                        _syncing ? 'Синхронизация...' : 'Синхронизировать сейчас',
+                        _syncing
+                            ? l10n.offlineSyncingButton
+                            : l10n.offlineSyncNowButton,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
@@ -293,7 +297,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                   const SizedBox(height: 20),
 
                   // Settings
-                  Text('Настройки',
+                  Text(l10n.settings,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -324,11 +328,11 @@ class _OfflineModePageState extends State<OfflineModePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Авто-синхронизация',
+                                Text(l10n.offlineAutoSyncLabel,
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500)),
-                                Text('Синхронизировать при подключении к сети',
+                                Text(l10n.offlineAutoSyncDescription,
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: context.textSecondary)),
@@ -361,9 +365,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'В офлайн-режиме все операции сохраняются локально '
-                            'и автоматически синхронизируются при восстановлении '
-                            'подключения к интернету.',
+                            l10n.offlineInfoBody,
                             style: TextStyle(
                                 fontSize: 13,
                                 color: context.textSecondary),
@@ -375,7 +377,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                   const SizedBox(height: 24),
 
                   // Clear cache
-                  Text('Данные',
+                  Text(l10n.offlineDataSectionLabel,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -394,8 +396,7 @@ class _OfflineModePageState extends State<OfflineModePage> {
                       ),
                       onPressed: _confirmClearCache,
                       icon: const Icon(Icons.restart_alt),
-                      label: Text(
-                          AppLocalizations.of(context)!.offlineResetSyncStatusButton,
+                      label: Text(l10n.offlineResetSyncStatusButton,
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                     ),

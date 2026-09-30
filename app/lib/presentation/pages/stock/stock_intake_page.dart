@@ -100,7 +100,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Приход товара'),
+          title: Text(AppLocalizations.of(context)!.stockIntake),
         ),
         body: Column(
           children: [
@@ -108,7 +108,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
               padding: const EdgeInsets.all(AppConstants.spacingMd),
               child: AppSearchBar(
                 controller: _searchController,
-                hint: 'Найти товар для прихода',
+                hint: AppLocalizations.of(context)!.stockIntakeSearchHint,
                 onChanged: (query) {
                   setState(() => _isSearching = query.isNotEmpty);
                   context.read<ProductListBloc>().add(ProductListSearchChanged(query));
@@ -152,7 +152,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
           Icon(Icons.inventory, size: 64, color: AppColors.disabled),
           const SizedBox(height: 16),
           Text(
-            'Найдите товар для оформления прихода',
+            AppLocalizations.of(context)!.stockIntakeEmptyState,
             style: TextStyle(color: context.textSecondary),
           ),
         ],
@@ -193,7 +193,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                   Icon(Icons.search_off, size: 64, color: AppColors.disabled),
                   const SizedBox(height: 16),
                   Text(
-                    'Товары не найдены',
+                    AppLocalizations.of(context)!.noProductsFound,
                     style: TextStyle(color: context.textSecondary),
                   ),
                 ],
@@ -258,7 +258,10 @@ class _StockIntakePageState extends State<StockIntakePage> {
           children: [
             Text(Formatters.price(product.sellPrice, currency: currency)),
             Text(
-              'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
+              AppLocalizations.of(context)!.stockIntakeRemainingLine(
+                product.quantity.toString(),
+                _getUnitDisplayName(product.unit),
+              ),
               style: TextStyle(
                 fontSize: 12,
                 color: product.isLowStock ? AppColors.warning : context.textSecondary,
@@ -335,11 +338,16 @@ class _StockIntakePageState extends State<StockIntakePage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Цена: ${Formatters.price(product.sellPrice, currency: currency)}',
+                          AppLocalizations.of(context)!.stockIntakePriceLine(
+                            Formatters.price(product.sellPrice, currency: currency),
+                          ),
                           style: TextStyle(color: context.textSecondary),
                         ),
                         Text(
-                          'Остаток: ${product.quantity} ${_getUnitDisplayName(product.unit)}',
+                          AppLocalizations.of(context)!.stockIntakeRemainingLine(
+                            product.quantity.toString(),
+                            _getUnitDisplayName(product.unit),
+                          ),
                           style: TextStyle(color: context.textSecondary),
                         ),
                       ],
@@ -359,9 +367,9 @@ class _StockIntakePageState extends State<StockIntakePage> {
             ),
           ),
           const SizedBox(height: AppConstants.spacingLg),
-          const Text(
-            'Количество',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.quantity,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -372,7 +380,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
-              hintText: 'Введите количество',
+              hintText: AppLocalizations.of(context)!.enterQuantityHint,
               suffixText: _getUnitDisplayName(product.unit),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -389,9 +397,9 @@ class _StockIntakePageState extends State<StockIntakePage> {
             },
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          const Text(
-            'Себестоимость (за единицу)',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.stockIntakeCostPerUnitLabel,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -404,7 +412,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
               FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
             ],
             decoration: InputDecoration(
-              hintText: 'Введите себестоимость',
+              hintText: AppLocalizations.of(context)!.enterCostPriceHint,
               suffixText: currency.symbol,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -432,7 +440,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Итоговая стоимость',
+                  AppLocalizations.of(context)!.stockIntakeTotalCostLabel,
                   style: TextStyle(
                     fontSize: 14,
                     color: context.textSecondary,
@@ -452,7 +460,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
           ),
           const SizedBox(height: AppConstants.spacingXl),
           AppButton(
-            text: 'Сохранить',
+            text: AppLocalizations.of(context)!.save,
             onPressed: state.canSubmit && !state.isSubmitting
                 ? () {
                     final storeId = _getStoreId();

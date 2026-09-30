@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
@@ -10,8 +11,8 @@ class AppDialog {
     BuildContext context, {
     required String title,
     required String message,
-    String confirmText = 'Тасдиқ',
-    String cancelText = 'Бекор',
+    String? confirmText,
+    String? cancelText,
     VoidCallback? onConfirm,
     bool isDanger = false,
     bool barrierDismissible = true,
@@ -34,22 +35,25 @@ class AppDialog {
 class _AppDialogContent extends StatelessWidget {
   final String title;
   final String message;
-  final String confirmText;
-  final String cancelText;
+  final String? confirmText;
+  final String? cancelText;
   final VoidCallback? onConfirm;
   final bool isDanger;
 
   const _AppDialogContent({
     required this.title,
     required this.message,
-    required this.confirmText,
-    required this.cancelText,
+    this.confirmText,
+    this.cancelText,
     this.onConfirm,
     required this.isDanger,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final resolvedConfirmText = confirmText ?? l10n.confirm;
+    final resolvedCancelText = cancelText ?? l10n.cancel;
     final confirmColor = isDanger ? AppColors.error : AppColors.primary;
 
     return Dialog(
@@ -111,7 +115,7 @@ class _AppDialogContent extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        cancelText,
+                        resolvedCancelText,
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
@@ -140,7 +144,7 @@ class _AppDialogContent extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        confirmText,
+                        resolvedConfirmText,
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,

@@ -55,7 +55,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
           '/stores/${widget.storeId}/telegram-bot/test-message');
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-      AppSnackbar.success(context, l10n.snackTestMessageSent);
+        AppSnackbar.success(context, l10n.snackTestMessageSent);
       }
     } catch (e) {
       if (mounted) {
@@ -68,10 +68,11 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: AppBar(
-        title: const Text('Telegram-бот'),
+        title: Text(l10n.settingsTileTelegramBot),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -132,7 +133,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    _connected ? 'Подключён' : 'Не подключён',
+                                    _connected ? l10n.printerSettingsConnected : l10n.printerSettingsNotConnected,
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
@@ -177,9 +178,9 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                               color: AppColors.primary, size: 18),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
-                          child: Text('Подключённых клиентов',
-                              style: TextStyle(
+                        Expanded(
+                          child: Text(l10n.telegramLinkedCustomersLabel,
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                         ),
                         Text(
@@ -196,7 +197,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                   const SizedBox(height: 20),
 
                   // How to connect instructions
-                  Text('Как подключить клиентов',
+                  Text(l10n.telegramHowToConnectTitle,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -212,15 +213,13 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildStep('1', 'Клиент находит бота $_botUsername в Telegram'),
+                        _buildStep('1', l10n.telegramStep1Text(_botUsername)),
                         const SizedBox(height: 12),
-                        _buildStep('2', 'Нажимает /start и вводит свой номер телефона'),
+                        _buildStep('2', l10n.telegramStep2Text),
                         const SizedBox(height: 12),
-                        _buildStep('3',
-                            'Бот проверяет номер в базе клиентов и связывает аккаунт'),
+                        _buildStep('3', l10n.telegramStep3Text),
                         const SizedBox(height: 12),
-                        _buildStep('4',
-                            'Клиент получает уведомления о продажах и долгах'),
+                        _buildStep('4', l10n.telegramStep4Text),
                         const SizedBox(height: 16),
                         // QR placeholder
                         Center(
@@ -270,7 +269,7 @@ class _TelegramBotSettingsPageState extends State<TelegramBotSettingsPage> {
                                     strokeWidth: 2, color: Colors.white))
                             : const Icon(Icons.send_outlined),
                         label: Text(
-                          _sendingTest ? 'Отправка...' : 'Тестовое сообщение',
+                          _sendingTest ? l10n.telegramSendingButton : l10n.telegramTestMessageButton,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
