@@ -1552,7 +1552,7 @@ abstract class AppLocalizations {
   /// **'Итого'**
   String get total;
 
-  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed: the same all-caps form is the grand-total label on the POS checkout screen, in the on-screen receipt widget, and in the printed/PDF receipt, so the caps form is a shared visual convention rather than one screen's choice (promoted from the former `posCheckoutTotalCaps`, same value).
+  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because two unrelated screens share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value). CAVEAT: the printed and PDF receipts render the same all-caps label from their own hardcoded 'ИТОГО' — thermal_printer_service.dart and receipt_pdf_service.dart live outside lib/presentation, which check_i18n does not scan and which has no BuildContext. So this key does NOT yet cover those surfaces, and they will stay Russian once tg/uz translations land. Route them through this key when that layer is localized.
   ///
   /// In ru, this message translates to:
   /// **'ИТОГО'**
