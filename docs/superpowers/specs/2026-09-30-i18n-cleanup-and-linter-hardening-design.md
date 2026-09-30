@@ -205,9 +205,12 @@ reports **3186** offenders.
 
 ### Parse failures must be a hard error
 
-`throwIfDiagnostics: false` keeps a file with syntax errors from crashing the tool — but the file would
-then contribute **zero** string nodes and pass silently. That would be a worse blind spot than any of
-the four being closed, because it would be invisible and would scale with however many files failed.
+`throwIfDiagnostics: false` keeps a file with syntax errors from crashing the tool — but the parser
+**recovers** and returns a *partial* unit rather than nothing. Verified against analyzer 7.7.1:
+`class Broken { void f( {` produces 4 errors and a non-empty unit. So the failure mode is not an empty
+scan, it is a **partial** one — literals outside the unparsed region are still found, which makes the
+result look like success while part of the file went unexamined. That is a worse blind spot than any of
+the four being closed, because it is both invisible and partial.
 
 Any file whose parse produces errors must make the tool report that file and exit non-zero, with a
 message distinguishing "this file could not be parsed" from "this file contains hardcoded strings". The
