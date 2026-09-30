@@ -326,8 +326,18 @@ void main() {
         }
       });
 
+      // Both tests in this group need an explicit `wait`. The bloc emits
+      // SubscriptionUploading and then does real filesystem I/O
+      // (`await MultipartFile.fromFile(event.receiptPath)`) before it reaches
+      // the mocked `post`, so the terminal state arrives one async file read
+      // later. bloc_test's default assertion window can close before that read
+      // completes on a loaded CI runner, yielding a spurious
+      // "Expected [Uploading, Error] / Actual [Uploading]" — this failed ~1 run
+      // in 6 locally and broke CI on main. The read is a 4-byte temp file, so
+      // 200ms is ample.
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should upload the receipt, submit the change request, then reload',
+        wait: const Duration(milliseconds: 200),
         setUp: () {
           when(() => dioClient.post<dynamic>(
                 '/stores/store-1/subscription/upload-receipt',
@@ -366,6 +376,7 @@ void main() {
 
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should emit SubscriptionError and skip the change request when the upload itself fails',
+        wait: const Duration(milliseconds: 200),
         setUp: () {
           when(() => dioClient.post<dynamic>(
                 '/stores/store-1/subscription/upload-receipt',
