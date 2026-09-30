@@ -751,7 +751,9 @@ If Steps 1-5 are all clean, there is nothing to commit and this task ends. Other
 
 ## Notes for the executor
 
-- **Values must stay byte-identical.** That property is what keeps the goldens meaningful. Two deliberate exceptions, both flagged in their tasks: `debt_reminder_service.dart:59` loses a trailing period on the unit abbreviation (no callers, so nothing user-visible changes), and `ZReport.duration` changes shape rather than text.
+- **Values must stay byte-identical.** That property is what keeps the goldens meaningful. Exactly one deliberate exception: `ZReport.duration` changes shape rather than text (`'{hours}ч {minutes}м'` composed from two `int` fields renders what `'${diff.inHours}ч ${diff.inMinutes % 60}м'` did).
+
+  An earlier revision of this plan listed a second exception — `debt_reminder_service.dart:59` losing a trailing period on the unit abbreviation. That is **no longer true**: commit `1c3dd91` moved `шт.` inside `lowStockAlertBody`, whose value is `'{product}: осталось {quantity} шт.'`, period intact. A byte-identity auditor should expect **no** text discrepancy anywhere on this branch.
 - **Verify every reuse, even the ones this plan lists as confirmed.** They were checked while writing, but the ARB moves. The highest-risk mistake is a key whose Russian matches but whose meaning does not — Track 2 hit that repeatedly (`paid` the payroll status vs `paidAmount` the receipt row). Check the existing key's `@description` and call sites, not just its value.
 - **The two `'Кол'` / `'Кол.'` keys are deliberately different.** Thermal has no period, PDF does. Do not normalize them.
 - **Do not regenerate any golden.** If one moves, a value is wrong.

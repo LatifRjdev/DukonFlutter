@@ -1606,7 +1606,7 @@ abstract class AppLocalizations {
   /// **'Смешанная оплата'**
   String get mixed;
 
-  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Shared across pos_checkout_page.dart and transaction_detail_page.dart (a later task in this plan), both of which use the bare form for the same UI role (a compact payment-method chip/label).
+  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Five consumers, all using the bare form for the same UI role (a compact payment-method chip/label): pos_checkout_page.dart, transaction_detail_page.dart, sales_history_page.dart, and the two receipt builders lib/core/services/thermal_printer_service.dart and receipt_pdf_service.dart.
   ///
   /// In ru, this message translates to:
   /// **'Смешанная'**
@@ -1996,7 +1996,7 @@ abstract class AppLocalizations {
   /// **'Оплачен'**
   String get transactionDetailStatusPaid;
 
-  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge.
+  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge. Four consumers: transaction_detail_page.dart, sales_history_page.dart, refund_page.dart, and lib/core/services/receipt_share_service.dart (the share-sheet subject line).
   ///
   /// In ru, this message translates to:
   /// **'Чек {receiptNo}'**
@@ -2998,7 +2998,7 @@ abstract class AppLocalizations {
   /// **'Когда курьер доставил заказ'**
   String get notificationSettingsDeliverySubtitle;
 
-  /// No description provided for @notificationSettingsDebtReminderTitle.
+  /// Does double duty: the debt-reminder toggle's label on the notification-settings screen, and the push-notification title fired by lib/core/services/debt_reminder_service.dart for a debt due tomorrow. Distinct from `debtReminderOverdueTitle`/`debtReminderDueTodayTitle`, which are the more urgent variants for debts already overdue or due today.
   ///
   /// In ru, this message translates to:
   /// **'Напоминание о долге'**
