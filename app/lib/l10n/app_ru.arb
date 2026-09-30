@@ -374,6 +374,8 @@
   "@kg": { "description": "Kilogram unit" },
   "liter": "л",
   "@liter": { "description": "Liter unit" },
+  "meter": "м",
+  "@meter": { "description": "Metre unit abbreviation for ProductUnit.m — sibling of `pcs`, `kg`, `liter`, `pack`. Distinct from `unitMeter` (\"Метр\", the full word used in the unit picker)." },
   "pack": "уп",
   "@pack": { "description": "Pack unit" },
   "unitPiece": "Штука",
@@ -637,6 +639,18 @@
   "@receiptNo": { "description": "Receipt number label" },
   "receiptQtyAbbrev": "Кол.",
   "@receiptQtyAbbrev": { "description": "Abbreviated quantity column header on a receipt's item table, shortened to fit a narrow receipt column — distinct from `quantity` (\"Количество\", the full word used where space allows). Shared by the on-screen receipt widget and the PDF receipt, which use the same abbreviated header." },
+  "receiptQtyAbbrevShort": "Кол",
+  "@receiptQtyAbbrevShort": { "description": "Quantity column header on the thermal (ESC/POS) receipt, with NO trailing period — distinct from `receiptQtyAbbrev` (\"Кол.\", with a period) used on the PDF receipt and in the on-screen receipt widget. The two differ by one character in the existing product copy; do not merge them without a deliberate product decision, since either change alters printed output." },
+  "receiptPointsEarnedLine": "Начислено баллов: +{points}",
+  "@receiptPointsEarnedLine": {
+    "description": "Printed-receipt line showing loyalty points earned on this sale; points is pre-formatted at the call site.",
+    "placeholders": { "points": { "type": "String" } }
+  },
+  "receiptPointsBalanceLine": "Ваш баланс: {points} баллов",
+  "@receiptPointsBalanceLine": {
+    "description": "Printed-receipt line showing the customer's loyalty balance after this sale.",
+    "placeholders": { "points": { "type": "String" } }
+  },
   "printReceipt": "Печать чека",
   "@printReceipt": { "description": "Print receipt action" },
   "printReceiptButton": "Печатать чек",
@@ -1111,6 +1125,34 @@
   "@notificationSettingsDaysWithoutSaleLabel": { "description": "Notification settings — label of the numeric field setting how many days without a sale marks a product as stale" },
   "notificationSettingsRemainingPercentLabel": "Остаток, % от партии",
   "@notificationSettingsRemainingPercentLabel": { "description": "Notification settings — label of the numeric field setting the minimum remaining stock, as a percentage of the original batch, for the stale-product alert to fire" },
+
+  "debtReminderDueTomorrowBody": "{customer} должен {amount}. Срок оплаты завтра.",
+  "@debtReminderDueTomorrowBody": {
+    "description": "Push notification body sent the day before a debt is due. amount is pre-formatted via Formatters.price, so it already carries the currency abbreviation. The matching title reuses `notificationSettingsDebtReminderTitle` (\"Напоминание о долге\") — there is deliberately no due-tomorrow title key.",
+    "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "debtReminderDueTodayTitle": "Срок оплаты долга",
+  "@debtReminderDueTodayTitle": { "description": "Push notification title sent on the day a debt falls due — distinct from `notificationSettingsDebtReminderTitle` (\"Напоминание о долге\"), the generic debt-reminder wording reused as the due-tomorrow notification title and as the settings switch label" },
+  "debtReminderDueTodayBody": "{customer} должен {amount}. Срок оплаты сегодня!",
+  "@debtReminderDueTodayBody": {
+    "description": "Push notification body sent on the day a debt falls due.",
+    "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "debtReminderOverdueTitle": "Просроченный долг",
+  "@debtReminderOverdueTitle": { "description": "Push notification title sent once a debt is past due — distinct from `debtReminderDueTodayTitle` (\"Срок оплаты долга\", fired on the due date itself) and from `notificationSettingsDebtReminderTitle` (\"Напоминание о долге\", the generic wording)" },
+  "debtReminderOverdueBody": "{customer}: просрочен долг {amount}.",
+  "@debtReminderOverdueBody": {
+    "description": "Push notification body sent once a debt is past due.",
+    "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
+  },
+
+  "lowStockAlertTitle": "Мало товара на складе",
+  "@lowStockAlertTitle": { "description": "Push notification title for the low-stock alert — distinct from `lowStock` (\"Мало на складе\"), the shorter stock-status badge on the product list, and from `notificationSettingsLowStockTitle` (\"Низкий остаток\"), the settings switch label for this same alert" },
+  "lowStockAlertBody": "{product}: осталось {quantity}",
+  "@lowStockAlertBody": {
+    "description": "Push notification body for the low-stock alert. quantity is pre-formatted at the call site and already includes the unit abbreviation.",
+    "placeholders": { "product": { "type": "String" }, "quantity": { "type": "String" } }
+  },
 
   "notificationsEmptyState": "Нет уведомлений",
   "@notificationsEmptyState": { "description": "Notifications list page — empty state shown when the user has no notifications" },

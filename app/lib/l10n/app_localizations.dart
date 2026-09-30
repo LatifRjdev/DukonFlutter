@@ -1126,6 +1126,12 @@ abstract class AppLocalizations {
   /// **'л'**
   String get liter;
 
+  /// Metre unit abbreviation for ProductUnit.m — sibling of `pcs`, `kg`, `liter`, `pack`. Distinct from `unitMeter` ("Метр", the full word used in the unit picker).
+  ///
+  /// In ru, this message translates to:
+  /// **'м'**
+  String get meter;
+
   /// Pack unit
   ///
   /// In ru, this message translates to:
@@ -1785,6 +1791,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Кол.'**
   String get receiptQtyAbbrev;
+
+  /// Quantity column header on the thermal (ESC/POS) receipt, with NO trailing period — distinct from `receiptQtyAbbrev` ("Кол.", with a period) used on the PDF receipt and in the on-screen receipt widget. The two differ by one character in the existing product copy; do not merge them without a deliberate product decision, since either change alters printed output.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол'**
+  String get receiptQtyAbbrevShort;
+
+  /// Printed-receipt line showing loyalty points earned on this sale; points is pre-formatted at the call site.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено баллов: +{points}'**
+  String receiptPointsEarnedLine(String points);
+
+  /// Printed-receipt line showing the customer's loyalty balance after this sale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш баланс: {points} баллов'**
+  String receiptPointsBalanceLine(String points);
 
   /// Print receipt action
   ///
@@ -3009,6 +3033,48 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Остаток, % от партии'**
   String get notificationSettingsRemainingPercentLabel;
+
+  /// Push notification body sent the day before a debt is due. amount is pre-formatted via Formatters.price, so it already carries the currency abbreviation. The matching title reuses `notificationSettingsDebtReminderTitle` ("Напоминание о долге") — there is deliberately no due-tomorrow title key.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer} должен {amount}. Срок оплаты завтра.'**
+  String debtReminderDueTomorrowBody(String customer, String amount);
+
+  /// Push notification title sent on the day a debt falls due — distinct from `notificationSettingsDebtReminderTitle` ("Напоминание о долге"), the generic debt-reminder wording reused as the due-tomorrow notification title and as the settings switch label
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок оплаты долга'**
+  String get debtReminderDueTodayTitle;
+
+  /// Push notification body sent on the day a debt falls due.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer} должен {amount}. Срок оплаты сегодня!'**
+  String debtReminderDueTodayBody(String customer, String amount);
+
+  /// Push notification title sent once a debt is past due — distinct from `debtReminderDueTodayTitle` ("Срок оплаты долга", fired on the due date itself) and from `notificationSettingsDebtReminderTitle` ("Напоминание о долге", the generic wording)
+  ///
+  /// In ru, this message translates to:
+  /// **'Просроченный долг'**
+  String get debtReminderOverdueTitle;
+
+  /// Push notification body sent once a debt is past due.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer}: просрочен долг {amount}.'**
+  String debtReminderOverdueBody(String customer, String amount);
+
+  /// Push notification title for the low-stock alert — distinct from `lowStock` ("Мало на складе"), the shorter stock-status badge on the product list, and from `notificationSettingsLowStockTitle` ("Низкий остаток"), the settings switch label for this same alert
+  ///
+  /// In ru, this message translates to:
+  /// **'Мало товара на складе'**
+  String get lowStockAlertTitle;
+
+  /// Push notification body for the low-stock alert. quantity is pre-formatted at the call site and already includes the unit abbreviation.
+  ///
+  /// In ru, this message translates to:
+  /// **'{product}: осталось {quantity}'**
+  String lowStockAlertBody(String product, String quantity);
 
   /// Notifications list page — empty state shown when the user has no notifications
   ///
