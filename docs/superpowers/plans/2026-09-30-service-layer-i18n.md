@@ -632,7 +632,11 @@ Expected: all tests pass, including the two new ones.
 
 Run `dart run tool/check_i18n.dart` — it will now report the error-path literals plus `'сом.'`.
 
-**Expect 13 allowlist lines for 14 occurrences.** `'Не удалось выполнить операцию'` appears twice in `error_messages.dart` (the 400-and-below fallback and the unknown-exception fallback), and entries are keyed `<path>::<literal>`, so both occurrences collapse into one line. That is correct, not a miscount — and it is also a known limitation: one entry whitelists unlimited occurrences of that literal in that file, so re-adding it elsewhere in the same file would not be caught.
+**Expect 14 allowlist lines for 15 occurrences.** `'Не удалось выполнить операцию'` appears twice in `error_messages.dart` (the 400-and-below fallback and the unknown-exception fallback), and entries are keyed `<path>::<literal>`, so both occurrences collapse into one line. That is correct, not a miscount — and it is also a known limitation: one entry whitelists unlimited occurrences of that literal in that file, so re-adding it elsewhere in the same file would not be caught.
+
+The breakdown: `error_messages.dart` 11 occurrences → 10 lines, `debt_repository_impl.dart` 3 → 3, `enums.dart` 1 → 1. Note the same literal `'Не удалось выполнить операцию'` also appears in `debt_repository_impl.dart`, but keys include the path, so that is a separate line rather than a third collapse.
+
+Do not adjust these numbers to match what the lint prints — count from the output and from the files, and reconcile. (An earlier revision of this plan said 13-for-14, having undercounted `error_messages.dart` by one; Task 7's implementer caught it by counting rather than trusting the plan.)
 
 Add them under a new block in `app/tool/i18n-allowlist.txt`, preserving the existing comment structure:
 
@@ -657,7 +661,7 @@ Add them under a new block in `app/tool/i18n-allowlist.txt`, preserving the exis
 lib/core/constants/enums.dart::'сом.'
 ```
 
-Add the 14 error-path entries verbatim from the lint output under block 3.
+Add the 13 error-path entries verbatim from the lint output under block 3.
 
 - [ ] **Step 6: Verify, including non-vacuity**
 
