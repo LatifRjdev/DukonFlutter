@@ -115,27 +115,27 @@ Add the receipt loyalty lines next to `receiptPreviewDefaultFooter`:
 Add the notification block after `notificationSettingsDebtReminderSubtitle`:
 
 ```json
-  "debtReminderDueTomorrowBody": "{customer} должен {amount}. Срок оплаты завтра.",
+  "debtReminderDueTomorrowBody": "{customer} должен {amount} сом. Срок оплаты завтра.",
   "@debtReminderDueTomorrowBody": {
-    "description": "Push notification body sent the day before a debt is due. amount is pre-formatted via Formatters.price, so it already carries the currency abbreviation.",
+    "description": "Push notification body sent the day before a debt is due. amount is the bare number from debtAmount.toStringAsFixed(2); the currency abbreviation is part of this value. NOT Formatters.price, which would render 500,00 with a comma decimal separator.",
     "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
   },
   "debtReminderDueTodayTitle": "Срок оплаты долга",
-  "debtReminderDueTodayBody": "{customer} должен {amount}. Срок оплаты сегодня!",
+  "debtReminderDueTodayBody": "{customer} должен {amount} сом. Срок оплаты сегодня!",
   "@debtReminderDueTodayBody": {
     "description": "Push notification body sent on the day a debt falls due.",
     "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
   },
   "debtReminderOverdueTitle": "Просроченный долг",
-  "debtReminderOverdueBody": "{customer}: просрочен долг {amount}.",
+  "debtReminderOverdueBody": "{customer}: просрочен долг {amount} сом.",
   "@debtReminderOverdueBody": {
     "description": "Push notification body sent once a debt is past due.",
     "placeholders": { "customer": { "type": "String" }, "amount": { "type": "String" } }
   },
   "lowStockAlertTitle": "Мало товара на складе",
-  "lowStockAlertBody": "{product}: осталось {quantity}",
+  "lowStockAlertBody": "{product}: осталось {quantity} шт.",
   "@lowStockAlertBody": {
-    "description": "Push notification body for the low-stock alert. quantity is pre-formatted at the call site and already includes the unit abbreviation.",
+    "description": "Push notification body for the low-stock alert. quantity is the bare count from currentQuantity.toString(); the unit abbreviation is part of this value and stays hardcoded to pieces, preserving a pre-existing bug deliberately.",
     "placeholders": { "product": { "type": "String" }, "quantity": { "type": "String" } }
   },
 ```
@@ -446,22 +446,24 @@ Expected: only the two `injection.dart` registration lines. If a real caller app
 
 - [ ] **Step 2: Add `l10n` and replace the 8 literals**
 
-Add the `AppLocalizations` import plus `import '../utils/formatters.dart';`. Add `required AppLocalizations l10n` to `scheduleDebtReminder` (line 9) and `showLowStockAlert` (line 51).
+Add the `AppLocalizations` import. Add `required AppLocalizations l10n` to `scheduleDebtReminder` (line 9) and `showLowStockAlert` (line 51).
 
-The bodies currently interpolate a raw amount and a hardcoded `'сом.'`. Format via `Formatters.price`, which supplies the currency abbreviation — removing two more hardcoded duplicates:
+**Do NOT use `Formatters.price` here.** It returns `NumberFormat('#,##0.00','ru_RU').format(amount)`, which renders `500.00` as `500,00` — a comma decimal separator plus thousands grouping the current literal does not have. The literals use `toStringAsFixed(2)`, so keep that and pass the bare number; the `сом.` and `шт.` abbreviations live inside the ARB values instead. This keeps output byte-identical.
 
 | Line | Find | Replace with |
 |---|---|---|
 | 22 | `title: 'Напоминание о долге',` | `title: l10n.notificationSettingsDebtReminderTitle,` |
-| 23 | `body: '$customerName должен ${debtAmount.toStringAsFixed(2)} сом. Срок оплаты завтра.',` | `body: l10n.debtReminderDueTomorrowBody(customerName, Formatters.price(debtAmount)),` |
+| 23 | `body: '$customerName должен ${debtAmount.toStringAsFixed(2)} сом. Срок оплаты завтра.',` | `body: l10n.debtReminderDueTomorrowBody(customerName, debtAmount.toStringAsFixed(2)),` |
 | 33 | `title: 'Срок оплаты долга',` | `title: l10n.debtReminderDueTodayTitle,` |
-| 34 | `body: '$customerName должен ${debtAmount.toStringAsFixed(2)} сом. Срок оплаты сегодня!',` | `body: l10n.debtReminderDueTodayBody(customerName, Formatters.price(debtAmount)),` |
+| 34 | `body: '$customerName должен ${debtAmount.toStringAsFixed(2)} сом. Срок оплаты сегодня!',` | `body: l10n.debtReminderDueTodayBody(customerName, debtAmount.toStringAsFixed(2)),` |
 | 44 | `title: 'Просроченный долг',` | `title: l10n.debtReminderOverdueTitle,` |
-| 45 | `body: '$customerName: просрочен долг ${debtAmount.toStringAsFixed(2)} сом.',` | `body: l10n.debtReminderOverdueBody(customerName, Formatters.price(debtAmount)),` |
+| 45 | `body: '$customerName: просрочен долг ${debtAmount.toStringAsFixed(2)} сом.',` | `body: l10n.debtReminderOverdueBody(customerName, debtAmount.toStringAsFixed(2)),` |
 | 58 | `title: 'Мало товара на складе',` | `title: l10n.lowStockAlertTitle,` |
-| 59 | `body: '$productName: осталось $currentQuantity шт.',` | `body: l10n.lowStockAlertBody(productName, '$currentQuantity ${ProductUnit.pcs.displayName(l10n)}'),` |
+| 59 | `body: '$productName: осталось $currentQuantity шт.',` | `body: l10n.lowStockAlertBody(productName, currentQuantity.toString()),` |
 
-Line 59 also needs `import '../constants/enums.dart';`. Note this changes the rendered text from `'... шт.'` to `'... шт'` — the unit key has no trailing period. Flag it in the commit message: it is a one-character change in a notification that currently has no callers, so nothing user-visible regresses.
+No extra imports are needed — `enums.dart` and `formatters.dart` are both unnecessary now that the abbreviations live in the ARB values.
+
+The `шт.` abbreviation stays hardcoded to pieces inside `lowStockAlertBody`, exactly as the literal does today, so a product measured in kg still reads as pieces. **That is a pre-existing bug and it is preserved deliberately** — fixing it is a product change, not an extraction. It is recorded in `@lowStockAlertBody`.
 
 - [ ] **Step 3: Verify**
 

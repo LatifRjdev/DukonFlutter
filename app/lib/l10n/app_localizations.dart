@@ -3034,10 +3034,10 @@ abstract class AppLocalizations {
   /// **'Остаток, % от партии'**
   String get notificationSettingsRemainingPercentLabel;
 
-  /// Push notification body sent the day before a debt is due. amount is pre-formatted via Formatters.price, so it already carries the currency abbreviation. The matching title reuses `notificationSettingsDebtReminderTitle` ("Напоминание о долге") — there is deliberately no due-tomorrow title key.
+  /// Push notification body sent the day before a debt is due. amount is the bare number from debtAmount.toStringAsFixed(2); the currency abbreviation is part of this value, not the argument. Deliberately NOT Formatters.price, which uses NumberFormat(ru_RU) and would render "500,00" with a comma decimal separator plus thousands grouping — a visible change from the literal this replaces. The matching title reuses `notificationSettingsDebtReminderTitle` ("Напоминание о долге") — there is deliberately no due-tomorrow title key.
   ///
   /// In ru, this message translates to:
-  /// **'{customer} должен {amount}. Срок оплаты завтра.'**
+  /// **'{customer} должен {amount} сом. Срок оплаты завтра.'**
   String debtReminderDueTomorrowBody(String customer, String amount);
 
   /// Push notification title sent on the day a debt falls due — distinct from `notificationSettingsDebtReminderTitle` ("Напоминание о долге"), the generic debt-reminder wording reused as the due-tomorrow notification title and as the settings switch label
@@ -3049,7 +3049,7 @@ abstract class AppLocalizations {
   /// Push notification body sent on the day a debt falls due.
   ///
   /// In ru, this message translates to:
-  /// **'{customer} должен {amount}. Срок оплаты сегодня!'**
+  /// **'{customer} должен {amount} сом. Срок оплаты сегодня!'**
   String debtReminderDueTodayBody(String customer, String amount);
 
   /// Push notification title sent once a debt is past due — distinct from `debtReminderDueTodayTitle` ("Срок оплаты долга", fired on the due date itself) and from `notificationSettingsDebtReminderTitle` ("Напоминание о долге", the generic wording)
@@ -3061,7 +3061,7 @@ abstract class AppLocalizations {
   /// Push notification body sent once a debt is past due.
   ///
   /// In ru, this message translates to:
-  /// **'{customer}: просрочен долг {amount}.'**
+  /// **'{customer}: просрочен долг {amount} сом.'**
   String debtReminderOverdueBody(String customer, String amount);
 
   /// Push notification title for the low-stock alert — distinct from `lowStock` ("Мало на складе"), the shorter stock-status badge on the product list, and from `notificationSettingsLowStockTitle` ("Низкий остаток"), the settings switch label for this same alert
@@ -3070,10 +3070,10 @@ abstract class AppLocalizations {
   /// **'Мало товара на складе'**
   String get lowStockAlertTitle;
 
-  /// Push notification body for the low-stock alert. quantity is pre-formatted at the call site and already includes the unit abbreviation.
+  /// Push notification body for the low-stock alert. quantity is the bare count from currentQuantity.toString(); the unit abbreviation is part of this value. NOTE: that abbreviation is hardcoded to pieces, so a product measured in kg or litres still reads as pieces. This is a pre-existing bug in the literal being replaced, preserved deliberately — fixing it is a product change, not an extraction.
   ///
   /// In ru, this message translates to:
-  /// **'{product}: осталось {quantity}'**
+  /// **'{product}: осталось {quantity} шт.'**
   String lowStockAlertBody(String product, String quantity);
 
   /// Notifications list page — empty state shown when the user has no notifications

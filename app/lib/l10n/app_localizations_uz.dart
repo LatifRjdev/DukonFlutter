@@ -1631,7 +1631,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String debtReminderDueTomorrowBody(String customer, String amount) {
-    return '$customer должен $amount. Срок оплаты завтра.';
+    return '$customer должен $amount сом. Срок оплаты завтра.';
   }
 
   @override
@@ -1639,7 +1639,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String debtReminderDueTodayBody(String customer, String amount) {
-    return '$customer должен $amount. Срок оплаты сегодня!';
+    return '$customer должен $amount сом. Срок оплаты сегодня!';
   }
 
   @override
@@ -1647,7 +1647,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String debtReminderOverdueBody(String customer, String amount) {
-    return '$customer: просрочен долг $amount.';
+    return '$customer: просрочен долг $amount сом.';
   }
 
   @override
@@ -1655,7 +1655,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String lowStockAlertBody(String product, String quantity) {
-    return '$product: осталось $quantity';
+    return '$product: осталось $quantity шт.';
   }
 
   @override
