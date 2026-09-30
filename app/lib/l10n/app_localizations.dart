@@ -1414,7 +1414,7 @@ abstract class AppLocalizations {
   /// **'Наличие на складе'**
   String get productDetailStockAvailabilityTitle;
 
-  /// Product detail page — general info section card title
+  /// Product detail page — general info section card title. Same value as `transactionDetailInfoSectionTitle` ("Информация") on the transaction-detail screen; each screen's info card lists different fields, so they may diverge in tg/uz. Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Информация'**
@@ -1834,7 +1834,7 @@ abstract class AppLocalizations {
   /// **'История продаж'**
   String get salesHistory;
 
-  /// No description provided for @salesFilterSheetTitle.
+  /// Sales-filter bottom sheet heading. Same value as the pre-existing `a11yFilters` ("Фильтры"), which is a screen-reader/tooltip label — visible chrome and a11y labels are kept as separate keys in this ARB (cf. `share`/`a11yShare`). Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Фильтры'**
@@ -1882,7 +1882,7 @@ abstract class AppLocalizations {
   /// **'Отменён'**
   String get salesFilterStatusCancelled;
 
-  /// Sales-history period-filter chip for opening a custom date-range picker (bare "Выбрать") — distinct from `salesFilterCustomDates` ("Выбрать даты"), the fuller wording used in the sales-filter bottom sheet's period section
+  /// Sales-history period-filter chip for opening a custom date-range picker (bare "Выбрать") — distinct from `salesFilterCustomDates` ("Выбрать даты"), the fuller wording used in the sales-filter bottom sheet's period section. Also shares its bare value with `subscriptionSelectPlanButton` ("Выбрать"), a plan-selection button — unrelated actions that coincide in Russian and may not in tg/uz. Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Выбрать'**
@@ -3700,7 +3700,7 @@ abstract class AppLocalizations {
   /// **'Валовая прибыль'**
   String get financeGrossProfit;
 
-  /// No description provided for @financeNetProfit.
+  /// Finance-dashboard KPI card label. Same value as `reportsNetProfitLabel` ("Чистая прибыль") on the reports screen; each is feature-scoped to its own screen and they may be worded differently per locale. Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Чистая прибыль'**
@@ -3712,7 +3712,7 @@ abstract class AppLocalizations {
   /// **'{quantity} шт'**
   String financeDashboardQuantityUnit(String quantity);
 
-  /// No description provided for @financeDashboardCurrencies.
+  /// Finance-dashboard grid tile linking to the currency-rates screen. Same value as `subscriptionFeatureCurrencies` ("Валюты"), which is a bullet in a subscription plan's feature list — a navigation label vs. a feature name. Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Валюты'**
@@ -4306,7 +4306,7 @@ abstract class AppLocalizations {
   /// **'Авто'**
   String get zakatCalculatorAutoBadge;
 
-  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsSupplierDebtsToggleTitle` ("Долги поставщикам (вычет)", with a '(вычет)' suffix) — different text, do not merge.
+  /// Zakat-calculator asset-card title. Distinct from zakat_settings_page.dart's `zakatSettingsSupplierDebtsToggleTitle` ("Долги поставщикам (вычет)", with a '(вычет)' suffix) — different text, do not merge. Also shares its exact value with the pre-existing `dashboardSupplierOwedSubtitle` ("Долги поставщикам"), a dashboard card subtitle; kept separate as a row label vs. a card subtitle. Do not merge.
   ///
   /// In ru, this message translates to:
   /// **'Долги поставщикам'**
