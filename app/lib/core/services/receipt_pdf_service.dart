@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../domain/entities/sale.dart';
 import '../utils/formatters.dart';
 
@@ -28,6 +29,7 @@ class ReceiptPdfService {
   Future<Uint8List> generateReceipt({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
     PaperWidth paperWidth = PaperWidth.mm80,
@@ -64,9 +66,9 @@ class ReceiptPdfService {
             _dashedDivider(),
             pw.SizedBox(height: 4),
             pw.Row(children: [
-              pw.Expanded(flex: 3, child: pw.Text('Товар', style: smallBold)),
-              pw.Expanded(child: pw.Text('Кол.', style: smallBold, textAlign: pw.TextAlign.center)),
-              pw.Expanded(flex: 2, child: pw.Text('Сумма', style: smallBold, textAlign: pw.TextAlign.right)),
+              pw.Expanded(flex: 3, child: pw.Text(l10n.product, style: smallBold)),
+              pw.Expanded(child: pw.Text(l10n.receiptQtyAbbrev, style: smallBold, textAlign: pw.TextAlign.center)),
+              pw.Expanded(flex: 2, child: pw.Text(l10n.amount, style: smallBold, textAlign: pw.TextAlign.right)),
             ]),
             pw.SizedBox(height: 3),
             pw.Divider(height: 0.5),
@@ -82,22 +84,22 @@ class ReceiptPdfService {
             pw.SizedBox(height: 4),
             _dashedDivider(),
             pw.SizedBox(height: 4),
-            _totalRow('Подытог', Formatters.price(sale.subtotal), regular),
+            _totalRow(l10n.subtotal, Formatters.price(sale.subtotal), regular),
             if (sale.discount > 0)
-              _totalRow('Скидка', '- ${Formatters.price(sale.discount)}', regular),
+              _totalRow(l10n.discount, '- ${Formatters.price(sale.discount)}', regular),
             pw.SizedBox(height: 2),
-            _totalRow('ИТОГО', Formatters.price(sale.total), totalStyle),
+            _totalRow(l10n.totalCaps, Formatters.price(sale.total), totalStyle),
             pw.SizedBox(height: 4),
             _dashedDivider(),
             pw.SizedBox(height: 4),
-            _totalRow('Оплата', _paymentTypeName(sale.paymentType), regular),
-            _totalRow('Оплачено', Formatters.price(sale.paidAmount), regular),
+            _totalRow(l10n.payment, _paymentTypeName(sale.paymentType, l10n), regular),
+            _totalRow(l10n.paidAmount, Formatters.price(sale.paidAmount), regular),
             if (sale.change > 0)
-              _totalRow('Сдача', Formatters.price(sale.change), regular),
+              _totalRow(l10n.change, Formatters.price(sale.change), regular),
             if (sale.debtAmount > 0)
-              _totalRow('Долг', Formatters.price(sale.debtAmount), regular),
+              _totalRow(l10n.debtLabel, Formatters.price(sale.debtAmount), regular),
             pw.SizedBox(height: 10),
-            pw.Text('Спасибо за покупку!', style: regular, textAlign: pw.TextAlign.center),
+            pw.Text(l10n.receiptPreviewDefaultFooter, style: regular, textAlign: pw.TextAlign.center),
           ],
         ),
       ),
@@ -130,12 +132,12 @@ class ReceiptPdfService {
     );
   }
 
-  String _paymentTypeName(String type) {
+  String _paymentTypeName(String type, AppLocalizations l10n) {
     switch (type) {
-      case 'CASH': return 'Наличные';
-      case 'CARD': return 'Карта';
-      case 'DEBT': return 'В долг';
-      case 'MIXED': return 'Смешанная';
+      case 'CASH': return l10n.cash;
+      case 'CARD': return l10n.card;
+      case 'DEBT': return l10n.debt;
+      case 'MIXED': return l10n.paymentMixedShort;
       default: return type;
     }
   }

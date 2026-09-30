@@ -550,6 +550,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get liter => 'l';
 
   @override
+  String get meter => 'м';
+
+  @override
   String get pack => 'qad';
 
   @override
@@ -936,6 +939,19 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get receiptQtyAbbrev => 'Кол.';
+
+  @override
+  String get receiptQtyAbbrevShort => 'Кол';
+
+  @override
+  String receiptPointsEarnedLine(String points) {
+    return 'Начислено баллов: +$points';
+  }
+
+  @override
+  String receiptPointsBalanceLine(String points) {
+    return 'Ваш баланс: $points баллов';
+  }
 
   @override
   String get printReceipt => 'Chekni chop etish';
@@ -1612,6 +1628,35 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get notificationSettingsRemainingPercentLabel =>
       'Остаток, % от партии';
+
+  @override
+  String debtReminderDueTomorrowBody(String customer, String amount) {
+    return '$customer должен $amount сом. Срок оплаты завтра.';
+  }
+
+  @override
+  String get debtReminderDueTodayTitle => 'Срок оплаты долга';
+
+  @override
+  String debtReminderDueTodayBody(String customer, String amount) {
+    return '$customer должен $amount сом. Срок оплаты сегодня!';
+  }
+
+  @override
+  String get debtReminderOverdueTitle => 'Просроченный долг';
+
+  @override
+  String debtReminderOverdueBody(String customer, String amount) {
+    return '$customer: просрочен долг $amount сом.';
+  }
+
+  @override
+  String get lowStockAlertTitle => 'Мало товара на складе';
+
+  @override
+  String lowStockAlertBody(String product, String quantity) {
+    return '$product: осталось $quantity шт.';
+  }
 
   @override
   String get notificationsEmptyState => 'Нет уведомлений';

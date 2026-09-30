@@ -1,5 +1,6 @@
-// Very small lint script: fail if any .dart file under lib/presentation/
-// contains a Cyrillic string literal that is NOT wrapped in
+// Very small lint script: fail if any .dart file under lib/ (excluding the
+// generated lib/l10n/ output) contains a Cyrillic string literal that is NOT
+// wrapped in
 // AppLocalizations.of(context).<key>, Text.rich, debugLabel, log calls,
 // or inside an existing allow-list.
 //
@@ -36,9 +37,12 @@ Future<void> main(List<String> args) async {
 /// never pass it and get `Directory.current.path` as before.
 Future<int> run(List<String> args, {String? repoRootOverride}) async {
   final repoRoot = repoRootOverride ?? Directory.current.path;
-  final presentation = Directory('$repoRoot/lib/presentation');
-  if (!presentation.existsSync()) {
-    stderr.writeln('lib/presentation not found — run from app/ directory');
+  // Scan all of lib/, not just lib/presentation: the narrower root was a blind
+  // spot that let 71 user-facing literals in lib/core, lib/data and lib/domain
+  // survive the whole Track 2 migration untouched.
+  final scanRoot = Directory('$repoRoot/lib');
+  if (!scanRoot.existsSync()) {
+    stderr.writeln('lib not found — run from app/ directory');
     return 2;
   }
 
@@ -70,10 +74,13 @@ Future<int> run(List<String> args, {String? repoRootOverride}) async {
   // text.
   final offenders = <({String key, String display})>[];
   var scanned = 0;
-  await for (final entity in presentation.list(recursive: true)) {
+  await for (final entity in scanRoot.list(recursive: true)) {
     if (entity is! File || !entity.path.endsWith('.dart')) continue;
-    scanned++;
     final rel = entity.path.substring(repoRoot.length + 1);
+    // lib/l10n holds gen-l10n output, including app_localizations_ru.dart,
+    // which is Russian by definition. Scanning it is meaningless noise.
+    if (rel.startsWith('lib/l10n/')) continue;
+    scanned++;
     final lines = entity.readAsLinesSync();
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];

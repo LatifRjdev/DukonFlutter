@@ -1,16 +1,24 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dukonpro/core/services/debt_reminder_service.dart';
 import 'package:dukonpro/core/services/notification_service.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 
 class MockNotificationService extends Mock implements NotificationService {}
 
 void main() {
   late MockNotificationService notificationService;
   late DebtReminderService service;
+  late AppLocalizations l10n;
 
-  setUpAll(() {
+  // The expected titles/bodies asserted below stay written out as literal
+  // Russian strings on purpose: they pin the localized `ru` renderings to the
+  // exact hardcoded literals this service used before ADR-0002 Track 2b moved
+  // them into app_ru.arb.
+  setUpAll(() async {
     registerFallbackValue(DateTime(2000));
+    l10n = await AppLocalizations.delegate.load(const Locale('ru'));
   });
 
   setUp(() {
@@ -47,6 +55,7 @@ void main() {
         customerName: 'Азиз',
         debtAmount: 150.5,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       verify(() => notificationService.scheduleNotification(
@@ -84,6 +93,7 @@ void main() {
         customerName: 'Иван',
         debtAmount: 40,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       // day-before reminder (baseId) must NOT be scheduled — it's already in the past.
@@ -121,6 +131,7 @@ void main() {
         customerName: 'Мария',
         debtAmount: 99.99,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       verifyNever(() => notificationService.scheduleNotification(
@@ -156,6 +167,7 @@ void main() {
         customerName: 'Олег',
         debtAmount: 10,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       verify(() => notificationService.showNotification(
@@ -175,6 +187,7 @@ void main() {
         customerName: 'Настя',
         debtAmount: 200,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       verify(() => notificationService.scheduleNotification(
@@ -195,6 +208,7 @@ void main() {
         customerName: 'Дилноза',
         debtAmount: 5,
         dueDate: dueDate,
+        l10n: l10n,
       );
 
       verify(() => notificationService.scheduleNotification(
@@ -222,6 +236,7 @@ void main() {
       await service.showLowStockAlert(
         productName: 'Молоко',
         currentQuantity: 3,
+        l10n: l10n,
       );
 
       verify(() => notificationService.showNotification(
@@ -233,8 +248,8 @@ void main() {
     });
 
     test('produces different ids for different product names', () async {
-      await service.showLowStockAlert(productName: 'Хлеб', currentQuantity: 1);
-      await service.showLowStockAlert(productName: 'Сахар', currentQuantity: 2);
+      await service.showLowStockAlert(productName: 'Хлеб', currentQuantity: 1, l10n: l10n);
+      await service.showLowStockAlert(productName: 'Сахар', currentQuantity: 2, l10n: l10n);
 
       final breadId = 'Хлеб'.hashCode.abs() % 100000 + 50000;
       final sugarId = 'Сахар'.hashCode.abs() % 100000 + 50000;
@@ -255,7 +270,7 @@ void main() {
     });
 
     test('handles zero quantity', () async {
-      await service.showLowStockAlert(productName: 'Соль', currentQuantity: 0);
+      await service.showLowStockAlert(productName: 'Соль', currentQuantity: 0, l10n: l10n);
 
       verify(() => notificationService.showNotification(
             id: any(named: 'id'),

@@ -2,6 +2,7 @@ import 'package:dukonpro/core/services/receipt_share_service.dart';
 import 'package:dukonpro/core/services/thermal_printer_service.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/injection.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
 import 'package:dukonpro/presentation/pages/pos/receipt_preview_page.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _FakeReceiptShareService extends Fake implements ReceiptShareService {
   Future<void> shareReceipt({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
   }) async {}

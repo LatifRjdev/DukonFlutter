@@ -15,6 +15,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/core/services/receipt_pdf_service.dart';
 import 'package:dukonpro/core/services/receipt_share_service.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
@@ -64,6 +65,7 @@ void main() {
   late FakeSharePlatform fakeShare;
   late Directory tempDir;
   late ReceiptShareService service;
+  late AppLocalizations l10n;
 
   final samplePdfBytes = Uint8List.fromList([0x25, 0x50, 0x44, 0x46, 0x2D]); // "%PDF-"
 
@@ -92,8 +94,10 @@ void main() {
     );
   }
 
-  setUpAll(() {
+  setUpAll(() async {
     registerFallbackValue(buildSale());
+    l10n = await AppLocalizations.delegate.load(const Locale('ru'));
+    registerFallbackValue(l10n);
   });
 
   setUp(() async {
@@ -107,6 +111,7 @@ void main() {
     when(() => pdfService.generateReceipt(
           sale: any(named: 'sale'),
           storeName: any(named: 'storeName'),
+          l10n: any(named: 'l10n'),
           storeAddress: any(named: 'storeAddress'),
           storePhone: any(named: 'storePhone'),
         )).thenAnswer((_) async => samplePdfBytes);
@@ -128,6 +133,7 @@ void main() {
       await service.shareReceipt(
         sale: sale,
         storeName: 'Дукон',
+        l10n: l10n,
         storeAddress: 'ул. Рудаки 1',
         storePhone: '+992901234567',
       );
@@ -135,6 +141,7 @@ void main() {
       verify(() => pdfService.generateReceipt(
             sale: sale,
             storeName: 'Дукон',
+            l10n: l10n,
             storeAddress: 'ул. Рудаки 1',
             storePhone: '+992901234567',
           )).called(1);
@@ -144,11 +151,12 @@ void main() {
         () async {
       final sale = buildSale();
 
-      await service.shareReceipt(sale: sale, storeName: 'Дукон');
+      await service.shareReceipt(sale: sale, storeName: 'Дукон', l10n: l10n);
 
       verify(() => pdfService.generateReceipt(
             sale: sale,
             storeName: 'Дукон',
+            l10n: l10n,
             storeAddress: null,
             storePhone: null,
           )).called(1);
@@ -158,7 +166,7 @@ void main() {
         () async {
       final sale = buildSale(receiptNo: 'R-000777');
 
-      await service.shareReceipt(sale: sale, storeName: 'Дукон');
+      await service.shareReceipt(sale: sale, storeName: 'Дукон', l10n: l10n);
 
       final expectedFile = File('${tempDir.path}/receipt_R-000777.pdf');
       expect(await expectedFile.exists(), isTrue);
@@ -169,7 +177,7 @@ void main() {
         () async {
       final sale = buildSale(receiptNo: 'R-000042');
 
-      await service.shareReceipt(sale: sale, storeName: 'Дукон');
+      await service.shareReceipt(sale: sale, storeName: 'Дукон', l10n: l10n);
 
       expect(fakeShare.callCount, 1);
       expect(fakeShare.lastSubject, 'Чек R-000042');
@@ -183,12 +191,13 @@ void main() {
       when(() => pdfService.generateReceipt(
             sale: any(named: 'sale'),
             storeName: any(named: 'storeName'),
+            l10n: any(named: 'l10n'),
             storeAddress: any(named: 'storeAddress'),
             storePhone: any(named: 'storePhone'),
           )).thenThrow(Exception('pdf generation failed'));
 
       await expectLater(
-        service.shareReceipt(sale: buildSale(), storeName: 'Дукон'),
+        service.shareReceipt(sale: buildSale(), storeName: 'Дукон', l10n: l10n),
         throwsA(isA<Exception>()),
       );
       expect(fakeShare.callCount, 0);
@@ -198,15 +207,15 @@ void main() {
       fakeShare.throwOnShare = Exception('share sheet unavailable');
 
       await expectLater(
-        service.shareReceipt(sale: buildSale(), storeName: 'Дукон'),
+        service.shareReceipt(sale: buildSale(), storeName: 'Дукон', l10n: l10n),
         throwsA(isA<Exception>()),
       );
     });
 
     test('produces distinct file names for different receipts, avoiding collisions',
         () async {
-      await service.shareReceipt(sale: buildSale(receiptNo: 'R-1'), storeName: 'A');
-      await service.shareReceipt(sale: buildSale(receiptNo: 'R-2'), storeName: 'A');
+      await service.shareReceipt(sale: buildSale(receiptNo: 'R-1'), storeName: 'A', l10n: l10n);
+      await service.shareReceipt(sale: buildSale(receiptNo: 'R-2'), storeName: 'A', l10n: l10n);
 
       expect(await File('${tempDir.path}/receipt_R-1.pdf').exists(), isTrue);
       expect(await File('${tempDir.path}/receipt_R-2.pdf').exists(), isTrue);

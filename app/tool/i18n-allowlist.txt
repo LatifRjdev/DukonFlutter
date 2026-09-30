@@ -5,8 +5,9 @@
 # NOTE: --dump-allowlist writes raw entries only and drops these comments.
 # Re-add them by hand afterwards.
 #
-# After the ADR-0002 Track 2 migration this list contains only two kinds of
-# entry, both deliberate. Everything else has been migrated to app_ru.arb.
+# After the ADR-0002 Track 2 / Track 2b migrations this list contains only four
+# kinds of entry, all deliberate. Everything else has been migrated to
+# app_ru.arb.
 
 # ---------------------------------------------------------------------------
 # 1. Track 3 — Bloc state strings (deferred by design, NOT yet migrated)
@@ -61,3 +62,55 @@ lib/presentation/pages/settings/subscription_page.dart::'Бизнес'
 lib/presentation/pages/settings/subscription_page.dart::'Премиум'
 lib/presentation/pages/settings/subscription_page.dart::'Старт'
 lib/presentation/pages/settings/subscription_page.dart::'Эсхата'
+
+# ---------------------------------------------------------------------------
+# 3. Sub-project B — the error path (deferred by design)
+# ---------------------------------------------------------------------------
+# error_messages.dart's mapErrorToUserMessage has 124 call sites across 29
+# Bloc files, and its result lands in state objects ~66 UI sites read as
+# .message. Converting it to error codes is an architectural change, specced
+# separately. debt_repository_impl.dart's literals are exception constructor
+# arguments that mapErrorToUserMessage never reads (it dispatches on type and
+# HTTP status), so they must move with the mechanism, not ahead of it.
+#
+# NOTE: 'Не удалось выполнить операцию' occurs TWICE in error_messages.dart
+# (the <=400 ServerException fallback and the unknown-exception fallback) but
+# needs only one entry — entries are keyed `<path>::<literal>`, so one line
+# covers every occurrence of that literal in that file. 13 entries here cover
+# 14 occurrences.
+lib/core/errors/error_messages.dart::'Конфликт — объект уже существует'
+lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
+lib/core/errors/error_messages.dart::'Недостаточно прав'
+lib/core/errors/error_messages.dart::'Некорректные данные'
+lib/core/errors/error_messages.dart::'Нет подключения к интернету'
+lib/core/errors/error_messages.dart::'Объект не найден'
+lib/core/errors/error_messages.dart::'Ошибка локального хранилища'
+lib/core/errors/error_messages.dart::'Ошибка сервера — попробуйте позже'
+lib/core/errors/error_messages.dart::'Сессия истекла. Войдите снова.'
+lib/core/errors/error_messages.dart::'Слишком много попыток — попробуйте позже'
+lib/data/repositories/debt_repository_impl.dart::'Не удалось выполнить операцию'
+lib/data/repositories/debt_repository_impl.dart::'Нет соединения'
+lib/data/repositories/debt_repository_impl.dart::'Ошибка сервера'
+
+# ---------------------------------------------------------------------------
+# 4. Currency abbreviation — not translatable
+# ---------------------------------------------------------------------------
+# 'сом.' is the somoni abbreviation, the same category as '$' and '₽'.
+# Localizing it would thread AppLocalizations through Formatters.price and its
+# 32 call sites for no translation benefit. Decided 2026-09-30.
+#
+# KNOWN CONSISTENCY RISK from that decision, recorded here so it is not
+# rediscovered as a bug later: 13 app_ru.arb values bake сом/сом. directly into
+# translatable strings (posCheckoutPointsRedeemPreview,
+# posCheckoutDiscountPreview, saleSuccessReceiptShareTextWhatsapp,
+# saleSuccessReceiptShareTextSms, the three debtReminder*Body keys,
+# creditSaleAmountLabel, zakatCalculatorShareText,
+# loyaltySettingsAmountForPointsLabel, loyaltySettingsPointValueLabel,
+# loyaltyAnalyticsSavingsValue, zReportPdfTotalLine). Once tg/uz ship, a
+# translator CAN localize the abbreviation in those 13 keys but CANNOT in
+# Formatters.price output, which reads Currency.symbol from this allowlisted
+# literal. The same screen could then render the unit two different ways. If
+# that becomes user-visible, the fix is to align in one direction — either
+# localize Currency.symbol too, or strip сом from those 13 values and let
+# Formatters.price own the unit everywhere — not to patch individual keys.
+lib/core/constants/enums.dart::'сом.'

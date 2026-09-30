@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/core/services/receipt_pdf_service.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/domain/entities/sale_item.dart';
@@ -20,6 +22,11 @@ import 'package:dukonpro/domain/entities/sale_item.dart';
 /// payment type, both paper widths).
 void main() {
   late ReceiptPdfService service;
+  late AppLocalizations l10n;
+
+  setUpAll(() async {
+    l10n = await AppLocalizations.delegate.load(const Locale('ru'));
+  });
 
   setUp(() {
     service = ReceiptPdfService();
@@ -82,6 +89,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item(name: 'Bread')]),
         storeName: 'Shop',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -91,6 +99,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item()]),
         storeName: 'Дукон',
+        l10n: l10n,
         storeAddress: 'ул. Рудаки 1',
         storePhone: '+992 90 123 4567',
       );
@@ -101,6 +110,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item()]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -118,6 +128,7 @@ void main() {
           paidAmount: 32,
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -134,10 +145,12 @@ void main() {
           paidAmount: 8,
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       final withoutDiscount = await service.generateReceipt(
         sale: buildSale(items: [item(name: 'Хлеб', price: 10)]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(withDiscount);
       expectValidPdf(withoutDiscount);
@@ -155,6 +168,7 @@ void main() {
           change: 5,
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -169,6 +183,7 @@ void main() {
           paymentType: 'DEBT',
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -177,6 +192,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: []),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -187,6 +203,7 @@ void main() {
           items: [item(name: 'О' * 200)],
         ),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -198,6 +215,7 @@ void main() {
         final bytes = await service.generateReceipt(
           sale: buildSale(items: [item()], paymentType: type),
           storeName: 'Дукон',
+          l10n: l10n,
         );
         expectValidPdf(bytes);
       });
@@ -209,6 +227,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item()]),
         storeName: 'Дукон',
+        l10n: l10n,
         paperWidth: PaperWidth.mm80,
       );
       expectValidPdf(bytes);
@@ -218,6 +237,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item()]),
         storeName: 'Дукон',
+        l10n: l10n,
         paperWidth: PaperWidth.mm58,
       );
       expectValidPdf(bytes);
@@ -229,6 +249,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item(name: 'Молоко 3.2%')]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -237,6 +258,7 @@ void main() {
       final bytes = await service.generateReceipt(
         sale: buildSale(items: [item(name: 'Чойи сабз ҳамчун ёд')]),
         storeName: 'Дӯкон',
+        l10n: l10n,
       );
       expectValidPdf(bytes);
     });
@@ -248,10 +270,12 @@ void main() {
       final first = await service.generateReceipt(
         sale: buildSale(items: [item()]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       final second = await service.generateReceipt(
         sale: buildSale(items: [item(name: 'Молоко')]),
         storeName: 'Дукон',
+        l10n: l10n,
       );
       expectValidPdf(first);
       expectValidPdf(second);

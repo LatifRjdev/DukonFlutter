@@ -1,3 +1,5 @@
+import 'package:dukonpro/l10n/app_localizations.dart';
+
 enum Currency { tjs, usd, rub }
 
 enum StoreCategory { grocery, clothing, electronics, hardware, pharmacy, other }
@@ -15,26 +17,26 @@ extension CurrencyExtension on Currency {
 }
 
 extension StoreCategoryExtension on StoreCategory {
-  String get displayName {
+  String displayName(AppLocalizations l10n) {
     switch (this) {
-      case StoreCategory.grocery: return 'Продукты';
-      case StoreCategory.clothing: return 'Одежда';
-      case StoreCategory.electronics: return 'Электроника';
-      case StoreCategory.hardware: return 'Стройматериалы';
-      case StoreCategory.pharmacy: return 'Аптека';
-      case StoreCategory.other: return 'Другое';
+      case StoreCategory.grocery: return l10n.grocery;
+      case StoreCategory.clothing: return l10n.clothing;
+      case StoreCategory.electronics: return l10n.electronics;
+      case StoreCategory.hardware: return l10n.hardware;
+      case StoreCategory.pharmacy: return l10n.pharmacy;
+      case StoreCategory.other: return l10n.other;
     }
   }
 }
 
 extension ProductUnitExtension on ProductUnit {
-  String get displayName {
+  String displayName(AppLocalizations l10n) {
     switch (this) {
-      case ProductUnit.pcs: return 'шт';
-      case ProductUnit.kg: return 'кг';
-      case ProductUnit.l: return 'л';
-      case ProductUnit.m: return 'м';
-      case ProductUnit.pack: return 'уп';
+      case ProductUnit.pcs: return l10n.pcs;
+      case ProductUnit.kg: return l10n.kg;
+      case ProductUnit.l: return l10n.liter;
+      case ProductUnit.m: return l10n.meter;
+      case ProductUnit.pack: return l10n.pack;
     }
   }
 }

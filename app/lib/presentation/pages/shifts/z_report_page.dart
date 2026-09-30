@@ -83,7 +83,7 @@ class _ZReportPageState extends State<ZReportPage> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${l10n.duration}: ${report.duration}',
+                  '${l10n.duration}: ${l10n.shiftsDurationFormat(report.durationHours.toString(), report.durationMinutes.toString())}',
                   style: TextStyle(fontSize: 13, color: context.textSecondary),
                 ),
               ],

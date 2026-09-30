@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:dukonpro/l10n/app_localizations.dart';
 import '../../domain/entities/sale.dart';
 import 'receipt_pdf_service.dart';
 
@@ -13,12 +14,14 @@ class ReceiptShareService {
   Future<void> shareReceipt({
     required Sale sale,
     required String storeName,
+    required AppLocalizations l10n,
     String? storeAddress,
     String? storePhone,
   }) async {
     final pdfBytes = await _pdfService.generateReceipt(
       sale: sale,
       storeName: storeName,
+      l10n: l10n,
       storeAddress: storeAddress,
       storePhone: storePhone,
     );
@@ -30,7 +33,7 @@ class ReceiptShareService {
 
     await Share.shareXFiles(
       [XFile(file.path, mimeType: 'application/pdf')],
-      subject: 'Чек ${sale.receiptNo}',
+      subject: l10n.transactionDetailReceiptTitle(sale.receiptNo.toString()),
     );
   }
 }

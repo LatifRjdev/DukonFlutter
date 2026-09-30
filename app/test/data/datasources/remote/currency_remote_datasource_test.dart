@@ -23,7 +23,10 @@ void main() {
       );
 
   group('CurrencyRemoteDatasourceImpl.getLatestRates', () {
-    test('maps known currency codes to their flag and label', () async {
+    // No `label` assertions here: the display name is localized and resolved
+    // at the render site (currencies_page.dart's `_currencyLabel`), so the
+    // datasource only maps the locale-independent flag emoji.
+    test('maps known currency codes to their flag', () async {
       when(() => dio.get<dynamic>(any())).thenAnswer(
         (_) async => resp({
           'rates': {
@@ -41,23 +44,18 @@ void main() {
       final usd = rates.firstWhere((r) => r.code == 'USD');
       expect(usd.rate, 10.5);
       expect(usd.flag, '🇺🇸');
-      expect(usd.label, 'Доллар США');
 
       final rub = rates.firstWhere((r) => r.code == 'RUB');
       expect(rub.flag, '🇷🇺');
-      expect(rub.label, 'Российский рубль');
 
       final eur = rates.firstWhere((r) => r.code == 'EUR');
       expect(eur.flag, '🇪🇺');
-      expect(eur.label, 'Евро');
 
       final cny = rates.firstWhere((r) => r.code == 'CNY');
       expect(cny.flag, '🇨🇳');
-      expect(cny.label, 'Китайский юань');
     });
 
-    test('falls back to empty flag and raw code label for unknown currency',
-        () async {
+    test('falls back to empty flag for unknown currency', () async {
       when(() => dio.get<dynamic>(any())).thenAnswer(
         (_) async => resp({
           'rates': {'GBP': 13.7},
@@ -70,7 +68,6 @@ void main() {
       expect(rates.first.code, 'GBP');
       expect(rates.first.rate, 13.7);
       expect(rates.first.flag, '');
-      expect(rates.first.label, 'GBP');
     });
 
     test('returns empty list when rates map is empty', () async {

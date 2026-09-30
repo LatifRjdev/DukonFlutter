@@ -1060,7 +1060,7 @@ abstract class AppLocalizations {
   /// **'Редактировать категорию'**
   String get categoriesEditTitle;
 
-  /// Category create/edit dialog title when creating a new category — shared a source line with categoriesEditTitle in a ternary, so it was missed by check_i18n.dart's one-match-per-line scan
+  /// Category create/edit dialog title when creating a new category — the non-editing branch of a ternary whose other branch is `categoriesEditTitle`
   ///
   /// In ru, this message translates to:
   /// **'Новая категория'**
@@ -1125,6 +1125,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'л'**
   String get liter;
+
+  /// Metre unit abbreviation for ProductUnit.m — sibling of `pcs`, `kg`, `liter`, `pack`. Distinct from `unitMeter` ("Метр", the full word used in the unit picker).
+  ///
+  /// In ru, this message translates to:
+  /// **'м'**
+  String get meter;
 
   /// Pack unit
   ///
@@ -1342,7 +1348,7 @@ abstract class AppLocalizations {
   /// **'Требует внимания'**
   String get productFilterAttention;
 
-  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. NOTE: this string was NOT in check_i18n.dart's original allow-list dump for this file — it shares a source line with `noProducts` and check_i18n only flags the first Cyrillic match per line — but it must still be migrated in this same pass
+  /// Product list page — empty-state headline shown when a stock filter/search hides all products. Distinct from `emptyProductsTitle` ("Добавьте свой первый товар"), a differently-worded empty-state used on another products screen. Rendered as the filtered branch of a ternary whose other branch is `noProducts`, the headline used when the store has no products at all.
   ///
   /// In ru, this message translates to:
   /// **'Нет товаров по фильтру'**
@@ -1378,7 +1384,7 @@ abstract class AppLocalizations {
   /// **'Активен'**
   String get productStatusActive;
 
-  /// Lint-tool blind spot fix — companion to `productStatusActive` on the same ternary line, never flagged by check_i18n.dart's one-match-per-line regex
+  /// Product inactive-status badge — the other branch of the same ternary as `productStatusActive`, and in the same masculine grammatical agreement (product = 'товар', masculine)
   ///
   /// In ru, this message translates to:
   /// **'Неактивен'**
@@ -1552,7 +1558,7 @@ abstract class AppLocalizations {
   /// **'Итого'**
   String get total;
 
-  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because two unrelated screens share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value). CAVEAT: the printed and PDF receipts render the same all-caps label from their own hardcoded 'ИТОГО' — thermal_printer_service.dart and receipt_pdf_service.dart live outside lib/presentation, which check_i18n does not scan and which has no BuildContext. So this key does NOT yet cover those surfaces, and they will stay Russian once tg/uz translations land. Route them through this key when that layer is localized.
+  /// All-caps grand-total row label, used where the design emphasises the grand total — distinct from `total` ("Итого", title case). Deliberately unprefixed because four unrelated surfaces share it: pos_checkout_page.dart and widgets/pos/receipt_widget.dart (promoted from the former `posCheckoutTotalCaps`, same value), plus the two service-layer receipt renderers core/services/thermal_printer_service.dart and core/services/receipt_pdf_service.dart, which were routed through this key in ADR-0002 Track 2b (they previously each carried their own hardcoded 'ИТОГО').
   ///
   /// In ru, this message translates to:
   /// **'ИТОГО'**
@@ -1600,7 +1606,7 @@ abstract class AppLocalizations {
   /// **'Смешанная оплата'**
   String get mixed;
 
-  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Shared across pos_checkout_page.dart and transaction_detail_page.dart (a later task in this plan), both of which use the bare form for the same UI role (a compact payment-method chip/label).
+  /// Bare 'Mixed' payment-method label (as used on compact payment-method selector buttons/status labels) — distinct from `mixed` ("Смешанная оплата", the fuller phrase used in the checkout confirmation flow). Five consumers, all using the bare form for the same UI role (a compact payment-method chip/label): pos_checkout_page.dart, transaction_detail_page.dart, sales_history_page.dart, and the two receipt builders lib/core/services/thermal_printer_service.dart and receipt_pdf_service.dart.
   ///
   /// In ru, this message translates to:
   /// **'Смешанная'**
@@ -1786,6 +1792,24 @@ abstract class AppLocalizations {
   /// **'Кол.'**
   String get receiptQtyAbbrev;
 
+  /// Quantity column header on the thermal (ESC/POS) receipt, with NO trailing period — distinct from `receiptQtyAbbrev` ("Кол.", with a period) used on the PDF receipt and in the on-screen receipt widget. The two differ by one character in the existing product copy; do not merge them without a deliberate product decision, since either change alters printed output.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол'**
+  String get receiptQtyAbbrevShort;
+
+  /// Printed-receipt line showing loyalty points earned on this sale; points is pre-formatted at the call site.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено баллов: +{points}'**
+  String receiptPointsEarnedLine(String points);
+
+  /// Printed-receipt line showing the customer's loyalty balance after this sale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш баланс: {points} баллов'**
+  String receiptPointsBalanceLine(String points);
+
   /// Print receipt action
   ///
   /// In ru, this message translates to:
@@ -1858,7 +1882,7 @@ abstract class AppLocalizations {
   /// **'Тип оплаты'**
   String get salesFilterPaymentTypeSectionLabel;
 
-  /// Generic bare 'Debt' label — shared between this sheet's payment-type filter chip and customer_detail_page.dart's debt stat card; distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere
+  /// Generic bare 'Debt' label — shared by three surfaces: this sheet's payment-type filter chip, customer_detail_page.dart's debt stat card, and the debt row of the PDF receipt (core/services/receipt_pdf_service.dart, added in ADR-0002 Track 2b). Distinct from `debt` ("В долг"), the preposition-inflected form used as a payment-method value elsewhere — including `_paymentTypeName` inside that same PDF service, so both keys coexist in one file and must not be merged
   ///
   /// In ru, this message translates to:
   /// **'Долг'**
@@ -1972,7 +1996,7 @@ abstract class AppLocalizations {
   /// **'Оплачен'**
   String get transactionDetailStatusPaid;
 
-  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge.
+  /// Receipt-detail screen header. Distinct from `receiptNo` ("Чек №") and `dashboardSaleReceiptLabel` ("Чек #{receiptNo}") — this screen's header has no separating symbol before the number, unlike either existing candidate; do not merge. Four consumers: transaction_detail_page.dart, sales_history_page.dart, refund_page.dart, and lib/core/services/receipt_share_service.dart (the share-sheet subject line).
   ///
   /// In ru, this message translates to:
   /// **'Чек {receiptNo}'**
@@ -2974,7 +2998,7 @@ abstract class AppLocalizations {
   /// **'Когда курьер доставил заказ'**
   String get notificationSettingsDeliverySubtitle;
 
-  /// No description provided for @notificationSettingsDebtReminderTitle.
+  /// Does double duty: the debt-reminder toggle's label on the notification-settings screen, and the push-notification title fired by lib/core/services/debt_reminder_service.dart for a debt due tomorrow. Distinct from `debtReminderOverdueTitle`/`debtReminderDueTodayTitle`, which are the more urgent variants for debts already overdue or due today.
   ///
   /// In ru, this message translates to:
   /// **'Напоминание о долге'**
@@ -3009,6 +3033,48 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Остаток, % от партии'**
   String get notificationSettingsRemainingPercentLabel;
+
+  /// Push notification body sent the day before a debt is due. amount is the bare number from debtAmount.toStringAsFixed(2); the currency abbreviation is part of this value, not the argument. Deliberately NOT Formatters.price, which uses NumberFormat(ru_RU) and would render "500,00" with a comma decimal separator plus thousands grouping — a visible change from the literal this replaces. The matching title reuses `notificationSettingsDebtReminderTitle` ("Напоминание о долге") — there is deliberately no due-tomorrow title key.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer} должен {amount} сом. Срок оплаты завтра.'**
+  String debtReminderDueTomorrowBody(String customer, String amount);
+
+  /// Push notification title sent on the day a debt falls due — distinct from `notificationSettingsDebtReminderTitle` ("Напоминание о долге"), the generic debt-reminder wording reused as the due-tomorrow notification title and as the settings switch label
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок оплаты долга'**
+  String get debtReminderDueTodayTitle;
+
+  /// Push notification body sent on the day a debt falls due.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer} должен {amount} сом. Срок оплаты сегодня!'**
+  String debtReminderDueTodayBody(String customer, String amount);
+
+  /// Push notification title sent once a debt is past due — distinct from `debtReminderDueTodayTitle` ("Срок оплаты долга", fired on the due date itself) and from `notificationSettingsDebtReminderTitle` ("Напоминание о долге", the generic wording)
+  ///
+  /// In ru, this message translates to:
+  /// **'Просроченный долг'**
+  String get debtReminderOverdueTitle;
+
+  /// Push notification body sent once a debt is past due.
+  ///
+  /// In ru, this message translates to:
+  /// **'{customer}: просрочен долг {amount} сом.'**
+  String debtReminderOverdueBody(String customer, String amount);
+
+  /// Push notification title for the low-stock alert — distinct from `lowStock` ("Мало на складе"), the shorter stock-status badge on the product list, and from `notificationSettingsLowStockTitle` ("Низкий остаток"), the settings switch label for this same alert
+  ///
+  /// In ru, this message translates to:
+  /// **'Мало товара на складе'**
+  String get lowStockAlertTitle;
+
+  /// Push notification body for the low-stock alert. quantity is the bare count from currentQuantity.toString(); the unit abbreviation is part of this value. NOTE: that abbreviation is hardcoded to pieces, so a product measured in kg or litres still reads as pieces. This is a pre-existing bug in the literal being replaced, preserved deliberately — fixing it is a product change, not an extraction.
+  ///
+  /// In ru, this message translates to:
+  /// **'{product}: осталось {quantity} шт.'**
+  String lowStockAlertBody(String product, String quantity);
 
   /// Notifications list page — empty state shown when the user has no notifications
   ///
@@ -3460,7 +3526,7 @@ abstract class AppLocalizations {
   /// **'Банк'**
   String get subscriptionBankLabel;
 
-  /// Lint-tool blind spot fix — check_i18n.dart's regex only flags the first Cyrillic string literal per line, and this one sits on the same line as the already-flagged 'Загрузка...' ternary branch, so it never appeared in tool/i18n-allowlist.txt; migrated together with its sibling for consistency
+  /// Subscription payment screen — upload-receipt button's default (non-uploading) label; its in-flight counterpart is the generic `loading` ("Загрузка..."), the other branch of the same ternary
   ///
   /// In ru, this message translates to:
   /// **'Я перевёл — загрузить чек'**
@@ -3514,7 +3580,7 @@ abstract class AppLocalizations {
   /// **'Показатель'**
   String get reportsMetricColumnLabel;
 
-  /// Lint-tool blind spot fix — companion header to `reportsMetricColumnLabel` on the same array literal, never flagged by check_i18n.dart's one-match-per-line regex
+  /// Reports export — second column header of the metric/value table, companion to `reportsMetricColumnLabel` in the same header array; used by both the PDF and the Excel export
   ///
   /// In ru, this message translates to:
   /// **'Значение'**
@@ -4696,7 +4762,7 @@ abstract class AppLocalizations {
   /// **'Безопасность'**
   String get editProfileSecuritySectionLabel;
 
-  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, which shares the same source line in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
+  /// Edit-profile screen — bottom full-width save button's default (non-saving) label; its in-flight counterpart is the generic `savingEllipsis`, the other branch of the same ternary. Distinct from `save` ("Сохранить"), the bare header action button on the same screen
   ///
   /// In ru, this message translates to:
   /// **'Сохранить изменения'**
@@ -5320,7 +5386,7 @@ abstract class AppLocalizations {
   /// **'Подвал чека'**
   String get receiptTemplateFooterFieldLabel;
 
-  /// Default receipt-footer preview text — reused verbatim as the footer text field's hint, since the hint suggests exactly this same fallback value
+  /// Default receipt-footer text, five consumers. On the receipt-template settings screen it is both the preview fallback when the footer field is empty and, verbatim, that field's hint (the hint suggests exactly this fallback value). It is also the footer rendered by widgets/pos/receipt_widget.dart and by the two service-layer receipt renderers, core/services/thermal_printer_service.dart and core/services/receipt_pdf_service.dart
   ///
   /// In ru, this message translates to:
   /// **'Спасибо за покупку!'**
@@ -5542,7 +5608,7 @@ abstract class AppLocalizations {
   /// **'Отправка...'**
   String get telegramSendingButton;
 
-  /// Telegram-bot settings screen — test-message button's default (non-sending) label; shares a source line with `telegramSendingButton` in a ternary and so was missed by check_i18n's one-match-per-line scan. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
+  /// Telegram-bot settings screen — test-message button's default (non-sending) label; its in-flight counterpart is `telegramSendingButton`, the other branch of the same ternary. Distinct from `snackTestMessageSent` ("Тестовое сообщение отправлено"), the confirmation snackbar
   ///
   /// In ru, this message translates to:
   /// **'Тестовое сообщение'**
@@ -7119,7 +7185,7 @@ abstract class AppLocalizations {
   /// **'НБТ — Национальный банк Таджикистана'**
   String get nbtBankLabel;
 
-  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. NOTE: the same four currency names are also hardcoded in lib/data/datasources/remote/currency_remote_datasource.dart, which sits outside lib/presentation and so is invisible to tool/check_i18n.dart — migrating that layer needs a context-free lookup and is tracked as a separate follow-up.
+  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. These four names were once duplicated as a hardcoded Russian map in lib/data/datasources/remote/currency_remote_datasource.dart; that map is gone — CurrencyRate now carries only code/rate/flag and the display name is resolved from these keys at the render site (currencies_page.dart's _currencyLabel).
   ///
   /// In ru, this message translates to:
   /// **'Доллар США'**

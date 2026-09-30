@@ -4,7 +4,12 @@ class ZReport extends Equatable {
   final String staffName;
   final DateTime openedAt;
   final DateTime closedAt;
-  final String duration;
+  /// Shift length, split into whole hours and the leftover minutes. Kept as
+  /// numbers rather than a formatted string so the "3ч 15м" rendering stays in
+  /// the presentation layer (`l10n.shiftsDurationFormat`) — the domain layer
+  /// has no locale.
+  final int durationHours;
+  final int durationMinutes;
   final int salesCount;
   final double cashTotal;
   final double cardTotal;
@@ -25,7 +30,8 @@ class ZReport extends Equatable {
     required this.staffName,
     required this.openedAt,
     required this.closedAt,
-    required this.duration,
+    required this.durationHours,
+    required this.durationMinutes,
     this.salesCount = 0,
     this.cashTotal = 0,
     this.cardTotal = 0,
@@ -51,8 +57,8 @@ class ZReport extends Equatable {
   // side was written against a flat shape that never matched, so this
   // parse threw on every real response and the Z-report screen always
   // showed a generic error instead of the report (found during the
-  // 2026-09-21 manual QA pass). `duration` isn't sent by the backend at
-  // all — computed here from openedAt/closedAt instead.
+  // 2026-09-21 manual QA pass). The shift duration isn't sent by the backend
+  // at all — computed here from openedAt/closedAt instead.
   factory ZReport.fromJson(Map<String, dynamic> json) {
     final shift = json['shift'] as Map<String, dynamic>? ?? const {};
     final sales = json['sales'] as Map<String, dynamic>? ?? const {};
@@ -67,7 +73,8 @@ class ZReport extends Equatable {
       staffName: shift['staffName'] as String? ?? '',
       openedAt: openedAt,
       closedAt: closedAt,
-      duration: '${diff.inHours}ч ${diff.inMinutes % 60}м',
+      durationHours: diff.inHours,
+      durationMinutes: diff.inMinutes % 60,
       salesCount: sales['count'] as int? ?? 0,
       cashTotal: (sales['cashTotal'] as num?)?.toDouble() ?? 0,
       cardTotal: (sales['cardTotal'] as num?)?.toDouble() ?? 0,
