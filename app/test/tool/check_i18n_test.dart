@@ -121,4 +121,31 @@ void main() {
     final code = await check_i18n.run([], repoRootOverride: tempDir.path);
     expect(code, 0);
   });
+
+  test('a hardcoded literal in lib/core is flagged, not just lib/presentation', () async {
+    // Regression guard for the scan root. Before this, check_i18n only walked
+    // lib/presentation, so every string in lib/core, lib/data and lib/domain
+    // was invisible — which is how 71 user-facing literals survived Track 2.
+    Directory('${tempDir.path}/lib/core/services').createSync(recursive: true);
+    File('${tempDir.path}/lib/core/services/sample_service.dart')
+        .writeAsStringSync("const msg = 'Ошибка сервера';\n");
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: 'lib/core must be in scope');
+  });
+
+  test('generated localizations under lib/l10n are not scanned', () async {
+    // lib/l10n/app_localizations_ru.dart is entirely Russian by definition;
+    // scanning it would produce thousands of false positives.
+    Directory('${tempDir.path}/lib/l10n').createSync(recursive: true);
+    File('${tempDir.path}/lib/l10n/app_localizations_ru.dart')
+        .writeAsStringSync("String get save => 'Сохранить';\n");
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 0, reason: 'lib/l10n must be excluded');
+  });
 }
