@@ -74,6 +74,27 @@ const STORE_CATEGORIES: { value: string; label: string }[] = [
   { value: 'OTHER', label: 'Другое' },
 ];
 
+// Mirrors the PLANS/STATUSES enums in
+// api/src/modules/admin/dto/update-store-subscription.dto.ts. Note CANCELLED
+// (two Ls) — that is Prisma's SubscriptionStatus spelling, which the DTO
+// validates against; SUB_STATUS_LABELS above uses the older single-L key the
+// list rows were written with, so the two are deliberately not shared.
+const SUB_PLANS = ['START', 'BUSINESS', 'PREMIUM'];
+const SUB_STATUSES = ['TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED'];
+
+interface StoreSubscription {
+  plan?: string;
+  status?: string;
+  currentPeriodEnd?: string | null;
+}
+
+interface TariffForm {
+  plan: string;
+  status: string;
+  /** YYYY-MM-DD, as an <input type="date"> reports it. */
+  currentPeriodEnd: string;
+}
+
 const EMPTY_NEW_STORE = {
   ownerId: '',
   name: '',
@@ -96,6 +117,12 @@ export default function StoresPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [newStore, setNewStore] = useState(EMPTY_NEW_STORE);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [tariffDialog, setTariffDialog] = useState<Store | null>(null);
+  // Only the fields the admin has actually touched. The rest is derived from
+  // the fetched subscription below rather than copied into state by an effect,
+  // so a background refetch cannot overwrite an edit in progress.
+  const [tariffEdits, setTariffEdits] = useState<Partial<TariffForm>>({});
+  const [tariffError, setTariffError] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
@@ -156,6 +183,65 @@ export default function StoresPage() {
       // `.message`. There is no `e.response.data.message`.
       setCreateError(e instanceof Error ? e.message : 'Не удалось создать магазин');
       toast.error('Ошибка создания магазина');
+    },
+  });
+
+  // Preloads what the change starts from. `api.get` returns parsed JSON
+  // directly — there is no axios `{ data }` envelope here. The endpoint 404s
+  // for a store with no Subscription row; the PUT upserts, so a failure here
+  // is not fatal and the dialog falls back to the defaults below.
+  const { data: currentSub } = useQuery<StoreSubscription>({
+    queryKey: ['admin-store-subscription', tariffDialog?.id],
+    queryFn: () => api.get(`/admin/stores/${tariffDialog!.id}/subscription`),
+    enabled: !!tariffDialog,
+    retry: false,
+  });
+
+  // Untouched fields fall back to the fetched subscription, then to what the
+  // list row already knows, then to a usable default — the endpoint 404s for a
+  // store that has no subscription at all, and the dialog must still work there
+  // because the PUT upserts.
+  const tariff: TariffForm = {
+    plan: tariffEdits.plan ?? currentSub?.plan ?? tariffDialog?.subscription?.plan ?? 'START',
+    status:
+      tariffEdits.status ?? currentSub?.status ?? tariffDialog?.subscription?.status ?? 'ACTIVE',
+    currentPeriodEnd:
+      tariffEdits.currentPeriodEnd ?? (currentSub?.currentPeriodEnd ?? '').slice(0, 10),
+  };
+
+  const tariffMutation = useMutation({
+    mutationFn: ({
+      storeId,
+      body,
+    }: {
+      storeId: string;
+      body: { plan: string; status: string; currentPeriodEnd: string };
+    }) =>
+      api.put(`/admin/stores/${storeId}/subscription`, {
+        plan: body.plan,
+        status: body.status,
+        // The DTO's @IsDateString wants a full ISO datetime; a date input
+        // yields YYYY-MM-DD. Anchored at UTC midnight so the stored period end
+        // does not shift by the admin's timezone offset.
+        currentPeriodEnd: new Date(`${body.currentPeriodEnd}T00:00:00.000Z`).toISOString(),
+      }),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['stores'] });
+      // Otherwise reopening this store's dialog preloads the pre-change plan
+      // from cache before the refetch lands.
+      queryClient.invalidateQueries({
+        queryKey: ['admin-store-subscription', variables.storeId],
+      });
+      setTariffDialog(null);
+      setTariffEdits({});
+      setTariffError(null);
+      toast.success('Тариф обновлён');
+    },
+    onError: (e: unknown) => {
+      // Same error shape as the create dialog: lib/api.ts throws a plain Error
+      // whose `.message` carries the server's message.
+      setTariffError(e instanceof Error ? e.message : 'Не удалось обновить тариф');
+      toast.error('Ошибка обновления тарифа');
     },
   });
 
@@ -251,6 +337,16 @@ export default function StoresPage() {
               className={!s.isActive ? 'text-green-600' : 'text-red-600'}
             >
               {!s.isActive ? 'Восстановить' : 'Приостановить'}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setTariffDialog(s);
+                setTariffEdits({});
+                setTariffError(null);
+              }}
+            >
+              Тариф
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -377,6 +473,96 @@ export default function StoresPage() {
           if (suspendConfirm) suspendMutation.mutate(suspendConfirm);
         }}
       />
+
+      {/* Tariff dialog */}
+      <Dialog
+        open={!!tariffDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTariffDialog(null);
+            setTariffEdits({});
+            setTariffError(null);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Тариф магазина</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Магазин: <strong>{tariffDialog?.name}</strong>
+            </p>
+            {currentSub?.plan && (
+              <p className="text-sm text-muted-foreground">
+                Текущий тариф: <strong>{currentSub.plan}</strong>
+                {currentSub.status ? ` · ${currentSub.status}` : ''}
+              </p>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="tariff-plan">Тариф</Label>
+              <select
+                id="tariff-plan"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={tariff.plan}
+                onChange={(e) => setTariffEdits((t) => ({ ...t, plan: e.target.value }))}
+              >
+                {SUB_PLANS.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tariff-status">Статус</Label>
+              <select
+                id="tariff-status"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={tariff.status}
+                onChange={(e) => setTariffEdits((t) => ({ ...t, status: e.target.value }))}
+              >
+                {SUB_STATUSES.map((st) => (
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tariff-until">Действует до</Label>
+              <Input
+                id="tariff-until"
+                type="date"
+                value={tariff.currentPeriodEnd}
+                onChange={(e) =>
+                  setTariffEdits((t) => ({ ...t, currentPeriodEnd: e.target.value }))
+                }
+              />
+            </div>
+            {tariffError && <p className="text-sm text-destructive">{tariffError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTariffDialog(null)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() =>
+                tariffDialog &&
+                tariffMutation.mutate({ storeId: tariffDialog.id, body: tariff })
+              }
+              disabled={
+                !tariff.plan ||
+                !tariff.status ||
+                !tariff.currentPeriodEnd ||
+                tariffMutation.isPending
+              }
+            >
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Create-store dialog */}
       <Dialog
