@@ -650,14 +650,35 @@ Expected: **all 11 pass** — the 9 pre-existing and the 2 new.
 
 If a pre-existing test now fails, that is a signal the rewrite changed observable behaviour. Diagnose it; do **not** edit the test to match the new code. The 9 existing tests are the contract.
 
-- [ ] **Step 6: Verify allowlist key compatibility against the real tree**
+- [ ] **Step 6: Migrate the allowlist to the multiset rule, then verify**
+
+The code you just wrote makes the allowlist a multiset, so run the lint first and expect **`EXIT=1` with exactly 5 offenders** — surplus occurrences the old Set-based lookup silently permitted. This is the gap-1 fix working, not a key-migration failure.
 
 ```bash
 dart run tool/check_i18n.dart; echo "EXIT=$?"
 ```
-Expected: `EXIT=0` and `scanned 343 files` (347 `.dart` files under `lib` minus the 4 generated ones; Task 1 removed one file from the 348 this plan was written against).
 
-`EXIT=0` here is a strong signal: if the AST produced a different key for any of the 45 committed entries, that entry would stop matching and its literal would surface as an offender. Note the count is 344 even though the skip is still directory-based at this point — Task 7 narrows it.
+Read the 5 reported keys from the output — **that list is authoritative, not the one below.** Measured 2026-10-01 it was:
+
+```
+lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
+lib/presentation/blocs/subscription/subscription_bloc.dart::'Заявка отправлена, ожидайте подтверждения'
+lib/presentation/pages/settings/subscription_page.dart::'Старт'
+lib/presentation/pages/settings/subscription_page.dart::'Бизнес'
+lib/presentation/pages/settings/subscription_page.dart::'Премиум'
+```
+
+Add one duplicate line per surplus occurrence, immediately below the existing line and inside its current block. Then update the preamble, which still describes the old Set model, to state the multiset rule: an entry permits exactly one occurrence, and N identical lines permit N. Fix block 3's count line too — with the duplicate it is 11 lines covering 11 occurrences across 10 distinct literals.
+
+```bash
+dart run tool/check_i18n.dart; echo "EXIT=$?"
+grep -c "^lib/" tool/i18n-allowlist.txt
+```
+Expected: `EXIT=0`, `scanned 343 files`, and **50** entry lines (45 + 5).
+
+`EXIT=0` is a strong compatibility signal: if the AST produced a different key for any committed entry, that entry would stop matching and its literal would surface as an offender.
+
+**Tightening the rule and migrating the data to it belong in one commit.** An earlier revision of this plan split them across Tasks 4 and 6, which left the lint red in between — a state that breaks `git bisect` and any per-commit CI.
 
 - [ ] **Step 7: Measure the runtime**
 
@@ -752,7 +773,7 @@ git commit -m "test(i18n): pin that an unparseable file exits 2, not 0"
 
 ## Task 6: Occurrence counting — make the allowlist a multiset
 
-The code from Task 4 already counts. This task proves it and migrates the committed allowlist.
+Task 4 already ships the counting code *and* the migrated allowlist (the two are one semantic change, so splitting them would leave the lint red in between). This task adds the tests that pin the behaviour.
 
 **Files:**
 - Modify: `app/test/tool/check_i18n_test.dart` (2 new tests)
@@ -804,45 +825,7 @@ flutter test test/tool/check_i18n_test.dart --reporter expanded
 ```
 Expected: **all 14 pass**. (The first would have returned 0 against the Set-based scanner — that is the gap being closed, and Task 4's implementation already closes it.)
 
-- [ ] **Step 3: Find out how many entries actually need a duplicate**
-
-```bash
-dart run tool/check_i18n.dart; echo "EXIT=$?"
-```
-Expected: `EXIT=1`. The committed allowlist still has one line per literal, so every literal occurring twice now reports its surplus occurrence. **Read the reported keys — that list is the authoritative set needing duplication.**
-
-Measured on 2026-09-30 it was 5 entries:
-
-```
-lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
-lib/presentation/blocs/subscription/subscription_bloc.dart::'Заявка отправлена, ожидайте подтверждения'
-lib/presentation/pages/settings/subscription_page.dart::'Бизнес'
-lib/presentation/pages/settings/subscription_page.dart::'Премиум'
-lib/presentation/pages/settings/subscription_page.dart::'Старт'
-```
-
-**Count from the output, not from this list.** If you get a number other than 5, the discrepancy is the finding — report it rather than adjusting either side to match. Two adjacent count claims in this project's history were wrong (a "13 lines for 14 occurrences" that was really 14 for 15, and a "53 literals" that was 57).
-
-- [ ] **Step 4: Add one duplicate line per surplus occurrence**
-
-For each key the previous step reported, add a second identical line immediately below the existing one in `app/tool/i18n-allowlist.txt`, keeping it inside its current block.
-
-- [ ] **Step 5: Document the multiset rule in the file's preamble**
-
-The preamble currently explains that an entry "covers every occurrence of that literal in that file". That is now false. Replace that explanation with:
-
-```
-# An entry is keyed `<path>::<literal source>` and permits EXACTLY ONE
-# occurrence. A literal appearing N times in the same file needs N identical
-# lines — repetition is how the permitted count is expressed, so the number of
-# identical lines IS the budget. This replaced an earlier Set-based rule under
-# which a single entry silently permitted unlimited repeats, so re-adding an
-# already-covered string elsewhere in the same file passed the gate.
-```
-
-Also fix block 3's inline comment if Task 3's edit described it as "10 entries cover 11 occurrences" — with the duplicate added it is now 11 entries covering 11 occurrences.
-
-- [ ] **Step 6: Verify the lint is clean and the count is 50**
+- [ ] **Step 3: Verify the lint is still clean and the count is 50**
 
 ```bash
 dart run tool/check_i18n.dart; echo "EXIT=$?"
@@ -850,7 +833,7 @@ grep -c "^lib/" tool/i18n-allowlist.txt
 ```
 Expected: `EXIT=0`, and **50** entry lines (45 after Task 3, plus the 5 duplicates). Entry lines going *up* while the gate gets stricter is the expected outcome here.
 
-- [ ] **Step 7: Prove the committed allowlist is exactly the live offender multiset**
+- [ ] **Step 4: Prove the committed allowlist is exactly the live offender multiset**
 
 `--dump-allowlist` rewrites the file from scratch, so it drops the comment blocks — a whole-file `diff` will always differ. Compare only the entry lines:
 
@@ -869,16 +852,16 @@ This is the strongest available check on the allowlist: it proves simultaneously
 
 **Restore the file afterwards.** The `git checkout` above is not optional; without it you commit a comment-stripped allowlist.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add tool/i18n-allowlist.txt test/tool/check_i18n_test.dart
-git commit -m "feat(i18n): count occurrences in the allowlist instead of set membership
+git add test/tool/check_i18n_test.dart
+git commit -m "test(i18n): pin that the allowlist counts occurrences
 
-One path::literal line now permits exactly one occurrence; N identical
-lines permit N. The file gets longer (45 -> 50 entries) while getting
-stricter — previously a single entry covered unlimited repeats, so
-re-adding an allowlisted string in the same file passed the gate."
+Two tests pin both halves of the contract: N lines permit exactly N
+occurrences, and N+1 occurrences fail. The counting code and the migrated
+allowlist shipped together in the AST rewrite, because tightening the
+rule and migrating the data to it are one semantic change."
 ```
 
 ---
