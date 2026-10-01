@@ -11,10 +11,13 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
+import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
+import { UpdateStoreSubscriptionDto } from './dto/update-store-subscription.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
 import { AdminAuditLogQueryDto } from './dto/admin-audit-log-query.dto';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 import { RevenueQueryDto, ReportPeriod } from './dto/revenue-query.dto';
 import { AnnouncementsQueryDto } from './dto/announcements-query.dto';
 import { CreateUserByAdminDto } from './dto/create-user-by-admin.dto';
@@ -30,6 +33,7 @@ export class AdminService {
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
     private readonly storesService: StoresService,
+    private readonly audit: AuditLogService,
   ) {}
 
   // ============ USERS ============
@@ -386,6 +390,117 @@ export class AdminService {
       data: { ownerId: dto.newOwnerId },
       select: { id: true, ownerId: true, name: true },
     });
+  }
+
+  /// Creates a store for an EXISTING user.
+  ///
+  /// Delegates to StoresService.create rather than writing the store here:
+  /// that single path also creates the PREMIUM/TRIAL subscription and the
+  /// OWNER staff row, and a second creation path would silently skip both.
+  /// New-user creation already has its own route (POST /admin/users), which
+  /// can create a first store in the same transaction.
+  async createStoreForOwner(dto: CreateStoreByAdminDto) {
+    const owner = await this.prisma.user.findUnique({
+      where: { id: dto.ownerId },
+    });
+    if (!owner) throw new NotFoundException('Owner user not found');
+
+    return this.storesService.create(dto.ownerId, {
+      name: dto.name,
+      category: dto.category,
+      currency: dto.currency,
+      address: dto.address,
+      phone: dto.phone,
+    });
+  }
+
+  /// Assigns or changes a store's subscription plan.
+  ///
+  /// Sets plan, status and period together on purpose, though not for the
+  /// reason it first appears. What each field actually does:
+  ///   - `plan` is what the entitlement layer reads. plan-limit.helper.ts
+  ///     resolves SubscriptionPlanConfig from it for max-products/staff/
+  ///     discounts; feature-flag.helper.ts and SubscriptionGuard read it for
+  ///     feature flags and @RequiresPlan.
+  ///   - `status` is read by feature-flag.helper.ts and SubscriptionGuard,
+  ///     which deny anything outside ACTIVE/TRIAL. plan-limit.helper.ts does
+  ///     NOT read it. So a plan granted on an EXPIRED row unlocks limits but
+  ///     no flagged features — a half-grant, which is worse than none.
+  ///   - `currentPeriodEnd` is read by NO guard. Its consumer is the daily
+  ///     checkExpiredSubscriptions cron in subscriptions.service.ts, which
+  ///     flips any ACTIVE/TRIAL row whose period has passed to EXPIRED and
+  ///     pushes "подписка истекла" to the owner. Requiring it is what stops
+  ///     the grant being revoked at the next midnight.
+  ///
+  /// Upserts rather than 404ing on a missing subscription: every store created
+  /// through StoresService.create has one, but a store from an older path or a
+  /// half-failed migration might not, and repairing that is exactly what an
+  /// admin tool is for. trialEndsAt is never written — it records when the
+  /// original trial ended.
+  async updateStoreSubscription(
+    id: string,
+    dto: UpdateStoreSubscriptionDto,
+    actorUserId?: string,
+  ) {
+    const store = await this.prisma.store.findUnique({ where: { id } });
+    if (!store) throw new NotFoundException('Store not found');
+
+    // Read the current row before writing so the audit entry can record what
+    // the grant changed FROM.
+    const before = await this.prisma.subscription.findUnique({
+      where: { storeId: id },
+      select: { plan: true, status: true, currentPeriodEnd: true },
+    });
+
+    const periodEnd = new Date(dto.currentPeriodEnd);
+
+    const updated = await this.prisma.subscription.upsert({
+      where: { storeId: id },
+      update: {
+        plan: dto.plan as SubscriptionPlan,
+        status: dto.status as SubscriptionStatus,
+        currentPeriodEnd: periodEnd,
+      },
+      create: {
+        storeId: id,
+        plan: dto.plan as SubscriptionPlan,
+        status: dto.status as SubscriptionStatus,
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: periodEnd,
+      },
+    });
+
+    // Explicit audit record. AuditInterceptor already logs this route, but its
+    // snapshots are of the STORE row (deriveEntityType maps admin/stores/:id to
+    // `stores`), which a subscription write never touches — so its before and
+    // after come out identical and the granted plan appears nowhere. Mirrors
+    // subscriptions.service.ts's `subscription.plan_change` so both plan-change
+    // paths leave the same shape of trail.
+    if (actorUserId) {
+      void this.audit.record(
+        actorUserId,
+        'subscription.plan_change',
+        'subscription',
+        updated.id,
+        {
+          storeId: id,
+          from: before
+            ? {
+                plan: before.plan,
+                status: before.status,
+                currentPeriodEnd: before.currentPeriodEnd.toISOString(),
+              }
+            : null,
+          to: {
+            plan: updated.plan,
+            status: updated.status,
+            currentPeriodEnd: updated.currentPeriodEnd.toISOString(),
+          },
+        },
+      );
+    }
+
+    return updated;
   }
 
   // ============ DASHBOARD ============

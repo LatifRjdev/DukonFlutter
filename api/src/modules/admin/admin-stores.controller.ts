@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Put,
   Param,
   Query,
@@ -19,6 +20,9 @@ import { AdminService } from './admin.service';
 import { AdminExportService } from './admin-export.service';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
+import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { UpdateStoreSubscriptionDto } from './dto/update-store-subscription.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -30,6 +34,13 @@ export class AdminStoresController {
     private readonly adminService: AdminService,
     private readonly exportService: AdminExportService,
   ) {}
+
+  @Post()
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
+  @ApiOperation({ summary: 'Create a store for an existing user' })
+  createStore(@Body() dto: CreateStoreByAdminDto) {
+    return this.adminService.createStoreForOwner(dto);
+  }
 
   @Get()
   @ApiOperation({ summary: 'List all stores with pagination and filters' })
@@ -64,6 +75,17 @@ export class AdminStoresController {
   })
   getStoreSubscription(@Param('id') id: string) {
     return this.adminService.getStoreSubscription(id);
+  }
+
+  @Put(':id/subscription')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
+  @ApiOperation({ summary: 'Assign or change a store subscription plan' })
+  updateStoreSubscription(
+    @Param('id') id: string,
+    @Body() dto: UpdateStoreSubscriptionDto,
+    @CurrentUser('id') actorUserId: string,
+  ) {
+    return this.adminService.updateStoreSubscription(id, dto, actorUserId);
   }
 
   @Put(':id/suspend')

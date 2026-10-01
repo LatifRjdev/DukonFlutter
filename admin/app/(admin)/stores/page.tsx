@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, Search, Download } from 'lucide-react';
+import { MoreHorizontal, Search, Download, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,7 +45,7 @@ const SUB_STATUS_COLORS: Record<string, string> = {
   ACTIVE: 'bg-green-100 text-green-700',
   TRIAL: 'bg-blue-100 text-blue-700',
   PAST_DUE: 'bg-yellow-100 text-yellow-700',
-  CANCELED: 'bg-gray-100 text-gray-600',
+  CANCELLED: 'bg-gray-100 text-gray-600',
   EXPIRED: 'bg-red-100 text-red-700',
 };
 
@@ -53,7 +53,7 @@ const SUB_STATUS_LABELS: Record<string, string> = {
   ACTIVE: 'Активна',
   TRIAL: 'Trial',
   PAST_DUE: 'Просрочена',
-  CANCELED: 'Отменена',
+  CANCELLED: 'Отменена',
   EXPIRED: 'Истекла',
 };
 
@@ -62,6 +62,49 @@ const SUB_STATUS_LABELS: Record<string, string> = {
 // not subscription status). SUSPENDED is excluded here because it maps
 // onto `isActive=false` directly.
 const UNSUPPORTED_EXPORT_STATUSES = new Set(['ACTIVE', 'TRIAL', 'PAST_DUE', 'EXPIRED']);
+
+// Mirrors STORE_CATEGORIES in api/src/modules/admin/dto/create-store-by-admin.dto.ts —
+// the backend @IsEnum rejects anything else.
+const STORE_CATEGORIES: { value: string; label: string }[] = [
+  { value: 'GROCERY', label: 'Продукты' },
+  { value: 'CLOTHING', label: 'Одежда' },
+  { value: 'ELECTRONICS', label: 'Электроника' },
+  { value: 'HARDWARE', label: 'Хозтовары' },
+  { value: 'PHARMACY', label: 'Аптека' },
+  { value: 'OTHER', label: 'Другое' },
+];
+
+// Mirrors the PLANS/STATUSES enums in
+// api/src/modules/admin/dto/update-store-subscription.dto.ts, which validate
+// against Prisma's SubscriptionStatus. Every spelling here is CANCELLED with
+// two Ls — SUB_STATUS_LABELS/COLORS above used to key it with one L, so a
+// cancelled subscription fell through their lookup and rendered the raw
+// English enum value instead of "Отменена". Keep all four lists on Prisma's
+// spelling.
+const SUB_PLANS = ['START', 'BUSINESS', 'PREMIUM'];
+const SUB_STATUSES = ['TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED'];
+
+interface StoreSubscription {
+  plan?: string;
+  status?: string;
+  currentPeriodEnd?: string | null;
+}
+
+interface TariffForm {
+  plan: string;
+  status: string;
+  /** YYYY-MM-DD, as an <input type="date"> reports it. */
+  currentPeriodEnd: string;
+}
+
+const EMPTY_NEW_STORE = {
+  ownerId: '',
+  name: '',
+  category: 'GROCERY',
+  currency: 'TJS',
+  address: '',
+  phone: '',
+};
 
 export default function StoresPage() {
   const router = useRouter();
@@ -73,6 +116,15 @@ export default function StoresPage() {
   const [transferDialog, setTransferDialog] = useState<Store | null>(null);
   const [newOwnerId, setNewOwnerId] = useState('');
   const [suspendConfirm, setSuspendConfirm] = useState<Store | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [newStore, setNewStore] = useState(EMPTY_NEW_STORE);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [tariffDialog, setTariffDialog] = useState<Store | null>(null);
+  // Only the fields the admin has actually touched. The rest is derived from
+  // the fetched subscription below rather than copied into state by an effect,
+  // so a background refetch cannot overwrite an edit in progress.
+  const [tariffEdits, setTariffEdits] = useState<Partial<TariffForm>>({});
+  const [tariffError, setTariffError] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
@@ -104,6 +156,95 @@ export default function StoresPage() {
       toast.success('Владелец магазина изменён');
     },
     onError: () => toast.error('Ошибка передачи магазина'),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (body: typeof EMPTY_NEW_STORE) =>
+      api.post('/admin/stores', {
+        ownerId: body.ownerId,
+        name: body.name,
+        category: body.category,
+        currency: body.currency,
+        address: body.address || undefined,
+        phone: body.phone || undefined,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stores'] });
+      setCreateOpen(false);
+      setCreateError(null);
+      setNewStore(EMPTY_NEW_STORE);
+      toast.success('Магазин создан');
+    },
+    onError: (e: unknown) => {
+      // Surface the server's message inline — an unknown owner or a rejected
+      // field is a recoverable mistake the admin should still see while
+      // fixing it, not only in a toast that fades.
+      //
+      // lib/api.ts is a fetch wrapper, not axios: it throws
+      // `new Error(data.message || 'HTTP <status>')`, so the message lives on
+      // `.message`. There is no `e.response.data.message`.
+      setCreateError(e instanceof Error ? e.message : 'Не удалось создать магазин');
+      toast.error('Ошибка создания магазина');
+    },
+  });
+
+  // Preloads what the change starts from. `api.get` returns parsed JSON
+  // directly — there is no axios `{ data }` envelope here. The endpoint 404s
+  // for a store with no Subscription row; the PUT upserts, so a failure here
+  // is not fatal and the dialog falls back to the defaults below.
+  const { data: currentSub } = useQuery<StoreSubscription>({
+    queryKey: ['admin-store-subscription', tariffDialog?.id],
+    queryFn: () => api.get(`/admin/stores/${tariffDialog!.id}/subscription`),
+    enabled: !!tariffDialog,
+    retry: false,
+  });
+
+  // Untouched fields fall back to the fetched subscription, then to what the
+  // list row already knows, then to a usable default — the endpoint 404s for a
+  // store that has no subscription at all, and the dialog must still work there
+  // because the PUT upserts.
+  const tariff: TariffForm = {
+    plan: tariffEdits.plan ?? currentSub?.plan ?? tariffDialog?.subscription?.plan ?? 'START',
+    status:
+      tariffEdits.status ?? currentSub?.status ?? tariffDialog?.subscription?.status ?? 'ACTIVE',
+    currentPeriodEnd:
+      tariffEdits.currentPeriodEnd ?? (currentSub?.currentPeriodEnd ?? '').slice(0, 10),
+  };
+
+  const tariffMutation = useMutation({
+    mutationFn: ({
+      storeId,
+      body,
+    }: {
+      storeId: string;
+      body: { plan: string; status: string; currentPeriodEnd: string };
+    }) =>
+      api.put(`/admin/stores/${storeId}/subscription`, {
+        plan: body.plan,
+        status: body.status,
+        // The DTO's @IsDateString wants a full ISO datetime; a date input
+        // yields YYYY-MM-DD. Anchored at UTC midnight so the stored period end
+        // does not shift by the admin's timezone offset.
+        currentPeriodEnd: new Date(`${body.currentPeriodEnd}T00:00:00.000Z`).toISOString(),
+      }),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['stores'] });
+      // Otherwise reopening this store's dialog preloads the pre-change plan
+      // from cache before the refetch lands.
+      queryClient.invalidateQueries({
+        queryKey: ['admin-store-subscription', variables.storeId],
+      });
+      setTariffDialog(null);
+      setTariffEdits({});
+      setTariffError(null);
+      toast.success('Тариф обновлён');
+    },
+    onError: (e: unknown) => {
+      // Same error shape as the create dialog: lib/api.ts throws a plain Error
+      // whose `.message` carries the server's message.
+      setTariffError(e instanceof Error ? e.message : 'Не удалось обновить тариф');
+      toast.error('Ошибка обновления тарифа');
+    },
   });
 
   const categories = ['all', ...new Set(stores.map((s) => s.category).filter(Boolean) as string[])];
@@ -202,6 +343,16 @@ export default function StoresPage() {
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
+                setTariffDialog(s);
+                setTariffEdits({});
+                setTariffError(null);
+              }}
+            >
+              Тариф
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
                 setTransferDialog(s);
               }}
             >
@@ -216,11 +367,17 @@ export default function StoresPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Магазины</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {stores.length} магазинов всего
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Магазины</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {stores.length} магазинов всего
+          </p>
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Создать магазин
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -318,6 +475,203 @@ export default function StoresPage() {
           if (suspendConfirm) suspendMutation.mutate(suspendConfirm);
         }}
       />
+
+      {/* Tariff dialog */}
+      <Dialog
+        open={!!tariffDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTariffDialog(null);
+            setTariffEdits({});
+            setTariffError(null);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Тариф магазина</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Магазин: <strong>{tariffDialog?.name}</strong>
+            </p>
+            {currentSub?.plan && (
+              <p className="text-sm text-muted-foreground">
+                Текущий тариф: <strong>{currentSub.plan}</strong>
+                {currentSub.status ? ` · ${currentSub.status}` : ''}
+              </p>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="tariff-plan">Тариф</Label>
+              <select
+                id="tariff-plan"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={tariff.plan}
+                onChange={(e) => setTariffEdits((t) => ({ ...t, plan: e.target.value }))}
+              >
+                {SUB_PLANS.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tariff-status">Статус</Label>
+              <select
+                id="tariff-status"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={tariff.status}
+                onChange={(e) => setTariffEdits((t) => ({ ...t, status: e.target.value }))}
+              >
+                {SUB_STATUSES.map((st) => (
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tariff-until">Действует до</Label>
+              <Input
+                id="tariff-until"
+                type="date"
+                // A past date here is not a harmless typo: the nightly
+                // checkExpiredSubscriptions cron flips any ACTIVE/TRIAL row
+                // whose period has passed to EXPIRED and pushes "подписка
+                // истекла" to the owner. The grant would look successful and
+                // be gone by morning.
+                min={new Date().toISOString().slice(0, 10)}
+                value={tariff.currentPeriodEnd}
+                onChange={(e) =>
+                  setTariffEdits((t) => ({ ...t, currentPeriodEnd: e.target.value }))
+                }
+              />
+            </div>
+            {tariffError && <p className="text-sm text-destructive">{tariffError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTariffDialog(null)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() =>
+                tariffDialog &&
+                tariffMutation.mutate({ storeId: tariffDialog.id, body: tariff })
+              }
+              disabled={
+                !tariff.plan ||
+                !tariff.status ||
+                !tariff.currentPeriodEnd ||
+                tariffMutation.isPending
+              }
+            >
+              Сохранить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create-store dialog */}
+      <Dialog
+        open={createOpen}
+        onOpenChange={(open) => {
+          setCreateOpen(open);
+          // Reset the whole form on close, not just the error. Without this a
+          // reopen shows the previous name/address/phone, and UserPicker —
+          // which seeds its own search state from `value` — displays the bare
+          // owner UUID with Создать still enabled. The transfer dialog resets
+          // its equivalent state the same way.
+          if (!open) {
+            setCreateError(null);
+            setNewStore(EMPTY_NEW_STORE);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Создать магазин</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-2">
+              {/* UserPicker owns its own search Input and does not forward an
+                  id, so this Label is descriptive rather than associated —
+                  same as the transfer dialog's. */}
+              <Label>Владелец</Label>
+              <UserPicker
+                key={createOpen ? 'create-open' : 'create-closed'}
+                value={newStore.ownerId}
+                onSelect={(id) => setNewStore((s) => ({ ...s, ownerId: id }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-name">Название</Label>
+              <Input
+                id="create-name"
+                value={newStore.name}
+                onChange={(e) => setNewStore((s) => ({ ...s, name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-category">Категория</Label>
+              <select
+                id="create-category"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={newStore.category}
+                onChange={(e) => setNewStore((s) => ({ ...s, category: e.target.value }))}
+              >
+                {STORE_CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-currency">Валюта</Label>
+              <select
+                id="create-currency"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={newStore.currency}
+                onChange={(e) => setNewStore((s) => ({ ...s, currency: e.target.value }))}
+              >
+                <option value="TJS">TJS</option>
+                <option value="USD">USD</option>
+                <option value="RUB">RUB</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-address">Адрес</Label>
+              <Input
+                id="create-address"
+                value={newStore.address}
+                onChange={(e) => setNewStore((s) => ({ ...s, address: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-phone">Телефон</Label>
+              <Input
+                id="create-phone"
+                placeholder="+992901234567"
+                value={newStore.phone}
+                onChange={(e) => setNewStore((s) => ({ ...s, phone: e.target.value }))}
+              />
+            </div>
+            {createError && <p className="text-sm text-destructive">{createError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() => createMutation.mutate(newStore)}
+              disabled={!newStore.ownerId || !newStore.name || createMutation.isPending}
+            >
+              Создать
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Transfer dialog */}
       <Dialog
