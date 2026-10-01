@@ -45,7 +45,7 @@ const SUB_STATUS_COLORS: Record<string, string> = {
   ACTIVE: 'bg-green-100 text-green-700',
   TRIAL: 'bg-blue-100 text-blue-700',
   PAST_DUE: 'bg-yellow-100 text-yellow-700',
-  CANCELED: 'bg-gray-100 text-gray-600',
+  CANCELLED: 'bg-gray-100 text-gray-600',
   EXPIRED: 'bg-red-100 text-red-700',
 };
 
@@ -53,7 +53,7 @@ const SUB_STATUS_LABELS: Record<string, string> = {
   ACTIVE: 'Активна',
   TRIAL: 'Trial',
   PAST_DUE: 'Просрочена',
-  CANCELED: 'Отменена',
+  CANCELLED: 'Отменена',
   EXPIRED: 'Истекла',
 };
 
@@ -75,10 +75,12 @@ const STORE_CATEGORIES: { value: string; label: string }[] = [
 ];
 
 // Mirrors the PLANS/STATUSES enums in
-// api/src/modules/admin/dto/update-store-subscription.dto.ts. Note CANCELLED
-// (two Ls) — that is Prisma's SubscriptionStatus spelling, which the DTO
-// validates against; SUB_STATUS_LABELS above uses the older single-L key the
-// list rows were written with, so the two are deliberately not shared.
+// api/src/modules/admin/dto/update-store-subscription.dto.ts, which validate
+// against Prisma's SubscriptionStatus. Every spelling here is CANCELLED with
+// two Ls — SUB_STATUS_LABELS/COLORS above used to key it with one L, so a
+// cancelled subscription fell through their lookup and rendered the raw
+// English enum value instead of "Отменена". Keep all four lists on Prisma's
+// spelling.
 const SUB_PLANS = ['START', 'BUSINESS', 'PREMIUM'];
 const SUB_STATUSES = ['TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED'];
 
