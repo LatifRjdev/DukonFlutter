@@ -36,6 +36,14 @@ import 'presentation/blocs/printer/printer_bloc.dart';
 import 'presentation/blocs/subscription/subscription_bloc.dart';
 import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 
+/// Identity of the current session, used to key the session-scoped providers.
+///
+/// Returns the signed-in user's id, or a sentinel while signed out. Changing
+/// it disposes every session-scoped bloc, which is what stops one account's
+/// data — most damagingly StoreBloc.selectedStore — leaking into the next.
+String _sessionKeyOf(AuthState state) =>
+    state is AuthAuthenticated ? 'user:${state.user.id}' : 'anonymous';
+
 class DukonProApp extends StatelessWidget {
   const DukonProApp({super.key, this.locale = const Locale('ru')});
 
@@ -49,34 +57,14 @@ class DukonProApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // AuthBloc owns the session and must outlive it. SettingsBloc stays
+        // because the BlocBuilder driving themeMode sits above MaterialApp —
+        // it is the only bloc consumed up here. Everything else is
+        // session-scoped and lives in the router's builder below.
         BlocProvider(create: (_) => sl<AuthBloc>()),
-        BlocProvider(create: (_) => sl<StoreBloc>()),
-        BlocProvider(create: (_) => sl<CartBloc>()),
-        BlocProvider(create: (_) => sl<DashboardBloc>()),
-        BlocProvider(create: (_) => sl<ProductListBloc>()),
-        BlocProvider(create: (_) => sl<ProductFormBloc>()),
-        BlocProvider(create: (_) => sl<CategoryBloc>()),
-        BlocProvider(create: (_) => sl<CheckoutBloc>()),
-        BlocProvider(create: (_) => sl<SalesHistoryBloc>()),
-        BlocProvider(create: (_) => sl<StockIntakeBloc>()),
-        BlocProvider(create: (_) => sl<FinanceBloc>()),
-        BlocProvider(create: (_) => sl<ExpenseBloc>()),
-        BlocProvider(create: (_) => sl<DebtBloc>()),
-        BlocProvider(create: (_) => sl<ZakatBloc>()),
         BlocProvider(
           create: (_) => sl<SettingsBloc>()..add(SettingsProfileRequested()),
         ),
-        BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
-        BlocProvider(create: (_) => sl<CustomerListBloc>()),
-        BlocProvider(create: (_) => sl<SupplierListBloc>()),
-        BlocProvider(create: (_) => sl<StaffBloc>()),
-        BlocProvider(create: (_) => sl<RolesBloc>()),
-        BlocProvider(create: (_) => sl<ShiftBloc>()),
-        BlocProvider(create: (_) => sl<PayrollBloc>()),
-        BlocProvider(create: (_) => sl<StaffFormBloc>()),
-        BlocProvider(create: (_) => sl<PrinterBloc>()),
-        BlocProvider(create: (_) => sl<SubscriptionBloc>()),
-        BlocProvider(create: (_) => sl<LoyaltySettingsBloc>()),
       ],
       child: _AuthLifecycleWatcher(
         child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -107,18 +95,63 @@ class DukonProApp extends StatelessWidget {
             // when connectivity drops mid-flow. Previously the banner
             // lived only on the HomePage Scaffold.
             builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context),
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: Column(
-                    children: [
-                      const OfflineBanner(),
-                      Expanded(child: child ?? const SizedBox.shrink()),
+              // Session-scoped providers live HERE, not at the root: they must
+              // sit above every screen but below MaterialApp, because
+              // AppRouter.router is a `static final GoRouter` and rebuilding
+              // MaterialApp.router resets navigation to splash (see the
+              // buildWhen comment above, which exists for that reason).
+              //
+              // MaterialApp's builder runs on every route build, so the key
+              // must be STABLE across navigation — same key and position means
+              // Flutter reuses the element and the blocs survive. That is
+              // pinned by test/presentation/session_scope_test.dart.
+              return BlocBuilder<AuthBloc, AuthState>(
+                buildWhen: (prev, curr) =>
+                    _sessionKeyOf(prev) != _sessionKeyOf(curr),
+                builder: (context, authState) {
+                  return MultiBlocProvider(
+                    key: ValueKey(_sessionKeyOf(authState)),
+                    providers: [
+                      BlocProvider(create: (_) => sl<StoreBloc>()),
+                      BlocProvider(create: (_) => sl<CartBloc>()),
+                      BlocProvider(create: (_) => sl<DashboardBloc>()),
+                      BlocProvider(create: (_) => sl<ProductListBloc>()),
+                      BlocProvider(create: (_) => sl<ProductFormBloc>()),
+                      BlocProvider(create: (_) => sl<CategoryBloc>()),
+                      BlocProvider(create: (_) => sl<CheckoutBloc>()),
+                      BlocProvider(create: (_) => sl<SalesHistoryBloc>()),
+                      BlocProvider(create: (_) => sl<StockIntakeBloc>()),
+                      BlocProvider(create: (_) => sl<FinanceBloc>()),
+                      BlocProvider(create: (_) => sl<ExpenseBloc>()),
+                      BlocProvider(create: (_) => sl<DebtBloc>()),
+                      BlocProvider(create: (_) => sl<ZakatBloc>()),
+                      BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
+                      BlocProvider(create: (_) => sl<CustomerListBloc>()),
+                      BlocProvider(create: (_) => sl<SupplierListBloc>()),
+                      BlocProvider(create: (_) => sl<StaffBloc>()),
+                      BlocProvider(create: (_) => sl<RolesBloc>()),
+                      BlocProvider(create: (_) => sl<ShiftBloc>()),
+                      BlocProvider(create: (_) => sl<PayrollBloc>()),
+                      BlocProvider(create: (_) => sl<StaffFormBloc>()),
+                      BlocProvider(create: (_) => sl<PrinterBloc>()),
+                      BlocProvider(create: (_) => sl<SubscriptionBloc>()),
+                      BlocProvider(create: (_) => sl<LoyaltySettingsBloc>()),
                     ],
-                  ),
-                ),
+                    child: MediaQuery(
+                      data: MediaQuery.of(context),
+                      child: SafeArea(
+                        top: false,
+                        bottom: false,
+                        child: Column(
+                          children: [
+                            const OfflineBanner(),
+                            Expanded(child: child ?? const SizedBox.shrink()),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               );
             },
           );
