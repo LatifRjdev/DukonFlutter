@@ -66,17 +66,19 @@ lib/presentation/pages/settings/subscription_page.dart::'Эсхата'
 # ---------------------------------------------------------------------------
 # 3. Sub-project B — the error path (deferred by design)
 # ---------------------------------------------------------------------------
-# error_messages.dart's mapErrorToUserMessage has 124 call sites across 29
-# Bloc files, and its result lands in state objects ~66 UI sites read as
-# .message. Converting it to error codes is an architectural change, specced
-# separately.
+# error_messages.dart's mapErrorToUserMessage has 124 call sites across 49
+# files — 29 Blocs AND 20 pages that call it directly in their own try/catch,
+# which is easy to miss when scoping this as "a Bloc problem". Its result lands
+# in 43 state classes carrying `final String message`, read at 98 sites in the
+# UI. Converting it to error codes is an architectural change, specced
+# separately. (Figures measured 2026-10-01; an earlier version of this comment
+# said "29 Bloc files" and "~66 UI sites", both understating the work.)
 #
 # NOTE: 'Не удалось выполнить операцию' occurs TWICE in error_messages.dart
 # (the <=400 ServerException fallback and the unknown-exception fallback) but
 # needs only one entry — entries are keyed `<path>::<literal>`, so one line
 # covers every occurrence of that literal in that file. 10 entries here cover
-# 11 occurrences ('Не удалось выполнить операцию' appears twice, at the
-# <=400 ServerException fallback and the unknown-exception fallback).
+# 11 occurrences.
 #
 # debt_repository_impl.dart's three literals used to sit here. They were
 # removed because Exception.message is diagnostic-only and never reaches a
