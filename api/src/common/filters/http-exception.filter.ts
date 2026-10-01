@@ -33,8 +33,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     }
 
-    // Always log server-side. Include stack only off-production so prod logs
-    // stay terse and ops-friendly without dropping the info entirely in dev.
+    // Log every 4xx and 5xx server-side.
+    //
+    // 4xx used to be logged NOWHERE: LoggingInterceptor only logs the success
+    // path (its tap() has no error callback), and NestJS runs guards before
+    // interceptors, so a guard rejection never reaches it at all. A 403 from
+    // StoreAccessGuard therefore left no trace, and an empty log reads like
+    // "nothing was denied" — which is how a cross-store access bug went
+    // misdiagnosed for half an hour.
+    //
+    // 4xx is warn with no stack: it is an expected outcome, and a stack would
+    // bury the one line you actually want to grep. 5xx keeps error + stack
+    // off-production so prod logs stay terse without losing the detail in dev.
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
       const stack =
         exception instanceof Error ? exception.stack : String(exception);
@@ -42,6 +52,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         `${request.method} ${request.url} -> ${status}`,
         this.isProduction ? undefined : stack,
       );
+    } else if (status >= HttpStatus.BAD_REQUEST) {
+      this.logger.warn(`${request.method} ${request.url} -> ${status}`);
     }
 
     // Never leak raw exception messages (Prisma column names, stack fragments,
