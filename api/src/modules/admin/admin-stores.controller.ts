@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Put,
   Param,
   Query,
@@ -19,6 +20,7 @@ import { AdminService } from './admin.service';
 import { AdminExportService } from './admin-export.service';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
+import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -30,6 +32,13 @@ export class AdminStoresController {
     private readonly adminService: AdminService,
     private readonly exportService: AdminExportService,
   ) {}
+
+  @Post()
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
+  @ApiOperation({ summary: 'Create a store for an existing user' })
+  createStore(@Body() dto: CreateStoreByAdminDto) {
+    return this.adminService.createStoreForOwner(dto);
+  }
 
   @Get()
   @ApiOperation({ summary: 'List all stores with pagination and filters' })

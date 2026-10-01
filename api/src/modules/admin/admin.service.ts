@@ -11,6 +11,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
+import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
@@ -385,6 +386,28 @@ export class AdminService {
       where: { id },
       data: { ownerId: dto.newOwnerId },
       select: { id: true, ownerId: true, name: true },
+    });
+  }
+
+  /// Creates a store for an EXISTING user.
+  ///
+  /// Delegates to StoresService.create rather than writing the store here:
+  /// that single path also creates the PREMIUM/TRIAL subscription and the
+  /// OWNER staff row, and a second creation path would silently skip both.
+  /// New-user creation already has its own route (POST /admin/users), which
+  /// can create a first store in the same transaction.
+  async createStoreForOwner(dto: CreateStoreByAdminDto) {
+    const owner = await this.prisma.user.findUnique({
+      where: { id: dto.ownerId },
+    });
+    if (!owner) throw new NotFoundException('Owner user not found');
+
+    return this.storesService.create(dto.ownerId, {
+      name: dto.name,
+      category: dto.category,
+      currency: dto.currency,
+      address: dto.address,
+      phone: dto.phone,
     });
   }
 
