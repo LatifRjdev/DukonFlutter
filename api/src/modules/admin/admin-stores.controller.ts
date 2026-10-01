@@ -21,6 +21,7 @@ import { AdminExportService } from './admin-export.service';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
 import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
+import { UpdateStoreSubscriptionDto } from './dto/update-store-subscription.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -73,6 +74,16 @@ export class AdminStoresController {
   })
   getStoreSubscription(@Param('id') id: string) {
     return this.adminService.getStoreSubscription(id);
+  }
+
+  @Put(':id/subscription')
+  @Throttle({ default: { limit: 60, ttl: 60000 } })
+  @ApiOperation({ summary: 'Assign or change a store subscription plan' })
+  updateStoreSubscription(
+    @Param('id') id: string,
+    @Body() dto: UpdateStoreSubscriptionDto,
+  ) {
+    return this.adminService.updateStoreSubscription(id, dto);
   }
 
   @Put(':id/suspend')

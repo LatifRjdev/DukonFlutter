@@ -12,6 +12,7 @@ import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
 import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
+import { UpdateStoreSubscriptionDto } from './dto/update-store-subscription.dto';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
@@ -408,6 +409,42 @@ export class AdminService {
       currency: dto.currency,
       address: dto.address,
       phone: dto.phone,
+    });
+  }
+
+  /// Assigns or changes a store's subscription plan.
+  ///
+  /// Sets plan, status and period together on purpose. The entitlement guards
+  /// (common/guards/plan-limit.helper.ts and feature-flag.helper.ts) consult
+  /// status and currentPeriodEnd as well as plan, so changing only the plan on
+  /// an EXPIRED or lapsed subscription would record the grant and change
+  /// nothing the user can see.
+  ///
+  /// Upserts rather than 404ing on a missing subscription: every store created
+  /// through StoresService.create has one, but a store from an older path or a
+  /// half-failed migration might not, and repairing that is exactly what an
+  /// admin tool is for. trialEndsAt is never written — it records when the
+  /// original trial ended.
+  async updateStoreSubscription(id: string, dto: UpdateStoreSubscriptionDto) {
+    const store = await this.prisma.store.findUnique({ where: { id } });
+    if (!store) throw new NotFoundException('Store not found');
+
+    const periodEnd = new Date(dto.currentPeriodEnd);
+
+    return this.prisma.subscription.upsert({
+      where: { storeId: id },
+      update: {
+        plan: dto.plan as SubscriptionPlan,
+        status: dto.status as SubscriptionStatus,
+        currentPeriodEnd: periodEnd,
+      },
+      create: {
+        storeId: id,
+        plan: dto.plan as SubscriptionPlan,
+        status: dto.status as SubscriptionStatus,
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: periodEnd,
+      },
     });
   }
 
