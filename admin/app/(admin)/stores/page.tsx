@@ -536,6 +536,12 @@ export default function StoresPage() {
               <Input
                 id="tariff-until"
                 type="date"
+                // A past date here is not a harmless typo: the nightly
+                // checkExpiredSubscriptions cron flips any ACTIVE/TRIAL row
+                // whose period has passed to EXPIRED and pushes "подписка
+                // истекла" to the owner. The grant would look successful and
+                // be gone by morning.
+                min={new Date().toISOString().slice(0, 10)}
                 value={tariff.currentPeriodEnd}
                 onChange={(e) =>
                   setTariffEdits((t) => ({ ...t, currentPeriodEnd: e.target.value }))
@@ -571,7 +577,15 @@ export default function StoresPage() {
         open={createOpen}
         onOpenChange={(open) => {
           setCreateOpen(open);
-          if (!open) setCreateError(null);
+          // Reset the whole form on close, not just the error. Without this a
+          // reopen shows the previous name/address/phone, and UserPicker —
+          // which seeds its own search state from `value` — displays the bare
+          // owner UUID with Создать still enabled. The transfer dialog resets
+          // its equivalent state the same way.
+          if (!open) {
+            setCreateError(null);
+            setNewStore(EMPTY_NEW_STORE);
+          }
         }}
       >
         <DialogContent>

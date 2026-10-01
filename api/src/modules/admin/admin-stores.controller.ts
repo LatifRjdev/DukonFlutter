@@ -21,6 +21,7 @@ import { AdminExportService } from './admin-export.service';
 import { AdminStoresQueryDto } from './dto/admin-stores-query.dto';
 import { TransferStoreDto } from './dto/transfer-store.dto';
 import { CreateStoreByAdminDto } from './dto/create-store-by-admin.dto';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { UpdateStoreSubscriptionDto } from './dto/update-store-subscription.dto';
 
 @ApiTags('Admin')
@@ -82,8 +83,9 @@ export class AdminStoresController {
   updateStoreSubscription(
     @Param('id') id: string,
     @Body() dto: UpdateStoreSubscriptionDto,
+    @CurrentUser('id') actorUserId: string,
   ) {
-    return this.adminService.updateStoreSubscription(id, dto);
+    return this.adminService.updateStoreSubscription(id, dto, actorUserId);
   }
 
   @Put(':id/suspend')

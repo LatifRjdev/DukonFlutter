@@ -5,6 +5,7 @@ import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 describe('AdminService.createStoreForOwner', () => {
   let service: AdminService;
@@ -46,6 +47,7 @@ describe('AdminService.createStoreForOwner', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
         { provide: StoresService, useValue: storesService },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);

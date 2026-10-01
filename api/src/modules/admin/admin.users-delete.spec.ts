@@ -5,6 +5,7 @@ import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 function makePrismaFake() {
   const users = new Map<string, any>();
@@ -59,6 +60,7 @@ describe('AdminService.deleteUser — last-admin guard', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
         { provide: StoresService, useValue: {} },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);

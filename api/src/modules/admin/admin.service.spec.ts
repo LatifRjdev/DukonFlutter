@@ -4,6 +4,7 @@ import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 // Minimal prisma fake — only the models AdminService announcement
 // methods actually touch. Other AdminService methods are covered by
@@ -41,6 +42,7 @@ describe('AdminService — announcements (Spec C)', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: notifications },
         { provide: StoresService, useValue: { create: jest.fn() } },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);
@@ -172,6 +174,7 @@ describe('AdminService — updatePlan', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
         { provide: StoresService, useValue: { create: jest.fn() } },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);
@@ -300,6 +303,7 @@ describe('AdminService — listAnnouncements attaches senderName', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
         { provide: StoresService, useValue: { create: jest.fn() } },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);

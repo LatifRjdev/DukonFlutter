@@ -5,6 +5,7 @@ import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 function makePrismaFake(opts: { withSubscription: boolean }) {
   const subscriptions = new Map<string, any>();
@@ -27,6 +28,11 @@ function makePrismaFake(opts: { withSubscription: boolean }) {
       ),
     },
     subscription: {
+      // The service reads the current row before writing so the audit entry
+      // can record what the grant changed FROM.
+      findUnique: jest.fn(
+        async ({ where }: any) => subscriptions.get(where.storeId) ?? null,
+      ),
       upsert: jest.fn(async ({ where, update, create }: any) => {
         const existing = subscriptions.get(where.storeId);
         const row = existing
@@ -46,6 +52,7 @@ async function buildService(prisma: any) {
       { provide: PrismaService, useValue: prisma },
       { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
       { provide: StoresService, useValue: { create: jest.fn() } },
+      { provide: AuditLogService, useValue: { record: jest.fn() } },
     ],
   }).compile();
   return moduleRef.get(AdminService);
@@ -122,5 +129,46 @@ describe('AdminService.updateStoreSubscription', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
 
     expect(prisma.subscription.upsert).not.toHaveBeenCalled();
+  });
+
+  it('should record an audit entry naming the plan it granted and what it changed from', async () => {
+    // AuditInterceptor already logs this route, but deriveEntityType maps
+    // admin/stores/:id to `stores`, so its before/after snapshots are of the
+    // STORE row — which a subscription write never touches. They come out
+    // identical and the granted plan appears nowhere. Without this explicit
+    // record a tariff grant leaves a trail that proves only that *something*
+    // happened, which is the one mitigation the design relies on.
+    const prisma = makePrismaFake({ withSubscription: true });
+    const audit = { record: jest.fn() };
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        AdminService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
+        { provide: StoresService, useValue: { create: jest.fn() } },
+        { provide: AuditLogService, useValue: audit },
+      ],
+    }).compile();
+    const service = moduleRef.get(AdminService);
+
+    await service.updateStoreSubscription(
+      'store-1',
+      {
+        plan: 'BUSINESS',
+        status: 'ACTIVE',
+        currentPeriodEnd: '2027-01-01T00:00:00.000Z',
+      } as any,
+      'admin-7',
+    );
+
+    expect(audit.record).toHaveBeenCalledTimes(1);
+    const [actor, action, entityType, , details] = audit.record.mock.calls[0];
+    expect(actor).toBe('admin-7');
+    expect(action).toBe('subscription.plan_change');
+    expect(entityType).toBe('subscription');
+    expect(details.from.plan).toBe('PREMIUM');
+    expect(details.to.plan).toBe('BUSINESS');
+    expect(details.to.status).toBe('ACTIVE');
+    expect(details.storeId).toBe('store-1');
   });
 });

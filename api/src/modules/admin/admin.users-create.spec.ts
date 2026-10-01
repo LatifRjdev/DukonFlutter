@@ -5,6 +5,7 @@ import { AdminService } from './admin.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StoresService } from '../stores/stores.service';
+import { AuditLogService } from '../../common/audit/audit-log.service';
 
 function makePrismaFake() {
   const users = new Map<string, any>();
@@ -82,6 +83,7 @@ describe('AdminService.createUserManually', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: NotificationsService, useValue: { sendPush: jest.fn() } },
         { provide: StoresService, useValue: storesService },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
       ],
     }).compile();
     service = moduleRef.get(AdminService);
