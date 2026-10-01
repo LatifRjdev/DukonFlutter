@@ -26,8 +26,13 @@ make the error path harder to reason about than it needs to be.
 ## Out of scope
 
 - **B1** — the non-context localization mechanism and `error_messages.dart`'s 11 strings. Needs its own
-  design: 125 call sites across 50 files, 43 state classes carrying `final String message`, 98 UI
-  `.message` reads.
+  design: **124** call sites across **49** files (29 Blocs and 20 pages — the pages call
+  `mapErrorToUserMessage` directly in their own `try`/`catch`, which is easy to miss when scoping this as
+  a Bloc problem), and **43** state classes carrying `final String message`. Reproduce with
+  `grep -rn mapErrorToUserMessage lib --include="*.dart"` minus the definition and the one mention in
+  `exceptions.dart`'s dartdoc. The number of UI read sites depends on how you count — 64 `state.message`,
+  ~65 excluding `this.message` declarations — so treat it as "tens of sites" rather than a precise
+  figure, and measure it when B1 is specced.
 - **B2** — Track 3's 19 Bloc strings (mostly success toasts; 7 interpolate).
 - **E** — ARB hygiene: 6 duplicate-value key groups, 3 screen-prefixed keys to promote, 4 generic keys
   parked in feature blocks, 88 dead keys, the two golden tests that hand-compose private widget copies.
@@ -76,9 +81,11 @@ decoy that looks like the layer already exists.
 It is **written at 108 construction sites and read nowhere** — `mapErrorToUserMessage` dispatches on
 runtime type and `statusCode` only, and discards it.
 
-Keep the field. Six of those 108 sites pass a genuine server-supplied message
-(`e.response?.data?['message']`), so the field is capturing real diagnostic data that a future logger
-would want. Deleting it would touch 108 sites to destroy information.
+Keep the field. **38** of those 108 sites receive a genuine server-derived message — the 16 remote
+datasources each decode one and feed it to both a `ServerException` and an `UnauthorizedException`, plus
+a few inline sites; the specific `e.response?.data?['message']` expression appears at 2. So the field is
+capturing real diagnostic data that a future logger would want, and deleting it would touch 108 sites to
+destroy information.
 
 Add a dartdoc to each of the four classes (or one shared comment) recording three facts: the field is
 never shown to a user; `mapErrorToUserMessage` discards it, dispatching on type and status; and no
@@ -115,7 +122,7 @@ occurrences" — after C3 it is 10 covering 11.
 `app/tool/check_i18n.dart` (142 lines) reads each file line by line and applies the regex
 `['"][^'"]*[Ѐ-ԯ][^'"]*['"]` with `allMatches`, skipping lines whose trimmed form starts with `//`.
 It scans 344 files (all of `lib` except `lib/l10n/`) and is enforced in CI
-(`.github/workflows/ci.yml:128`).
+(`.github/workflows/ci.yml:128`). After Part C deletes one file the figure becomes 343.
 
 All four of its known gaps are consequences of being line-based and regex-based:
 
@@ -221,7 +228,9 @@ count of successfully scanned files must remain in the output so a sudden drop i
 Parsing 344 files is more work than 344 regex sweeps. `parseString` does syntactic parsing only — no
 resolution, no summaries — so the expected cost is low, but it must be **measured** and reported rather
 than assumed. If wall-clock time on the full `lib` tree exceeds roughly 10 seconds the result should be
-reported as a finding, since the tool runs on every CI push and in the pre-commit path.
+reported as a finding, since the tool runs on every CI push (`.github/workflows/ci.yml:128`). That is
+its only consumer — `lefthook.yml`'s pre-commit hook runs api prettier/tsc/eslint plus `dart
+format`/`dart analyze`, and never invokes it.
 
 ---
 
@@ -260,7 +269,7 @@ the lint exits 1 naming that file, restore, confirm exit 0. Run unpiped — a pi
 | Check | Expectation |
 |---|---|
 | `flutter analyze` | `No issues found!` |
-| `dart run tool/check_i18n.dart` | exit 0, and the scanned-file count still **344**: `lib` holds 348 `.dart` files, the 4 under `lib/l10n/` are all generated and all match `app_localizations*.dart`, so narrowing the skip from directory to filename excludes exactly the same 4 files today. The count changing is itself a finding. |
+| `dart run tool/check_i18n.dart` | exit 0, and the scanned-file count **343**. `lib` held 348 `.dart` files when this spec was written, giving 344; Part C's deletion of `currency_remote_datasource.dart` removes one, so the shipped figure is 347 − 4 generated = **343**. The 4 under `lib/l10n/` are all generated and all match `app_localizations*.dart`, so narrowing the skip from directory to filename excludes exactly the same set. A count other than 343 is a finding. |
 | `flutter test` | the failing **set** identical to the documented 18 macOS goldens — compared as a set, never as a count |
 | ARB | no translatable value changed; `flutter gen-l10n` produces no diff |
 | Allowlist | **48 → 50 lines**: minus 3 removed by C3 (`debt_repository_impl.dart`'s literals, all single-occurrence), plus 5 duplicates added by the multiset rule. Entry lines going *up* is expected here — the file gets longer while becoming stricter. |

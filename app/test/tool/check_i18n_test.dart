@@ -294,4 +294,57 @@ void main() {
         reason: 'either a committed entry stopped matching, or a new '
             'unallowlisted literal appeared in lib/');
   });
+
+  test('a multi-line triple-quoted literal round-trips through --dump-allowlist', () async {
+    // The allow-list is line-based, but a triple-quoted literal's toSource()
+    // spans several physical lines. Emitting it raw wrote a three-line entry
+    // plus two phantom ones, exited 0 claiming success, and left the re-check
+    // failing — so gap 3 shipped a literal shape that was detectable but
+    // impossible to grandfather. Newlines are escaped in the key to close that.
+    File('${tempDir.path}/lib/presentation/sample.dart')
+        .writeAsStringSync("const s = '''\nМногострочный\n''';\n");
+    final allowlistFile = File('${tempDir.path}/tool/i18n-allowlist.txt');
+    allowlistFile.writeAsStringSync('');
+
+    await check_i18n.run(['--dump-allowlist'], repoRootOverride: tempDir.path);
+
+    final written = allowlistFile
+        .readAsLinesSync()
+        .where((l) => l.trim().isNotEmpty)
+        .toList();
+    expect(written, hasLength(1), reason: 'one physical line per entry');
+    expect(written.single, contains(r'\n'), reason: 'newlines escaped, not raw');
+
+    // The real contract: what the dump writes must satisfy the next check.
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+    expect(code, 0, reason: 'dump output must be a usable allow-list');
+  });
+
+  test('a log() call on a receiver does not exempt its string argument', () async {
+    // _isDiagnosticArgument matches on method name, so without a target check
+    // ANY `x.log('...')` would be treated as a diagnostic and skipped. The app
+    // has no logger yet but exceptions.dart's dartdoc says one is expected, and
+    // `Logger().log(...)` is exactly that shape.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "void f(dynamic l) { l.log('Журнал'); }\n",
+    );
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: 'only unprefixed log/print/debugPrint are exempt');
+  });
+
+  test('a bare debugPrint() argument is still exempt', () async {
+    // The other half of that contract: narrowing to unprefixed calls must not
+    // break the guard the old line-based scanner provided.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "void f() { debugPrint('Отладка'); }\n",
+    );
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 0, reason: 'unprefixed diagnostic calls stay exempt');
+  });
 }

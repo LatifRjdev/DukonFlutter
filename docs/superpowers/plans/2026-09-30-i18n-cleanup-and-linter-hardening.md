@@ -685,7 +685,7 @@ Expected: `EXIT=0`, `scanned 343 files`, and **50** entry lines (45 + 5).
 ```bash
 time dart run tool/check_i18n.dart
 ```
-Record the wall-clock time. Parsing 343 files costs more than 343 regex sweeps. If it exceeds roughly **10 seconds**, report it as a finding — this runs on every CI push (`.github/workflows/ci.yml:128`) and in the pre-commit path.
+Record the wall-clock time. Parsing 343 files costs more than 343 regex sweeps. If it exceeds roughly **10 seconds**, report it as a finding — it runs on every CI push (`.github/workflows/ci.yml:128`). That is its **only** consumer: `lefthook.yml`'s pre-commit hook runs api prettier/tsc/eslint plus `dart format`/`dart analyze`, and does not invoke this tool.
 
 - [ ] **Step 8: Prove non-vacuity end to end**
 

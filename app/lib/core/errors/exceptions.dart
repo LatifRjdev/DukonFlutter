@@ -7,10 +7,13 @@
 /// 1. `mapErrorToUserMessage` (lib/core/errors/error_messages.dart) is the only
 ///    thing that turns these into user-facing text, and it dispatches purely on
 ///    runtime type and [ServerException.statusCode]. It never reads `message`.
-/// 2. The field is written at 108 construction sites and read at none. Six of
-///    those sites pass a genuine server-supplied string
-///    (`e.response?.data?['message']`), so it is capturing real diagnostic
-///    detail — which is why it is kept rather than deleted.
+/// 2. The field is written at 108 construction sites and read at none. **38** of
+///    those receive a genuine server-derived string — the 16 remote datasources
+///    each decode one and feed it to both a `ServerException` and an
+///    `UnauthorizedException`, plus a few inline sites; the specific
+///    `e.response?.data?['message']` expression appears at 2 of them. So the
+///    field is capturing real diagnostic detail, which is why it is kept rather
+///    than deleted.
 /// 3. There is no logger consuming it. The app has no logging infrastructure at
 ///    all, so today the field is write-only. Introducing one is tracked
 ///    separately and has its own PII constraints (see .claude/rules/security.md,

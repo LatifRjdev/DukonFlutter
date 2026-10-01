@@ -64,15 +64,33 @@ class _CyrillicLiteralCollector extends RecursiveAstVisitor<void> {
     final args = node.parent;
     if (args is! ArgumentList) return false;
     final call = args.parent;
+    // `call.target == null` restricts this to unprefixed invocations. Without
+    // it, ANY method named log/print/debugPrint on ANY receiver would exempt
+    // its string arguments — so a future `Logger().log('Ошибка')` or
+    // `auditLog.log(...)` would silently stop being policed. exceptions.dart's
+    // dartdoc notes a logger is expected to arrive under separate tracking,
+    // which is exactly the shape that would have opened that hole.
     return call is MethodInvocation &&
+        call.target == null &&
         _diagnosticCalls.contains(call.methodName.name);
   }
 
+  /// The allow-list key form of a literal's source.
+  ///
+  /// Newlines are escaped to `\n` because the allow-list is line-based
+  /// (`readAsLinesSync`). A `'''…'''` literal's `toSource()` spans several
+  /// physical lines, so emitting it raw made the key unmatchable AND corrupted
+  /// the file on `--dump-allowlist`: the dump exited 0 claiming success while
+  /// writing a three-line entry plus two phantom ones, and the re-check still
+  /// failed. That left multi-line literals detectable but impossible to
+  /// grandfather — a capability shipping with no remediation path.
+  static String keyFor(StringLiteral node) =>
+      node.toSource().replaceAll('\r\n', r'\n').replaceAll('\n', r'\n');
+
   void _record(StringLiteral node) {
     if (_isDiagnosticArgument(node)) return;
-    final source = node.toSource();
-    if (!_cyrillic.hasMatch(source)) return;
-    found.add((source: source, offset: node.offset));
+    if (!_cyrillic.hasMatch(node.toSource())) return;
+    found.add((source: keyFor(node), offset: node.offset));
   }
 
   @override
@@ -102,7 +120,7 @@ class _CyrillicLiteralCollector extends RecursiveAstVisitor<void> {
         .map((e) => e.value)
         .join();
     if (_cyrillic.hasMatch(literalParts) && !_isDiagnosticArgument(node)) {
-      found.add((source: node.toSource(), offset: node.offset));
+      found.add((source: keyFor(node), offset: node.offset));
     }
     for (final element in node.elements.whereType<InterpolationExpression>()) {
       element.expression.accept(this);
