@@ -1,6 +1,7 @@
 import {
   ArgumentsHost,
   ConflictException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -55,11 +56,18 @@ describe('AllExceptionsFilter', () => {
 
   beforeEach(() => {
     filter = new AllExceptionsFilter();
-    // Silence Logger.error so test output stays readable.
+    // Silence Logger.error/warn so test output stays readable. (warn matters
+    // now that the filter logs 4xx too, and most cases below are 4xx.)
     jest
       .spyOn(
         (filter as unknown as { logger: { error: jest.Mock } }).logger,
         'error',
+      )
+      .mockImplementation(() => undefined);
+    jest
+      .spyOn(
+        (filter as unknown as { logger: { warn: jest.Mock } }).logger,
+        'warn',
       )
       .mockImplementation(() => undefined);
   });
@@ -184,5 +192,58 @@ describe('AllExceptionsFilter', () => {
     filter.catch(new ConflictException('Staff member already exists'), host);
     expect(response.headers['Retry-After']).toBeUndefined();
     expect(response.statusCode).toBe(409);
+  });
+});
+
+describe('AllExceptionsFilter — 4xx logging', () => {
+  // Until this, LoggingInterceptor logged only the success path (its tap() has
+  // no error callback, and guards reject before interceptors run at all), and
+  // this filter logged only 5xx. So every 4xx was logged NOWHERE — 400, 401,
+  // 403, 404, 409. A permissions bug then presents as an empty log, which
+  // reads like "no error occurred" and sends you down a false trail.
+  it('logs a 4xx at warn level, without a stack', () => {
+    const filter = new AllExceptionsFilter();
+    const warn = jest.spyOn(filter['logger'], 'warn').mockImplementation();
+    const error = jest.spyOn(filter['logger'], 'error').mockImplementation();
+    const { host } = makeHost();
+
+    filter.catch(
+      new ForbiddenException('You do not have access to this store'),
+      host,
+    );
+
+    expect(error).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledTimes(1);
+    const [message, ...rest] = warn.mock.calls[0];
+    expect(message).toContain('GET /api/test -> 403');
+    // A 403 is an expected outcome, not an exceptional one — a stack would be
+    // noise on a line that should be greppable.
+    expect(rest.filter((a) => a !== undefined)).toHaveLength(0);
+  });
+
+  it('still logs a 5xx at error level, with a stack off-production', () => {
+    const filter = new AllExceptionsFilter();
+    const error = jest.spyOn(filter['logger'], 'error').mockImplementation();
+    const { host } = makeHost();
+
+    filter.catch(new Error('boom'), host);
+
+    expect(error).toHaveBeenCalledTimes(1);
+    const [message, stack] = error.mock.calls[0];
+    expect(message).toContain('GET /api/test -> 500');
+    expect(typeof stack).toBe('string');
+  });
+
+  it('does not log 2xx-shaped HttpExceptions below 400', () => {
+    // Guards the boundary: the new branch must not start logging redirects.
+    const filter = new AllExceptionsFilter();
+    const warn = jest.spyOn(filter['logger'], 'warn').mockImplementation();
+    const error = jest.spyOn(filter['logger'], 'error').mockImplementation();
+    const { host } = makeHost();
+
+    filter.catch(new HttpException('moved', HttpStatus.FOUND), host);
+
+    expect(warn).not.toHaveBeenCalled();
+    expect(error).not.toHaveBeenCalled();
   });
 });
