@@ -177,4 +177,121 @@ void main() {
 
     expect(code, 1, reason: 'a multi-line literal is one node');
   });
+
+  test('a file that cannot be parsed is a hard failure, not a silent skip', () async {
+    // The analyzer recovers from syntax errors and returns a PARTIAL unit rather
+    // than nothing (verified: 'class Broken { void f( {' yields 4 errors and a
+    // non-empty unit). So the danger is not an empty scan but a partial one —
+    // literals outside the broken region are still found, which makes the gap
+    // look like success. Exit 2 forces the file to be fixed instead.
+    File('${tempDir.path}/lib/presentation/broken.dart')
+        .writeAsStringSync('class Broken { void f( {\n');
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 2, reason: 'exit 2 = the tool could not do its job');
+  });
+
+  test('three occurrences are not covered by two allow-list lines', () async {
+    // Gap 1: entries were held in a Set, so one line covered unlimited repeats
+    // of that literal in that file. A third copy appearing was invisible.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "const a = 'Повтор';\nconst b = 'Повтор';\nconst c = 'Повтор';\n",
+    );
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync(
+      "lib/presentation/sample.dart::'Повтор'\n"
+      "lib/presentation/sample.dart::'Повтор'\n",
+    );
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: '2 permitted, 3 present');
+  });
+
+  test('three occurrences are covered by three allow-list lines', () async {
+    // The other half of the contract: repetition is how the permitted count is
+    // expressed, so N lines must permit exactly N occurrences.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "const a = 'Повтор';\nconst b = 'Повтор';\nconst c = 'Повтор';\n",
+    );
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync(
+      "lib/presentation/sample.dart::'Повтор'\n"
+      "lib/presentation/sample.dart::'Повтор'\n"
+      "lib/presentation/sample.dart::'Повтор'\n",
+    );
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 0, reason: '3 permitted, 3 present');
+  });
+
+  test('a hand-written file under lib/l10n is scanned', () async {
+    // Gap 4: the skip used to be rel.startsWith('lib/l10n/'), excluding the
+    // whole directory. Generated files are excluded because they are generated,
+    // not because of where they sit — so a hand-written helper dropped into
+    // lib/l10n must still be policed. The existing
+    // 'generated localizations under lib/l10n are not scanned' test is the
+    // other half of this contract and must keep passing.
+    Directory('${tempDir.path}/lib/l10n').createSync(recursive: true);
+    File('${tempDir.path}/lib/l10n/l10n_helpers.dart')
+        .writeAsStringSync("const s = 'Помощник';\n");
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: 'only generated app_localizations*.dart is excluded');
+  });
+
+  test("a raw string's allow-list key keeps the r prefix", () async {
+    // Deliberate difference from the old regex, which began matching at the
+    // first quote and so produced 'Сырая' as the key. node.toSource() is the
+    // honest representation. There are zero Cyrillic-bearing raw strings in lib
+    // today, so no committed entry is affected — this pins the choice so it
+    // stays deliberate rather than becoming an accident someone "fixes".
+    File('${tempDir.path}/lib/presentation/sample.dart')
+        .writeAsStringSync("const s = r'Сырая';\n");
+    final allowlistFile = File('${tempDir.path}/tool/i18n-allowlist.txt');
+    allowlistFile.writeAsStringSync('');
+
+    await check_i18n.run(['--dump-allowlist'], repoRootOverride: tempDir.path);
+
+    expect(
+      allowlistFile.readAsStringSync().trim(),
+      "lib/presentation/sample.dart::r'Сырая'",
+    );
+  });
+
+  test('every committed allow-list entry still resolves against the real lib tree', () async {
+    // Guards the regex -> AST key migration. Keys are `<path>::<literal source>`
+    // and all committed entries must keep matching without edits: if the AST
+    // produced a different source form for any of them (raw-string prefixes and
+    // interpolations are the risky shapes), that entry would stop matching and
+    // its literal would surface as an offender, failing this test.
+    //
+    // `flutter test` runs with the CWD at app/, which is the repo root this
+    // tool expects. This is deliberately the same check CI runs — it asserts
+    // the committed allowlist and the live tree agree, so it fails if either
+    // drifts.
+    //
+    // What this does NOT prove: the absence of STALE entries. An entry that no
+    // longer corresponds to any occurrence is simply never consumed, and an
+    // unconsumed permit cannot make the run fail. Only the
+    // `--dump-allowlist` entry-line diff (a manual step, not a test) catches
+    // that. Do not read a pass here as "the allowlist is exactly the live
+    // offender multiset" — it only means "nothing is missing from it".
+    final repoRoot = Directory.current.path;
+    final entries = File('$repoRoot/tool/i18n-allowlist.txt')
+        .readAsLinesSync()
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty && !l.startsWith('#'))
+        .toList();
+    expect(entries, isNotEmpty, reason: 'sanity: the allow-list must be found');
+
+    final code = await check_i18n.run([], repoRootOverride: repoRoot);
+
+    expect(code, 0,
+        reason: 'either a committed entry stopped matching, or a new '
+            'unallowlisted literal appeared in lib/');
+  });
 }
