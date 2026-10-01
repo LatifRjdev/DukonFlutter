@@ -7185,7 +7185,7 @@ abstract class AppLocalizations {
   /// **'НБТ — Национальный банк Таджикистана'**
   String get nbtBankLabel;
 
-  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. These four names were once duplicated as a hardcoded Russian map in lib/data/datasources/remote/currency_remote_datasource.dart; that map is gone — CurrencyRate now carries only code/rate/flag and the display name is resolved from these keys at the render site (currencies_page.dart's _currencyLabel).
+  /// Currency display name — US Dollar. Deliberately generic (unprefixed) so a future currency picker can reuse it. One of four sibling keys (currencyUsd/currencyRub/currencyEur/currencyCny) resolved by _currencyLabel in presentation/pages/finance/currencies_page.dart, which falls back to the raw code for anything else. Deliberately describes the key's role and its consumer rather than the migration history that produced it — the earlier wording named a datasource file and model that have since been deleted, and went stale twice.
   ///
   /// In ru, this message translates to:
   /// **'Доллар США'**

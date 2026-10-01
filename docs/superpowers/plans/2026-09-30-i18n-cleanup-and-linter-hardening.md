@@ -16,7 +16,8 @@
 
 These were verified against the live tree and the analyzer API. Do not re-derive them from memory, but *do* re-verify any number before you rely on it — this project has shipped two off-by-one count claims already.
 
-- `lib` holds **348** `.dart` files; **4** are under `lib/l10n/` (`app_localizations.dart`, `app_localizations_ru.dart`, `app_localizations_tg.dart`, `app_localizations_uz.dart` — all generated). Scanned count is **344** and must stay 344.
+- `lib` held **348** `.dart` files when this plan was written, of which **4** are under `lib/l10n/` (`app_localizations.dart`, `app_localizations_ru.dart`, `app_localizations_tg.dart`, `app_localizations_uz.dart` — all generated), giving a scanned count of **344**.
+  **Task 1 deletes one file, so from Task 2 onward the tree is 347 `.dart` files and the scanned count is 343.** Tasks 4, 7 and 8 below assert **343**. If you are running Task 4+ and see 344, Task 1's deletion did not land; if you see anything else, a file was added or removed and that is the finding.
 - `tool/i18n-allowlist.txt` has **48** entry lines (non-blank, non-`#`).
 - **5** of those 48 cover 2 occurrences each and will each need a duplicate line under the multiset rule.
 - The four exception classes' `message` field is written at **108** construction sites and read **nowhere**.
@@ -451,7 +452,7 @@ final _cyrillic = RegExp(r'[Ѐ-ԯ]');
 // Calls whose string arguments are diagnostics, not UI copy. The old scanner
 // expressed this as "the line starts with debugPrint(", which missed nested and
 // multi-line calls. It currently suppresses nothing in lib/ — verified across
-// all 344 scanned files — but the intent is real and is preserved here in a
+// all scanned files — but the intent is real and is preserved here in a
 // form that actually works.
 const _diagnosticCalls = {'debugPrint', 'log', 'print'};
 
@@ -654,7 +655,7 @@ If a pre-existing test now fails, that is a signal the rewrite changed observabl
 ```bash
 dart run tool/check_i18n.dart; echo "EXIT=$?"
 ```
-Expected: `EXIT=0` and `scanned 344 files`.
+Expected: `EXIT=0` and `scanned 343 files` (347 `.dart` files under `lib` minus the 4 generated ones; Task 1 removed one file from the 348 this plan was written against).
 
 `EXIT=0` here is a strong signal: if the AST produced a different key for any of the 45 committed entries, that entry would stop matching and its literal would surface as an offender. Note the count is 344 even though the skip is still directory-based at this point — Task 7 narrows it.
 
@@ -663,7 +664,7 @@ Expected: `EXIT=0` and `scanned 344 files`.
 ```bash
 time dart run tool/check_i18n.dart
 ```
-Record the wall-clock time. Parsing 344 files costs more than 344 regex sweeps. If it exceeds roughly **10 seconds**, report it as a finding — this runs on every CI push (`.github/workflows/ci.yml:128`) and in the pre-commit path.
+Record the wall-clock time. Parsing 343 files costs more than 343 regex sweeps. If it exceeds roughly **10 seconds**, report it as a finding — this runs on every CI push (`.github/workflows/ci.yml:128`) and in the pre-commit path.
 
 - [ ] **Step 8: Prove non-vacuity end to end**
 
@@ -979,7 +980,7 @@ dart run tool/check_i18n.dart; echo "EXIT=$?"
 find lib -name "*.dart" | wc -l
 find lib/l10n -name "*.dart" | wc -l
 ```
-Expected: `EXIT=0` with `scanned 344 files`; 348 total; 4 under `lib/l10n`. All 4 generated files match `app_localizations*.dart`, so narrowing from directory to filename excludes exactly the same set today. **If the scanned count changed, that is a finding** — it would mean a file in `lib/l10n` is not actually generated output.
+Expected: `EXIT=0` with `scanned 343 files`; **347** total; 4 under `lib/l10n`. All 4 generated files match `app_localizations*.dart`, so narrowing from directory to filename excludes exactly the same set today. **If the scanned count changes when you make this edit, that is a finding** — it would mean a file in `lib/l10n` is not actually generated output, or a generated file does not match the pattern.
 
 - [ ] **Step 5: Commit**
 
@@ -1000,7 +1001,7 @@ git commit -m "test(i18n): pin l10n exclusion, raw-string keying, and allowlist 
 cd app
 dart run tool/check_i18n.dart; echo "EXIT=$?"
 ```
-Expected: `scanned 344 files`, `EXIT=0`. Unpiped.
+Expected: `scanned 343 files`, `EXIT=0`. Unpiped.
 
 - [ ] **Step 2: Analyze**
 
