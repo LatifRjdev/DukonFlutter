@@ -148,4 +148,33 @@ void main() {
 
     expect(code, 0, reason: 'lib/l10n must be excluded');
   });
+
+  test('a Cyrillic string inside a trailing comment is not reported', () async {
+    // The old scanner skipped a line only when its *trimmed* form began with
+    // '//', so Cyrillic in a trailing comment false-positived. Fixing that with
+    // a regex is not possible without breaking literals that legitimately
+    // contain '//' (URLs); parsing Dart makes it structural, because a comment
+    // is not a string-literal node at all.
+    File('${tempDir.path}/lib/presentation/sample.dart')
+        .writeAsStringSync("void f() { g(); } // 'Пример'\n");
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 0, reason: 'a comment is not a string literal');
+  });
+
+  test("Cyrillic on a continuation line of a ''' literal is reported", () async {
+    // The old scanner was line-based and required a quote character on the same
+    // line as the Cyrillic. A multi-line literal's middle lines have neither, so
+    // they were invisible. An AST sees one node regardless of line count.
+    File('${tempDir.path}/lib/presentation/sample.dart').writeAsStringSync(
+      "const s = '''\nМногострочный текст\n''';\n",
+    );
+    File('${tempDir.path}/tool/i18n-allowlist.txt').writeAsStringSync('');
+
+    final code = await check_i18n.run([], repoRootOverride: tempDir.path);
+
+    expect(code, 1, reason: 'a multi-line literal is one node');
+  });
 }

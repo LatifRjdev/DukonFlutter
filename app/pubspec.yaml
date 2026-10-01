@@ -80,6 +80,11 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # AST-based scanning for tool/check_i18n.dart. Already present in
+  # pubspec.lock as a transitive dependency of flutter_lints, so declaring it
+  # directly costs no extra download — it just makes the import legitimate
+  # (depend_on_referenced_packages).
+  analyzer: ^7.7.1
   golden_toolkit: ^0.15.0
   # Bloc testing — mock repositories and assert state transitions
   # without touching real HTTP / local DB (FE-P0-002 / #7).
