@@ -32,6 +32,9 @@ Verified against the live tree. Re-verify any number you rely on, but these are 
   ```
 - **"Lint clean" is not achievable and is not the bar.** The pre-existing baseline is ~3572 problems repo-wide; `src/modules/admin/**` alone reports 229. Judge your files against their siblings instead: `admin.users-create.spec.ts` reports 46 problems, almost all `no-unsafe-*` from its hand-written `any` Prisma fake. A new spec in that style landing in the same range is normal, not a regression.
 - **`npx tsc --noEmit` IS the meaningful gate** and must be 0 errors.
+- **Green tests are NOT evidence of type health.** Measured during Task 2: a spec with a genuine type error (`new Date(x)` where `x: Date | null`, TS2769) **passed** under `npm test` while `tsc --noEmit` failed on it. ts-jest did not surface it. Run `tsc` separately every time; never infer type correctness from a green suite.
+- **Prefer a narrow cast to `as any`.** Tasks 1 and 2 both found the plan's `as any` unnecessary: `admin.service.ts:25` already imports Prisma's `SubscriptionPlan`/`SubscriptionStatus`, so `as SubscriptionPlan` keeps Prisma's input types checking the field instead of switching checking off. Same for DTO objects — Task 1 dropped `as any` entirely and it still compiled.
+- **Nullable Prisma fields need `?.`, not `!`, in test assertions.** `trialEndsAt` is `DateTime?` and `subscription` is `Subscription | null`. Optional chaining keeps the assertion's force (an absent value yields `undefined` and still fails); `!` would assert away exactly the nullability the test exists to protect.
 
 ## File structure
 
