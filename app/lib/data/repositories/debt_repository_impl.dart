@@ -91,13 +91,13 @@ class DebtRepositoryImpl implements DebtRepository {
   Exception _handleDioError(DioException e) {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.connectionError) {
-      return const NetworkException('Нет соединения');
+      return const NetworkException('No connection');
     }
     final status = e.response?.statusCode ?? 0;
     if (status == 401) return const UnauthorizedException();
-    if (status >= 500) return const ServerException('Ошибка сервера');
+    if (status >= 500) return const ServerException('Server error');
     return ServerException(
-      e.response?.data?['message']?.toString() ?? 'Не удалось выполнить операцию',
+      e.response?.data?['message']?.toString() ?? 'Operation failed',
     );
   }
 }

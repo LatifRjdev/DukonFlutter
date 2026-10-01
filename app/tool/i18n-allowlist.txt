@@ -69,15 +69,19 @@ lib/presentation/pages/settings/subscription_page.dart::'Эсхата'
 # error_messages.dart's mapErrorToUserMessage has 124 call sites across 29
 # Bloc files, and its result lands in state objects ~66 UI sites read as
 # .message. Converting it to error codes is an architectural change, specced
-# separately. debt_repository_impl.dart's literals are exception constructor
-# arguments that mapErrorToUserMessage never reads (it dispatches on type and
-# HTTP status), so they must move with the mechanism, not ahead of it.
+# separately.
 #
 # NOTE: 'Не удалось выполнить операцию' occurs TWICE in error_messages.dart
 # (the <=400 ServerException fallback and the unknown-exception fallback) but
 # needs only one entry — entries are keyed `<path>::<literal>`, so one line
-# covers every occurrence of that literal in that file. 13 entries here cover
-# 14 occurrences.
+# covers every occurrence of that literal in that file. 10 entries here cover
+# 11 occurrences ('Не удалось выполнить операцию' appears twice, at the
+# <=400 ServerException fallback and the unknown-exception fallback).
+#
+# debt_repository_impl.dart's three literals used to sit here. They were
+# removed because Exception.message is diagnostic-only and never reaches a
+# screen (see lib/core/errors/exceptions.dart), so English is correct there
+# and there is nothing to defer.
 lib/core/errors/error_messages.dart::'Конфликт — объект уже существует'
 lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
 lib/core/errors/error_messages.dart::'Недостаточно прав'
@@ -88,9 +92,6 @@ lib/core/errors/error_messages.dart::'Ошибка локального хран
 lib/core/errors/error_messages.dart::'Ошибка сервера — попробуйте позже'
 lib/core/errors/error_messages.dart::'Сессия истекла. Войдите снова.'
 lib/core/errors/error_messages.dart::'Слишком много попыток — попробуйте позже'
-lib/data/repositories/debt_repository_impl.dart::'Не удалось выполнить операцию'
-lib/data/repositories/debt_repository_impl.dart::'Нет соединения'
-lib/data/repositories/debt_repository_impl.dart::'Ошибка сервера'
 
 # ---------------------------------------------------------------------------
 # 4. Currency abbreviation — not translatable
