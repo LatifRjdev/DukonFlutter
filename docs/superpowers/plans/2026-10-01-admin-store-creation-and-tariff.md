@@ -25,7 +25,13 @@ Verified against the live tree. Re-verify any number you rely on, but these are 
 - `admin/components/user-picker.tsx` exports `UserPicker` with props `{ value: string; onSelect: (id: string, label: string) => void }`. The transfer dialog already uses it (`stores/page.tsx:33`, and in the dialog body). **Reuse it; do not write a second picker.**
 - Backend tests use a hand-written Prisma fake plus `Test.createTestingModule({ providers: [AdminService, {provide: PrismaService, useValue: prisma}, {provide: NotificationsService, useValue: {sendPush: jest.fn()}}, {provide: StoresService, useValue: storesService}] })` — see `api/src/modules/admin/admin.users-create.spec.ts:79-88`. Mirror it.
 - Admin tests use Vitest + MSW with `server` from `../../../test/msw/server` and an `API_URL` constant — see `admin/app/(admin)/stores/page.test.tsx`.
-- Commands: `api/` → `npm test` (jest), `npm run lint`; `admin/` → `npm test` (`vitest run`), `npm run lint`.
+- Commands: `api/` → `npm test` (jest); `admin/` → `npm test` (`vitest run`).
+- **DO NOT run `npm run lint` in `api/`.** The script is `eslint "{src,apps,libs,test}/**/*.ts" --fix` — it rewrites the whole tree in place. Task 1's implementer ran it once: it modified **41 unrelated files** and stripped load-bearing `as any[]` assertions from `loyalty.service.spec.ts`, introducing 4 `tsc` errors that did not exist before. Restoring took `git show HEAD:<path> > <path>` per file. Lint your own files only, without `--fix`:
+  ```bash
+  npx eslint src/modules/admin/dto/your-file.dto.ts src/modules/admin/admin.service.ts
+  ```
+- **"Lint clean" is not achievable and is not the bar.** The pre-existing baseline is ~3572 problems repo-wide; `src/modules/admin/**` alone reports 229. Judge your files against their siblings instead: `admin.users-create.spec.ts` reports 46 problems, almost all `no-unsafe-*` from its hand-written `any` Prisma fake. A new spec in that style landing in the same range is normal, not a regression.
+- **`npx tsc --noEmit` IS the meaningful gate** and must be 0 errors.
 
 ## File structure
 
@@ -309,10 +315,10 @@ Expected: **3 passed**.
 - [ ] **Step 7: Lint and typecheck**
 
 ```bash
-npm run lint
+npx eslint <the files you touched>   # NO --fix; see the hazard note in Facts
 npx tsc --noEmit
 ```
-Expected: both clean.
+Expected: `tsc` reports **0 errors** — that is the gate. For eslint, compare your files against their siblings rather than expecting zero; the repo baseline is ~3572 problems.
 
 - [ ] **Step 8: Commit**
 
@@ -596,10 +602,10 @@ Expected: **7 passed** (4 + 3).
 
 ```bash
 npm test
-npm run lint
+npx eslint <the files you touched>   # NO --fix
 npx tsc --noEmit
 ```
-Expected: all green. Record the pass/fail counts. **If anything was failing before your change, say so rather than attributing it to this work** — check by stashing and re-running if unsure.
+Expected: tests green and `tsc` at 0 errors. Record the pass/fail counts. **If anything was failing before your change, say so rather than attributing it to this work** — check by comparing against `main` rather than assuming.
 
 - [ ] **Step 8: Commit**
 
@@ -1064,10 +1070,10 @@ Expected: all pass, including everything from Task 3 and the pre-existing suites
 - [ ] **Step 5: Lint and typecheck the admin app**
 
 ```bash
-npm run lint
+npx eslint <the files you touched>   # NO --fix; see the hazard note in Facts
 npx tsc --noEmit
 ```
-Expected: both clean.
+Expected: `tsc` reports **0 errors** — that is the gate. For eslint, compare your files against their siblings rather than expecting zero; the repo baseline is ~3572 problems.
 
 - [ ] **Step 6: Commit**
 
@@ -1094,10 +1100,9 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```bash
 cd api
 npm test
-npm run lint
 npx tsc --noEmit
 ```
-Expected: green. Report the test counts.
+Expected: tests green, `tsc` 0 errors. Report the test counts. Do **not** run `npm run lint` here — it carries `--fix` and rewrites the tree.
 
 - [ ] **Step 2: Admin suite, lint, typecheck**
 
@@ -1107,7 +1112,7 @@ npm test
 npm run lint
 npx tsc --noEmit
 ```
-Expected: green. Report the test counts.
+Expected: green. Report the test counts. The admin script is plain `eslint` with no `--fix`, so it is safe to run here — unlike `api/`'s.
 
 - [ ] **Step 3: Assert the Flutter app was not touched**
 
