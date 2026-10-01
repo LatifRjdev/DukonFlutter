@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, Search, Download } from 'lucide-react';
+import { MoreHorizontal, Search, Download, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +63,26 @@ const SUB_STATUS_LABELS: Record<string, string> = {
 // onto `isActive=false` directly.
 const UNSUPPORTED_EXPORT_STATUSES = new Set(['ACTIVE', 'TRIAL', 'PAST_DUE', 'EXPIRED']);
 
+// Mirrors STORE_CATEGORIES in api/src/modules/admin/dto/create-store-by-admin.dto.ts —
+// the backend @IsEnum rejects anything else.
+const STORE_CATEGORIES: { value: string; label: string }[] = [
+  { value: 'GROCERY', label: 'Продукты' },
+  { value: 'CLOTHING', label: 'Одежда' },
+  { value: 'ELECTRONICS', label: 'Электроника' },
+  { value: 'HARDWARE', label: 'Хозтовары' },
+  { value: 'PHARMACY', label: 'Аптека' },
+  { value: 'OTHER', label: 'Другое' },
+];
+
+const EMPTY_NEW_STORE = {
+  ownerId: '',
+  name: '',
+  category: 'GROCERY',
+  currency: 'TJS',
+  address: '',
+  phone: '',
+};
+
 export default function StoresPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -73,6 +93,9 @@ export default function StoresPage() {
   const [transferDialog, setTransferDialog] = useState<Store | null>(null);
   const [newOwnerId, setNewOwnerId] = useState('');
   const [suspendConfirm, setSuspendConfirm] = useState<Store | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [newStore, setNewStore] = useState(EMPTY_NEW_STORE);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery<Store[]>({
     queryKey: ['stores'],
@@ -104,6 +127,36 @@ export default function StoresPage() {
       toast.success('Владелец магазина изменён');
     },
     onError: () => toast.error('Ошибка передачи магазина'),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (body: typeof EMPTY_NEW_STORE) =>
+      api.post('/admin/stores', {
+        ownerId: body.ownerId,
+        name: body.name,
+        category: body.category,
+        currency: body.currency,
+        address: body.address || undefined,
+        phone: body.phone || undefined,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stores'] });
+      setCreateOpen(false);
+      setCreateError(null);
+      setNewStore(EMPTY_NEW_STORE);
+      toast.success('Магазин создан');
+    },
+    onError: (e: unknown) => {
+      // Surface the server's message inline — an unknown owner or a rejected
+      // field is a recoverable mistake the admin should still see while
+      // fixing it, not only in a toast that fades.
+      //
+      // lib/api.ts is a fetch wrapper, not axios: it throws
+      // `new Error(data.message || 'HTTP <status>')`, so the message lives on
+      // `.message`. There is no `e.response.data.message`.
+      setCreateError(e instanceof Error ? e.message : 'Не удалось создать магазин');
+      toast.error('Ошибка создания магазина');
+    },
   });
 
   const categories = ['all', ...new Set(stores.map((s) => s.category).filter(Boolean) as string[])];
@@ -216,11 +269,17 @@ export default function StoresPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Магазины</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {stores.length} магазинов всего
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Магазины</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {stores.length} магазинов всего
+          </p>
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Создать магазин
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -318,6 +377,99 @@ export default function StoresPage() {
           if (suspendConfirm) suspendMutation.mutate(suspendConfirm);
         }}
       />
+
+      {/* Create-store dialog */}
+      <Dialog
+        open={createOpen}
+        onOpenChange={(open) => {
+          setCreateOpen(open);
+          if (!open) setCreateError(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Создать магазин</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-2">
+              {/* UserPicker owns its own search Input and does not forward an
+                  id, so this Label is descriptive rather than associated —
+                  same as the transfer dialog's. */}
+              <Label>Владелец</Label>
+              <UserPicker
+                key={createOpen ? 'create-open' : 'create-closed'}
+                value={newStore.ownerId}
+                onSelect={(id) => setNewStore((s) => ({ ...s, ownerId: id }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-name">Название</Label>
+              <Input
+                id="create-name"
+                value={newStore.name}
+                onChange={(e) => setNewStore((s) => ({ ...s, name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-category">Категория</Label>
+              <select
+                id="create-category"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={newStore.category}
+                onChange={(e) => setNewStore((s) => ({ ...s, category: e.target.value }))}
+              >
+                {STORE_CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-currency">Валюта</Label>
+              <select
+                id="create-currency"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                value={newStore.currency}
+                onChange={(e) => setNewStore((s) => ({ ...s, currency: e.target.value }))}
+              >
+                <option value="TJS">TJS</option>
+                <option value="USD">USD</option>
+                <option value="RUB">RUB</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-address">Адрес</Label>
+              <Input
+                id="create-address"
+                value={newStore.address}
+                onChange={(e) => setNewStore((s) => ({ ...s, address: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-phone">Телефон</Label>
+              <Input
+                id="create-phone"
+                placeholder="+992901234567"
+                value={newStore.phone}
+                onChange={(e) => setNewStore((s) => ({ ...s, phone: e.target.value }))}
+              />
+            </div>
+            {createError && <p className="text-sm text-destructive">{createError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={() => createMutation.mutate(newStore)}
+              disabled={!newStore.ownerId || !newStore.name || createMutation.isPending}
+            >
+              Создать
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Transfer dialog */}
       <Dialog

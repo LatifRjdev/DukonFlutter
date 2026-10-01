@@ -260,3 +260,93 @@ describe('StoresPage requests enough rows for client-side filtering to be accura
     expect(limit).toBeGreaterThanOrEqual(1000);
   });
 });
+
+describe('StoresPage — create store for an existing user', () => {
+  beforeEach(() => {
+    toastSuccess.mockReset();
+    toastError.mockReset();
+  });
+
+  it('POSTs { ownerId, name, category } to /admin/stores and invalidates the list', async () => {
+    const user = userEvent.setup();
+    const captured: { body?: Record<string, unknown> } = {};
+    let listFetches = 0;
+    server.use(
+      http.get(`${API_URL}/admin/stores`, () => {
+        listFetches += 1;
+        return HttpResponse.json({ data: [], total: 0 });
+      }),
+      http.post(`${API_URL}/admin/stores`, async ({ request }) => {
+        captured.body = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json({ id: 's2', name: 'Новый магазин' });
+      }),
+      http.get(`${API_URL}/admin/users`, () =>
+        HttpResponse.json({
+          data: [{ id: 'u1', name: 'Али', phone: '+992901234567' }],
+          total: 1,
+        }),
+      ),
+    );
+
+    renderWithQuery(<StoresPage />);
+    await waitFor(() => expect(listFetches).toBe(1));
+
+    await user.click(await screen.findByRole('button', { name: 'Создать магазин' }));
+
+    await user.type(screen.getByLabelText('Название'), 'Новый магазин');
+    // UserPicker renders a search Input with no id, so it cannot be reached by
+    // label — the transfer test addresses it by placeholder for the same reason.
+    await user.type(
+      screen.getByPlaceholderText(/Поиск по имени или телефону/i),
+      '+992901234567',
+    );
+    await user.click(await screen.findByText(/Али/));
+
+    await user.click(screen.getByRole('button', { name: 'Создать' }));
+
+    await waitFor(() => expect(captured.body).toBeDefined());
+    expect(captured.body).toMatchObject({
+      ownerId: 'u1',
+      name: 'Новый магазин',
+      category: 'GROCERY',
+    });
+    expect(toastSuccess).toHaveBeenCalledWith('Магазин создан');
+    // The list must be refetched — invalidating any other key fails silently.
+    await waitFor(() => expect(listFetches).toBe(2));
+  });
+
+  it('shows a server validation error inline instead of only as a toast', async () => {
+    // An unknown ownerId and a malformed field are both recoverable mistakes
+    // the admin should see next to the field, not just in a toast that fades.
+    const user = userEvent.setup();
+    server.use(
+      http.post(`${API_URL}/admin/stores`, () =>
+        HttpResponse.json(
+          { statusCode: 404, message: ['Owner user not found'] },
+          { status: 404 },
+        ),
+      ),
+      http.get(`${API_URL}/admin/users`, () =>
+        HttpResponse.json({
+          data: [{ id: 'u1', name: 'Али', phone: '+992901234567' }],
+          total: 1,
+        }),
+      ),
+    );
+
+    mockSingleStore(true);
+    renderWithQuery(<StoresPage />);
+    await user.click(await screen.findByRole('button', { name: 'Создать магазин' }));
+    await user.type(screen.getByLabelText('Название'), 'Новый магазин');
+    await user.type(
+      screen.getByPlaceholderText(/Поиск по имени или телефону/i),
+      '+992901234567',
+    );
+    await user.click(await screen.findByText(/Али/));
+    await user.click(screen.getByRole('button', { name: 'Создать' }));
+
+    expect(await screen.findByText('Owner user not found')).toBeInTheDocument();
+    // Still open, so the admin can fix the field without re-entering everything.
+    expect(screen.getByRole('button', { name: 'Создать' })).toBeInTheDocument();
+  });
+});
