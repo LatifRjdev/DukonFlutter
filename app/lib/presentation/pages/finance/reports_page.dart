@@ -90,34 +90,20 @@ class _ExpenseCategory {
   const _ExpenseCategory({required this.name, required this.total});
 }
 
-class _ProfitMonthItem {
-  final String month;
-  final double income;
-  final double expenses;
-  const _ProfitMonthItem({
-    required this.month,
-    required this.income,
-    required this.expenses,
-  });
-  factory _ProfitMonthItem.fromJson(Map<String, dynamic> j) => _ProfitMonthItem(
-    month: j['month'] as String? ?? '',
-    income: (j['income'] as num?)?.toDouble() ?? 0,
-    expenses: (j['expenses'] as num?)?.toDouble() ?? 0,
-  );
-}
-
 class _ProfitData {
   final double totalIncome;
   final double totalExpenses;
+  final double costOfGoods;
+  final double grossProfit;
   final double netProfit;
   final double margin;
-  final List<_ProfitMonthItem> monthly;
   const _ProfitData({
     required this.totalIncome,
     required this.totalExpenses,
+    required this.costOfGoods,
+    required this.grossProfit,
     required this.netProfit,
     required this.margin,
-    required this.monthly,
   });
 }
 
@@ -355,19 +341,19 @@ class _ReportsPageState extends State<ReportsPage>
         queryParameters: {'from': _fmt(_from), 'to': _fmt(_to)},
       );
       final body = resp.data ?? {};
-      final monthlyJson =
-          (body['monthly'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-      final income = (body['totalIncome'] as num?)?.toDouble() ?? 0;
-      final expenses = (body['totalExpenses'] as num?)?.toDouble() ?? 0;
-      final net = income - expenses;
-      final margin = income > 0 ? (net / income) * 100 : 0.0;
+      // These key names are what /reports/profit sends. The screen used to read
+      // `totalIncome`/`totalExpenses`/`monthly`, none of which the endpoint has
+      // ever returned, so every figure here rendered as 0 and the chart never
+      // appeared. It also recomputed net locally as income - expenses, ignoring
+      // cost of goods the same way the finance screen used to.
       setState(() {
         _profitData = _ProfitData(
-          totalIncome: income,
-          totalExpenses: expenses,
-          netProfit: net,
-          margin: margin,
-          monthly: monthlyJson.map(_ProfitMonthItem.fromJson).toList(),
+          totalIncome: (body['income'] as num?)?.toDouble() ?? 0,
+          totalExpenses: (body['expenses'] as num?)?.toDouble() ?? 0,
+          costOfGoods: (body['cogs'] as num?)?.toDouble() ?? 0,
+          grossProfit: (body['grossProfit'] as num?)?.toDouble() ?? 0,
+          netProfit: (body['profit'] as num?)?.toDouble() ?? 0,
+          margin: (body['marginPercent'] as num?)?.toDouble() ?? 0,
         );
       });
     } catch (e) {
@@ -700,6 +686,8 @@ class _ReportsPageState extends State<ReportsPage>
             ],
             data: [
               [l10n.income, _fmtPrice(p.totalIncome)],
+              [l10n.costOfGoods, _fmtPrice(p.costOfGoods)],
+              [l10n.financeGrossProfit, _fmtPrice(p.grossProfit)],
               [l10n.expenses, _fmtPrice(p.totalExpenses)],
               [l10n.reportsNetProfitLabel, _fmtPrice(p.netProfit)],
               [l10n.margin, '${p.margin.toStringAsFixed(1)}%'],
@@ -897,20 +885,11 @@ class _ReportsPageState extends State<ReportsPage>
         if (p != null) {
           addRow([l10n.reportsMetricColumnLabel, l10n.reportsValueColumnLabel]);
           addRow([l10n.income, p.totalIncome.toStringAsFixed(2)]);
+          addRow([l10n.costOfGoods, p.costOfGoods.toStringAsFixed(2)]);
+          addRow([l10n.financeGrossProfit, p.grossProfit.toStringAsFixed(2)]);
           addRow([l10n.expenses, p.totalExpenses.toStringAsFixed(2)]);
           addRow([l10n.reportsNetProfitLabel, p.netProfit.toStringAsFixed(2)]);
           addRow([l10n.reportsMarginPercentLabel, p.margin.toStringAsFixed(1)]);
-          if (p.monthly.isNotEmpty) {
-            addRow([]);
-            addRow([l10n.month, l10n.income, l10n.expenses]);
-            for (final m in p.monthly) {
-              addRow([
-                m.month,
-                m.income.toStringAsFixed(2),
-                m.expenses.toStringAsFixed(2),
-              ]);
-            }
-          }
         }
       case 3:
         final d = _productsData;
@@ -1769,6 +1748,26 @@ class _ProfitTab extends StatelessWidget {
           children: [
             Expanded(
               child: _KpiCard(
+                label: l10n.costOfGoods,
+                value: fmtPrice(d.costOfGoods),
+                color: AppColors.info,
+              ),
+            ),
+            const SizedBox(width: AppConstants.spacingSm),
+            Expanded(
+              child: _KpiCard(
+                label: l10n.financeGrossProfit,
+                value: fmtPrice(d.grossProfit),
+                color: context.warning,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        Row(
+          children: [
+            Expanded(
+              child: _KpiCard(
                 label: l10n.reportsNetProfitLabel,
                 value: fmtPrice(d.netProfit),
                 color: context.success,
@@ -1785,125 +1784,7 @@ class _ProfitTab extends StatelessWidget {
           ],
         ),
 
-        if (d.monthly.isNotEmpty) ...[
-          const SizedBox(height: AppConstants.spacingMd),
-          _SectionCard(
-            title: l10n.reportsIncomeVsExpensesChartTitle,
-            child: SizedBox(
-              height: 240,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY:
-                      d.monthly
-                          .expand((m) => [m.income, m.expenses])
-                          .reduce((a, b) => a > b ? a : b) *
-                      1.2,
-                  barTouchData: BarTouchData(enabled: true),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final idx = value.toInt();
-                          if (idx < 0 || idx >= d.monthly.length) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Text(
-                              d.monthly[idx].month,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                color: context.textSecondary,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  gridData: const FlGridData(show: false),
-                  barGroups: List.generate(
-                    d.monthly.length,
-                    (i) => BarChartGroupData(
-                      x: i,
-                      barsSpace: 4,
-                      barRods: [
-                        BarChartRodData(
-                          toY: d.monthly[i].income,
-                          color: AppColors.primary,
-                          width: 14,
-                          borderRadius: BorderRadius.circular(
-                            AppConstants.radiusXs,
-                          ),
-                        ),
-                        BarChartRodData(
-                          toY: d.monthly[i].expenses,
-                          color: context.danger,
-                          width: 14,
-                          borderRadius: BorderRadius.circular(
-                            AppConstants.radiusXs,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppConstants.spacingSm),
-          Row(
-            children: [
-              _LegendDot(color: AppColors.primary, label: l10n.income),
-              const SizedBox(width: AppConstants.spacingMd),
-              _LegendDot(color: context.danger, label: l10n.expenses),
-            ],
-          ),
-        ],
         const SizedBox(height: 80),
-      ],
-    );
-  }
-}
-
-class _LegendDot extends StatelessWidget {
-  final Color color;
-  final String label;
-  const _LegendDot({required this.color, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 12,
-            color: context.textSecondary,
-          ),
-        ),
       ],
     );
   }

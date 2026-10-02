@@ -370,7 +370,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(l10n.dashboardCost,
+                                    Text(l10n.costOfGoods,
                                       style: TextStyle(fontSize: 12, color: context.textSecondary)),
                                     Text(_formatPrice(totalCost),
                                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),

@@ -934,7 +934,7 @@ abstract class AppLocalizations {
   /// **'Оптовая цена'**
   String get wholesalePrice;
 
-  /// Add-product step 2 — cost price form field label with a required-field asterisk; distinct from `dashboardCost` ("Себестоимость", the dashboard metric tile label, no asterisk) and `costPrice` ("Цена закупки", a differently-worded purchase-price label)
+  /// Add-product step 2 — cost price form field label with a required-field asterisk; distinct from `costOfGoods` ("Себестоимость", the bare metric label, no asterisk) and `costPrice` ("Цена закупки", a differently-worded purchase-price label)
   ///
   /// In ru, this message translates to:
   /// **'Себестоимость *'**
@@ -2146,7 +2146,7 @@ abstract class AppLocalizations {
   /// **'Цена: {price}'**
   String stockIntakePriceLine(String price);
 
-  /// Stock-intake screen — section label above the unit cost-price field, with an explicit per-unit qualifier. Distinct from `costPriceRequiredLabel` ("Себестоимость *", the add-product field label with a required asterisk), `dashboardCost` ("Себестоимость", a dashboard metric tile) and `productDetailBatchCostLabel` ("Себестоимость партии", the cost of a whole batch rather than per unit)
+  /// Stock-intake screen — section label above the unit cost-price field, with an explicit per-unit qualifier. Distinct from `costPriceRequiredLabel` ("Себестоимость *", the add-product field label with a required asterisk), `costOfGoods` ("Себестоимость", the bare metric label) and `productDetailBatchCostLabel` ("Себестоимость партии", the cost of a whole batch rather than per unit)
   ///
   /// In ru, this message translates to:
   /// **'Себестоимость (за единицу)'**
@@ -2265,6 +2265,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Маржа'**
   String get margin;
+
+  /// Bare 'Cost of goods' metric label. Generic, not screen-specific — read by the dashboard tile, the product list footer, the product detail card and the profit report. Distinct from `costPrice` ("Цена закупки", a differently-worded purchase price), `costPriceRequiredLabel` (the add-product field with a required asterisk) and `productDetailBatchCostLabel` (the cost of a whole batch)
+  ///
+  /// In ru, this message translates to:
+  /// **'Себестоимость'**
+  String get costOfGoods;
 
   /// More button
   ///
@@ -2457,12 +2463,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выберите магазин'**
   String get dashboardSelectStoreTitle;
-
-  /// Cost-of-goods metric tile label
-  ///
-  /// In ru, this message translates to:
-  /// **'Себестоимость'**
-  String get dashboardCost;
 
   /// Dashboard action tiles section title
   ///
@@ -3693,12 +3693,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Детализация'**
   String get reportsDetailsSectionTitle;
-
-  /// No description provided for @reportsIncomeVsExpensesChartTitle.
-  ///
-  /// In ru, this message translates to:
-  /// **'Доход vs Расходы по месяцам'**
-  String get reportsIncomeVsExpensesChartTitle;
 
   /// No description provided for @reportsTopSalesSectionTitle.
   ///

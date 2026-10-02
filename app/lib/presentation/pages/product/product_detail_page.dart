@@ -176,7 +176,7 @@ class ProductDetailPage extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _MiniMetricCard(
-                            label: l10n.dashboardCost,
+                            label: l10n.costOfGoods,
                             value: product.costPrice != null
                                 ? _formatPrice(product.costPrice!)
                                 : '—',

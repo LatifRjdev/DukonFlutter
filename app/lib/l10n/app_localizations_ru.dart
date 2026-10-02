@@ -1199,6 +1199,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get margin => 'Маржа';
 
   @override
+  String get costOfGoods => 'Себестоимость';
+
+  @override
   String get more => 'Ещё';
 
   @override
@@ -1307,9 +1310,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dashboardSelectStoreTitle => 'Выберите магазин';
-
-  @override
-  String get dashboardCost => 'Себестоимость';
 
   @override
   String get dashboardOperationsTitle => 'Операции';
@@ -2000,9 +2000,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get reportsDetailsSectionTitle => 'Детализация';
-
-  @override
-  String get reportsIncomeVsExpensesChartTitle => 'Доход vs Расходы по месяцам';
 
   @override
   String get reportsTopSalesSectionTitle => 'Топ продажи';
