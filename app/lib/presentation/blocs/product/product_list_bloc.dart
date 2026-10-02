@@ -8,6 +8,21 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
   final ProductRepository _productRepository;
   String _storeId = '';
 
+  /// The request currently being served, if any.
+  ///
+  /// Two screens share this bloc and both load it: the Товары tab and the POS
+  /// till, which keeps its own copy of the store id. `HomePage` builds every
+  /// tab into an `IndexedStack`, so both are mounted and both react to a store
+  /// change — firing two identical requests for the slowest list in the app.
+  /// Deduplicating here rather than at either call site keeps it true for
+  /// whoever loads this bloc next.
+  ///
+  /// Only an identical in-flight request is dropped: a search, a category
+  /// filter or another page differs by [ProductListLoadRequested]'s props and
+  /// still goes through, as does any repeat once the first has finished — so
+  /// pull to refresh keeps working.
+  ProductListLoadRequested? _inFlight;
+
   ProductListBloc({required ProductRepository productRepository})
       : _productRepository = productRepository,
         super(ProductListInitial()) {
@@ -18,6 +33,8 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
   }
 
   Future<void> _onLoadRequested(ProductListLoadRequested event, Emitter<ProductListState> emit) async {
+    if (_inFlight == event) return;
+    _inFlight = event;
     _storeId = event.storeId;
     emit(ProductListLoading());
     try {
@@ -37,6 +54,9 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       ));
     } catch (e) {
       emit(ProductListError(mapErrorToUserMessage(e)));
+    } finally {
+      // Cleared even on failure, so a retry of the same request is allowed.
+      if (_inFlight == event) _inFlight = null;
     }
   }
 

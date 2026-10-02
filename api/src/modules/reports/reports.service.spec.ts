@@ -20,6 +20,7 @@ type SaleItemRow = {
   quantity: number;
   total: number;
   costPrice?: number | null;
+  refundedQuantity?: number;
 };
 
 type ExpenseRow = {
@@ -284,10 +285,18 @@ function makePrismaFake() {
           )
           .map((s) => s.id),
       );
+      // Mirrors the shared aggregate in common/finance/cost-of-goods.ts,
+      // refund term included — the fake drifting from the SQL it stands in for
+      // is how the two copies diverged in the first place.
       const cogs = items
         .filter((it) => matchSaleIds.has(it.saleId))
-        .reduce((acc, it) => acc + it.quantity * (it.costPrice ?? 0), 0);
-      return [{ cogs }];
+        .reduce(
+          (acc, it) =>
+            acc +
+            (it.quantity - (it.refundedQuantity ?? 0)) * (it.costPrice ?? 0),
+          0,
+        );
+      return [{ cogs: String(cogs) }];
     }
     return [];
   });

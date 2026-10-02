@@ -408,7 +408,7 @@ class _DashboardPageState extends State<DashboardPage> {
         const SizedBox(width: 10),
         Expanded(
           child: _MetricTile(
-            label: l10n.dashboardCost,
+            label: l10n.costOfGoods,
             value: _formatPrice(stats.todayCost),
             accent: AppColors.info,
           ),
