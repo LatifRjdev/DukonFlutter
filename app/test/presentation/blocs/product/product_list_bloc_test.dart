@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -360,6 +362,106 @@ void main() {
               ));
         },
       );
+    });
+
+    group('duplicate load requests', () {
+      // Товары and the POS till share this bloc and both load it, and both are
+      // mounted at once inside HomePage's IndexedStack — so a store change
+      // fired two identical requests for the slowest list in the app.
+      test('should issue one request when the same load is dispatched twice '
+          'before the first completes', () async {
+        final gate = Completer<
+            ({List<Product> data, int total, int totalPages})>();
+        var calls = 0;
+        when(() => repository.getProducts(
+              any(),
+              page: any(named: 'page'),
+              limit: any(named: 'limit'),
+              search: any(named: 'search'),
+              categoryId: any(named: 'categoryId'),
+              inStock: any(named: 'inStock'),
+              lowStock: any(named: 'lowStock'),
+              sortBy: any(named: 'sortBy'),
+              sortOrder: any(named: 'sortOrder'),
+            )).thenAnswer((_) {
+          calls++;
+          return gate.future;
+        });
+
+        final bloc = ProductListBloc(productRepository: repository);
+        addTearDown(bloc.close);
+
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1'));
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1'));
+        await Future<void>.delayed(Duration.zero);
+
+        expect(calls, 1);
+
+        gate.complete((data: [mkProduct()], total: 1, totalPages: 1));
+        await bloc.stream.firstWhere((s) => s is ProductListLoaded);
+      });
+
+      test('should still issue a request when a search differs from the one '
+          'in flight', () async {
+        final gate = Completer<
+            ({List<Product> data, int total, int totalPages})>();
+        var calls = 0;
+        when(() => repository.getProducts(
+              any(),
+              page: any(named: 'page'),
+              limit: any(named: 'limit'),
+              search: any(named: 'search'),
+              categoryId: any(named: 'categoryId'),
+              inStock: any(named: 'inStock'),
+              lowStock: any(named: 'lowStock'),
+              sortBy: any(named: 'sortBy'),
+              sortOrder: any(named: 'sortOrder'),
+            )).thenAnswer((_) {
+          calls++;
+          return gate.future;
+        });
+
+        final bloc = ProductListBloc(productRepository: repository);
+        addTearDown(bloc.close);
+
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1'));
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1', search: 'a'));
+        await Future<void>.delayed(Duration.zero);
+
+        expect(calls, 2);
+
+        gate.complete((data: [mkProduct()], total: 1, totalPages: 1));
+        await bloc.stream.firstWhere((s) => s is ProductListLoaded);
+      });
+
+      test('should issue a request again once the previous one has finished',
+          () async {
+        var calls = 0;
+        when(() => repository.getProducts(
+              any(),
+              page: any(named: 'page'),
+              limit: any(named: 'limit'),
+              search: any(named: 'search'),
+              categoryId: any(named: 'categoryId'),
+              inStock: any(named: 'inStock'),
+              lowStock: any(named: 'lowStock'),
+              sortBy: any(named: 'sortBy'),
+              sortOrder: any(named: 'sortOrder'),
+            )).thenAnswer((_) async {
+          calls++;
+          return (data: [mkProduct()], total: 1, totalPages: 1);
+        });
+
+        final bloc = ProductListBloc(productRepository: repository);
+        addTearDown(bloc.close);
+
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1'));
+        await bloc.stream.firstWhere((s) => s is ProductListLoaded);
+        bloc.add(const ProductListLoadRequested(storeId: 'store-1'));
+        await bloc.stream.firstWhere((s) => s is ProductListLoaded);
+
+        expect(calls, 2, reason: 'pull to refresh must keep working');
+      });
     });
   });
 }
