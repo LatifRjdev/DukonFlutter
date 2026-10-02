@@ -5,11 +5,11 @@ import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'injection.dart';
 import 'presentation/widgets/common/offline_banner.dart';
+import 'presentation/widgets/common/store_scope.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/auth/auth_event.dart';
 import 'presentation/blocs/auth/auth_state.dart';
 import 'presentation/blocs/store/store_bloc.dart';
-import 'presentation/blocs/store/store_state.dart';
 import 'presentation/blocs/pos/cart_bloc.dart';
 import 'presentation/blocs/dashboard/dashboard_bloc.dart';
 import 'presentation/blocs/product/product_list_bloc.dart';
@@ -44,18 +44,6 @@ import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 /// data — most damagingly StoreBloc.selectedStore — leaking into the next.
 String _sessionKeyOf(AuthState state) =>
     state is AuthAuthenticated ? 'user:${state.user.id}' : 'anonymous';
-
-/// Identity of the selected store, used for the inner provider key.
-///
-/// StoreBloc itself must NOT sit inside the store-keyed subtree — it owns the
-/// selection, so its own change would destroy it mid-switch. It also must not
-/// sit at the root, or `selectedStore` would survive logout and the next
-/// session would fetch against the previous user's store, which is the bug
-/// fixed in 2082dc8. Hence the middle level.
-String _storeKeyOf(StoreState state) =>
-    state is StoreLoaded && state.selectedStore != null
-        ? 'store:${state.selectedStore!.id}'
-        : 'no-store';
 
 class DukonProApp extends StatelessWidget {
   const DukonProApp({super.key, this.locale = const Locale('ru')});
@@ -125,17 +113,21 @@ class DukonProApp extends StatelessWidget {
                   final sessionKey = _sessionKeyOf(authState);
                   return MultiBlocProvider(
                     // Level 2: survives a store switch, resets on logout.
+                    //
+                    // StoreBloc must NOT sit inside the store-keyed subtree —
+                    // it owns the selection, so its own change would destroy
+                    // it mid-switch. Nor at the root, or `selectedStore` would
+                    // survive logout and the next session would fetch against
+                    // the previous user's store, the bug fixed in 2082dc8.
                     key: ValueKey('session:$sessionKey'),
                     providers: [
                       BlocProvider(create: (_) => sl<StoreBloc>()),
                     ],
-                    child: BlocBuilder<StoreBloc, StoreState>(
-                      buildWhen: (prev, curr) =>
-                          _storeKeyOf(prev) != _storeKeyOf(curr),
-                      builder: (context, storeState) {
+                    child: StoreScope(
+                      builder: (context, storeKey) {
                         return MultiBlocProvider(
                           // Level 3: resets on account OR store change.
-                          key: ValueKey('$sessionKey|${_storeKeyOf(storeState)}'),
+                          key: ValueKey('$sessionKey|$storeKey'),
                           providers: [
                             BlocProvider(create: (_) => sl<CartBloc>()),
                             BlocProvider(create: (_) => sl<DashboardBloc>()),
