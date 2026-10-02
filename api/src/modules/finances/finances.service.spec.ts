@@ -442,3 +442,79 @@ describe('FinancesService', () => {
     });
   });
 });
+
+// The dashboard reads todayCost and todayExpenses; the API sent neither, so
+// both cards rendered 0 for every store, always. With real expenses of 420 the
+// card showed 0 — and the same screen showed a profit that already had those
+// 420 deducted, so its own numbers did not add up.
+//
+// These cases pin exact figures rather than filter behavior, so they use a
+// fixed-return fake instead of the map-backed one above: COGS comes from a
+// $queryRaw aggregate, which the map-backed fake deliberately stubs as empty.
+function makeFigurePrisma(opts: {
+  revenue: number;
+  expenses: number;
+  cogs: number;
+}) {
+  return {
+    sale: {
+      aggregate: jest.fn(async () => ({
+        _sum: { total: opts.revenue },
+        _count: 3,
+        _avg: { total: opts.revenue / 3 },
+      })),
+      count: jest.fn(async () => 3),
+      findMany: jest.fn(async () => []),
+    },
+    expense: {
+      aggregate: jest.fn(async () => ({ _sum: { amount: opts.expenses } })),
+      groupBy: jest.fn(async () => []),
+    },
+    product: { count: jest.fn(async () => 10) },
+    saleItem: {
+      groupBy: jest.fn(async () => []),
+    },
+    // One return serves every raw query the finance path issues: the low-stock
+    // count, the by-day breakdowns (passed through untouched) and computeCogs.
+    $queryRaw: jest.fn(async () => [
+      { count: BigInt(0), cogs: String(opts.cogs) },
+    ]),
+  };
+}
+
+async function buildWithFigures(prisma: any): Promise<FinancesService> {
+  const ref = await Test.createTestingModule({
+    providers: [FinancesService, { provide: PrismaService, useValue: prisma }],
+  }).compile();
+  return ref.get(FinancesService);
+}
+
+describe('FinancesService.getOverview', () => {
+  it('returns todayCost and todayExpenses, which the dashboard needs', async () => {
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getOverview('store-1', {
+      period: 'today',
+    } as any);
+
+    expect(r.todayRevenue).toBe(575);
+    expect(r.todayCost).toBe(230);
+    expect(r.todayExpenses).toBe(420);
+  });
+
+  it('reports profit net of BOTH cost of goods and expenses', async () => {
+    // Previously todayProfit was revenue - expenses, ignoring COGS entirely.
+    // The dashboard shows revenue above three cards (profit / cost / expenses),
+    // so the numbers have to add up: 575 - 230 - 420 = -75.
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getOverview('store-1', {
+      period: 'today',
+    } as any);
+
+    expect(r.todayProfit).toBe(-75);
+    expect(r.todayRevenue - r.todayCost - r.todayExpenses).toBe(r.todayProfit);
+  });
+});

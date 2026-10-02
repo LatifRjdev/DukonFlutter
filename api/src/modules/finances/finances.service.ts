@@ -21,6 +21,7 @@ export class FinancesService {
       totalProducts,
       lowStockProducts,
       recentSales,
+      todayCost,
     ] = await Promise.all([
       this.prisma.sale.aggregate({
         where: {
@@ -63,6 +64,7 @@ export class FinancesService {
           customer: { select: { name: true } },
         },
       }),
+      this.computeCogs(storeId, startDate, endDate),
     ]);
 
     const todayRevenue = Number(salesAggregate._sum.total || 0);
@@ -70,8 +72,13 @@ export class FinancesService {
 
     return {
       todayRevenue,
+      todayCost,
+      todayExpenses,
       todaySalesCount: salesAggregate._count,
-      todayProfit: todayRevenue - todayExpenses,
+      // Net of BOTH cost of goods and expenses. This previously ignored COGS,
+      // which made the dashboard self-contradictory: it showed a profit with
+      // expenses already deducted next to an expenses card reading 0.
+      todayProfit: todayRevenue - todayCost - todayExpenses,
       totalProducts,
       lowStockProducts: Number(lowStockProducts[0]?.count ?? 0),
       recentSales: recentSales.map((s: any) => ({
@@ -447,6 +454,38 @@ export class FinancesService {
         Number(customerTotals._sum.debt ?? 0) -
         Number(supplierTotals._sum.debt ?? 0),
     };
+  }
+
+  /// Cost of goods sold for a period.
+  ///
+  /// Reads SaleItem.costPrice — the cost SNAPSHOT taken when the sale was
+  /// made — not the product's current costPrice. Re-pricing a product must not
+  /// rewrite the margin on sales that already happened.
+  ///
+  /// `refundedQuantity` is cumulative per line, so subtracting it drops
+  /// refunded units out without a second query.
+  ///
+  /// A NULL costPrice contributes 0. None exist today (verified across every
+  /// store), but an import path that skipped the snapshot would silently
+  /// understate COGS — and 0 is the only honest default, since the historical
+  /// cost cannot be reconstructed.
+  private async computeCogs(
+    storeId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
+    const rows = await this.prisma.$queryRaw<[{ cogs: string | null }]>`
+      SELECT COALESCE(
+        SUM((si."quantity" - si."refundedQuantity") * si."costPrice"), 0
+      )::text AS cogs
+      FROM sale_items si
+      JOIN sales s ON s.id = si."saleId"
+      WHERE s."storeId" = ${storeId}
+        AND s."status" = 'COMPLETED'
+        AND s."createdAt" >= ${startDate}
+        AND s."createdAt" <= ${endDate}
+    `;
+    return Number(rows[0]?.cogs ?? 0);
   }
 
   private getDateRange(query: FinanceQueryDto): {
