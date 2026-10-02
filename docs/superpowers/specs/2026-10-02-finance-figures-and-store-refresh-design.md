@@ -103,9 +103,15 @@ current cost — correct behaviour, since re-pricing a product must not rewrite 
 COGS = SUM((quantity - refundedQuantity) * costPrice)
 ```
 
-over sale items joined to that store's non-cancelled sales in the period. `refundedQuantity` already
-tracks cumulative refunds per line, so refunded units drop out without extra work. Verified against the
-seeded data: the aggregate returns exactly **230.00**.
+over sale items joined to that store's **COMPLETED** sales in the period. Verified against the seeded
+data: the aggregate returns exactly **230.00**.
+
+Correcting this section as written: it claimed refunded units drop out via `refundedQuantity`. They do
+not. `SalesService.refund` moves the sale to `RETURNED`/`PARTIALLY_RETURNED` in the same transaction that
+increments that column, so the `COMPLETED` filter already excludes a refunded sale whole. The figures are
+right either way — revenue uses the identical filter, so both sides drop it together — but the subtraction
+is dead code today, kept only so the aggregate stays correct if the filter is ever widened. Widening it
+for COGS alone would understate margin.
 
 A shared private helper serves all three endpoints rather than three copies of the aggregate.
 

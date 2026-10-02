@@ -471,8 +471,17 @@ export class FinancesService {
   /// made — not the product's current costPrice. Re-pricing a product must not
   /// rewrite the margin on sales that already happened.
   ///
-  /// `refundedQuantity` is cumulative per line, so subtracting it drops
-  /// refunded units out without a second query.
+  /// Refunds do NOT reach the subtraction today: SalesService.refund moves the
+  /// sale to RETURNED or PARTIALLY_RETURNED in the same transaction that
+  /// increments refundedQuantity, so the COMPLETED filter already excludes such
+  /// a sale in its entirety. That matches how revenue treats it — the revenue
+  /// aggregates use the identical filter — so margins stay consistent. The
+  /// `- refundedQuantity` term is kept so this aggregate stays correct if that
+  /// filter is ever widened; widening it here alone would understate margin.
+  ///
+  /// Known inconsistency, deliberately left alone: topProducts (above) does
+  /// include PARTIALLY_RETURNED, so the dashboard's top-products list and its
+  /// revenue/COGS disagree about partially refunded sales.
   ///
   /// A NULL costPrice contributes 0. None exist today (verified across every
   /// store), but an import path that skipped the snapshot would silently

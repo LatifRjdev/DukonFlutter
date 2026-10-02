@@ -548,4 +548,71 @@ describe('FinancesService.getDashboard', () => {
 
     expect(r.cogs).toBe(230);
   });
+
+  // These assert the SQL the service SENDS, not what a database makes of it.
+  // The fake stubs $queryRaw with a canned row, so the join, the status filter
+  // and the NULL-costPrice path are never executed here — a real partial-refund
+  // or cancelled-sale test needs a live database, which this suite has no
+  // infrastructure for. Pinning the text at least stops the aggregate silently
+  // losing its store scoping or its status filter.
+  const cogsQuery = (prisma: { $queryRaw: jest.Mock }) => {
+    const call = prisma.$queryRaw.mock.calls.find((args: unknown[]) =>
+      (args[0] as string[]).join('?').includes('costPrice'),
+    );
+    if (!call) throw new Error('no cost-of-goods query was issued');
+    return {
+      sql: (call[0] as string[]).join('?').replace(/\s+/g, ' '),
+      params: call.slice(1),
+    };
+  };
+
+  it('should scope the cost of goods to one store when computing it', async () => {
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    await service.getOverview('store-1', { period: 'today' } as any);
+
+    const { sql, params } = cogsQuery(prisma);
+    expect(sql).toContain('FROM sale_items si');
+    expect(sql).toContain('JOIN sales s ON s.id = si."saleId"');
+    expect(sql).toContain('s."storeId" = ?');
+    expect(params[0]).toBe('store-1');
+  });
+
+  it('should exclude non-completed sales when computing the cost of goods', async () => {
+    // Revenue uses the same filter. If one drifts, margins go wrong silently.
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    await service.getOverview('store-1', { period: 'today' } as any);
+
+    expect(cogsQuery(prisma).sql).toContain(`s."status" = 'COMPLETED'`);
+  });
+
+  it('should net refunded units out of the cost of goods', async () => {
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    await service.getOverview('store-1', { period: 'today' } as any);
+
+    expect(cogsQuery(prisma).sql).toContain(
+      'SUM((si."quantity" - si."refundedQuantity") * si."costPrice")',
+    );
+  });
+
+  it('should report zero cost of goods when no sale item carries a cost', async () => {
+    // SUM over all-NULL costPrice returns NULL; COALESCE is what keeps the
+    // response a number instead of null reaching the dashboard.
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    prisma.$queryRaw = jest.fn(async () => [
+      { count: BigInt(0), cogs: null },
+    ]) as any;
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getOverview('store-1', {
+      period: 'today',
+    } as any);
+
+    expect(r.todayCost).toBe(0);
+  });
 });
