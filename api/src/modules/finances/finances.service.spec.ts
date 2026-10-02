@@ -518,3 +518,34 @@ describe('FinancesService.getOverview', () => {
     expect(r.todayRevenue - r.todayCost - r.todayExpenses).toBe(r.todayProfit);
   });
 });
+
+describe('FinancesService.getSummary', () => {
+  it('returns cogs so the finance screen can show real gross profit', async () => {
+    // The screen's «Валовая прибыль» rendered revenue - expenses because COGS
+    // was absent from the whole finance path. Gross profit is revenue - COGS.
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getSummary('store-1', {
+      period: 'month',
+    } as any);
+
+    expect(r.cogs).toBe(230);
+  });
+});
+
+describe('FinancesService.getDashboard', () => {
+  it('also returns cogs, since the finance screen loads from here first', async () => {
+    // FinanceBloc calls getDashboard on open and getSummary on a period tap.
+    // If only one carries cogs, gross profit is wrong on open and right after
+    // a tap — which looks like a rendering glitch rather than a missing field.
+    const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getDashboard('store-1', {
+      period: 'month',
+    } as any);
+
+    expect(r.cogs).toBe(230);
+  });
+});

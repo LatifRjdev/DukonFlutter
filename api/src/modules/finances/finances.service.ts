@@ -102,6 +102,7 @@ export class FinancesService {
       salesCount,
       topProducts,
       recentSales,
+      cogs,
     ] = await Promise.all([
       // Total revenue from sales
       this.prisma.sale.aggregate({
@@ -165,6 +166,7 @@ export class FinancesService {
           createdAt: true,
         },
       }),
+      this.computeCogs(storeId, startDate, endDate),
     ]);
 
     const totalRevenue = Number(salesAggregate._sum.total || 0);
@@ -175,6 +177,10 @@ export class FinancesService {
     return {
       totalRevenue,
       totalExpenses,
+      // The finance screen loads from here on open and from getSummary on a
+      // period tap, so both have to carry cogs — otherwise gross profit is
+      // wrong until the first tap.
+      cogs,
       profit,
       salesCount,
       averageCheck,
@@ -234,9 +240,12 @@ export class FinancesService {
       _count: true,
     });
 
+    const cogs = await this.computeCogs(storeId, startDate, endDate);
+
     return {
       salesByDay,
       expensesByDay,
+      cogs,
       expensesByCategory: expensesByCategory.map((e) => ({
         category: e.category,
         total: Number(e._sum.amount || 0),
