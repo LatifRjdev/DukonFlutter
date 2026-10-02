@@ -40,7 +40,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  bool _loaded = false;
   String _selectedPeriod = 'today';
   DateTimeRange? _customDateRange;
 
@@ -67,7 +66,6 @@ class _DashboardPageState extends State<DashboardPage> {
   void _loadDashboard() {
     final storeId = _getStoreId();
     if (storeId != null) {
-      _loaded = true;
       context.read<DashboardBloc>().add(
         DashboardLoadRequested(storeId, period: _selectedPeriod),
       );
@@ -92,10 +90,34 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // HomePage holds the five bottom-nav tabs in an IndexedStack, so this
+    // page is built once and kept alive for the whole session — `initState`
+    // never runs again. The store switcher lives in this page's own header,
+    // so after a switch nothing would dispatch a load and the screen would
+    // sit on the (freshly recreated, therefore empty) bloc's initial state.
+    // This listener re-runs the normal load path instead. It also covers the
+    // cold-start case where StoreBloc only resolves a selected store after
+    // `initState` has already run.
+    //
+    // `listenWhen` is load-bearing: StoreBloc also emits when the store
+    // *list* reloads with the selection unchanged, and without the guard
+    // every such emission would trigger a redundant refetch.
     return BlocListener<StoreBloc, StoreState>(
+      listenWhen: (prev, curr) =>
+          (prev is StoreLoaded ? prev.selectedStore?.id : null) !=
+          (curr is StoreLoaded ? curr.selectedStore?.id : null),
       listener: (context, state) {
-        if (state is StoreLoaded && !_loaded) {
-          _loadDashboard();
+        if (state is StoreLoaded && state.selectedStore != null) {
+          // Deferred to the end of the frame on purpose. The store-scoped
+          // BlocProviders in app.dart are keyed by store id, so DashboardBloc
+          // is only replaced during the frame this very emission schedules.
+          // Dispatching synchronously here would reach the *outgoing* bloc
+          // and the response would land in an instance that is about to be
+          // discarded — the screen would then sit on the new bloc's empty
+          // initial state showing zeros, even though the request succeeded.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _loadDashboard();
+          });
         }
       },
       child: Scaffold(
@@ -285,9 +307,14 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               title: Text(store.name),
               onTap: () {
+                // Don't reload here: `add` only queues the event, so the
+                // StoreBloc state (and the store-keyed DashboardBloc above
+                // this page) is still the *previous* store's at this point —
+                // a load dispatched now fetches the old store into a bloc
+                // that is about to be discarded. The StoreBloc listener in
+                // `build` reloads once the new selection has actually landed.
                 context.read<StoreBloc>().add(StoreSelected(store.id));
                 Navigator.pop(ctx);
-                _loadDashboard();
               },
             )),
           ],

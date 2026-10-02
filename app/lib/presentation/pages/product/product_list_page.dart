@@ -44,7 +44,6 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   final _searchController = TextEditingController();
   late _StockFilter _stockFilter;
-  bool _loaded = false;
   bool _showFilters = false;
 
   @override
@@ -75,7 +74,6 @@ class _ProductListPageState extends State<ProductListPage> {
   void _loadData() {
     final storeState = context.read<StoreBloc>().state;
     if (storeState is StoreLoaded && storeState.selectedStore != null) {
-      _loaded = true;
       final storeId = storeState.selectedStore!.id;
       context.read<ProductListBloc>().add(ProductListLoadRequested(storeId: storeId));
       context.read<CategoryBloc>().add(CategoryLoadRequested(storeId));
@@ -112,10 +110,34 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // HomePage holds the five bottom-nav tabs in an IndexedStack, so this
+    // page is built once and kept alive for the whole session — `initState`
+    // never runs again. After a store switch (the switcher lives in the
+    // dashboard header) nothing would dispatch a load, and the list would
+    // sit on the freshly recreated, therefore empty, bloc's initial state.
+    // This listener re-runs the normal load path instead. It also covers the
+    // cold-start case where StoreBloc only resolves a selected store after
+    // `initState` has already run.
+    //
+    // `listenWhen` is load-bearing: StoreBloc also emits when the store
+    // *list* reloads with the selection unchanged, and without the guard
+    // every such emission would trigger a redundant refetch.
     return BlocListener<StoreBloc, StoreState>(
+      listenWhen: (prev, curr) =>
+          (prev is StoreLoaded ? prev.selectedStore?.id : null) !=
+          (curr is StoreLoaded ? curr.selectedStore?.id : null),
       listener: (context, state) {
-        if (state is StoreLoaded && !_loaded) {
-          _loadData();
+        if (state is StoreLoaded && state.selectedStore != null) {
+          // Deferred to the end of the frame on purpose. The store-scoped
+          // BlocProviders in app.dart are keyed by store id, so ProductList/
+          // CategoryBloc are only replaced during the frame this very
+          // emission schedules. Dispatching synchronously here would reach
+          // the *outgoing* blocs and the response would land in instances
+          // about to be discarded — the list would then sit on the new
+          // bloc's empty initial state, even though the request succeeded.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _loadData();
+          });
         }
       },
       child: Scaffold(

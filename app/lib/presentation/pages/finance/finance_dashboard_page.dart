@@ -39,7 +39,6 @@ class FinanceDashboardPage extends StatefulWidget {
 
 class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
   String _period = 'month';
-  bool _loaded = false;
 
   String? get _storeId {
     if (widget.storeId != null && widget.storeId!.isNotEmpty) return widget.storeId;
@@ -61,7 +60,6 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
   void _loadFinance() {
     final id = _storeId;
     if (id != null) {
-      _loaded = true;
       context.read<FinanceBloc>().add(FinanceDashboardRequested(storeId: id));
     }
   }
@@ -69,10 +67,34 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // HomePage holds the five bottom-nav tabs in an IndexedStack, so this
+    // page is built once and kept alive for the whole session — `initState`
+    // never runs again. After a store switch (the switcher lives in the
+    // dashboard header) nothing would dispatch a load, and the finance cards
+    // would sit on the freshly recreated, therefore empty, bloc's initial
+    // state. This listener re-runs the normal load path instead. It also
+    // covers the cold-start case where StoreBloc only resolves a selected
+    // store after `initState` has already run.
+    //
+    // `listenWhen` is load-bearing: StoreBloc also emits when the store
+    // *list* reloads with the selection unchanged, and without the guard
+    // every such emission would trigger a redundant refetch.
     return BlocListener<StoreBloc, StoreState>(
+      listenWhen: (prev, curr) =>
+          (prev is StoreLoaded ? prev.selectedStore?.id : null) !=
+          (curr is StoreLoaded ? curr.selectedStore?.id : null),
       listener: (context, state) {
-        if (state is StoreLoaded && !_loaded) {
-          _loadFinance();
+        if (state is StoreLoaded && state.selectedStore != null) {
+          // Deferred to the end of the frame on purpose. The store-scoped
+          // BlocProviders in app.dart are keyed by store id, so FinanceBloc
+          // is only replaced during the frame this very emission schedules.
+          // Dispatching synchronously here would reach the *outgoing* bloc
+          // and the response would land in an instance that is about to be
+          // discarded — the cards would then sit on the new bloc's empty
+          // initial state, even though the request succeeded.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _loadFinance();
+          });
         }
       },
       child: Scaffold(
@@ -197,7 +219,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: l10n.financeGrossProfit,
-                                        value: _formatPrice(s.profit),
+                                        value: _formatPrice(s.grossProfit),
                                         textColor: context.warning,
                                       ),
                                     ),
@@ -208,7 +230,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: l10n.financeNetProfit,
-                                        value: _formatPrice(s.profit - s.totalExpenses),
+                                        value: _formatPrice(s.netProfit),
                                         textColor: context.success,
                                       ),
                                     ),
@@ -273,7 +295,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                         ]),
                                         BarChartGroupData(x: 2, barRods: [
                                           BarChartRodData(
-                                            toY: s.profit > 0 ? s.profit : 0,
+                                            toY: s.netProfit > 0 ? s.netProfit : 0,
                                             color: context.success,
                                             width: 32,
                                             borderRadius: BorderRadius.circular(AppConstants.radiusSm),

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../../domain/entities/store.dart';
 import '../../../domain/repositories/store_repository.dart';
 import 'store_event.dart';
 import 'store_state.dart';
@@ -17,10 +18,27 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   }
 
   Future<void> _onLoadRequested(StoreLoadRequested event, Emitter<StoreState> emit) async {
+    // Keep the active store across a reload. This handler runs on cold start,
+    // on pull to refresh and after editing a store, so unconditionally
+    // selecting `stores.first` silently moved the user to a different store —
+    // and now that the store-scoped blocs follow the selection, every screen
+    // would reload with that other store's data.
+    final current = state;
+    final selectedId = current is StoreLoaded ? current.selectedStore?.id : null;
     emit(StoreLoading());
     try {
       final stores = await _storeRepository.getStores();
-      emit(StoreLoaded(stores: stores, selectedStore: stores.isNotEmpty ? stores.first : null));
+      Store? retained;
+      for (final store in stores) {
+        if (store.id == selectedId) {
+          retained = store;
+          break;
+        }
+      }
+      emit(StoreLoaded(
+        stores: stores,
+        selectedStore: retained ?? (stores.isNotEmpty ? stores.first : null),
+      ));
     } catch (e) {
       emit(StoreError(mapErrorToUserMessage(e)));
     }

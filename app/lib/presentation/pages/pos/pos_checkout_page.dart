@@ -52,14 +52,24 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    _loadForSelectedStore();
+  }
+
+  /// Re-reads the selected store and refreshes the product list for it.
+  ///
+  /// Refresh the product list every time POS is mounted. ProductListBloc
+  /// is app-scoped, so without this dispatch the chip strip shows the
+  /// snapshot taken at app cold-start — newly created products and stock
+  /// changes don't appear until the next full restart.
+  ///
+  /// This also re-reads [_storeId]. The till caches the store id rather than
+  /// resolving it per tap, so after a store switch a stale cache would make
+  /// POS sell against the *previous* store's id.
+  void _loadForSelectedStore() {
     final storeState = context.read<StoreBloc>().state;
     if (storeState is StoreLoaded && storeState.selectedStore != null) {
       _storeId = storeState.selectedStore!.id;
     }
-    // Refresh the product list every time POS is mounted. ProductListBloc
-    // is app-scoped, so without this dispatch the chip strip shows the
-    // snapshot taken at app cold-start — newly created products and stock
-    // changes don't appear until the next full restart.
     if (_storeId != null) {
       context
           .read<ProductListBloc>()
@@ -259,15 +269,54 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
       _storeId = storeState.selectedStore!.id;
     }
 
-    return BlocListener<CheckoutBloc, CheckoutState>(
-      listener: (context, state) {
-        if (state.saleResult != null) {
-          context.go('/pos/success', extra: {'sale': state.saleResult});
-        }
-        if (state.error != null) {
-          AppSnackbar.error(context, state.error!);
-        }
-      },
+    // HomePage holds the five bottom-nav tabs in an IndexedStack, so this
+    // page is built once and kept alive for the whole session — `initState`
+    // never runs again. After a store switch (the switcher lives in the
+    // dashboard header) nothing would dispatch a load: the quick-product
+    // strip would sit on the freshly recreated, therefore empty,
+    // ProductListBloc, and the cached `_storeId` would still point at the
+    // previous store. `_loadForSelectedStore` fixes both. The cart itself
+    // needs no handling — CartBloc is store-scoped and is recreated empty.
+    //
+    // `listenWhen` is load-bearing: StoreBloc also emits when the store
+    // *list* reloads with the selection unchanged, and without the guard
+    // every such emission would trigger a redundant refetch.
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<StoreBloc, StoreState>(
+          listenWhen: (prev, curr) =>
+              (prev is StoreLoaded ? prev.selectedStore?.id : null) !=
+              (curr is StoreLoaded ? curr.selectedStore?.id : null),
+          listener: (context, state) {
+            if (state is StoreLoaded && state.selectedStore != null) {
+              // Drop any in-flight search: those hits belong to the old
+              // store and tapping one would add a foreign product to the
+              // till.
+              _searchController.clear();
+              // Deferred to the end of the frame on purpose. The store-scoped
+              // BlocProviders in app.dart are keyed by store id, so
+              // ProductListBloc is only replaced during the frame this very
+              // emission schedules. Dispatching synchronously here would
+              // reach the *outgoing* bloc and the response would land in an
+              // instance about to be discarded — the quick-product strip
+              // would stay empty even though the request succeeded.
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) _loadForSelectedStore();
+              });
+            }
+          },
+        ),
+        BlocListener<CheckoutBloc, CheckoutState>(
+          listener: (context, state) {
+            if (state.saleResult != null) {
+              context.go('/pos/success', extra: {'sale': state.saleResult});
+            }
+            if (state.error != null) {
+              AppSnackbar.error(context, state.error!);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: context.bg,
         body: SafeArea(
