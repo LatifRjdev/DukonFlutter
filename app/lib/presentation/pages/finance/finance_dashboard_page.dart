@@ -197,7 +197,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: l10n.financeGrossProfit,
-                                        value: _formatPrice(s.profit),
+                                        value: _formatPrice(s.grossProfit),
                                         textColor: context.warning,
                                       ),
                                     ),
@@ -208,7 +208,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                       padding: const EdgeInsets.all(16),
                                       child: _KpiCardContent(
                                         label: l10n.financeNetProfit,
-                                        value: _formatPrice(s.profit - s.totalExpenses),
+                                        value: _formatPrice(s.netProfit),
                                         textColor: context.success,
                                       ),
                                     ),
