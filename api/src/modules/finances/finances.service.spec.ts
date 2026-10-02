@@ -549,12 +549,12 @@ describe('FinancesService.getDashboard', () => {
     expect(r.cogs).toBe(230);
   });
 
-  // These assert the SQL the service SENDS, not what a database makes of it.
-  // The fake stubs $queryRaw with a canned row, so the join, the status filter
-  // and the NULL-costPrice path are never executed here — a real partial-refund
-  // or cancelled-sale test needs a live database, which this suite has no
-  // infrastructure for. Pinning the text at least stops the aggregate silently
-  // losing its store scoping or its status filter.
+  // These assert the SQL the service SENDS, not what a database makes of it:
+  // the fake stubs $queryRaw with a canned row. The behaviour of that SQL —
+  // the join, the status filter, the refund term, the NULL-costPrice path — is
+  // covered against a real Postgres in test/cogs.e2e-spec.ts. Keep both: these
+  // run in the fast suite and catch the query losing its scoping; those catch
+  // it computing the wrong number.
   const cogsQuery = (prisma: { $queryRaw: jest.Mock }) => {
     const call = prisma.$queryRaw.mock.calls.find((args: unknown[]) =>
       (args[0] as string[]).join('?').includes('costPrice'),
