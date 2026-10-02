@@ -9,6 +9,7 @@ import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/auth/auth_event.dart';
 import 'presentation/blocs/auth/auth_state.dart';
 import 'presentation/blocs/store/store_bloc.dart';
+import 'presentation/blocs/store/store_state.dart';
 import 'presentation/blocs/pos/cart_bloc.dart';
 import 'presentation/blocs/dashboard/dashboard_bloc.dart';
 import 'presentation/blocs/product/product_list_bloc.dart';
@@ -43,6 +44,18 @@ import 'presentation/blocs/loyalty/loyalty_settings_bloc.dart';
 /// data — most damagingly StoreBloc.selectedStore — leaking into the next.
 String _sessionKeyOf(AuthState state) =>
     state is AuthAuthenticated ? 'user:${state.user.id}' : 'anonymous';
+
+/// Identity of the selected store, used for the inner provider key.
+///
+/// StoreBloc itself must NOT sit inside the store-keyed subtree — it owns the
+/// selection, so its own change would destroy it mid-switch. It also must not
+/// sit at the root, or `selectedStore` would survive logout and the next
+/// session would fetch against the previous user's store, which is the bug
+/// fixed in 2082dc8. Hence the middle level.
+String _storeKeyOf(StoreState state) =>
+    state is StoreLoaded && state.selectedStore != null
+        ? 'store:${state.selectedStore!.id}'
+        : 'no-store';
 
 class DukonProApp extends StatelessWidget {
   const DukonProApp({super.key, this.locale = const Locale('ru')});
@@ -109,46 +122,60 @@ class DukonProApp extends StatelessWidget {
                 buildWhen: (prev, curr) =>
                     _sessionKeyOf(prev) != _sessionKeyOf(curr),
                 builder: (context, authState) {
+                  final sessionKey = _sessionKeyOf(authState);
                   return MultiBlocProvider(
-                    key: ValueKey(_sessionKeyOf(authState)),
+                    // Level 2: survives a store switch, resets on logout.
+                    key: ValueKey('session:$sessionKey'),
                     providers: [
                       BlocProvider(create: (_) => sl<StoreBloc>()),
-                      BlocProvider(create: (_) => sl<CartBloc>()),
-                      BlocProvider(create: (_) => sl<DashboardBloc>()),
-                      BlocProvider(create: (_) => sl<ProductListBloc>()),
-                      BlocProvider(create: (_) => sl<ProductFormBloc>()),
-                      BlocProvider(create: (_) => sl<CategoryBloc>()),
-                      BlocProvider(create: (_) => sl<CheckoutBloc>()),
-                      BlocProvider(create: (_) => sl<SalesHistoryBloc>()),
-                      BlocProvider(create: (_) => sl<StockIntakeBloc>()),
-                      BlocProvider(create: (_) => sl<FinanceBloc>()),
-                      BlocProvider(create: (_) => sl<ExpenseBloc>()),
-                      BlocProvider(create: (_) => sl<DebtBloc>()),
-                      BlocProvider(create: (_) => sl<ZakatBloc>()),
-                      BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
-                      BlocProvider(create: (_) => sl<CustomerListBloc>()),
-                      BlocProvider(create: (_) => sl<SupplierListBloc>()),
-                      BlocProvider(create: (_) => sl<StaffBloc>()),
-                      BlocProvider(create: (_) => sl<RolesBloc>()),
-                      BlocProvider(create: (_) => sl<ShiftBloc>()),
-                      BlocProvider(create: (_) => sl<PayrollBloc>()),
-                      BlocProvider(create: (_) => sl<StaffFormBloc>()),
-                      BlocProvider(create: (_) => sl<PrinterBloc>()),
-                      BlocProvider(create: (_) => sl<SubscriptionBloc>()),
-                      BlocProvider(create: (_) => sl<LoyaltySettingsBloc>()),
                     ],
-                    child: MediaQuery(
-                      data: MediaQuery.of(context),
-                      child: SafeArea(
-                        top: false,
-                        bottom: false,
-                        child: Column(
-                          children: [
-                            const OfflineBanner(),
-                            Expanded(child: child ?? const SizedBox.shrink()),
+                    child: BlocBuilder<StoreBloc, StoreState>(
+                      buildWhen: (prev, curr) =>
+                          _storeKeyOf(prev) != _storeKeyOf(curr),
+                      builder: (context, storeState) {
+                        return MultiBlocProvider(
+                          // Level 3: resets on account OR store change.
+                          key: ValueKey('$sessionKey|${_storeKeyOf(storeState)}'),
+                          providers: [
+                            BlocProvider(create: (_) => sl<CartBloc>()),
+                            BlocProvider(create: (_) => sl<DashboardBloc>()),
+                            BlocProvider(create: (_) => sl<ProductListBloc>()),
+                            BlocProvider(create: (_) => sl<ProductFormBloc>()),
+                            BlocProvider(create: (_) => sl<CategoryBloc>()),
+                            BlocProvider(create: (_) => sl<CheckoutBloc>()),
+                            BlocProvider(create: (_) => sl<SalesHistoryBloc>()),
+                            BlocProvider(create: (_) => sl<StockIntakeBloc>()),
+                            BlocProvider(create: (_) => sl<FinanceBloc>()),
+                            BlocProvider(create: (_) => sl<ExpenseBloc>()),
+                            BlocProvider(create: (_) => sl<DebtBloc>()),
+                            BlocProvider(create: (_) => sl<ZakatBloc>()),
+                            BlocProvider(create: (_) => sl<CustomerDetailBloc>()),
+                            BlocProvider(create: (_) => sl<CustomerListBloc>()),
+                            BlocProvider(create: (_) => sl<SupplierListBloc>()),
+                            BlocProvider(create: (_) => sl<StaffBloc>()),
+                            BlocProvider(create: (_) => sl<RolesBloc>()),
+                            BlocProvider(create: (_) => sl<ShiftBloc>()),
+                            BlocProvider(create: (_) => sl<PayrollBloc>()),
+                            BlocProvider(create: (_) => sl<StaffFormBloc>()),
+                            BlocProvider(create: (_) => sl<PrinterBloc>()),
+                            BlocProvider(create: (_) => sl<SubscriptionBloc>()),
+                            BlocProvider(create: (_) => sl<LoyaltySettingsBloc>()),
                           ],
-                        ),
-                      ),
+                          child: MediaQuery(
+                            data: MediaQuery.of(context),
+                            child: SafeArea(
+                              top: false,
+                              bottom: false,
+                              child: Column(
+                                children: [
+                                  const OfflineBanner(),
+                                  Expanded(child: child ?? const SizedBox.shrink()),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

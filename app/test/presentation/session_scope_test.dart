@@ -63,4 +63,31 @@ void main() {
         reason: 'same key must reuse the element, not rebuild the bloc');
     expect(seen.last.state, 1, reason: 'state must survive a rebuild');
   });
+
+  testWidgets('a store change also disposes the store-scoped blocs', (tester) async {
+    // Switching stores refreshed nothing: dashboard, Товары and Финансы all
+    // kept the previous store's data, and the API log showed only a
+    // banners/active request for the newly selected store.
+    final seen = <_CounterCubit>[];
+
+    Widget tree(String session, String store) => MaterialApp(
+          home: MultiBlocProvider(
+            key: ValueKey('$session|$store'),
+            providers: [BlocProvider(create: (_) => _CounterCubit())],
+            child: Builder(builder: (context) {
+              seen.add(context.read<_CounterCubit>());
+              return const SizedBox.shrink();
+            }),
+          ),
+        );
+
+    await tester.pumpWidget(tree('user-1', 'store-A'));
+    seen.last.bump();
+    await tester.pumpWidget(tree('user-1', 'store-B'));
+    await tester.pump();
+
+    expect(identical(seen.first, seen.last), isFalse,
+        reason: 'a different store must get fresh blocs');
+    expect(seen.last.state, 0, reason: 'the previous store\'s state must not carry over');
+  });
 }
