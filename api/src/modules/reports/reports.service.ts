@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { computeCostOfGoods } from '../../common/finance/cost-of-goods';
 import { ReportQueryDto } from './dto/report-query.dto';
 
 @Injectable()
@@ -127,25 +128,15 @@ export class ReportsService {
         },
         _sum: { amount: true },
       }),
-      // Cost of goods sold: sum(SaleItem.costPrice * quantity) for
-      // completed sales in the period. Same COMPLETED-only scoping as
-      // every other report query in this file (see getSalesReport /
-      // getProductsReport). costPrice is nullable on SaleItem (older
-      // rows / items added before cost tracking); those contribute 0.
-      this.prisma.$queryRaw<{ cogs: number }[]>`
-        SELECT COALESCE(SUM(si.quantity * si."costPrice"), 0)::float as cogs
-        FROM sale_items si
-        JOIN sales s ON s.id = si."saleId"
-        WHERE s."storeId" = ${storeId}
-          AND s.status = 'COMPLETED'
-          AND s."createdAt" >= ${startDate}
-          AND s."createdAt" <= ${endDate}
-      `,
+      // Shared with the finance dashboard, which shows the same number one
+      // tap away. This file used to carry its own copy; it had already drifted
+      // (no refund term) while claiming parity in a comment.
+      computeCostOfGoods(this.prisma, storeId, startDate, endDate),
     ]);
 
     const income = Number(salesAgg._sum.total ?? 0);
     const expenses = Number(expensesAgg._sum.amount ?? 0);
-    const cogs = Number(cogsResult[0]?.cogs ?? 0);
+    const cogs = cogsResult;
     // grossProfit: revenue minus cost of the goods actually sold.
     // profit (net): gross profit minus manually-entered operating
     // expenses. `profit` previously ignored COGS entirely, which made

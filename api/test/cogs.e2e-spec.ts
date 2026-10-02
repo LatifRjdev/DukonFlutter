@@ -2,6 +2,9 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FinancesService } from '../src/modules/finances/finances.service';
+import { FinanceQueryDto } from '../src/modules/finances/dto/finance-query.dto';
+import { ReportsService } from '../src/modules/reports/reports.service';
+import { ReportQueryDto } from '../src/modules/reports/dto/report-query.dto';
 import { AppModule } from '../src/app.module';
 
 // Exercises the cost-of-goods aggregate against a real database.
@@ -14,21 +17,28 @@ describe('Cost of goods sold (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let finances: FinancesService;
+  let reports: ReportsService;
 
-  let storeId: string;
-  let userId: string;
-  let productId: string;
+  // Initialised to '' rather than left undefined: Prisma drops an undefined
+  // filter field, so `deleteMany({ where: { storeId: undefined } })` becomes
+  // `deleteMany({})` and empties the table. afterAll runs even when beforeAll
+  // throws, so an empty string — which matches nothing — is the safe default.
+  let storeId = '';
+  let userId = '';
+  let productId = '';
 
-  // One day comfortably inside the "month" range the service computes, and far
-  // enough from midnight that the test cannot straddle a day boundary.
-  const soldAt = (() => {
-    const d = new Date();
-    d.setDate(Math.min(d.getDate(), 28));
-    d.setHours(12, 0, 0, 0);
-    return d;
-  })();
+  // An hour ago. It must be in the PAST: getDateRange's relative periods end at
+  // `new Date()`, so a fixture stamped later today is outside the window and
+  // every assertion silently reads 0 on any run before that time of day.
+  const soldAt = new Date(Date.now() - 60 * 60 * 1000);
 
-  const range = { period: 'month' } as never;
+  // Explicit bounds rather than a relative period, so the window cannot move
+  // under the fixture: getDateRange short-circuits on startDate+endDate.
+  const from = new Date(soldAt.getTime() - 60 * 60 * 1000).toISOString();
+  const to = new Date(soldAt.getTime() + 60 * 60 * 1000).toISOString();
+  const range: FinanceQueryDto = { startDate: from, endDate: to };
+  // The reports module names the same bounds differently.
+  const reportRange: ReportQueryDto = { from, to };
 
   /** A completed sale of `qty` units at cost 10, price 25. */
   const makeSale = async (
@@ -74,6 +84,7 @@ describe('Cost of goods sold (e2e)', () => {
     await app.init();
     prisma = app.get(PrismaService);
     finances = app.get(FinancesService);
+    reports = app.get(ReportsService);
 
     const user = await prisma.user.create({
       data: { phone: '+992999000098', password: 'x', name: 'COGS test owner' },
@@ -91,15 +102,17 @@ describe('Cost of goods sold (e2e)', () => {
 
   afterAll(async () => {
     // sale_items cascade from sales; everything else is deleted explicitly.
-    await prisma.sale.deleteMany({ where: { storeId } });
-    await prisma.product.deleteMany({ where: { storeId } });
-    await prisma.store.deleteMany({ where: { id: storeId } });
-    await prisma.user.deleteMany({ where: { id: userId } });
-    await app.close();
+    if (storeId) {
+      await prisma.sale.deleteMany({ where: { storeId } });
+      await prisma.product.deleteMany({ where: { storeId } });
+      await prisma.store.deleteMany({ where: { id: storeId } });
+    }
+    if (userId) await prisma.user.deleteMany({ where: { id: userId } });
+    if (app) await app.close();
   });
 
   afterEach(async () => {
-    await prisma.sale.deleteMany({ where: { storeId } });
+    if (storeId) await prisma.sale.deleteMany({ where: { storeId } });
   });
 
   it('should match the hand-computed figure when sales have a cost snapshot', async () => {
@@ -151,9 +164,26 @@ describe('Cost of goods sold (e2e)', () => {
     expect(r.cogs).toBe(0);
   });
 
-  it('should count only the costed lines when a sale mixes costed and uncosted items', async () => {
-    await makeSale('COGS-8', 4); // 4 x 10 = 40
-    await makeSale('COGS-9', 7, { costPrice: null }); // contributes nothing
+  it('should count only the costed lines when one sale mixes costed and uncosted items', async () => {
+    // Both lines on the SAME sale, so this exercises SUM skipping a NULL row
+    // rather than the status filter dropping a whole sale.
+    await prisma.sale.create({
+      data: {
+        storeId,
+        receiptNo: 'COGS-8',
+        subtotal: 275,
+        total: 275,
+        paymentType: 'CASH',
+        paidAmount: 275,
+        createdAt: soldAt,
+        items: {
+          create: [
+            { productId, productName: 'costed', quantity: 4, unitPrice: 25, costPrice: 10, total: 100 },
+            { productId, productName: 'uncosted', quantity: 7, unitPrice: 25, costPrice: null, total: 175 },
+          ],
+        },
+      },
+    });
 
     const r = (await finances.getSummary(storeId, range)) as { cogs: number };
 
@@ -161,63 +191,97 @@ describe('Cost of goods sold (e2e)', () => {
   });
 
   it('should not count another store cost of goods', async () => {
-    const otherUser = await prisma.user.create({
-      data: { phone: '+992999000097', password: 'x', name: 'COGS other owner' },
-    });
-    const otherStore = await prisma.store.create({
-      data: {
-        name: 'COGS other store',
-        category: 'GROCERY',
-        ownerId: otherUser.id,
-      },
-    });
-    const otherProduct = await prisma.product.create({
-      data: {
-        storeId: otherStore.id,
-        name: 'other probe',
-        costPrice: 10,
-        sellPrice: 25,
-      },
-    });
-    await prisma.sale.create({
-      data: {
-        storeId: otherStore.id,
-        receiptNo: 'COGS-OTHER',
-        subtotal: 250,
-        total: 250,
-        paymentType: 'CASH',
-        paidAmount: 250,
-        createdAt: soldAt,
-        items: {
-          create: {
-            productId: otherProduct.id,
-            productName: 'other probe',
-            quantity: 10,
-            unitPrice: 25,
-            costPrice: 10,
-            total: 250,
+    // Ids captured before any await so the finally can clean up whatever got
+    // created, however far this got. A fixture leaked by an early throw would
+    // otherwise collide on the unique phone and fail every later run.
+    let otherUserId = '';
+    let otherStoreId = '';
+    try {
+      const otherUser = await prisma.user.create({
+        data: {
+          phone: '+992999000097',
+          password: 'x',
+          name: 'COGS other owner',
+        },
+      });
+      otherUserId = otherUser.id;
+      const otherStore = await prisma.store.create({
+        data: {
+          name: 'COGS other store',
+          category: 'GROCERY',
+          ownerId: otherUser.id,
+        },
+      });
+      otherStoreId = otherStore.id;
+      const otherProduct = await prisma.product.create({
+        data: {
+          storeId: otherStore.id,
+          name: 'other probe',
+          costPrice: 10,
+          sellPrice: 25,
+        },
+      });
+      await prisma.sale.create({
+        data: {
+          storeId: otherStore.id,
+          receiptNo: 'COGS-OTHER',
+          subtotal: 250,
+          total: 250,
+          paymentType: 'CASH',
+          paidAmount: 250,
+          createdAt: soldAt,
+          items: {
+            create: {
+              productId: otherProduct.id,
+              productName: 'other probe',
+              quantity: 10,
+              unitPrice: 25,
+              costPrice: 10,
+              total: 250,
+            },
           },
         },
-      },
-    });
+      });
 
-    await makeSale('COGS-10', 4);
+      await makeSale('COGS-10', 4);
 
-    try {
       const r = (await finances.getSummary(storeId, range)) as { cogs: number };
       expect(r.cogs).toBe(40);
     } finally {
-      await prisma.sale.deleteMany({ where: { storeId: otherStore.id } });
-      await prisma.product.deleteMany({ where: { storeId: otherStore.id } });
-      await prisma.store.deleteMany({ where: { id: otherStore.id } });
-      await prisma.user.deleteMany({ where: { id: otherUser.id } });
+      if (otherStoreId) {
+        await prisma.sale.deleteMany({ where: { storeId: otherStoreId } });
+        await prisma.product.deleteMany({ where: { storeId: otherStoreId } });
+        await prisma.store.deleteMany({ where: { id: otherStoreId } });
+      }
+      if (otherUserId) {
+        await prisma.user.deleteMany({ where: { id: otherUserId } });
+      }
     }
+  });
+
+  it('should report the same cost of goods to the finance screen and the profit report', async () => {
+    // These render one tap apart — Финансы and Отчёты → Прибыль. They used to
+    // compute the figure from two separate copies of the aggregate, and the
+    // copies had already drifted. This is the property that keeps them honest.
+    await makeSale('COGS-13', 6);
+
+    const finance = (await finances.getSummary(storeId, range)) as {
+      cogs: number;
+    };
+    const report = (await reports.getProfitReport(storeId, reportRange)) as {
+      cogs: number;
+      grossProfit: number;
+    };
+
+    expect(finance.cogs).toBe(60);
+    expect(report.cogs).toBe(finance.cogs);
+    expect(report.grossProfit).toBe(150 - 60);
   });
 
   it('should exclude sales outside the requested period', async () => {
     await makeSale('COGS-11', 4);
     const longAgo = new Date(soldAt);
-    longAgo.setFullYear(longAgo.getFullYear() - 2);
+    longAgo.setFullYear(longAgo.getFullYear() - 2);  // well outside `range`
     await prisma.sale.create({
       data: {
         storeId,
