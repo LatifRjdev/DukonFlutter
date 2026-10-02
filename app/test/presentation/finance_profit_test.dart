@@ -12,7 +12,6 @@ void main() {
     totalIncome: 575,
     totalCost: 230,
     totalExpenses: 420,
-    profit: -75,
     salesCount: 3,
     avgCheck: 575 / 3,
   );

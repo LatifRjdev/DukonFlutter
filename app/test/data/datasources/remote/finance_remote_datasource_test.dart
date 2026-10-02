@@ -31,6 +31,7 @@ void main() {
           )).thenAnswer((_) async => resp({
             'totalRevenue': 1000,
             'totalExpenses': 400,
+            'cogs': 300,
             'profit': 600,
             'salesCount': 10,
             'averageCheck': 100,
@@ -48,7 +49,11 @@ void main() {
 
       expect(summary.totalIncome, 1000);
       expect(summary.totalExpenses, 400);
-      expect(summary.profit, 600);
+      expect(summary.totalCost, 300);
+      // The response's own `profit` (600) ignores cost of goods. It must not
+      // reach the entity: gross is 1000-300 and net is that less expenses.
+      expect(summary.grossProfit, 700);
+      expect(summary.netProfit, 300);
       expect(summary.salesCount, 10);
       expect(summary.avgCheck, 100);
       expect(summary.topProducts.length, 1);
@@ -69,7 +74,8 @@ void main() {
 
       expect(summary.totalIncome, 0);
       expect(summary.totalExpenses, 0);
-      expect(summary.profit, 0);
+      expect(summary.totalCost, 0);
+      expect(summary.netProfit, 0);
       expect(summary.salesCount, 0);
       expect(summary.avgCheck, 0);
       expect(summary.topProducts, isEmpty);
@@ -207,13 +213,16 @@ void main() {
               {'total': 30},
               {'total': 20},
             ],
+            'cogs': 40,
           }));
 
       final summary = await ds.getSummary('store-1', period: 'month');
 
       expect(summary.totalIncome, 150);
       expect(summary.totalExpenses, 50);
-      expect(summary.profit, 100);
+      expect(summary.totalCost, 40);
+      expect(summary.grossProfit, 110);
+      expect(summary.netProfit, 60);
       expect(summary.salesCount, 3);
       expect(summary.avgCheck, 50);
     });
@@ -231,7 +240,8 @@ void main() {
 
       expect(summary.totalIncome, 0);
       expect(summary.totalExpenses, 0);
-      expect(summary.profit, 0);
+      expect(summary.totalCost, 0);
+      expect(summary.netProfit, 0);
       expect(summary.salesCount, 0);
       expect(summary.avgCheck, 0);
     });

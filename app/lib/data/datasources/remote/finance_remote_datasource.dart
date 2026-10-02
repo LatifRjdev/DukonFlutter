@@ -65,7 +65,6 @@ class FinanceRemoteDatasourceImpl implements FinanceRemoteDatasource {
         totalIncome: totalIncome,
         totalCost: totalCost,
         totalExpenses: totalExpenses,
-        profit: totalIncome - totalCost - totalExpenses,
         salesCount: salesCount,
         avgCheck: salesCount > 0 ? totalIncome / salesCount : 0,
       );
@@ -80,7 +79,6 @@ class FinanceRemoteDatasourceImpl implements FinanceRemoteDatasource {
       totalIncome: (json['totalRevenue'] as num?)?.toDouble() ?? 0,
       totalCost: (json['cogs'] as num?)?.toDouble() ?? 0,
       totalExpenses: (json['totalExpenses'] as num?)?.toDouble() ?? 0,
-      profit: (json['profit'] as num?)?.toDouble() ?? 0,
       salesCount: (json['salesCount'] as num?)?.toInt() ?? 0,
       avgCheck: (json['averageCheck'] as num?)?.toDouble() ?? 0,
       topProducts: topProductsList.map((p) {

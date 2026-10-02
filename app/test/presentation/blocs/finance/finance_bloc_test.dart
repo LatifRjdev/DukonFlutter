@@ -17,7 +17,6 @@ void main() {
   const summary = FinanceSummary(
     totalIncome: 100,
     totalExpenses: 40,
-    profit: 60,
     salesCount: 5,
     avgCheck: 20,
   );

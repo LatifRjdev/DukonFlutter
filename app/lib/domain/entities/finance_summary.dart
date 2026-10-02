@@ -4,7 +4,6 @@ class FinanceSummary extends Equatable {
   final double totalIncome;
   final double totalCost;
   final double totalExpenses;
-  final double profit;
   final int salesCount;
   final double avgCheck;
   final List<TopProduct> topProducts;
@@ -13,7 +12,6 @@ class FinanceSummary extends Equatable {
     required this.totalIncome,
     this.totalCost = 0,
     required this.totalExpenses,
-    required this.profit,
     required this.salesCount,
     required this.avgCheck,
     this.topProducts = const [],
@@ -29,7 +27,7 @@ class FinanceSummary extends Equatable {
 
   @override
   List<Object?> get props =>
-      [totalIncome, totalCost, totalExpenses, profit, salesCount];
+      [totalIncome, totalCost, totalExpenses, salesCount];
 }
 
 class TopProduct extends Equatable {

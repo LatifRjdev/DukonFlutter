@@ -8,7 +8,6 @@ void main() {
       const summary = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );
@@ -20,14 +19,12 @@ void main() {
       const a = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );
       const b = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );
@@ -40,14 +37,12 @@ void main() {
       const a = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );
       const b = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 999,
         topProducts: [
@@ -65,14 +60,12 @@ void main() {
       const a = FinanceSummary(
         totalIncome: 100,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );
       const b = FinanceSummary(
         totalIncome: 200,
         totalExpenses: 40,
-        profit: 60,
         salesCount: 5,
         avgCheck: 20,
       );

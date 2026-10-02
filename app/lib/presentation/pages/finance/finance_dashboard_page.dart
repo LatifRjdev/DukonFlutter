@@ -295,7 +295,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                                         ]),
                                         BarChartGroupData(x: 2, barRods: [
                                           BarChartRodData(
-                                            toY: s.profit > 0 ? s.profit : 0,
+                                            toY: s.netProfit > 0 ? s.netProfit : 0,
                                             color: context.success,
                                             width: 32,
                                             borderRadius: BorderRadius.circular(AppConstants.radiusSm),
