@@ -66,6 +66,13 @@ Logins: `+992920777001` / `x8R9s5msWiEzBYWL`, `+992920777002` / `yfgYAi5oHqm38w8
 - **Do NOT hand-edit `app/lib/l10n/app_localizations*.dart`** or the ARB.
 - **`npx tsc --noEmit` at 0 errors is the gate**, not lint — the repo lint baseline is ~3572 problems. **Green tests do not imply clean types**; run `tsc` separately.
 - **Do NOT run `git pull`/`rebase`/`push`.** Commit only.
+- **Verify a "Create:" marker before writing the file.** This plan got one wrong: it listed
+  `api/src/modules/finances/finances.service.spec.ts` as new when it already held 444 lines and 11
+  passing tests, and a `Write` destroyed them. Tasks 1-2's implementer caught it from `git status`
+  showing `M` rather than `A` and restored from `HEAD~1`, but only after committing once. Run
+  `ls <path>` or `git log --oneline -- <path>` first; if the file exists, **append** rather than write.
+  (Checked for the remaining tasks: `finance_profit_test.dart` is genuinely absent;
+  `session_scope_test.dart` exists and is correctly marked Modify.)
 
 ---
 
