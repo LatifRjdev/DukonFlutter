@@ -241,7 +241,12 @@ export class FinancesService {
       _count: true,
     });
 
-    const cogs = await computeCostOfGoods(this.prisma, storeId, startDate, endDate);
+    const cogs = await computeCostOfGoods(
+      this.prisma,
+      storeId,
+      startDate,
+      endDate,
+    );
 
     return {
       salesByDay,

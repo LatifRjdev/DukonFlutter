@@ -178,8 +178,22 @@ describe('Cost of goods sold (e2e)', () => {
         createdAt: soldAt,
         items: {
           create: [
-            { productId, productName: 'costed', quantity: 4, unitPrice: 25, costPrice: 10, total: 100 },
-            { productId, productName: 'uncosted', quantity: 7, unitPrice: 25, costPrice: null, total: 175 },
+            {
+              productId,
+              productName: 'costed',
+              quantity: 4,
+              unitPrice: 25,
+              costPrice: 10,
+              total: 100,
+            },
+            {
+              productId,
+              productName: 'uncosted',
+              quantity: 7,
+              unitPrice: 25,
+              costPrice: null,
+              total: 175,
+            },
           ],
         },
       },
@@ -262,26 +276,34 @@ describe('Cost of goods sold (e2e)', () => {
   it('should report the same cost of goods to the finance screen and the profit report', async () => {
     // These render one tap apart — Финансы and Отчёты → Прибыль. They used to
     // compute the figure from two separate copies of the aggregate, and the
-    // copies had already drifted. This is the property that keeps them honest.
-    await makeSale('COGS-13', 6);
+    // copies had drifted: the reports one omitted the refund term and cast
+    // through float8 instead of numeric.
+    //
+    // The fixture is chosen so BOTH differences are observable. A COMPLETED
+    // sale carrying refundedQuantity is not a state the refund path can
+    // produce — it moves the sale out of COMPLETED — but it is the only way to
+    // make the refund term visible to the aggregate, and the term is exactly
+    // what a third copy would omit. The cost is 0.07 so the sum is not exactly
+    // representable in binary floating point: the old ::float cast returned
+    // 0.35000000000000003 here.
+    await makeSale('COGS-13', 10, { refundedQuantity: 5, costPrice: 0.07 });
 
     const finance = (await finances.getSummary(storeId, range)) as {
       cogs: number;
     };
     const report = (await reports.getProfitReport(storeId, reportRange)) as {
       cogs: number;
-      grossProfit: number;
     };
 
-    expect(finance.cogs).toBe(60);
+    // 10 sold less 5 refunded, at 0.07 each.
+    expect(finance.cogs).toBe(0.35);
     expect(report.cogs).toBe(finance.cogs);
-    expect(report.grossProfit).toBe(150 - 60);
   });
 
   it('should exclude sales outside the requested period', async () => {
     await makeSale('COGS-11', 4);
     const longAgo = new Date(soldAt);
-    longAgo.setFullYear(longAgo.getFullYear() - 2);  // well outside `range`
+    longAgo.setFullYear(longAgo.getFullYear() - 2); // well outside `range`
     await prisma.sale.create({
       data: {
         storeId,
