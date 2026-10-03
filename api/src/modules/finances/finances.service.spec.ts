@@ -173,6 +173,12 @@ function makePrismaFake() {
     saleItem: {
       groupBy: jest.fn(async () => []),
     },
+    // getCreditsSummary reads the most recent payment per counterparty. No
+    // seeded payments, so every counterparty reports null — which is the case
+    // the UI has to render anyway.
+    supplierPayment: {
+      groupBy: jest.fn(async () => []),
+    },
     // getSummary / getBalance use $queryRaw — return empty rows; tests below
     // focus on aggregate-driven fields rather than raw-query output.
     $queryRaw: jest.fn(async () => []),
@@ -565,6 +571,30 @@ describe('FinancesService.getDashboard', () => {
       params: call.slice(1),
     };
   };
+
+  it('should report balance profit net of cost of goods, and the cash position gross of it', async () => {
+    // Баланс used to show 655 where Главная showed 225 for the same store and
+    // period — it computed income - expenses and ignored cost entirely.
+    // currentBalance stays gross on purpose: the stock was paid for when it
+    // was bought, so netting it off here would double-count the outflow.
+    const prisma: any = makeFigurePrisma({
+      revenue: 1075,
+      expenses: 420,
+      cogs: 430,
+    });
+    prisma.expense.findMany = jest.fn(async () => []);
+    const service = await buildWithFigures(prisma);
+
+    const r: any = await service.getBalance('store-1', {
+      period: 'month',
+    } as any);
+
+    expect(r.income).toBe(1075);
+    expect(r.expenses).toBe(420);
+    expect(r.cogs).toBe(430);
+    expect(r.profit).toBe(225);
+    expect(r.currentBalance).toBe(655);
+  });
 
   it('should scope the cost of goods to one store when computing it', async () => {
     const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });

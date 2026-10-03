@@ -37,12 +37,16 @@ class _Transaction {
   final double amount;
   final String date;
   final String description;
+
+  /// Set for sales; the title is composed in the UI so it stays translatable.
+  final String receiptNo;
   const _Transaction({
     required this.id,
     required this.type,
     required this.amount,
     required this.date,
     required this.description,
+    this.receiptNo = '',
   });
 
   // Backend sends each recentTransactions item as {type: 'SALE'|'EXPENSE',
@@ -56,6 +60,7 @@ class _Transaction {
         amount: (j['amount'] as num?)?.toDouble() ?? 0,
         date: j['date'] as String? ?? '',
         description: j['label'] as String? ?? '',
+        receiptNo: j['receiptNo'] as String? ?? '',
       );
 }
 
@@ -63,6 +68,7 @@ class _BalanceData {
   final double balance;
   final double income;
   final double expenses;
+  final double cogs;
   final double profit;
   final List<_ChartPoint> chartData;
   final List<_Transaction> transactions;
@@ -71,6 +77,7 @@ class _BalanceData {
     required this.balance,
     required this.income,
     required this.expenses,
+    required this.cogs,
     required this.profit,
     required this.chartData,
     required this.transactions,
@@ -88,6 +95,7 @@ class _BalanceData {
         balance: (j['currentBalance'] as num?)?.toDouble() ?? 0,
         income: (j['income'] as num?)?.toDouble() ?? 0,
         expenses: (j['expenses'] as num?)?.toDouble() ?? 0,
+        cogs: (j['cogs'] as num?)?.toDouble() ?? 0,
         profit: (j['profit'] as num?)?.toDouble() ?? 0,
         chartData: ((j['chartData'] as List?) ?? [])
             .map((e) => _ChartPoint.fromJson(e as Map<String, dynamic>))
@@ -424,32 +432,51 @@ class _BalancePageState extends State<BalancePage> {
 
   Widget _buildSummaryRow(_BalanceData d) {
     final l10n = AppLocalizations.of(context)!;
+    // Two rows rather than one: profit is net of cost of goods, so the cost
+    // has to be on screen for the four numbers to add up. Four cells in a
+    // single row leave no space for a five-digit figure.
     return GlassCard(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: _SummaryCell(
-              label: l10n.incomes,
-              value: _formatPrice(d.income),
-              color: AppColors.success,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: _SummaryCell(
+                  label: l10n.incomes,
+                  value: _formatPrice(d.income),
+                  color: AppColors.success,
+                ),
+              ),
+              Container(width: 1, height: 40, color: context.border),
+              Expanded(
+                child: _SummaryCell(
+                  label: l10n.expenses,
+                  value: _formatPrice(d.expenses),
+                  color: AppColors.error,
+                ),
+              ),
+            ],
           ),
-          Container(width: 1, height: 40, color: context.border),
-          Expanded(
-            child: _SummaryCell(
-              label: l10n.expenses,
-              value: _formatPrice(d.expenses),
-              color: AppColors.error,
-            ),
-          ),
-          Container(width: 1, height: 40, color: context.border),
-          Expanded(
-            child: _SummaryCell(
-              label: l10n.profit,
-              value: _formatPrice(d.profit),
-              color: d.profit >= 0 ? AppColors.primary : AppColors.error,
-            ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _SummaryCell(
+                  label: l10n.costOfGoods,
+                  value: _formatPrice(d.cogs),
+                  color: AppColors.info,
+                ),
+              ),
+              Container(width: 1, height: 40, color: context.border),
+              Expanded(
+                child: _SummaryCell(
+                  label: l10n.profit,
+                  value: _formatPrice(d.profit),
+                  color: d.profit >= 0 ? AppColors.primary : AppColors.error,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -473,12 +500,25 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
+  /// Sales are titled from their receipt number, matching История продаж;
+  /// expenses carry their own description from the backend.
+  String _transactionTitle(_Transaction tx, AppLocalizations l10n) {
+    if (tx.receiptNo.isNotEmpty) {
+      return l10n.transactionDetailReceiptTitle(tx.receiptNo);
+    }
+    if (tx.description.isNotEmpty) return tx.description;
+    return tx.type == 'sale' ? l10n.sale : l10n.expense;
+  }
+
   Widget _buildTransactionRow(_Transaction tx) {
     final l10n = AppLocalizations.of(context)!;
     final isSale = tx.type == 'sale';
     final color = isSale ? AppColors.success : AppColors.error;
     final icon = isSale ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded;
     final prefix = isSale ? '+' : '-';
+    // The sign belongs to the prefix alone: expenses arrive already negative
+    // from the API, so formatting the raw value rendered "--120 TJS".
+    final magnitude = tx.amount.abs();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -499,7 +539,7 @@ class _BalancePageState extends State<BalancePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx.description.isNotEmpty ? tx.description : (isSale ? l10n.sale : l10n.expense),
+                  _transactionTitle(tx, l10n),
                   style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -513,7 +553,7 @@ class _BalancePageState extends State<BalancePage> {
             ),
           ),
           Text(
-            '$prefix${_formatPrice(tx.amount)}',
+            '$prefix${_formatPrice(magnitude)}',
             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: color),
           ),
         ],

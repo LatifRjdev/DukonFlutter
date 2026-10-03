@@ -47,10 +47,16 @@ class _CreditGroup {
   final List<_CreditItem> items;
   const _CreditGroup({required this.total, required this.count, required this.items});
 
-  factory _CreditGroup.fromJson(Map<String, dynamic> j) => _CreditGroup(
-        total: (j['total'] as num?)?.toDouble() ?? 0,
+  /// [itemsKey] names the list inside the group: /finances/credits-summary
+  /// returns `customers` under receivables and `suppliers` under payables.
+  /// Reading `total`/`items` — which the endpoint has never sent — left both
+  /// tabs permanently empty and both totals at 0, while Долги showed the same
+  /// debts correctly from a different endpoint.
+  factory _CreditGroup.fromJson(Map<String, dynamic> j, String itemsKey) =>
+      _CreditGroup(
+        total: (j['totalAmount'] as num?)?.toDouble() ?? 0,
         count: (j['count'] as num?)?.toInt() ?? 0,
-        items: ((j['items'] as List?) ?? [])
+        items: ((j[itemsKey] as List?) ?? [])
             .map((e) => _CreditItem.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
@@ -62,8 +68,10 @@ class _CreditsSummary {
   const _CreditsSummary({required this.receivables, required this.payables});
 
   factory _CreditsSummary.fromJson(Map<String, dynamic> j) => _CreditsSummary(
-        receivables: _CreditGroup.fromJson(j['receivables'] as Map<String, dynamic>? ?? {}),
-        payables: _CreditGroup.fromJson(j['payables'] as Map<String, dynamic>? ?? {}),
+        receivables: _CreditGroup.fromJson(
+            j['receivables'] as Map<String, dynamic>? ?? {}, 'customers'),
+        payables: _CreditGroup.fromJson(
+            j['payables'] as Map<String, dynamic>? ?? {}, 'suppliers'),
       );
 }
 
