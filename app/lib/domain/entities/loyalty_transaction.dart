@@ -28,8 +28,8 @@ class LoyaltyTransaction {
         points: (json['points'] as num).toInt(),
         saleId: json['saleId'] as String?,
         expiresAt: json['expiresAt'] != null
-            ? DateTime.parse(json['expiresAt'] as String)
+            ? DateTime.parse(json['expiresAt'] as String).toLocal()
             : null,
-        createdAt: DateTime.parse(json['createdAt'] as String),
+        createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       );
 }

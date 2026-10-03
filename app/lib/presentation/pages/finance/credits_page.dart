@@ -135,7 +135,7 @@ class _CreditsPageState extends State<CreditsPage> with SingleTickerProviderStat
   String _formatDate(String? raw) {
     if (raw == null || raw.isEmpty) return '—';
     try {
-      return DateFormat('dd.MM.yyyy').format(DateTime.parse(raw));
+      return DateFormat('dd.MM.yyyy').format(DateTime.parse(raw).toLocal());
     } catch (_) {
       return raw;
     }

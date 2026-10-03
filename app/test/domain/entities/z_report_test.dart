@@ -76,8 +76,8 @@ void main() {
       ));
 
       expect(report.staffName, 'Ali');
-      expect(report.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z'));
-      expect(report.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z'));
+      expect(report.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z').toLocal());
+      expect(report.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z').toLocal());
       // duration isn't sent by the backend — computed from openedAt/closedAt.
       expect(report.durationHours, 12);
       expect(report.durationMinutes, 0);

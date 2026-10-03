@@ -61,7 +61,7 @@ class _AppNotification {
       title: j['title'] as String? ?? '',
       body: j['body'] as String? ?? '',
       createdAt: j['createdAt'] != null
-          ? DateTime.tryParse(j['createdAt'] as String) ?? DateTime.now()
+          ? DateTime.tryParse(j['createdAt'] as String)?.toLocal() ?? DateTime.now()
           : DateTime.now(),
       isRead: j['isRead'] as bool? ?? false,
     );

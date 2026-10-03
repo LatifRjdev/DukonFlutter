@@ -166,7 +166,7 @@ void main() {
       expect(entity.reference, 'REF-1');
       expect(entity.notes, 'bulk order');
       expect(entity.createdBy, 'user-1');
-      expect(entity.createdAt, DateTime.parse('2026-05-12T12:00:00Z'));
+      expect(entity.createdAt, DateTime.parse('2026-05-12T12:00:00Z').toLocal());
     });
 
     test('missing optional fields parse to null without crashing', () {

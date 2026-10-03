@@ -270,12 +270,12 @@ class SaleLocalDatasourceImpl implements SaleLocalDatasource {
       change: (row['change_amount'] as num?)?.toDouble() ?? 0,
       debtAmount: (row['debt_amount'] as num?)?.toDouble() ?? 0,
       dueDate: row['due_date'] != null
-          ? DateTime.parse(row['due_date'] as String)
+          ? DateTime.parse(row['due_date'] as String).toLocal()
           : null,
       status: row['status'] as String? ?? 'COMPLETED',
       notes: row['notes'] as String?,
       items: items,
-      createdAt: DateTime.parse(row['created_at'] as String),
+      createdAt: DateTime.parse(row['created_at'] as String).toLocal(),
     );
   }
 

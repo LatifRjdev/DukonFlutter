@@ -374,6 +374,9 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
 
     String fmtDate(String raw) {
       try {
+        // Deliberately NOT .toLocal(): CurrencyRate.date is a `@db.Date`
+        // calendar date (one rate per currency per day), serialised as
+        // midnight UTC. Converting it would relabel the point by a day.
         final dt = DateTime.parse(raw);
         return DateFormat('dd.MM').format(dt);
       } catch (_) {

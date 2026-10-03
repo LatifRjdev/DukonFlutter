@@ -41,7 +41,7 @@ class DashboardRemoteDatasourceImpl implements DashboardRemoteDatasource {
           paidAmount: (m['total'] as num?)?.toDouble() ?? 0,
           status: m['status'] as String? ?? 'COMPLETED',
           customerName: m['customerName'] as String?,
-          createdAt: DateTime.tryParse(m['createdAt']?.toString() ?? '') ?? DateTime.now(),
+          createdAt: DateTime.tryParse(m['createdAt']?.toString() ?? '')?.toLocal() ?? DateTime.now(),
         );
       }).toList();
 

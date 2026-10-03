@@ -163,7 +163,7 @@ class _BalancePageState extends State<BalancePage> {
 
   String _formatDate(String raw) {
     try {
-      final dt = DateTime.parse(raw);
+      final dt = DateTime.parse(raw).toLocal();
       return DateFormat('dd.MM').format(dt);
     } catch (_) {
       return raw;
@@ -172,7 +172,7 @@ class _BalancePageState extends State<BalancePage> {
 
   String _formatDateFull(String raw) {
     try {
-      final dt = DateTime.parse(raw);
+      final dt = DateTime.parse(raw).toLocal();
       return DateFormat('dd.MM.yyyy HH:mm').format(dt);
     } catch (_) {
       return raw;

@@ -49,9 +49,9 @@ class ShiftModel extends Equatable {
       storeId: json['storeId'] as String,
       staffId: json['staffId'] as String,
       staffName: json['staffName'] as String?,
-      openedAt: DateTime.parse(json['openedAt'] as String),
+      openedAt: DateTime.parse(json['openedAt'] as String).toLocal(),
       closedAt: json['closedAt'] != null
-          ? DateTime.parse(json['closedAt'] as String)
+          ? DateTime.parse(json['closedAt'] as String).toLocal()
           : null,
       openingCash: (json['openingCash'] as num).toDouble(),
       closingCash: (json['closingCash'] as num?)?.toDouble(),

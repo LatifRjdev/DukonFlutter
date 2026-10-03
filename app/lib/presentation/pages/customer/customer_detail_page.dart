@@ -314,7 +314,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
   }
 
   String _formatDate(String iso) {
-    final dt = DateTime.tryParse(iso);
+    final dt = DateTime.tryParse(iso)?.toLocal();
     if (dt == null) return '';
     return '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
   }

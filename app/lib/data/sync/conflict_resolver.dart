@@ -56,6 +56,9 @@ class ConflictResolver {
 
     if (raw is DateTime) return raw;
     if (raw is String) {
+      // No .toLocal() needed: this value is only fed to isAfter/difference,
+      // which compare absolute instants regardless of zone flag, and it is
+      // never rendered. Converting would be a no-op.
       return DateTime.tryParse(raw);
     }
     return null;

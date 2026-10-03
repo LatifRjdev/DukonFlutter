@@ -21,7 +21,7 @@ class PayrollAdjustment extends Equatable {
       type: json['type'] as String,
       amount: (json['amount'] as num).toDouble(),
       description: json['description'] as String,
-      date: json['date'] != null ? DateTime.parse(json['date'] as String) : null,
+      date: json['date'] != null ? DateTime.parse(json['date'] as String).toLocal() : null,
     );
   }
 

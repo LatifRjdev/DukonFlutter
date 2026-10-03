@@ -28,9 +28,9 @@ class SyncQueueItemModel {
       recordId: json['recordId'] as String,
       action: json['action'] as String,
       payload: json['payload'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       syncedAt: json['syncedAt'] != null
-          ? DateTime.parse(json['syncedAt'] as String)
+          ? DateTime.parse(json['syncedAt'] as String).toLocal()
           : null,
       retryCount: json['retryCount'] as int? ?? 0,
     );
@@ -58,9 +58,9 @@ class SyncQueueItemModel {
       recordId: map['record_id'] as String,
       action: map['action'] as String,
       payload: map['payload'] as String,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
       syncedAt: map['synced_at'] != null
-          ? DateTime.parse(map['synced_at'] as String)
+          ? DateTime.parse(map['synced_at'] as String).toLocal()
           : null,
       retryCount: map['retry_count'] as int? ?? 0,
     );

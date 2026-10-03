@@ -68,9 +68,9 @@ void main() {
       expect(inv.investorName, 'Ali');
       expect(inv.investorPhone, '+992900000000');
       expect(inv.status, 'ACTIVE');
-      expect(inv.startDate, DateTime.parse('2026-01-01T00:00:00.000Z'));
-      expect(inv.endDate, DateTime.parse('2026-06-01T00:00:00.000Z'));
-      expect(inv.createdAt, DateTime.parse('2026-01-01T00:00:00.000Z'));
+      expect(inv.startDate, DateTime.parse('2026-01-01T00:00:00.000Z').toLocal());
+      expect(inv.endDate, DateTime.parse('2026-06-01T00:00:00.000Z').toLocal());
+      expect(inv.createdAt, DateTime.parse('2026-01-01T00:00:00.000Z').toLocal());
     });
 
     test('defaults total to 0 and totalPages to 1 when absent', () async {

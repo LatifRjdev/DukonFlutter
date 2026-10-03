@@ -41,7 +41,7 @@ class StockMovementModel {
       reference: json['reference'] as String?,
       notes: json['notes'] as String?,
       createdBy: json['createdBy'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
@@ -75,7 +75,7 @@ class StockMovementModel {
       reference: map['reference'] as String?,
       notes: map['notes'] as String?,
       createdBy: map['created_by'] as String?,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
     );
   }
 

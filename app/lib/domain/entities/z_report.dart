@@ -65,8 +65,8 @@ class ZReport extends Equatable {
     final returns = json['returns'] as Map<String, dynamic>? ?? const {};
     final cashDrawer = json['cashDrawer'] as Map<String, dynamic>? ?? const {};
 
-    final openedAt = DateTime.parse(shift['openedAt'] as String);
-    final closedAt = DateTime.parse(shift['closedAt'] as String);
+    final openedAt = DateTime.parse(shift['openedAt'] as String).toLocal();
+    final closedAt = DateTime.parse(shift['closedAt'] as String).toLocal();
     final diff = closedAt.difference(openedAt);
 
     return ZReport(

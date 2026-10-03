@@ -126,8 +126,8 @@ class ExpenseRemoteDatasourceImpl implements ExpenseRemoteDatasource {
       isRecurring: json['isRecurring'] as bool? ?? false,
       recurringDay: json['recurringDay'] as int?,
       createdBy: json['createdBy'] as String?,
-      date: DateTime.parse(json['date'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      date: DateTime.parse(json['date'] as String).toLocal(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

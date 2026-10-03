@@ -66,7 +66,7 @@ class SaleModel {
       change: (json['change'] as num?)?.toDouble() ?? 0,
       debtAmount: (json['debtAmount'] as num?)?.toDouble() ?? 0,
       dueDate: json['dueDate'] != null
-          ? DateTime.parse(json['dueDate'] as String)
+          ? DateTime.parse(json['dueDate'] as String).toLocal()
           : null,
       status: json['status'] as String? ?? 'COMPLETED',
       notes: json['notes'] as String?,
@@ -75,7 +75,7 @@ class SaleModel {
               .map((e) => SaleItemModel.fromJson(e as Map<String, dynamic>))
               .toList()
           : const [],
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
@@ -127,12 +127,12 @@ class SaleModel {
       change: (map['change_amount'] as num?)?.toDouble() ?? 0,
       debtAmount: (map['debt_amount'] as num?)?.toDouble() ?? 0,
       dueDate: map['due_date'] != null
-          ? DateTime.parse(map['due_date'] as String)
+          ? DateTime.parse(map['due_date'] as String).toLocal()
           : null,
       status: map['status'] as String? ?? 'COMPLETED',
       notes: map['notes'] as String?,
       items: items,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
     );
   }
 

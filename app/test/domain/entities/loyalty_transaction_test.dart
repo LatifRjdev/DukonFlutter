@@ -22,8 +22,8 @@ void main() {
       expect(tx.type, 'EARN');
       expect(tx.points, 50);
       expect(tx.saleId, 'sale-1');
-      expect(tx.expiresAt, DateTime.parse('2026-12-31T00:00:00.000Z'));
-      expect(tx.createdAt, DateTime.parse('2026-07-01T10:00:00.000Z'));
+      expect(tx.expiresAt, DateTime.parse('2026-12-31T00:00:00.000Z').toLocal());
+      expect(tx.createdAt, DateTime.parse('2026-07-01T10:00:00.000Z').toLocal());
     });
 
     test('parses a REDEEM transaction with negative points', () {

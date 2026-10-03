@@ -200,7 +200,7 @@ void main() {
       expect(model.total, 90.0);
       expect(model.items, hasLength(1));
       expect(model.items.first.productName, 'Apple');
-      expect(model.createdAt, DateTime.parse('2026-01-01T00:00:00.000Z'));
+      expect(model.createdAt, DateTime.parse('2026-01-01T00:00:00.000Z').toLocal());
     });
 
     test('defaults discount/change/debtAmount to 0 when absent', () {
@@ -230,7 +230,7 @@ void main() {
     test('parses a non-null dueDate', () {
       final json = validJson()..['dueDate'] = '2026-02-01T00:00:00.000Z';
       final model = SaleModel.fromJson(json);
-      expect(model.dueDate, DateTime.parse('2026-02-01T00:00:00.000Z'));
+      expect(model.dueDate, DateTime.parse('2026-02-01T00:00:00.000Z').toLocal());
     });
 
     test('accepts integer JSON numbers for double fields without throwing',

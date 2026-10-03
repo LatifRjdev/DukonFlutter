@@ -124,7 +124,7 @@ class AuthLocalDatasourceImpl implements AuthLocalDatasource {
         email: json['email'] as String?,
         avatar: json['avatar'] as String?,
         isActive: json['isActive'] as bool? ?? true,
-        createdAt: DateTime.parse(json['createdAt'] as String),
+        createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       );
     } catch (e) {
       return null;

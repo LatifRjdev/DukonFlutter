@@ -31,8 +31,8 @@ void main() {
       expect(shift.storeId, 'store-1');
       expect(shift.staffId, 'staff-1');
       expect(shift.staffName, 'Ali');
-      expect(shift.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z'));
-      expect(shift.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z'));
+      expect(shift.openedAt, DateTime.parse('2026-07-17T08:00:00.000Z').toLocal());
+      expect(shift.closedAt, DateTime.parse('2026-07-17T20:00:00.000Z').toLocal());
       expect(shift.openingCash, 500);
       expect(shift.closingCash, 1200);
       expect(shift.expectedCash, 1250);

@@ -558,7 +558,7 @@ class _StockMovementsSectionState extends State<_StockMovementsSection> {
 
   String _formatDate(String? dateStr) {
     if (dateStr == null) return '';
-    final dt = DateTime.tryParse(dateStr);
+    final dt = DateTime.tryParse(dateStr)?.toLocal();
     if (dt == null) return dateStr;
     return DateFormat('dd.MM.yyyy HH:mm').format(dt);
   }

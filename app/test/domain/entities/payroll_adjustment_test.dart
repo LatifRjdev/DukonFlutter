@@ -17,7 +17,7 @@ void main() {
       expect(adj.type, 'BONUS');
       expect(adj.amount, 150.5);
       expect(adj.description, 'Overtime bonus');
-      expect(adj.date, DateTime.parse('2026-05-11T00:00:00.000Z'));
+      expect(adj.date, DateTime.parse('2026-05-11T00:00:00.000Z').toLocal());
     });
 
     test('parses a DEDUCTION adjustment with a negative amount', () {

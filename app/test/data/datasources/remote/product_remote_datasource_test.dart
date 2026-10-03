@@ -229,7 +229,7 @@ void main() {
     test('createdAt parses the ISO-8601 string from the backend', () async {
       final product = await load(
           validProductJson(createdAt: '2026-03-15T12:30:00.000Z'));
-      expect(product.createdAt, DateTime.parse('2026-03-15T12:30:00.000Z'));
+      expect(product.createdAt, DateTime.parse('2026-03-15T12:30:00.000Z').toLocal());
     });
   });
 

@@ -108,7 +108,7 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
       logoUrl: json['logoUrl'] as String?,
       settings: (json['settings'] as Map<String, dynamic>?) ?? {},
       isActive: json['isActive'] as bool? ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

@@ -193,7 +193,7 @@ class ProductLocalDatasourceImpl implements ProductLocalDatasource {
       unit: row['unit'] as String? ?? 'PCS',
       imageUrl: row['image_url'] as String?,
       isActive: (row['is_active'] as int?) == 1,
-      createdAt: DateTime.parse(row['created_at'] as String),
+      createdAt: DateTime.parse(row['created_at'] as String).toLocal(),
     );
   }
 }

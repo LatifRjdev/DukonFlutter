@@ -52,7 +52,7 @@ class StaffMember extends Equatable {
       isOnShift: json['isOnShift'] as bool? ?? false,
       todaySales: (json['todaySales'] as num?)?.toDouble() ??
           (json['todaySalesTotal'] as num?)?.toDouble(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
