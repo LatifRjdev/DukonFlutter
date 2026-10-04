@@ -48,7 +48,12 @@ class ShiftModel extends Equatable {
       id: json['id'] as String,
       storeId: json['storeId'] as String,
       staffId: json['staffId'] as String,
-      staffName: json['staffName'] as String?,
+      // The API nests the name under staff.user; there is no flat staffName,
+      // so this always came back null and the screen read "Кассир: Не указан"
+      // for a shift whose cashier the Сотрудники screen showed by name.
+      staffName: json['staffName'] as String? ??
+          ((json['staff'] as Map<String, dynamic>?)?['user']
+              as Map<String, dynamic>?)?['name'] as String?,
       openedAt: DateTime.parse(json['openedAt'] as String).toLocal(),
       closedAt: json['closedAt'] != null
           ? DateTime.parse(json['closedAt'] as String).toLocal()

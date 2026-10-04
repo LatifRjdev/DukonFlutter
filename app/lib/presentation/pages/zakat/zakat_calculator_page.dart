@@ -253,6 +253,11 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                         ),
 
                         if (!calc.isAboveNisab) ...[
+                          // A nisab of 0 means it was never configured, not
+                          // that the assets fall short of it — the backend
+                          // deliberately declines to compute zakat without a
+                          // threshold. Saying "below the nisab" there asserts
+                          // a comparison that never happened.
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.all(12),
@@ -265,7 +270,10 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                 const Icon(Icons.info_outline, size: 18, color: AppColors.warning),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text(l10n.belowNisabNotice,
+                                  child: Text(
+                                    calc.nisabAmount > 0
+                                        ? l10n.belowNisabNotice
+                                        : l10n.nisabNotConfiguredNotice,
                                     style: const TextStyle(fontSize: 13, color: AppColors.warning)),
                                 ),
                               ],
@@ -378,7 +386,18 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
               children: [
                 Row(
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    // Flexible, not a bare Text: nothing in this row could
+                    // shrink, so a long title ("Дебиторская задолженность")
+                    // plus the badge overflowed the card by a few pixels.
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     if (badge != null) ...[
                       const SizedBox(width: 6),
                       Container(

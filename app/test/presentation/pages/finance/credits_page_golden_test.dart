@@ -104,24 +104,27 @@ void main() {
   testWidgets('renders localized strings for a loaded credits summary',
       (tester) async {
     if (sl.isRegistered<DioClient>()) sl.unregister<DioClient>();
+    // Field names mirror /finances/credits-summary exactly. The fixture used
+    // to say `total`/`items`, which the endpoint has never sent — so this test
+    // passed while the screen itself rendered an empty list against real data.
     sl.registerSingleton<DioClient>(_FakeDioClientWithData({
       'receivables': {
-        'total': 1500,
+        'totalAmount': 1500,
         'count': 3,
-        'items': [
+        'customers': [
           {
             'id': 'c1',
             'name': 'Иван Иванов',
             'phone': '+992900000001',
             'debt': 500,
-            'lastPayment': '2026-01-15',
+            'lastPayment': '2026-01-15T00:00:00.000Z',
           },
         ],
       },
       'payables': {
-        'total': 800,
+        'totalAmount': 800,
         'count': 2,
-        'items': <Map<String, dynamic>>[],
+        'suppliers': <Map<String, dynamic>>[],
       },
     }));
 

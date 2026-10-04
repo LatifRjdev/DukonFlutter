@@ -2468,6 +2468,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get belowNisabNotice => 'Активы ниже нисаба. Закят не обязателен.';
 
   @override
+  String get nisabNotConfiguredNotice =>
+      'Нисаб не задан, поэтому закят не рассчитан. Укажите его в настройках.';
+
+  @override
   String get recordZakatPayment => 'Записать выплату закята';
 
   @override

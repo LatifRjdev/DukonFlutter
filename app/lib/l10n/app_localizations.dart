@@ -4570,6 +4570,12 @@ abstract class AppLocalizations {
   /// **'Активы ниже нисаба. Закят не обязателен.'**
   String get belowNisabNotice;
 
+  /// Shown instead of `belowNisabNotice` when the nisab threshold is 0, i.e. never configured. The assets were not compared against anything, so claiming they are below the threshold would be false.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нисаб не задан, поэтому закят не рассчитан. Укажите его в настройках.'**
+  String get nisabNotConfiguredNotice;
+
   /// No description provided for @recordZakatPayment.
   ///
   /// In ru, this message translates to:
