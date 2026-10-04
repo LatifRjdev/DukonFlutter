@@ -295,7 +295,7 @@ class _ZakatCalculatorPageState extends State<ZakatCalculatorPage> {
                                     'amount': calc.zakatDue,
                                     'totalAssets': calc.netAssets,
                                     'zakatDue': calc.zakatDue,
-                                    'paidAt': DateTime.now().toIso8601String(),
+                                    'paidAt': DateTime.now().toUtc().toIso8601String(),
                                   },
                                 ));
                               },

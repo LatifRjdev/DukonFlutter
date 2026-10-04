@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/data/datasources/remote/dashboard_remote_datasource.dart';
 import 'package:dukonpro/data/datasources/remote/finance_remote_datasource.dart';
+import 'package:dukonpro/data/datasources/remote/loyalty_remote_datasource.dart';
 import 'package:dukonpro/data/datasources/remote/sale_remote_datasource.dart';
 
 class _MockDioClient extends Mock implements DioClient {}
@@ -73,5 +74,31 @@ void main() {
         .getSales('store-1', dateFrom: from, dateTo: to);
 
     expectUtcRange('dateFrom', 'dateTo');
+  });
+
+  // The counterpart: a CALENDAR date must not be converted. .toUtc() on a
+  // local midnight lands on the previous day, so a well-meaning sweep that
+  // "fixed" this site would silently shift every loyalty range back a day.
+  test('should send the loyalty range as a calendar date, not an instant',
+      () async {
+    when(() => dio.get<dynamic>(any(),
+            queryParameters: any(named: 'queryParameters')))
+        .thenAnswer((_) async => Response<dynamic>(
+              requestOptions: RequestOptions(path: ''),
+              statusCode: 200,
+              data: <String, dynamic>{},
+            ));
+
+    // The response mapper needs a fully populated body; this test is about
+    // what went OUT, and the request has already been made by the time the
+    // mapper runs.
+    try {
+      await LoyaltyRemoteDatasourceImpl(dioClient: dio)
+          .getAnalytics('store-1', DateTime(2026, 10, 2), DateTime(2026, 10, 2));
+    } catch (_) {}
+
+    final params = sentParams();
+    expect(params['from'], '2026-10-02');
+    expect(params['to'], '2026-10-02');
   });
 }

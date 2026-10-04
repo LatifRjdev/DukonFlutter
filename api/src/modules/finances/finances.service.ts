@@ -517,6 +517,8 @@ export class FinancesService {
     switch (query.period) {
       case 'today':
       case 'day':
+        // No adjustment: the window starts today. Deleting this group would
+        // drop 'today' into default: (a month) and break the home screen.
         break;
       case 'week':
         startDate.setDate(startDate.getDate() - 7);
