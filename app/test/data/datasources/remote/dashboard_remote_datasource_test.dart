@@ -146,8 +146,11 @@ void main() {
           )).captured;
       final params = captured.single as Map<String, dynamic>;
       expect(params['period'], 'custom');
-      expect(params['startDate'], start.toIso8601String());
-      expect(params['endDate'], end.toIso8601String());
+      // Sent as an instant so the server's own timezone cannot shift the
+      // window; the expectation derives from the same DateTime, so it
+      // holds in any zone.
+      expect(params['startDate'], start.toUtc().toIso8601String());
+      expect(params['endDate'], end.toUtc().toIso8601String());
     });
 
     test('omits startDate/endDate query params when not provided', () async {

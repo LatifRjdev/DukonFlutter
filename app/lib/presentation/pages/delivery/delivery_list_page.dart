@@ -86,8 +86,8 @@ class _DeliveryListCubit extends Cubit<_DeliveryListState> {
         '/stores/$storeId/deliveries',
         queryParameters: {
           'status': status,
-          'from': from?.toIso8601String(),
-          'to': to?.toIso8601String(),
+          'from': from?.toUtc().toIso8601String(),
+          'to': to?.toUtc().toIso8601String(),
         }..removeWhere((_, v) => v == null),
       );
       final raw = resp.data;

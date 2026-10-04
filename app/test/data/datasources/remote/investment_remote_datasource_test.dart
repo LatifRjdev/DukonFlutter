@@ -163,8 +163,8 @@ void main() {
       expect(params['page'], 2);
       expect(params['limit'], 10);
       expect(params['status'], 'ACTIVE');
-      expect(params['startDate'], start.toIso8601String());
-      expect(params['endDate'], end.toIso8601String());
+      expect(params['startDate'], start.toUtc().toIso8601String());
+      expect(params['endDate'], end.toUtc().toIso8601String());
     });
 
     test('omits status/startDate/endDate query params when not provided',
