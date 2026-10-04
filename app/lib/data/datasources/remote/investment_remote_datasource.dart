@@ -43,8 +43,8 @@ class InvestmentRemoteDatasourceImpl implements InvestmentRemoteDatasource {
           'page': page,
           'limit': limit,
           'status': ?status,
-          if (startDate != null) 'startDate': startDate.toIso8601String(),
-          if (endDate != null) 'endDate': endDate.toIso8601String(),
+          if (startDate != null) 'startDate': startDate.toUtc().toIso8601String(),
+          if (endDate != null) 'endDate': endDate.toUtc().toIso8601String(),
         },
       );
 

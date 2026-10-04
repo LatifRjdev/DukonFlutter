@@ -22,8 +22,8 @@ class DashboardRemoteDatasourceImpl implements DashboardRemoteDatasource {
         ApiEndpoints.financeOverview(storeId),
         queryParameters: {
           'period': period,
-          if (startDate != null) 'startDate': startDate.toIso8601String(),
-          if (endDate != null) 'endDate': endDate.toIso8601String(),
+          if (startDate != null) 'startDate': startDate.toUtc().toIso8601String(),
+          if (endDate != null) 'endDate': endDate.toUtc().toIso8601String(),
         },
       );
       final json = response.data as Map<String, dynamic>;

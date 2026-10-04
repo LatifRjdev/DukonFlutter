@@ -86,6 +86,11 @@ class _DeliveryListCubit extends Cubit<_DeliveryListState> {
         '/stores/$storeId/deliveries',
         queryParameters: {
           'status': status,
+          // Deliberately NOT .toUtc(): deliveries.service.ts re-truncates `to`
+          // with setHours(23,59,59,999) in SERVER-local time, so marking the
+          // instant would move the boundary to ~05:00 of the chosen day on a
+          // UTC host. Fix the server before converting these. Dead today —
+          // no caller passes from/to.
           'from': from?.toIso8601String(),
           'to': to?.toIso8601String(),
         }..removeWhere((_, v) => v == null),

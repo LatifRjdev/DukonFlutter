@@ -21,8 +21,12 @@ class FinanceRemoteDatasourceImpl implements FinanceRemoteDatasource {
       final response = await _dioClient.get(
         ApiEndpoints.financeDashboard(storeId),
         queryParameters: {
-          if (startDate != null) 'startDate': startDate.toIso8601String(),
-          if (endDate != null) 'endDate': endDate.toIso8601String(),
+          // .toUtc() so the instant is unambiguous. A zoneless ISO string is
+          // parsed by Node as SERVER-local, which happens to match the device
+          // only because both run at +05 today; on a UTC-hosted API every
+          // custom range would shift by five hours.
+          if (startDate != null) 'startDate': startDate.toUtc().toIso8601String(),
+          if (endDate != null) 'endDate': endDate.toUtc().toIso8601String(),
         },
       );
       return _mapSummary(response.data as Map<String, dynamic>);
@@ -38,8 +42,8 @@ class FinanceRemoteDatasourceImpl implements FinanceRemoteDatasource {
         ApiEndpoints.financeSummary(storeId),
         queryParameters: {
           'period': period,
-          if (startDate != null) 'startDate': startDate.toIso8601String(),
-          if (endDate != null) 'endDate': endDate.toIso8601String(),
+          if (startDate != null) 'startDate': startDate.toUtc().toIso8601String(),
+          if (endDate != null) 'endDate': endDate.toUtc().toIso8601String(),
         },
       );
       final json = response.data as Map<String, dynamic>;

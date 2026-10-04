@@ -596,6 +596,47 @@ describe('FinancesService.getDashboard', () => {
     expect(r.currentBalance).toBe(655);
   });
 
+  it('should use the same window for the balance screen as for the dashboard', async () => {
+    // Баланс built its own range and zeroed the hours while getDateRange did
+    // not, so its "month" started up to a day earlier than every other finance
+    // screen's and the two could disagree at the edge of a period.
+    const capture = (prisma: any) =>
+      prisma.sale.aggregate.mock.calls[0][0].where.createdAt as {
+        gte: Date;
+        lte: Date;
+      };
+
+    const a: any = makeFigurePrisma({ revenue: 1, expenses: 0, cogs: 0 });
+    a.expense.findMany = jest.fn(async () => []);
+    await (await buildWithFigures(a)).getBalance('store-1', {
+      period: 'month',
+    } as any);
+
+    const b: any = makeFigurePrisma({ revenue: 1, expenses: 0, cogs: 0 });
+    await (await buildWithFigures(b)).getDashboard('store-1', {
+      period: 'month',
+    } as any);
+
+    expect(capture(a).gte.getTime()).toBe(capture(b).gte.getTime());
+  });
+
+  it('should start every relative period at midnight', async () => {
+    // A window that slides through the day drops a sale from exactly a month
+    // ago as the clock advances.
+    const prisma: any = makeFigurePrisma({ revenue: 1, expenses: 0, cogs: 0 });
+    const service = await buildWithFigures(prisma);
+
+    for (const period of ['week', 'month', 'year']) {
+      prisma.sale.aggregate.mockClear();
+      await service.getDashboard('store-1', { period } as any);
+      const { gte } = prisma.sale.aggregate.mock.calls[0][0].where
+        .createdAt as { gte: Date };
+      expect([gte.getHours(), gte.getMinutes(), gte.getSeconds()]).toEqual([
+        0, 0, 0,
+      ]);
+    }
+  });
+
   it('should scope the cost of goods to one store when computing it', async () => {
     const prisma = makeFigurePrisma({ revenue: 575, expenses: 420, cogs: 230 });
     const service = await buildWithFigures(prisma);

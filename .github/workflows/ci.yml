@@ -48,6 +48,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      # A green `nest build` is not proof of a usable artifact: for months it
+      # emitted dist/src/main.js while start:prod and the Dockerfile CMD both
+      # looked for dist/main, so the container crashed on start and CI never
+      # noticed. Assert the entrypoint the image actually runs.
+      - name: Verify build entrypoint
+        run: test -f dist/main.js
+
   backend-e2e:
     name: Backend e2e (Jest + Postgres)
     runs-on: ubuntu-latest

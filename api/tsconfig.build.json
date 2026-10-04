@@ -1,4 +1,12 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "compilerOptions": { "rootDir": "src" },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "scripts"]
+  // rootDir is pinned so a stray top-level .ts FAILS the build instead of
+  // silently relocating output to dist/src/ and leaving a container that
+  // crashes on start. "scripts" is excluded so nest
+  // build emits dist/main.js. With scripts/ compiled alongside it, the
+  // root became the project directory and output moved to dist/src/ —
+  // which both npm run start:prod and the Dockerfile CMD fail to find.
+  // The scripts are run through ts-node and never need compiling.
 }

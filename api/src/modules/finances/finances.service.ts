@@ -264,22 +264,11 @@ export class FinancesService {
   }
 
   async getBalance(storeId: string, query: BalanceQueryDto) {
-    const endDate = new Date();
-    const startDate = new Date();
-
-    switch (query.period) {
-      case BalancePeriod.WEEK:
-        startDate.setDate(startDate.getDate() - 7);
-        break;
-      case BalancePeriod.YEAR:
-        startDate.setFullYear(startDate.getFullYear() - 1);
-        break;
-      case BalancePeriod.MONTH:
-      default:
-        startDate.setMonth(startDate.getMonth() - 1);
-        break;
-    }
-    startDate.setHours(0, 0, 0, 0);
+    // The shared range, so Баланс cannot drift from the screens it is compared
+    // against. BalancePeriod's values are the same strings getDateRange reads.
+    const { startDate, endDate } = this.getDateRange({
+      period: query.period ?? BalancePeriod.MONTH,
+    });
 
     const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData, cogs] =
       await Promise.all([
@@ -528,7 +517,8 @@ export class FinancesService {
     switch (query.period) {
       case 'today':
       case 'day':
-        startDate.setHours(0, 0, 0, 0);
+        // No adjustment: the window starts today. Deleting this group would
+        // drop 'today' into default: (a month) and break the home screen.
         break;
       case 'week':
         startDate.setDate(startDate.getDate() - 7);
@@ -541,6 +531,12 @@ export class FinancesService {
         startDate.setMonth(startDate.getMonth() - 1);
         break;
     }
+    // Whole days for every period, not just today. Without this, "Месяц" meant
+    // "since this time of day a month ago", so the window slid through the day
+    // and a sale from exactly a month ago silently dropped out as the clock
+    // advanced. getBalance already zeroed the hours, which is why Баланс and
+    // Главная could disagree at the edge of a period.
+    startDate.setHours(0, 0, 0, 0);
 
     return { startDate, endDate };
   }
