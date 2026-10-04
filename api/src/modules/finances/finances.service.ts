@@ -281,7 +281,7 @@ export class FinancesService {
     }
     startDate.setHours(0, 0, 0, 0);
 
-    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData] =
+    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData, cogs] =
       await Promise.all([
         this.prisma.sale.aggregate({
           where: {
@@ -357,16 +357,11 @@ export class FinancesService {
         ) e ON e.date = day.date
         ORDER BY day.date ASC
       `,
+      computeCostOfGoods(this.prisma, storeId, startDate, endDate),
       ]);
 
     const income = Number(salesAgg._sum.total ?? 0);
     const expenses = Number(expensesAgg._sum.amount ?? 0);
-    const cogs = await computeCostOfGoods(
-      this.prisma,
-      storeId,
-      startDate,
-      endDate,
-    );
     // Net of cost of goods, like the dashboard and the profit report. This
     // used to be income - expenses, so Баланс reported 655 where Главная —
     // one tap away, same store, same period — reported 225.
@@ -399,9 +394,12 @@ export class FinancesService {
       .slice(0, 15);
 
     return {
-      // Cash position, deliberately NOT net of cost of goods: the stock was
-      // paid for when it was bought, not when it was sold, so subtracting it
-      // here would double-count. Only `profit` carries the margin.
+      // Period revenue less recorded expenses — NOT a cash position, despite
+      // the "Текущий баланс" label: `income` counts credit sales in full, and
+      // `expenses` holds only manually entered rows, never supplier payments.
+      // Deliberately NOT net of cost of goods: PURCHASE is an expense category,
+      // so a merchant who books stock purchases there would be double-charged.
+      // Only `profit` carries the margin.
       currentBalance: income - expenses,
       income,
       expenses,

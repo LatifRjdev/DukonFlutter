@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Only the id is kept. The store list is always re-fetched for the signed-in
 /// account, and a remembered id is honoured only if it appears in that list —
 /// so an id belonging to a previous account cannot select anything, it simply
-/// falls through to the default. It is cleared on sign-out anyway.
+/// falls through to the default. That filter is what makes this safe; the
+/// explicit clear on StoreResetRequested is a tidy-up, not the guarantee —
+/// not every sign-out path dispatches it.
 class SelectedStoreLocalDatasource {
   static const _key = 'store.selectedId.v1';
 

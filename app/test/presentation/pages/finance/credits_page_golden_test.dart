@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/mock_blocs.dart';
@@ -117,7 +118,7 @@ void main() {
             'name': 'Иван Иванов',
             'phone': '+992900000001',
             'debt': 500,
-            'lastPayment': '2026-01-15T00:00:00.000Z',
+            'lastPayment': '2026-01-15T12:00:00.000Z',
           },
         ],
       },
@@ -143,5 +144,16 @@ void main() {
     expect(find.text('3 чел.'), findsOneWidget); // new creditsPersonCountLabel
     expect(find.text('посл. 15.01.2026'),
         findsOneWidget); // new creditsLastPaymentLabel
+
+    // Assert the VALUES, not only the labels. Reading `total` instead of
+    // `totalAmount` renders "0 TJS" under an unchanged "Общий долг нам" — half
+    // of the reported defect — and a label-only assertion stays green through
+    // it, which is exactly how the old fixture hid the bug.
+    // Formatted the way the page formats it — the ru locale groups with a
+    // non-breaking space, so a literal '1 500' would not match.
+    final money = NumberFormat('#,##0', 'ru');
+    expect(find.text('${money.format(1500)} TJS'), findsOneWidget,
+        reason: 'the receivables total must come from totalAmount');
+    // Only the active tab is built, so the payables total is not on screen.
   });
 }

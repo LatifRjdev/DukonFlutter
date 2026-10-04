@@ -160,7 +160,10 @@ void main() {
       final sale = SaleModel.fromJson(_saleJson(_saleIso));
       final rawUtc = DateTime.parse(_saleIso);
 
-      if (rawUtc.timeZoneOffset == Duration.zero) {
+      // DateTime.timeZoneOffset is ALWAYS zero on an isUtc instance, so
+      // asking rawUtc would have skipped this assertion on every host,
+      // including UTC+05. The host's own offset is the real discriminator.
+      if (DateTime.now().timeZoneOffset == Duration.zero) {
         // A UTC host cannot distinguish the two renderings; the isUtc
         // assertions above are what carry the contract there.
         return;
@@ -181,7 +184,8 @@ void main() {
       expect(_dateTime.format(sale.createdAt),
           _dateTime.format(rawUtc.toLocal()));
 
-      if (rawUtc.timeZoneOffset > const Duration(hours: 1, minutes: 30)) {
+      if (DateTime.now().timeZoneOffset >
+          const Duration(hours: 1, minutes: 30)) {
         // e.g. Dushanbe (UTC+05): 02.10 22:30Z is 03.10 03:30 local.
         expect(sale.createdAt.day, isNot(rawUtc.day),
             reason: 'east of UTC a late-evening UTC instant is local tomorrow');
@@ -196,7 +200,8 @@ void main() {
       expect(_dateTime.format(sale.createdAt),
           _dateTime.format(rawUtc.toLocal()));
 
-      if (rawUtc.timeZoneOffset < const Duration(hours: -1, minutes: -30)) {
+      if (DateTime.now().timeZoneOffset <
+          const Duration(hours: -1, minutes: -30)) {
         expect(sale.createdAt.day, isNot(rawUtc.day),
             reason: 'west of UTC an early-morning UTC instant is local '
                 'yesterday');

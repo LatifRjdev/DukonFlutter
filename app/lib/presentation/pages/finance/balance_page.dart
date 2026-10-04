@@ -50,7 +50,8 @@ class _Transaction {
   });
 
   // Backend sends each recentTransactions item as {type: 'SALE'|'EXPENSE',
-  // label: ..., ...} — this used to read the non-existent 'description'
+  // ...}: sales carry `receiptNo`, expenses carry `label`. This used to read
+  // the non-existent 'description'
   // key (always ''), and compared `type` against the lowercase 'sale'
   // below without normalizing case, which would have misclassified every
   // real transaction as an expense once `recentTransactions` was wired up.
