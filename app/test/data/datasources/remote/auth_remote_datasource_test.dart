@@ -486,7 +486,7 @@ void main() {
 
       final user = await ds.verifyToken();
 
-      expect(user.createdAt, DateTime.parse('2026-03-04T05:06:07.000Z'));
+      expect(user.createdAt, DateTime.parse('2026-03-04T05:06:07.000Z').toLocal());
     });
   });
 

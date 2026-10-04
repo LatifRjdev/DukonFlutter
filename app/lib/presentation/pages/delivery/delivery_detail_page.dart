@@ -56,7 +56,7 @@ class _DeliveryDetail {
         items: ((j['items'] as List?) ?? [])
             .map((e) => _DeliveryItem.fromJson(e as Map<String, dynamic>))
             .toList(),
-        createdAt: DateTime.tryParse(j['createdAt'] as String? ?? '') ?? DateTime.now(),
+        createdAt: DateTime.tryParse(j['createdAt'] as String? ?? '')?.toLocal() ?? DateTime.now(),
       );
 
   static _DeliveryStatus _statusFrom(String s) {

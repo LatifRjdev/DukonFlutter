@@ -45,6 +45,9 @@ class LoyaltyAnalytics {
             ))
         .toList();
     return LoyaltyAnalytics(
+      // Deliberately NOT .toLocal(): these echo back the date-only `from`/`to`
+      // range the client sent (see loyalty_remote_datasource), so they are
+      // calendar bounds rather than instants.
       from: DateTime.parse(period['from'] as String),
       to: DateTime.parse(period['to'] as String),
       totalEarned: (json['totalEarned'] as num).toInt(),

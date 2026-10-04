@@ -131,6 +131,8 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
       name: json['name'] as String,
       phone: json['phone'] as String?,
       email: json['email'] as String?,
+      // Deliberately NOT .toLocal(): a birthday is a calendar date, not an
+      // instant, so converting it can move it to the adjacent day.
       birthday: json['birthday'] != null
           ? DateTime.parse(json['birthday'] as String)
           : null,
@@ -141,7 +143,7 @@ class CustomerRemoteDatasourceImpl implements CustomerRemoteDatasource {
       isActive: json['isActive'] as bool? ?? true,
       telegramChatId: json['telegramChatId'] as String?,
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
+          ? DateTime.parse(json['createdAt'] as String).toLocal()
           : null,
     );
   }

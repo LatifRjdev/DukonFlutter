@@ -110,7 +110,7 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       plan: data['plan'] as String? ?? 'START',
       status: data['status'] as String? ?? 'ACTIVE',
       expiresAt: data['expiresAt'] != null
-          ? DateTime.tryParse(data['expiresAt'] as String)
+          ? DateTime.tryParse(data['expiresAt'] as String)?.toLocal()
           : null,
       trialDaysLeft: (data['trialDaysLeft'] as num?)?.toInt(),
       adminDiscount: (data['adminDiscount'] as num?)?.toDouble(),

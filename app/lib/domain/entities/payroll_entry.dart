@@ -64,7 +64,7 @@ class PayrollEntry extends Equatable {
       totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0,
       isPaid: json['isPaid'] as bool? ?? false,
       paidAt: json['paidAt'] != null
-          ? DateTime.parse(json['paidAt'] as String)
+          ? DateTime.parse(json['paidAt'] as String).toLocal()
           : null,
       adjustments: (json['adjustments'] as List?)
               ?.map((e) => PayrollAdjustment.fromJson(e as Map<String, dynamic>))

@@ -139,7 +139,7 @@ class PaymentRecord extends Equatable {
         method: json['method'] as String? ?? 'CARD',
         status: json['status'] as String? ?? 'PENDING',
         createdAt: json['createdAt'] != null
-            ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()
+            ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ?? DateTime.now()
             : DateTime.now(),
         receiptUrl: json['receiptUrl'] as String?,
         adminNote: json['adminNote'] as String?,

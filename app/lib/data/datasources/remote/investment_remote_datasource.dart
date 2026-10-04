@@ -144,9 +144,9 @@ class InvestmentRemoteDatasourceImpl implements InvestmentRemoteDatasource {
       investorName: json['investorName'] as String,
       investorPhone: json['investorPhone'] as String?,
       status: json['status'] as String,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: json['endDate'] != null ? DateTime.parse(json['endDate'] as String) : null,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      startDate: DateTime.parse(json['startDate'] as String).toLocal(),
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate'] as String).toLocal() : null,
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

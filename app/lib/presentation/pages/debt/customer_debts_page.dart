@@ -51,7 +51,7 @@ class _CustomerDebtsPageState extends State<CustomerDebtsPage> {
   bool _isOverdue(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return false;
     try {
-      final date = DateTime.parse(dateStr);
+      final date = DateTime.parse(dateStr).toLocal();
       final daysSinceSale = DateTime.now().difference(date).inDays;
       return daysSinceSale > 30; // Consider overdue after 30 days
     } catch (_) {

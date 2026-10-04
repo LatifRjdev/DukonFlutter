@@ -94,7 +94,7 @@ void main() {
               .having((s) => s.status, 'status', 'ACTIVE')
               .having((s) => s.trialDaysLeft, 'trialDaysLeft', 5)
               .having((s) => s.adminDiscount, 'adminDiscount', 10.5)
-              .having((s) => s.expiresAt, 'expiresAt', DateTime.parse('2026-08-01T00:00:00.000Z'))
+              .having((s) => s.expiresAt, 'expiresAt', DateTime.parse('2026-08-01T00:00:00.000Z').toLocal())
               .having((s) => s.limits.maxStores, 'limits.maxStores', 3)
               .having((s) => s.limits.maxProducts, 'limits.maxProducts', 2000)
               .having((s) => s.limits.maxStaff, 'limits.maxStaff', 10)

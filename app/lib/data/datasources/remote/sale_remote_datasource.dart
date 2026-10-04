@@ -156,7 +156,7 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
       change: (json['change'] as num?)?.toDouble() ?? 0,
       debtAmount: (json['debtAmount'] as num?)?.toDouble() ?? 0,
       dueDate: json['dueDate'] != null
-          ? DateTime.parse(json['dueDate'] as String)
+          ? DateTime.parse(json['dueDate'] as String).toLocal()
           : null,
       status: json['status'] as String? ?? 'COMPLETED',
       notes: json['notes'] as String?,
@@ -164,7 +164,7 @@ class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
           .map((item) => _mapSaleItem(item as Map<String, dynamic>,
               parentSaleId: json['id'] as String?))
           .toList(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       pointsEarned: (json['pointsEarned'] as num?)?.toInt() ?? 0,
       pointsBalance: (json['pointsBalance'] as num?)?.toInt() ?? 0,
     );

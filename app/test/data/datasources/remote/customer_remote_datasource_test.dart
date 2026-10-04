@@ -151,7 +151,7 @@ void main() {
       expect(customer.debt, 100);
       expect(customer.isActive, isTrue);
       expect(customer.telegramChatId, 'tg-123');
-      expect(customer.createdAt, DateTime.parse('2024-03-10T08:00:00.000Z'));
+      expect(customer.createdAt, DateTime.parse('2024-03-10T08:00:00.000Z').toLocal());
     });
 
     test('applies defaults for missing optional numeric/bool fields', () async {

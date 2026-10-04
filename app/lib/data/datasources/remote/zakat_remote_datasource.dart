@@ -142,6 +142,10 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
       nisabSilver: (json['nisabSilver'] as num?)?.toDouble() ?? 595,
       nisabCurrency: json['nisabCurrency'] as String? ?? 'TJS',
       nisabAmount: (json['nisabAmount'] as num?)?.toDouble() ?? 0,
+      // Deliberately NOT .toLocal(): the haul start is a calendar date that
+      // zakat_settings_page round-trips straight from a date picker (sent as
+      // naive local midnight, rendered back as bare day/month/year), so the
+      // UTC wall-clock is the value we want.
       haulStartDate: json['haulStartDate'] != null
           ? DateTime.parse(json['haulStartDate'] as String)
           : null,
@@ -162,8 +166,8 @@ class ZakatRemoteDatasourceImpl implements ZakatRemoteDatasource {
       zakatDue: (json['zakatDue'] as num).toDouble(),
       breakdown: json['breakdown'] as Map<String, dynamic>? ?? {},
       notes: json['notes'] as String?,
-      paidAt: DateTime.parse(json['paidAt'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      paidAt: DateTime.parse(json['paidAt'] as String).toLocal(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

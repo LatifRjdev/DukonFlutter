@@ -40,7 +40,7 @@ class _Delivery {
         address: j['address'] as String? ?? '',
         amount: (j['amount'] as num?)?.toDouble() ?? 0,
         status: _statusFromString(j['status'] as String? ?? ''),
-        createdAt: DateTime.tryParse(j['createdAt'] as String? ?? '') ?? DateTime.now(),
+        createdAt: DateTime.tryParse(j['createdAt'] as String? ?? '')?.toLocal() ?? DateTime.now(),
       );
 
   static DeliveryStatus _statusFromString(String s) {

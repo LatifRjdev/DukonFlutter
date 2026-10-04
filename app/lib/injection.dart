@@ -11,6 +11,7 @@ import 'core/router/app_router.dart';
 
 import 'data/datasources/local/auth_local_datasource.dart';
 import 'data/datasources/local/cart_local_datasource.dart';
+import 'data/datasources/local/selected_store_local_datasource.dart';
 import 'data/datasources/local/category_local_datasource.dart';
 import 'data/datasources/local/product_local_datasource.dart';
 import 'data/datasources/local/sale_local_datasource.dart';
@@ -196,6 +197,9 @@ Future<void> initDependencies() async {
 
   // E.4: cart persistence — uses SharedPreferences fetched lazily on
   // first save to keep init() synchronous.
+  sl.registerLazySingleton<SelectedStoreLocalDatasource>(
+    () => SelectedStoreLocalDatasource(sl<SharedPreferences>()),
+  );
   sl.registerLazySingleton<CartLocalDatasource>(
     () => CartLocalDatasource(sl<SharedPreferences>()),
   );
@@ -385,7 +389,10 @@ Future<void> initDependencies() async {
   );
 
   sl.registerFactory<StoreBloc>(
-    () => StoreBloc(storeRepository: sl<StoreRepository>()),
+    () => StoreBloc(
+      storeRepository: sl<StoreRepository>(),
+      selection: sl<SelectedStoreLocalDatasource>(),
+    ),
   );
 
   sl.registerFactory<ProductListBloc>(

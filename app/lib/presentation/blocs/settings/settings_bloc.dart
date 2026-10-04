@@ -83,7 +83,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       avatar: json['avatar'] as String?,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
+          ? DateTime.parse(json['createdAt'] as String).toLocal()
           : DateTime.now(),
     );
   }

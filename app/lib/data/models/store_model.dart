@@ -45,7 +45,7 @@ class StoreModel {
           ? json['settings'] as Map<String, dynamic>
           : const {},
       isActive: json['isActive'] as bool? ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
@@ -81,7 +81,7 @@ class StoreModel {
           ? jsonDecode(map['settings'] as String) as Map<String, dynamic>
           : const {},
       isActive: (map['is_active'] as int? ?? 1) == 1,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
     );
   }
 

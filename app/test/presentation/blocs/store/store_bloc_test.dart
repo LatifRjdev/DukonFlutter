@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:dukonpro/core/errors/exceptions.dart';
+import 'package:dukonpro/data/datasources/local/selected_store_local_datasource.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dukonpro/domain/entities/store.dart';
 import 'package:dukonpro/domain/repositories/store_repository.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
@@ -198,4 +200,78 @@ void main() {
       );
     });
   });
+
+  group('remembering the selected store', () {
+    // A cold start has no in-memory selection, so without persistence the user
+    // was dropped back into whichever store sorts first.
+    Future<SelectedStoreLocalDatasource> freshSelection(
+        [Map<String, Object> seed = const {}]) async {
+      SharedPreferences.setMockInitialValues(seed);
+      return SelectedStoreLocalDatasource(
+          await SharedPreferences.getInstance());
+    }
+
+    test('should restore the remembered store when the bloc starts cold',
+        () async {
+      final selection = await freshSelection({'store.selectedId.v1': 's2'});
+      when(() => repository.getStores())
+          .thenAnswer((_) async => [buildStore(id: 's1'), buildStore(id: 's2')]);
+
+      final bloc =
+          StoreBloc(storeRepository: repository, selection: selection);
+      addTearDown(bloc.close);
+      bloc.add(StoreLoadRequested());
+      final loaded = await bloc.stream.firstWhere((s) => s is StoreLoaded)
+          as StoreLoaded;
+
+      expect(loaded.selectedStore?.id, 's2');
+    });
+
+    test('should fall back to the first store when the remembered one is not '
+        'in the account', () async {
+      // The id belongs to a previous account; the list is scoped to this one.
+      final selection = await freshSelection({'store.selectedId.v1': 'other'});
+      when(() => repository.getStores())
+          .thenAnswer((_) async => [buildStore(id: 's1')]);
+
+      final bloc =
+          StoreBloc(storeRepository: repository, selection: selection);
+      addTearDown(bloc.close);
+      bloc.add(StoreLoadRequested());
+      final loaded = await bloc.stream.firstWhere((s) => s is StoreLoaded)
+          as StoreLoaded;
+
+      expect(loaded.selectedStore?.id, 's1');
+    });
+
+    test('should remember a store when the user selects it', () async {
+      final selection = await freshSelection();
+      when(() => repository.getStores())
+          .thenAnswer((_) async => [buildStore(id: 's1'), buildStore(id: 's2')]);
+
+      final bloc =
+          StoreBloc(storeRepository: repository, selection: selection);
+      addTearDown(bloc.close);
+      bloc.add(StoreLoadRequested());
+      await bloc.stream.firstWhere((s) => s is StoreLoaded);
+      bloc.add(const StoreSelected('s2'));
+      await bloc.stream.firstWhere(
+          (s) => s is StoreLoaded && s.selectedStore?.id == 's2');
+
+      expect(selection.read(), 's2');
+    });
+
+    test('should forget the store when the session is reset', () async {
+      final selection = await freshSelection({'store.selectedId.v1': 's2'});
+      final bloc =
+          StoreBloc(storeRepository: repository, selection: selection);
+      addTearDown(bloc.close);
+
+      bloc.add(StoreResetRequested());
+      await bloc.stream.firstWhere((s) => s is StoreInitial);
+
+      expect(selection.read(), isNull);
+    });
+  });
+
 }

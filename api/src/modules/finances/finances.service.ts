@@ -281,7 +281,7 @@ export class FinancesService {
     }
     startDate.setHours(0, 0, 0, 0);
 
-    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData] =
+    const [salesAgg, expensesAgg, recentSales, recentExpenses, chartData, cogs] =
       await Promise.all([
         this.prisma.sale.aggregate({
           where: {
@@ -357,11 +357,15 @@ export class FinancesService {
         ) e ON e.date = day.date
         ORDER BY day.date ASC
       `,
+      computeCostOfGoods(this.prisma, storeId, startDate, endDate),
       ]);
 
     const income = Number(salesAgg._sum.total ?? 0);
     const expenses = Number(expensesAgg._sum.amount ?? 0);
-    const profit = income - expenses;
+    // Net of cost of goods, like the dashboard and the profit report. This
+    // used to be income - expenses, so Баланс reported 655 where Главная —
+    // one tap away, same store, same period — reported 225.
+    const profit = income - cogs - expenses;
 
     // Build recent transactions merged and sorted
     const recentTransactions = [
@@ -369,7 +373,9 @@ export class FinancesService {
         type: 'SALE' as const,
         id: s.id,
         amount: Number(s.total),
-        label: `Sale #${s.receiptNo}`,
+        // The app composes the user-visible title from this; it used to be
+        // sent as an English literal that rendered verbatim in a Russian UI.
+        receiptNo: s.receiptNo,
         customerName: s.customer?.name ?? null,
         paymentType: s.paymentType,
         status: s.status,
@@ -388,9 +394,16 @@ export class FinancesService {
       .slice(0, 15);
 
     return {
-      currentBalance: profit,
+      // Period revenue less recorded expenses — NOT a cash position, despite
+      // the "Текущий баланс" label: `income` counts credit sales in full, and
+      // `expenses` holds only manually entered rows, never supplier payments.
+      // Deliberately NOT net of cost of goods: PURCHASE is an expense category,
+      // so a merchant who books stock purchases there would be double-charged.
+      // Only `profit` carries the margin.
+      currentBalance: income - expenses,
       income,
       expenses,
+      cogs,
       profit,
       period: query.period ?? BalancePeriod.MONTH,
       startDate,
@@ -406,7 +419,8 @@ export class FinancesService {
   }
 
   async getCreditsSummary(storeId: string) {
-    const [customersWithDebt, suppliersWithDebt, totals] = await Promise.all([
+    const [customersWithDebt, suppliersWithDebt, totals, lastPayments] =
+      await Promise.all([
       // Receivables: customers who owe the store
       this.prisma.customer.findMany({
         where: { storeId, debt: { gt: 0 } },
@@ -443,9 +457,33 @@ export class FinancesService {
           _count: true,
         }),
       ]),
+      // Most recent payment per counterparty. The Кредиты screen has always
+      // had a "last payment" line; nothing ever filled it. A DebtPayment hangs
+      // off a sale rather than a customer, so receivables need the join.
+      Promise.all([
+        this.prisma.$queryRaw<{ id: string; last: Date }[]>`
+          SELECT s."customerId" AS id, MAX(dp."createdAt") AS last
+          FROM debt_payments dp
+          JOIN sales s ON s.id = dp."saleId"
+          WHERE s."storeId" = ${storeId} AND s."customerId" IS NOT NULL
+          GROUP BY s."customerId"
+        `,
+        this.prisma.supplierPayment.groupBy({
+          by: ['supplierId'],
+          where: { storeId },
+          _max: { createdAt: true },
+        }),
+      ]),
     ]);
 
     const [customerTotals, supplierTotals] = totals;
+    const [customerLastPayments, supplierLastPayments] = lastPayments;
+    const lastPaidByCustomer = new Map(
+      customerLastPayments.map((r) => [r.id, r.last]),
+    );
+    const lastPaidBySupplier = new Map(
+      supplierLastPayments.map((r) => [r.supplierId, r._max.createdAt]),
+    );
 
     return {
       receivables: {
@@ -455,6 +493,7 @@ export class FinancesService {
           ...c,
           debt: Number(c.debt),
           totalSpent: Number(c.totalSpent),
+          lastPayment: lastPaidByCustomer.get(c.id) ?? null,
         })),
       },
       payables: {
@@ -463,6 +502,7 @@ export class FinancesService {
         suppliers: suppliersWithDebt.map((s) => ({
           ...s,
           debt: Number(s.debt),
+          lastPayment: lastPaidBySupplier.get(s.id) ?? null,
         })),
       },
       netPosition:

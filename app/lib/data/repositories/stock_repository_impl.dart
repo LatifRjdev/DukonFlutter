@@ -119,7 +119,7 @@ class StockRepositoryImpl implements StockRepository {
       reference: json['reference'] as String?,
       notes: json['notes'] as String?,
       createdBy: json['createdBy'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

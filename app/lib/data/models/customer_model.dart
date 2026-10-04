@@ -36,6 +36,9 @@ class CustomerModel {
       name: json['name'] as String,
       phone: json['phone'] as String?,
       email: json['email'] as String?,
+      // Deliberately NOT .toLocal(): a birthday is a calendar date, not an
+      // instant. The API sends it as midnight UTC, so shifting it into a
+      // negative-offset zone would move it to the previous day.
       birthday: json['birthday'] != null
           ? DateTime.parse(json['birthday'] as String)
           : null,
@@ -72,6 +75,7 @@ class CustomerModel {
       name: map['name'] as String,
       phone: map['phone'] as String?,
       email: map['email'] as String?,
+      // Calendar date, not an instant — see fromJson above.
       birthday: map['birthday'] != null
           ? DateTime.parse(map['birthday'] as String)
           : null,

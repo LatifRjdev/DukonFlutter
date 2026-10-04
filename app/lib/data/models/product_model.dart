@@ -62,7 +62,7 @@ class ProductModel {
       unit: json['unit'] as String? ?? 'PCS',
       imageUrl: json['imageUrl'] as String?,
       isActive: json['isActive'] as bool? ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
@@ -110,7 +110,7 @@ class ProductModel {
       unit: map['unit'] as String? ?? 'PCS',
       imageUrl: map['image_url'] as String?,
       isActive: (map['is_active'] as int? ?? 1) == 1,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
     );
   }
 
