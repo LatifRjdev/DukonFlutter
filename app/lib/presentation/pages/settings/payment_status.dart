@@ -12,7 +12,15 @@
 enum PaymentStatusKind {
   pending,
   approved,
+
+  /// An admin refused the receipt. There is a `rejectionReason` column behind
+  /// this, and the merchant's next step is to read it and re-upload.
   rejected,
+
+  /// The payment never went through. Distinct from [rejected] because the
+  /// merchant's next step is to pay again, not to argue — one label over both
+  /// would tell someone with a failed card that a person turned them down.
+  failed,
   refunded,
 
   /// A status the schema has gained and this file has not. Rendered distinctly
@@ -23,7 +31,8 @@ enum PaymentStatusKind {
 
 PaymentStatusKind paymentStatusKind(String status) => switch (status) {
       'APPROVED' || 'COMPLETED' => PaymentStatusKind.approved,
-      'REJECTED' || 'FAILED' => PaymentStatusKind.rejected,
+      'REJECTED' => PaymentStatusKind.rejected,
+      'FAILED' => PaymentStatusKind.failed,
       'PENDING' => PaymentStatusKind.pending,
       // Deliberately its own kind, not `rejected`: a refund is a payment that
       // succeeded and was later returned, and saying "отклонён" would be wrong.

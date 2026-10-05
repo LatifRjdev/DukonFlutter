@@ -344,20 +344,27 @@ export default function UserDetailPage({
                           {store.subscription.plan}
                         </Badge>
                       )}
-                      {/* The red treatment is about the STORE being suspended,
-                          not about its subscription, so it wins. */}
-                      {!store.isActive ? (
+                      {/* Suspension is a STORE fact and the subscription
+                          status is a SUBSCRIPTION fact — both render. Showing
+                          only the suspension re-created, one notch smaller,
+                          the very bug this block fixes: a suspended store with
+                          a cancelled subscription would hide the cancellation
+                          again. */}
+                      {!store.isActive && (
                         <Badge variant="outline" className="text-red-700 border-red-300">
                           Приостановлен
                         </Badge>
-                      ) : store.subscription?.status ? (
+                      )}
+                      {store.subscription?.status ? (
                         <Badge variant="outline" className={subStatusOutline(store.subscription.status)}>
                           {subStatusLabel(store.subscription.status)}
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-slate-500 border-slate-300">
-                          —
-                        </Badge>
+                        !store.isActive || (
+                          <Badge variant="outline" className="text-slate-500 border-slate-300">
+                            —
+                          </Badge>
+                        )
                       )}
                     </div>
                   </div>

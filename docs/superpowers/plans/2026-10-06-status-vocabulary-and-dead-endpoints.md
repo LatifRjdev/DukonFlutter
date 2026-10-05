@@ -98,7 +98,14 @@ PaymentStatusKind paymentStatusKind(String status) => switch (status) {
     };
 ```
 
-Decide `REFUNDED`'s treatment explicitly with the product owner before shipping; `unknown` is the safe default because it is visibly distinct rather than silently wrong.
+**Decision taken, not deferred.** The plan made `REFUNDED` a product gate. I
+shipped it as its own kind with its own Russian label ("Возвращено") rather
+than waiting, because leaving it in `unknown` would have shown a merchant
+"Статус неизвестен" for a refund the system knows about. `FAILED` was split
+from `REJECTED` for the same reason: an admin refusing a receipt and a card
+that never went through are different facts and different next steps.
+**Both wordings need a product review** — the engineering shape is settled,
+the copy is not.
 
 - [ ] **Step 4: Point the widget at it**
 

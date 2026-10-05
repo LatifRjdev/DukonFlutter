@@ -1276,6 +1276,8 @@
   "@subscriptionPaymentPendingStatus": { "description": "Payment-record status badge for PENDING specifically — no longer a catch-all default; unrecognised statuses use `subscriptionPaymentUnknownStatus` — distinct from `subscriptionPendingBannerText`, the fuller pending-payment banner sentence shown elsewhere on the same page" },
   "subscriptionPaymentConfirmedStatus": "Подтверждено",
   "subscriptionPaymentRejectedStatus": "Отклонено",
+  "subscriptionPaymentFailedStatus": "Не прошёл",
+  "@subscriptionPaymentFailedStatus": { "description": "Payment-record status badge for a FAILED payment — one that never went through. Distinct from `subscriptionPaymentRejectedStatus` (\"Отклонено\"), where an admin refused the receipt and left a reason" },
   "subscriptionPaymentRefundedStatus": "Возвращено",
   "@subscriptionPaymentRefundedStatus": { "description": "Payment-record status badge for a REFUNDED payment — one that succeeded and was later returned. Distinct from `subscriptionPaymentRejectedStatus` (\"Отклонено\"), which means the payment was never accepted" },
   "subscriptionPaymentUnknownStatus": "Статус неизвестен",

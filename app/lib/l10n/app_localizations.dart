@@ -3484,6 +3484,12 @@ abstract class AppLocalizations {
   /// **'Отклонено'**
   String get subscriptionPaymentRejectedStatus;
 
+  /// Payment-record status badge for a FAILED payment — one that never went through. Distinct from `subscriptionPaymentRejectedStatus` ("Отклонено"), where an admin refused the receipt and left a reason
+  ///
+  /// In ru, this message translates to:
+  /// **'Не прошёл'**
+  String get subscriptionPaymentFailedStatus;
+
   /// Payment-record status badge for a REFUNDED payment — one that succeeded and was later returned. Distinct from `subscriptionPaymentRejectedStatus` ("Отклонено"), which means the payment was never accepted
   ///
   /// In ru, this message translates to:

@@ -11,9 +11,10 @@
  * an empty list. The export link carried the misspelling to the API, which
  * rejected it with a 400.
  *
- * `users/[id]/page.tsx` still renders status with its own ternary and has no
- * cancelled branch at all; it uses a different badge style, so it is left for
- * a follow-up rather than forced through these helpers.
+ * `users/[id]/page.tsx` used to render status with its own ternary that had no
+ * cancelled branch; it uses outline badges, which is what `SUB_STATUS_OUTLINE`
+ * below is for. Every subscription-status badge in the admin now resolves
+ * through this file.
  *
  * Keep `SUBSCRIPTION_STATUSES` in Prisma's spelling; the type below makes a
  * missing entry a compile error rather than a blank badge.

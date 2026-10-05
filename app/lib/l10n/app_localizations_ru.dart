@@ -1875,6 +1875,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get subscriptionPaymentRejectedStatus => 'Отклонено';
 
   @override
+  String get subscriptionPaymentFailedStatus => 'Не прошёл';
+
+  @override
   String get subscriptionPaymentRefundedStatus => 'Возвращено';
 
   @override

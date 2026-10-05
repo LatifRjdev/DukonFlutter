@@ -492,6 +492,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           AppColors.warning,
           l10n.subscriptionPaymentPendingStatus,
         ),
+      PaymentStatusKind.failed => (
+          AppColors.error,
+          l10n.subscriptionPaymentFailedStatus,
+        ),
       PaymentStatusKind.refunded => (
           AppColors.info,
           l10n.subscriptionPaymentRefundedStatus,
@@ -505,7 +509,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return Semantics(
       label: AppLocalizations.of(
         context,
-      )!.a11yPaymentOf(_planLabel(payment.plan)),
+      )!.a11yPaymentOf(statusLabel),
       button: true,
       child: GestureDetector(
         onTap: () => _showPaymentDetail(payment),
@@ -522,18 +526,27 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // There is no plan to title this with — the Payment model
+                    // has no such column, which is why this slot rendered
+                    // empty for every row. The date is the row's identity.
                     Text(
-                      _planLabel(payment.plan),
+                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
-                      style: TextStyle(fontSize: 12, color: context.textMuted),
-                    ),
+                    if (payment.adminNote != null &&
+                        payment.adminNote!.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        payment.adminNote!,
+                        style:
+                            TextStyle(fontSize: 12, color: context.textMuted),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -610,7 +623,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         title: Text(
           AppLocalizations.of(
             ctx,
-          )!.subscriptionPaymentDialogTitle(_planLabel(payment.plan)),
+          )!.subscriptionPaymentDialogTitle(
+              DateFormat('dd.MM.yyyy').format(payment.createdAt)),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
