@@ -15,7 +15,7 @@
 Two things I earlier described as "exists but unreachable from the UI" turned out **not** to be gaps, and no task below addresses them:
 
 - `POST /admin/subscriptions/run-expiry-check` and `POST /admin/subscriptions/send-expiry-reminders` are **deliberately** ops-only. `subscriptions.controller.ts:258-261` says so: the matching `@Cron` jobs run at 00:00 and 09:00, and these admin-gated duplicates exist so QA can exercise the EXPIRED flip and the 3-day reminder without waiting for the scheduler. Adding buttons is a product decision, not a defect. Task 4 is optional and exists only to record the choice.
-- `GET stores/:storeId/subscription/payments` is a **merchant** route, not an admin one. My earlier enumeration lumped controllers together and mislabelled it. It is still dead — see Task 3.
+- `GET stores/:storeId/subscription/payments` is a **merchant** route, not an admin one. My earlier enumeration lumped controllers together and mislabelled it. It is not dead either — see Task 3.
 
 ---
 
@@ -27,7 +27,7 @@ Two things I earlier described as "exists but unreachable from the UI" turned ou
 | App compares against `'CONFIRMED'` — **not a member** | `app/lib/presentation/pages/settings/subscription_page.dart:479` |
 | Live DB payment statuses | `APPROVED`, `REJECTED` |
 | A `PREMIUM`/`CANCELLED` store exists and renders as a yellow "PREMIUM" badge | `admin/app/(admin)/users/[id]/page.tsx:334-347` |
-| Subscription payments reach the app via `data['payments']` on the main GET | `app/lib/presentation/blocs/subscription/subscription_bloc.dart:97` |
+| The bloc reads `data['payments']`, which the main GET does **not** send — so the history was always empty | `app/lib/presentation/blocs/subscription/subscription_bloc.dart:97` |
 | Callers of `GET …/subscription/payments` | none, in `app/`, `admin/` or `api/` |
 
 ---
@@ -182,23 +182,33 @@ npx tsc --noEmit
 
 ---
 
-### Task 3: Delete the dead payment-history endpoint
+### Task 3: Connect the payment history that was built but never wired ✅ done
 
-**Evidence it is dead:** `GET stores/:storeId/subscription/payments` (`subscriptions.controller.ts:131`) has **no caller** in `app/`, `admin/` or `api/`. The mobile subscription page does render a payment history, but its data arrives on the main subscription response and is read at `subscription_bloc.dart:97` as `data['payments']`.
+**Corrected during implementation.** This task originally said to delete
+`GET stores/:storeId/subscription/payments` as dead. The reasoning was wrong.
+I claimed the payments reach the app on the main subscription response because
+`subscription_bloc.dart:97` reads `data['payments']` — but the live response has
+no such key. So the list was always empty, the history section returns
+`SizedBox.shrink()` when empty, and **the feature had never rendered once**.
 
-- [ ] **Step 1: Re-verify before deleting** — a plan is not a licence to delete on trust:
+Everything for it already existed and nothing joined them up: the UI, the ARB
+keys, the `PaymentRecord` model, the state field, and the endpoint. The fix is
+to call it, not to remove it.
 
-```bash
-grep -rn "subscription/payments" app/lib admin api/src --include='*.dart' --include='*.ts' --include='*.tsx'
-grep -rn "getPaymentHistory" api/src
-```
-Expected: only the controller and service definitions. **If anything else appears, stop and report instead of deleting.**
+- [x] Deleted the endpoint, then reverted on discovering the above.
+- [x] The bloc fetches `/subscription` and `/subscription/payments` in parallel
+      and merges, so the history renders.
+- [x] Verified on device: an approved payment shows "Подтверждено" against a
+      real APPROVED row, which also makes Task 1 observable.
+- [x] The bloc test fixture put payments inside the main body with status
+      `'CONFIRMED'` — the same value the page compared against, and the reason
+      the defect survived review. It now sits where the data really comes from
+      and carries `APPROVED`.
 
-- [ ] **Step 2: Remove** the `@Get('payments')` handler and `getPaymentHistory` from the service, plus any now-unused imports and its spec coverage.
-- [ ] **Step 3:** `cd api && npx tsc --noEmit && npm test` — expect 0 errors and a green suite.
-- [ ] **Step 4: Commit**, quoting the grep output in the message so the next reader can see the deletion was evidence-based rather than assumed.
-
----
+**The lesson worth keeping:** "no caller" is not the same as "dead". Here it
+meant "never connected", and the plan's own re-verify step would not have
+caught it — the greps it prescribed all came back clean. What caught it was
+checking what the endpoint the UI *does* call actually returns.
 
 ### Task 4 (optional — a decision, not a defect)
 
