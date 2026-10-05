@@ -15,6 +15,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_text_field.dart';
@@ -199,7 +200,8 @@ class _CreditSalePageState extends State<CreditSalePage> {
             });
             Navigator.pop(ctx);
           } else if (state is CustomerFormError) {
-            AppSnackbar.error(listenerContext, state.message);
+            AppSnackbar.error(listenerContext,
+                state.message.resolve(AppLocalizations.of(listenerContext)!));
           }
         },
         child: _CreateCustomerDialogContent(storeId: storeId),
@@ -244,7 +246,7 @@ class _CreditSalePageState extends State<CreditSalePage> {
           });
         }
         if (state.error != null) {
-          AppSnackbar.error(context, state.error!);
+          AppSnackbar.error(context, state.error!.resolve(l10n));
         }
       },
       child: Scaffold(

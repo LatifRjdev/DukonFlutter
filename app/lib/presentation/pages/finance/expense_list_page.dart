@@ -9,6 +9,7 @@ import '../../../domain/entities/expense.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -158,7 +159,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
               listenWhen: (previous, current) => current is ExpenseDeleteFailure,
               listener: (context, state) {
                 if (state is ExpenseDeleteFailure) {
-                  AppSnackbar.error(context, state.message);
+                  AppSnackbar.error(context, state.message.resolve(l10n));
                 }
               },
               buildWhen: (previous, current) => current is! ExpenseDeleteFailure,
@@ -168,7 +169,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                 }
                 if (state is ExpenseError) {
                   return AppErrorWidget(
-                    message: state.message,
+                    message: state.message.resolve(l10n),
                     onRetry: _loadExpenses,
                   );
                 }

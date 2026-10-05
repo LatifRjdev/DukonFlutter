@@ -10,6 +10,7 @@ import '../../blocs/staff/staff_event.dart';
 import '../../blocs/staff_form/staff_form_bloc.dart';
 import '../../blocs/staff_form/staff_form_event.dart';
 import '../../blocs/staff_form/staff_form_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
@@ -116,7 +117,7 @@ class _AddStaffPageState extends State<AddStaffPage> {
             );
             context.pop();
           } else if (state is StaffFormError) {
-            AppSnackbar.error(context, state.errorMessage ?? l10n.error);
+            AppSnackbar.error(context, state.errorMessage?.resolve(l10n) ?? l10n.error);
           }
         },
         child: SingleChildScrollView(

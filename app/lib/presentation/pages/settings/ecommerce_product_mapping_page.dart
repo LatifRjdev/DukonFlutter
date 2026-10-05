@@ -4,6 +4,7 @@ import '../../../core/constants/api_endpoints.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_search_bar.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -79,7 +80,10 @@ class _EcommerceProductMappingPageState
         _products = productsJson.cast<Map<String, dynamic>>();
       });
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
+      if (mounted) {
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -94,7 +98,10 @@ class _EcommerceProductMappingPageState
       );
       if (mounted) AppSnackbar.success(context, l10n.saved);
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
+      if (mounted) {
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!));
+      }
     }
   }
 

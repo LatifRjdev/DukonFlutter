@@ -11,8 +11,8 @@ import '../../widgets/common/app_snackbar.dart';
 import '../../../injection.dart';
 import '../../blocs/investment/investment_bloc.dart';
 import '../../blocs/investment/investment_event.dart';
-import '../../blocs/investment/investment_l10n_key.dart';
 import '../../blocs/investment/investment_state.dart';
+import '../../l10n/app_message_l10n.dart';
 
 class InvestmentListPage extends StatefulWidget {
   final String storeId;
@@ -143,18 +143,13 @@ class _InvestmentListPageState extends State<InvestmentListPage> {
                 Expanded(
                   child: BlocConsumer<InvestmentBloc, InvestmentState>(
                     listener: (context, state) {
+                      final l10n = AppLocalizations.of(context)!;
                       if (state is InvestmentActionSuccess) {
-                        final l10n = AppLocalizations.of(context)!;
-                        final message = switch (state.key) {
-                          InvestmentL10nKey.created => l10n.investmentCreated,
-                          InvestmentL10nKey.updated => l10n.investmentUpdated,
-                          InvestmentL10nKey.deleted => l10n.investmentDeleted,
-                        };
-                        AppSnackbar.success(context, message);
+                        AppSnackbar.success(context, state.message.resolve(l10n));
                         _loadInvestments(context);
                       }
                       if (state is InvestmentError) {
-                        AppSnackbar.error(context, state.message);
+                        AppSnackbar.error(context, state.message.resolve(l10n));
                       }
                     },
                     builder: (context, state) {

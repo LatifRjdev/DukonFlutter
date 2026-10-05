@@ -20,6 +20,7 @@ import '../../blocs/store/store_state.dart';
 import '../../blocs/subscription/subscription_bloc.dart';
 import '../../blocs/subscription/subscription_event.dart';
 import '../../blocs/subscription/subscription_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -258,7 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is SettingsError) {
-                    return Center(child: Text(state.message));
+                    return Center(child: Text(state.message.resolve(l10n)));
                   }
                   if (state is SettingsLoaded) {
                     final user = state.user;

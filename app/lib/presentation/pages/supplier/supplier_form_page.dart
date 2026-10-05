@@ -7,6 +7,7 @@ import '../../../domain/entities/supplier.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
 import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -97,7 +98,7 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
             // like CustomerDetailBloc, so it can't be reached from here.
             context.pop(true);
           } else if (state is SupplierFormError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(

@@ -7,6 +7,7 @@ import '../../../core/router/route_names.dart';
 import '../../blocs/loyalty/loyalty_settings_bloc.dart';
 import '../../blocs/loyalty/loyalty_settings_event.dart';
 import '../../blocs/loyalty/loyalty_settings_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -163,7 +164,7 @@ class _LoyaltySettingsPageState extends State<LoyaltySettingsPage> {
           AppSnackbar.success(context, l10n.snackSettingsSaved);
         }
         if (state is LoyaltySettingsError) {
-          AppSnackbar.error(context, state.message);
+          AppSnackbar.error(context, state.message.resolve(l10n));
         }
       },
       builder: (context, state) {

@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_text_field.dart';
@@ -62,7 +63,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
           if (state is AuthPasswordResetSuccess) {
             context.go('/login');
           } else if (state is AuthFailure) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SafeArea(

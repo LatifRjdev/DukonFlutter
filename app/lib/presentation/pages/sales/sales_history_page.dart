@@ -13,6 +13,7 @@ import '../../blocs/sales/sales_history_event.dart';
 import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
@@ -171,7 +172,7 @@ class _SalesHistoryPageState extends State<SalesHistoryPage> {
                   }
                   if (state is SalesHistoryError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _onRefresh,
                     );
                   }

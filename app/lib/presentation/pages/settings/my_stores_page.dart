@@ -9,6 +9,7 @@ import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -47,7 +48,10 @@ class _MyStoresPageState extends State<MyStoresPage> {
         );
       }
     } catch (e) {
-      setState(() => _error = mapErrorToUserMessage(e));
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        setState(() => _error = mapErrorToAppMessage(e).resolve(l10n));
+      }
     } finally {
       setState(() => _loading = false);
     }
@@ -241,7 +245,8 @@ class _MyStoresPageState extends State<MyStoresPage> {
       return true;
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
       return false;
     }

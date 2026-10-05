@@ -10,6 +10,7 @@ import '../../blocs/subscription/subscription_event.dart';
 import '../../blocs/subscription/subscription_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -685,10 +686,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return BlocListener<SubscriptionBloc, SubscriptionState>(
       listener: (context, state) {
         if (state is SubscriptionActionSuccess) {
-          AppSnackbar.success(context, state.message);
+          AppSnackbar.success(context, state.message.resolve(l10n));
         }
         if (state is SubscriptionError) {
-          AppSnackbar.error(context, state.message);
+          AppSnackbar.error(context, state.message.resolve(l10n));
         }
       },
       child: Scaffold(
@@ -711,7 +712,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      state.message,
+                      state.message.resolve(l10n),
                       style: const TextStyle(color: AppColors.error),
                     ),
                     const SizedBox(height: 16),

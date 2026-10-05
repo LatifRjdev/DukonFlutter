@@ -8,6 +8,7 @@ import '../../../domain/entities/payroll_adjustment.dart';
 import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/payroll/month_selector.dart';
 import '../../widgets/payroll/payroll_staff_card.dart';
 import '../../widgets/common/app_button.dart';
@@ -171,7 +172,7 @@ class _PayrollPageState extends State<PayrollPage> {
       body: BlocConsumer<PayrollBloc, PayrollState>(
         listener: (context, state) {
           if (state is PayrollError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         builder: (context, state) {
@@ -231,7 +232,7 @@ class _PayrollPageState extends State<PayrollPage> {
 
     if (state is PayrollError) {
       return AppErrorWidget(
-        message: state.message,
+        message: state.message.resolve(l10n),
         onRetry: _retryLastLoad,
       );
     }

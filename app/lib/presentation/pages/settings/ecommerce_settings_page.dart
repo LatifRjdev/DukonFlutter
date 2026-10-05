@@ -8,6 +8,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../core/router/route_names.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -62,7 +63,10 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
         });
       }
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
+      if (mounted) {
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -88,7 +92,10 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
         AppSnackbar.success(context, l10n.snackSettingsSaved);
       }
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
+      if (mounted) {
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!));
+      }
     }
   }
 
@@ -103,7 +110,10 @@ class _EcommerceSettingsPageState extends State<EcommerceSettingsPage> {
         AppSnackbar.success(context, l10n.ecommerceSettingsKeyRegenerated);
       }
     } catch (e) {
-      if (mounted) AppSnackbar.error(context, mapErrorToUserMessage(e));
+      if (mounted) {
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!));
+      }
     }
   }
 

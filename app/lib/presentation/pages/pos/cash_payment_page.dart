@@ -13,6 +13,7 @@ import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -71,7 +72,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
           context.go('/pos/success', extra: {'sale': state.saleResult});
         }
         if (state.error != null) {
-          AppSnackbar.error(context, state.error!);
+          AppSnackbar.error(context, state.error!.resolve(l10n));
         }
       },
       child: Scaffold(

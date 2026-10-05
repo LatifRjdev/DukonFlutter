@@ -6,6 +6,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -137,8 +138,11 @@ class _CurrenciesPageState extends State<CurrenciesPage> {
         _loading = false;
       });
     } catch (e) {
+      if (!mounted) return;
+      final message =
+          mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!);
       setState(() {
-        _error = mapErrorToUserMessage(e);
+        _error = message;
         _loading = false;
       });
     }

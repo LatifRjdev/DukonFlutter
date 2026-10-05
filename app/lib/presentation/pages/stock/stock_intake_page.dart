@@ -17,6 +17,7 @@ import '../../blocs/stock/stock_intake_event.dart';
 import '../../blocs/stock/stock_intake_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_search_bar.dart';
@@ -95,7 +96,8 @@ class _StockIntakePageState extends State<StockIntakePage> {
         }
 
         if (state.error != null) {
-          AppSnackbar.error(context, state.error!);
+          AppSnackbar.error(
+              context, state.error!.resolve(AppLocalizations.of(context)!));
         }
       },
       child: Scaffold(
@@ -175,7 +177,7 @@ class _StockIntakePageState extends State<StockIntakePage> {
                 const Icon(Icons.error_outline, size: 64, color: AppColors.error),
                 const SizedBox(height: 16),
                 Text(
-                  state.message,
+                  state.message.resolve(AppLocalizations.of(context)!),
                   style: TextStyle(color: context.textSecondary),
                   textAlign: TextAlign.center,
                 ),

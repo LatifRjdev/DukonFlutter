@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -85,7 +87,7 @@ class _DetailLoaded extends _DetailState {
 }
 
 class _DetailError extends _DetailState {
-  final String message;
+  final AppMessage message;
   _DetailError(this.message);
 }
 
@@ -107,7 +109,7 @@ class _DetailCubit extends Cubit<_DetailState> {
       final resp = await _client.get('/stores/$storeId/deliveries/$deliveryId');
       emit(_DetailLoaded(_DeliveryDetail.fromJson(resp.data as Map<String, dynamic>)));
     } catch (e) {
-      emit(_DetailError(mapErrorToUserMessage(e)));
+      emit(_DetailError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -122,7 +124,7 @@ class _DetailCubit extends Cubit<_DetailState> {
       );
       await load();
     } catch (e) {
-      emit(_DetailError(mapErrorToUserMessage(e)));
+      emit(_DetailError(mapErrorToAppMessage(e)));
     }
   }
 }
@@ -171,7 +173,7 @@ class _DetailView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(state.message, style: const TextStyle(color: AppColors.error)),
+                  Text(state.message.resolve(l10n), style: const TextStyle(color: AppColors.error)),
                   const SizedBox(height: 12),
                   TextButton(
                       onPressed: () => context.read<_DetailCubit>().load(),

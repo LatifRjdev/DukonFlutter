@@ -8,6 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/debt/debt_card.dart';
 import '../../widgets/common/app_error_widget.dart';
 
@@ -58,7 +59,7 @@ class _DebtsOverviewPageState extends State<DebtsOverviewPage> {
           return Scaffold(
             appBar: AppBar(title: Text(l10n.debts)),
             body: AppErrorWidget(
-              message: state.message,
+              message: state.message.resolve(l10n),
               onRetry: () => context.read<DebtBloc>().add(DebtsOverviewRequested(storeId: widget.storeId)),
             ),
           );

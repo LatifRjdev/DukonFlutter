@@ -8,6 +8,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -87,7 +88,9 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, AppLocalizations.of(context)!.snackConnectionError(mapErrorToUserMessage(e)));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context,
+            l10n.snackConnectionError(mapErrorToAppMessage(e).resolve(l10n)));
       }
     }
   }
@@ -114,7 +117,7 @@ class _KkmSettingsPageState extends State<KkmSettingsPage> {
     } catch (e) {
       if (mounted) {
         AppSnackbar.error(
-            context, l10n.snackPrintErrorDetails(mapErrorToUserMessage(e)));
+            context, l10n.snackPrintErrorDetails(mapErrorToAppMessage(e).resolve(l10n)));
       }
     } finally {
       if (mounted) setState(() => _isPrinting = false);

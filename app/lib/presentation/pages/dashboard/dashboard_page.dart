@@ -14,6 +14,7 @@ import '../../blocs/dashboard/dashboard_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/gradient_header.dart';
 import '../../widgets/common/glass_card.dart';
@@ -144,7 +145,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 listenWhen: (previous, current) => current is DashboardRefreshFailure,
                 listener: (context, state) {
                   if (state is DashboardRefreshFailure) {
-                    AppSnackbar.error(context, state.message);
+                    AppSnackbar.error(context, state.message.resolve(l10n));
                   }
                 },
                 buildWhen: (previous, current) => current is! DashboardRefreshFailure,
@@ -157,7 +158,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   if (state is DashboardError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _loadDashboard,
                     );
                   }

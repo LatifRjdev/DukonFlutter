@@ -22,6 +22,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../blocs/subscription/subscription_bloc.dart';
 import '../../blocs/subscription/subscription_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -421,7 +422,7 @@ class _ReportsPageState extends State<ReportsPage>
 
   // This page calls DioClient directly (not through a datasource with its
   // own error mapping), so a raw DioException used to reach
-  // mapErrorToUserMessage() unconverted — that function only recognizes
+  // mapErrorToAppMessage() unconverted — that function only recognizes
   // NetworkException/UnauthorizedException/ServerException/CacheException,
   // so every failure here (expired subscription, 400, 404, 500, no
   // network) fell through to the same generic "Не удалось выполнить
@@ -430,7 +431,8 @@ class _ReportsPageState extends State<ReportsPage>
   // 2026-09-21 manual QA pass). Converts DioException the same way every
   // other remote datasource in the app does before mapping it.
   String _errMsg(Object e) =>
-      mapErrorToUserMessage(e is DioException ? _handleDioError(e) : e);
+      mapErrorToAppMessage(e is DioException ? _handleDioError(e) : e)
+          .resolve(AppLocalizations.of(context)!);
 
   Exception _handleDioError(DioException e) {
     if (e.type == DioExceptionType.connectionTimeout ||

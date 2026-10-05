@@ -13,6 +13,7 @@ import '../../../domain/entities/z_report.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../l10n/app_message_l10n.dart';
 
 class ZReportPage extends StatefulWidget {
   final String storeId;
@@ -48,7 +49,7 @@ class _ZReportPageState extends State<ZReportPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is ShiftError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message.resolve(l10n)));
           }
           if (state is ZReportLoaded) {
             return _buildReport(state.report, l10n);

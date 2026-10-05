@@ -11,6 +11,7 @@ import '../../blocs/finance/finance_event.dart';
 import '../../blocs/finance/finance_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/glass_card.dart';
@@ -133,7 +134,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
                     }
                     if (state is FinanceError) {
                       return AppErrorWidget(
-                        message: state.message,
+                        message: state.message.resolve(l10n),
                         onRetry: _loadFinance,
                       );
                     }

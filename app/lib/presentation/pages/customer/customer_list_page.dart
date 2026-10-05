@@ -17,6 +17,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 class CustomerListPage extends StatefulWidget {
@@ -150,6 +151,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
               final messenger = ScaffoldMessenger.of(context);
               final view = View.of(context);
               final dir = Directionality.of(context);
+              final l10n = AppLocalizations.of(context)!;
               try {
                 await sl<CustomerRepository>().createCustomer(
                   _getStoreId(),
@@ -160,7 +162,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                 _loadCustomers();
               } catch (e) {
                 navigator.pop();
-                final msg = mapErrorToUserMessage(e);
+                final msg = mapErrorToAppMessage(e).resolve(l10n);
                 messenger.showSnackBar(SnackBar(
                   content: Text(msg),
                   backgroundColor: AppColors.error,
@@ -258,7 +260,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                   }
                   if (state is CustomerListError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _loadCustomers,
                     );
                   }

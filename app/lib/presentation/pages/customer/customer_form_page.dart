@@ -12,6 +12,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/customer_detail/customer_detail_bloc.dart';
 import '../../blocs/customer_detail/customer_detail_event.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -115,7 +116,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
             AppSnackbar.success(context, _isEditing ? l10n.customerUpdated : l10n.customerAdded);
             context.pop();
           } else if (state is CustomerFormError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(

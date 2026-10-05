@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -64,7 +66,7 @@ class _CreateSubmitting extends _CreateState {
 class _CreateSuccess extends _CreateState {}
 
 class _CreateError extends _CreateState {
-  final String message;
+  final AppMessage message;
   final List<_Sale> sales;
   final List<_StaffMember> staff;
   _CreateError({required this.message, required this.sales, required this.staff});
@@ -109,7 +111,7 @@ class _CreateCubit extends Cubit<_CreateState> {
       _staff = staffList.map((e) => _StaffMember.fromJson(e as Map<String, dynamic>)).toList();
       emit(_CreateRefsLoaded(sales: _sales, staff: _staff));
     } catch (e) {
-      emit(_CreateError(message: mapErrorToUserMessage(e), sales: _sales, staff: _staff));
+      emit(_CreateError(message: mapErrorToAppMessage(e), sales: _sales, staff: _staff));
     }
   }
 
@@ -132,7 +134,7 @@ class _CreateCubit extends Cubit<_CreateState> {
       );
       emit(_CreateSuccess());
     } catch (e) {
-      emit(_CreateError(message: mapErrorToUserMessage(e), sales: _sales, staff: _staff));
+      emit(_CreateError(message: mapErrorToAppMessage(e), sales: _sales, staff: _staff));
     }
   }
 }
@@ -200,7 +202,8 @@ class _CreateViewState extends State<_CreateView> {
           context.pop(true);
         }
         if (state is _CreateError) {
-          AppSnackbar.error(context, state.message);
+          AppSnackbar.error(
+              context, state.message.resolve(AppLocalizations.of(context)!));
         }
       },
       child: Scaffold(

@@ -8,6 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/network/network_info.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../core/errors/exceptions.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../data/sync/sync_engine.dart';
 import '../../../data/sync/sync_queue.dart';
 import '../../../injection.dart';
@@ -106,8 +107,9 @@ class _OfflineModePageState extends State<OfflineModePage> {
     final connected = await _networkInfo.isConnected;
     if (!connected) {
       if (mounted) {
-        AppSnackbar.error(
-            context, mapErrorToUserMessage(const NetworkException()));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context,
+            mapErrorToAppMessage(const NetworkException()).resolve(l10n));
       }
       return;
     }
@@ -115,7 +117,8 @@ class _OfflineModePageState extends State<OfflineModePage> {
       await _syncEngine.processQueue();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
     }
   }
@@ -171,7 +174,8 @@ class _OfflineModePageState extends State<OfflineModePage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
     }
   }

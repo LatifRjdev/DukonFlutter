@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 
@@ -74,7 +76,7 @@ class _InvApplying extends _InvState {
 class _InvDone extends _InvState {}
 
 class _InvError extends _InvState {
-  final String message;
+  final AppMessage message;
   final _InvState? previous;
   _InvError(this.message, {this.previous});
 }
@@ -102,7 +104,7 @@ class _InvCubit extends Cubit<_InvState> {
 
       emit(_InvCounting(countId: countId, products: products));
     } catch (e) {
-      emit(_InvError(mapErrorToUserMessage(e), previous: _InvInitial()));
+      emit(_InvError(mapErrorToAppMessage(e), previous: _InvInitial()));
     }
   }
 
@@ -119,7 +121,7 @@ class _InvCubit extends Cubit<_InvState> {
       );
       emit(_InvDiff(countId: countId, products: products));
     } catch (e) {
-      emit(_InvError(mapErrorToUserMessage(e),
+      emit(_InvError(mapErrorToAppMessage(e),
           previous: _InvCounting(countId: countId, products: products)));
     }
   }
@@ -130,7 +132,7 @@ class _InvCubit extends Cubit<_InvState> {
       await _client.post('/stores/$storeId/inventory-counts/$countId/apply');
       emit(_InvDone());
     } catch (e) {
-      emit(_InvError(mapErrorToUserMessage(e),
+      emit(_InvError(mapErrorToAppMessage(e),
           previous: _InvDiff(countId: countId, products: products)));
     }
   }
@@ -164,8 +166,9 @@ class _InventoryView extends StatelessWidget {
     return BlocConsumer<_InvCubit, _InvState>(
       listener: (context, state) {
         if (state is _InvError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  state.message.resolve(AppLocalizations.of(context)!))));
         }
       },
       builder: (context, state) {
@@ -207,7 +210,7 @@ class _InventoryView extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(state.message, style: const TextStyle(color: AppColors.error)),
+                Text(state.message.resolve(l10n), style: const TextStyle(color: AppColors.error)),
                 const SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () => context.read<_InvCubit>().retry(state.previous),

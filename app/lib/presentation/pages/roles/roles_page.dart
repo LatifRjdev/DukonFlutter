@@ -8,6 +8,7 @@ import '../../../domain/entities/role_permission.dart';
 import '../../blocs/roles/roles_bloc.dart';
 import '../../blocs/roles/roles_event.dart';
 import '../../blocs/roles/roles_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/staff/permission_toggle_row.dart';
 
@@ -118,7 +119,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
             AppSnackbar.success(context, l10n.snackSettingsSaved);
           } else if (state is RolesError) {
             setState(() => _isSaving = false);
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         builder: (context, state) {
@@ -134,7 +135,7 @@ class _RolesPageState extends State<RolesPage> with SingleTickerProviderStateMix
             return const Center(child: CircularProgressIndicator());
           }
           if (state is RolesError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message.resolve(l10n)));
           }
           final roles = state is RolesLoaded ? state.roles : _lastLoadedRoles;
           if (roles != null) {

@@ -9,6 +9,7 @@ import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_chip.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../../injection.dart';
@@ -158,8 +159,11 @@ class _BalancePageState extends State<BalancePage> {
         _loading = false;
       });
     } catch (e) {
+      if (!mounted) return;
+      final message =
+          mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!);
       setState(() {
-        _error = mapErrorToUserMessage(e);
+        _error = message;
         _loading = false;
       });
     }

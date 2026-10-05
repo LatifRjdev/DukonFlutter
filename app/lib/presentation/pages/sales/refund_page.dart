@@ -12,6 +12,7 @@ import '../../blocs/sales/sales_history_event.dart';
 import '../../blocs/sales/sales_history_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -128,7 +129,7 @@ class _RefundPageState extends State<RefundPage> {
       listener: (context, state) {
         if (state is SalesHistoryLoaded && !state.isRefunding) {
           if (state.refundError != null) {
-            AppSnackbar.error(context, state.refundError!);
+            AppSnackbar.error(context, state.refundError!.resolve(l10n));
             return;
           }
           final updatedSale = state.sales

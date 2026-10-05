@@ -10,6 +10,7 @@ import '../../blocs/store/store_state.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -169,12 +170,12 @@ class _ZakatSettingsPageState extends State<ZakatSettingsPage> {
                     });
                   }
                   if (state is ZakatActionSuccess) {
-                    AppSnackbar.success(context, state.message);
+                    AppSnackbar.success(context, state.message.resolve(l10n));
                     context.pop();
                   }
                   if (state is ZakatError) {
                     _refreshingGoldPrice = false;
-                    AppSnackbar.error(context, state.message);
+                    AppSnackbar.error(context, state.message.resolve(l10n));
                   }
                 },
                 builder: (context, state) {
