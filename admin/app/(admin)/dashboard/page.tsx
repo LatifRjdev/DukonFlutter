@@ -70,7 +70,7 @@ export default function DashboardPage() {
       href: '/subscriptions?status=ACTIVE',
     },
     {
-      title: 'Trial',
+      title: 'Пробные',
       value: stats?.subscriptionsByStatus?.TRIAL ?? 0,
       icon: Clock,
       description: 'Пробный период',

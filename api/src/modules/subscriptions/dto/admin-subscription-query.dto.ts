@@ -1,16 +1,23 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
 
 export class AdminSubscriptionQueryDto {
-  @ApiPropertyOptional()
+  // Validated against the enum, not merely IsString: an unknown value used to
+  // sail through here and blow up inside Prisma as a 500. Not reachable from
+  // the admin UI — that list fetches without params and filters client-side —
+  // so this is hardening for direct and Swagger callers, and it brings this
+  // DTO into line with AdminSubscriptionExportQueryDto, which already
+  // validated both fields.
+  @ApiPropertyOptional({ enum: SubscriptionStatus })
   @IsOptional()
-  @IsString()
-  status?: string;
+  @IsEnum(SubscriptionStatus)
+  status?: SubscriptionStatus;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: SubscriptionPlan })
   @IsOptional()
-  @IsString()
-  plan?: string;
+  @IsEnum(SubscriptionPlan)
+  plan?: SubscriptionPlan;
 
   @ApiPropertyOptional()
   @IsOptional()

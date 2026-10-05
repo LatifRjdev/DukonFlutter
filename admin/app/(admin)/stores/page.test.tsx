@@ -155,7 +155,7 @@ describe('StoresPage — Экспорт button vs. subscription-status filter', 
 
     const statusTrigger = screen.getAllByRole('combobox')[2];
     await user.click(statusTrigger);
-    const trialOption = await screen.findByRole('option', { name: 'Trial' });
+    const trialOption = await screen.findByRole('option', { name: 'Пробная' });
     await user.click(trialOption);
 
     const exportButton = screen.getByRole('button', { name: /Экспорт/ });

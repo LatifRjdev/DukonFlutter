@@ -149,7 +149,7 @@ export default function BannersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Все статусы</SelectItem>
-                  <SelectItem value="TRIAL">Trial</SelectItem>
+                  <SelectItem value="TRIAL">Пробная</SelectItem>
                   <SelectItem value="ACTIVE">Активные</SelectItem>
                   <SelectItem value="PAST_DUE">Просрочены</SelectItem>
                   <SelectItem value="CANCELLED">Отменены</SelectItem>

@@ -25,22 +25,8 @@ import { api } from '@/lib/api';
 import { Store, Subscription } from '@/lib/types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { subStatusColor, subStatusLabel } from '@/lib/subscription-status';
 
-const SUB_STATUS_LABELS: Record<string, string> = {
-  ACTIVE: 'Активна',
-  TRIAL: 'Trial',
-  PAST_DUE: 'Просрочена',
-  CANCELED: 'Отменена',
-  EXPIRED: 'Истекла',
-};
-
-const SUB_STATUS_COLORS: Record<string, string> = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  TRIAL: 'bg-blue-100 text-blue-700',
-  PAST_DUE: 'bg-yellow-100 text-yellow-700',
-  CANCELED: 'bg-gray-100 text-gray-600',
-  EXPIRED: 'bg-red-100 text-red-700',
-};
 
 export default function StoreDetailPage({
   params,
@@ -154,8 +140,8 @@ export default function StoreDetailPage({
                 Приостановлен
               </Badge>
             ) : store.subscription ? (
-              <Badge className={`${SUB_STATUS_COLORS[store.subscription.status] || ''} hover:opacity-80`}>
-                {SUB_STATUS_LABELS[store.subscription.status] || store.subscription.status}
+              <Badge className={`${subStatusColor(store.subscription.status)} hover:opacity-80`}>
+                {subStatusLabel(store.subscription.status)}
               </Badge>
             ) : (
               <Badge variant="outline">—</Badge>
@@ -231,8 +217,8 @@ export default function StoreDetailPage({
               </div>
               <div>
                 <p className="text-muted-foreground">Статус</p>
-                <Badge className={`${SUB_STATUS_COLORS[subscription.status] || ''} hover:opacity-80`}>
-                  {SUB_STATUS_LABELS[subscription.status] || subscription.status}
+                <Badge className={`${subStatusColor(subscription.status)} hover:opacity-80`}>
+                  {subStatusLabel(subscription.status)}
                 </Badge>
               </div>
               <div>
