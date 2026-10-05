@@ -11,7 +11,9 @@ Blocs put **user-facing Russian text** into state objects. Two sources:
 1. **Errors.** `mapErrorToUserMessage` (`lib/core/errors/error_messages.dart`) returns one of
    **11 hardcoded Russian strings**. Called at **125 sites across 51 files**.
 2. **Successes.** Blocs construct success states with inline literals —
-   `SettingsActionSuccess('Профиль обновлён')`. **9 distinct strings.**
+   `SettingsActionSuccess('Профиль обновлён')`. **10 distinct strings** across 5 classes; four
+   of those classes carry more than one string, so enum members are minted per *string*, not
+   per class.
 
 Both land in a `final String message` field on **33 state classes** (28 error carriers, 5 success
 carriers) and are read at **~110 sites**, 38 of them snackbars.
@@ -26,6 +28,21 @@ The tempting move is to localize inside the bloc — inject `AppLocalizations`, 
 `.claude/rules/kmp-architecture.md` keeps presentation logic out of anything that would need a
 `BuildContext`. A bloc that owns a locale also re-emits stale text when the user changes
 language mid-session, because the string was resolved at emit time.
+
+## Prior art in this repo, and why it is extended rather than copied
+
+One bloc already does this. `InvestmentActionSuccess` carries an `InvestmentL10nKey` enum, not a
+string (`lib/presentation/blocs/investment/investment_l10n_key.dart`, marked "Spec E D.4"), and
+the page resolves it with an inline `switch`. So the mechanism is proven here, not imported.
+
+It is extended rather than copied for one reason: **its resolve switch is duplicated.** The same
+three-arm `InvestmentL10nKey.created => l10n.investmentCreated` block appears in both
+`investment_list_page.dart:149` and `add_investment_page.dart:130`. Per-feature enums with
+inline switches scale that duplication by every (feature × consuming page) pair. One enum with
+one `resolve` extension is written once and reused, so this change also removes the duplication
+that already exists.
+
+`InvestmentL10nKey` folds into the new enum and is deleted; its three ARB keys are kept.
 
 ## The shape of the fix
 
@@ -47,6 +64,9 @@ enum AppMessage {
   // successes
   profileUpdated, passwordChanged, expenseAdded, expenseUpdated, expenseDeleted,
   paymentRecorded, paymentAccepted, zakatPaymentRecorded, zakatSettingsSaved,
+  subscriptionRequestSent,
+  // absorbed from InvestmentL10nKey, which is deleted
+  investmentCreated, investmentUpdated, investmentDeleted,
 }
 ```
 
@@ -73,7 +93,11 @@ member names carry the distinction.
 the error path returns for `NetworkException`. `.claude/rules/mobile-l10n.md` requires grepping
 the ARB before minting a key; this is the one that already matches.
 
-**Ten new ARB keys, not eleven.** The generic fallback string `'Не удалось выполнить операцию'`
+**A tenth success member, found by the inventory.** `SubscriptionActionSuccess('Заявка
+отправлена, ожидайте подтверждения')` is split across two source lines, so a single-line grep
+missed it. Counts in this document are from a multiline scan.
+
+**Ten new error keys, not eleven.** The generic fallback string `'Не удалось выполнить операцию'`
 is returned by two branches (unknown exception type, and a `ServerException` with an unmapped
 status). Both map to `AppMessage.unknownError` — one key, two producers.
 
@@ -101,10 +125,10 @@ Three controls:
    `state.message.resolve(l10n)`, and a site that already had a `BuildContext` in scope but no
    `l10n` needs one added. These are counted and listed in the plan rather than swept blind.
 
-**A second-order risk:** some `*ActionSuccess` states may be constructed in more than one place
-with different strings, which the enum cannot express without a new member per string. The plan's
-first task is an inventory that pins each construction site to exactly one enum member, so this
-surfaces before any edit rather than during one.
+**The second-order risk was checked before writing the plan, and is bounded.** Four of the five
+success classes do carry more than one string — `ExpenseActionSuccess` has three. That is fine:
+members are minted per string. The inventory also turned up the two-line literal the first grep
+missed, which is why the plan starts from the recorded inventory rather than re-deriving it.
 
 ## Testing
 
