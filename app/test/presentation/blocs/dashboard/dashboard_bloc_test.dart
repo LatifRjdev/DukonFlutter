@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/repositories/dashboard_repository.dart';
 import 'package:dukonpro/presentation/blocs/dashboard/dashboard_bloc.dart';
@@ -60,7 +61,7 @@ void main() {
         act: (bloc) => bloc.add(const DashboardLoadRequested('store-1')),
         expect: () => [
           isA<DashboardLoading>(),
-          const DashboardError('Нет подключения к интернету'),
+          const DashboardError(AppMessage.offline),
         ],
       );
 
@@ -76,7 +77,7 @@ void main() {
         act: (bloc) => bloc.add(const DashboardLoadRequested('store-1')),
         expect: () => [
           isA<DashboardLoading>(),
-          const DashboardError('Не удалось выполнить операцию'),
+          const DashboardError(AppMessage.unknownError),
         ],
       );
 
@@ -131,7 +132,7 @@ void main() {
         seed: () => const DashboardLoaded(stats),
         act: (bloc) => bloc.add(const DashboardRefreshRequested('store-1')),
         expect: () => [
-          const DashboardRefreshFailure('Ошибка сервера — попробуйте позже'),
+          const DashboardRefreshFailure(AppMessage.serverError),
         ],
       );
 
@@ -145,7 +146,7 @@ void main() {
         build: () => DashboardBloc(dashboardRepository: repository),
         act: (bloc) => bloc.add(const DashboardRefreshRequested('store-1')),
         expect: () => [
-          const DashboardError('Нет подключения к интернету'),
+          const DashboardError(AppMessage.offline),
         ],
       );
     });
@@ -197,7 +198,7 @@ void main() {
         act: (bloc) => bloc.add(const DashboardPeriodChanged('store-1', 'week')),
         expect: () => [
           isA<DashboardLoading>(),
-          const DashboardError('Сессия истекла. Войдите снова.'),
+          const DashboardError(AppMessage.sessionExpired),
         ],
       );
     });

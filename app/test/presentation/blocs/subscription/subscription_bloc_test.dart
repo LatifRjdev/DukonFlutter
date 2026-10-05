@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/presentation/blocs/subscription/subscription_bloc.dart';
@@ -226,7 +227,7 @@ void main() {
         act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
-          const SubscriptionError('Нет подключения к интернету'),
+          const SubscriptionError(AppMessage.offline),
         ],
       );
 
@@ -237,7 +238,7 @@ void main() {
         act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
-          const SubscriptionError('Объект не найден'),
+          const SubscriptionError(AppMessage.notFound),
         ],
       );
 
@@ -248,7 +249,7 @@ void main() {
         act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
-          const SubscriptionError('Не удалось выполнить операцию'),
+          const SubscriptionError(AppMessage.unknownError),
         ],
       );
     });
@@ -271,7 +272,7 @@ void main() {
         )),
         expect: () => [
           isA<SubscriptionUploading>(),
-          const SubscriptionActionSuccess('Заявка отправлена, ожидайте подтверждения'),
+          const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent),
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>(),
         ],
@@ -303,7 +304,7 @@ void main() {
         )),
         expect: () => [
           isA<SubscriptionUploading>(),
-          const SubscriptionError('Ошибка сервера — попробуйте позже'),
+          const SubscriptionError(AppMessage.serverError),
         ],
       );
     });
@@ -358,7 +359,7 @@ void main() {
         )),
         expect: () => [
           isA<SubscriptionUploading>(),
-          const SubscriptionActionSuccess('Заявка отправлена, ожидайте подтверждения'),
+          const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent),
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>(),
         ],
@@ -392,7 +393,7 @@ void main() {
         )),
         expect: () => [
           isA<SubscriptionUploading>(),
-          const SubscriptionError('Нет подключения к интернету'),
+          const SubscriptionError(AppMessage.offline),
         ],
         verify: (_) {
           verifyNever(() => dioClient.post<dynamic>(

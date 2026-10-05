@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/zakat_calculation.dart';
 import 'package:dukonpro/domain/entities/zakat_payment.dart';
@@ -117,7 +118,7 @@ void main() {
       act: (bloc) => bloc.add(const ZakatCalculateRequested(storeId: 'store-1')),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatError('Нет подключения к интернету'),
+        const ZakatError(AppMessage.offline),
       ],
     );
 
@@ -132,12 +133,11 @@ void main() {
       act: (bloc) => bloc.add(const ZakatCalculateRequested(storeId: 'store-1')),
       expect: () => [
         isA<ZakatLoading>(),
-        predicate<ZakatState>((s) {
-          if (s is! ZakatError) return false;
-          return !s.message.contains('10.0.2.2') &&
-              !s.message.contains('DioException') &&
-              s.message.isNotEmpty;
-        }, 'error set but no leaky internal text'),
+        // The no-leak property is now carried by the type: an AppMessage
+        // cannot contain Dio text or an internal host. Assert the member.
+        predicate<ZakatState>(
+            (s) => s is ZakatError && s.message == AppMessage.unknownError,
+            'ZakatError(unknownError)'),
       ],
     );
   });
@@ -181,7 +181,7 @@ void main() {
       act: (bloc) => bloc.add(const ZakatSettingsRequested(storeId: 'store-1')),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatError('Ошибка сервера — попробуйте позже'),
+        const ZakatError(AppMessage.serverError),
       ],
     );
   });
@@ -200,7 +200,7 @@ void main() {
       )),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatActionSuccess('Настройки закята сохранены'),
+        const ZakatActionSuccess(AppMessage.zakatSettingsSaved),
       ],
       verify: (_) {
         final captured = verify(() => repository.upsertSettings(
@@ -226,7 +226,7 @@ void main() {
       )),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatError('Нет подключения к интернету'),
+        const ZakatError(AppMessage.offline),
       ],
     );
   });
@@ -246,7 +246,7 @@ void main() {
       )),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatActionSuccess('Выплата закята записана'),
+        const ZakatActionSuccess(AppMessage.zakatPaymentRecorded),
       ],
       verify: (_) {
         final captured = verify(() => repository.createPayment(
@@ -272,7 +272,7 @@ void main() {
       )),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatError('Конфликт — объект уже существует'),
+        const ZakatError(AppMessage.conflict),
       ],
     );
   });
@@ -383,7 +383,7 @@ void main() {
       act: (bloc) => bloc.add(const ZakatPaymentsRequested(storeId: 'store-1')),
       expect: () => [
         isA<ZakatLoading>(),
-        const ZakatError('Нет подключения к интернету'),
+        const ZakatError(AppMessage.offline),
       ],
     );
   });

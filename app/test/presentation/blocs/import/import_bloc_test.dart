@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/data/datasources/remote/product_remote_datasource.dart';
 import 'package:dukonpro/presentation/blocs/import/import_bloc.dart';
@@ -127,7 +128,7 @@ void main() {
         ),
         expect: () => [
           const ImportLoading(),
-          const ImportError(message: 'Нет подключения к интернету'),
+          const ImportError(message: AppMessage.offline),
         ],
       );
 
@@ -145,7 +146,7 @@ void main() {
         ),
         expect: () => [
           const ImportLoading(),
-          const ImportError(message: 'Некорректные данные'),
+          const ImportError(message: AppMessage.badRequest),
         ],
       );
 
@@ -165,12 +166,11 @@ void main() {
         ),
         expect: () => [
           const ImportLoading(),
-          predicate<ImportState>((s) {
-            if (s is! ImportError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<ImportState>(
+              (s) => s is ImportError && s.message == AppMessage.unknownError,
+              'ImportError(unknownError)'),
         ],
       );
     });
@@ -240,7 +240,7 @@ void main() {
         ),
         expect: () => [
           const ImportLoading(),
-          const ImportError(message: 'Ошибка сервера — попробуйте позже'),
+          const ImportError(message: AppMessage.serverError),
         ],
       );
 
@@ -256,7 +256,7 @@ void main() {
         ),
         expect: () => [
           const ImportLoading(),
-          const ImportError(message: 'Сессия истекла. Войдите снова.'),
+          const ImportError(message: AppMessage.sessionExpired),
         ],
       );
     });
@@ -293,7 +293,7 @@ void main() {
             bloc.add(const ImportTemplateRequested(storeId: storeId)),
         expect: () => [
           const ImportLoading(),
-          const ImportError(message: 'Нет подключения к интернету'),
+          const ImportError(message: AppMessage.offline),
         ],
       );
     });

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/constants/api_endpoints.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
@@ -111,7 +112,7 @@ void main() {
         expect: () => [
           isA<SupplierDetailLoading>(),
           isA<SupplierDetailError>()
-              .having((s) => s.message, 'message', 'Нет подключения к интернету'),
+              .having((s) => s.message, 'message', AppMessage.offline),
         ],
       );
 
@@ -144,12 +145,13 @@ void main() {
         )),
         expect: () => [
           isA<SupplierDetailLoading>(),
-          predicate<SupplierDetailState>((s) {
-            if (s is! SupplierDetailError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<SupplierDetailState>(
+              (s) =>
+                  s is SupplierDetailError &&
+                  s.message == AppMessage.unknownError,
+              'SupplierDetailError(unknownError)'),
         ],
       );
     });

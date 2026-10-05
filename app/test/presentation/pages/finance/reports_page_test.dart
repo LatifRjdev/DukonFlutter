@@ -14,7 +14,7 @@ import '../../../helpers/golden_pump_helper.dart';
 // Regression test for the 2026-09-21 manual QA finding: ReportsPage calls
 // DioClient directly rather than going through a datasource with its own
 // error mapping, so a raw DioException (e.g. 403 "Subscription is EXPIRED")
-// used to reach mapErrorToUserMessage() unconverted and fall through to the
+// used to reach mapErrorToAppMessage() unconverted and fall through to the
 // same generic "Не удалось выполнить операцию" shown for every failure —
 // network, 400, 403, 500 — with no way to tell a permanent failure from a
 // transient one worth retrying. Fixed by converting DioException the same

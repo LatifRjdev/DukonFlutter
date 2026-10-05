@@ -7,6 +7,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/sales/sales_history_bloc.dart';
@@ -117,7 +118,7 @@ void main() {
     await tester.pump();
     stateController.add(loaded.copyWith(
       isRefunding: false,
-      refundError: 'Нет подключения к интернету',
+      refundError: AppMessage.offline,
     ));
     await tester.pump();
 

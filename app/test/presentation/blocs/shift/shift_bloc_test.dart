@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/shift.dart';
 import 'package:dukonpro/domain/entities/z_report.dart';
@@ -82,7 +83,7 @@ void main() {
         expect: () => [
           isA<ShiftLoading>(),
           isA<ShiftError>().having(
-              (s) => s.message, 'message', 'Нет подключения к интернету'),
+              (s) => s.message, 'message', AppMessage.offline),
         ],
       );
     });
@@ -125,7 +126,7 @@ void main() {
         expect: () => [
           isA<ShiftLoading>(),
           isA<ShiftError>().having((s) => s.message, 'message',
-              'Конфликт — объект уже существует'),
+              AppMessage.conflict),
         ],
       );
 
@@ -141,12 +142,11 @@ void main() {
             bloc.add(const OpenShift(storeId: 's1', openingCash: 500)),
         expect: () => [
           isA<ShiftLoading>(),
-          predicate<ShiftState>((s) {
-            if (s is! ShiftError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<ShiftState>(
+              (s) => s is ShiftError && s.message == AppMessage.unknownError,
+              'ShiftError(unknownError)'),
         ],
       );
     });
@@ -196,7 +196,7 @@ void main() {
         expect: () => [
           isA<ShiftLoading>(),
           isA<ShiftError>().having(
-              (s) => s.message, 'message', 'Нет подключения к интернету'),
+              (s) => s.message, 'message', AppMessage.offline),
         ],
       );
 
@@ -216,7 +216,7 @@ void main() {
         expect: () => [
           isA<ShiftLoading>(),
           isA<ShiftError>().having((s) => s.message, 'message',
-              'Ошибка сервера — попробуйте позже'),
+              AppMessage.serverError),
         ],
       );
     });
@@ -369,7 +369,7 @@ void main() {
         expect: () => [
           isA<ShiftLoading>(),
           isA<ShiftError>()
-              .having((s) => s.message, 'message', 'Объект не найден'),
+              .having((s) => s.message, 'message', AppMessage.notFound),
         ],
       );
     });

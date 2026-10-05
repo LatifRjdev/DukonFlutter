@@ -9,6 +9,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/domain/entities/payroll_entry.dart';
 import 'package:dukonpro/domain/entities/payroll_period.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -144,13 +145,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Simulate the pay action failing.
-    stateController.add(const PayrollError('Network error'));
+    stateController.add(const PayrollError(AppMessage.offline));
     await tester.pumpAndSettle();
 
     expect(
       find.descendant(
         of: find.byType(AppErrorWidget),
-        matching: find.text('Network error'),
+        matching: find.text('Нет подключения к интернету'),
       ),
       findsOneWidget,
     );
@@ -182,13 +183,13 @@ void main() {
     await tester.pumpWidget(wrap(const PayrollPage(storeId: 'store-1')));
     await tester.pumpAndSettle();
 
-    stateController.add(const PayrollError('Network error'));
+    stateController.add(const PayrollError(AppMessage.offline));
     await tester.pumpAndSettle();
 
     expect(
       find.descendant(
         of: find.byType(AppErrorWidget),
-        matching: find.text('Network error'),
+        matching: find.text('Нет подключения к интернету'),
       ),
       findsOneWidget,
     );

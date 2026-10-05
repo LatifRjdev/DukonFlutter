@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/presentation/blocs/customer_detail/customer_detail_bloc.dart';
@@ -129,7 +130,7 @@ void main() {
         )),
         expect: () => [
           isA<CustomerDetailLoading>(),
-          const CustomerDetailError('Нет подключения к интернету'),
+          const CustomerDetailError(AppMessage.offline),
         ],
       );
 
@@ -146,7 +147,7 @@ void main() {
         )),
         expect: () => [
           isA<CustomerDetailLoading>(),
-          const CustomerDetailError('Не удалось выполнить операцию'),
+          const CustomerDetailError(AppMessage.unknownError),
         ],
       );
 
@@ -163,7 +164,7 @@ void main() {
         )),
         expect: () => [
           isA<CustomerDetailLoading>(),
-          const CustomerDetailError('Объект не найден'),
+          const CustomerDetailError(AppMessage.notFound),
         ],
       );
     });

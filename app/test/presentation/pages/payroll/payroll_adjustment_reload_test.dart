@@ -11,6 +11,7 @@
 // child route left the shared bloc in. Same root-cause class and fix
 // pattern as staff_list_reload_test.dart / debts_overview_reload_test.dart.
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/domain/entities/payroll_entry.dart';
 import 'package:dukonpro/domain/entities/payroll_period.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -100,7 +101,7 @@ void main() {
 
     // Simulate the shared bloc having been left in PayrollError by a failed
     // AddAdjustment while the user was on the (stubbed) adjustment screen.
-    when(() => payrollBloc.state).thenReturn(const PayrollError('Некорректные данные'));
+    when(() => payrollBloc.state).thenReturn(const PayrollError(AppMessage.badRequest));
 
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();

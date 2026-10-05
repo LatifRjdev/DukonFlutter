@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/domain/repositories/sale_repository.dart';
@@ -95,7 +96,7 @@ void main() {
         expect: () => [
           isA<SalesHistoryLoading>(),
           isA<SalesHistoryError>()
-              .having((s) => s.message, 'message', 'Нет подключения к интернету'),
+              .having((s) => s.message, 'message', AppMessage.offline),
         ],
       );
 
@@ -115,11 +116,11 @@ void main() {
         act: (bloc) => bloc.add(const SalesHistoryLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SalesHistoryLoading>(),
-          isA<SalesHistoryError>().having(
-            (s) => s.message.contains('DioException') || s.message.contains('10.0.2.2'),
-            'no leaky internal text',
-            isFalse,
-          ),
+          // SalesHistoryError.message is an AppMessage, so it cannot contain
+          // Dio text or an internal host — that is now a type guarantee, not
+          // a runtime check. Assert the member instead.
+          isA<SalesHistoryError>()
+              .having((s) => s.message, 'message', AppMessage.unknownError),
         ],
       );
 
@@ -584,7 +585,7 @@ void main() {
               .having(
                 (s) => s.refundError,
                 'refundError',
-                'Нет подключения к интернету',
+                AppMessage.offline,
               ),
         ],
       );
@@ -609,13 +610,10 @@ void main() {
         )),
         expect: () => [
           isA<SalesHistoryLoaded>().having((s) => s.isRefunding, 'isRefunding', true),
+          // refundError is an AppMessage? for the same reason: no text, so
+          // nothing to leak. Assert the member it maps to.
           isA<SalesHistoryLoaded>().having(
-            (s) =>
-                s.refundError!.contains('DioException') ||
-                s.refundError!.contains('10.0.2.2'),
-            'no leaky internal text',
-            isFalse,
-          ),
+              (s) => s.refundError, 'refundError', AppMessage.unknownError),
         ],
       );
 
@@ -632,7 +630,7 @@ void main() {
           sales: [_makeSale(id: 's1', receiptNo: 'R-001', total: 100)],
           total: 1,
           totalPages: 1,
-          refundError: 'Нет подключения к интернету',
+          refundError: AppMessage.offline,
         ),
         act: (bloc) => bloc.add(const SalesHistoryRefundSale(
           storeId: 'store-1',

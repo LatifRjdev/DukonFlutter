@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/sale.dart';
 import 'package:dukonpro/domain/repositories/sale_repository.dart';
@@ -209,7 +210,7 @@ void main() {
           predicate<CheckoutState>((s) => s.isProcessing),
           predicate<CheckoutState>((s) =>
               !s.isProcessing &&
-              s.error == 'Нет подключения к интернету' &&
+              s.error == AppMessage.offline &&
               s.saleResult == null),
         ],
       );
@@ -232,13 +233,12 @@ void main() {
             bloc.add(const CheckoutProcessPayment(storeId: 'store-1')),
         expect: () => [
           predicate<CheckoutState>((s) => s.isProcessing),
-          predicate<CheckoutState>((s) {
-            if (s.isProcessing) return false;
-            final err = s.error ?? '';
-            return !err.contains('10.0.2.2') &&
-                !err.contains('DioException') &&
-                err.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // CheckoutState.error is an AppMessage?, so there is no text that
+          // could carry Dio internals — that property is now enforced by the
+          // type. Assert it is set, and to which member.
+          predicate<CheckoutState>(
+              (s) => !s.isProcessing && s.error == AppMessage.unknownError,
+              'error == unknownError'),
         ],
       );
     });

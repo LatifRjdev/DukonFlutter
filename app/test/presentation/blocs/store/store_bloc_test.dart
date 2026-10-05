@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/data/datasources/local/selected_store_local_datasource.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,7 +77,7 @@ void main() {
         act: (bloc) => bloc.add(StoreLoadRequested()),
         expect: () => [
           isA<StoreLoading>(),
-          const StoreError('Нет подключения к интернету'),
+          const StoreError(AppMessage.offline),
         ],
       );
 
@@ -91,12 +92,11 @@ void main() {
         act: (bloc) => bloc.add(StoreLoadRequested()),
         expect: () => [
           isA<StoreLoading>(),
-          predicate<StoreState>((s) {
-            if (s is! StoreError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<StoreState>(
+              (s) => s is StoreError && s.message == AppMessage.unknownError,
+              'StoreError(unknownError)'),
         ],
       );
     });
@@ -159,7 +159,7 @@ void main() {
         )),
         expect: () => [
           isA<StoreLoading>(),
-          const StoreError('Конфликт — объект уже существует'),
+          const StoreError(AppMessage.conflict),
         ],
         verify: (_) {
           verifyNever(() => repository.getStores());

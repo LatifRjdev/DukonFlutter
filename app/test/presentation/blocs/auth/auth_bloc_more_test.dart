@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/user.dart';
 import 'package:dukonpro/domain/repositories/auth_repository.dart';
@@ -69,7 +70,7 @@ void main() {
       )),
       expect: () => [
         AuthLoading(),
-        const AuthFailure('Сессия истекла. Войдите снова.'),
+        const AuthFailure(AppMessage.sessionExpired),
       ],
     );
 
@@ -110,8 +111,8 @@ void main() {
       )),
       expect: () => [
         AuthLoading(),
-        // 409 maps to "Конфликт — объект уже существует" via mapErrorToUserMessage.
-        const AuthFailure('Конфликт — объект уже существует'),
+        // 409 maps to "Конфликт — объект уже существует" via mapErrorToAppMessage.
+        const AuthFailure(AppMessage.conflict),
       ],
     );
 

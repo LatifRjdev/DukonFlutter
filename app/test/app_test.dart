@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/theme/app_theme.dart';
 import 'package:dukonpro/presentation/blocs/settings/settings_bloc.dart';
 import 'package:dukonpro/presentation/blocs/settings/settings_event.dart';
@@ -105,7 +106,7 @@ void main() {
         bloc,
         Stream<SettingsState>.fromIterable([
           loaded,
-          const SettingsActionSuccess('Профиль обновлён'),
+          const SettingsActionSuccess(AppMessage.profileUpdated),
           loaded,
         ]),
         initialState: loaded,

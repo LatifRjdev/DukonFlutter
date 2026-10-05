@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/expense.dart';
 import 'package:dukonpro/domain/repositories/expense_repository.dart';
@@ -107,7 +108,7 @@ void main() {
         expect: () => [
           isA<ExpenseLoading>(),
           isA<ExpenseError>().having(
-              (s) => s.message, 'message', 'Нет подключения к интернету'),
+              (s) => s.message, 'message', AppMessage.offline),
         ],
       );
 
@@ -128,12 +129,11 @@ void main() {
             bloc.add(const ExpenseListRequested(storeId: 'store-1')),
         expect: () => [
           isA<ExpenseLoading>(),
-          predicate<ExpenseState>((s) {
-            if (s is! ExpenseError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<ExpenseState>(
+              (s) => s is ExpenseError && s.message == AppMessage.unknownError,
+              'ExpenseError(unknownError)'),
         ],
       );
     });
@@ -161,7 +161,7 @@ void main() {
         expect: () => [
           isA<ExpenseLoading>(),
           isA<ExpenseActionSuccess>()
-              .having((s) => s.message, 'message', 'Расход добавлен'),
+              .having((s) => s.message, 'message', AppMessage.expenseAdded),
           isA<ExpenseLoading>(),
           isA<ExpenseLoaded>(),
         ],
@@ -187,7 +187,7 @@ void main() {
         expect: () => [
           isA<ExpenseLoading>(),
           isA<ExpenseError>()
-              .having((s) => s.message, 'message', 'Некорректные данные'),
+              .having((s) => s.message, 'message', AppMessage.badRequest),
         ],
         verify: (_) {
           verifyNever(() => repository.getExpenses(
@@ -225,7 +225,7 @@ void main() {
         expect: () => [
           isA<ExpenseLoading>(),
           isA<ExpenseActionSuccess>()
-              .having((s) => s.message, 'message', 'Расход обновлён'),
+              .having((s) => s.message, 'message', AppMessage.expenseUpdated),
           isA<ExpenseLoading>(),
           isA<ExpenseLoaded>(),
         ],
@@ -253,7 +253,7 @@ void main() {
         expect: () => [
           isA<ExpenseLoading>(),
           isA<ExpenseError>().having((s) => s.message, 'message',
-              'Сессия истекла. Войдите снова.'),
+              AppMessage.sessionExpired),
         ],
       );
     });
@@ -283,7 +283,7 @@ void main() {
         )),
         expect: () => [
           isA<ExpenseActionSuccess>()
-              .having((s) => s.message, 'message', 'Расход удалён'),
+              .having((s) => s.message, 'message', AppMessage.expenseDeleted),
           isA<ExpenseLoading>(),
           isA<ExpenseLoaded>(),
         ],
@@ -316,7 +316,7 @@ void main() {
         )),
         expect: () => [
           isA<ExpenseDeleteFailure>().having(
-              (s) => s.message, 'message', 'Ошибка сервера — попробуйте позже'),
+              (s) => s.message, 'message', AppMessage.serverError),
         ],
         verify: (_) {
           verifyNever(() => repository.getExpenses(

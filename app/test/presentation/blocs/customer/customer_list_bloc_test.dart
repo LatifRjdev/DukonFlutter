@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/customer.dart';
 import 'package:dukonpro/domain/repositories/customer_repository.dart';
@@ -67,7 +68,7 @@ void main() {
         act: (bloc) => bloc.add(const CustomerListLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<CustomerListLoading>(),
-          const CustomerListError('Нет подключения к интернету'),
+          const CustomerListError(AppMessage.offline),
         ],
       );
 
@@ -84,12 +85,13 @@ void main() {
         act: (bloc) => bloc.add(const CustomerListLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<CustomerListLoading>(),
-          predicate<CustomerListState>((s) {
-            if (s is! CustomerListError) return false;
-            return !s.message.contains('DioException') &&
-                !s.message.contains('10.0.2.2') &&
-                s.message.isNotEmpty;
-          }, 'error message has no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<CustomerListState>(
+              (s) =>
+                  s is CustomerListError &&
+                  s.message == AppMessage.unknownError,
+              'CustomerListError(unknownError)'),
         ],
       );
     });
@@ -195,7 +197,7 @@ void main() {
         )),
         expect: () => [
           isA<CustomerFormLoading>(),
-          const CustomerFormError('Некорректные данные'),
+          const CustomerFormError(AppMessage.badRequest),
         ],
       );
     });
@@ -236,7 +238,7 @@ void main() {
         )),
         expect: () => [
           isA<CustomerFormLoading>(),
-          const CustomerFormError('Сессия истекла. Войдите снова.'),
+          const CustomerFormError(AppMessage.sessionExpired),
         ],
       );
     });

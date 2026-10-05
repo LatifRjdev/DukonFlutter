@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/user.dart';
 import 'package:dukonpro/domain/repositories/auth_repository.dart';
@@ -105,7 +106,7 @@ void main() {
         )),
         expect: () => [
           AuthLoading(),
-          const AuthFailure('Сессия истекла. Войдите снова.'),
+          const AuthFailure(AppMessage.sessionExpired),
         ],
       );
 
@@ -124,7 +125,7 @@ void main() {
         )),
         expect: () => [
           AuthLoading(),
-          const AuthFailure('Нет подключения к интернету'),
+          const AuthFailure(AppMessage.offline),
         ],
       );
 
@@ -143,11 +144,13 @@ void main() {
         )),
         expect: () => [
           AuthLoading(),
-          predicate<AuthState>((s) {
-            if (s is! AuthFailure) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('http://');
-          }, 'AuthFailure without internal host in message'),
+          // AuthFailure.message is an AppMessage, so it cannot carry the
+          // internal host at all — the leak property this used to probe at
+          // runtime is now enforced by the type. What is still worth
+          // asserting is which message an unrecognised exception maps to.
+          predicate<AuthState>(
+              (s) => s is AuthFailure && s.message == AppMessage.unknownError,
+              'AuthFailure(unknownError)'),
         ],
       );
     });

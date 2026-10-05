@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/finance_summary.dart';
 import 'package:dukonpro/domain/repositories/finance_repository.dart';
@@ -100,7 +101,7 @@ void main() {
             bloc.add(const FinanceDashboardRequested(storeId: 'store-1')),
         expect: () => [
           isA<FinanceLoading>(),
-          const FinanceError('Нет подключения к интернету'),
+          const FinanceError(AppMessage.offline),
         ],
       );
 
@@ -119,10 +120,11 @@ void main() {
             bloc.add(const FinanceDashboardRequested(storeId: 'store-1')),
         expect: () => [
           isA<FinanceLoading>(),
-          predicate<FinanceState>((s) {
-            if (s is! FinanceError) return false;
-            return !s.message.contains('DioException') && s.message.isNotEmpty;
-          }, 'error set but no leaky internal text'),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text. Assert the member instead.
+          predicate<FinanceState>(
+              (s) => s is FinanceError && s.message == AppMessage.unknownError,
+              'FinanceError(unknownError)'),
         ],
       );
     });
@@ -166,7 +168,7 @@ void main() {
         ),
         expect: () => [
           isA<FinanceLoading>(),
-          const FinanceError('Ошибка сервера — попробуйте позже'),
+          const FinanceError(AppMessage.serverError),
         ],
       );
 
@@ -185,7 +187,7 @@ void main() {
         ),
         expect: () => [
           isA<FinanceLoading>(),
-          const FinanceError('Сессия истекла. Войдите снова.'),
+          const FinanceError(AppMessage.sessionExpired),
         ],
       );
     });

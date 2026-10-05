@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/product.dart';
 import 'package:dukonpro/domain/repositories/product_repository.dart';
@@ -74,7 +75,7 @@ void main() {
       blocTest<ProductFormBloc, ProductFormState>(
         'updates currentStep and clears any existing error',
         build: () => ProductFormBloc(productRepository: repository),
-        seed: () => const ProductFormState(currentStep: 0, error: 'boom'),
+        seed: () => const ProductFormState(currentStep: 0, error: AppMessage.unknownError),
         act: (bloc) => bloc.add(const ProductFormUpdateStep(2)),
         expect: () => [
           predicate<ProductFormState>(
@@ -228,7 +229,7 @@ void main() {
           predicate<ProductFormState>((s) =>
               !s.isSubmitting &&
               !s.isSuccess &&
-              s.error == 'Нет подключения к интернету'),
+              s.error == AppMessage.offline),
         ],
       );
 
@@ -244,7 +245,7 @@ void main() {
         expect: () => [
           predicate<ProductFormState>((s) => s.isSubmitting),
           predicate<ProductFormState>(
-              (s) => s.error == 'Некорректные данные'),
+              (s) => s.error == AppMessage.badRequest),
         ],
       );
 
@@ -260,7 +261,7 @@ void main() {
         expect: () => [
           predicate<ProductFormState>((s) => s.isSubmitting),
           predicate<ProductFormState>(
-              (s) => s.error == 'Сессия истекла. Войдите снова.'),
+              (s) => s.error == AppMessage.sessionExpired),
         ],
       );
 
@@ -276,7 +277,7 @@ void main() {
         expect: () => [
           predicate<ProductFormState>((s) => s.isSubmitting),
           predicate<ProductFormState>(
-              (s) => s.error == 'Не удалось выполнить операцию'),
+              (s) => s.error == AppMessage.unknownError),
         ],
       );
     });
@@ -335,7 +336,7 @@ void main() {
           predicate<ProductFormState>((s) => s.isLoading),
           predicate<ProductFormState>((s) =>
               !s.isLoading &&
-              s.error == 'Объект не найден' &&
+              s.error == AppMessage.notFound &&
               s.editingProductId == null),
         ],
       );
@@ -408,7 +409,7 @@ void main() {
           currentStep: 2,
           productData: {'name': 'Dirty'},
           isSubmitting: true,
-          error: 'boom',
+          error: AppMessage.unknownError,
           editingProductId: 'p1',
           isSuccess: true,
         ),

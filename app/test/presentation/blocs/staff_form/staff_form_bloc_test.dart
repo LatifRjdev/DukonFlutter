@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/staff_member.dart';
 import 'package:dukonpro/domain/repositories/staff_repository.dart';
@@ -198,7 +199,7 @@ void main() {
           isA<StaffFormError>().having(
             (s) => s.errorMessage,
             'errorMessage',
-            'Некорректные данные',
+            AppMessage.badRequest,
           ),
         ],
       );
@@ -289,7 +290,7 @@ void main() {
           isA<StaffFormError>().having(
             (s) => s.errorMessage,
             'errorMessage',
-            'Нет подключения к интернету',
+            AppMessage.offline,
           ),
         ],
       );
