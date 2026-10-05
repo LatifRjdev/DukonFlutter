@@ -1,51 +1,55 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/error_messages.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 
-// Covers the full decision table for mapErrorToUserMessage so future
-// refactors of the sealed-error layer cannot silently leak raw exception
-// text to the UI (FE-P1-002 regression guard, FE-P0-002 seed coverage).
+// Covers the full decision table for mapErrorToAppMessage so future refactors
+// of the sealed-error layer cannot silently leak raw exception text to the UI
+// (FE-P1-002 regression guard, FE-P0-002 seed coverage).
+//
+// The leak tests below now assert something the TYPE guarantees: the mapper
+// returns an enum, so no exception text can reach the UI through it by
+// construction. They are kept because they pin the branch each leaky input
+// lands on — a future `default` that swallowed everything into one member
+// would still be wrong, and these say which member is right.
 
 void main() {
-  group('mapErrorToUserMessage', () {
-    test('NetworkException → "Нет подключения к интернету"', () {
+  group('mapErrorToAppMessage', () {
+    test('should report offline when the exception is a NetworkException', () {
+      expect(mapErrorToAppMessage(const NetworkException()), AppMessage.offline);
+    });
+
+    test('should report an expired session when unauthorized', () {
       expect(
-        mapErrorToUserMessage(const NetworkException()),
-        'Нет подключения к интернету',
+        mapErrorToAppMessage(const UnauthorizedException()),
+        AppMessage.sessionExpired,
       );
     });
 
-    test('UnauthorizedException → session-expired message', () {
+    test('should report a cache error when local storage fails', () {
       expect(
-        mapErrorToUserMessage(const UnauthorizedException()),
-        'Сессия истекла. Войдите снова.',
-      );
-    });
-
-    test('CacheException → local-storage message', () {
-      expect(
-        mapErrorToUserMessage(const CacheException('whatever')),
-        'Ошибка локального хранилища',
+        mapErrorToAppMessage(const CacheException('whatever')),
+        AppMessage.cacheError,
       );
     });
 
     group('ServerException', () {
-      const cases = <int, String>{
-        400: 'Некорректные данные',
-        403: 'Недостаточно прав',
-        404: 'Объект не найден',
-        409: 'Конфликт — объект уже существует',
-        429: 'Слишком много попыток — попробуйте позже',
-        500: 'Ошибка сервера — попробуйте позже',
-        502: 'Ошибка сервера — попробуйте позже',
-        503: 'Ошибка сервера — попробуйте позже',
+      const cases = <int, AppMessage>{
+        400: AppMessage.badRequest,
+        403: AppMessage.forbidden,
+        404: AppMessage.notFound,
+        409: AppMessage.conflict,
+        429: AppMessage.tooManyRequests,
+        500: AppMessage.serverError,
+        502: AppMessage.serverError,
+        503: AppMessage.serverError,
       };
 
       for (final entry in cases.entries) {
-        test('HTTP ${entry.key} → "${entry.value}"', () {
+        test('should map HTTP ${entry.key} to ${entry.value}', () {
           expect(
-            mapErrorToUserMessage(
+            mapErrorToAppMessage(
               ServerException('anything', statusCode: entry.key),
             ),
             entry.value,
@@ -53,53 +57,47 @@ void main() {
         });
       }
 
-      test('HTTP 418 (unmapped 4xx) → generic failure message', () {
+      test('should fall back to unknown when the status is unmapped', () {
         expect(
-          mapErrorToUserMessage(
-            ServerException('teapot', statusCode: 418),
-          ),
-          'Не удалось выполнить операцию',
+          mapErrorToAppMessage(ServerException('teapot', statusCode: 418)),
+          AppMessage.unknownError,
         );
       });
 
-      test('no status code → generic failure message', () {
+      test('should fall back to unknown when there is no status code', () {
         expect(
-          mapErrorToUserMessage(const ServerException('boom')),
-          'Не удалось выполнить операцию',
+          mapErrorToAppMessage(const ServerException('boom')),
+          AppMessage.unknownError,
         );
       });
 
-      test('never returns the raw message, even with a long body', () {
-        const leakyMessage =
+      test('should ignore the exception body entirely', () {
+        // The mapper dispatches on type and status only; it has never read
+        // `message`, and now it could not return it even if it did.
+        const leaky =
             'PostgresError: column "users.secret_internal_field" does not exist';
-        final result = mapErrorToUserMessage(
-          ServerException(leakyMessage, statusCode: 500),
+        expect(
+          mapErrorToAppMessage(ServerException(leaky, statusCode: 500)),
+          AppMessage.serverError,
         );
-        expect(result.contains('PostgresError'), isFalse);
-        expect(result.contains('secret_internal_field'), isFalse);
       });
     });
 
     group('unknown errors', () {
-      test('plain Exception → generic failure (no raw text)', () {
+      test('should fall back to unknown for a plain Exception', () {
         final err = Exception('http://10.0.2.2:4455/internal-host-leak');
-        final result = mapErrorToUserMessage(err);
-        expect(result, 'Не удалось выполнить операцию');
-        expect(result.contains('10.0.2.2'), isFalse);
+        expect(mapErrorToAppMessage(err), AppMessage.unknownError);
       });
 
-      test('StateError → generic failure', () {
+      test('should fall back to unknown for a StateError', () {
         expect(
-          mapErrorToUserMessage(StateError('bad state')),
-          'Не удалось выполнить операцию',
+          mapErrorToAppMessage(StateError('bad state')),
+          AppMessage.unknownError,
         );
       });
 
-      test('String thrown as error → generic failure', () {
-        expect(
-          mapErrorToUserMessage('just a string'),
-          'Не удалось выполнить операцию',
-        );
+      test('should fall back to unknown for a thrown String', () {
+        expect(mapErrorToAppMessage('just a string'), AppMessage.unknownError);
       });
     });
   });
