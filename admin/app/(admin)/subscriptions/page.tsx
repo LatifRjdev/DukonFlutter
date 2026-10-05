@@ -37,22 +37,8 @@ import { api } from '@/lib/api';
 import { Subscription, PendingPayment } from '@/lib/types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { subStatusColor, subStatusLabel } from '@/lib/subscription-status';
 
-const STATUS_COLORS: Record<string, string> = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  TRIAL: 'bg-blue-100 text-blue-700',
-  PAST_DUE: 'bg-yellow-100 text-yellow-700',
-  EXPIRED: 'bg-red-100 text-red-700',
-  CANCELED: 'bg-gray-100 text-gray-600',
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  ACTIVE: 'Активна',
-  TRIAL: 'Trial',
-  PAST_DUE: 'Просрочена',
-  EXPIRED: 'Истекла',
-  CANCELED: 'Отменена',
-};
 
 export default function SubscriptionsPage() {
   return (
@@ -218,8 +204,8 @@ function SubscriptionsContent() {
       key: 'status',
       header: 'Статус',
       cell: (s) => (
-        <Badge className={`${STATUS_COLORS[s.status] || ''} hover:opacity-80`}>
-          {STATUS_LABELS[s.status] || s.status}
+        <Badge className={`${subStatusColor(s.status)} hover:opacity-80`}>
+          {subStatusLabel(s.status)}
         </Badge>
       ),
     },
@@ -315,10 +301,10 @@ function SubscriptionsContent() {
               <SelectContent>
                 <SelectItem value="all">Все</SelectItem>
                 <SelectItem value="ACTIVE">Активные</SelectItem>
-                <SelectItem value="TRIAL">Trial</SelectItem>
+                <SelectItem value="TRIAL">Пробная</SelectItem>
                 <SelectItem value="PAST_DUE">Просрочены</SelectItem>
                 <SelectItem value="EXPIRED">Истекшие</SelectItem>
-                <SelectItem value="CANCELED">Отменены</SelectItem>
+                <SelectItem value="CANCELLED">Отменены</SelectItem>
               </SelectContent>
             </Select>
             {statusFilter !== 'all' && (

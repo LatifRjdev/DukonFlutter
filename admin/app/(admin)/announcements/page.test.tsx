@@ -155,7 +155,7 @@ describe('AnnouncementsPage status filter sends the real SubscriptionStatus enum
     // "Фильтр по статусу" is the second combobox on this page (the first is
     // "Фильтр по тарифу").
     await userEvent.click(screen.getAllByRole('combobox')[1]);
-    await userEvent.click(await screen.findByRole('option', { name: 'Trial' }));
+    await userEvent.click(await screen.findByRole('option', { name: 'Пробная' }));
 
     await userEvent.click(screen.getByRole('button', { name: /Отправить/i }));
 

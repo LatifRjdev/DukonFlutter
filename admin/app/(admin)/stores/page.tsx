@@ -34,6 +34,12 @@ import { UserPicker } from '@/components/user-picker';
 import { api } from '@/lib/api';
 import { Store } from '@/lib/types';
 import { toast } from 'sonner';
+import {
+  SUBSCRIPTION_PLANS,
+  SUBSCRIPTION_STATUSES,
+  subStatusColor,
+  subStatusLabel,
+} from '@/lib/subscription-status';
 
 const PLAN_COLORS: Record<string, string> = {
   START: 'bg-gray-100 text-gray-700',
@@ -41,21 +47,6 @@ const PLAN_COLORS: Record<string, string> = {
   PREMIUM: 'bg-purple-100 text-purple-700',
 };
 
-const SUB_STATUS_COLORS: Record<string, string> = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  TRIAL: 'bg-blue-100 text-blue-700',
-  PAST_DUE: 'bg-yellow-100 text-yellow-700',
-  CANCELLED: 'bg-gray-100 text-gray-600',
-  EXPIRED: 'bg-red-100 text-red-700',
-};
-
-const SUB_STATUS_LABELS: Record<string, string> = {
-  ACTIVE: 'Активна',
-  TRIAL: 'Trial',
-  PAST_DUE: 'Просрочена',
-  CANCELLED: 'Отменена',
-  EXPIRED: 'Истекла',
-};
 
 // Statuses the on-screen filter supports that the export endpoint cannot
 // express as a query param (AdminStoresQueryDto only supports `isActive`,
@@ -74,15 +65,12 @@ const STORE_CATEGORIES: { value: string; label: string }[] = [
   { value: 'OTHER', label: 'Другое' },
 ];
 
-// Mirrors the PLANS/STATUSES enums in
-// api/src/modules/admin/dto/update-store-subscription.dto.ts, which validate
-// against Prisma's SubscriptionStatus. Every spelling here is CANCELLED with
-// two Ls — SUB_STATUS_LABELS/COLORS above used to key it with one L, so a
-// cancelled subscription fell through their lookup and rendered the raw
-// English enum value instead of "Отменена". Keep all four lists on Prisma's
-// spelling.
-const SUB_PLANS = ['START', 'BUSINESS', 'PREMIUM'];
-const SUB_STATUSES = ['TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED'];
+// The tariff-edit dropdowns read the same vocabulary the badges do, so there
+// is nothing here to drift: lib/subscription-status.ts is checked against
+// Prisma's enum by a test. These aliases exist only to keep the JSX below
+// readable.
+const SUB_PLANS = SUBSCRIPTION_PLANS;
+const SUB_STATUSES = SUBSCRIPTION_STATUSES;
 
 interface StoreSubscription {
   plan?: string;
@@ -299,8 +287,8 @@ export default function StoresPage() {
         }
         const subStatus = s.subscription?.status ?? 'EXPIRED';
         return (
-          <Badge className={`${SUB_STATUS_COLORS[subStatus] || ''} hover:opacity-80`}>
-            {SUB_STATUS_LABELS[subStatus] || subStatus}
+          <Badge className={`${subStatusColor(subStatus)} hover:opacity-80`}>
+            {subStatusLabel(subStatus)}
           </Badge>
         );
       },
@@ -420,7 +408,7 @@ export default function StoresPage() {
           <SelectContent>
             <SelectItem value="all">Все статусы</SelectItem>
             <SelectItem value="ACTIVE">Активна</SelectItem>
-            <SelectItem value="TRIAL">Trial</SelectItem>
+            <SelectItem value="TRIAL">Пробная</SelectItem>
             <SelectItem value="PAST_DUE">Просрочена</SelectItem>
             <SelectItem value="SUSPENDED">Приостановлен</SelectItem>
             <SelectItem value="EXPIRED">Истекла</SelectItem>

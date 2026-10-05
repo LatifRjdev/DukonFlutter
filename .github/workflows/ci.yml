@@ -100,6 +100,35 @@ jobs:
       - name: e2e tests (Jest)
         run: npm run test:e2e -- --ci --colors
 
+  admin:
+    name: Admin panel (tsc + vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # Includes lib/subscription-status.test.ts, which reads
+      # api/prisma/schema.prisma and fails if the admin's status vocabulary
+      # drifts from the database. That guard only means something if it runs
+      # here — the admin suite was local-only until now.
+      - name: Tests (Vitest)
+        run: npx vitest run
+
   flutter:
     name: Flutter app (analyze + test)
     runs-on: ubuntu-latest

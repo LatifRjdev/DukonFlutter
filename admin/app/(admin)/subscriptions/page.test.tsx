@@ -87,6 +87,38 @@ describe('SubscriptionsPage — list rendering', () => {
     // Tab counter shows "(1)" — proves we pulled exactly one row.
     expect(screen.getByText(/Все подписки \(1\)/)).toBeInTheDocument();
   });
+
+  it('renders a Russian label for a cancelled subscription', async () => {
+    // The status maps on this page used to be keyed CANCELED with one L while
+    // the API sends Prisma's CANCELLED, so the badge fell through the lookup
+    // and showed the raw English enum.
+    server.use(
+      http.get(`${API_URL}/admin/subscriptions`, () =>
+        HttpResponse.json([
+          {
+            id: 'sub2',
+            storeId: 's2',
+            plan: 'BUSINESS',
+            status: 'CANCELLED',
+            currentPeriodEnd: '2026-12-31T00:00:00Z',
+            adminDiscount: 0,
+            createdAt: '2026-01-01T00:00:00Z',
+            store: { id: 's2', name: 'Cancelled Store' },
+          },
+        ]),
+      ),
+      http.get(`${API_URL}/admin/subscriptions/pending-payments`, () =>
+        HttpResponse.json([]),
+      ),
+    );
+    renderWithQuery(<SubscriptionsPage />);
+
+    await waitFor(() =>
+      expect(screen.getByText('Cancelled Store')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('Отменена')).toBeInTheDocument();
+    expect(screen.queryByText('CANCELLED')).not.toBeInTheDocument();
+  });
 });
 
 describe('SubscriptionsPage — destructive action: cancel subscription', () => {
