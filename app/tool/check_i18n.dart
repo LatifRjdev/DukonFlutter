@@ -236,6 +236,27 @@ Future<int> run(List<String> args, {String? repoRootOverride}) async {
     return 0;
   }
 
+  // An entry that no longer matches anything is not harmless: it is a standing
+  // licence to re-introduce exactly the literal it names, with the gate still
+  // green. The migration that removed error_messages.dart's 11 strings left
+  // its 13 entries behind, and nothing said so — the comparison below only
+  // ever asked whether a SEEN literal was allowed, never whether an ALLOWED
+  // one was still seen.
+  final unused = allowed.keys.where((k) => (seen[k] ?? 0) < allowed[k]!).toList()
+    ..sort();
+  if (unused.isNotEmpty) {
+    stdout.writeln(
+      'check_i18n: ${unused.length} allow-list entr(ies) no longer match any '
+      'literal. Delete them from tool/i18n-allowlist.txt — until you do, they '
+      'permit those strings to come back unnoticed.',
+    );
+    for (final k in unused.take(50)) {
+      final short = allowed[k]! - (seen[k] ?? 0);
+      stdout.writeln('  $k  ($short unused of ${allowed[k]})');
+    }
+    return 3;
+  }
+
   if (offenders.isEmpty) {
     stdout.writeln(
       'check_i18n: scanned $scanned files, no new hardcoded Cyrillic strings.',

@@ -17,14 +17,15 @@
 # app_ru.arb.
 
 # ---------------------------------------------------------------------------
-# 1. Track 3 — Bloc state strings (deferred by design, NOT yet migrated)
+# 1. Printer bloc state strings (the last holdout)
 # ---------------------------------------------------------------------------
-# These 6 Bloc files store user-facing Russian text directly in emitted state.
-# Blocs have no BuildContext, so AppLocalizations.of(context) is unavailable:
-# migrating them needs a different mechanism (Bloc emits an error/message
-# *code*, the UI layer maps it to a localized string), not literal
-# replacement. Tracked as Track 3 in
-# docs/superpowers/specs/2026-09-28-adr0002-track2-remaining-i18n-migration-design.md.
+# The mechanism this section used to defer now EXISTS: a bloc emits an
+# AppMessage and the UI resolves it (lib/core/errors/app_message.dart). Every
+# other bloc was migrated; printer_bloc.dart is the exception because its text
+# is printer-specific — "Не удалось подключиться" is about Bluetooth, not about
+# any error the shared vocabulary describes — so it would need members no other
+# caller wants. Migrating it means deciding whether printer copy deserves its
+# own enum, which is a separate call from this one.
 lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось напечатать'
 lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось подключиться'
 lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка печати'
@@ -62,38 +63,6 @@ lib/presentation/pages/settings/subscription_page.dart::'Премиум'
 lib/presentation/pages/settings/subscription_page.dart::'Старт'
 lib/presentation/pages/settings/subscription_page.dart::'Старт'
 lib/presentation/pages/settings/subscription_page.dart::'Эсхата'
-
-# ---------------------------------------------------------------------------
-# 3. Sub-project B — the error path (deferred by design)
-# ---------------------------------------------------------------------------
-# error_messages.dart's mapErrorToUserMessage has 124 call sites across 49
-# files — 29 Blocs AND 20 pages that call it directly in their own try/catch,
-# which is easy to miss when scoping this as "a Bloc problem". Its result lands
-# in 43 state classes carrying `final String message`, read at 98 sites in the
-# UI. Converting it to error codes is an architectural change, specced
-# separately. (Figures measured 2026-10-01; an earlier version of this comment
-# said "29 Bloc files" and "~66 UI sites", both understating the work.)
-#
-# NOTE: 'Не удалось выполнить операцию' occurs TWICE in error_messages.dart
-# (the <=400 ServerException fallback and the unknown-exception fallback), so it
-# carries TWO identical lines below — one per permitted occurrence. 11 lines here
-# cover 11 occurrences across 10 distinct literals.
-#
-# debt_repository_impl.dart's three literals used to sit here. They were
-# removed because Exception.message is diagnostic-only and never reaches a
-# screen (see lib/core/errors/exceptions.dart), so English is correct there
-# and there is nothing to defer.
-lib/core/errors/error_messages.dart::'Конфликт — объект уже существует'
-lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
-lib/core/errors/error_messages.dart::'Не удалось выполнить операцию'
-lib/core/errors/error_messages.dart::'Недостаточно прав'
-lib/core/errors/error_messages.dart::'Некорректные данные'
-lib/core/errors/error_messages.dart::'Нет подключения к интернету'
-lib/core/errors/error_messages.dart::'Объект не найден'
-lib/core/errors/error_messages.dart::'Ошибка локального хранилища'
-lib/core/errors/error_messages.dart::'Ошибка сервера — попробуйте позже'
-lib/core/errors/error_messages.dart::'Сессия истекла. Войдите снова.'
-lib/core/errors/error_messages.dart::'Слишком много попыток — попробуйте позже'
 
 # ---------------------------------------------------------------------------
 # 4. Currency abbreviation — not translatable

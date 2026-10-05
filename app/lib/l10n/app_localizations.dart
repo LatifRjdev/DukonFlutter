@@ -2380,7 +2380,7 @@ abstract class AppLocalizations {
   /// **'Нет подключения к интернету. Работаем офлайн.'**
   String get offline;
 
-  /// Offline banner — message while the device is offline and the sync queue is empty. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the longer two-sentence variant used elsewhere
+  /// "No internet connection". TWO consumers, so keep it short enough for a banner AND complete enough to stand alone: the offline banner (while the device is offline and the sync queue is empty), and AppMessage.offline — the app-wide error a bloc emits for a NetworkException, shown as a snackbar or inline error on ~30 screens. It is the one AppMessage error that does not live in the error* block, because this key already existed with exactly the right string. Distinct from `offline` ("Нет подключения к интернету. Работаем офлайн."), the longer two-sentence variant used elsewhere
   ///
   /// In ru, this message translates to:
   /// **'Нет подключения к интернету'**
