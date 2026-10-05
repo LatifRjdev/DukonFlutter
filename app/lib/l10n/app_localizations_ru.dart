@@ -124,6 +124,33 @@ class AppLocalizationsRu extends AppLocalizations {
   String get error => 'Ошибка';
 
   @override
+  String get errorSessionExpired => 'Сессия истекла. Войдите снова.';
+
+  @override
+  String get errorBadRequest => 'Некорректные данные';
+
+  @override
+  String get errorForbidden => 'Недостаточно прав';
+
+  @override
+  String get errorNotFound => 'Объект не найден';
+
+  @override
+  String get errorConflict => 'Конфликт — объект уже существует';
+
+  @override
+  String get errorTooManyRequests => 'Слишком много попыток — попробуйте позже';
+
+  @override
+  String get errorServer => 'Ошибка сервера — попробуйте позже';
+
+  @override
+  String get errorCache => 'Ошибка локального хранилища';
+
+  @override
+  String get errorUnknown => 'Не удалось выполнить операцию';
+
+  @override
   String get success => 'Успешно';
 
   @override
@@ -2242,6 +2269,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paymentRecorded => 'Оплата записана';
 
   @override
+  String get subscriptionRequestSent =>
+      'Заявка отправлена, ожидайте подтверждения';
+
+  @override
   String get paymentQueuedOfflineMessage =>
       'Платёж сохранён офлайн — отправим при подключении';
 
@@ -2405,6 +2436,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get zakatSettings => 'Настройки закята';
+
+  @override
+  String get zakatSettingsSaved => 'Настройки закята сохранены';
+
+  @override
+  String get zakatPaymentRecorded => 'Выплата закята записана';
 
   @override
   String get zakatHistory => 'История выплат';
@@ -2602,6 +2639,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get expenseDeleted => 'Расход удалён';
+
+  @override
+  String get expenseUpdated => 'Расход обновлён';
 
   @override
   String get expenseListForPeriod => 'За период';

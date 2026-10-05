@@ -124,6 +124,33 @@ class AppLocalizationsTg extends AppLocalizations {
   String get error => 'Хатогӣ';
 
   @override
+  String get errorSessionExpired => 'Сессия истекла. Войдите снова.';
+
+  @override
+  String get errorBadRequest => 'Некорректные данные';
+
+  @override
+  String get errorForbidden => 'Недостаточно прав';
+
+  @override
+  String get errorNotFound => 'Объект не найден';
+
+  @override
+  String get errorConflict => 'Конфликт — объект уже существует';
+
+  @override
+  String get errorTooManyRequests => 'Слишком много попыток — попробуйте позже';
+
+  @override
+  String get errorServer => 'Ошибка сервера — попробуйте позже';
+
+  @override
+  String get errorCache => 'Ошибка локального хранилища';
+
+  @override
+  String get errorUnknown => 'Не удалось выполнить операцию';
+
+  @override
   String get success => 'Бомуваффақият';
 
   @override
@@ -2243,6 +2270,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get paymentRecorded => 'Пардохт сабт шуд';
 
   @override
+  String get subscriptionRequestSent =>
+      'Заявка отправлена, ожидайте подтверждения';
+
+  @override
   String get paymentQueuedOfflineMessage =>
       'Платёж сохранён офлайн — отправим при подключении';
 
@@ -2406,6 +2437,12 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get zakatSettings => 'Танзимоти закот';
+
+  @override
+  String get zakatSettingsSaved => 'Настройки закята сохранены';
+
+  @override
+  String get zakatPaymentRecorded => 'Выплата закята записана';
 
   @override
   String get zakatHistory => 'Таърихи пардохтҳо';
@@ -2603,6 +2640,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get expenseDeleted => 'Хароҷот нест шуд';
+
+  @override
+  String get expenseUpdated => 'Расход обновлён';
 
   @override
   String get expenseListForPeriod => 'За период';

@@ -310,6 +310,60 @@ abstract class AppLocalizations {
   /// **'Ошибка'**
   String get error;
 
+  /// Error shown when the session or refresh token is no longer valid and the user must sign in again. One of the AppMessage error vocabulary (lib/core/errors/app_message.dart), which a bloc emits as an enum value and the widget resolves
+  ///
+  /// In ru, this message translates to:
+  /// **'Сессия истекла. Войдите снова.'**
+  String get errorSessionExpired;
+
+  /// Error for a 400 from the API — the request was malformed or failed validation. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Некорректные данные'**
+  String get errorBadRequest;
+
+  /// Error for a 403 — the account lacks permission for this action. AppMessage vocabulary. Distinct from `errorSessionExpired`, which means the session is gone rather than insufficient
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно прав'**
+  String get errorForbidden;
+
+  /// Error for a 404 — the requested object does not exist. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Объект не найден'**
+  String get errorNotFound;
+
+  /// Error for a 409 — the object being created already exists. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Конфликт — объект уже существует'**
+  String get errorConflict;
+
+  /// Error for a 429 — the client is rate limited. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Слишком много попыток — попробуйте позже'**
+  String get errorTooManyRequests;
+
+  /// Error for any 5xx. AppMessage vocabulary. Deliberately says nothing about the cause: the exception's own diagnostic message is English and must never reach the UI
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка сервера — попробуйте позже'**
+  String get errorServer;
+
+  /// Error raised by the local database or cache layer. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка локального хранилища'**
+  String get errorCache;
+
+  /// Fallback error, used both for an unrecognised exception type and for a server status with no specific mapping. AppMessage vocabulary
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось выполнить операцию'**
+  String get errorUnknown;
+
   /// Generic success label
   ///
   /// In ru, this message translates to:
@@ -4162,6 +4216,12 @@ abstract class AppLocalizations {
   /// **'Оплата записана'**
   String get paymentRecorded;
 
+  /// Snackbar after a subscription payment request is submitted and is awaiting admin approval
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка отправлена, ожидайте подтверждения'**
+  String get subscriptionRequestSent;
+
   /// Snackbar shown when a debt payment is submitted while offline and queued for later sync
   ///
   /// In ru, this message translates to:
@@ -4461,6 +4521,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Настройки закята'**
   String get zakatSettings;
+
+  /// Snackbar after the zakat settings are saved. Distinct from `zakatSettings` ("Настройки закята"), the screen label
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки закята сохранены'**
+  String get zakatSettingsSaved;
+
+  /// Snackbar after a zakat payment is recorded
+  ///
+  /// In ru, this message translates to:
+  /// **'Выплата закята записана'**
+  String get zakatPaymentRecorded;
 
   /// No description provided for @zakatHistory.
   ///
@@ -4833,6 +4905,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Расход удалён'**
   String get expenseDeleted;
+
+  /// Snackbar after an existing expense is edited. Distinct from `expenseAdded` and `expenseDeleted`
+  ///
+  /// In ru, this message translates to:
+  /// **'Расход обновлён'**
+  String get expenseUpdated;
 
   /// Expense list summary card: label for the total-spend-in-period stat, paired above the 'today' stat
   ///
