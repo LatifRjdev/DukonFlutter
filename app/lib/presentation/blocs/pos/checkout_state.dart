@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/sale.dart';
 import 'cart_state.dart';
 
@@ -17,7 +18,7 @@ class CheckoutState extends Equatable {
   final String? notes;
   final bool isProcessing;
   final Sale? saleResult;
-  final String? error;
+  final AppMessage? error;
 
   const CheckoutState({
     this.items = const [],
@@ -55,7 +56,7 @@ class CheckoutState extends Equatable {
     String? notes,
     bool? isProcessing,
     Sale? saleResult,
-    String? error,
+    AppMessage? error,
   }) {
     return CheckoutState(
       items: items ?? this.items,

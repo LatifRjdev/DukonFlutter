@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 
 abstract class LoyaltySettingsState extends Equatable {
   const LoyaltySettingsState();
@@ -25,7 +26,7 @@ class LoyaltySettingsSaved extends LoyaltySettingsState {
 }
 
 class LoyaltySettingsError extends LoyaltySettingsState {
-  final String message;
+  final AppMessage message;
   const LoyaltySettingsError(this.message);
   @override
   List<Object?> get props => [message];

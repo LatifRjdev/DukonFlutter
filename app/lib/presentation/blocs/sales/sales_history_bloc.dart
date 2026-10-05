@@ -57,7 +57,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
         skippedRows: result.skippedRows,
       ));
     } catch (e) {
-      emit(SalesHistoryError(mapErrorToUserMessage(e)));
+      emit(SalesHistoryError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -153,7 +153,7 @@ class SalesHistoryBloc extends Bloc<SalesHistoryEvent, SalesHistoryState> {
       } catch (e) {
         emit(currentState.copyWith(
           isRefunding: false,
-          refundError: mapErrorToUserMessage(e),
+          refundError: mapErrorToAppMessage(e),
         ));
       }
     }

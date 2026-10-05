@@ -4,7 +4,7 @@
 /// shown to a user.** Three facts are worth knowing before you render it, log
 /// it, or delete it as dead:
 ///
-/// 1. `mapErrorToUserMessage` (lib/core/errors/error_messages.dart) is the only
+/// 1. `mapErrorToAppMessage` (lib/core/errors/error_messages.dart) is the only
 ///    thing that turns these into user-facing text, and it dispatches purely on
 ///    runtime type and [ServerException.statusCode]. It never reads `message`.
 /// 2. The field is written at 108 construction sites and read at none. **38** of

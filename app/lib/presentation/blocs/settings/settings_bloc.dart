@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/errors/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final themeMode = ThemeMode.values[themeModeIndex];
       emit(SettingsLoaded(_mapUser(data), themeMode: themeMode));
     } catch (e) {
-      emit(SettingsError(mapErrorToUserMessage(e)));
+      emit(SettingsError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -51,10 +52,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
       final data = response.data as Map<String, dynamic>;
-      emit(const SettingsActionSuccess('Профиль обновлён'));
+      emit(const SettingsActionSuccess(AppMessage.profileUpdated));
       emit(SettingsLoaded(_mapUser(data)));
     } catch (e) {
-      emit(SettingsError(mapErrorToUserMessage(e)));
+      emit(SettingsError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -68,9 +69,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           'newPassword': event.newPassword,
         },
       );
-      emit(const SettingsActionSuccess('Пароль изменён'));
+      emit(const SettingsActionSuccess(AppMessage.passwordChanged));
     } catch (e) {
-      emit(SettingsError(mapErrorToUserMessage(e)));
+      emit(SettingsError(mapErrorToAppMessage(e)));
     }
   }
 

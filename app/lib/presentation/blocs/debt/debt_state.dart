@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 
 abstract class DebtState extends Equatable {
   const DebtState();
@@ -26,7 +27,7 @@ class SupplierDebtsLoaded extends DebtState {
 }
 
 class DebtPaymentSuccess extends DebtState {
-  final String message;
+  final AppMessage message;
   const DebtPaymentSuccess(this.message);
   @override
   List<Object?> get props => [message];
@@ -48,7 +49,7 @@ class DebtsOverviewLoaded extends DebtState {
 }
 
 class DebtError extends DebtState {
-  final String message;
+  final AppMessage message;
   const DebtError(this.message);
   @override
   List<Object?> get props => [message];

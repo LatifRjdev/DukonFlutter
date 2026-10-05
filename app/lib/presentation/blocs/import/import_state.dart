@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 
 abstract class ImportState extends Equatable {
   const ImportState();
@@ -57,7 +58,7 @@ class ImportTemplateDownloaded extends ImportState {
 }
 
 class ImportError extends ImportState {
-  final String message;
+  final AppMessage message;
 
   const ImportError({required this.message});
 

@@ -38,7 +38,7 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
         search: event.search,
       ));
     } catch (e) {
-      emit(CustomerListError(mapErrorToUserMessage(e)));
+      emit(CustomerListError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -59,7 +59,7 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
       final customer = await _customerRepository.createCustomer(event.storeId, event.data);
       emit(CustomerFormSuccess(customer: customer, isEditing: false));
     } catch (e) {
-      emit(CustomerFormError(mapErrorToUserMessage(e)));
+      emit(CustomerFormError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -76,7 +76,7 @@ class CustomerListBloc extends Bloc<CustomerListEvent, CustomerListState> {
       );
       emit(CustomerFormSuccess(customer: customer, isEditing: true));
     } catch (e) {
-      emit(CustomerFormError(mapErrorToUserMessage(e)));
+      emit(CustomerFormError(mapErrorToAppMessage(e)));
     }
   }
 }

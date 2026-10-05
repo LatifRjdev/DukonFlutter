@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/staff_member.dart';
 
 class StaffFormState extends Equatable {
@@ -12,7 +13,7 @@ class StaffFormState extends Equatable {
   final bool isLoading;
   final bool isSuccess;
   final StaffMember? savedStaffMember;
-  final String? errorMessage;
+  final AppMessage? errorMessage;
 
   const StaffFormState({
     this.name = '',
@@ -39,7 +40,7 @@ class StaffFormState extends Equatable {
     bool? isLoading,
     bool? isSuccess,
     StaffMember? savedStaffMember,
-    String? errorMessage,
+    AppMessage? errorMessage,
   }) {
     return StaffFormState(
       name: name ?? this.name,
@@ -91,7 +92,7 @@ class StaffFormSuccess extends StaffFormState {
 
 class StaffFormError extends StaffFormState {
   const StaffFormError({
-    required String message,
+    required AppMessage message,
     required super.name,
     required super.phone,
     required super.role,

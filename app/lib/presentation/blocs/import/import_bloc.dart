@@ -40,7 +40,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
         filePath: event.filePath,
       ));
     } catch (e) {
-      emit(ImportError(message: mapErrorToUserMessage(e)));
+      emit(ImportError(message: mapErrorToAppMessage(e)));
     }
   }
 
@@ -64,7 +64,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
         errors: errors,
       ));
     } catch (e) {
-      emit(ImportError(message: mapErrorToUserMessage(e)));
+      emit(ImportError(message: mapErrorToAppMessage(e)));
     }
   }
 
@@ -79,7 +79,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
       );
       emit(ImportTemplateDownloaded(filePath: filePath));
     } catch (e) {
-      emit(ImportError(message: mapErrorToUserMessage(e)));
+      emit(ImportError(message: mapErrorToAppMessage(e)));
     }
   }
 }

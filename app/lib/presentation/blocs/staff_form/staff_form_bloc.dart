@@ -78,7 +78,7 @@ class StaffFormBloc extends Bloc<StaffFormEvent, StaffFormState> {
       ));
     } catch (e) {
       emit(StaffFormError(
-        message: mapErrorToUserMessage(e),
+        message: mapErrorToAppMessage(e),
         name: state.name,
         phone: state.phone,
         role: state.role,

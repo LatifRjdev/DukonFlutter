@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/payroll_period.dart';
 
 abstract class PayrollState extends Equatable {
@@ -25,7 +26,7 @@ class PayrollPeriodDetailLoaded extends PayrollState {
 }
 
 class PayrollError extends PayrollState {
-  final String message;
+  final AppMessage message;
   const PayrollError(this.message);
   @override
   List<Object?> get props => [message];

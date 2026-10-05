@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/user.dart';
 
 abstract class SettingsState extends Equatable {
@@ -27,14 +28,14 @@ class SettingsLoaded extends SettingsState {
 }
 
 class SettingsActionSuccess extends SettingsState {
-  final String message;
+  final AppMessage message;
   const SettingsActionSuccess(this.message);
   @override
   List<Object?> get props => [message];
 }
 
 class SettingsError extends SettingsState {
-  final String message;
+  final AppMessage message;
   const SettingsError(this.message);
   @override
   List<Object?> get props => [message];

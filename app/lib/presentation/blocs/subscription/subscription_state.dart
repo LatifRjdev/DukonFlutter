@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 
 // ─── Supporting models ────────────────────────────────────────────────────────
 
@@ -204,7 +205,7 @@ class SubscriptionLoaded extends SubscriptionState {
 }
 
 class SubscriptionError extends SubscriptionState {
-  final String message;
+  final AppMessage message;
   const SubscriptionError(this.message);
 
   @override
@@ -212,7 +213,7 @@ class SubscriptionError extends SubscriptionState {
 }
 
 class SubscriptionActionSuccess extends SubscriptionState {
-  final String message;
+  final AppMessage message;
   const SubscriptionActionSuccess(this.message);
 
   @override

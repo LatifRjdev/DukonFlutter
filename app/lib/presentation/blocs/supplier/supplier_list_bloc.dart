@@ -38,7 +38,7 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
         search: event.search,
       ));
     } catch (e) {
-      emit(SupplierListError(mapErrorToUserMessage(e)));
+      emit(SupplierListError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -59,7 +59,7 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
       final supplier = await _supplierRepository.createSupplier(event.storeId, event.data);
       emit(SupplierFormSuccess(supplier: supplier, isEditing: false));
     } catch (e) {
-      emit(SupplierFormError(mapErrorToUserMessage(e)));
+      emit(SupplierFormError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -76,7 +76,7 @@ class SupplierListBloc extends Bloc<SupplierListEvent, SupplierListState> {
       );
       emit(SupplierFormSuccess(supplier: supplier, isEditing: true));
     } catch (e) {
-      emit(SupplierFormError(mapErrorToUserMessage(e)));
+      emit(SupplierFormError(mapErrorToAppMessage(e)));
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/errors/error_messages.dart';
 import '../../../core/services/thermal_printer_service.dart';
 import 'printer_event.dart';
 import 'printer_state.dart';
@@ -24,7 +23,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       final devices = await _printerService.scanDevices();
       emit(state.copyWith(devices: devices, isScanning: false));
     } catch (e) {
-      emit(state.copyWith(isScanning: false, error: 'Ошибка поиска: ${mapErrorToUserMessage(e)}'));
+      emit(state.copyWith(isScanning: false, error: 'Ошибка поиска'));
     }
   }
 
@@ -41,7 +40,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         emit(state.copyWith(error: 'Не удалось подключиться'));
       }
     } catch (e) {
-      emit(state.copyWith(error: 'Ошибка подключения: ${mapErrorToUserMessage(e)}'));
+      emit(state.copyWith(error: 'Ошибка подключения'));
     }
   }
 
@@ -60,7 +59,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         error: success ? null : 'Не удалось напечатать',
       ));
     } catch (e) {
-      emit(state.copyWith(isPrinting: false, error: 'Ошибка печати: ${mapErrorToUserMessage(e)}'));
+      emit(state.copyWith(isPrinting: false, error: 'Ошибка печати'));
     }
   }
 

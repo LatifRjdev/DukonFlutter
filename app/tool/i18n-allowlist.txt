@@ -25,26 +25,15 @@
 # *code*, the UI layer maps it to a localized string), not literal
 # replacement. Tracked as Track 3 in
 # docs/superpowers/specs/2026-09-28-adr0002-track2-remaining-i18n-migration-design.md.
-lib/presentation/blocs/debt/debt_bloc.dart::'Оплата записана'
-lib/presentation/blocs/debt/debt_bloc.dart::'Оплата принята'
-lib/presentation/blocs/expense/expense_bloc.dart::'Расход добавлен'
-lib/presentation/blocs/expense/expense_bloc.dart::'Расход обновлён'
-lib/presentation/blocs/expense/expense_bloc.dart::'Расход удалён'
 lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось напечатать'
 lib/presentation/blocs/printer/printer_bloc.dart::'Не удалось подключиться'
-lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка печати: ${mapErrorToUserMessage(e)}'
-lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка подключения: ${mapErrorToUserMessage(e)}'
-lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка поиска: ${mapErrorToUserMessage(e)}'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка печати'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка подключения'
+lib/presentation/blocs/printer/printer_bloc.dart::'Ошибка поиска'
 lib/presentation/blocs/printer/printer_bloc.dart::'Подключено к ${event.device.name}'
 lib/presentation/blocs/printer/printer_bloc.dart::'Принтер отключён'
 lib/presentation/blocs/printer/printer_bloc.dart::'Принтер по умолчанию: ${event.name}'
 lib/presentation/blocs/printer/printer_bloc.dart::'Тестовая печать выполнена'
-lib/presentation/blocs/settings/settings_bloc.dart::'Пароль изменён'
-lib/presentation/blocs/settings/settings_bloc.dart::'Профиль обновлён'
-lib/presentation/blocs/subscription/subscription_bloc.dart::'Заявка отправлена, ожидайте подтверждения'
-lib/presentation/blocs/subscription/subscription_bloc.dart::'Заявка отправлена, ожидайте подтверждения'
-lib/presentation/blocs/zakat/zakat_bloc.dart::'Выплата закята записана'
-lib/presentation/blocs/zakat/zakat_bloc.dart::'Настройки закята сохранены'
 
 # ---------------------------------------------------------------------------
 # 2. Proper nouns — permanently hardcoded, never translatable

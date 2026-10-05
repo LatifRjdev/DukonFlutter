@@ -37,7 +37,7 @@ class StockIntakeBloc extends Bloc<StockIntakeEvent, StockIntakeState> {
         isSearching: false,
       ));
     } catch (e) {
-      emit(state.copyWith(isSearching: false, error: mapErrorToUserMessage(e)));
+      emit(state.copyWith(isSearching: false, error: mapErrorToAppMessage(e)));
     }
   }
 
@@ -91,7 +91,7 @@ class StockIntakeBloc extends Bloc<StockIntakeEvent, StockIntakeState> {
       );
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: mapErrorToUserMessage(e)));
+      emit(state.copyWith(isSubmitting: false, error: mapErrorToAppMessage(e)));
     }
   }
 

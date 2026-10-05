@@ -1,7 +1,7 @@
 /// A user-facing message, as a value rather than a string.
 ///
 /// Blocs used to put Russian text straight into state objects — the error path
-/// through `mapErrorToUserMessage`, and success states built from inline
+/// through `mapErrorToAppMessage`, and success states built from inline
 /// literals like `SettingsActionSuccess('Профиль обновлён')`. Neither could be
 /// translated: `app_tg.arb` and `app_uz.arb` cannot reach a string a bloc baked
 /// in, so Tajik and Uzbek users saw Russian for every error and confirmation.

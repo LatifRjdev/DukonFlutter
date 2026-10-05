@@ -47,7 +47,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
       }
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: mapErrorToUserMessage(e)));
+      emit(state.copyWith(isSubmitting: false, error: mapErrorToAppMessage(e)));
     }
   }
 
@@ -61,7 +61,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
         editingProductId: product.id,
       ));
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: mapErrorToUserMessage(e)));
+      emit(state.copyWith(isLoading: false, error: mapErrorToAppMessage(e)));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/zakat_calculation.dart';
 import '../../../domain/entities/zakat_settings.dart';
 import '../../../domain/entities/zakat_payment.dart';
@@ -50,14 +51,14 @@ class ZakatPaymentsLoaded extends ZakatState {
 }
 
 class ZakatActionSuccess extends ZakatState {
-  final String message;
+  final AppMessage message;
   const ZakatActionSuccess(this.message);
   @override
   List<Object?> get props => [message];
 }
 
 class ZakatError extends ZakatState {
-  final String message;
+  final AppMessage message;
   const ZakatError(this.message);
   @override
   List<Object?> get props => [message];

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/shift.dart';
 import '../../../domain/entities/z_report.dart';
 
@@ -43,7 +44,7 @@ class ShiftClosed extends ShiftState {
 }
 
 class ShiftError extends ShiftState {
-  final String message;
+  final AppMessage message;
   const ShiftError(this.message);
   @override
   List<Object?> get props => [message];

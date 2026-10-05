@@ -1,3 +1,4 @@
+import '../../../core/errors/app_message.dart';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -28,7 +29,7 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       final data = res.data as Map<String, dynamic>? ?? {};
       emit(_mapLoaded(data));
     } catch (e) {
-      emit(SubscriptionError(mapErrorToUserMessage(e)));
+      emit(SubscriptionError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -61,12 +62,12 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       );
 
       emit(const SubscriptionActionSuccess(
-          'Заявка отправлена, ожидайте подтверждения'));
+          AppMessage.subscriptionRequestSent));
 
       // Reload
       add(SubscriptionLoadRequested(storeId: event.storeId));
     } catch (e) {
-      emit(SubscriptionError(mapErrorToUserMessage(e)));
+      emit(SubscriptionError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -85,10 +86,10 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
         },
       );
       emit(const SubscriptionActionSuccess(
-          'Заявка отправлена, ожидайте подтверждения'));
+          AppMessage.subscriptionRequestSent));
       add(SubscriptionLoadRequested(storeId: event.storeId));
     } catch (e) {
-      emit(SubscriptionError(mapErrorToUserMessage(e)));
+      emit(SubscriptionError(mapErrorToAppMessage(e)));
     }
   }
 

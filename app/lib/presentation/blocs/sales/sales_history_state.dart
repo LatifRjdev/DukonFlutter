@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/sale.dart';
 
 abstract class SalesHistoryState extends Equatable {
@@ -22,7 +23,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
   final String? status;
   final bool isLoadingMore;
   final bool isRefunding;
-  final String? refundError;
+  final AppMessage? refundError;
   final int skippedRows;
 
   const SalesHistoryLoaded({
@@ -53,7 +54,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
     String? status,
     bool? isLoadingMore,
     bool? isRefunding,
-    String? refundError,
+    AppMessage? refundError,
     int? skippedRows,
     bool clearDateFrom = false,
     bool clearDateTo = false,
@@ -95,7 +96,7 @@ class SalesHistoryLoaded extends SalesHistoryState {
 }
 
 class SalesHistoryError extends SalesHistoryState {
-  final String message;
+  final AppMessage message;
   const SalesHistoryError(this.message);
   @override
   List<Object?> get props => [message];

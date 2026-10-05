@@ -22,7 +22,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       final categories = await _categoryRepository.getCategories(event.storeId);
       emit(CategoryLoaded(categories));
     } catch (e) {
-      emit(CategoryError(mapErrorToUserMessage(e)));
+      emit(CategoryError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -36,7 +36,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       });
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(mapErrorToUserMessage(e)));
+      emit(CategoryError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -47,7 +47,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       });
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(mapErrorToUserMessage(e)));
+      emit(CategoryError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -56,7 +56,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       await _categoryRepository.deleteCategory(event.storeId, event.id);
       add(CategoryLoadRequested(event.storeId));
     } catch (e) {
-      emit(CategoryError(mapErrorToUserMessage(e)));
+      emit(CategoryError(mapErrorToAppMessage(e)));
     }
   }
 }

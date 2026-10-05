@@ -53,7 +53,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
         categoryId: event.categoryId,
       ));
     } catch (e) {
-      emit(ProductListError(mapErrorToUserMessage(e)));
+      emit(ProductListError(mapErrorToAppMessage(e)));
     } finally {
       // Cleared even on failure, so a retry of the same request is allowed.
       if (_inFlight == event) _inFlight = null;
@@ -73,7 +73,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       await _productRepository.deleteProduct(event.storeId, event.productId);
       add(ProductListLoadRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ProductListError(mapErrorToUserMessage(e)));
+      emit(ProductListError(mapErrorToAppMessage(e)));
     }
   }
 }

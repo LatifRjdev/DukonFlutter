@@ -89,7 +89,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 
@@ -105,7 +105,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 
@@ -121,7 +121,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.sendOtp(event.phone);
       emit(AuthOtpSent(phone: event.phone));
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 
@@ -132,7 +132,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _bindSentryUser(result.user);
       emit(AuthAuthenticated(result.user));
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 
@@ -142,7 +142,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.forgotPassword(event.phone);
       emit(AuthOtpSent(phone: event.phone));
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 
@@ -152,7 +152,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.resetPassword(event.phone, event.code, event.newPassword);
       emit(AuthPasswordResetSuccess());
     } catch (e) {
-      emit(AuthFailure(mapErrorToUserMessage(e)));
+      emit(AuthFailure(mapErrorToAppMessage(e)));
     }
   }
 }

@@ -27,7 +27,7 @@ class LoyaltyAnalyticsBloc
       );
       emit(LoyaltyAnalyticsLoaded(data));
     } catch (e) {
-      emit(LoyaltyAnalyticsError(mapErrorToUserMessage(e)));
+      emit(LoyaltyAnalyticsError(mapErrorToAppMessage(e)));
     }
   }
 }
