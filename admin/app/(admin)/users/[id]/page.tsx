@@ -35,6 +35,7 @@ import { api } from '@/lib/api';
 import { User, Store as StoreType } from '@/lib/types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { subStatusLabel, subStatusOutline } from '@/lib/subscription-status';
 
 export default function UserDetailPage({
   params,
@@ -331,20 +332,34 @@ export default function UserDetailPage({
                         </p>
                       )}
                     </div>
-                    <Badge
-                      variant="outline"
-                      className={
-                        !store.isActive
-                          ? 'text-red-700 border-red-300'
-                          : store.subscription?.status === 'ACTIVE'
-                          ? 'text-green-700 border-green-300'
-                          : store.subscription?.status === 'TRIAL'
-                          ? 'text-blue-700 border-blue-300'
-                          : 'text-yellow-700 border-yellow-300'
-                      }
-                    >
-                      {store.subscription?.plan || store.subscription?.status || (store.isActive ? '—' : 'Приостановлен')}
-                    </Badge>
+                    {/* Plan and status are separate facts and need separate
+                        badges. One badge rendering `plan || status` meant the
+                        status only appeared when there was no plan — so a
+                        PREMIUM store whose subscription was CANCELLED read as
+                        "PREMIUM", and the catch-all yellow made PAST_DUE,
+                        CANCELLED and EXPIRED indistinguishable. */}
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {store.subscription?.plan && (
+                        <Badge variant="outline" className="text-slate-700 border-slate-300">
+                          {store.subscription.plan}
+                        </Badge>
+                      )}
+                      {/* The red treatment is about the STORE being suspended,
+                          not about its subscription, so it wins. */}
+                      {!store.isActive ? (
+                        <Badge variant="outline" className="text-red-700 border-red-300">
+                          Приостановлен
+                        </Badge>
+                      ) : store.subscription?.status ? (
+                        <Badge variant="outline" className={subStatusOutline(store.subscription.status)}>
+                          {subStatusLabel(store.subscription.status)}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-slate-500 border-slate-300">
+                          —
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

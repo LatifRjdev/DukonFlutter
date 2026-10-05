@@ -355,3 +355,59 @@ describe('UserDetailPage — delete user', () => {
     expect(routerPush).toHaveBeenCalledWith('/users');
   });
 });
+
+describe('UserDetailPage — store subscription badges', () => {
+  beforeEach(() => {
+    mockUser();
+  });
+
+  it('shows both the plan and a distinguishable cancelled status', async () => {
+    // The badge used to render `plan || status` with a yellow catch-all
+    // colour, so a PREMIUM store whose subscription was CANCELLED read as a
+    // yellow "PREMIUM" — the cancellation was invisible, and PAST_DUE,
+    // CANCELLED and EXPIRED were all the same colour.
+    server.use(
+      http.get(`${API_URL}/admin/users/u1/stores`, () =>
+        HttpResponse.json([
+          {
+            id: 's1',
+            name: 'Магазин PREMIUM 2',
+            isActive: true,
+            subscription: { plan: 'PREMIUM', status: 'CANCELLED' },
+          },
+        ]),
+      ),
+    );
+    await renderPage();
+
+    await waitFor(() =>
+      expect(screen.getByText('Магазин PREMIUM 2')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('PREMIUM')).toBeInTheDocument();
+    expect(screen.getByText('Отменена')).toBeInTheDocument();
+    expect(screen.queryByText('CANCELLED')).not.toBeInTheDocument();
+  });
+
+  it('still marks a suspended store regardless of its subscription', async () => {
+    // The red treatment is about the STORE, not the subscription, and must
+    // survive the status badge being added beside it.
+    server.use(
+      http.get(`${API_URL}/admin/users/u1/stores`, () =>
+        HttpResponse.json([
+          {
+            id: 's2',
+            name: 'Приостановленный',
+            isActive: false,
+            subscription: { plan: 'START', status: 'ACTIVE' },
+          },
+        ]),
+      ),
+    );
+    await renderPage();
+
+    await waitFor(() =>
+      expect(screen.getByText('Приостановленный')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('Приостановлен')).toBeInTheDocument();
+  });
+});

@@ -44,6 +44,23 @@ export const SUB_STATUS_COLORS: Record<SubscriptionStatus, string> = {
   EXPIRED: 'bg-red-100 text-red-700',
 };
 
+/// Outline palette, for the places that use `variant="outline"` badges. Same
+/// vocabulary, different surface — kept here rather than as a fourth local map
+/// so it cannot drift from the labels it sits next to.
+export const SUB_STATUS_OUTLINE: Record<SubscriptionStatus, string> = {
+  TRIAL: 'text-blue-700 border-blue-300',
+  ACTIVE: 'text-green-700 border-green-300',
+  PAST_DUE: 'text-yellow-700 border-yellow-300',
+  CANCELLED: 'text-gray-600 border-gray-300',
+  EXPIRED: 'text-red-700 border-red-300',
+};
+
+/// As with [subStatusColor], an unknown status must not look like a cancelled
+/// one.
+export const subStatusOutline = (status: string): string =>
+  SUB_STATUS_OUTLINE[status as SubscriptionStatus] ??
+  'text-purple-700 border-purple-300';
+
 /** Falls back to the raw value so an enum added server-side still renders. */
 export const subStatusLabel = (status: string): string =>
   SUB_STATUS_LABELS[status as SubscriptionStatus] ?? status;
