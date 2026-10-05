@@ -11,9 +11,10 @@
  * an empty list. The export link carried the misspelling to the API, which
  * rejected it with a 400.
  *
- * `users/[id]/page.tsx` still renders status with its own ternary and has no
- * cancelled branch at all; it uses a different badge style, so it is left for
- * a follow-up rather than forced through these helpers.
+ * `users/[id]/page.tsx` used to render status with its own ternary that had no
+ * cancelled branch; it uses outline badges, which is what `SUB_STATUS_OUTLINE`
+ * below is for. Every subscription-status badge in the admin now resolves
+ * through this file.
  *
  * Keep `SUBSCRIPTION_STATUSES` in Prisma's spelling; the type below makes a
  * missing entry a compile error rather than a blank badge.
@@ -43,6 +44,23 @@ export const SUB_STATUS_COLORS: Record<SubscriptionStatus, string> = {
   CANCELLED: 'bg-gray-100 text-gray-600',
   EXPIRED: 'bg-red-100 text-red-700',
 };
+
+/// Outline palette, for the places that use `variant="outline"` badges. Same
+/// vocabulary, different surface — kept here rather than as a fourth local map
+/// so it cannot drift from the labels it sits next to.
+export const SUB_STATUS_OUTLINE: Record<SubscriptionStatus, string> = {
+  TRIAL: 'text-blue-700 border-blue-300',
+  ACTIVE: 'text-green-700 border-green-300',
+  PAST_DUE: 'text-yellow-700 border-yellow-300',
+  CANCELLED: 'text-gray-600 border-gray-300',
+  EXPIRED: 'text-red-700 border-red-300',
+};
+
+/// As with [subStatusColor], an unknown status must not look like a cancelled
+/// one.
+export const subStatusOutline = (status: string): string =>
+  SUB_STATUS_OUTLINE[status as SubscriptionStatus] ??
+  'text-purple-700 border-purple-300';
 
 /** Falls back to the raw value so an enum added server-side still renders. */
 export const subStatusLabel = (status: string): string =>

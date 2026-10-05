@@ -355,3 +355,83 @@ describe('UserDetailPage — delete user', () => {
     expect(routerPush).toHaveBeenCalledWith('/users');
   });
 });
+
+describe('UserDetailPage — store subscription badges', () => {
+  beforeEach(() => {
+    mockUser();
+  });
+
+  it('shows both the plan and a distinguishable cancelled status', async () => {
+    // The badge used to render `plan || status` with a yellow catch-all
+    // colour, so a PREMIUM store whose subscription was CANCELLED read as a
+    // yellow "PREMIUM" — the cancellation was invisible, and PAST_DUE,
+    // CANCELLED and EXPIRED were all the same colour.
+    server.use(
+      http.get(`${API_URL}/admin/users/u1/stores`, () =>
+        HttpResponse.json([
+          {
+            id: 's1',
+            name: 'Магазин PREMIUM 2',
+            isActive: true,
+            subscription: { plan: 'PREMIUM', status: 'CANCELLED' },
+          },
+        ]),
+      ),
+    );
+    await renderPage();
+
+    await waitFor(() =>
+      expect(screen.getByText('Магазин PREMIUM 2')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('PREMIUM')).toBeInTheDocument();
+    expect(screen.getByText('Отменена')).toBeInTheDocument();
+    expect(screen.queryByText('CANCELLED')).not.toBeInTheDocument();
+  });
+
+  it('shows the subscription status alongside a suspended store, not instead of it', async () => {
+    // Suspension is a store fact, the status is a subscription fact. Rendering
+    // only the suspension would hide a cancellation again — the same one-slot-
+    // two-facts shape this block exists to remove.
+    server.use(
+      http.get(`${API_URL}/admin/users/u1/stores`, () =>
+        HttpResponse.json([
+          {
+            id: 's2',
+            name: 'Приостановленный',
+            isActive: false,
+            subscription: { plan: 'START', status: 'CANCELLED' },
+          },
+        ]),
+      ),
+    );
+    await renderPage();
+
+    await waitFor(() =>
+      expect(screen.getByText('Приостановленный')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('Приостановлен')).toBeInTheDocument();
+    expect(screen.getByText('Отменена')).toBeInTheDocument();
+    expect(screen.getByText('START')).toBeInTheDocument();
+  });
+
+  it('gives two different statuses two different colours', async () => {
+    // The yellow catch-all made PAST_DUE, CANCELLED and EXPIRED identical.
+    // Asserting the labels alone would not have caught that.
+    server.use(
+      http.get(`${API_URL}/admin/users/u1/stores`, () =>
+        HttpResponse.json([
+          { id: 'a', name: 'Просрочен', isActive: true, subscription: { plan: 'START', status: 'PAST_DUE' } },
+          { id: 'b', name: 'Истёк', isActive: true, subscription: { plan: 'START', status: 'EXPIRED' } },
+        ]),
+      ),
+    );
+    await renderPage();
+
+    await waitFor(() =>
+      expect(screen.getByText('Просрочена')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('Просрочена').className).not.toBe(
+      screen.getByText('Истекла').className,
+    );
+  });
+});

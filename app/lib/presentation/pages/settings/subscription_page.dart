@@ -12,6 +12,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'payment_status.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
@@ -473,32 +474,42 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget _buildPaymentTile(PaymentRecord payment) {
-    Color statusColor;
-    String statusLabel;
-    switch (payment.status) {
-      case 'CONFIRMED':
-        statusColor = AppColors.success;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentConfirmedStatus;
-        break;
-      case 'REJECTED':
-        statusColor = AppColors.error;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentRejectedStatus;
-        break;
-      default:
-        statusColor = AppColors.warning;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentPendingStatus;
-    }
+    final l10n = AppLocalizations.of(context)!;
+    // Switching on the mapped kind rather than the raw string: the raw switch
+    // tested for 'CONFIRMED', which PaymentStatus does not contain, so every
+    // APPROVED payment landed in the default branch and read as pending.
+    final (Color statusColor, String statusLabel) =
+        switch (paymentStatusKind(payment.status)) {
+      PaymentStatusKind.approved => (
+          AppColors.success,
+          l10n.subscriptionPaymentConfirmedStatus,
+        ),
+      PaymentStatusKind.rejected => (
+          AppColors.error,
+          l10n.subscriptionPaymentRejectedStatus,
+        ),
+      PaymentStatusKind.pending => (
+          AppColors.warning,
+          l10n.subscriptionPaymentPendingStatus,
+        ),
+      PaymentStatusKind.failed => (
+          AppColors.error,
+          l10n.subscriptionPaymentFailedStatus,
+        ),
+      PaymentStatusKind.refunded => (
+          AppColors.info,
+          l10n.subscriptionPaymentRefundedStatus,
+        ),
+      PaymentStatusKind.unknown => (
+          context.textSecondary,
+          l10n.subscriptionPaymentUnknownStatus,
+        ),
+    };
 
     return Semantics(
       label: AppLocalizations.of(
         context,
-      )!.a11yPaymentOf(_planLabel(payment.plan)),
+      )!.a11yPaymentOf(statusLabel),
       button: true,
       child: GestureDetector(
         onTap: () => _showPaymentDetail(payment),
@@ -515,18 +526,27 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // There is no plan to title this with — the Payment model
+                    // has no such column, which is why this slot rendered
+                    // empty for every row. The date is the row's identity.
                     Text(
-                      _planLabel(payment.plan),
+                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
-                      style: TextStyle(fontSize: 12, color: context.textMuted),
-                    ),
+                    if (payment.adminNote != null &&
+                        payment.adminNote!.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        payment.adminNote!,
+                        style:
+                            TextStyle(fontSize: 12, color: context.textMuted),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -603,7 +623,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         title: Text(
           AppLocalizations.of(
             ctx,
-          )!.subscriptionPaymentDialogTitle(_planLabel(payment.plan)),
+          )!.subscriptionPaymentDialogTitle(
+              DateFormat('dd.MM.yyyy').format(payment.createdAt)),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,

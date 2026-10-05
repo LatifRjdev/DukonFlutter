@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../core/errors/app_message.dart';
+import '../../../core/constants/api_endpoints.dart';
 
 // ─── Supporting models ────────────────────────────────────────────────────────
 
@@ -114,7 +115,6 @@ class SubscriptionFeatures extends Equatable {
 
 class PaymentRecord extends Equatable {
   final String id;
-  final String plan;
   final double amount;
   final String method; // CARD, CASH
   final String status; // PENDING, CONFIRMED, REJECTED
@@ -124,7 +124,6 @@ class PaymentRecord extends Equatable {
 
   const PaymentRecord({
     required this.id,
-    required this.plan,
     required this.amount,
     required this.method,
     required this.status,
@@ -135,20 +134,34 @@ class PaymentRecord extends Equatable {
 
   factory PaymentRecord.fromJson(Map<String, dynamic> json) => PaymentRecord(
         id: json['id'] as String? ?? '',
-        plan: json['plan'] as String? ?? '',
         amount: (json['amount'] as num?)?.toDouble() ?? 0,
         method: json['method'] as String? ?? 'CARD',
         status: json['status'] as String? ?? 'PENDING',
         createdAt: json['createdAt'] != null
             ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ?? DateTime.now()
             : DateTime.now(),
-        receiptUrl: json['receiptUrl'] as String?,
-        adminNote: json['adminNote'] as String?,
+        // The column is `receiptImage` and holds a path relative to the API
+        // host, not a URL. Reading 'receiptUrl' meant the receipt block never
+        // rendered; keeping it relative would have meant Image.network failing
+        // on every one.
+        receiptUrl: _receiptUrl(json['receiptImage'] as String?),
+        // `rejectionReason` is the admin's reason for refusing; `note` is the
+        // general note a request carries. The old key 'adminNote' is neither,
+        // so a rejected payment never showed why.
+        adminNote: (json['rejectionReason'] as String?) ?? (json['note'] as String?),
       );
+
+  /// `receiptImage` is stored as e.g. `uploads/receipts/abc.jpg`.
+  static String? _receiptUrl(String? path) {
+    if (path == null || path.isEmpty) return null;
+    if (path.startsWith('http')) return path;
+    final base = ApiEndpoints.baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+    return '$base/${path.replaceFirst(RegExp(r'^/'), '')}';
+  }
 
   @override
   List<Object?> get props =>
-      [id, plan, amount, method, status, createdAt, receiptUrl, adminNote];
+      [id, amount, method, status, createdAt, receiptUrl, adminNote];
 }
 
 // ─── States ───────────────────────────────────────────────────────────────────
