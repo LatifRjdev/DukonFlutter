@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 
 class ProductFormState extends Equatable {
   final int currentStep;
   final Map<String, dynamic> productData;
   final bool isLoading;
   final bool isSubmitting;
-  final String? error;
+  final AppMessage? error;
   final String? editingProductId;
   final bool isSuccess;
 
@@ -34,7 +35,7 @@ class ProductFormState extends Equatable {
     Map<String, dynamic>? productData,
     bool? isLoading,
     bool? isSubmitting,
-    String? error,
+    AppMessage? error,
     String? editingProductId,
     bool? isSuccess,
   }) {

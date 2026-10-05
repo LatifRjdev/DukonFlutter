@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/product.dart';
 import 'package:dukonpro/domain/entities/stock_movement.dart';
@@ -130,7 +131,7 @@ void main() {
           predicate<StockIntakeState>((s) => s.isSearching),
           predicate<StockIntakeState>((s) =>
               !s.isSearching &&
-              s.error == 'Нет подключения к интернету' &&
+              s.error == AppMessage.offline &&
               s.selectedProduct == null),
         ],
       );
@@ -148,11 +149,12 @@ void main() {
         )),
         expect: () => [
           predicate<StockIntakeState>((s) => s.isSearching),
-          predicate<StockIntakeState>((s) {
-            if (s.isSearching) return false;
-            final err = s.error ?? '';
-            return err.isNotEmpty && !err.contains('DioException');
-          }),
+          // StockIntakeState.error is an AppMessage?, so it has no text that
+          // could carry Dio internals — now a type guarantee. Assert the
+          // member it is set to.
+          predicate<StockIntakeState>(
+              (s) => !s.isSearching && s.error == AppMessage.unknownError,
+              'error == unknownError'),
         ],
       );
     });
@@ -161,7 +163,7 @@ void main() {
       blocTest<StockIntakeBloc, StockIntakeState>(
         'sets selectedProduct + unitCost from product.costPrice and clears error',
         build: buildBloc,
-        seed: () => const StockIntakeState(error: 'stale error'),
+        seed: () => const StockIntakeState(error: AppMessage.unknownError),
         act: (bloc) =>
             bloc.add(StockIntakeSelectProduct(mkProduct(costPrice: 12))),
         expect: () => [
@@ -187,7 +189,7 @@ void main() {
       blocTest<StockIntakeBloc, StockIntakeState>(
         'updates quantity and clears error',
         build: buildBloc,
-        seed: () => const StockIntakeState(error: 'stale error'),
+        seed: () => const StockIntakeState(error: AppMessage.unknownError),
         act: (bloc) => bloc.add(const StockIntakeSetQuantity(7)),
         expect: () => [
           predicate<StockIntakeState>(
@@ -212,7 +214,7 @@ void main() {
       blocTest<StockIntakeBloc, StockIntakeState>(
         'updates unitCost and clears error',
         build: buildBloc,
-        seed: () => const StockIntakeState(error: 'stale error'),
+        seed: () => const StockIntakeState(error: AppMessage.unknownError),
         act: (bloc) => bloc.add(const StockIntakeSetUnitCost(9.5)),
         expect: () => [
           predicate<StockIntakeState>(
@@ -411,7 +413,7 @@ void main() {
           predicate<StockIntakeState>((s) => s.isSubmitting),
           predicate<StockIntakeState>((s) =>
               !s.isSubmitting &&
-              s.error == 'Нет подключения к интернету' &&
+              s.error == AppMessage.offline &&
               !s.isSuccess),
         ],
       );
@@ -433,7 +435,7 @@ void main() {
         expect: () => [
           predicate<StockIntakeState>((s) => s.isSubmitting),
           predicate<StockIntakeState>(
-              (s) => !s.isSubmitting && s.error == 'Некорректные данные'),
+              (s) => !s.isSubmitting && s.error == AppMessage.badRequest),
         ],
       );
 
@@ -453,11 +455,11 @@ void main() {
             bloc.add(const StockIntakeSubmit(storeId: 'store-1')),
         expect: () => [
           predicate<StockIntakeState>((s) => s.isSubmitting),
-          predicate<StockIntakeState>((s) {
-            if (s.isSubmitting) return false;
-            final err = s.error ?? '';
-            return err.isNotEmpty && !err.contains('DioException');
-          }),
+          // Same here: no text in the state means nothing to leak, so the
+          // check becomes an assertion on the member.
+          predicate<StockIntakeState>(
+              (s) => !s.isSubmitting && s.error == AppMessage.unknownError,
+              'error == unknownError'),
         ],
       );
     });
@@ -473,7 +475,7 @@ void main() {
           supplier: supplier,
           notes: 'careful',
           isSuccess: true,
-          error: 'boom',
+          error: AppMessage.unknownError,
         ),
         act: (bloc) => bloc.add(StockIntakeReset()),
         expect: () => [const StockIntakeState()],

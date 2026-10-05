@@ -9,6 +9,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/presentation/blocs/dashboard/dashboard_bloc.dart';
 import 'package:dukonpro/presentation/blocs/dashboard/dashboard_event.dart';
 import 'package:dukonpro/presentation/blocs/dashboard/dashboard_state.dart';
@@ -70,7 +71,7 @@ void main() {
     // screen before the failed refresh.
     expect(find.textContaining(RegExp('12.345')), findsOneWidget);
 
-    stateController.add(const DashboardRefreshFailure('Нет подключения к интернету'));
+    stateController.add(const DashboardRefreshFailure(AppMessage.offline));
     await tester.pump();
     // Let the snackbar's entrance animation settle so its text is mounted.
     await tester.pump(const Duration(milliseconds: 300));

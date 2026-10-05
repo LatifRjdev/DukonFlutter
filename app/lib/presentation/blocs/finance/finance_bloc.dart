@@ -24,7 +24,7 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
       );
       emit(FinanceLoaded(summary: summary));
     } catch (e) {
-      emit(FinanceError(mapErrorToUserMessage(e)));
+      emit(FinanceError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -34,7 +34,7 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
       final summary = await _financeRepository.getSummary(event.storeId, period: event.period);
       emit(FinanceLoaded(summary: summary, period: event.period));
     } catch (e) {
-      emit(FinanceError(mapErrorToUserMessage(e)));
+      emit(FinanceError(mapErrorToAppMessage(e)));
     }
   }
 }

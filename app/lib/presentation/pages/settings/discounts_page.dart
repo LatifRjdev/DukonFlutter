@@ -4,6 +4,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -39,7 +40,10 @@ class _DiscountsPageState extends State<DiscountsPage> {
         setState(() => _discounts = List<Map<String, dynamic>>.from(data['data'] as List));
       }
     } catch (e) {
-      setState(() => _error = mapErrorToUserMessage(e));
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        setState(() => _error = mapErrorToAppMessage(e).resolve(l10n));
+      }
     } finally {
       setState(() => _loading = false);
     }
@@ -52,7 +56,8 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
     }
   }
@@ -63,7 +68,8 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
     }
   }
@@ -224,7 +230,8 @@ class _DiscountsPageState extends State<DiscountsPage> {
       await _load();
     } catch (e) {
       if (mounted) {
-        AppSnackbar.error(context, mapErrorToUserMessage(e));
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
       }
     }
   }

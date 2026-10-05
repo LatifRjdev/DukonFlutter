@@ -15,6 +15,7 @@ import '../../blocs/customer_detail/customer_detail_event.dart';
 import '../../blocs/customer_detail/customer_detail_state.dart';
 import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -73,7 +74,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is CustomerDetailError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message.resolve(l10n)));
           }
           if (state is CustomerDetailLoaded) {
             final customer = state.customer;

@@ -73,7 +73,7 @@ void main() {
         expect: () => [
           predicate<PrinterState>((s) => s.isScanning),
           predicate<PrinterState>((s) =>
-              !s.isScanning && s.error == 'Ошибка поиска: Нет подключения к интернету' && s.devices.isEmpty),
+              !s.isScanning && s.error == 'Ошибка поиска' && s.devices.isEmpty),
         ],
       );
 
@@ -137,7 +137,7 @@ void main() {
         expect: () => [
           predicate<PrinterState>((s) => s.connectedDevice == null && s.error == null && s.successMessage == null),
           predicate<PrinterState>((s) =>
-              s.connectedDevice == null && s.error == 'Ошибка подключения: Нет подключения к интернету'),
+              s.connectedDevice == null && s.error == 'Ошибка подключения'),
         ],
       );
 
@@ -212,7 +212,7 @@ void main() {
         expect: () => [
           predicate<PrinterState>((s) => s.isPrinting),
           predicate<PrinterState>((s) =>
-              !s.isPrinting && s.error == 'Ошибка печати: Нет подключения к интернету' && s.successMessage == null),
+              !s.isPrinting && s.error == 'Ошибка печати' && s.successMessage == null),
         ],
       );
 

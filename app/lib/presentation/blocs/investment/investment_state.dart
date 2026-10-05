@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/investment.dart';
-import 'investment_l10n_key.dart';
 
 abstract class InvestmentState extends Equatable {
   const InvestmentState();
@@ -57,14 +57,14 @@ class InvestmentSummaryLoaded extends InvestmentState {
 }
 
 class InvestmentActionSuccess extends InvestmentState {
-  final InvestmentL10nKey key;
-  const InvestmentActionSuccess(this.key);
+  final AppMessage message;
+  const InvestmentActionSuccess(this.message);
   @override
-  List<Object?> get props => [key];
+  List<Object?> get props => [message];
 }
 
 class InvestmentError extends InvestmentState {
-  final String message;
+  final AppMessage message;
   const InvestmentError(this.message);
   @override
   List<Object?> get props => [message];

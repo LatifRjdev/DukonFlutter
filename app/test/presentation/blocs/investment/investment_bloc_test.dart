@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/domain/entities/investment.dart';
 import 'package:dukonpro/domain/repositories/investment_repository.dart';
 import 'package:dukonpro/presentation/blocs/investment/investment_bloc.dart';
 import 'package:dukonpro/presentation/blocs/investment/investment_event.dart';
-import 'package:dukonpro/presentation/blocs/investment/investment_l10n_key.dart';
 import 'package:dukonpro/presentation/blocs/investment/investment_state.dart';
 
 class _MockRepo extends Mock implements InvestmentRepository {}
@@ -158,9 +158,9 @@ void main() {
       expect: () => [
         isA<InvestmentLoading>(),
         isA<InvestmentActionSuccess>().having(
-          (s) => s.key,
+          (s) => s.message,
           'key',
-          InvestmentL10nKey.created,
+          AppMessage.investmentCreated,
         ),
         // chained reload from initial state goes via the else branch (Loading)
         isA<InvestmentLoading>(),

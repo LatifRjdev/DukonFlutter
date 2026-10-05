@@ -12,6 +12,7 @@ import '../../../injection.dart';
 import '../../blocs/import/import_bloc.dart';
 import '../../blocs/import/import_event.dart';
 import '../../blocs/import/import_state.dart';
+import '../../l10n/app_message_l10n.dart';
 
 class ImportProductsPage extends StatelessWidget {
   final String storeId;
@@ -69,7 +70,7 @@ class _ImportProductsView extends StatelessWidget {
             if (state is ImportSuccess) {
               _showSuccessDialog(context, l10n, state);
             } else if (state is ImportError) {
-              AppSnackbar.error(context, state.message);
+              AppSnackbar.error(context, state.message.resolve(l10n));
             } else if (state is ImportTemplateDownloaded) {
               OpenFile.open(state.filePath);
             }
@@ -86,7 +87,7 @@ class _ImportProductsView extends StatelessWidget {
             }
             if (state is ImportError) {
               return _ErrorView(
-                message: state.message,
+                message: state.message.resolve(l10n),
                 onRetry: () => _pickFile(context),
               );
             }

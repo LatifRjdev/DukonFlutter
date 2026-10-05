@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/core/network/dio_client.dart';
 import 'package:dukonpro/domain/entities/user.dart';
@@ -111,7 +112,7 @@ void main() {
         act: (bloc) => bloc.add(SettingsProfileRequested()),
         expect: () => [
           isA<SettingsLoading>(),
-          const SettingsError('Нет подключения к интернету'),
+          const SettingsError(AppMessage.offline),
         ],
       );
 
@@ -126,12 +127,11 @@ void main() {
         act: (bloc) => bloc.add(SettingsProfileRequested()),
         expect: () => [
           isA<SettingsLoading>(),
-          predicate<SettingsState>((s) {
-            if (s is! SettingsError) return false;
-            return !s.message.contains('10.0.2.2') &&
-                !s.message.contains('DioException') &&
-                s.message.isNotEmpty;
-          }),
+          // The no-leak property is now carried by the type: an AppMessage
+          // cannot contain Dio text or an internal host. Assert the member.
+          predicate<SettingsState>(
+              (s) => s is SettingsError && s.message == AppMessage.unknownError,
+              'SettingsError(unknownError)'),
         ],
       );
     });
@@ -148,7 +148,7 @@ void main() {
             bloc.add(const SettingsProfileUpdated(name: 'Bob')),
         expect: () => [
           isA<SettingsLoading>(),
-          const SettingsActionSuccess('Профиль обновлён'),
+          const SettingsActionSuccess(AppMessage.profileUpdated),
           predicate<SettingsState>(
               (s) => s is SettingsLoaded && s.user.name == 'Bob'),
         ],
@@ -173,7 +173,7 @@ void main() {
             bloc.add(const SettingsProfileUpdated(name: 'Bob')),
         expect: () => [
           isA<SettingsLoading>(),
-          const SettingsError('Ошибка сервера — попробуйте позже'),
+          const SettingsError(AppMessage.serverError),
         ],
       );
     });
@@ -192,7 +192,7 @@ void main() {
         )),
         expect: () => [
           isA<SettingsLoading>(),
-          const SettingsActionSuccess('Пароль изменён'),
+          const SettingsActionSuccess(AppMessage.passwordChanged),
         ],
         verify: (_) {
           final captured = verify(
@@ -217,7 +217,7 @@ void main() {
         )),
         expect: () => [
           isA<SettingsLoading>(),
-          const SettingsError('Некорректные данные'),
+          const SettingsError(AppMessage.badRequest),
         ],
       );
     });

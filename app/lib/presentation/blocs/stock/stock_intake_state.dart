@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/product.dart';
 import '../../../domain/entities/supplier.dart';
 
@@ -11,7 +12,7 @@ class StockIntakeState extends Equatable {
   final bool isSearching;
   final bool isSubmitting;
   final bool isSuccess;
-  final String? error;
+  final AppMessage? error;
 
   const StockIntakeState({
     this.selectedProduct,
@@ -38,7 +39,7 @@ class StockIntakeState extends Equatable {
     bool? isSearching,
     bool? isSubmitting,
     bool? isSuccess,
-    String? error,
+    AppMessage? error,
     bool clearProduct = false,
     bool clearSupplier = false,
   }) {

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/customer.dart';
 
 abstract class CustomerListState extends Equatable {
@@ -29,7 +30,7 @@ class CustomerListLoaded extends CustomerListState {
 }
 
 class CustomerListError extends CustomerListState {
-  final String message;
+  final AppMessage message;
   const CustomerListError(this.message);
   @override
   List<Object?> get props => [message];
@@ -46,7 +47,7 @@ class CustomerFormSuccess extends CustomerListState {
 }
 
 class CustomerFormError extends CustomerListState {
-  final String message;
+  final AppMessage message;
   const CustomerFormError(this.message);
   @override
   List<Object?> get props => [message];

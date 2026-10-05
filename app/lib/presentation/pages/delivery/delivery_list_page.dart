@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -69,7 +71,7 @@ class _DeliveryListLoaded extends _DeliveryListState {
 }
 
 class _DeliveryListError extends _DeliveryListState {
-  final String message;
+  final AppMessage message;
   _DeliveryListError(this.message);
 }
 
@@ -106,7 +108,7 @@ class _DeliveryListCubit extends Cubit<_DeliveryListState> {
       }
       emit(_DeliveryListLoaded(list.map((e) => _Delivery.fromJson(e as Map<String, dynamic>)).toList()));
     } catch (e) {
-      emit(_DeliveryListError(mapErrorToUserMessage(e)));
+      emit(_DeliveryListError(mapErrorToAppMessage(e)));
     }
   }
 }
@@ -212,7 +214,7 @@ class _DeliveryListViewState extends State<_DeliveryListView> with SingleTickerP
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(state.message, style: const TextStyle(color: AppColors.error)),
+                  Text(state.message.resolve(l10n), style: const TextStyle(color: AppColors.error)),
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: () => _reload(_tabStatuses[_tabController.index]),

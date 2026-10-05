@@ -21,7 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
-      emit(DashboardError(mapErrorToUserMessage(e)));
+      emit(DashboardError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -31,10 +31,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
       if (state is DashboardLoaded) {
-        emit(DashboardRefreshFailure(mapErrorToUserMessage(e)));
+        emit(DashboardRefreshFailure(mapErrorToAppMessage(e)));
         return;
       }
-      emit(DashboardError(mapErrorToUserMessage(e)));
+      emit(DashboardError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -44,7 +44,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final stats = await _dashboardRepository.getOverview(event.storeId, period: event.period, startDate: event.startDate, endDate: event.endDate);
       emit(DashboardLoaded(stats, period: event.period));
     } catch (e) {
-      emit(DashboardError(mapErrorToUserMessage(e)));
+      emit(DashboardError(mapErrorToAppMessage(e)));
     }
   }
 }

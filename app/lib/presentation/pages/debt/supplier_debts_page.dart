@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/debt/debt_bloc.dart';
 import '../../blocs/debt/debt_event.dart';
 import '../../blocs/debt/debt_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/debt/payment_form.dart';
@@ -73,12 +74,12 @@ class _SupplierDebtsPageState extends State<SupplierDebtsPage> {
         listener: (context, state) {
           final l10n = AppLocalizations.of(context)!;
           if (state is DebtPaymentSuccess) {
-            AppSnackbar.success(context, state.message);
+            AppSnackbar.success(context, state.message.resolve(l10n));
             context.read<DebtBloc>().add(SupplierDebtsRequested(storeId: widget.storeId, supplierId: widget.supplierId));
           } else if (state is DebtPaymentQueued) {
             AppSnackbar.info(context, l10n.paymentQueuedOfflineMessage);
           } else if (state is DebtError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         builder: (context, state) {

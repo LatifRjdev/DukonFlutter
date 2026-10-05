@@ -7,6 +7,7 @@ import '../../../core/constants/enums.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_event.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_chip.dart';
@@ -57,7 +58,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
           if (state is StoreLoaded && state.selectedStore != null) {
             context.go('/home');
           } else if (state is StoreError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(

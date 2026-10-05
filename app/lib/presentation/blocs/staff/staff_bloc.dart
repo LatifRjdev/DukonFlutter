@@ -30,7 +30,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
         totalPages: result.totalPages,
       ));
     } catch (e) {
-      emit(StaffError(mapErrorToUserMessage(e)));
+      emit(StaffError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -40,7 +40,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       final staffMember = await _staffRepository.getStaffMember(event.storeId, event.id);
       emit(StaffDetailLoaded(staffMember));
     } catch (e) {
-      emit(StaffError(mapErrorToUserMessage(e)));
+      emit(StaffError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -50,7 +50,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       await _staffRepository.deleteStaff(event.storeId, event.id);
       add(LoadStaff(storeId: event.storeId));
     } catch (e) {
-      emit(StaffError(mapErrorToUserMessage(e)));
+      emit(StaffError(mapErrorToAppMessage(e)));
     }
   }
 }

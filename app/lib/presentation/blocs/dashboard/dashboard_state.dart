@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/sale.dart';
 
 class DashboardStats extends Equatable {
@@ -52,7 +53,7 @@ class DashboardLoaded extends DashboardState {
 }
 
 class DashboardError extends DashboardState {
-  final String message;
+  final AppMessage message;
   const DashboardError(this.message);
   @override
   List<Object?> get props => [message];
@@ -66,7 +67,7 @@ class DashboardError extends DashboardState {
 /// it, so the still-valid, already-rendered stats stay on screen instead of
 /// being replaced by an error view (SPEC.md #41).
 class DashboardRefreshFailure extends DashboardState {
-  final String message;
+  final AppMessage message;
   const DashboardRefreshFailure(this.message);
   @override
   List<Object?> get props => [message];

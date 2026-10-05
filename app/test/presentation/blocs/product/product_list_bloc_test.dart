@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/product.dart';
 import 'package:dukonpro/domain/repositories/product_repository.dart';
@@ -127,7 +128,7 @@ void main() {
         act: (bloc) => bloc.add(const ProductListLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<ProductListLoading>(),
-          const ProductListError('Нет подключения к интернету'),
+          const ProductListError(AppMessage.offline),
         ],
       );
 
@@ -151,7 +152,7 @@ void main() {
         act: (bloc) => bloc.add(const ProductListLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<ProductListLoading>(),
-          const ProductListError('Ошибка сервера — попробуйте позже'),
+          const ProductListError(AppMessage.serverError),
         ],
       );
     });
@@ -346,7 +347,7 @@ void main() {
         act: (bloc) => bloc
             .add(const ProductDeleteRequested(storeId: 'store-1', productId: 'p1')),
         expect: () => [
-          const ProductListError('Недостаточно прав'),
+          const ProductListError(AppMessage.forbidden),
         ],
         verify: (_) {
           verifyNever(() => repository.getProducts(

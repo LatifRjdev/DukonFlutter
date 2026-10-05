@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/role_permission.dart';
 
 abstract class RolesState extends Equatable {
@@ -18,7 +19,7 @@ class RolesLoaded extends RolesState {
 }
 
 class RolesError extends RolesState {
-  final String message;
+  final AppMessage message;
   const RolesError(this.message);
   @override
   List<Object?> get props => [message];

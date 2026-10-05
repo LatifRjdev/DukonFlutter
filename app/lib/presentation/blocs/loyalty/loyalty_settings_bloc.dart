@@ -24,7 +24,7 @@ class LoyaltySettingsBloc
       final settings = await _repository.getSettings(event.storeId);
       emit(LoyaltySettingsLoaded(settings));
     } catch (e) {
-      emit(LoyaltySettingsError(mapErrorToUserMessage(e)));
+      emit(LoyaltySettingsError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -38,7 +38,7 @@ class LoyaltySettingsBloc
           await _repository.updateSettings(event.storeId, event.data);
       emit(LoyaltySettingsSaved(settings));
     } catch (e) {
-      emit(LoyaltySettingsError(mapErrorToUserMessage(e)));
+      emit(LoyaltySettingsError(mapErrorToAppMessage(e)));
     }
   }
 }

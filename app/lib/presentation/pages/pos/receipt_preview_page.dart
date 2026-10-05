@@ -9,6 +9,7 @@ import '../../../domain/entities/sale.dart';
 import '../../../injection.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/pos/receipt_widget.dart';
@@ -33,7 +34,8 @@ class ReceiptPreviewPage extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      AppSnackbar.error(context, AppLocalizations.of(context)!.snackGenericError(mapErrorToUserMessage(e)));
+      AppSnackbar.error(
+          context, l10n.snackGenericError(mapErrorToAppMessage(e).resolve(l10n)));
     }
   }
 

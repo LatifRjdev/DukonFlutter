@@ -38,7 +38,7 @@ class CustomerDetailBloc extends Bloc<CustomerDetailEvent, CustomerDetailState> 
 
       emit(CustomerDetailLoaded(customer: customer, recentSales: salesList));
     } catch (e) {
-      emit(CustomerDetailError(mapErrorToUserMessage(e)));
+      emit(CustomerDetailError(mapErrorToAppMessage(e)));
     }
   }
 }

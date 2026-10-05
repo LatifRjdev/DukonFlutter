@@ -8,6 +8,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/domain/entities/expense.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 import 'package:dukonpro/presentation/blocs/expense/expense_bloc.dart';
@@ -124,7 +125,7 @@ void main() {
     expect(find.byType(ExpenseCard), findsOneWidget);
 
     stateController
-        .add(const ExpenseDeleteFailure('Ошибка сервера — попробуйте позже'));
+        .add(const ExpenseDeleteFailure(AppMessage.serverError));
     await tester.pump();
     // Let the snackbar's entrance animation settle so its text is mounted.
     await tester.pump(const Duration(milliseconds: 300));

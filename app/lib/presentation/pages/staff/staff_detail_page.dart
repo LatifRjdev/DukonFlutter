@@ -10,6 +10,7 @@ import '../../blocs/staff/staff_state.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/shifts/shift_card.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
@@ -102,7 +103,7 @@ class _StaffDetailPageState extends State<StaffDetailPage> with SingleTickerProv
             return const Center(child: CircularProgressIndicator());
           }
           if (state is StaffError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message.resolve(l10n)));
           }
           if (state is StaffDetailLoaded) {
             final member = state.staffMember;

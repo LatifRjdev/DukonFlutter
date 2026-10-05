@@ -36,7 +36,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
         totalPages: previous is ShiftLoaded ? previous.totalPages : 0,
       ));
     } catch (e) {
-      emit(ShiftError(mapErrorToUserMessage(e)));
+      emit(ShiftError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -49,7 +49,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       );
       emit(ShiftOpened(shift));
     } catch (e) {
-      emit(ShiftError(mapErrorToUserMessage(e)));
+      emit(ShiftError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -63,7 +63,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       );
       emit(ShiftClosed(shift));
     } catch (e) {
-      emit(ShiftError(mapErrorToUserMessage(e)));
+      emit(ShiftError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -89,7 +89,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
         totalPages: result.totalPages,
       ));
     } catch (e) {
-      emit(ShiftError(mapErrorToUserMessage(e)));
+      emit(ShiftError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -99,7 +99,7 @@ class ShiftBloc extends Bloc<ShiftEvent, ShiftState> {
       final report = await _shiftRepository.getZReport(event.storeId, event.shiftId);
       emit(ZReportLoaded(report: report));
     } catch (e) {
-      emit(ShiftError(mapErrorToUserMessage(e)));
+      emit(ShiftError(mapErrorToAppMessage(e)));
     }
   }
 }

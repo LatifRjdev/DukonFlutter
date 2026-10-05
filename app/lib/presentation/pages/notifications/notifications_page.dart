@@ -9,6 +9,7 @@ import '../../../core/errors/error_messages.dart';
 import '../../../core/network/dio_client.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -169,9 +170,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
         _hasMore = _notifications.length < total;
       });
     } catch (e) {
+      if (!mounted) return;
+      final message =
+          mapErrorToAppMessage(e).resolve(AppLocalizations.of(context)!);
       setState(() {
         _loading = false;
-        _error = mapErrorToUserMessage(e);
+        _error = message;
       });
     }
   }
@@ -199,6 +203,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       });
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       // Optimistically update the local read state anyway (it'll be
       // corrected by the next refresh either way), but surface the
       // failure — silently swallowing it meant a notification could look
@@ -208,7 +213,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       setState(() {
         _notifications[index] = notif.copyWithRead();
       });
-      AppSnackbar.error(context, mapErrorToUserMessage(e));
+      AppSnackbar.error(context, mapErrorToAppMessage(e).resolve(l10n));
     }
   }
 

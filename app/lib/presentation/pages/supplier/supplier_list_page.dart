@@ -16,6 +16,7 @@ import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 class SupplierListPage extends StatefulWidget {
@@ -124,6 +125,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                 final messenger = ScaffoldMessenger.of(context);
                 final view = View.of(context);
                 final dir = Directionality.of(context);
+                final l10n = AppLocalizations.of(context)!;
                 try {
                   await sl<SupplierRepository>().createSupplier(
                     _getStoreId(),
@@ -134,7 +136,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   _loadSuppliers();
                 } catch (e) {
                   navigator.pop();
-                  final msg = mapErrorToUserMessage(e);
+                  final msg = mapErrorToAppMessage(e).resolve(l10n);
                   messenger.showSnackBar(SnackBar(
                     content: Text(msg),
                     backgroundColor: AppColors.error,
@@ -213,7 +215,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   }
                   if (state is SupplierListError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _loadSuppliers,
                     );
                   }

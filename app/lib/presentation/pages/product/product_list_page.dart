@@ -21,6 +21,7 @@ import '../../blocs/product/product_list_event.dart';
 import '../../blocs/product/product_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 
 // Spec 2026-05-11-finance-nav-fixes-design.md, BUG #26 (Q2=B): the new
 // `attention` value is the union of `lowStock + outOfStock`. The
@@ -288,7 +289,7 @@ class _ProductListPageState extends State<ProductListPage> {
                   }
                   if (state is ProductListError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _loadData,
                     );
                   }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/customer.dart';
 
 abstract class CustomerDetailState extends Equatable {
@@ -19,7 +20,7 @@ class CustomerDetailLoaded extends CustomerDetailState {
 }
 
 class CustomerDetailError extends CustomerDetailState {
-  final String message;
+  final AppMessage message;
   const CustomerDetailError(this.message);
   @override
   List<Object?> get props => [message];

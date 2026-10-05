@@ -7,6 +7,7 @@ import '../../../domain/entities/loyalty_analytics.dart';
 import '../../blocs/loyalty/loyalty_analytics_bloc.dart';
 import '../../blocs/loyalty/loyalty_analytics_event.dart';
 import '../../blocs/loyalty/loyalty_analytics_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 enum _Period { week, month, year }
@@ -62,7 +63,7 @@ class _LoyaltyAnalyticsPageState extends State<LoyaltyAnalyticsPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state is LoyaltyAnalyticsError) {
-                  return Center(child: Text(state.message));
+                  return Center(child: Text(state.message.resolve(l10n)));
                 }
                 if (state is LoyaltyAnalyticsLoaded) {
                   return _Body(data: state.data);

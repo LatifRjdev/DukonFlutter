@@ -9,6 +9,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -155,7 +156,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                     _loadData();
                   }
                   if (state is ShiftError) {
-                    AppSnackbar.error(context, state.message);
+                    AppSnackbar.error(context, state.message.resolve(l10n));
                   }
                 },
                 builder: (context, state) {
@@ -195,7 +196,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
                   }
                   if (state is ShiftError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: _loadData,
                     );
                   }

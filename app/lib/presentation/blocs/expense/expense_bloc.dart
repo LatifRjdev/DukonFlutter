@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../domain/repositories/expense_repository.dart';
 import 'expense_event.dart';
@@ -34,7 +35,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         selectedCategory: event.category,
       ));
     } catch (e) {
-      emit(ExpenseError(mapErrorToUserMessage(e)));
+      emit(ExpenseError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -42,10 +43,10 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     emit(ExpenseLoading());
     try {
       await _expenseRepository.createExpense(event.storeId, event.data);
-      emit(const ExpenseActionSuccess('Расход добавлен'));
+      emit(const ExpenseActionSuccess(AppMessage.expenseAdded));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(mapErrorToUserMessage(e)));
+      emit(ExpenseError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -53,10 +54,10 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     emit(ExpenseLoading());
     try {
       await _expenseRepository.updateExpense(event.storeId, event.id, event.data);
-      emit(const ExpenseActionSuccess('Расход обновлён'));
+      emit(const ExpenseActionSuccess(AppMessage.expenseUpdated));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseError(mapErrorToUserMessage(e)));
+      emit(ExpenseError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -69,10 +70,10 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     // being deleted — on screen until the outcome is known (SPEC.md #32).
     try {
       await _expenseRepository.deleteExpense(event.storeId, event.id);
-      emit(const ExpenseActionSuccess('Расход удалён'));
+      emit(const ExpenseActionSuccess(AppMessage.expenseDeleted));
       add(ExpenseListRequested(storeId: event.storeId));
     } catch (e) {
-      emit(ExpenseDeleteFailure(mapErrorToUserMessage(e)));
+      emit(ExpenseDeleteFailure(mapErrorToAppMessage(e)));
     }
   }
 }

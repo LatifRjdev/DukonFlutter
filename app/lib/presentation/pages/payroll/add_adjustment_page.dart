@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/payroll/payroll_bloc.dart';
 import '../../blocs/payroll/payroll_event.dart';
 import '../../blocs/payroll/payroll_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -69,7 +70,7 @@ class _AddAdjustmentPageState extends State<AddAdjustmentPage> {
             context.pop();
           }
           if (state is PayrollError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(

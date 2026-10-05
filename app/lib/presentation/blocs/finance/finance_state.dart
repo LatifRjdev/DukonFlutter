@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/finance_summary.dart';
 
 abstract class FinanceState extends Equatable {
@@ -19,7 +20,7 @@ class FinanceLoaded extends FinanceState {
 }
 
 class FinanceError extends FinanceState {
-  final String message;
+  final AppMessage message;
   const FinanceError(this.message);
   @override
   List<Object?> get props => [message];

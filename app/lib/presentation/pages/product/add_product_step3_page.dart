@@ -15,6 +15,7 @@ import '../../blocs/store/store_state.dart';
 import '../../blocs/supplier/supplier_list_bloc.dart';
 import '../../blocs/supplier/supplier_list_event.dart';
 import '../../blocs/supplier/supplier_list_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -108,7 +109,7 @@ class _AddProductStep3PageState extends State<AddProductStep3Page> {
           if (state.error != null) {
             AppSnackbar.error(
               context,
-              state.error!,
+              state.error!.resolve(l10n),
             );
           }
         },

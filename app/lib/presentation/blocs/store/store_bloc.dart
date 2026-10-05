@@ -52,7 +52,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         selectedStore: retained ?? (stores.isNotEmpty ? stores.first : null),
       ));
     } catch (e) {
-      emit(StoreError(mapErrorToUserMessage(e)));
+      emit(StoreError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -69,7 +69,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final stores = await _storeRepository.getStores();
       emit(StoreLoaded(stores: stores, selectedStore: store));
     } catch (e) {
-      emit(StoreError(mapErrorToUserMessage(e)));
+      emit(StoreError(mapErrorToAppMessage(e)));
     }
   }
 

@@ -11,6 +11,7 @@ import '../../../injection.dart';
 import '../../blocs/supplier_detail/supplier_detail_bloc.dart';
 import '../../blocs/supplier_detail/supplier_detail_event.dart';
 import '../../blocs/supplier_detail/supplier_detail_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_card.dart';
 import '../../widgets/common/app_button.dart';
 
@@ -54,7 +55,7 @@ class _SupplierDetailView extends StatelessWidget {
         if (state is SupplierDetailError) {
           return Scaffold(
             appBar: AppBar(title: Text(l10n.supplier)),
-            body: Center(child: Text(state.message)),
+            body: Center(child: Text(state.message.resolve(l10n))),
           );
         }
         if (state is SupplierDetailLoaded) {

@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../blocs/expense/expense_bloc.dart';
 import '../../blocs/expense/expense_event.dart';
 import '../../blocs/expense/expense_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_text_field.dart';
 import '../../widgets/common/app_snackbar.dart';
@@ -91,11 +92,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
       body: BlocListener<ExpenseBloc, ExpenseState>(
         listener: (context, state) {
           if (state is ExpenseActionSuccess) {
-            AppSnackbar.success(context, state.message);
+            AppSnackbar.success(context, state.message.resolve(l10n));
             context.pop();
           }
           if (state is ExpenseError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/store.dart';
 
 abstract class StoreState extends Equatable {
@@ -19,7 +20,7 @@ class StoreLoaded extends StoreState {
 }
 
 class StoreError extends StoreState {
-  final String message;
+  final AppMessage message;
   const StoreError(this.message);
   @override
   List<Object?> get props => [message];

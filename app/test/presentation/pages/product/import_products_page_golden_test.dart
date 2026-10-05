@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/injection.dart';
 import 'package:dukonpro/presentation/blocs/import/import_bloc.dart';
 import 'package:dukonpro/presentation/blocs/import/import_event.dart';
@@ -112,7 +113,7 @@ void main() {
   testWidgets('renders visible error content for ImportError state',
       (tester) async {
     when(() => importBloc.state).thenReturn(
-      const ImportError(message: 'Не удалось прочитать файл'),
+      const ImportError(message: AppMessage.unknownError),
     );
 
     await pumpPageWithTheme(
@@ -121,7 +122,7 @@ void main() {
       brightness: Brightness.light,
     );
 
-    expect(find.text('Не удалось прочитать файл'), findsOneWidget);
+    expect(find.text('Не удалось выполнить операцию'), findsOneWidget);
     expect(find.text('Повторить'), findsOneWidget); // l10n.retry
     expect(find.byIcon(Icons.error_outline), findsOneWidget);
     // Must not silently fall through to the initial "select file" screen.

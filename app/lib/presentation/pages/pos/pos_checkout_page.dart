@@ -25,6 +25,7 @@ import '../../blocs/customer/customer_list_event.dart';
 import '../../blocs/customer/customer_list_state.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/barcode_scanner_sheet.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -312,7 +313,7 @@ class _PosCheckoutPageState extends State<PosCheckoutPage> {
               context.go('/pos/success', extra: {'sale': state.saleResult});
             }
             if (state.error != null) {
-              AppSnackbar.error(context, state.error!);
+              AppSnackbar.error(context, state.error!.resolve(l10n));
             }
           },
         ),

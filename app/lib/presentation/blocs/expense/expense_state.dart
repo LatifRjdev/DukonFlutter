@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/expense.dart';
 
 abstract class ExpenseState extends Equatable {
@@ -22,14 +23,14 @@ class ExpenseLoaded extends ExpenseState {
 }
 
 class ExpenseActionSuccess extends ExpenseState {
-  final String message;
+  final AppMessage message;
   const ExpenseActionSuccess(this.message);
   @override
   List<Object?> get props => [message];
 }
 
 class ExpenseError extends ExpenseState {
-  final String message;
+  final AppMessage message;
   const ExpenseError(this.message);
   @override
   List<Object?> get props => [message];
@@ -43,7 +44,7 @@ class ExpenseError extends ExpenseState {
 /// expense that failed to delete — are never wiped off the screen while the
 /// error is surfaced (SPEC.md #32).
 class ExpenseDeleteFailure extends ExpenseState {
-  final String message;
+  final AppMessage message;
   const ExpenseDeleteFailure(this.message);
   @override
   List<Object?> get props => [message];

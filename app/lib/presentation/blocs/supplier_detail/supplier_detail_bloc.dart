@@ -34,7 +34,7 @@ class SupplierDetailBloc extends Bloc<SupplierDetailEvent, SupplierDetailState> 
       );
       emit(SupplierDetailLoaded(supplier));
     } catch (e) {
-      emit(SupplierDetailError(mapErrorToUserMessage(e)));
+      emit(SupplierDetailError(mapErrorToAppMessage(e)));
     }
   }
 }

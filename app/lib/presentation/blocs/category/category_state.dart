@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/category.dart';
 
 abstract class CategoryState extends Equatable {
@@ -18,7 +19,7 @@ class CategoryLoaded extends CategoryState {
 }
 
 class CategoryError extends CategoryState {
-  final String message;
+  final AppMessage message;
   const CategoryError(this.message);
   @override
   List<Object?> get props => [message];

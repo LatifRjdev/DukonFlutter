@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/role_permission.dart';
 import 'package:dukonpro/domain/repositories/staff_repository.dart';
@@ -86,7 +87,7 @@ void main() {
           isA<RolesError>().having(
             (s) => s.message,
             'message',
-            'Нет подключения к интернету',
+            AppMessage.offline,
           ),
         ],
       );
@@ -123,7 +124,7 @@ void main() {
         expect: () => [
           isA<RolesLoading>(),
           isA<RolesError>()
-              .having((s) => s.message, 'message', 'Недостаточно прав'),
+              .having((s) => s.message, 'message', AppMessage.forbidden),
         ],
       );
     });
@@ -268,7 +269,7 @@ void main() {
           isA<RolesError>().having(
             (s) => s.message,
             'message',
-            'Ошибка сервера — попробуйте позже',
+            AppMessage.serverError,
           ),
         ],
         verify: (_) {

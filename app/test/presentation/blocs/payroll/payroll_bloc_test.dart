@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/payroll_period.dart';
 import 'package:dukonpro/domain/repositories/payroll_repository.dart';
@@ -68,7 +69,7 @@ void main() {
           isA<PayrollError>().having(
             (s) => s.message,
             'message',
-            'Нет подключения к интернету',
+            AppMessage.offline,
           ),
         ],
       );
@@ -84,12 +85,12 @@ void main() {
         act: (bloc) => bloc.add(const LoadPayrollPeriods(storeId: 'store-1')),
         expect: () => [
           isA<PayrollLoading>(),
-          isA<PayrollError>().having(
-            (s) => s.message,
-            'message',
-            predicate<String>((m) =>
-                !m.contains('10.0.2.2') && !m.contains('DioException')),
-          ),
+          // PayrollError.message is an AppMessage, so it carries no text that
+          // could contain the internal host or Dio noise — the leak property
+          // this used to probe at runtime is now enforced by the type. Assert
+          // the member an unrecognised exception maps to instead.
+          isA<PayrollError>()
+              .having((s) => s.message, 'message', AppMessage.unknownError),
         ],
       );
     });
@@ -132,7 +133,7 @@ void main() {
         expect: () => [
           isA<PayrollLoading>(),
           isA<PayrollError>()
-              .having((s) => s.message, 'message', 'Объект не найден'),
+              .having((s) => s.message, 'message', AppMessage.notFound),
         ],
       );
     });
@@ -184,7 +185,7 @@ void main() {
           isA<PayrollError>().having(
             (s) => s.message,
             'message',
-            'Ошибка сервера — попробуйте позже',
+            AppMessage.serverError,
           ),
         ],
         verify: (_) {
@@ -269,7 +270,7 @@ void main() {
         expect: () => [
           isA<PayrollLoading>(),
           isA<PayrollError>()
-              .having((s) => s.message, 'message', 'Некорректные данные'),
+              .having((s) => s.message, 'message', AppMessage.badRequest),
         ],
         verify: (_) {
           verifyNever(() => repository.getPayrollPeriod(any(), any()));
@@ -323,7 +324,7 @@ void main() {
           isA<PayrollError>().having(
             (s) => s.message,
             'message',
-            'Нет подключения к интернету',
+            AppMessage.offline,
           ),
         ],
       );
@@ -375,7 +376,7 @@ void main() {
           isA<PayrollError>().having(
             (s) => s.message,
             'message',
-            'Конфликт — объект уже существует',
+            AppMessage.conflict,
           ),
         ],
         verify: (_) {
@@ -424,7 +425,7 @@ void main() {
           isA<PayrollError>().having(
             (s) => s.message,
             'message',
-            'Сессия истекла. Войдите снова.',
+            AppMessage.sessionExpired,
           ),
         ],
       );

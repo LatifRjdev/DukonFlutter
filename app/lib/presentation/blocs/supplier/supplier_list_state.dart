@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/supplier.dart';
 
 abstract class SupplierListState extends Equatable {
@@ -29,7 +30,7 @@ class SupplierListLoaded extends SupplierListState {
 }
 
 class SupplierListError extends SupplierListState {
-  final String message;
+  final AppMessage message;
   const SupplierListError(this.message);
   @override
   List<Object?> get props => [message];
@@ -46,7 +47,7 @@ class SupplierFormSuccess extends SupplierListState {
 }
 
 class SupplierFormError extends SupplierListState {
-  final String message;
+  final AppMessage message;
   const SupplierFormError(this.message);
   @override
   List<Object?> get props => [message];

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/loyalty_analytics.dart';
 
 abstract class LoyaltyAnalyticsState extends Equatable {
@@ -24,7 +25,7 @@ class LoyaltyAnalyticsLoaded extends LoyaltyAnalyticsState {
 }
 
 class LoyaltyAnalyticsError extends LoyaltyAnalyticsState {
-  final String message;
+  final AppMessage message;
   const LoyaltyAnalyticsError(this.message);
 
   @override

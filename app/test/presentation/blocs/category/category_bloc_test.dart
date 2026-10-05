@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:dukonpro/core/errors/app_message.dart';
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/domain/entities/category.dart';
 import 'package:dukonpro/domain/repositories/category_repository.dart';
@@ -77,7 +78,7 @@ void main() {
           isA<CategoryError>().having(
             (s) => s.message,
             'message',
-            'Нет подключения к интернету',
+            AppMessage.offline,
           ),
         ],
       );
@@ -93,12 +94,11 @@ void main() {
         act: (bloc) => bloc.add(const CategoryLoadRequested('store-1')),
         expect: () => [
           isA<CategoryLoading>(),
-          isA<CategoryError>().having((s) {
-            final message = s.message;
-            return !message.contains('10.0.2.2') &&
-                !message.contains('DioException') &&
-                message.isNotEmpty;
-          }, 'sanitized message', true),
+          // CategoryError.message is an AppMessage: it has no text to leak,
+          // so the sanitization property is now guaranteed by the type rather
+          // than checked here. Assert the member an unknown exception maps to.
+          isA<CategoryError>()
+              .having((s) => s.message, 'message', AppMessage.unknownError),
         ],
       );
     });
@@ -151,7 +151,7 @@ void main() {
           isA<CategoryError>().having(
             (s) => s.message,
             'message',
-            'Некорректные данные',
+            AppMessage.badRequest,
           ),
         ],
         verify: (_) {
@@ -204,7 +204,7 @@ void main() {
           isA<CategoryError>().having(
             (s) => s.message,
             'message',
-            'Ошибка локального хранилища',
+            AppMessage.cacheError,
           ),
         ],
       );
@@ -248,7 +248,7 @@ void main() {
           isA<CategoryError>().having(
             (s) => s.message,
             'message',
-            'Сессия истекла. Войдите снова.',
+            AppMessage.sessionExpired,
           ),
         ],
         verify: (_) {

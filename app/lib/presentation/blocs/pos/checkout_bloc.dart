@@ -122,7 +122,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       final sale = await _saleRepository.createSale(event.storeId, saleData);
       emit(state.copyWith(isProcessing: false, saleResult: sale));
     } catch (e) {
-      emit(state.copyWith(isProcessing: false, error: mapErrorToUserMessage(e)));
+      emit(state.copyWith(isProcessing: false, error: mapErrorToAppMessage(e)));
     }
   }
 }

@@ -22,7 +22,7 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       final roles = await _staffRepository.getRoles(event.storeId);
       emit(RolesLoaded(roles: roles));
     } catch (e) {
-      emit(RolesError(mapErrorToUserMessage(e)));
+      emit(RolesError(mapErrorToAppMessage(e)));
     }
   }
 
@@ -47,7 +47,7 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       await _staffRepository.updateRolePermissions(event.storeId, event.role, event.permissions);
       add(LoadRoles(storeId: event.storeId));
     } catch (e) {
-      emit(RolesError(mapErrorToUserMessage(e)));
+      emit(RolesError(mapErrorToAppMessage(e)));
     }
   }
 }

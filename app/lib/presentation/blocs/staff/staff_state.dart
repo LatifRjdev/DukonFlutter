@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../domain/entities/staff_member.dart';
 
 abstract class StaffState extends Equatable {
@@ -27,7 +28,7 @@ class StaffDetailLoaded extends StaffState {
 }
 
 class StaffError extends StaffState {
-  final String message;
+  final AppMessage message;
   const StaffError(this.message);
   @override
   List<Object?> get props => [message];

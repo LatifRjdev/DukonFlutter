@@ -8,6 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/zakat/zakat_bloc.dart';
 import '../../blocs/zakat/zakat_event.dart';
 import '../../blocs/zakat/zakat_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_empty_state.dart';
 import '../../widgets/common/app_error_widget.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -77,7 +78,7 @@ class _ZakatHistoryPageState extends State<ZakatHistoryPage> {
                   }
                   if (state is ZakatError) {
                     return AppErrorWidget(
-                      message: state.message,
+                      message: state.message.resolve(l10n),
                       onRetry: () => context.read<ZakatBloc>().add(ZakatPaymentsRequested(storeId: widget.storeId)),
                     );
                   }

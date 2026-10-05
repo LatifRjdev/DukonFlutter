@@ -7,6 +7,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../blocs/shift/shift_bloc.dart';
 import '../../blocs/shift/shift_event.dart';
 import '../../blocs/shift/shift_state.dart';
+import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_button.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
@@ -52,7 +53,7 @@ class _OpenShiftPageState extends State<OpenShiftPage> {
             context.pop();
           }
           if (state is ShiftError) {
-            AppSnackbar.error(context, state.message);
+            AppSnackbar.error(context, state.message.resolve(l10n));
           }
         },
         child: SingleChildScrollView(
