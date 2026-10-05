@@ -1,12 +1,19 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "rootDir": "src" },
+  "compilerOptions": {
+    // Pinned so a stray top-level .ts FAILS the build instead of silently
+    // relocating output to dist/src/ and leaving a container that crashes on
+    // start — which is what happened once scripts/ was compiled alongside src/
+    // and moved the inferred rootDir to the project root.
+    "rootDir": "src",
+    // Incremental emit and nest-cli's deleteOutDir are not safe together: tsc
+    // consults tsconfig.build.tsbuildinfo, concludes the output is current and
+    // emits nothing, while deleteOutDir has already removed dist/. The build
+    // then exits 0 with no artifact at all. Any stale tsbuildinfo — for
+    // instance one written before rootDir was pinned — triggers it.
+    "incremental": false
+  },
+  // scripts/ is run through ts-node and never needs compiling; keeping it out
+  // is what lets rootDir stay "src".
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "scripts"]
-  // rootDir is pinned so a stray top-level .ts FAILS the build instead of
-  // silently relocating output to dist/src/ and leaving a container that
-  // crashes on start. "scripts" is excluded so nest
-  // build emits dist/main.js. With scripts/ compiled alongside it, the
-  // root became the project directory and output moved to dist/src/ —
-  // which both npm run start:prod and the Dockerfile CMD fail to find.
-  // The scripts are run through ts-node and never need compiling.
 }
