@@ -12,6 +12,7 @@ import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
 import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'payment_status.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
@@ -473,27 +474,33 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget _buildPaymentTile(PaymentRecord payment) {
-    Color statusColor;
-    String statusLabel;
-    switch (payment.status) {
-      case 'CONFIRMED':
-        statusColor = AppColors.success;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentConfirmedStatus;
-        break;
-      case 'REJECTED':
-        statusColor = AppColors.error;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentRejectedStatus;
-        break;
-      default:
-        statusColor = AppColors.warning;
-        statusLabel = AppLocalizations.of(
-          context,
-        )!.subscriptionPaymentPendingStatus;
-    }
+    final l10n = AppLocalizations.of(context)!;
+    // Switching on the mapped kind rather than the raw string: the raw switch
+    // tested for 'CONFIRMED', which PaymentStatus does not contain, so every
+    // APPROVED payment landed in the default branch and read as pending.
+    final (Color statusColor, String statusLabel) =
+        switch (paymentStatusKind(payment.status)) {
+      PaymentStatusKind.approved => (
+          AppColors.success,
+          l10n.subscriptionPaymentConfirmedStatus,
+        ),
+      PaymentStatusKind.rejected => (
+          AppColors.error,
+          l10n.subscriptionPaymentRejectedStatus,
+        ),
+      PaymentStatusKind.pending => (
+          AppColors.warning,
+          l10n.subscriptionPaymentPendingStatus,
+        ),
+      PaymentStatusKind.refunded => (
+          AppColors.info,
+          l10n.subscriptionPaymentRefundedStatus,
+        ),
+      PaymentStatusKind.unknown => (
+          context.textSecondary,
+          l10n.subscriptionPaymentUnknownStatus,
+        ),
+    };
 
     return Semantics(
       label: AppLocalizations.of(

@@ -3466,7 +3466,7 @@ abstract class AppLocalizations {
   /// **'Выбрать'**
   String get subscriptionSelectPlanButton;
 
-  /// Payment-record status badge, default/pending case — distinct from `subscriptionPendingBannerText`, the fuller pending-payment banner sentence shown elsewhere on the same page
+  /// Payment-record status badge for PENDING specifically — no longer a catch-all default; unrecognised statuses use `subscriptionPaymentUnknownStatus` — distinct from `subscriptionPendingBannerText`, the fuller pending-payment banner sentence shown elsewhere on the same page
   ///
   /// In ru, this message translates to:
   /// **'Ожидает'**
@@ -3483,6 +3483,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Отклонено'**
   String get subscriptionPaymentRejectedStatus;
+
+  /// Payment-record status badge for a REFUNDED payment — one that succeeded and was later returned. Distinct from `subscriptionPaymentRejectedStatus` ("Отклонено"), which means the payment was never accepted
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращено'**
+  String get subscriptionPaymentRefundedStatus;
+
+  /// Payment-record status badge for a status the server sent that the app does not recognise. Deliberately NOT the pending label: the page previously treated every unrecognised value as pending, which is how an APPROVED payment came to read "Ожидает"
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус неизвестен'**
+  String get subscriptionPaymentUnknownStatus;
 
   /// No description provided for @subscriptionPaymentDialogTitle.
   ///
