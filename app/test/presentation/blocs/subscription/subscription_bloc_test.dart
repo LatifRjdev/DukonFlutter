@@ -23,8 +23,14 @@ void main() {
         data: body,
       );
 
-  void mockGet(dynamic body) {
-    when(() => dioClient.get<dynamic>(any())).thenAnswer((_) async => resp(body));
+  /// The bloc issues TWO gets: /subscription for the plan, and
+  /// /subscription/payments for the history, which the first has never
+  /// carried. Routed by path so a test can supply either independently.
+  void mockGet(dynamic body, {List<dynamic> payments = const []}) {
+    when(() => dioClient.get<dynamic>(any())).thenAnswer((invocation) async {
+      final path = invocation.positionalArguments.first as String;
+      return resp(path.endsWith('/payments') ? payments : body);
+    });
   }
 
   void mockGetError(Object error) {
@@ -55,17 +61,6 @@ void main() {
       'hasDelivery': false,
       'hasInventory': true,
     },
-    'payments': [
-      {
-        'id': 'p1',
-        'plan': 'BUSINESS',
-        'amount': 100.0,
-        'method': 'CARD',
-        'status': 'CONFIRMED',
-        'createdAt': '2026-07-01T00:00:00.000Z',
-        'receiptUrl': 'http://example.com/receipt.jpg',
-      },
-    ],
     'pendingPayment': {
       'id': 'p2',
       'plan': 'PREMIUM',
@@ -76,6 +71,23 @@ void main() {
     },
   };
 
+  // Served by GET /subscription/payments, not by /subscription — the main
+  // response has never carried a `payments` key. The status here is APPROVED
+  // because that is what PaymentStatus contains; the old fixture said
+  // 'CONFIRMED', which is exactly the value the page used to compare against
+  // and the reason an approved payment rendered as pending.
+  final paymentsFixture = <dynamic>[
+    {
+      'id': 'p1',
+      'plan': 'BUSINESS',
+      'amount': 100.0,
+      'method': 'CARD',
+      'status': 'APPROVED',
+      'createdAt': '2026-07-01T00:00:00.000Z',
+      'receiptUrl': 'http://example.com/receipt.jpg',
+    },
+  ];
+
   group('SubscriptionBloc', () {
     test('initial state is SubscriptionInitial', () {
       final bloc = SubscriptionBloc(dioClient: dioClient);
@@ -85,7 +97,7 @@ void main() {
     group('SubscriptionLoadRequested', () {
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should emit loading then loaded with mapped plan/limits/features/payments when request succeeds',
-        setUp: () => mockGet(fullData),
+        setUp: () => mockGet(fullData, payments: paymentsFixture),
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
@@ -262,7 +274,7 @@ void main() {
                 '/stores/store-1/subscription/request-change',
                 data: any(named: 'data'),
               )).thenAnswer((_) async => resp({'ok': true}));
-          mockGet(fullData);
+          mockGet(fullData, payments: paymentsFixture);
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) => bloc.add(const SubscriptionPlanChangeRequested(
@@ -348,7 +360,7 @@ void main() {
                 '/stores/store-1/subscription/request-change',
                 data: any(named: 'data'),
               )).thenAnswer((_) async => resp({'ok': true}));
-          mockGet(fullData);
+          mockGet(fullData, payments: paymentsFixture);
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) => bloc.add(SubscriptionReceiptUploaded(

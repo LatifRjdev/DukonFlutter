@@ -24,10 +24,18 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   ) async {
     emit(SubscriptionLoading());
     try {
-      final res =
-          await _dioClient.get('/stores/${event.storeId}/subscription');
-      final data = res.data as Map<String, dynamic>? ?? {};
-      emit(_mapLoaded(data));
+      // Two calls: GET /subscription does not carry payments, so the history
+      // list this screen renders was always empty and its section never
+      // appeared. The payments endpoint existed all along and nothing called
+      // it — the UI, the l10n keys, the state field and the route were all
+      // present but never connected.
+      final results = await Future.wait([
+        _dioClient.get('/stores/${event.storeId}/subscription'),
+        _dioClient.get('/stores/${event.storeId}/subscription/payments'),
+      ]);
+      final data = results[0].data as Map<String, dynamic>? ?? {};
+      final payments = results[1].data as List<dynamic>? ?? const [];
+      emit(_mapLoaded({...data, 'payments': payments}));
     } catch (e) {
       emit(SubscriptionError(mapErrorToAppMessage(e)));
     }
