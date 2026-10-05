@@ -1,10 +1,11 @@
 /// A user-facing message, as a value rather than a string.
 ///
-/// Blocs used to put Russian text straight into state objects — the error path
-/// through `mapErrorToAppMessage`, and success states built from inline
-/// literals like `SettingsActionSuccess('Профиль обновлён')`. Neither could be
-/// translated: `app_tg.arb` and `app_uz.arb` cannot reach a string a bloc baked
-/// in, so Tajik and Uzbek users saw Russian for every error and confirmation.
+/// Blocs used to put Russian text straight into state objects — the error
+/// mapper returned a hardcoded string, and success states were built from
+/// inline literals like `SettingsActionSuccess('Профиль обновлён')`. Neither
+/// could be translated: `app_tg.arb` and `app_uz.arb` cannot reach a string a
+/// bloc baked in, so Tajik and Uzbek users saw Russian for every error and
+/// every confirmation.
 ///
 /// A bloc now emits one of these and the widget resolves it through
 /// `AppLocalizations` — see `presentation/l10n/app_message_l10n.dart`. The
