@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../pages/settings/payment_status.dart';
 import 'subscription_event.dart';
 import 'subscription_state.dart';
 
@@ -118,9 +119,17 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
         .map(PaymentRecord.fromJson)
         .toList();
 
-    final pendingRaw = data['pendingPayment'] as Map<String, dynamic>?;
-    final pendingPayment =
-        pendingRaw != null ? PaymentRecord.fromJson(pendingRaw) : null;
+    // Derived from the history rather than read from the response: the
+    // endpoint sends no `pendingPayment` key, so the banner telling a merchant
+    // their request is awaiting approval never appeared. The payments list is
+    // ordered newest-first by the API.
+    PaymentRecord? pendingPayment;
+    for (final p in payments) {
+      if (paymentStatusKind(p.status) == PaymentStatusKind.pending) {
+        pendingPayment = p;
+        break;
+      }
+    }
 
     final limitsRaw = data['limits'] as Map<String, dynamic>?;
     final featuresRaw = data['features'] as Map<String, dynamic>?;
@@ -128,10 +137,12 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     return SubscriptionLoaded(
       plan: data['plan'] as String? ?? 'START',
       status: data['status'] as String? ?? 'ACTIVE',
-      expiresAt: data['expiresAt'] != null
-          ? DateTime.tryParse(data['expiresAt'] as String)?.toLocal()
-          : null,
-      trialDaysLeft: (data['trialDaysLeft'] as num?)?.toInt(),
+      // The response carries `currentPeriodEnd` and `trialEndsAt`; it has
+      // never carried `expiresAt` or a pre-computed `trialDaysLeft`. Both
+      // branches of the plan card's expiry line therefore produced an empty
+      // string, so the card never showed when the subscription runs out.
+      expiresAt: _parseDate(data['currentPeriodEnd']),
+      trialDaysLeft: _trialDaysLeft(_parseDate(data['trialEndsAt'])),
       adminDiscount: (data['adminDiscount'] as num?)?.toDouble(),
       limits: limitsRaw != null
           ? SubscriptionLimits.fromJson(limitsRaw)
@@ -142,5 +153,16 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       payments: payments,
       pendingPayment: pendingPayment,
     );
+  }
+
+  static DateTime? _parseDate(Object? raw) =>
+      raw is String ? DateTime.tryParse(raw)?.toLocal() : null;
+
+  /// Whole days from now until [trialEndsAt], floored at zero. The server
+  /// sends the date; the screen wants a count.
+  static int? _trialDaysLeft(DateTime? trialEndsAt) {
+    if (trialEndsAt == null) return null;
+    final days = trialEndsAt.difference(DateTime.now()).inDays;
+    return days < 0 ? 0 : days;
   }
 }
