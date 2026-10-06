@@ -1844,7 +1844,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String subscriptionTrialDaysLeftLine(String days) {
-    return 'Пробный период: осталось $days дней';
+    return 'Пробный период: осталось $days дн.';
   }
 
   @override

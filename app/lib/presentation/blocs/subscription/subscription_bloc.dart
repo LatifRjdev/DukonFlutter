@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/errors/error_messages.dart';
+import '../../pages/settings/payment_status.dart';
 import 'subscription_event.dart';
 import 'subscription_state.dart';
 
@@ -118,9 +119,19 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
         .map(PaymentRecord.fromJson)
         .toList();
 
-    final pendingRaw = data['pendingPayment'] as Map<String, dynamic>?;
-    final pendingPayment =
-        pendingRaw != null ? PaymentRecord.fromJson(pendingRaw) : null;
+    // Derived from the history rather than read from the response: the
+    // endpoint sends no `pendingPayment` key, so the banner telling a merchant
+    // their request is awaiting approval never appeared.
+    //
+    // Only EXISTENCE is consumed today — the banner renders a constant string
+    // and reads no field off this. Two PENDING rows are reachable, since
+    // requestChange creates one without checking for an existing one, so this
+    // takes the newest by sorting rather than trusting the server's order.
+    final pending = payments
+        .where((p) => paymentStatusKind(p.status) == PaymentStatusKind.pending)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final PaymentRecord? pendingPayment = pending.isEmpty ? null : pending.first;
 
     final limitsRaw = data['limits'] as Map<String, dynamic>?;
     final featuresRaw = data['features'] as Map<String, dynamic>?;
@@ -128,10 +139,12 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     return SubscriptionLoaded(
       plan: data['plan'] as String? ?? 'START',
       status: data['status'] as String? ?? 'ACTIVE',
-      expiresAt: data['expiresAt'] != null
-          ? DateTime.tryParse(data['expiresAt'] as String)?.toLocal()
-          : null,
-      trialDaysLeft: (data['trialDaysLeft'] as num?)?.toInt(),
+      // The response carries `currentPeriodEnd` and `trialEndsAt`; it has
+      // never carried `expiresAt` or a pre-computed `trialDaysLeft`. Both
+      // branches of the plan card's expiry line therefore produced an empty
+      // string, so the card never showed when the subscription runs out.
+      expiresAt: _parseDate(data['currentPeriodEnd']),
+      trialDaysLeft: _trialDaysLeft(_parseDate(data['trialEndsAt'])),
       adminDiscount: (data['adminDiscount'] as num?)?.toDouble(),
       limits: limitsRaw != null
           ? SubscriptionLimits.fromJson(limitsRaw)
@@ -142,5 +155,23 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       payments: payments,
       pendingPayment: pendingPayment,
     );
+  }
+
+  static DateTime? _parseDate(Object? raw) =>
+      raw is String ? DateTime.tryParse(raw)?.toLocal() : null;
+
+  /// Days remaining until [trialEndsAt], rounded UP and floored at zero. The
+  /// server sends the date; the screen wants a count.
+  ///
+  /// Rounding up rather than truncating, because a trial is created as
+  /// `now + 7 days` and truncation reports the wrong number at both ends: on
+  /// the day of signup the difference is seven days minus milliseconds, which
+  /// floors to 6, and on the final day with ten hours left it floors to 0 —
+  /// telling a merchant the trial is over while it still works.
+  static int? _trialDaysLeft(DateTime? trialEndsAt) {
+    if (trialEndsAt == null) return null;
+    final hours = trialEndsAt.difference(DateTime.now()).inHours;
+    if (hours <= 0) return 0;
+    return (hours / 24).ceil();
   }
 }
