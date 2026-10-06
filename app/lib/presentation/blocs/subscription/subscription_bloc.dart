@@ -121,15 +121,17 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
 
     // Derived from the history rather than read from the response: the
     // endpoint sends no `pendingPayment` key, so the banner telling a merchant
-    // their request is awaiting approval never appeared. The payments list is
-    // ordered newest-first by the API.
-    PaymentRecord? pendingPayment;
-    for (final p in payments) {
-      if (paymentStatusKind(p.status) == PaymentStatusKind.pending) {
-        pendingPayment = p;
-        break;
-      }
-    }
+    // their request is awaiting approval never appeared.
+    //
+    // Only EXISTENCE is consumed today — the banner renders a constant string
+    // and reads no field off this. Two PENDING rows are reachable, since
+    // requestChange creates one without checking for an existing one, so this
+    // takes the newest by sorting rather than trusting the server's order.
+    final pending = payments
+        .where((p) => paymentStatusKind(p.status) == PaymentStatusKind.pending)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final PaymentRecord? pendingPayment = pending.isEmpty ? null : pending.first;
 
     final limitsRaw = data['limits'] as Map<String, dynamic>?;
     final featuresRaw = data['features'] as Map<String, dynamic>?;
@@ -158,11 +160,18 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   static DateTime? _parseDate(Object? raw) =>
       raw is String ? DateTime.tryParse(raw)?.toLocal() : null;
 
-  /// Whole days from now until [trialEndsAt], floored at zero. The server
-  /// sends the date; the screen wants a count.
+  /// Days remaining until [trialEndsAt], rounded UP and floored at zero. The
+  /// server sends the date; the screen wants a count.
+  ///
+  /// Rounding up rather than truncating, because a trial is created as
+  /// `now + 7 days` and truncation reports the wrong number at both ends: on
+  /// the day of signup the difference is seven days minus milliseconds, which
+  /// floors to 6, and on the final day with ten hours left it floors to 0 —
+  /// telling a merchant the trial is over while it still works.
   static int? _trialDaysLeft(DateTime? trialEndsAt) {
     if (trialEndsAt == null) return null;
-    final days = trialEndsAt.difference(DateTime.now()).inDays;
-    return days < 0 ? 0 : days;
+    final hours = trialEndsAt.difference(DateTime.now()).inHours;
+    if (hours <= 0) return 0;
+    return (hours / 24).ceil();
   }
 }

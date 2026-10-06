@@ -3430,10 +3430,10 @@ abstract class AppLocalizations {
   /// **'Истекла'**
   String get subscriptionExpiredStatus;
 
-  /// No description provided for @subscriptionTrialDaysLeftLine.
+  /// Plan card line while a subscription is on trial. Abbreviated "дн." rather than a spelled-out form because the count is interpolated and Russian needs three different endings (1 день, 2 дня, 5 дней) — the project deliberately uses String placeholders with no ICU plural, so an abbreviation is the only form that is correct for every count. The line only began rendering once the bloc read trialEndsAt; before that both branches of the expiry text produced an empty string.
   ///
   /// In ru, this message translates to:
-  /// **'Пробный период: осталось {days} дней'**
+  /// **'Пробный период: осталось {days} дн.'**
   String subscriptionTrialDaysLeftLine(String days);
 
   /// Subscription-card trailing text — plan expiry date, pre-formatted at the call site. Same value as `customerDetailPointsExpiryLine` ("до {date}") but scoped to a different screen; kept separate per the feature-prefix convention.

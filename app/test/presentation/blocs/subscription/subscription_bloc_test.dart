@@ -65,11 +65,6 @@ void main() {
     },
   };
 
-  // Served by GET /subscription/payments, not by /subscription — the main
-  // response has never carried a `payments` key. The status here is APPROVED
-  // because that is what PaymentStatus contains; the old fixture said
-  // 'CONFIRMED', which is exactly the value the page used to compare against
-  // and the reason an approved payment rendered as pending.
   // Served by GET /subscription/payments, newest first. A pending payment is
   // a row in here, not a `pendingPayment` key on the main response — that key
   // has never been sent, so the awaiting-approval banner never appeared.
@@ -442,7 +437,12 @@ void main() {
     });
 
     test('should count the trial days left from trialEndsAt', () async {
-      final endsIn5Days = DateTime.now().toUtc().add(const Duration(days: 5, hours: 1));
+      // Five days and three hours. inHours truncates, so a one-hour margin
+      // would land back on 120h exactly and read as 5 either way; three hours
+      // keeps the fixture clear of the boundary so the expectation pins the
+      // rounding rather than the truncation.
+      final endsIn5Days =
+          DateTime.now().toUtc().add(const Duration(days: 5, hours: 3));
       mockGet(<String, dynamic>{
         'plan': 'PREMIUM',
         'status': 'TRIAL',
@@ -455,7 +455,80 @@ void main() {
       final loaded = await bloc.stream
           .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
 
-      expect(loaded.trialDaysLeft, 5);
+      expect(loaded.trialDaysLeft, 6);
+    });
+
+    test('should report a whole week on the day a trial is created', () async {
+      // Trials are created as now + 7 days, so the difference is seven days
+      // minus milliseconds. Truncating told a merchant who had just signed up
+      // that six days remained.
+      mockGet(<String, dynamic>{
+        'plan': 'PREMIUM',
+        'status': 'TRIAL',
+        'trialEndsAt': DateTime.now()
+            .toUtc()
+            .add(const Duration(days: 7))
+            .subtract(const Duration(milliseconds: 5))
+            .toIso8601String(),
+      });
+      final bloc = SubscriptionBloc(dioClient: dioClient);
+      addTearDown(bloc.close);
+
+      bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
+      final loaded = await bloc.stream
+          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+
+      expect(loaded.trialDaysLeft, 7);
+    });
+
+    test('should still report a day left on the final day of a trial', () async {
+      // Ten hours left truncated to 0, which reads as "over" on a trial that
+      // still works.
+      mockGet(<String, dynamic>{
+        'plan': 'PREMIUM',
+        'status': 'TRIAL',
+        'trialEndsAt':
+            DateTime.now().toUtc().add(const Duration(hours: 10)).toIso8601String(),
+      });
+      final bloc = SubscriptionBloc(dioClient: dioClient);
+      addTearDown(bloc.close);
+
+      bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
+      final loaded = await bloc.stream
+          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+
+      expect(loaded.trialDaysLeft, 1);
+    });
+
+    test('should take the newest of two pending payments, whatever order the '
+        'server sends them in', () async {
+      // requestChange creates a PENDING row without checking for an existing
+      // one, so two are reachable. The oldest is listed first here on purpose.
+      mockGet(<String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
+          payments: <dynamic>[
+            {
+              'id': 'pay-older',
+              'amount': 149.0,
+              'method': 'CARD',
+              'status': 'PENDING',
+              'createdAt': '2026-09-01T00:00:00.000Z',
+            },
+            {
+              'id': 'pay-newer',
+              'amount': 299.0,
+              'method': 'CARD',
+              'status': 'PENDING',
+              'createdAt': '2026-10-05T00:00:00.000Z',
+            },
+          ]);
+      final bloc = SubscriptionBloc(dioClient: dioClient);
+      addTearDown(bloc.close);
+
+      bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
+      final loaded = await bloc.stream
+          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+
+      expect(loaded.pendingPayment?.id, 'pay-newer');
     });
 
     test('should report no days left rather than a negative count when the '
