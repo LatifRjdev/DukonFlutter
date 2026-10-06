@@ -35,25 +35,25 @@ class _MockSubscriptionBloc
     implements SubscriptionBloc {}
 
 SubscriptionLoaded _fakeNonPremiumSubscription() => SubscriptionLoaded(
-      plan: 'BUSINESS',
-      status: 'ACTIVE',
-      limits: const SubscriptionLimits(
-        maxStores: 3,
-        maxProducts: 2000,
-        maxStaff: 10,
-        maxDiscounts: 5,
-      ),
-      features: const SubscriptionFeatures(
-        hasReportsAll: true,
-        hasExport: false,
-        hasTelegram: true,
-        hasAllPush: false,
-        hasDelivery: true,
-        hasInventory: true,
-        hasEcommerceIntegration: false,
-      ),
-      payments: const [],
-    );
+  plan: 'BUSINESS',
+  status: 'ACTIVE',
+  limits: const SubscriptionLimits(
+    maxStores: 3,
+    maxProducts: 2000,
+    maxStaff: 10,
+    maxDiscounts: 5,
+  ),
+  features: const SubscriptionFeatures(
+    hasReportsAll: true,
+    hasExport: false,
+    hasTelegram: true,
+    hasAllPush: false,
+    hasDelivery: true,
+    hasInventory: true,
+    hasEcommerceIntegration: false,
+  ),
+  payments: const [],
+);
 
 class _FakeDioClient extends Fake implements DioClient {
   @override
@@ -61,8 +61,7 @@ class _FakeDioClient extends Fake implements DioClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
-  }) async =>
-      throw Exception('network unavailable');
+  }) async => throw Exception('network unavailable');
 
   @override
   Future<Response<T>> put<T>(
@@ -70,8 +69,7 @@ class _FakeDioClient extends Fake implements DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-  }) async =>
-      throw Exception('network unavailable');
+  }) async => throw Exception('network unavailable');
 }
 
 void main() {
@@ -96,12 +94,13 @@ void main() {
     subscriptionBloc = _MockSubscriptionBloc();
 
     when(() => authBloc.state).thenReturn(AuthInitial());
-    when(() => settingsBloc.state).thenReturn(
-      SettingsLoaded(fakeUser, themeMode: ThemeMode.light),
-    );
+    when(
+      () => settingsBloc.state,
+    ).thenReturn(SettingsLoaded(fakeUser, themeMode: ThemeMode.light));
     when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
-    when(() => subscriptionBloc.state)
-        .thenReturn(_fakeNonPremiumSubscription());
+    when(
+      () => subscriptionBloc.state,
+    ).thenReturn(_fakeNonPremiumSubscription());
 
     if (!sl.isRegistered<DioClient>()) {
       sl.registerSingleton<DioClient>(_FakeDioClient());
@@ -119,14 +118,14 @@ void main() {
   });
 
   Widget wrapWithBlocs(Widget child) => MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthBloc>.value(value: authBloc),
-          BlocProvider<SettingsBloc>.value(value: settingsBloc),
-          BlocProvider<StoreBloc>.value(value: storeBloc),
-          BlocProvider<SubscriptionBloc>.value(value: subscriptionBloc),
-        ],
-        child: child,
-      );
+    providers: [
+      BlocProvider<AuthBloc>.value(value: authBloc),
+      BlocProvider<SettingsBloc>.value(value: settingsBloc),
+      BlocProvider<StoreBloc>.value(value: storeBloc),
+      BlocProvider<SubscriptionBloc>.value(value: subscriptionBloc),
+    ],
+    child: child,
+  );
 
   Widget page() => const SettingsPage();
 
@@ -155,18 +154,23 @@ void main() {
       await screenMatchesGolden(tester, 'settings_dark');
     });
 
-    testGoldens('light theme — subscription still loading shows no PREMIUM badge',
-        (tester) async {
-      when(() => subscriptionBloc.state).thenReturn(SubscriptionInitial());
-      await pumpPageWithTheme(
-        tester,
-        page(),
-        brightness: Brightness.light,
-        wrap: wrapWithBlocs,
-        size: const Size(412, 900),
-      );
-      tester.takeException();
-      await screenMatchesGolden(tester, 'settings_subscription_loading_light');
-    });
+    testGoldens(
+      'light theme — subscription still loading shows no PREMIUM badge',
+      (tester) async {
+        when(() => subscriptionBloc.state).thenReturn(SubscriptionInitial());
+        await pumpPageWithTheme(
+          tester,
+          page(),
+          brightness: Brightness.light,
+          wrap: wrapWithBlocs,
+          size: const Size(412, 900),
+        );
+        tester.takeException();
+        await screenMatchesGolden(
+          tester,
+          'settings_subscription_loading_light',
+        );
+      },
+    );
   });
 }

@@ -18,10 +18,10 @@ void main() {
   late _MockDioClient dioClient;
 
   Response<dynamic> resp(dynamic body) => Response(
-        requestOptions: RequestOptions(path: ''),
-        statusCode: 200,
-        data: body,
-      );
+    requestOptions: RequestOptions(path: ''),
+    statusCode: 200,
+    data: body,
+  );
 
   /// The bloc issues TWO gets: /subscription for the plan, and
   /// /subscription/payments for the history, which the first has never
@@ -97,20 +97,33 @@ void main() {
         'should emit loading then loaded with mapped plan/limits/features/payments when request succeeds',
         setUp: () => mockGet(fullData, payments: paymentsFixture),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
               .having((s) => s.plan, 'plan', 'BUSINESS')
               .having((s) => s.status, 'status', 'ACTIVE')
               .having((s) => s.adminDiscount, 'adminDiscount', 10.5)
-              .having((s) => s.expiresAt, 'expiresAt', DateTime.parse('2026-08-01T00:00:00.000Z').toLocal())
+              .having(
+                (s) => s.expiresAt,
+                'expiresAt',
+                DateTime.parse('2026-08-01T00:00:00.000Z').toLocal(),
+              )
               .having((s) => s.limits.maxStores, 'limits.maxStores', 3)
               .having((s) => s.limits.maxProducts, 'limits.maxProducts', 2000)
               .having((s) => s.limits.maxStaff, 'limits.maxStaff', 10)
               .having((s) => s.limits.maxDiscounts, 'limits.maxDiscounts', 5)
-              .having((s) => s.features.hasReportsAll, 'features.hasReportsAll', true)
-              .having((s) => s.features.hasDelivery, 'features.hasDelivery', false)
+              .having(
+                (s) => s.features.hasReportsAll,
+                'features.hasReportsAll',
+                true,
+              )
+              .having(
+                (s) => s.features.hasDelivery,
+                'features.hasDelivery',
+                false,
+              )
               .having((s) => s.payments.length, 'payments.length', 2)
               .having((s) => s.payments.first.id, 'payments.first.id', 'p2')
               .having((s) => s.pendingPayment?.id, 'pendingPayment.id', 'p2')
@@ -118,7 +131,9 @@ void main() {
               .having((s) => s.isExpired, 'isExpired', false),
         ],
         verify: (_) {
-          verify(() => dioClient.get<dynamic>('/stores/store-1/subscription')).called(1);
+          verify(
+            () => dioClient.get<dynamic>('/stores/store-1/subscription'),
+          ).called(1);
         },
       );
 
@@ -126,7 +141,8 @@ void main() {
         'should fall back to plan/status/limits/features defaults when response body is empty',
         setUp: () => mockGet(<String, dynamic>{}),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
@@ -139,7 +155,11 @@ void main() {
               .having((s) => s.limits.maxProducts, 'limits.maxProducts', 500)
               .having((s) => s.limits.maxStaff, 'limits.maxStaff', 2)
               .having((s) => s.limits.maxDiscounts, 'limits.maxDiscounts', 0)
-              .having((s) => s.features.hasReportsAll, 'features.hasReportsAll', false)
+              .having(
+                (s) => s.features.hasReportsAll,
+                'features.hasReportsAll',
+                false,
+              )
               .having((s) => s.payments, 'payments', isEmpty)
               .having((s) => s.pendingPayment, 'pendingPayment', isNull),
         ],
@@ -157,7 +177,8 @@ void main() {
           },
         }),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
@@ -190,7 +211,8 @@ void main() {
           'limits': {'maxProducts': -1, 'maxStaff': -1, 'maxDiscounts': -1},
         }),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
@@ -207,7 +229,8 @@ void main() {
         'should mark state as expired-not-active when status is EXPIRED',
         setUp: () => mockGet(<String, dynamic>{'status': 'EXPIRED'}),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
@@ -220,7 +243,8 @@ void main() {
         'should treat TRIAL status as active and not expired',
         setUp: () => mockGet(<String, dynamic>{'status': 'TRIAL'}),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
@@ -233,7 +257,8 @@ void main() {
         'should emit a friendly offline message when the request throws NetworkException',
         setUp: () => mockGetError(const NetworkException()),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           const SubscriptionError(AppMessage.offline),
@@ -242,9 +267,12 @@ void main() {
 
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should map a 404 ServerException to "not found" instead of leaking raw message',
-        setUp: () => mockGetError(const ServerException('subscription not found', statusCode: 404)),
+        setUp: () => mockGetError(
+          const ServerException('subscription not found', statusCode: 404),
+        ),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           const SubscriptionError(AppMessage.notFound),
@@ -255,7 +283,8 @@ void main() {
         'should fall back to the generic failure message for an unrecognized error type',
         setUp: () => mockGetError(Exception('boom')),
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
         expect: () => [
           isA<SubscriptionLoading>(),
           const SubscriptionError(AppMessage.unknownError),
@@ -267,18 +296,22 @@ void main() {
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should submit the change request directly and reload without touching the upload endpoint',
         setUp: () {
-          when(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: any(named: 'data'),
-              )).thenAnswer((_) async => resp({'ok': true}));
+          when(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: any(named: 'data'),
+            ),
+          ).thenAnswer((_) async => resp({'ok': true}));
           mockGet(fullData, payments: paymentsFixture);
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionPlanChangeRequested(
-          storeId: 'store-1',
-          plan: 'BUSINESS',
-          paymentMethod: 'CASH',
-        )),
+        act: (bloc) => bloc.add(
+          const SubscriptionPlanChangeRequested(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CASH',
+          ),
+        ),
         expect: () => [
           isA<SubscriptionUploading>(),
           const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent),
@@ -286,31 +319,39 @@ void main() {
           isA<SubscriptionLoaded>(),
         ],
         verify: (_) {
-          verify(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: {'plan': 'BUSINESS', 'paymentMethod': 'CASH'},
-              )).called(1);
-          verifyNever(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/upload-receipt',
-                data: any(named: 'data'),
-              ));
+          verify(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: {'plan': 'BUSINESS', 'paymentMethod': 'CASH'},
+            ),
+          ).called(1);
+          verifyNever(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/upload-receipt',
+              data: any(named: 'data'),
+            ),
+          );
         },
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
         'should emit SubscriptionError when the change request fails',
         setUp: () {
-          when(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: any(named: 'data'),
-              )).thenThrow(const ServerException('boom', statusCode: 500));
+          when(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: any(named: 'data'),
+            ),
+          ).thenThrow(const ServerException('boom', statusCode: 500));
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(const SubscriptionPlanChangeRequested(
-          storeId: 'store-1',
-          plan: 'PREMIUM',
-          paymentMethod: 'CASH',
-        )),
+        act: (bloc) => bloc.add(
+          const SubscriptionPlanChangeRequested(
+            storeId: 'store-1',
+            plan: 'PREMIUM',
+            paymentMethod: 'CASH',
+          ),
+        ),
         expect: () => [
           isA<SubscriptionUploading>(),
           const SubscriptionError(AppMessage.serverError),
@@ -349,23 +390,29 @@ void main() {
         'should upload the receipt, submit the change request, then reload',
         wait: const Duration(milliseconds: 200),
         setUp: () {
-          when(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/upload-receipt',
-                data: any(named: 'data'),
-              )).thenAnswer((_) async => resp({'ok': true}));
-          when(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: any(named: 'data'),
-              )).thenAnswer((_) async => resp({'ok': true}));
+          when(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/upload-receipt',
+              data: any(named: 'data'),
+            ),
+          ).thenAnswer((_) async => resp({'ok': true}));
+          when(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: any(named: 'data'),
+            ),
+          ).thenAnswer((_) async => resp({'ok': true}));
           mockGet(fullData, payments: paymentsFixture);
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(SubscriptionReceiptUploaded(
-          storeId: 'store-1',
-          plan: 'BUSINESS',
-          paymentMethod: 'CARD',
-          receiptPath: receiptPath,
-        )),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
         expect: () => [
           isA<SubscriptionUploading>(),
           const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent),
@@ -373,14 +420,18 @@ void main() {
           isA<SubscriptionLoaded>(),
         ],
         verify: (_) {
-          verify(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/upload-receipt',
-                data: any(named: 'data'),
-              )).called(1);
-          verify(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: {'plan': 'BUSINESS', 'paymentMethod': 'CARD'},
-              )).called(1);
+          verify(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/upload-receipt',
+              data: any(named: 'data'),
+            ),
+          ).called(1);
+          verify(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: {'plan': 'BUSINESS', 'paymentMethod': 'CARD'},
+            ),
+          ).called(1);
         },
       );
 
@@ -388,27 +439,33 @@ void main() {
         'should emit SubscriptionError and skip the change request when the upload itself fails',
         wait: const Duration(milliseconds: 200),
         setUp: () {
-          when(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/upload-receipt',
-                data: any(named: 'data'),
-              )).thenThrow(const NetworkException());
+          when(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/upload-receipt',
+              data: any(named: 'data'),
+            ),
+          ).thenThrow(const NetworkException());
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
-        act: (bloc) => bloc.add(SubscriptionReceiptUploaded(
-          storeId: 'store-1',
-          plan: 'BUSINESS',
-          paymentMethod: 'CARD',
-          receiptPath: receiptPath,
-        )),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
         expect: () => [
           isA<SubscriptionUploading>(),
           const SubscriptionError(AppMessage.offline),
         ],
         verify: (_) {
-          verifyNever(() => dioClient.post<dynamic>(
-                '/stores/store-1/subscription/request-change',
-                data: any(named: 'data'),
-              ));
+          verifyNever(
+            () => dioClient.post<dynamic>(
+              '/stores/store-1/subscription/request-change',
+              data: any(named: 'data'),
+            ),
+          );
         },
       );
     });
@@ -429,8 +486,9 @@ void main() {
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.expiresAt, isNotNull);
       expect(loaded.expiresAt!.toUtc().year, 2027);
@@ -441,8 +499,9 @@ void main() {
       // would land back on 120h exactly and read as 5 either way; three hours
       // keeps the fixture clear of the boundary so the expectation pins the
       // rounding rather than the truncation.
-      final endsIn5Days =
-          DateTime.now().toUtc().add(const Duration(days: 5, hours: 3));
+      final endsIn5Days = DateTime.now().toUtc().add(
+        const Duration(days: 5, hours: 3),
+      );
       mockGet(<String, dynamic>{
         'plan': 'PREMIUM',
         'status': 'TRIAL',
@@ -452,8 +511,9 @@ void main() {
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.trialDaysLeft, 6);
     });
@@ -475,58 +535,68 @@ void main() {
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.trialDaysLeft, 7);
     });
 
-    test('should still report a day left on the final day of a trial', () async {
-      // Ten hours left truncated to 0, which reads as "over" on a trial that
-      // still works.
-      mockGet(<String, dynamic>{
-        'plan': 'PREMIUM',
-        'status': 'TRIAL',
-        'trialEndsAt':
-            DateTime.now().toUtc().add(const Duration(hours: 10)).toIso8601String(),
-      });
-      final bloc = SubscriptionBloc(dioClient: dioClient);
-      addTearDown(bloc.close);
+    test(
+      'should still report a day left on the final day of a trial',
+      () async {
+        // Ten hours left truncated to 0, which reads as "over" on a trial that
+        // still works.
+        mockGet(<String, dynamic>{
+          'plan': 'PREMIUM',
+          'status': 'TRIAL',
+          'trialEndsAt': DateTime.now()
+              .toUtc()
+              .add(const Duration(hours: 10))
+              .toIso8601String(),
+        });
+        final bloc = SubscriptionBloc(dioClient: dioClient);
+        addTearDown(bloc.close);
 
-      bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+        bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
+        final loaded =
+            await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+                as SubscriptionLoaded;
 
-      expect(loaded.trialDaysLeft, 1);
-    });
+        expect(loaded.trialDaysLeft, 1);
+      },
+    );
 
     test('should take the newest of two pending payments, whatever order the '
         'server sends them in', () async {
       // requestChange creates a PENDING row without checking for an existing
       // one, so two are reachable. The oldest is listed first here on purpose.
-      mockGet(<String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
-          payments: <dynamic>[
-            {
-              'id': 'pay-older',
-              'amount': 149.0,
-              'method': 'CARD',
-              'status': 'PENDING',
-              'createdAt': '2026-09-01T00:00:00.000Z',
-            },
-            {
-              'id': 'pay-newer',
-              'amount': 299.0,
-              'method': 'CARD',
-              'status': 'PENDING',
-              'createdAt': '2026-10-05T00:00:00.000Z',
-            },
-          ]);
+      mockGet(
+        <String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
+        payments: <dynamic>[
+          {
+            'id': 'pay-older',
+            'amount': 149.0,
+            'method': 'CARD',
+            'status': 'PENDING',
+            'createdAt': '2026-09-01T00:00:00.000Z',
+          },
+          {
+            'id': 'pay-newer',
+            'amount': 299.0,
+            'method': 'CARD',
+            'status': 'PENDING',
+            'createdAt': '2026-10-05T00:00:00.000Z',
+          },
+        ],
+      );
       final bloc = SubscriptionBloc(dioClient: dioClient);
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.pendingPayment?.id, 'pay-newer');
     });
@@ -536,15 +606,18 @@ void main() {
       mockGet(<String, dynamic>{
         'plan': 'PREMIUM',
         'status': 'TRIAL',
-        'trialEndsAt':
-            DateTime.now().toUtc().subtract(const Duration(days: 3)).toIso8601String(),
+        'trialEndsAt': DateTime.now()
+            .toUtc()
+            .subtract(const Duration(days: 3))
+            .toIso8601String(),
       });
       final bloc = SubscriptionBloc(dioClient: dioClient);
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.trialDaysLeft, 0);
     });
@@ -552,36 +625,41 @@ void main() {
     test('should surface a pending payment from the history', () async {
       // The response has no pendingPayment key; it is derived from the
       // payments list, which is where a PENDING row actually lives.
-      mockGet(<String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
-          payments: <dynamic>[
-            {
-              'id': 'pay-pending',
-              'amount': 400.0,
-              'method': 'CASH',
-              'status': 'PENDING',
-              'createdAt': '2026-10-05T21:18:33.301Z',
-            },
-            {
-              'id': 'pay-old',
-              'amount': 400.0,
-              'method': 'CASH',
-              'status': 'APPROVED',
-              'createdAt': '2026-09-05T21:18:33.301Z',
-            },
-          ]);
+      mockGet(
+        <String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
+        payments: <dynamic>[
+          {
+            'id': 'pay-pending',
+            'amount': 400.0,
+            'method': 'CASH',
+            'status': 'PENDING',
+            'createdAt': '2026-10-05T21:18:33.301Z',
+          },
+          {
+            'id': 'pay-old',
+            'amount': 400.0,
+            'method': 'CASH',
+            'status': 'APPROVED',
+            'createdAt': '2026-09-05T21:18:33.301Z',
+          },
+        ],
+      );
       final bloc = SubscriptionBloc(dioClient: dioClient);
       addTearDown(bloc.close);
 
       bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+      final loaded =
+          await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+              as SubscriptionLoaded;
 
       expect(loaded.pendingPayment?.id, 'pay-pending');
     });
 
-    test('should report no pending payment when every payment is settled',
-        () async {
-      mockGet(<String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
+    test(
+      'should report no pending payment when every payment is settled',
+      () async {
+        mockGet(
+          <String, dynamic>{'plan': 'BUSINESS', 'status': 'ACTIVE'},
           payments: <dynamic>[
             {
               'id': 'pay-old',
@@ -590,15 +668,18 @@ void main() {
               'status': 'APPROVED',
               'createdAt': '2026-09-05T21:18:33.301Z',
             },
-          ]);
-      final bloc = SubscriptionBloc(dioClient: dioClient);
-      addTearDown(bloc.close);
+          ],
+        );
+        final bloc = SubscriptionBloc(dioClient: dioClient);
+        addTearDown(bloc.close);
 
-      bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
-      final loaded = await bloc.stream
-          .firstWhere((s) => s is SubscriptionLoaded) as SubscriptionLoaded;
+        bloc.add(const SubscriptionLoadRequested(storeId: 's1'));
+        final loaded =
+            await bloc.stream.firstWhere((s) => s is SubscriptionLoaded)
+                as SubscriptionLoaded;
 
-      expect(loaded.pendingPayment, isNull);
-    });
+        expect(loaded.pendingPayment, isNull);
+      },
+    );
   });
 }

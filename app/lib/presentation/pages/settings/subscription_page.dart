@@ -478,38 +478,37 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     // Switching on the mapped kind rather than the raw string: the raw switch
     // tested for 'CONFIRMED', which PaymentStatus does not contain, so every
     // APPROVED payment landed in the default branch and read as pending.
-    final (Color statusColor, String statusLabel) =
-        switch (paymentStatusKind(payment.status)) {
+    final (Color statusColor, String statusLabel) = switch (paymentStatusKind(
+      payment.status,
+    )) {
       PaymentStatusKind.approved => (
-          AppColors.success,
-          l10n.subscriptionPaymentConfirmedStatus,
-        ),
+        AppColors.success,
+        l10n.subscriptionPaymentConfirmedStatus,
+      ),
       PaymentStatusKind.rejected => (
-          AppColors.error,
-          l10n.subscriptionPaymentRejectedStatus,
-        ),
+        AppColors.error,
+        l10n.subscriptionPaymentRejectedStatus,
+      ),
       PaymentStatusKind.pending => (
-          AppColors.warning,
-          l10n.subscriptionPaymentPendingStatus,
-        ),
+        AppColors.warning,
+        l10n.subscriptionPaymentPendingStatus,
+      ),
       PaymentStatusKind.failed => (
-          AppColors.error,
-          l10n.subscriptionPaymentFailedStatus,
-        ),
+        AppColors.error,
+        l10n.subscriptionPaymentFailedStatus,
+      ),
       PaymentStatusKind.refunded => (
-          AppColors.info,
-          l10n.subscriptionPaymentRefundedStatus,
-        ),
+        AppColors.info,
+        l10n.subscriptionPaymentRefundedStatus,
+      ),
       PaymentStatusKind.unknown => (
-          context.textSecondary,
-          l10n.subscriptionPaymentUnknownStatus,
-        ),
+        context.textSecondary,
+        l10n.subscriptionPaymentUnknownStatus,
+      ),
     };
 
     return Semantics(
-      label: AppLocalizations.of(
-        context,
-      )!.a11yPaymentOf(statusLabel),
+      label: AppLocalizations.of(context)!.a11yPaymentOf(statusLabel),
       button: true,
       child: GestureDetector(
         onTap: () => _showPaymentDetail(payment),
@@ -541,8 +540,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       const SizedBox(height: 2),
                       Text(
                         payment.adminNote!,
-                        style:
-                            TextStyle(fontSize: 12, color: context.textMuted),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: context.textMuted,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -621,10 +622,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          AppLocalizations.of(
-            ctx,
-          )!.subscriptionPaymentDialogTitle(
-              DateFormat('dd.MM.yyyy').format(payment.createdAt)),
+          AppLocalizations.of(ctx)!.subscriptionPaymentDialogTitle(
+            DateFormat('dd.MM.yyyy').format(payment.createdAt),
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,

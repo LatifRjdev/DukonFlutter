@@ -18,26 +18,26 @@ class _MockSubscriptionBloc
     implements SubscriptionBloc {}
 
 SubscriptionLoaded _fakeLoaded() => SubscriptionLoaded(
-      plan: 'BUSINESS',
-      status: 'ACTIVE',
-      expiresAt: DateTime(2026, 3, 30),
-      limits: const SubscriptionLimits(
-        maxStores: 3,
-        maxProducts: 2000,
-        maxStaff: 10,
-        maxDiscounts: 5,
-      ),
-      features: const SubscriptionFeatures(
-        hasReportsAll: true,
-        hasExport: false,
-        hasTelegram: true,
-        hasAllPush: false,
-        hasDelivery: true,
-        hasInventory: true,
-        hasEcommerceIntegration: false,
-      ),
-      payments: const [],
-    );
+  plan: 'BUSINESS',
+  status: 'ACTIVE',
+  expiresAt: DateTime(2026, 3, 30),
+  limits: const SubscriptionLimits(
+    maxStores: 3,
+    maxProducts: 2000,
+    maxStaff: 10,
+    maxDiscounts: 5,
+  ),
+  features: const SubscriptionFeatures(
+    hasReportsAll: true,
+    hasExport: false,
+    hasTelegram: true,
+    hasAllPush: false,
+    hasDelivery: true,
+    hasInventory: true,
+    hasEcommerceIntegration: false,
+  ),
+  payments: const [],
+);
 
 Future<void> _pumpPage(
   WidgetTester tester,

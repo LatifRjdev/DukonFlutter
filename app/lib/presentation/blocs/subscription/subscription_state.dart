@@ -26,11 +26,11 @@ class SubscriptionLimits extends Equatable {
       );
 
   factory SubscriptionLimits.defaults() => const SubscriptionLimits(
-        maxStores: 1,
-        maxProducts: 500,
-        maxStaff: 2,
-        maxDiscounts: 0,
-      );
+    maxStores: 1,
+    maxProducts: 500,
+    maxStaff: 2,
+    maxDiscounts: 0,
+  );
 
   @override
   List<Object?> get props => [maxStores, maxProducts, maxStaff, maxDiscounts];
@@ -71,14 +71,14 @@ class SubscriptionFeatures extends Equatable {
       );
 
   factory SubscriptionFeatures.defaults() => const SubscriptionFeatures(
-        hasReportsAll: false,
-        hasExport: false,
-        hasTelegram: false,
-        hasAllPush: false,
-        hasDelivery: false,
-        hasInventory: false,
-        hasEcommerceIntegration: false,
-      );
+    hasReportsAll: false,
+    hasExport: false,
+    hasTelegram: false,
+    hasAllPush: false,
+    hasDelivery: false,
+    hasInventory: false,
+    hasEcommerceIntegration: false,
+  );
 
   bool hasFeature(String key) {
     switch (key) {
@@ -103,14 +103,14 @@ class SubscriptionFeatures extends Equatable {
 
   @override
   List<Object?> get props => [
-        hasReportsAll,
-        hasExport,
-        hasTelegram,
-        hasAllPush,
-        hasDelivery,
-        hasInventory,
-        hasEcommerceIntegration,
-      ];
+    hasReportsAll,
+    hasExport,
+    hasTelegram,
+    hasAllPush,
+    hasDelivery,
+    hasInventory,
+    hasEcommerceIntegration,
+  ];
 }
 
 class PaymentRecord extends Equatable {
@@ -133,23 +133,25 @@ class PaymentRecord extends Equatable {
   });
 
   factory PaymentRecord.fromJson(Map<String, dynamic> json) => PaymentRecord(
-        id: json['id'] as String? ?? '',
-        amount: (json['amount'] as num?)?.toDouble() ?? 0,
-        method: json['method'] as String? ?? 'CARD',
-        status: json['status'] as String? ?? 'PENDING',
-        createdAt: json['createdAt'] != null
-            ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ?? DateTime.now()
-            : DateTime.now(),
-        // The column is `receiptImage` and holds a path relative to the API
-        // host, not a URL. Reading 'receiptUrl' meant the receipt block never
-        // rendered; keeping it relative would have meant Image.network failing
-        // on every one.
-        receiptUrl: _receiptUrl(json['receiptImage'] as String?),
-        // `rejectionReason` is the admin's reason for refusing; `note` is the
-        // general note a request carries. The old key 'adminNote' is neither,
-        // so a rejected payment never showed why.
-        adminNote: (json['rejectionReason'] as String?) ?? (json['note'] as String?),
-      );
+    id: json['id'] as String? ?? '',
+    amount: (json['amount'] as num?)?.toDouble() ?? 0,
+    method: json['method'] as String? ?? 'CARD',
+    status: json['status'] as String? ?? 'PENDING',
+    createdAt: json['createdAt'] != null
+        ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ??
+              DateTime.now()
+        : DateTime.now(),
+    // The column is `receiptImage` and holds a path relative to the API
+    // host, not a URL. Reading 'receiptUrl' meant the receipt block never
+    // rendered; keeping it relative would have meant Image.network failing
+    // on every one.
+    receiptUrl: _receiptUrl(json['receiptImage'] as String?),
+    // `rejectionReason` is the admin's reason for refusing; `note` is the
+    // general note a request carries. The old key 'adminNote' is neither,
+    // so a rejected payment never showed why.
+    adminNote:
+        (json['rejectionReason'] as String?) ?? (json['note'] as String?),
+  );
 
   /// `receiptImage` is stored as e.g. `uploads/receipts/abc.jpg`.
   static String? _receiptUrl(String? path) {
@@ -160,8 +162,15 @@ class PaymentRecord extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, amount, method, status, createdAt, receiptUrl, adminNote];
+  List<Object?> get props => [
+    id,
+    amount,
+    method,
+    status,
+    createdAt,
+    receiptUrl,
+    adminNote,
+  ];
 }
 
 // ─── States ───────────────────────────────────────────────────────────────────
@@ -205,16 +214,16 @@ class SubscriptionLoaded extends SubscriptionState {
 
   @override
   List<Object?> get props => [
-        plan,
-        status,
-        expiresAt,
-        trialDaysLeft,
-        adminDiscount,
-        limits,
-        features,
-        payments,
-        pendingPayment,
-      ];
+    plan,
+    status,
+    expiresAt,
+    trialDaysLeft,
+    adminDiscount,
+    limits,
+    features,
+    payments,
+    pendingPayment,
+  ];
 }
 
 class SubscriptionError extends SubscriptionState {

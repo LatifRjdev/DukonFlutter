@@ -52,10 +52,15 @@ void main() {
     // tells them. Mirrors the admin's subscription-status test, which parses
     // the same file.
     final schema = File('../api/prisma/schema.prisma').readAsStringSync();
-    final block =
-        RegExp(r'^enum PaymentStatus\s*\{([^}]*)\}', multiLine: true)
-            .firstMatch(schema);
-    expect(block, isNotNull, reason: 'PaymentStatus not found in schema.prisma');
+    final block = RegExp(
+      r'^enum PaymentStatus\s*\{([^}]*)\}',
+      multiLine: true,
+    ).firstMatch(schema);
+    expect(
+      block,
+      isNotNull,
+      reason: 'PaymentStatus not found in schema.prisma',
+    );
 
     final fromSchema = block!
         .group(1)!
@@ -64,8 +69,11 @@ void main() {
         .where((l) => l.isNotEmpty);
 
     for (final status in fromSchema) {
-      expect(paymentStatusKind(status), isNot(PaymentStatusKind.unknown),
-          reason: '$status has no deliberate mapping');
+      expect(
+        paymentStatusKind(status),
+        isNot(PaymentStatusKind.unknown),
+        reason: '$status has no deliberate mapping',
+      );
     }
   });
 }

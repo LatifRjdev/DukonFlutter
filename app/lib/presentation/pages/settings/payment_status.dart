@@ -30,12 +30,12 @@ enum PaymentStatusKind {
 }
 
 PaymentStatusKind paymentStatusKind(String status) => switch (status) {
-      'APPROVED' || 'COMPLETED' => PaymentStatusKind.approved,
-      'REJECTED' => PaymentStatusKind.rejected,
-      'FAILED' => PaymentStatusKind.failed,
-      'PENDING' => PaymentStatusKind.pending,
-      // Deliberately its own kind, not `rejected`: a refund is a payment that
-      // succeeded and was later returned, and saying "отклонён" would be wrong.
-      'REFUNDED' => PaymentStatusKind.refunded,
-      _ => PaymentStatusKind.unknown,
-    };
+  'APPROVED' || 'COMPLETED' => PaymentStatusKind.approved,
+  'REJECTED' => PaymentStatusKind.rejected,
+  'FAILED' => PaymentStatusKind.failed,
+  'PENDING' => PaymentStatusKind.pending,
+  // Deliberately its own kind, not `rejected`: a refund is a payment that
+  // succeeded and was later returned, and saying "отклонён" would be wrong.
+  'REFUNDED' => PaymentStatusKind.refunded,
+  _ => PaymentStatusKind.unknown,
+};
