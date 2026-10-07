@@ -1843,6 +1843,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get subscriptionExpiredStatus => 'Истекла';
 
   @override
+  String get subscriptionPastDueStatus => 'Просрочена';
+
+  @override
+  String get subscriptionUnknownStatus => 'Статус неизвестен';
+
+  @override
   String subscriptionTrialDaysLeftLine(String days) {
     return 'Пробный период: осталось $days дн.';
   }
