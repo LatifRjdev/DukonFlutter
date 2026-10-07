@@ -25,7 +25,12 @@ describe('PlanView', () => {
       .filter((l) => l.startsWith('has'))
       .map((l) => l.split(/\s+/)[0]);
 
-    expect(fromSchema.length).toBeGreaterThan(0);
+    // Counts must match exactly, not merely be non-empty. `> 0` rules out the
+    // regex failing outright but NOT a partial capture: if a schema edit ever
+    // made `[^}]*` stop early and pick up 5 of 12 flags, every one of those 5
+    // would be in the array and the test would pass while missing the other 7
+    // — silently failing in exactly the drift scenario it exists to catch.
+    expect(fromSchema).toHaveLength(PLAN_FEATURE_FLAGS.length);
     for (const flag of fromSchema) {
       expect(PLAN_FEATURE_FLAGS).toContain(flag);
     }
@@ -45,6 +50,22 @@ describe('PlanView', () => {
   it('should treat a null or zero discount as full price', () => {
     expect(discountedPrice(200, 0)).toBe(200);
     expect(discountedPrice(200, null)).toBe(200);
+  });
+
+  it('should make a full discount free rather than nearly free', () => {
+    expect(discountedPrice(200, 100)).toBe(0);
+  });
+
+  it('should never produce a negative price', () => {
+    // Unreachable today — SetDiscountDto is @Min(0) @Max(100) and is the only
+    // writer. Pinned anyway because this is the one place a merchant's price
+    // is decided, and "the caller validates" is not something a pricing
+    // function should have to assume.
+    expect(discountedPrice(200, 150)).toBe(0);
+  });
+
+  it('should ignore a negative discount rather than inflating the price', () => {
+    expect(discountedPrice(200, -25)).toBe(200);
   });
 
   it('should expose the discounted price and every flag on the view', () => {

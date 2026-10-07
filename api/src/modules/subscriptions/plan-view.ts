@@ -54,7 +54,14 @@ export function discountedPrice(
   listPrice: number,
   discountPercent: number | null | undefined,
 ): number {
-  const discount = discountPercent ? Number(discountPercent) : 0;
+  // Clamped rather than trusted. `SetDiscountDto` constrains this to 0-100 and
+  // is the only writer today, so nothing can currently reach the branches
+  // below — but this function is now the single place a merchant's price is
+  // decided, and a price that goes negative because a caller skipped
+  // validation is not a failure mode worth leaving open for the sake of two
+  // lines.
+  const raw = discountPercent ? Number(discountPercent) : 0;
+  const discount = Math.min(100, Math.max(0, raw));
   return Math.round(listPrice * (1 - discount / 100) * 100) / 100;
 }
 
