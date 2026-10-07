@@ -33,9 +33,14 @@ SubscriptionLoaded _fakeLoaded() => SubscriptionLoaded(
     hasAllPush: false,
     hasDelivery: true,
     hasInventory: true,
+    hasZakat: false,
+    hasInvestments: false,
+    hasLoyalty: false,
+    hasBatchProfitability: false,
     hasEcommerceIntegration: false,
   ),
   payments: const [],
+  availablePlans: const [],
 );
 
 Future<void> _pumpPage(

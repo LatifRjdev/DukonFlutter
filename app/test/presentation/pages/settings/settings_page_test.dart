@@ -87,6 +87,7 @@ SubscriptionLoaded _subscriptionLoaded({
       limits: SubscriptionLimits.defaults(),
       features: SubscriptionFeatures.defaults(),
       payments: const [],
+      availablePlans: const [],
     );
 
 void main() {

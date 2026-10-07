@@ -37,9 +37,13 @@ class SubscriptionLimits extends Equatable {
   List<Object?> get props => [maxProducts, maxStaff, maxDiscounts];
 }
 
-// Keep in sync with SubscriptionsService.getSubscription()'s `features` object
-// (api/src/modules/subscriptions/subscriptions.service.ts) — the backend hand-maintains
-// this same 7-key list, so a new flag added to one side needs the other updated too.
+// Mirrors `PLAN_FEATURE_FLAGS` in
+// api/src/modules/subscriptions/plan-view.ts, which is itself checked against
+// `model SubscriptionPlanConfig` in schema.prisma by plan-view.spec.ts. This
+// list used to be hand-kept on both sides — the old comment here said so — and
+// four flags were added to one side only. Three of those four are enforced with
+// @RequiresFeature on whole controllers, so the app could not gate zakat,
+// loyalty or batch profitability and merchants met a 403 instead.
 class SubscriptionFeatures extends Equatable {
   final bool hasReportsAll;
   final bool hasExport;
@@ -47,6 +51,10 @@ class SubscriptionFeatures extends Equatable {
   final bool hasAllPush;
   final bool hasDelivery;
   final bool hasInventory;
+  final bool hasZakat;
+  final bool hasInvestments;
+  final bool hasLoyalty;
+  final bool hasBatchProfitability;
   final bool hasEcommerceIntegration;
 
   const SubscriptionFeatures({
@@ -56,6 +64,10 @@ class SubscriptionFeatures extends Equatable {
     required this.hasAllPush,
     required this.hasDelivery,
     required this.hasInventory,
+    required this.hasZakat,
+    required this.hasInvestments,
+    required this.hasLoyalty,
+    required this.hasBatchProfitability,
     required this.hasEcommerceIntegration,
   });
 
@@ -67,10 +79,18 @@ class SubscriptionFeatures extends Equatable {
         hasAllPush: json['hasAllPush'] as bool? ?? false,
         hasDelivery: json['hasDelivery'] as bool? ?? false,
         hasInventory: json['hasInventory'] as bool? ?? false,
+        hasZakat: json['hasZakat'] as bool? ?? false,
+        hasInvestments: json['hasInvestments'] as bool? ?? false,
+        hasLoyalty: json['hasLoyalty'] as bool? ?? false,
+        hasBatchProfitability: json['hasBatchProfitability'] as bool? ?? false,
         hasEcommerceIntegration:
             json['hasEcommerceIntegration'] as bool? ?? false,
       );
 
+  // `?? false` throughout, and defaults are all false: an absent flag denies.
+  // The deleted `hasFeature(String)` did the opposite — `default: return true`
+  // — against a server helper documented as fail-closed precisely so a
+  // misconfigured plan cannot silently unlock a paid feature.
   factory SubscriptionFeatures.defaults() => const SubscriptionFeatures(
     hasReportsAll: false,
     hasExport: false,
@@ -78,29 +98,12 @@ class SubscriptionFeatures extends Equatable {
     hasAllPush: false,
     hasDelivery: false,
     hasInventory: false,
+    hasZakat: false,
+    hasInvestments: false,
+    hasLoyalty: false,
+    hasBatchProfitability: false,
     hasEcommerceIntegration: false,
   );
-
-  bool hasFeature(String key) {
-    switch (key) {
-      case 'hasReportsAll':
-        return hasReportsAll;
-      case 'hasExport':
-        return hasExport;
-      case 'hasTelegram':
-        return hasTelegram;
-      case 'hasAllPush':
-        return hasAllPush;
-      case 'hasDelivery':
-        return hasDelivery;
-      case 'hasInventory':
-        return hasInventory;
-      case 'hasEcommerceIntegration':
-        return hasEcommerceIntegration;
-      default:
-        return true;
-    }
-  }
 
   @override
   List<Object?> get props => [
@@ -110,7 +113,60 @@ class SubscriptionFeatures extends Equatable {
     hasAllPush,
     hasDelivery,
     hasInventory,
+    hasZakat,
+    hasInvestments,
+    hasLoyalty,
+    hasBatchProfitability,
     hasEcommerceIntegration,
+  ];
+}
+
+/// One plan as offered to THIS merchant: [price] already has their
+/// `adminDiscount` applied, server-side, by the same helper `request-change`
+/// uses to compute what they will be charged.
+class SubscriptionPlanOption extends Equatable {
+  final String plan;
+  final double price;
+  final double listPrice;
+  final int maxProducts;
+  final int maxStaff;
+  final int maxDiscounts;
+  final SubscriptionFeatures features;
+
+  const SubscriptionPlanOption({
+    required this.plan,
+    required this.price,
+    required this.listPrice,
+    required this.maxProducts,
+    required this.maxStaff,
+    required this.maxDiscounts,
+    required this.features,
+  });
+
+  bool get isDiscounted => price < listPrice;
+
+  factory SubscriptionPlanOption.fromJson(Map<String, dynamic> json) =>
+      SubscriptionPlanOption(
+        plan: json['plan'] as String? ?? '',
+        price: (json['price'] as num?)?.toDouble() ?? 0,
+        listPrice: (json['listPrice'] as num?)?.toDouble() ?? 0,
+        maxProducts: (json['maxProducts'] as num?)?.toInt() ?? 0,
+        maxStaff: (json['maxStaff'] as num?)?.toInt() ?? 0,
+        maxDiscounts: (json['maxDiscounts'] as num?)?.toInt() ?? 0,
+        features: SubscriptionFeatures.fromJson(
+          (json['features'] as Map<String, dynamic>?) ?? const {},
+        ),
+      );
+
+  @override
+  List<Object?> get props => [
+    plan,
+    price,
+    listPrice,
+    maxProducts,
+    maxStaff,
+    maxDiscounts,
+    features,
   ];
 }
 
@@ -208,12 +264,19 @@ class SubscriptionLoaded extends SubscriptionState {
   final List<PaymentRecord> payments;
   final PaymentRecord? pendingPayment;
 
+  /// Every plan as offered to this merchant, priced with their discount
+  /// already applied server-side. Empty when the response omits it — never
+  /// invented — so the card list can render an error instead of a price
+  /// nobody promised.
+  final List<SubscriptionPlanOption> availablePlans;
+
   const SubscriptionLoaded({
     required this.plan,
     required this.status,
     required this.limits,
     required this.features,
     required this.payments,
+    required this.availablePlans,
     this.expiresAt,
     this.trialDaysLeft,
     this.adminDiscount,
@@ -247,6 +310,7 @@ class SubscriptionLoaded extends SubscriptionState {
     features,
     payments,
     pendingPayment,
+    availablePlans,
   ];
 }
 

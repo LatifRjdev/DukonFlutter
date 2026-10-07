@@ -196,6 +196,10 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
           : SubscriptionFeatures.defaults(),
       payments: payments,
       pendingPayment: pendingPayment,
+      availablePlans: (data['availablePlans'] as List<dynamic>? ?? const [])
+          .whereType<Map<String, dynamic>>()
+          .map(SubscriptionPlanOption.fromJson)
+          .toList(),
     );
   }
 

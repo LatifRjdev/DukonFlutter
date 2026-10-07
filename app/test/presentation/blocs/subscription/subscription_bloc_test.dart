@@ -177,6 +177,131 @@ void main() {
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
+        'should read the four flags the response gained, not just the original seven',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'BUSINESS',
+          'status': 'ACTIVE',
+          'features': {
+            'hasReportsAll': true,
+            'hasExport': false,
+            'hasTelegram': true,
+            'hasAllPush': false,
+            'hasDelivery': true,
+            'hasInventory': true,
+            'hasZakat': true,
+            'hasInvestments': true,
+            'hasLoyalty': true,
+            'hasBatchProfitability': true,
+            'hasEcommerceIntegration': false,
+          },
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          // The four that used to be dropped on the floor. Three of them are
+          // enforced server-side, so the app could not gate what the server
+          // would refuse.
+          isA<SubscriptionLoaded>()
+              .having((s) => s.features.hasZakat, 'hasZakat', true)
+              .having((s) => s.features.hasLoyalty, 'hasLoyalty', true)
+              .having(
+                (s) => s.features.hasBatchProfitability,
+                'hasBatchProfitability',
+                true,
+              )
+              .having((s) => s.features.hasInvestments, 'hasInvestments', true),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should deny a flag the response omits rather than assuming it',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'START',
+          'status': 'ACTIVE',
+          'features': {'hasReportsAll': true},
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>()
+              .having((s) => s.features.hasZakat, 'hasZakat', false)
+              .having((s) => s.features.hasLoyalty, 'hasLoyalty', false),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should read every plan and its price from availablePlans',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'START',
+          'status': 'ACTIVE',
+          'availablePlans': [
+            {
+              'plan': 'START',
+              'price': 134.0,
+              'listPrice': 200.0,
+              'maxProducts': 500,
+              'maxStaff': 2,
+              'maxDiscounts': 0,
+              'features': {'hasZakat': false, 'hasLoyalty': false},
+            },
+            {
+              'plan': 'BUSINESS',
+              'price': 268.0,
+              'listPrice': 400.0,
+              'maxProducts': 2000,
+              'maxStaff': 10,
+              'maxDiscounts': 5,
+              'features': {'hasZakat': true, 'hasLoyalty': true},
+            },
+          ],
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>()
+              .having((s) => s.availablePlans.length, 'plans', 2)
+              .having((s) => s.availablePlans.first.plan, 'first.plan', 'START')
+              // The discounted price, not the list price: this is the number
+              // that will be charged, and the whole point of the change.
+              .having((s) => s.availablePlans.first.price, 'first.price', 134.0)
+              .having(
+                (s) => s.availablePlans.first.listPrice,
+                'first.listPrice',
+                200.0,
+              )
+              .having(
+                (s) => s.availablePlans[1].maxProducts,
+                'business.maxProducts',
+                2000,
+              ),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should leave availablePlans empty when the response omits it',
+        setUp: () => mockGet(<String, dynamic>{'plan': 'START'}),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          // Empty, not invented. The card list renders an error state rather
+          // than a price nobody promised.
+          isA<SubscriptionLoaded>().having(
+            (s) => s.availablePlans,
+            'availablePlans',
+            isEmpty,
+          ),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
         'should report a PAST_DUE subscription as lapsed, not as active',
         setUp: () => mockGet(<String, dynamic>{
           'plan': 'BUSINESS',
