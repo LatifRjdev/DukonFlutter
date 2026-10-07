@@ -3178,11 +3178,11 @@ abstract class AppLocalizations {
   /// **'Вы уверены, что хотите выйти?'**
   String get settingsLogoutConfirmBody;
 
-  /// Settings page — dialog title shown when tapping the ecommerce integration tile on a non-PREMIUM plan
+  /// Dialog title when a merchant opens a feature their plan does not include. The plan name is the CHEAPEST plan whose config carries the flag, taken from availablePlans — not a constant. Replaced settingsPremiumGateTitle, which said PREMIUM for every feature, including zakat and loyalty, which BUSINESS already includes.
   ///
   /// In ru, this message translates to:
-  /// **'Доступно на тарифе PREMIUM'**
-  String get settingsPremiumGateTitle;
+  /// **'Доступно на тарифе {plan}'**
+  String settingsPlanGateTitle(String plan);
 
   /// Settings page — body text of the PREMIUM upsell dialog for the ecommerce integration
   ///

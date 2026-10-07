@@ -24,7 +24,29 @@ import '../../l10n/app_message_l10n.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../injection.dart';
 import '../../widgets/common/app_snackbar.dart';
+import 'plan_gate.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
+
+/// Russian brand name for a raw `enum SubscriptionPlan` value
+/// (START/BUSINESS/PREMIUM), used on this page's own plan tile and reused —
+/// via this file's public, top-level form — by other gated entry points
+/// (more_page.dart's Закят tile, the product detail page's batch
+/// profitability section) so none of them need to mint a second copy of these
+/// literal strings. See tool/i18n-allowlist.txt, which grandfathers these
+/// three literals by occurrence count: a second copy elsewhere would be a new,
+/// unlisted occurrence and fail `dart run tool/check_i18n.dart`.
+String planLabel(String plan) {
+  switch (plan) {
+    case 'START':
+      return 'Старт';
+    case 'BUSINESS':
+      return 'Бизнес';
+    case 'PREMIUM':
+      return 'Премиум';
+    default:
+      return plan;
+  }
+}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -164,19 +186,6 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  String _planLabel(String plan) {
-    switch (plan) {
-      case 'START':
-        return 'Старт';
-      case 'BUSINESS':
-        return 'Бизнес';
-      case 'PREMIUM':
-        return 'Премиум';
-      default:
-        return plan;
-    }
-  }
-
   void _showLogoutDialog() {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
@@ -203,12 +212,18 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void _showPremiumUpsellDialog() {
+  /// [requiredPlanLabel] is the already-translated Russian brand name (e.g.
+  /// `planLabel('BUSINESS')` → 'Бизнес') of the cheapest plan that carries the
+  /// gated feature — never the raw enum, and never a hardcoded tier: this
+  /// dialog used to hardcode "PREMIUM" for every feature it gated, which
+  /// over-sold BUSINESS-tier features (zakat, loyalty, batch profitability) as
+  /// requiring the top plan.
+  void _showPlanGateDialog(String requiredPlanLabel) {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.settingsPremiumGateTitle),
+        title: Text(l10n.settingsPlanGateTitle(requiredPlanLabel)),
         content: Text(l10n.settingsPremiumGateBody),
         actions: [
           TextButton(
@@ -224,6 +239,31 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Shared rendering for a tile gated on a plan feature flag: badges the
+  /// cheapest qualifying plan when confirmed ineligible, disables the tap
+  /// while [PlanGate.of] hasn't resolved yet (so the tile never flashes a lock
+  /// on cold start), and otherwise behaves exactly like an ungated tile.
+  Widget _planGatedTile(
+    PlanGate gate, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onAllowed,
+  }) {
+    final requiredPlan = gate.requiredPlan;
+    final badge = gate.isUpsellable ? planLabel(requiredPlan!) : null;
+    return _buildTile(
+      icon,
+      title,
+      badge: badge,
+      badgeColor: badge != null ? AppColors.warning : null,
+      onTap: gate.isAllowed
+          ? onAllowed
+          : (gate.isUpsellable
+              ? () => _showPlanGateDialog(planLabel(requiredPlan!))
+              : null),
     );
   }
 
@@ -334,8 +374,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildTile(Icons.discount_outlined, l10n.discountsPageTitle,
                             onTap: () => context.push(RouteNames.discounts, extra: _getStoreId())),
                           _buildDivider(),
-                          _buildTile(Icons.card_giftcard_outlined, l10n.loyaltySettingsTitle,
-                            onTap: () => context.push(RouteNames.loyaltySettings, extra: _getStoreId())),
+                          BlocBuilder<SubscriptionBloc, SubscriptionState>(
+                            builder: (_, sub) => _planGatedTile(
+                              PlanGate.of(sub, (f) => f.hasLoyalty),
+                              icon: Icons.card_giftcard_outlined,
+                              title: l10n.loyaltySettingsTitle,
+                              onAllowed: () => context.push(RouteNames.loyaltySettings, extra: _getStoreId()),
+                            ),
+                          ),
                           _buildDivider(),
                           _buildTile(Icons.receipt_long_outlined, l10n.settingsTileReceiptTemplates,
                             onTap: () => context.push(RouteNames.receiptTemplate, extra: _getStoreId())),
@@ -365,24 +411,12 @@ class _SettingsPageState extends State<SettingsPage> {
                             onTap: () => context.push(RouteNames.scannerSettings)),
                           _buildDivider(),
                           BlocBuilder<SubscriptionBloc, SubscriptionState>(
-                            builder: (_, sub) {
-                              final stillLoading = sub is SubscriptionInitial ||
-                                  sub is SubscriptionLoading;
-                              final hasEcommerce = sub is SubscriptionLoaded &&
-                                  sub.features.hasEcommerceIntegration;
-                              final confirmedIneligible = !stillLoading && !hasEcommerce;
-                              return _buildTile(
-                                Icons.storefront_outlined,
-                                l10n.ecommerceSettingsTitle,
-                                badge: confirmedIneligible ? 'PREMIUM' : null,
-                                badgeColor: confirmedIneligible ? AppColors.warning : null,
-                                onTap: stillLoading
-                                    ? null
-                                    : (hasEcommerce
-                                        ? () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId())
-                                        : _showPremiumUpsellDialog),
-                              );
-                            },
+                            builder: (_, sub) => _planGatedTile(
+                              PlanGate.of(sub, (f) => f.hasEcommerceIntegration),
+                              icon: Icons.storefront_outlined,
+                              title: l10n.ecommerceSettingsTitle,
+                              onAllowed: () => context.push(RouteNames.ecommerceSettings, extra: _getStoreId()),
+                            ),
                           ),
                         ]),
                         const SizedBox(height: 20),
@@ -462,10 +496,10 @@ class _SettingsPageState extends State<SettingsPage> {
                           builder: (_, sub) {
                             String planTitle = l10n.settingsPlanFallbackLabel;
                             if (sub is SubscriptionLoaded) {
-                              final planLabel = _planLabel(sub.plan);
+                              final label = planLabel(sub.plan);
                               planTitle = sub.expiresAt != null
-                                  ? l10n.settingsPlanUntilDate(planLabel, DateFormat('dd.MM.yyyy').format(sub.expiresAt!))
-                                  : planLabel;
+                                  ? l10n.settingsPlanUntilDate(label, DateFormat('dd.MM.yyyy').format(sub.expiresAt!))
+                                  : label;
                             }
                             return _buildSectionCard([
                               _buildTile(Icons.workspace_premium_outlined, planTitle,

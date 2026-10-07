@@ -1711,7 +1711,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get settingsLogoutConfirmBody => 'Вы уверены, что хотите выйти?';
 
   @override
-  String get settingsPremiumGateTitle => 'Доступно на тарифе PREMIUM';
+  String settingsPlanGateTitle(String plan) {
+    return 'Доступно на тарифе $plan';
+  }
 
   @override
   String get settingsPremiumGateBody =>
