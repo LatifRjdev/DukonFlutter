@@ -28,9 +28,8 @@ enum AppMessage {
   serverError,
   cacheError,
 
-  /// Three branches share this: an unrecognised exception type, a
-  /// ServerException whose status code has no specific mapping, and a
-  /// request-change response with no payment id in it.
+  /// Two branches share this: an unrecognised exception type, and a
+  /// ServerException whose status code has no specific mapping.
   unknownError,
 
   // ── Successes ────────────────────────────────────────────────────────────

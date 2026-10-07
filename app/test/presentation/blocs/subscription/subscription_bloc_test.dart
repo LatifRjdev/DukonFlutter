@@ -546,7 +546,13 @@ void main() {
           posts = [];
           when(
             () => dioClient.post<dynamic>(any(), data: any(named: 'data')),
-          ).thenThrow(const NetworkException());
+          ).thenAnswer((invocation) async {
+            posts.add((
+              path: invocation.positionalArguments.first as String,
+              data: invocation.namedArguments[const Symbol('data')],
+            ));
+            throw const NetworkException();
+          });
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) => bloc.add(
@@ -561,12 +567,73 @@ void main() {
           isA<SubscriptionUploading>(),
           const SubscriptionError(AppMessage.offline),
         ],
+        verify: (_) {
+          // The name of this test used to be the whole of its claim: the old
+          // body had no verify at all, and a stray upload added inside the
+          // error path did not fail it.
+          expect(posts.map((p) => p.path).toList(), [
+            '/stores/store-1/subscription/request-change',
+          ]);
+        },
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
-        'should stop rather than build an upload URL when the response carries no payment id',
+        'should report the request as sent without a receipt when the response carries no payment id',
         wait: const Duration(milliseconds: 200),
-        setUp: () => recordPosts(requestChangeId: null),
+        setUp: () {
+          recordPosts(requestChangeId: null);
+          mockGet(fullData, payments: paymentsFixture);
+        },
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
+        // A 2xx from request-change means the Payment row exists, so this is
+        // the same situation as a failed upload and gets the same answer. A
+        // flat error here would invite a resubmission, and two pending payments
+        // can each be approved and each extend the period.
+        expect: () => [
+          isA<SubscriptionUploading>(),
+          const SubscriptionActionSuccess(
+            AppMessage.subscriptionRequestSentWithoutReceipt,
+          ),
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>(),
+        ],
+        verify: (_) {
+          // Posting to a path ending in `/null` would 404 exactly like the bug
+          // being fixed, and look identical in the logs.
+          expect(
+            posts.where((p) => p.path.contains('/upload-receipt')),
+            isEmpty,
+          );
+        },
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should report the request as sent without a receipt when the response body is not a map',
+        wait: const Duration(milliseconds: 200),
+        setUp: () {
+          posts = [];
+          when(
+            () => dioClient.post<dynamic>(any(), data: any(named: 'data')),
+          ).thenAnswer((invocation) async {
+            posts.add((
+              path: invocation.positionalArguments.first as String,
+              data: invocation.namedArguments[const Symbol('data')],
+            ));
+            // A list, not a map: the cast that reads `id` throws. The request
+            // still returned 2xx, so the row exists and the merchant must not
+            // be told otherwise.
+            return resp(<dynamic>['not', 'a', 'map']);
+          });
+          mockGet(fullData, payments: paymentsFixture);
+        },
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) => bloc.add(
           SubscriptionReceiptUploaded(
@@ -578,11 +645,13 @@ void main() {
         ),
         expect: () => [
           isA<SubscriptionUploading>(),
-          const SubscriptionError(AppMessage.unknownError),
+          const SubscriptionActionSuccess(
+            AppMessage.subscriptionRequestSentWithoutReceipt,
+          ),
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>(),
         ],
         verify: (_) {
-          // Posting to a path ending in `/null` would 404 exactly like the bug
-          // being fixed, and look identical in the logs.
           expect(
             posts.where((p) => p.path.contains('/upload-receipt')),
             isEmpty,

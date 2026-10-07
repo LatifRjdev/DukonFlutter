@@ -63,22 +63,41 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     // Reversed, the upload had no id, hit a route that does not exist
     // (`upload-receipt` without `/:paymentId`), 404'd, and the request never
     // ran at all: paying by card recorded nothing.
-    final String paymentId;
+    //
+    // This try wraps ONLY the POST, so its catch means "the request did not
+    // happen". Everything after it means the opposite, and must not tell the
+    // merchant their request failed — see the comment above the upload below.
+    final Response<dynamic> response;
     try {
-      final response = await _dioClient.post<dynamic>(
+      response = await _dioClient.post<dynamic>(
         '/stores/${event.storeId}/subscription/request-change',
         data: {'plan': event.plan, 'paymentMethod': event.paymentMethod},
       );
-      final id = (response.data as Map<String, dynamic>?)?['id'] as String?;
-      if (id == null || id.isEmpty) {
-        // Stop rather than POST to a path ending in `/null`, which would 404
-        // exactly like the bug this replaces and look the same in the logs.
-        emit(const SubscriptionError(AppMessage.unknownError));
-        return;
-      }
-      paymentId = id;
     } catch (e) {
       emit(SubscriptionError(mapErrorToAppMessage(e)));
+      return;
+    }
+
+    // 2xx means the Payment row exists, whatever the body looks like. So an
+    // unreadable body is the same situation as a failed upload — request
+    // created, receipt not attached — and gets the same answer, including the
+    // reload, which is what lets reality correct the message: the pending
+    // banner appears if the row is really there and stays away if it is not.
+    // Reporting a flat error here instead would invite a resubmission, and two
+    // pending payments can both be approved, each extending the period.
+    String? paymentId;
+    try {
+      paymentId = (response.data as Map<String, dynamic>?)?['id'] as String?;
+    } catch (_) {
+      paymentId = null;
+    }
+    if (paymentId == null || paymentId.isEmpty) {
+      emit(
+        const SubscriptionActionSuccess(
+          AppMessage.subscriptionRequestSentWithoutReceipt,
+        ),
+      );
+      add(SubscriptionLoadRequested(storeId: event.storeId));
       return;
     }
 
