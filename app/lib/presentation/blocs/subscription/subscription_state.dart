@@ -194,10 +194,12 @@ class SubscriptionLoading extends SubscriptionState {}
 
 class SubscriptionLoaded extends SubscriptionState {
   final String plan; // enum SubscriptionPlan: START, BUSINESS, PREMIUM
-  // Listed four of the five SubscriptionStatus values until 2026-10, omitting
-  // the one this file had no handling for: PAST_DUE. Read via [kind], whose
-  // mapping is tested against the schema.
-  final String status; // enum SubscriptionStatus in api/prisma/schema.prisma
+  /// Raw `enum SubscriptionStatus` from `api/prisma/schema.prisma`. Read it via
+  /// [kind] rather than comparing strings here: this comment listed four of the
+  /// five values until 2026-10, omitting the one the file had no handling for —
+  /// PAST_DUE — and [kind]'s mapping is tested against the schema, so it cannot
+  /// drift the same way.
+  final String status;
   final DateTime? expiresAt;
   final int? trialDaysLeft;
   final double? adminDiscount;
