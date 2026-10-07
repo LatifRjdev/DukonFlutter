@@ -1144,7 +1144,7 @@ On the device, confirm:
 Then in the database, confirm the receipt actually attached:
 ```bash
 docker exec dukonpro-db psql -U dukonpro -d dukonpro -c \
-  "SELECT id, status, method, \"receiptImage\" FROM \"Payment\" ORDER BY \"createdAt\" DESC LIMIT 3;"
+  "SELECT id, status, method, \"receiptImage\" FROM payments ORDER BY \"createdAt\" DESC LIMIT 3;"
 ```
 Expected: the newest row is `PENDING` / `CARD` with a non-null `receiptImage` under `uploads/receipts/`.
 
@@ -1156,21 +1156,31 @@ Both halves, separately. The lesson from this file's history is that confirming 
 
 - [ ] **Step 5: Verify PAST_DUE on the device**
 
-Find the store the signed-in merchant owns, and force its status. Resolve the id from the phone number rather than pasting one in — guessing which of several stores the session is on is how a "nothing changed" result gets misread as a broken fix:
+Find the store the signed-in merchant owns, and force its status. Resolve the id from the phone number rather than pasting one in — guessing which store the session is on is how a "nothing changed" result gets misread as a broken fix.
+
+**Note the table names.** Raw SQL here uses the *table* names (snake_case plural: `stores`, `users`, `subscriptions`, `payments`), not the Prisma *model* names. Columns, by contrast, are camelCase and must be quoted (`"ownerId"`, `"storeId"`, `"createdAt"`). An earlier draft of this step used `"Store"`/`"Subscription"` and failed with `relation "Store" does not exist`.
 
 ```bash
-docker exec dukonpro-db psql -U dukonpro -d dukonpro -t -c \
-  "SELECT s.id, s.name, sub.status FROM \"Store\" s
-     JOIN \"User\" u ON u.id = s.\"ownerId\"
-     LEFT JOIN \"Subscription\" sub ON sub.\"storeId\" = s.id
+docker exec dukonpro-db psql -U dukonpro -d dukonpro -c \
+  "SELECT s.id, s.name, sub.status, sub.plan FROM stores s
+     JOIN users u ON u.id = s.\"ownerId\"
+     LEFT JOIN subscriptions sub ON sub.\"storeId\" = s.id
     WHERE u.phone = '+992920777001';"
 ```
-Note the id and the current status — you need the original value to restore it. Then:
+
+**This returns TWO rows** — the BUSINESS QA account owns two stores, and they are on different plans and different statuses:
+
+| name | status | plan |
+|---|---|---|
+| QA Магазин Бизнес | ACTIVE | BUSINESS |
+| QA Второй магазин | TRIAL | PREMIUM |
+
+Pick the one whose **name matches the store shown in the app's header** on the subscription screen, not the first row. Note both its id and its current status — you need the original status to restore it, and it is not necessarily `ACTIVE`.
 
 ```bash
-STORE_ID=<the id from above>
+STORE_ID=<the id of the store the app is actually showing>
 docker exec dukonpro-db psql -U dukonpro -d dukonpro -c \
-  "UPDATE \"Subscription\" SET status='PAST_DUE' WHERE \"storeId\"='${STORE_ID}';"
+  "UPDATE subscriptions SET status='PAST_DUE' WHERE \"storeId\"='${STORE_ID}';"
 ```
 
 Brace `${STORE_ID}` — in zsh an unbraced `"$STORE_ID:..."` is parsed as a `:P`-style parameter modifier and silently substitutes something else.
@@ -1182,7 +1192,7 @@ Pull to refresh the subscription screen. Confirm:
 Restore the status you noted before the update — not a hardcoded `ACTIVE`, which would silently promote a store that had been on `TRIAL`:
 ```bash
 docker exec dukonpro-db psql -U dukonpro -d dukonpro -c \
-  "UPDATE \"Subscription\" SET status='<the status you noted>' WHERE \"storeId\"='${STORE_ID}';"
+  "UPDATE subscriptions SET status='<the status you noted>' WHERE \"storeId\"='${STORE_ID}';"
 ```
 
 Then re-run the `SELECT` above and confirm it reads what it read at the start. Leave the database as it was found: this is the shared dev database, and an abandoned `PAST_DUE` row will look like a bug to the next person.
