@@ -3322,23 +3322,11 @@ abstract class AppLocalizations {
   /// **'Все отчёты'**
   String get subscriptionFeatureAllReports;
 
-  /// No description provided for @subscriptionFeatureUnlimitedProductsEmployees.
-  ///
-  /// In ru, this message translates to:
-  /// **'Безлимит товаров/сотрудников'**
-  String get subscriptionFeatureUnlimitedProductsEmployees;
-
   /// No description provided for @subscriptionFeatureExportPdfExcel.
   ///
   /// In ru, this message translates to:
   /// **'Экспорт PDF/Excel'**
   String get subscriptionFeatureExportPdfExcel;
-
-  /// No description provided for @subscriptionFeatureUnlimitedDiscounts.
-  ///
-  /// In ru, this message translates to:
-  /// **'Безлимит скидок'**
-  String get subscriptionFeatureUnlimitedDiscounts;
 
   /// No description provided for @subscriptionFeaturePrioritySupport.
   ///

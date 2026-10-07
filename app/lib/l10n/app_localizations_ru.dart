@@ -1787,14 +1787,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get subscriptionFeatureAllReports => 'Все отчёты';
 
   @override
-  String get subscriptionFeatureUnlimitedProductsEmployees =>
-      'Безлимит товаров/сотрудников';
-
-  @override
   String get subscriptionFeatureExportPdfExcel => 'Экспорт PDF/Excel';
-
-  @override
-  String get subscriptionFeatureUnlimitedDiscounts => 'Безлимит скидок';
 
   @override
   String get subscriptionFeaturePrioritySupport => 'Приоритетная поддержка';
