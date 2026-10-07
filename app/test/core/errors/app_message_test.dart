@@ -17,8 +17,11 @@ void main() {
   // wrong key, or to one that resolves to nothing.
   test('should resolve every AppMessage member to a non-empty string', () {
     for (final message in AppMessage.values) {
-      expect(message.resolve(l10n), isNotEmpty,
-          reason: 'no localized string behind $message');
+      expect(
+        message.resolve(l10n),
+        isNotEmpty,
+        reason: 'no localized string behind $message',
+      );
     }
   });
 
@@ -50,6 +53,8 @@ void main() {
       AppMessage.zakatSettingsSaved: 'Настройки закята сохранены',
       AppMessage.subscriptionRequestSent:
           'Заявка отправлена, ожидайте подтверждения',
+      AppMessage.subscriptionRequestSentWithoutReceipt:
+          'Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.',
       AppMessage.investmentCreated: 'Вложение добавлено',
       AppMessage.investmentUpdated: 'Вложение обновлено',
       AppMessage.investmentDeleted: 'Вложение удалено',
@@ -81,7 +86,10 @@ void main() {
     ];
 
     final strings = errors.map((m) => m.resolve(l10n)).toList();
-    expect(strings.toSet().length, strings.length,
-        reason: 'two error codes resolve to the same text: $strings');
+    expect(
+      strings.toSet().length,
+      strings.length,
+      reason: 'two error codes resolve to the same text: $strings',
+    );
   });
 }
