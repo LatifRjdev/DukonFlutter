@@ -8,8 +8,6 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/router/route_names.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
-import '../../blocs/subscription/subscription_bloc.dart';
-import '../../blocs/subscription/subscription_state.dart';
 import '../settings/plan_gate.dart';
 import '../settings/settings_page.dart' show planLabel;
 
@@ -87,9 +85,14 @@ class MorePage extends StatelessWidget {
             color: AppColors.warning,
             onTap: () => context.push(RouteNames.debtsOverview, extra: _getStoreId(context)),
           ),
-          BlocBuilder<SubscriptionBloc, SubscriptionState>(
-            builder: (_, sub) {
-              final gate = PlanGate.of(sub, (f) => f.hasZakat);
+          // PlanGateBuilder, not a bare BlocBuilder: nothing on this screen
+          // loads the subscription, and settings_page — which does — may never
+          // have been opened. Without the request the gate reads `undetermined`
+          // forever and the tile stays disabled for entitled merchants too.
+          PlanGateBuilder(
+            storeId: _getStoreId(context),
+            needs: (f) => f.hasZakat,
+            builder: (context, gate) {
               final requiredPlan = gate.requiredPlan;
               final badge = gate.isUpsellable ? planLabel(requiredPlan!) : null;
               return _MenuItem(

@@ -21,8 +21,6 @@ import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
-import '../../blocs/subscription/subscription_bloc.dart';
-import '../../blocs/subscription/subscription_state.dart';
 import '../settings/plan_gate.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -223,12 +221,19 @@ class ProductDetailPage extends StatelessWidget {
                     // loaded), the section still loads as before and leans on
                     // that same 403 handling — the only source of truth it
                     // had until now.
-                    BlocBuilder<SubscriptionBloc, SubscriptionState>(
-                      builder: (_, sub) {
-                        final gate = PlanGate.of(
-                          sub,
-                          (f) => f.hasBatchProfitability,
-                        );
+                    // PlanGateBuilder, not a bare BlocBuilder: this screen
+                    // does not load the subscription and settings_page may
+                    // never have been opened, which would leave the gate
+                    // undetermined forever.
+                    PlanGateBuilder(
+                      storeId: () {
+                        final storeState = context.read<StoreBloc>().state;
+                        return storeState is StoreLoaded
+                            ? storeState.selectedStore?.id ?? ''
+                            : '';
+                      }(),
+                      needs: (f) => f.hasBatchProfitability,
+                      builder: (context, gate) {
                         if (gate.verdict == PlanGateVerdict.blocked) {
                           return const SizedBox.shrink();
                         }
