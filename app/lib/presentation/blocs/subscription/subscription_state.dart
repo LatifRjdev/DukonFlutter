@@ -4,14 +4,19 @@ import '../../../core/constants/api_endpoints.dart';
 
 // ─── Supporting models ────────────────────────────────────────────────────────
 
+// `maxStores` was removed here in 2026-10: the column was dropped from
+// SubscriptionPlanConfig in 2026-05 (see api/src/common/guards/plan-limit.helper.ts)
+// because each store carries its own subscription, so a per-merchant store cap
+// had no architectural anchor. This class kept reading it with a `?? 1`
+// fallback, so it silently read as 1 forever, and seven test references kept it
+// looking real — three `.having` assertions and four fixture literals. Nothing
+// rendered it, which is why there was no visible defect to notice.
 class SubscriptionLimits extends Equatable {
-  final int maxStores; // -1 = unlimited
   final int maxProducts;
   final int maxStaff;
   final int maxDiscounts;
 
   const SubscriptionLimits({
-    required this.maxStores,
     required this.maxProducts,
     required this.maxStaff,
     required this.maxDiscounts,
@@ -19,21 +24,16 @@ class SubscriptionLimits extends Equatable {
 
   factory SubscriptionLimits.fromJson(Map<String, dynamic> json) =>
       SubscriptionLimits(
-        maxStores: (json['maxStores'] as num?)?.toInt() ?? 1,
         maxProducts: (json['maxProducts'] as num?)?.toInt() ?? 500,
         maxStaff: (json['maxStaff'] as num?)?.toInt() ?? 2,
         maxDiscounts: (json['maxDiscounts'] as num?)?.toInt() ?? 0,
       );
 
-  factory SubscriptionLimits.defaults() => const SubscriptionLimits(
-    maxStores: 1,
-    maxProducts: 500,
-    maxStaff: 2,
-    maxDiscounts: 0,
-  );
+  factory SubscriptionLimits.defaults() =>
+      const SubscriptionLimits(maxProducts: 500, maxStaff: 2, maxDiscounts: 0);
 
   @override
-  List<Object?> get props => [maxStores, maxProducts, maxStaff, maxDiscounts];
+  List<Object?> get props => [maxProducts, maxStaff, maxDiscounts];
 }
 
 // Keep in sync with SubscriptionsService.getSubscription()'s `features` object

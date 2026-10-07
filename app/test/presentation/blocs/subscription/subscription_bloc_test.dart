@@ -49,12 +49,7 @@ void main() {
     // 'CONFIRMED' survive, two keys further along.
     'currentPeriodEnd': '2026-08-01T00:00:00.000Z',
     'adminDiscount': 10.5,
-    'limits': {
-      'maxStores': 3,
-      'maxProducts': 2000,
-      'maxStaff': 10,
-      'maxDiscounts': 5,
-    },
+    'limits': {'maxProducts': 2000, 'maxStaff': 10, 'maxDiscounts': 5},
     'features': {
       'hasReportsAll': true,
       'hasExport': true,
@@ -110,7 +105,6 @@ void main() {
                 'expiresAt',
                 DateTime.parse('2026-08-01T00:00:00.000Z').toLocal(),
               )
-              .having((s) => s.limits.maxStores, 'limits.maxStores', 3)
               .having((s) => s.limits.maxProducts, 'limits.maxProducts', 2000)
               .having((s) => s.limits.maxStaff, 'limits.maxStaff', 10)
               .having((s) => s.limits.maxDiscounts, 'limits.maxDiscounts', 5)
@@ -151,7 +145,6 @@ void main() {
               .having((s) => s.trialDaysLeft, 'trialDaysLeft', isNull)
               .having((s) => s.adminDiscount, 'adminDiscount', isNull)
               .having((s) => s.expiresAt, 'expiresAt', isNull)
-              .having((s) => s.limits.maxStores, 'limits.maxStores', 1)
               .having((s) => s.limits.maxProducts, 'limits.maxProducts', 500)
               .having((s) => s.limits.maxStaff, 'limits.maxStaff', 2)
               .having((s) => s.limits.maxDiscounts, 'limits.maxDiscounts', 0)
@@ -166,15 +159,10 @@ void main() {
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
-        'should treat maxStores of -1 as unlimited without special-casing it away',
+        'should treat a limit of -1 as unlimited without special-casing it away',
         setUp: () => mockGet(<String, dynamic>{
           'plan': 'PREMIUM',
-          'limits': {
-            'maxStores': -1,
-            'maxProducts': -1,
-            'maxStaff': -1,
-            'maxDiscounts': -1,
-          },
+          'limits': {'maxProducts': -1, 'maxStaff': -1, 'maxDiscounts': -1},
         }),
         build: () => SubscriptionBloc(dioClient: dioClient),
         act: (bloc) =>
@@ -182,8 +170,9 @@ void main() {
         expect: () => [
           isA<SubscriptionLoading>(),
           isA<SubscriptionLoaded>()
-              .having((s) => s.limits.maxStores, 'limits.maxStores', -1)
-              .having((s) => s.limits.maxProducts, 'limits.maxProducts', -1),
+              .having((s) => s.limits.maxProducts, 'limits.maxProducts', -1)
+              .having((s) => s.limits.maxStaff, 'limits.maxStaff', -1)
+              .having((s) => s.limits.maxDiscounts, 'limits.maxDiscounts', -1),
         ],
       );
 

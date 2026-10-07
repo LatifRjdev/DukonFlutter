@@ -22,7 +22,6 @@ SubscriptionLoaded _fakeLoaded() => SubscriptionLoaded(
   status: 'ACTIVE',
   expiresAt: DateTime(2026, 3, 30),
   limits: const SubscriptionLimits(
-    maxStores: 3,
     maxProducts: 2000,
     maxStaff: 10,
     maxDiscounts: 5,
