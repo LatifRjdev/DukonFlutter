@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../../core/errors/app_message.dart';
 import '../../../core/constants/api_endpoints.dart';
+import '../../pages/settings/subscription_status.dart';
 
 // ─── Supporting models ────────────────────────────────────────────────────────
 
@@ -209,8 +210,21 @@ class SubscriptionLoaded extends SubscriptionState {
     this.pendingPayment,
   });
 
-  bool get isExpired => status == 'EXPIRED' || status == 'CANCELLED';
-  bool get isActive => status == 'ACTIVE' || status == 'TRIAL';
+  /// The server's gate, stated once: `feature-flag.helper.ts` allows ACTIVE and
+  /// TRIAL and refuses everything else.
+  bool get isActive =>
+      kind == SubscriptionStatusKind.active ||
+      kind == SubscriptionStatusKind.trial;
+
+  /// Deliberately the negation of [isActive] and not a second list. It used to
+  /// be `EXPIRED || CANCELLED`, which left PAST_DUE in neither — so the plan
+  /// card, whose gradient this getter chooses, rendered a lapsed subscription
+  /// in full colour while the backend refused every gated feature. Anything the
+  /// server will refuse has to look refused, including a status this app has
+  /// not heard of.
+  bool get isExpired => !isActive;
+
+  SubscriptionStatusKind get kind => subscriptionStatusKind(status);
 
   @override
   List<Object?> get props => [

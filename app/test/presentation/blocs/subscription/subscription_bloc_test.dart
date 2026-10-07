@@ -177,6 +177,44 @@ void main() {
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
+        'should report a PAST_DUE subscription as lapsed, not as active',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'BUSINESS',
+          'status': 'PAST_DUE',
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          // BOTH directions. Asserting only isActive == false passed on the old
+          // code — PAST_DUE was in neither list — and that half-assertion is
+          // exactly what let a lapsed merchant keep the full-colour card, since
+          // the gradient is chosen by isExpired.
+          isA<SubscriptionLoaded>()
+              .having((s) => s.isActive, 'isActive', false)
+              .having((s) => s.isExpired, 'isExpired', true),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should treat a status it does not recognise as lapsed rather than active',
+        setUp: () => mockGet(<String, dynamic>{
+          'plan': 'BUSINESS',
+          'status': 'SOMETHING_NEW',
+        }),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) =>
+            bloc.add(const SubscriptionLoadRequested(storeId: 'store-1')),
+        expect: () => [
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>()
+              .having((s) => s.isActive, 'isActive', false)
+              .having((s) => s.isExpired, 'isExpired', true),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
         // Regression test for a real production bug: the backend used to
         // nest feature flags under `planConfig` (e.g.
         // planConfig.hasEcommerceIntegration) while this bloc only ever
