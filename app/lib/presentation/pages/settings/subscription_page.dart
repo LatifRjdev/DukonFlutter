@@ -18,65 +18,69 @@ import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
 
-class _PlanInfo {
+class _PlanMeta {
   final String key;
   final String label;
-  final String price;
-  final List<String> features;
 
-  const _PlanInfo({
-    required this.key,
-    required this.label,
-    required this.price,
-    required this.features,
-  });
+  const _PlanMeta({required this.key, required this.label});
 }
 
-// Built per-build (not `const`) because plan labels/prices/features now come
-// from AppLocalizations, which requires a BuildContext — see
-// docs/superpowers/plans/2026-09-28-adr0002-track2-remaining-i18n-migration.md
-// Task 1. `label` values ('Старт'/'Бизнес'/'Премиум') stay as literal proper
-// nouns (tariff brand names) — see tool/i18n-allowlist.txt.
-List<_PlanInfo> _buildPlans(AppLocalizations l10n) => [
-  _PlanInfo(
-    key: 'START',
-    label: 'Старт',
-    price: l10n.subscriptionPriceStart,
-    features: [
-      l10n.subscriptionFeatureStores1,
-      l10n.subscriptionFeatureProducts500,
-      l10n.subscriptionFeatureEmployees2,
-      l10n.subscriptionFeatureSalesReport,
-      l10n.subscriptionFeatureCurrencies,
-    ],
-  ),
-  _PlanInfo(
-    key: 'BUSINESS',
-    label: 'Бизнес',
-    price: l10n.subscriptionPriceBusiness,
-    features: [
-      l10n.subscriptionFeatureStores3,
-      l10n.subscriptionFeatureProducts2000,
-      l10n.subscriptionFeatureEmployees10,
-      l10n.subscriptionFeatureAllReports,
-      l10n.settingsTileTelegramBot,
-      l10n.deliveryListTitle,
-      l10n.inventoryTitle,
-      l10n.subscriptionFeatureDiscounts5,
-    ],
-  ),
-  _PlanInfo(
-    key: 'PREMIUM',
-    label: 'Премиум',
-    price: l10n.subscriptionPricePremium,
-    features: [
-      l10n.subscriptionFeatureStores5,
-      l10n.subscriptionFeatureUnlimitedProductsEmployees,
-      l10n.subscriptionFeatureExportPdfExcel,
-      l10n.subscriptionFeatureUnlimitedDiscounts,
-      l10n.subscriptionFeaturePrioritySupport,
-    ],
-  ),
+// Display order and labels only — price, limits and the discount-gated
+// feature flags all come from `SubscriptionLoaded.availablePlans`, server
+// data for THIS merchant (see SubscriptionPlanOption). `label` values
+// ('Старт'/'Бизнес'/'Премиум') stay as literal proper nouns (tariff brand
+// names) — see tool/i18n-allowlist.txt.
+const List<_PlanMeta> _planOrder = [
+  _PlanMeta(key: 'START', label: 'Старт'),
+  _PlanMeta(key: 'BUSINESS', label: 'Бизнес'),
+  _PlanMeta(key: 'PREMIUM', label: 'Премиум'),
+];
+
+// A numeric limit renders as the server's own "unlimited" convention — `-1`
+// — rather than as the number itself. Used for products, staff and
+// discounts alike: all three are plain `int` limits with the same
+// convention, so one helper covers them rather than three copies of the
+// same ternary.
+String _limitLine(
+  int value,
+  String Function(String) line,
+  AppLocalizations l10n,
+) => value == -1 ? l10n.subscriptionFeatureUnlimited : line('$value');
+
+// The feature bullets that are not a number from the plan config: selected
+// per plan, as they were before this branch. Unlike the deleted
+// subscriptionFeatureStores1/3/5, none of these advertise a limit the server
+// does not enforce.
+List<String> _planCopyFeatures(String planKey, AppLocalizations l10n) =>
+    switch (planKey) {
+      'START' => [
+        l10n.subscriptionFeatureSalesReport,
+        l10n.subscriptionFeatureCurrencies,
+      ],
+      'BUSINESS' => [
+        l10n.subscriptionFeatureAllReports,
+        l10n.settingsTileTelegramBot,
+        l10n.deliveryListTitle,
+        l10n.inventoryTitle,
+      ],
+      'PREMIUM' => [
+        l10n.subscriptionFeatureExportPdfExcel,
+        l10n.subscriptionFeaturePrioritySupport,
+      ],
+      _ => const [],
+    };
+
+// All bullets for one plan card: the three server-sourced limits first, then
+// the plan's authored copy. Order doesn't carry meaning beyond readability —
+// nothing downstream depends on it.
+List<String> _planFeatureLines(
+  SubscriptionPlanOption option,
+  AppLocalizations l10n,
+) => [
+  _limitLine(option.maxProducts, l10n.subscriptionFeatureProductsLine, l10n),
+  _limitLine(option.maxStaff, l10n.subscriptionFeatureStaffLine, l10n),
+  _limitLine(option.maxDiscounts, l10n.subscriptionFeatureDiscountsLine, l10n),
+  ..._planCopyFeatures(option.plan, l10n),
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -151,7 +155,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   // ─── Payment flow ─────────────────────────────────────────────────────────
 
-  void _onSelectPlan(String planKey) {
+  void _onSelectPlan(String planKey, String planLabel, String priceLine) {
     if (_storeId == null) return;
     showModalBottomSheet(
       context: context,
@@ -161,6 +165,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       ),
       builder: (_) => _PaymentMethodSheet(
         planKey: planKey,
+        planLabel: planLabel,
+        priceLine: priceLine,
         storeId: _storeId!,
         bloc: context.read<SubscriptionBloc>(),
       ),
@@ -323,11 +329,16 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget _buildPlanCard(
-    _PlanInfo plan,
+    SubscriptionPlanOption option,
+    String label,
     bool isCurrent,
     SubscriptionLoaded state,
     AppLocalizations l10n,
   ) {
+    final priceLine = l10n.subscriptionPriceLine(
+      option.price.toStringAsFixed(0),
+    );
+    final features = _planFeatureLines(option, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -352,7 +363,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        plan.label,
+                        label,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -361,7 +372,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        plan.price,
+                        priceLine,
                         style: TextStyle(
                           fontSize: 13,
                           color: context.textSecondary,
@@ -394,7 +405,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   )
                 else
                   ElevatedButton(
-                    onPressed: () => _onSelectPlan(plan.key),
+                    onPressed: () =>
+                        _onSelectPlan(option.plan, label, priceLine),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -421,7 +433,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               ],
             ),
             const SizedBox(height: 12),
-            ...plan.features.map(
+            ...features.map(
               (f) => Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Row(
@@ -445,6 +457,31 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Shown instead of the plan cards when `availablePlans` is empty: a merchant
+  // could be charged a price this screen never verified with the server, so
+  // an empty list renders no price at all — not a hardcoded fallback card.
+  Widget _buildPlansUnavailable(AppLocalizations l10n) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.noData, style: TextStyle(color: context.textSecondary)),
+            const SizedBox(height: 12),
+            if (_storeId != null)
+              TextButton(
+                onPressed: () => context.read<SubscriptionBloc>().add(
+                  SubscriptionLoadRequested(storeId: _storeId!),
+                ),
+                child: Text(l10n.retry),
+              ),
           ],
         ),
       ),
@@ -787,14 +824,20 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ..._buildPlans(l10n).map(
-                      (plan) => _buildPlanCard(
-                        plan,
-                        plan.key == state.plan,
-                        state,
-                        l10n,
-                      ),
-                    ),
+                    if (state.availablePlans.isEmpty)
+                      _buildPlansUnavailable(l10n)
+                    else
+                      for (final meta in _planOrder)
+                        for (final option in state.availablePlans.where(
+                          (o) => o.plan == meta.key,
+                        ))
+                          _buildPlanCard(
+                            option,
+                            meta.label,
+                            meta.key == state.plan,
+                            state,
+                            l10n,
+                          ),
 
                     const SizedBox(height: 8),
 
@@ -816,11 +859,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
 class _PaymentMethodSheet extends StatefulWidget {
   final String planKey;
+  final String planLabel;
+  final String priceLine;
   final String storeId;
   final SubscriptionBloc bloc;
 
   const _PaymentMethodSheet({
     required this.planKey,
+    required this.planLabel,
+    required this.priceLine,
     required this.storeId,
     required this.bloc,
   });
@@ -891,13 +938,6 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final plans = _buildPlans(l10n);
-    final planInfo = plans.firstWhere(
-      (p) => p.key == widget.planKey,
-      orElse: () => plans.first,
-    );
-
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
@@ -923,12 +963,12 @@ class _PaymentMethodSheetState extends State<_PaymentMethodSheet> {
           Text(
             AppLocalizations.of(
               context,
-            )!.subscriptionPaymentSheetTitle(planInfo.label),
+            )!.subscriptionPaymentSheetTitle(widget.planLabel),
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Text(
-            planInfo.price,
+            widget.priceLine,
             style: TextStyle(fontSize: 14, color: context.textSecondary),
           ),
           const SizedBox(height: 20),
