@@ -117,8 +117,13 @@ class SubscriptionFeatures extends Equatable {
 class PaymentRecord extends Equatable {
   final String id;
   final double amount;
-  final String method; // CARD, CASH
-  final String status; // PENDING, CONFIRMED, REJECTED
+  // Both are raw server enum values. Named rather than listed: a restated list
+  // is what rots. `// CARD, CASH` omitted MOBILE_TRANSFER, and
+  // `// PENDING, CONFIRMED, REJECTED` named three of six and invented one —
+  // CONFIRMED has never been in PaymentStatus, which is precisely the mistake
+  // that made an approved payment read "Ожидает" until PR #85.
+  final String method; // enum PaymentMethod in api/prisma/schema.prisma
+  final String status; // enum PaymentStatus — read via paymentStatusKind()
   final DateTime createdAt;
   final String? receiptUrl;
   final String? adminNote;
@@ -188,8 +193,11 @@ class SubscriptionInitial extends SubscriptionState {}
 class SubscriptionLoading extends SubscriptionState {}
 
 class SubscriptionLoaded extends SubscriptionState {
-  final String plan; // START, BUSINESS, PREMIUM
-  final String status; // TRIAL, ACTIVE, EXPIRED, CANCELLED
+  final String plan; // enum SubscriptionPlan: START, BUSINESS, PREMIUM
+  // Listed four of the five SubscriptionStatus values until 2026-10, omitting
+  // the one this file had no handling for: PAST_DUE. Read via [kind], whose
+  // mapping is tested against the schema.
+  final String status; // enum SubscriptionStatus in api/prisma/schema.prisma
   final DateTime? expiresAt;
   final int? trialDaysLeft;
   final double? adminDiscount;
