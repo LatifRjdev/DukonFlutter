@@ -108,25 +108,41 @@ class PlanGateBuilder extends StatefulWidget {
 }
 
 class _PlanGateBuilderState extends State<PlanGateBuilder> {
-  @override
-  void initState() {
-    super.initState();
-    // Only from Initial: a Loading/Loaded/Error state means someone already
-    // asked, and re-asking on every build of every gated tile would hammer the
-    // endpoint — the rate limit is 100 requests a minute.
-    if (widget.storeId.isNotEmpty &&
-        context.read<SubscriptionBloc>().state is SubscriptionInitial) {
+  /// The store we have already asked about. Non-null means a request went out.
+  String? _requestedFor;
+
+  /// Requested from `build`, not `initState`, because the store arrives late.
+  ///
+  /// HomePage builds all five tabs eagerly, so this widget's initState can run
+  /// before StoreBloc has a selected store — `storeId` is then empty, there is
+  /// nothing to ask about, and initState never runs again. The tile stayed
+  /// disabled forever for entitled merchants, which is exactly what this
+  /// builder exists to prevent. Found on the emulator: a BUSINESS merchant,
+  /// whose plan includes zakat, saw the Закят tile greyed out.
+  ///
+  /// Guarded by [_requestedFor] and by the state still being
+  /// [SubscriptionInitial], so a rebuild cannot re-ask — the throttle is 100
+  /// requests a minute and this widget rebuilds on every bloc emission.
+  void _ensureRequested(SubscriptionState state) {
+    if (widget.storeId.isEmpty) return;
+    if (_requestedFor == widget.storeId) return;
+    if (state is! SubscriptionInitial) return;
+    _requestedFor = widget.storeId;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       context.read<SubscriptionBloc>().add(
         SubscriptionLoadRequested(storeId: widget.storeId),
       );
-    }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SubscriptionBloc, SubscriptionState>(
-      builder: (context, state) =>
-          widget.builder(context, PlanGate.of(state, widget.needs)),
+      builder: (context, state) {
+        _ensureRequested(state);
+        return widget.builder(context, PlanGate.of(state, widget.needs));
+      },
     );
   }
 }
