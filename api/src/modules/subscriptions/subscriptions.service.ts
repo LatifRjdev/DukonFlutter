@@ -258,9 +258,7 @@ export class SubscriptionsService implements OnModuleInit {
     // different rounding.
     const amount = discountedPrice(
       Number(planConfig.price),
-      subscription.adminDiscount
-        ? Number(subscription.adminDiscount)
-        : null,
+      subscription.adminDiscount ? Number(subscription.adminDiscount) : null,
     );
 
     const payment = await this.prisma.payment.create({

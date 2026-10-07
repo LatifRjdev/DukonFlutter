@@ -145,6 +145,17 @@ class SubscriptionPlanOption extends Equatable {
 
   bool get isDiscounted => price < listPrice;
 
+  /// Limits fall back to `0`, not to `-1`.
+  ///
+  /// `-1` is this codebase's "unlimited" convention, so defaulting to it would
+  /// make a malformed entry advertise an unlimited plan — the app promising
+  /// more than the server will honour, which is the direction that costs
+  /// money. `0` under-promises instead, and renders visibly wrong rather than
+  /// plausibly wrong. Same reasoning that put an unrecognised subscription
+  /// status on the pessimistic side of `isExpired`.
+  ///
+  /// Reachable only if the server breaks its contract: these are non-nullable
+  /// `Int` columns and `toPlanView` always sets them.
   factory SubscriptionPlanOption.fromJson(Map<String, dynamic> json) =>
       SubscriptionPlanOption(
         plan: json['plan'] as String? ?? '',
