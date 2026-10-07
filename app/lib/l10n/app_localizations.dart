@@ -4252,6 +4252,12 @@ abstract class AppLocalizations {
   /// **'Заявка отправлена, ожидайте подтверждения'**
   String get subscriptionRequestSent;
 
+  /// Snackbar when the plan-change request was created but the receipt image failed to upload. It points the merchant at support rather than at a retry on purpose: there is no UI for attaching a receipt to an existing payment, and resubmitting the form would create a second pending request, since request-change does not de-duplicate. Distinct from `subscriptionRequestSent`, where the receipt did attach
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.'**
+  String get subscriptionRequestSentWithoutReceipt;
+
   /// Snackbar shown when a debt payment is submitted while offline and queued for later sync
   ///
   /// In ru, this message translates to:

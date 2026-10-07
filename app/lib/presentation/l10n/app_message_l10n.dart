@@ -39,6 +39,8 @@ extension AppMessageL10n on AppMessage {
     AppMessage.zakatPaymentRecorded => l10n.zakatPaymentRecorded,
     AppMessage.zakatSettingsSaved => l10n.zakatSettingsSaved,
     AppMessage.subscriptionRequestSent => l10n.subscriptionRequestSent,
+    AppMessage.subscriptionRequestSentWithoutReceipt =>
+      l10n.subscriptionRequestSentWithoutReceipt,
     AppMessage.investmentCreated => l10n.investmentCreated,
     AppMessage.investmentUpdated => l10n.investmentUpdated,
     AppMessage.investmentDeleted => l10n.investmentDeleted,

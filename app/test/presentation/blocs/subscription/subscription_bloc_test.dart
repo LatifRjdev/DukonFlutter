@@ -404,7 +404,7 @@ void main() {
         }
       });
 
-      // Both tests in this group need an explicit `wait`. The bloc emits
+      // Every test in this group needs an explicit `wait`. The bloc emits
       // SubscriptionUploading and then does real filesystem I/O
       // (`await MultipartFile.fromFile(event.receiptPath)`) before it reaches
       // the mocked `post`, so the terminal state arrives one async file read
@@ -413,22 +413,42 @@ void main() {
       // "Expected [Uploading, Error] / Actual [Uploading]" — this failed ~1 run
       // in 6 locally and broke CI on main. The read is a 4-byte temp file, so
       // 200ms is ample.
+
+      // Records every post in order, so a test can assert the SEQUENCE and the
+      // URL the bloc built from the first response. The replaced tests matched
+      // `'/stores/store-1/subscription/upload-receipt'` exactly — a path the
+      // server does not have — and then verified that same literal, which is
+      // why three real mismatches stayed green for months.
+      late List<({String path, Object? data})> posts;
+
+      void recordPosts({
+        String? requestChangeId = 'pay-7',
+        Object? uploadThrows,
+      }) {
+        posts = [];
+        when(
+          () => dioClient.post<dynamic>(any(), data: any(named: 'data')),
+        ).thenAnswer((invocation) async {
+          final path = invocation.positionalArguments.first as String;
+          final data = invocation.namedArguments[const Symbol('data')];
+          posts.add((path: path, data: data));
+          if (path.contains('/upload-receipt')) {
+            if (uploadThrows != null) throw uploadThrows;
+            return resp({'ok': true});
+          }
+          return resp(
+            requestChangeId == null
+                ? <String, dynamic>{}
+                : <String, dynamic>{'id': requestChangeId},
+          );
+        });
+      }
+
       blocTest<SubscriptionBloc, SubscriptionState>(
-        'should upload the receipt, submit the change request, then reload',
+        'should create the change request first, then upload the receipt to that payment',
         wait: const Duration(milliseconds: 200),
         setUp: () {
-          when(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/upload-receipt',
-              data: any(named: 'data'),
-            ),
-          ).thenAnswer((_) async => resp({'ok': true}));
-          when(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/request-change',
-              data: any(named: 'data'),
-            ),
-          ).thenAnswer((_) async => resp({'ok': true}));
+          recordPosts();
           mockGet(fullData, payments: paymentsFixture);
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
@@ -447,30 +467,85 @@ void main() {
           isA<SubscriptionLoaded>(),
         ],
         verify: (_) {
-          verify(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/upload-receipt',
-              data: any(named: 'data'),
-            ),
-          ).called(1);
-          verify(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/request-change',
-              data: {'plan': 'BUSINESS', 'paymentMethod': 'CARD'},
-            ),
-          ).called(1);
+          // The order and the id in the URL, in one assertion. The receipt
+          // attaches to a Payment row that request-change creates, so an upload
+          // sent first has no id to carry — the old code sent it first and
+          // discarded the response that held the id.
+          expect(posts.map((p) => p.path).toList(), [
+            '/stores/store-1/subscription/request-change',
+            '/stores/store-1/subscription/upload-receipt/pay-7',
+          ]);
+          expect(posts.first.data, {
+            'plan': 'BUSINESS',
+            'paymentMethod': 'CARD',
+          });
         },
       );
 
       blocTest<SubscriptionBloc, SubscriptionState>(
-        'should emit SubscriptionError and skip the change request when the upload itself fails',
+        'should name the multipart field file, as the route interceptor requires',
         wait: const Duration(milliseconds: 200),
         setUp: () {
+          recordPosts();
+          mockGet(fullData, payments: paymentsFixture);
+        },
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
+        verify: (_) {
+          // Reaches INTO the FormData. `any(named: 'data')` never looked, which
+          // is how a field named 'receipt' survived against
+          // FileInterceptor('file', ...) in subscriptions.controller.ts:95.
+          final upload = posts.firstWhere(
+            (p) => p.path.contains('/upload-receipt'),
+          );
+          final formData = upload.data as FormData;
+          expect(formData.files.map((e) => e.key).toList(), ['file']);
+        },
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should tell the merchant the request went through when only the receipt upload fails',
+        wait: const Duration(milliseconds: 200),
+        setUp: () {
+          recordPosts(uploadThrows: const NetworkException());
+          mockGet(fullData, payments: paymentsFixture);
+        },
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
+        // Not an error state: the request EXISTS. request-change does not
+        // de-duplicate pending payments, so reporting a flat failure would make
+        // the merchant resubmit and create a second request for the same plan.
+        expect: () => [
+          isA<SubscriptionUploading>(),
+          const SubscriptionActionSuccess(
+            AppMessage.subscriptionRequestSentWithoutReceipt,
+          ),
+          isA<SubscriptionLoading>(),
+          isA<SubscriptionLoaded>(),
+        ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should emit an error and never upload when the change request itself fails',
+        wait: const Duration(milliseconds: 200),
+        setUp: () {
+          posts = [];
           when(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/upload-receipt',
-              data: any(named: 'data'),
-            ),
+            () => dioClient.post<dynamic>(any(), data: any(named: 'data')),
           ).thenThrow(const NetworkException());
         },
         build: () => SubscriptionBloc(dioClient: dioClient),
@@ -486,12 +561,31 @@ void main() {
           isA<SubscriptionUploading>(),
           const SubscriptionError(AppMessage.offline),
         ],
+      );
+
+      blocTest<SubscriptionBloc, SubscriptionState>(
+        'should stop rather than build an upload URL when the response carries no payment id',
+        wait: const Duration(milliseconds: 200),
+        setUp: () => recordPosts(requestChangeId: null),
+        build: () => SubscriptionBloc(dioClient: dioClient),
+        act: (bloc) => bloc.add(
+          SubscriptionReceiptUploaded(
+            storeId: 'store-1',
+            plan: 'BUSINESS',
+            paymentMethod: 'CARD',
+            receiptPath: receiptPath,
+          ),
+        ),
+        expect: () => [
+          isA<SubscriptionUploading>(),
+          const SubscriptionError(AppMessage.unknownError),
+        ],
         verify: (_) {
-          verifyNever(
-            () => dioClient.post<dynamic>(
-              '/stores/store-1/subscription/request-change',
-              data: any(named: 'data'),
-            ),
+          // Posting to a path ending in `/null` would 404 exactly like the bug
+          // being fixed, and look identical in the logs.
+          expect(
+            posts.where((p) => p.path.contains('/upload-receipt')),
+            isEmpty,
           );
         },
       );

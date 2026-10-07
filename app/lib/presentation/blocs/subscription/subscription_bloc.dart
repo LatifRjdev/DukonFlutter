@@ -1,5 +1,4 @@
 import '../../../core/errors/app_message.dart';
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
@@ -57,33 +56,60 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     Emitter<SubscriptionState> emit,
   ) async {
     emit(SubscriptionUploading());
-    try {
-      // 1. Upload receipt image
-      final file = File(event.receiptPath);
-      final formData = FormData.fromMap({
-        'receipt': await MultipartFile.fromFile(
-          file.path,
-          filename: 'receipt.jpg',
-        ),
-      });
-      await _dioClient.post(
-        '/stores/${event.storeId}/subscription/upload-receipt',
-        data: formData,
-      );
 
-      // 2. Create change request
-      await _dioClient.post(
+    // Order matters, and it used to be reversed. The receipt attaches to a
+    // Payment row, and that row is created by request-change — so the request
+    // has to come first and its id has to be carried into the upload path.
+    // Reversed, the upload had no id, hit a route that does not exist
+    // (`upload-receipt` without `/:paymentId`), 404'd, and the request never
+    // ran at all: paying by card recorded nothing.
+    final String paymentId;
+    try {
+      final response = await _dioClient.post<dynamic>(
         '/stores/${event.storeId}/subscription/request-change',
         data: {'plan': event.plan, 'paymentMethod': event.paymentMethod},
       );
-
-      emit(const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent));
-
-      // Reload
-      add(SubscriptionLoadRequested(storeId: event.storeId));
+      final id = (response.data as Map<String, dynamic>?)?['id'] as String?;
+      if (id == null || id.isEmpty) {
+        // Stop rather than POST to a path ending in `/null`, which would 404
+        // exactly like the bug this replaces and look the same in the logs.
+        emit(const SubscriptionError(AppMessage.unknownError));
+        return;
+      }
+      paymentId = id;
     } catch (e) {
       emit(SubscriptionError(mapErrorToAppMessage(e)));
+      return;
     }
+
+    // Past this point the request exists. An upload failure must NOT read as a
+    // flat failure: requestChange does not de-duplicate pending payments, so a
+    // merchant who resubmitted would create a second request for the same plan.
+    try {
+      final formData = FormData.fromMap({
+        // Named 'file' because the route is FileInterceptor('file', ...) —
+        // subscriptions.controller.ts:95. It used to be 'receipt'.
+        'file': await MultipartFile.fromFile(
+          event.receiptPath,
+          filename: 'receipt.jpg',
+        ),
+      });
+      await _dioClient.post<dynamic>(
+        '/stores/${event.storeId}/subscription/upload-receipt/$paymentId',
+        data: formData,
+      );
+      emit(const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent));
+    } catch (_) {
+      emit(
+        const SubscriptionActionSuccess(
+          AppMessage.subscriptionRequestSentWithoutReceipt,
+        ),
+      );
+    }
+
+    // Reloads either way, so the pending-payment banner confirms the request
+    // exists even when the receipt did not attach.
+    add(SubscriptionLoadRequested(storeId: event.storeId));
   }
 
   Future<void> _onPlanChangeRequested(

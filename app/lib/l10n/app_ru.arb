@@ -1456,6 +1456,8 @@
   "paymentRecorded": "Оплата записана",
   "subscriptionRequestSent": "Заявка отправлена, ожидайте подтверждения",
   "@subscriptionRequestSent": { "description": "Snackbar after a subscription payment request is submitted and is awaiting admin approval" },
+  "subscriptionRequestSentWithoutReceipt": "Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.",
+  "@subscriptionRequestSentWithoutReceipt": { "description": "Snackbar when the plan-change request was created but the receipt image failed to upload. It points the merchant at support rather than at a retry on purpose: there is no UI for attaching a receipt to an existing payment, and resubmitting the form would create a second pending request, since request-change does not de-duplicate. Distinct from `subscriptionRequestSent`, where the receipt did attach" },
   "paymentQueuedOfflineMessage": "Платёж сохранён офлайн — отправим при подключении",
   "@paymentQueuedOfflineMessage": { "description": "Snackbar shown when a debt payment is submitted while offline and queued for later sync" },
   "paymentFormMaxAmountLine": "Максимум: {amount} TJS",

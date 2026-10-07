@@ -2289,6 +2289,10 @@ class AppLocalizationsTg extends AppLocalizations {
       'Заявка отправлена, ожидайте подтверждения';
 
   @override
+  String get subscriptionRequestSentWithoutReceipt =>
+      'Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.';
+
+  @override
   String get paymentQueuedOfflineMessage =>
       'Платёж сохранён офлайн — отправим при подключении';
 

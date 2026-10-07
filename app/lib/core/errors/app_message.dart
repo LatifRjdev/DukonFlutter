@@ -28,8 +28,9 @@ enum AppMessage {
   serverError,
   cacheError,
 
-  /// Two branches share this: an unrecognised exception type, and a
-  /// ServerException whose status code has no specific mapping.
+  /// Three branches share this: an unrecognised exception type, a
+  /// ServerException whose status code has no specific mapping, and a
+  /// request-change response with no payment id in it.
   unknownError,
 
   // ── Successes ────────────────────────────────────────────────────────────
@@ -45,6 +46,12 @@ enum AppMessage {
   zakatPaymentRecorded,
   zakatSettingsSaved,
   subscriptionRequestSent,
+
+  /// The plan-change request was created but its receipt did not upload. Its own
+  /// member rather than an error, deliberately: the request DOES exist, and
+  /// `requestChange` does not de-duplicate pending payments, so telling the
+  /// merchant it failed would make them resubmit and create a second one.
+  subscriptionRequestSentWithoutReceipt,
 
   /// Absorbed from the former `InvestmentL10nKey`, which proved this pattern
   /// first but duplicated its resolve switch across two pages.
