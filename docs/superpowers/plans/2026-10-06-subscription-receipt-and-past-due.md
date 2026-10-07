@@ -4,7 +4,7 @@
 
 **Goal:** Repair three defects on the subscription screen: the card-with-receipt flow that records nothing, the `PAST_DUE` status that renders as healthy, and a limit field the API stopped sending in May.
 
-**Architecture:** All changes are client-side; no API route, DTO, or Prisma change. Item 1 reverses two HTTP calls inside one bloc handler so the `paymentId` the upload needs exists before the upload. Item 2 extracts the subscription-status vocabulary into its own module with an exhaustive, `default`-free mapping, mirroring `payment_status.dart`, and derives `isActive`/`isExpired` from it. Item 3 deletes a dead field and its six test sites.
+**Architecture:** All changes are client-side; no API route, DTO, or Prisma change. Item 1 reverses two HTTP calls inside one bloc handler so the `paymentId` the upload needs exists before the upload. Item 2 extracts the subscription-status vocabulary into its own module with an exhaustive, `default`-free mapping, mirroring `payment_status.dart`, and derives `isActive`/`isExpired` from it. Item 3 deletes a dead field and its seven test references.
 
 **Tech Stack:** Flutter 3.x / Dart 3.10, `flutter_bloc`, `dio` (multipart), `equatable`, `bloc_test` + `mocktail`, `flutter gen-l10n` ARB localization.
 
@@ -69,7 +69,7 @@ Postgres: container `dukonpro-db` on `:5435`, `psql -U dukonpro -d dukonpro`.
 
 ## Task 1: Remove the dead `maxStores` limit
 
-`SubscriptionLimits` reads `maxStores`, which `SubscriptionPlanConfig` has not had since 2026-05 — see the comment at `api/src/common/guards/plan-limit.helper.ts:4-8` explaining that a per-merchant store cap had no architectural anchor. The endpoint sends only `maxProducts`, `maxStaff`, `maxDiscounts`. Nothing renders `maxStores`; six test sites assert it.
+`SubscriptionLimits` reads `maxStores`, which `SubscriptionPlanConfig` has not had since 2026-05 — see the comment at `api/src/common/guards/plan-limit.helper.ts:4-8` explaining that a per-merchant store cap had no architectural anchor. The endpoint sends only `maxProducts`, `maxStaff`, `maxDiscounts`. Nothing renders `maxStores`; seven test references keep it looking real — three `.having` assertions and four fixture literals. Counted, not recalled.
 
 Deletions cannot be driven by a new failing test, so the guard here is different: edit the tests first so they stop asserting the dead contract, confirm green, then remove the field and confirm `flutter analyze` finds no surviving reference.
 
@@ -170,9 +170,11 @@ class SubscriptionLimits extends Equatable {
 
 Run from `app/`:
 ```bash
-grep -rn maxStores lib test ; echo "exit=$?"
+grep -rn maxStores lib test
 ```
-Expected: no output and `exit=1`. Any hit is a site Step 2 missed.
+Expected: **exactly one** hit — the explanatory comment Step 4 itself adds at the top of `SubscriptionLimits`. Anything else is a site Step 2 missed.
+
+(An earlier draft of this step expected zero hits, which contradicted Step 4's own comment text. The comment is the point of the change and stays; the grep is a sweep for *code and fixture* references, not for the word.)
 
 ```bash
 flutter analyze
@@ -199,7 +201,7 @@ The column was removed from SubscriptionPlanConfig in 2026-05 because each
 store carries its own subscription, so a per-merchant cap had no anchor and was
 never enforced. The endpoint sends maxProducts/maxStaff/maxDiscounts; this
 model kept reading maxStores behind a `?? 1` fallback, so it silently read as 1
-forever. Nothing rendered it, so there was no visible defect — but six test
+forever. Nothing rendered it, so there was no visible defect — but seven test
 sites asserted it, which is what would make the next reader believe it is real.
 
 One of those sites is kept rather than deleted. "should treat maxStores of -1

@@ -228,7 +228,7 @@ records why: each store carries its own subscription, so a per-merchant store ca
 had no architectural anchor and was never enforced. The endpoint sends
 `maxProducts`, `maxStaff`, `maxDiscounts` and nothing else.
 
-Nothing renders it, so there is no visible defect — but six test sites assert it,
+Nothing renders it, so there is no visible defect — but seven test references assert or supply it,
 and they are what would make the next person believe the field is real.
 
 Remove the field, the constructor argument, the `fromJson` line and the `props`
