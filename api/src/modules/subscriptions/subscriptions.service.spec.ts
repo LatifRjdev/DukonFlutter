@@ -28,6 +28,67 @@ function makePrismaFake() {
   const subsByStore = new Map<string, Sub>();
   const subsById = new Map<string, Sub>();
 
+  // Full per-plan config rows, including the boolean feature flags and
+  // numeric limits that getSubscription() now surfaces as top-level
+  // `features`/`limits` objects (and as `availablePlans`) for the mobile
+  // client. Eleven flags, matching the real seed in onModuleInit.
+  const planConfigs: Record<string, any> = {
+    START: {
+      plan: 'START',
+      price: 200,
+      maxProducts: 500,
+      maxStaff: 2,
+      maxDiscounts: 0,
+      hasReportsAll: false,
+      hasExport: false,
+      hasTelegram: false,
+      hasAllPush: false,
+      hasDelivery: false,
+      hasInventory: false,
+      hasZakat: false,
+      hasInvestments: false,
+      hasLoyalty: false,
+      hasBatchProfitability: false,
+      hasEcommerceIntegration: false,
+    },
+    BUSINESS: {
+      plan: 'BUSINESS',
+      price: 400,
+      maxProducts: 2000,
+      maxStaff: 10,
+      maxDiscounts: 5,
+      hasReportsAll: true,
+      hasExport: false,
+      hasTelegram: true,
+      hasAllPush: true,
+      hasDelivery: true,
+      hasInventory: true,
+      hasZakat: true,
+      hasInvestments: true,
+      hasLoyalty: true,
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: false,
+    },
+    PREMIUM: {
+      plan: 'PREMIUM',
+      price: 600,
+      maxProducts: -1,
+      maxStaff: -1,
+      maxDiscounts: -1,
+      hasReportsAll: true,
+      hasExport: true,
+      hasTelegram: true,
+      hasAllPush: true,
+      hasDelivery: true,
+      hasInventory: true,
+      hasZakat: true,
+      hasInvestments: true,
+      hasLoyalty: true,
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: true,
+    },
+  };
+
   return {
     _subsByStore: subsByStore,
     _subsById: subsById,
@@ -45,55 +106,11 @@ function makePrismaFake() {
     },
     subscriptionPlanConfig: {
       findUnique: jest.fn(async ({ where }: any) => {
-        // Full per-plan config rows, including the boolean feature flags
-        // and numeric limits that getSubscription() now surfaces as
-        // top-level `features`/`limits` objects for the mobile client.
-        const configs: Record<string, any> = {
-          START: {
-            plan: 'START',
-            price: 200,
-            maxProducts: 500,
-            maxStaff: 2,
-            maxDiscounts: 0,
-            hasReportsAll: false,
-            hasExport: false,
-            hasTelegram: false,
-            hasAllPush: false,
-            hasDelivery: false,
-            hasInventory: false,
-            hasEcommerceIntegration: false,
-          },
-          BUSINESS: {
-            plan: 'BUSINESS',
-            price: 400,
-            maxProducts: 2000,
-            maxStaff: 10,
-            maxDiscounts: 5,
-            hasReportsAll: true,
-            hasExport: false,
-            hasTelegram: true,
-            hasAllPush: true,
-            hasDelivery: true,
-            hasInventory: true,
-            hasEcommerceIntegration: false,
-          },
-          PREMIUM: {
-            plan: 'PREMIUM',
-            price: 600,
-            maxProducts: -1,
-            maxStaff: -1,
-            maxDiscounts: -1,
-            hasReportsAll: true,
-            hasExport: true,
-            hasTelegram: true,
-            hasAllPush: true,
-            hasDelivery: true,
-            hasInventory: true,
-            hasEcommerceIntegration: true,
-          },
-        };
-        return configs[where.plan] ?? null;
+        return planConfigs[where.plan] ?? null;
       }),
+      // getSubscription() now fetches every plan (for `availablePlans`) via
+      // findMany rather than looking up a single plan by name.
+      findMany: jest.fn(async () => Object.values(planConfigs)),
       upsert: jest.fn(async ({ where, create }: any) => ({
         plan: where.plan,
         ...create,
@@ -180,15 +197,30 @@ describe('SubscriptionsService — read paths', () => {
       // The field the real-world bug hinged on: mobile's client-side gate
       // reads result.features.hasEcommerceIntegration, not
       // result.planConfig.hasEcommerceIntegration.
-      expect(result.features).toEqual({
+      //
+      // features used to be typed out by hand as seven keys; it is now
+      // derived from PLAN_FEATURE_FLAGS (eleven keys), so we check the keys
+      // this test cares about via toMatchObject rather than an exact object
+      // — growing the flag set should not require editing this assertion.
+      // hasZakat/hasInvestments/hasLoyalty/hasBatchProfitability are the
+      // four that getSubscription used to drop entirely, which is the whole
+      // defect this fixes: a PREMIUM merchant with @RequiresFeature-gated
+      // controllers for zakat/loyalty/batch profitability hit a 403 reading
+      // "Недостаточно прав" despite being entitled.
+      expect(result.features).toMatchObject({
         hasReportsAll: true,
         hasExport: true,
         hasTelegram: true,
         hasAllPush: true,
         hasDelivery: true,
         hasInventory: true,
+        hasZakat: true,
+        hasInvestments: true,
+        hasLoyalty: true,
+        hasBatchProfitability: true,
         hasEcommerceIntegration: true,
       });
+      expect(Object.keys(result.features ?? {})).toHaveLength(11);
       expect(result.limits).toEqual({
         maxProducts: -1,
         maxStaff: -1,

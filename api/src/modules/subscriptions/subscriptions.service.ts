@@ -18,6 +18,7 @@ import { ExtendSubscriptionDto } from './dto/extend-subscription.dto';
 import { SetDiscountDto } from './dto/set-discount.dto';
 import { AdminManualPaymentDto } from './dto/admin-manual-payment.dto';
 import * as Sentry from '@sentry/nestjs';
+import { PLAN_FEATURE_FLAGS, discountedPrice, toPlanView } from './plan-view';
 
 const PLAN_HIERARCHY: Record<string, number> = {
   START: 1,
@@ -179,39 +180,36 @@ export class SubscriptionsService implements OnModuleInit {
       throw new NotFoundException('Subscription not found for this store');
     }
 
-    const planConfig = await this.prisma.subscriptionPlanConfig.findUnique({
-      where: { plan: subscription.plan },
+    const configs = await this.prisma.subscriptionPlanConfig.findMany({
+      orderBy: { price: 'asc' },
     });
+    const planConfig =
+      configs.find((c) => c.plan === subscription.plan) ?? null;
 
+    // adminDiscount is a Prisma Decimal, not a number — toPlanView /
+    // discountedPrice take number | null | undefined.
     const discount = subscription.adminDiscount
       ? Number(subscription.adminDiscount)
-      : 0;
-    const basePrice = planConfig ? Number(planConfig.price) : 0;
-    const calculatedPrice = basePrice * (1 - discount / 100);
+      : null;
 
-    // Mobile's SubscriptionBloc reads top-level `features`/`limits` objects
-    // (see app/lib/presentation/blocs/subscription/subscription_bloc.dart),
-    // not the nested `planConfig` shape — without this, every feature gate
-    // on the client silently falls back to SubscriptionFeatures.defaults()
-    // (all false), even for paying PREMIUM merchants. Keep `planConfig`
-    // too since other consumers may already depend on the flat shape.
-    const features = planConfig
-      ? {
-          hasReportsAll: planConfig.hasReportsAll,
-          hasExport: planConfig.hasExport,
-          hasTelegram: planConfig.hasTelegram,
-          hasAllPush: planConfig.hasAllPush,
-          hasDelivery: planConfig.hasDelivery,
-          hasInventory: planConfig.hasInventory,
-          hasEcommerceIntegration: planConfig.hasEcommerceIntegration,
-        }
-      : undefined;
+    // Every plan, priced for THIS merchant. The app renders its cards from
+    // this: it used to hardcode 49/149/299 in translation strings while the
+    // config charged 200/400/600, so tapping a card reading 49 created a
+    // payment for 200.
+    const availablePlans = configs.map((c) => toPlanView(c, discount));
 
-    const limits = planConfig
+    const currentView = planConfig ? toPlanView(planConfig, discount) : null;
+
+    // `features` and `limits` keep their names — the app reads them — but are
+    // derived rather than typed out. `features` grows from seven keys to
+    // eleven; adding keys cannot break a reader, and the four that were
+    // missing are the whole defect.
+    const features = currentView ? currentView.features : undefined;
+    const limits = currentView
       ? {
-          maxProducts: planConfig.maxProducts,
-          maxStaff: planConfig.maxStaff,
-          maxDiscounts: planConfig.maxDiscounts,
+          maxProducts: currentView.maxProducts,
+          maxStaff: currentView.maxStaff,
+          maxDiscounts: currentView.maxDiscounts,
         }
       : undefined;
 
@@ -220,7 +218,8 @@ export class SubscriptionsService implements OnModuleInit {
       planConfig,
       features,
       limits,
-      calculatedPrice: Math.round(calculatedPrice * 100) / 100,
+      availablePlans,
+      calculatedPrice: currentView ? currentView.price : 0,
     };
   }
 
@@ -241,11 +240,15 @@ export class SubscriptionsService implements OnModuleInit {
       throw new BadRequestException('Invalid plan');
     }
 
-    const discount = subscription.adminDiscount
-      ? Number(subscription.adminDiscount)
-      : 0;
-    const basePrice = Number(planConfig.price);
-    const amount = basePrice * (1 - discount / 100);
+    // Same helper the card's price came from, so the merchant is charged the
+    // number they were shown. These were two separate expressions with
+    // different rounding.
+    const amount = discountedPrice(
+      Number(planConfig.price),
+      subscription.adminDiscount
+        ? Number(subscription.adminDiscount)
+        : null,
+    );
 
     const payment = await this.prisma.payment.create({
       data: {
