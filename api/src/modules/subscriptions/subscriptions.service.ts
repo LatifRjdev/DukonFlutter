@@ -81,6 +81,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: true,
         hasZakat: true,
         hasInvestments: true,
+        hasLoyalty: true,
         hasBatchProfitability: true,
       },
       {
@@ -97,6 +98,7 @@ export class SubscriptionsService implements OnModuleInit {
         hasInventory: true,
         hasZakat: true,
         hasInvestments: true,
+        hasLoyalty: true,
         hasBatchProfitability: true,
         hasEcommerceIntegration: true,
       },
@@ -125,6 +127,17 @@ export class SubscriptionsService implements OnModuleInit {
     // fields that specifically needed this treatment, not a general
     // policy — don't add a new flag here without checking whether it
     // actually has the same gap first.
+    //
+    // That reasoning holds only because each of the three is ALSO set on the
+    // plan literals above, so a fresh database gets it right at create time
+    // and the migration covers rows that predate the column. hasLoyalty was
+    // set in neither until 2026-10: its backfill UPDATE matches zero rows on
+    // an empty table, the create literal omitted it so Prisma's
+    // @default(false) won, and nothing revisited it — leaving BUSINESS and
+    // PREMIUM permanently without loyalty on any fresh CI, staging or
+    // restored environment. Invisible until the flag began reaching the app.
+    // A backfill migration is not a substitute for the literal; it is the
+    // other half of it.
     for (const config of plans) {
       const update = {
         hasBatchProfitability: config.hasBatchProfitability,

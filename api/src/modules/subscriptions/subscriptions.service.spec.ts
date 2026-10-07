@@ -633,6 +633,54 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     expect(byPlan.PREMIUM.create.hasBatchProfitability).toBe(true);
   });
 
+  it('should seed every flag a plan is meant to have, not rely on a backfill migration', async () => {
+    // The `create` branch IS the fresh-database case: a new CI, staging or
+    // restored environment runs its migrations against an empty
+    // subscription_plan_configs, so a backfill `UPDATE ... WHERE plan IN
+    // (...)` matches zero rows, and whatever the create literal omits falls to
+    // Prisma's @default(false) and is never revisited.
+    //
+    // hasLoyalty was omitted from both the literal and the update: block,
+    // leaving BUSINESS and PREMIUM permanently without loyalty everywhere
+    // except databases old enough to have received the one-time migration —
+    // which is why dev looked fine. It only became visible when the flag
+    // started reaching the app.
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+
+    // Paid-tier flags, asserted on the create payload rather than on a row
+    // read back, because the create payload is what a fresh install gets.
+    for (const plan of ['BUSINESS', 'PREMIUM']) {
+      expect(byPlan[plan].create.hasZakat).toBe(true);
+      expect(byPlan[plan].create.hasInvestments).toBe(true);
+      expect(byPlan[plan].create.hasLoyalty).toBe(true);
+      expect(byPlan[plan].create.hasBatchProfitability).toBe(true);
+    }
+    expect(byPlan.START.create.hasZakat).toBe(false);
+    expect(byPlan.START.create.hasInvestments).toBe(false);
+  });
+
   it('should seed hasEcommerceIntegration=true for PREMIUM only, not START or BUSINESS', async () => {
     const prisma = makePrismaFake();
     const upsertCalls: any[] = [];
