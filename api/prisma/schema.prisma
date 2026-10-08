@@ -157,6 +157,17 @@ model Payment {
   // shared `note`, so rejecting overwrote the requested-plan audit
   // trail.
   note            String?
+  // The plan this payment buys. Until 2026-10 it lived only inside `note`, as
+  // the English phrase "Plan change request to BUSINESS", and approval
+  // recovered it with a regular expression — so a manual payment (whose note
+  // an admin types freely), an edited note, or a translated string silently
+  // left the plan unchanged while the money was taken. The note above stays
+  // as prose; this is the data.
+  //
+  // Nullable: rows predating the column and manual payments may have no
+  // parseable plan, and null means extend the period without changing the
+  // plan — which is already what happens to them, only visibly.
+  requestedPlan   SubscriptionPlan?
   rejectionReason String?
   reviewedAt      DateTime?
   reviewedBy      String?
