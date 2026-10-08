@@ -21,6 +21,7 @@ import '../../blocs/pos/cart_bloc.dart';
 import '../../blocs/pos/cart_event.dart';
 import '../../blocs/store/store_bloc.dart';
 import '../../blocs/store/store_state.dart';
+import '../settings/plan_gate.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final String productId;
@@ -210,15 +211,42 @@ class ProductDetailPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Batch profitability
-                    _BatchProfitabilitySection(
+                    // Batch profitability — gated on hasBatchProfitability.
+                    // `@RequiresFeature` already makes the endpoint 403 for a
+                    // plan without it, and the section was already silently
+                    // hiding on that 403 (see `_forbidden` below), so this
+                    // adds no new visible behaviour. It only skips a request
+                    // already known to fail when the plan is CONFIRMED to lack
+                    // the flag. While undetermined (SubscriptionBloc hasn't
+                    // loaded), the section still loads as before and leans on
+                    // that same 403 handling — the only source of truth it
+                    // had until now.
+                    // PlanGateBuilder, not a bare BlocBuilder: this screen
+                    // does not load the subscription and settings_page may
+                    // never have been opened, which would leave the gate
+                    // undetermined forever.
+                    PlanGateBuilder(
                       storeId: () {
                         final storeState = context.read<StoreBloc>().state;
                         return storeState is StoreLoaded
                             ? storeState.selectedStore?.id ?? ''
                             : '';
                       }(),
-                      productId: product.id,
+                      needs: (f) => f.hasBatchProfitability,
+                      builder: (context, gate) {
+                        if (gate.verdict == PlanGateVerdict.blocked) {
+                          return const SizedBox.shrink();
+                        }
+                        return _BatchProfitabilitySection(
+                          storeId: () {
+                            final storeState = context.read<StoreBloc>().state;
+                            return storeState is StoreLoaded
+                                ? storeState.selectedStore?.id ?? ''
+                                : '';
+                          }(),
+                          productId: product.id,
+                        );
+                      },
                     ),
                     const SizedBox(height: 20),
 

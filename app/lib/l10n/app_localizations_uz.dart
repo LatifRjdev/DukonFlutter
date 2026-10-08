@@ -1711,7 +1711,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get settingsLogoutConfirmBody => 'Вы уверены, что хотите выйти?';
 
   @override
-  String get settingsPremiumGateTitle => 'Доступно на тарифе PREMIUM';
+  String settingsPlanGateTitle(String plan) {
+    return 'Доступно на тарифе $plan';
+  }
 
   @override
   String get settingsPremiumGateBody =>
@@ -1779,59 +1781,42 @@ class AppLocalizationsUz extends AppLocalizations {
   String get settingsLogoutButton => 'Выйти из аккаунта';
 
   @override
-  String get subscriptionFeatureStores1 => '1 магазин';
-
-  @override
-  String get subscriptionFeatureProducts500 => '500 товаров';
-
-  @override
-  String get subscriptionFeatureEmployees2 => '2 сотрудника';
-
-  @override
   String get subscriptionFeatureSalesReport => 'Отчёт продаж';
 
   @override
   String get subscriptionFeatureCurrencies => 'Валюты';
 
   @override
-  String get subscriptionPriceStart => '49 TJS/мес';
-
-  @override
-  String get subscriptionFeatureStores3 => '3 магазина';
-
-  @override
-  String get subscriptionFeatureProducts2000 => '2000 товаров';
-
-  @override
-  String get subscriptionFeatureEmployees10 => '10 сотрудников';
-
-  @override
   String get subscriptionFeatureAllReports => 'Все отчёты';
-
-  @override
-  String get subscriptionFeatureDiscounts5 => '5 скидок';
-
-  @override
-  String get subscriptionPriceBusiness => '149 TJS/мес';
-
-  @override
-  String get subscriptionFeatureStores5 => '5 магазинов';
-
-  @override
-  String get subscriptionFeatureUnlimitedProductsEmployees =>
-      'Безлимит товаров/сотрудников';
 
   @override
   String get subscriptionFeatureExportPdfExcel => 'Экспорт PDF/Excel';
 
   @override
-  String get subscriptionFeatureUnlimitedDiscounts => 'Безлимит скидок';
-
-  @override
   String get subscriptionFeaturePrioritySupport => 'Приоритетная поддержка';
 
   @override
-  String get subscriptionPricePremium => '299 TJS/мес';
+  String subscriptionPriceLine(String amount) {
+    return '$amount TJS/мес';
+  }
+
+  @override
+  String subscriptionFeatureProductsLine(String count) {
+    return '$count товаров';
+  }
+
+  @override
+  String subscriptionFeatureStaffLine(String count) {
+    return '$count сотрудников';
+  }
+
+  @override
+  String subscriptionFeatureDiscountsLine(String count) {
+    return '$count скидок';
+  }
+
+  @override
+  String get subscriptionFeatureUnlimited => 'Без ограничений';
 
   @override
   String get subscriptionActiveStatus => 'Активна';

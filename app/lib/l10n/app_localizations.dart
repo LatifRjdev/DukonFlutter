@@ -3178,11 +3178,11 @@ abstract class AppLocalizations {
   /// **'Вы уверены, что хотите выйти?'**
   String get settingsLogoutConfirmBody;
 
-  /// Settings page — dialog title shown when tapping the ecommerce integration tile on a non-PREMIUM plan
+  /// Dialog title when a merchant opens a feature their plan does not include. The plan name is the CHEAPEST plan whose config carries the flag, taken from availablePlans — not a constant. Replaced settingsPremiumGateTitle, which said PREMIUM for every feature, including zakat and loyalty, which BUSINESS already includes.
   ///
   /// In ru, this message translates to:
-  /// **'Доступно на тарифе PREMIUM'**
-  String get settingsPremiumGateTitle;
+  /// **'Доступно на тарифе {plan}'**
+  String settingsPlanGateTitle(String plan);
 
   /// Settings page — body text of the PREMIUM upsell dialog for the ecommerce integration
   ///
@@ -3304,24 +3304,6 @@ abstract class AppLocalizations {
   /// **'Выйти из аккаунта'**
   String get settingsLogoutButton;
 
-  /// No description provided for @subscriptionFeatureStores1.
-  ///
-  /// In ru, this message translates to:
-  /// **'1 магазин'**
-  String get subscriptionFeatureStores1;
-
-  /// No description provided for @subscriptionFeatureProducts500.
-  ///
-  /// In ru, this message translates to:
-  /// **'500 товаров'**
-  String get subscriptionFeatureProducts500;
-
-  /// No description provided for @subscriptionFeatureEmployees2.
-  ///
-  /// In ru, this message translates to:
-  /// **'2 сотрудника'**
-  String get subscriptionFeatureEmployees2;
-
   /// No description provided for @subscriptionFeatureSalesReport.
   ///
   /// In ru, this message translates to:
@@ -3334,59 +3316,11 @@ abstract class AppLocalizations {
   /// **'Валюты'**
   String get subscriptionFeatureCurrencies;
 
-  /// No description provided for @subscriptionPriceStart.
-  ///
-  /// In ru, this message translates to:
-  /// **'49 TJS/мес'**
-  String get subscriptionPriceStart;
-
-  /// No description provided for @subscriptionFeatureStores3.
-  ///
-  /// In ru, this message translates to:
-  /// **'3 магазина'**
-  String get subscriptionFeatureStores3;
-
-  /// No description provided for @subscriptionFeatureProducts2000.
-  ///
-  /// In ru, this message translates to:
-  /// **'2000 товаров'**
-  String get subscriptionFeatureProducts2000;
-
-  /// No description provided for @subscriptionFeatureEmployees10.
-  ///
-  /// In ru, this message translates to:
-  /// **'10 сотрудников'**
-  String get subscriptionFeatureEmployees10;
-
   /// No description provided for @subscriptionFeatureAllReports.
   ///
   /// In ru, this message translates to:
   /// **'Все отчёты'**
   String get subscriptionFeatureAllReports;
-
-  /// No description provided for @subscriptionFeatureDiscounts5.
-  ///
-  /// In ru, this message translates to:
-  /// **'5 скидок'**
-  String get subscriptionFeatureDiscounts5;
-
-  /// No description provided for @subscriptionPriceBusiness.
-  ///
-  /// In ru, this message translates to:
-  /// **'149 TJS/мес'**
-  String get subscriptionPriceBusiness;
-
-  /// No description provided for @subscriptionFeatureStores5.
-  ///
-  /// In ru, this message translates to:
-  /// **'5 магазинов'**
-  String get subscriptionFeatureStores5;
-
-  /// No description provided for @subscriptionFeatureUnlimitedProductsEmployees.
-  ///
-  /// In ru, this message translates to:
-  /// **'Безлимит товаров/сотрудников'**
-  String get subscriptionFeatureUnlimitedProductsEmployees;
 
   /// No description provided for @subscriptionFeatureExportPdfExcel.
   ///
@@ -3394,23 +3328,41 @@ abstract class AppLocalizations {
   /// **'Экспорт PDF/Excel'**
   String get subscriptionFeatureExportPdfExcel;
 
-  /// No description provided for @subscriptionFeatureUnlimitedDiscounts.
-  ///
-  /// In ru, this message translates to:
-  /// **'Безлимит скидок'**
-  String get subscriptionFeatureUnlimitedDiscounts;
-
   /// No description provided for @subscriptionFeaturePrioritySupport.
   ///
   /// In ru, this message translates to:
   /// **'Приоритетная поддержка'**
   String get subscriptionFeaturePrioritySupport;
 
-  /// No description provided for @subscriptionPricePremium.
+  /// Plan card price. The amount is pre-formatted at the call site and comes from availablePlans, with this merchant's adminDiscount already applied server-side — it is the number request-change will charge. Replaced subscriptionPriceStart/Business/Premium, which hardcoded 49/149/299 while the config charged 200/400/600.
   ///
   /// In ru, this message translates to:
-  /// **'299 TJS/мес'**
-  String get subscriptionPricePremium;
+  /// **'{amount} TJS/мес'**
+  String subscriptionPriceLine(String amount);
+
+  /// Plan card bullet — product limit, from the plan config. Replaced subscriptionFeatureProducts500, whose key name pinned it to one plan.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} товаров'**
+  String subscriptionFeatureProductsLine(String count);
+
+  /// Plan card bullet — staff limit, from the plan config. Count-agnostic wording: the project uses String placeholders with no ICU plural, so one form has to be correct for 2 and 10 alike.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} сотрудников'**
+  String subscriptionFeatureStaffLine(String count);
+
+  /// Plan card bullet — discount limit, from the plan config. Count-agnostic for the same reason as subscriptionFeatureStaffLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} скидок'**
+  String subscriptionFeatureDiscountsLine(String count);
+
+  /// Plan card bullet replacing a numeric limit when the config stores -1, the PREMIUM convention for unlimited.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без ограничений'**
+  String get subscriptionFeatureUnlimited;
 
   /// Subscription-status badge — near-duplicate value to `loyaltySettingsActive` ("Активна", loyalty-toggle label) and `shiftsActiveStatus` ("Активна", shift-status badge); kept as its own key per this ARB's established pattern of not merging same-value keys across unrelated features
   ///

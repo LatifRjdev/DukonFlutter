@@ -44,9 +44,14 @@ SubscriptionLoaded _loadedWith(String status) => SubscriptionLoaded(
     hasAllPush: false,
     hasDelivery: true,
     hasInventory: true,
+    hasZakat: false,
+    hasInvestments: false,
+    hasLoyalty: false,
+    hasBatchProfitability: false,
     hasEcommerceIntegration: false,
   ),
   payments: const [],
+  availablePlans: const [],
 );
 
 void main() {

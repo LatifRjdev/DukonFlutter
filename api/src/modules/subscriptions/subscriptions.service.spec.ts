@@ -28,6 +28,67 @@ function makePrismaFake() {
   const subsByStore = new Map<string, Sub>();
   const subsById = new Map<string, Sub>();
 
+  // Full per-plan config rows, including the boolean feature flags and
+  // numeric limits that getSubscription() now surfaces as top-level
+  // `features`/`limits` objects (and as `availablePlans`) for the mobile
+  // client. Eleven flags, matching the real seed in onModuleInit.
+  const planConfigs: Record<string, any> = {
+    START: {
+      plan: 'START',
+      price: 200,
+      maxProducts: 500,
+      maxStaff: 2,
+      maxDiscounts: 0,
+      hasReportsAll: false,
+      hasExport: false,
+      hasTelegram: false,
+      hasAllPush: false,
+      hasDelivery: false,
+      hasInventory: false,
+      hasZakat: false,
+      hasInvestments: false,
+      hasLoyalty: false,
+      hasBatchProfitability: false,
+      hasEcommerceIntegration: false,
+    },
+    BUSINESS: {
+      plan: 'BUSINESS',
+      price: 400,
+      maxProducts: 2000,
+      maxStaff: 10,
+      maxDiscounts: 5,
+      hasReportsAll: true,
+      hasExport: false,
+      hasTelegram: true,
+      hasAllPush: true,
+      hasDelivery: true,
+      hasInventory: true,
+      hasZakat: true,
+      hasInvestments: true,
+      hasLoyalty: true,
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: false,
+    },
+    PREMIUM: {
+      plan: 'PREMIUM',
+      price: 600,
+      maxProducts: -1,
+      maxStaff: -1,
+      maxDiscounts: -1,
+      hasReportsAll: true,
+      hasExport: true,
+      hasTelegram: true,
+      hasAllPush: true,
+      hasDelivery: true,
+      hasInventory: true,
+      hasZakat: true,
+      hasInvestments: true,
+      hasLoyalty: true,
+      hasBatchProfitability: true,
+      hasEcommerceIntegration: true,
+    },
+  };
+
   return {
     _subsByStore: subsByStore,
     _subsById: subsById,
@@ -45,55 +106,11 @@ function makePrismaFake() {
     },
     subscriptionPlanConfig: {
       findUnique: jest.fn(async ({ where }: any) => {
-        // Full per-plan config rows, including the boolean feature flags
-        // and numeric limits that getSubscription() now surfaces as
-        // top-level `features`/`limits` objects for the mobile client.
-        const configs: Record<string, any> = {
-          START: {
-            plan: 'START',
-            price: 200,
-            maxProducts: 500,
-            maxStaff: 2,
-            maxDiscounts: 0,
-            hasReportsAll: false,
-            hasExport: false,
-            hasTelegram: false,
-            hasAllPush: false,
-            hasDelivery: false,
-            hasInventory: false,
-            hasEcommerceIntegration: false,
-          },
-          BUSINESS: {
-            plan: 'BUSINESS',
-            price: 400,
-            maxProducts: 2000,
-            maxStaff: 10,
-            maxDiscounts: 5,
-            hasReportsAll: true,
-            hasExport: false,
-            hasTelegram: true,
-            hasAllPush: true,
-            hasDelivery: true,
-            hasInventory: true,
-            hasEcommerceIntegration: false,
-          },
-          PREMIUM: {
-            plan: 'PREMIUM',
-            price: 600,
-            maxProducts: -1,
-            maxStaff: -1,
-            maxDiscounts: -1,
-            hasReportsAll: true,
-            hasExport: true,
-            hasTelegram: true,
-            hasAllPush: true,
-            hasDelivery: true,
-            hasInventory: true,
-            hasEcommerceIntegration: true,
-          },
-        };
-        return configs[where.plan] ?? null;
+        return planConfigs[where.plan] ?? null;
       }),
+      // getSubscription() now fetches every plan (for `availablePlans`) via
+      // findMany rather than looking up a single plan by name.
+      findMany: jest.fn(async () => Object.values(planConfigs)),
       upsert: jest.fn(async ({ where, create }: any) => ({
         plan: where.plan,
         ...create,
@@ -180,15 +197,30 @@ describe('SubscriptionsService — read paths', () => {
       // The field the real-world bug hinged on: mobile's client-side gate
       // reads result.features.hasEcommerceIntegration, not
       // result.planConfig.hasEcommerceIntegration.
-      expect(result.features).toEqual({
+      //
+      // features used to be typed out by hand as seven keys; it is now
+      // derived from PLAN_FEATURE_FLAGS (eleven keys), so we check the keys
+      // this test cares about via toMatchObject rather than an exact object
+      // — growing the flag set should not require editing this assertion.
+      // hasZakat/hasInvestments/hasLoyalty/hasBatchProfitability are the
+      // four that getSubscription used to drop entirely, which is the whole
+      // defect this fixes: a PREMIUM merchant with @RequiresFeature-gated
+      // controllers for zakat/loyalty/batch profitability hit a 403 reading
+      // "Недостаточно прав" despite being entitled.
+      expect(result.features).toMatchObject({
         hasReportsAll: true,
         hasExport: true,
         hasTelegram: true,
         hasAllPush: true,
         hasDelivery: true,
         hasInventory: true,
+        hasZakat: true,
+        hasInvestments: true,
+        hasLoyalty: true,
+        hasBatchProfitability: true,
         hasEcommerceIntegration: true,
       });
+      expect(Object.keys(result.features ?? {})).toHaveLength(11);
       expect(result.limits).toEqual({
         maxProducts: -1,
         maxStaff: -1,
@@ -599,6 +631,54 @@ describe('SubscriptionsService — seedPlanConfigs', () => {
     expect(byPlan.START.create.hasBatchProfitability).toBeUndefined();
     expect(byPlan.BUSINESS.create.hasBatchProfitability).toBe(true);
     expect(byPlan.PREMIUM.create.hasBatchProfitability).toBe(true);
+  });
+
+  it('should seed every flag a plan is meant to have, not rely on a backfill migration', async () => {
+    // The `create` branch IS the fresh-database case: a new CI, staging or
+    // restored environment runs its migrations against an empty
+    // subscription_plan_configs, so a backfill `UPDATE ... WHERE plan IN
+    // (...)` matches zero rows, and whatever the create literal omits falls to
+    // Prisma's @default(false) and is never revisited.
+    //
+    // hasLoyalty was omitted from both the literal and the update: block,
+    // leaving BUSINESS and PREMIUM permanently without loyalty everywhere
+    // except databases old enough to have received the one-time migration —
+    // which is why dev looked fine. It only became visible when the flag
+    // started reaching the app.
+    const prisma = makePrismaFake();
+    const upsertCalls: any[] = [];
+    prisma.subscriptionPlanConfig.upsert = jest.fn(
+      async ({ where, create, update }: any) => {
+        upsertCalls.push({ where, create, update });
+        return { plan: where.plan, ...create };
+      },
+    );
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        SubscriptionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: NotificationsService, useValue: fakeNotifications },
+        { provide: AuditLogService, useValue: { record: jest.fn() } },
+      ],
+    }).compile();
+    const service = moduleRef.get(SubscriptionsService);
+
+    await service.onModuleInit();
+
+    const byPlan = Object.fromEntries(
+      upsertCalls.map((c) => [c.where.plan, c]),
+    );
+
+    // Paid-tier flags, asserted on the create payload rather than on a row
+    // read back, because the create payload is what a fresh install gets.
+    for (const plan of ['BUSINESS', 'PREMIUM']) {
+      expect(byPlan[plan].create.hasZakat).toBe(true);
+      expect(byPlan[plan].create.hasInvestments).toBe(true);
+      expect(byPlan[plan].create.hasLoyalty).toBe(true);
+      expect(byPlan[plan].create.hasBatchProfitability).toBe(true);
+    }
+    expect(byPlan.START.create.hasZakat).toBe(false);
+    expect(byPlan.START.create.hasInvestments).toBe(false);
   });
 
   it('should seed hasEcommerceIntegration=true for PREMIUM only, not START or BUSINESS', async () => {

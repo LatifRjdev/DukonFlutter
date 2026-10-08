@@ -34,6 +34,90 @@ class _MockSubscriptionBloc
     extends MockBloc<SubscriptionEvent, SubscriptionState>
     implements SubscriptionBloc {}
 
+// Task 5 gates the loyalty and ecommerce tiles on the catalog in
+// availablePlans, not on a hardcoded tier, so an empty catalog can no longer
+// stand in for "some feature is missing" — cheapestPlanWith([], ...) finds
+// nothing to badge and PlanGate hides the upsell rather than naming a plan
+// that doesn't exist. This mirrors the real seeded config referenced by Task
+// 5 (zakat/loyalty/batch profitability/investments on BUSINESS, ecommerce on
+// PREMIUM) so both gated tiles render their real badge: "Бизнес" on loyalty,
+// "Премиум" on ecommerce. settings_light.png/settings_dark.png predate this
+// — they were captured when the ecommerce badge was still the hardcoded
+// literal "PREMIUM" and the loyalty tile had no badge at all, so both now
+// mismatch pixel-for-pixel and need a human to regenerate them, same as the
+// two SubscriptionPage goldens Task 4 left stale.
+const _planCatalogFeatures = {
+  'START': SubscriptionFeatures(
+    hasReportsAll: false,
+    hasExport: false,
+    hasTelegram: false,
+    hasAllPush: false,
+    hasDelivery: false,
+    hasInventory: false,
+    hasZakat: false,
+    hasInvestments: false,
+    hasLoyalty: false,
+    hasBatchProfitability: false,
+    hasEcommerceIntegration: false,
+  ),
+  'BUSINESS': SubscriptionFeatures(
+    hasReportsAll: true,
+    hasExport: false,
+    hasTelegram: true,
+    hasAllPush: false,
+    hasDelivery: true,
+    hasInventory: true,
+    hasZakat: true,
+    hasInvestments: true,
+    hasLoyalty: true,
+    hasBatchProfitability: true,
+    hasEcommerceIntegration: false,
+  ),
+  'PREMIUM': SubscriptionFeatures(
+    hasReportsAll: true,
+    hasExport: true,
+    hasTelegram: true,
+    hasAllPush: true,
+    hasDelivery: true,
+    hasInventory: true,
+    hasZakat: true,
+    hasInvestments: true,
+    hasLoyalty: true,
+    hasBatchProfitability: true,
+    hasEcommerceIntegration: true,
+  ),
+};
+
+final _fakeAvailablePlans = [
+  SubscriptionPlanOption(
+    plan: 'START',
+    price: 200,
+    listPrice: 200,
+    maxProducts: 500,
+    maxStaff: 2,
+    maxDiscounts: 0,
+    features: _planCatalogFeatures['START']!,
+  ),
+  SubscriptionPlanOption(
+    plan: 'BUSINESS',
+    price: 400,
+    listPrice: 400,
+    maxProducts: 2000,
+    maxStaff: 10,
+    maxDiscounts: 5,
+    features: _planCatalogFeatures['BUSINESS']!,
+  ),
+  SubscriptionPlanOption(
+    plan: 'PREMIUM',
+    price: 600,
+    listPrice: 600,
+    maxProducts: -1,
+    maxStaff: -1,
+    maxDiscounts: -1,
+    features: _planCatalogFeatures['PREMIUM']!,
+  ),
+];
+
 SubscriptionLoaded _fakeNonPremiumSubscription() => SubscriptionLoaded(
   plan: 'BUSINESS',
   status: 'ACTIVE',
@@ -42,6 +126,9 @@ SubscriptionLoaded _fakeNonPremiumSubscription() => SubscriptionLoaded(
     maxStaff: 10,
     maxDiscounts: 5,
   ),
+  // This merchant's OWN grant, deliberately missing loyalty and ecommerce —
+  // distinct from _planCatalogFeatures above, which is what EVERY plan
+  // offers, used only to resolve the cheapest upsell target.
   features: const SubscriptionFeatures(
     hasReportsAll: true,
     hasExport: false,
@@ -49,9 +136,14 @@ SubscriptionLoaded _fakeNonPremiumSubscription() => SubscriptionLoaded(
     hasAllPush: false,
     hasDelivery: true,
     hasInventory: true,
+    hasZakat: false,
+    hasInvestments: false,
+    hasLoyalty: false,
+    hasBatchProfitability: false,
     hasEcommerceIntegration: false,
   ),
   payments: const [],
+  availablePlans: _fakeAvailablePlans,
 );
 
 class _FakeDioClient extends Fake implements DioClient {

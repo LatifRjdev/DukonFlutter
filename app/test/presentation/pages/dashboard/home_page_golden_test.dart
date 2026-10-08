@@ -30,6 +30,9 @@ import 'package:dukonpro/presentation/blocs/product/product_list_bloc.dart';
 import 'package:dukonpro/presentation/blocs/product/product_list_event.dart';
 import 'package:dukonpro/presentation/blocs/product/product_list_state.dart';
 import 'package:dukonpro/presentation/blocs/store/store_bloc.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_bloc.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_event.dart';
+import 'package:dukonpro/presentation/blocs/subscription/subscription_state.dart';
 import 'package:dukonpro/presentation/pages/dashboard/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +65,38 @@ class MockFinanceBloc extends MockBloc<FinanceEvent, FinanceState>
 class MockCustomerListBloc
     extends MockBloc<CustomerListEvent, CustomerListState>
     implements CustomerListBloc {}
+
+class _MockSubscriptionBloc
+    extends MockBloc<SubscriptionEvent, SubscriptionState>
+    implements SubscriptionBloc {}
+
+// HomePage builds all five tab pages eagerly (for an IndexedStack-style
+// bottom nav), including MorePage, which Task 5 gated the Закят tile on —
+// so a SubscriptionBloc is now required in this tree even though the More
+// tab is never the one on screen. Loaded with the flag granted so this
+// golden keeps showing that tile exactly as it did before gating existed.
+const _featuresWithZakat = SubscriptionFeatures(
+  hasReportsAll: false,
+  hasExport: false,
+  hasTelegram: false,
+  hasAllPush: false,
+  hasDelivery: false,
+  hasInventory: false,
+  hasZakat: true,
+  hasInvestments: false,
+  hasLoyalty: false,
+  hasBatchProfitability: false,
+  hasEcommerceIntegration: false,
+);
+
+const _subscriptionLoaded = SubscriptionLoaded(
+  plan: 'BUSINESS',
+  status: 'ACTIVE',
+  limits: SubscriptionLimits(maxProducts: 500, maxStaff: 2, maxDiscounts: 0),
+  features: _featuresWithZakat,
+  payments: [],
+  availablePlans: [],
+);
 
 // ── GetIt fakes for OfflineBanner ─────────────────────────────────────────────
 
@@ -118,6 +153,7 @@ void main() {
   late MockCheckoutBloc checkoutBloc;
   late MockFinanceBloc financeBloc;
   late MockCustomerListBloc customerListBloc;
+  late _MockSubscriptionBloc subscriptionBloc;
 
   setUp(() {
     // Register GetIt fakes so OfflineBanner doesn't throw.
@@ -142,8 +178,10 @@ void main() {
     checkoutBloc = MockCheckoutBloc();
     financeBloc = MockFinanceBloc();
     customerListBloc = MockCustomerListBloc();
+    subscriptionBloc = _MockSubscriptionBloc();
 
     when(() => storeBloc.state).thenReturn(fakeStoreLoaded());
+    when(() => subscriptionBloc.state).thenReturn(_subscriptionLoaded);
     when(() => dashboardBloc.state).thenReturn(DashboardInitial());
     when(() => productListBloc.state).thenReturn(ProductListInitial());
     when(() => categoryBloc.state).thenReturn(CategoryInitial());
@@ -174,6 +212,7 @@ void main() {
           BlocProvider<CheckoutBloc>.value(value: checkoutBloc),
           BlocProvider<FinanceBloc>.value(value: financeBloc),
           BlocProvider<CustomerListBloc>.value(value: customerListBloc),
+          BlocProvider<SubscriptionBloc>.value(value: subscriptionBloc),
         ],
         child: child,
       );

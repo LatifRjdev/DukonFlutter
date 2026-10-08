@@ -196,6 +196,15 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
           : SubscriptionFeatures.defaults(),
       payments: payments,
       pendingPayment: pendingPayment,
+      // An entry with no plan name cannot be rendered as a card at all — it has
+      // no title and no action — so it is dropped rather than carried as a
+      // nameless row. Malformed entries are skipped, not fatal, matching how
+      // `payments` is parsed above.
+      availablePlans: (data['availablePlans'] as List<dynamic>? ?? const [])
+          .whereType<Map<String, dynamic>>()
+          .map(SubscriptionPlanOption.fromJson)
+          .where((p) => p.plan.isNotEmpty)
+          .toList(),
     );
   }
 
