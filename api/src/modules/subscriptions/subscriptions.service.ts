@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
   OnModuleInit,
   Logger,
 } from '@nestjs/common';
@@ -253,6 +254,22 @@ export class SubscriptionsService implements OnModuleInit {
       throw new BadRequestException('Invalid plan');
     }
 
+    // One pending request at a time. Nothing used to stop a second, and
+    // adminApprovePayment has no cross-payment guard either, so an admin
+    // working the queue approved both and the subscription gained two periods
+    // for one payment's money. A double submit is the ordinary way this
+    // happened: the receipt flow reported failure after creating the request
+    // until the branch two steps below this one fixed it.
+    const existingPending = await this.prisma.payment.findFirst({
+      where: { subscriptionId: subscription.id, status: 'PENDING' },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (existingPending) {
+      throw new ConflictException(
+        'A payment request is already awaiting review',
+      );
+    }
+
     // Same helper the card's price came from, so the merchant is charged the
     // number they were shown. These were two separate expressions with
     // different rounding.
@@ -269,6 +286,10 @@ export class SubscriptionsService implements OnModuleInit {
         method: dto.paymentMethod as any,
         status: 'PENDING',
         note: `Plan change request to ${dto.plan}`,
+        // The note stays as prose; THIS is the data. Reading the plan back out
+        // of the note with a regex is what made a manual payment silently
+        // fail to change anything.
+        requestedPlan: dto.plan as any,
       },
     });
 
