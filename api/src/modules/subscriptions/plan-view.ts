@@ -46,8 +46,12 @@ export interface PlanView {
  * The merchant's price for a plan. The ONLY place the discount is applied.
  *
  * getSubscription rounded (`Math.round(p * 100) / 100`) and requestChange did
- * not, so 33% off 200 produced 134 from one and 134.00000000000003 from the
+ * not, so the two disagreed wherever the arithmetic was inexact: 33% off the
+ * PREMIUM price of 600 gives 401.99999999999994 from one and 402 from the
  * other. Decimal(12,2) reconciled them on write, which is why nobody noticed.
+ *
+ * Not 200 — `200 * (1 - 33/100)` is exactly 134, which is how the first
+ * version of the spec test came to assert nothing.
  * Both call this now.
  */
 export function discountedPrice(

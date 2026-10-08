@@ -41,9 +41,17 @@ describe('PlanView', () => {
   });
 
   it('should round a discount that does not divide evenly', () => {
-    // 33% of 200 is 134.00000000000003 in IEEE 754. getSubscription used to
-    // round and requestChange did not; Decimal(12,2) hid the difference on
-    // write. One helper, one rounding rule.
+    // 600, not 200. `200 * (1 - 33/100)` is exactly 134 in IEEE 754, so that
+    // case passes with or without the rounding and proved nothing — verified
+    // by deleting Math.round and watching all eight tests stay green. The
+    // PREMIUM price is where the noise actually lives:
+    // `600 * (1 - 33/100)` is 401.99999999999994.
+    //
+    // This is the whole reason the helper exists. getSubscription rounded and
+    // requestChange did not, and Decimal(12,2) reconciled them on write, so
+    // the divergence was invisible — exactly as invisible as a test that
+    // cannot fail.
+    expect(discountedPrice(600, 33)).toBe(402);
     expect(discountedPrice(200, 33)).toBe(134);
   });
 

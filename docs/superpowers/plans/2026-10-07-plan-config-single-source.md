@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-07-plan-config-single-source-design.md`
 
+> **Correction, 2026-10-08.** The code blocks below repeat a wrong number: "33% of 200 is 134.00000000000003". It is exactly 134 — the noise is at the PREMIUM price, where `600 * (1 - 33/100)` is `401.99999999999994`. The rounding test built on 200 therefore asserted nothing, proven by deleting `Math.round` and watching all eight tests stay green. Fixed in the source and the spec; the blocks below are left as the record of what was executed.
+
 **Worktree:** `/Users/latifrjdev/Downloads/01_Проекты/Dukon/.worktrees/plan-config-truth`, branch `fix/plan-config-single-source`, based on `fix/subscription-receipt-and-past-due` at `3ccdb39` — **not on `main`**. The two branches edit the same files; that one is reviewed and ready and must merge first or alongside.
 
 ---
