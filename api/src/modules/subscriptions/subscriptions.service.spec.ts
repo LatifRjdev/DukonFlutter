@@ -335,6 +335,11 @@ function makeAdminPrismaFake() {
         ...data,
         status: data.status ?? basePayment.status,
       })),
+      // adminApprovePayment's supersede step: reject every other PENDING
+      // payment on the subscription. Not exercised by these fixtures (each
+      // has only the one `basePayment` in play), so `{ count: 0 }` is the
+      // right default.
+      updateMany: jest.fn(async () => ({ count: 0 })),
     },
     store: {
       findUnique: jest.fn(async () => ({

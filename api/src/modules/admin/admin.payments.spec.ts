@@ -41,6 +41,7 @@ function makePrismaFake() {
       | 'FAILED'
       | 'REFUNDED';
     note: string | null;
+    requestedPlan: string | null;
     rejectionReason: string | null;
     receiptImage: string | null;
     reviewedAt: Date | null;
@@ -95,6 +96,22 @@ function makePrismaFake() {
         Object.assign(p, data);
         paymentUpdateCalls.push({ where, data });
         return { ...p };
+      }),
+      // adminApprovePayment's supersede step: reject every other PENDING
+      // payment on the subscription inside the same $transaction.
+      updateMany: jest.fn(async ({ where, data }: any) => {
+        let count = 0;
+        for (const p of payments.values()) {
+          if (
+            p.subscriptionId === where.subscriptionId &&
+            p.status === where.status &&
+            p.id !== where.id?.not
+          ) {
+            Object.assign(p, data);
+            count += 1;
+          }
+        }
+        return { count };
       }),
     },
     store: {
@@ -153,6 +170,11 @@ describe('Admin payments flow', () => {
       method: 'CARD',
       status: 'PENDING' as const,
       note: 'Plan change request to BUSINESS',
+      // The plan now comes from this column, not from parsing `note` with a
+      // regex — note stays as prose. Set to agree with the note here since
+      // these fixtures aren't testing a disagreement (that case lives in
+      // payment-integrity.e2e-spec.ts).
+      requestedPlan: 'BUSINESS' as string | null,
       // F2.5: separate column for rejection reason; defaults to null
       // until the admin actually rejects.
       rejectionReason: null as string | null,
@@ -217,7 +239,7 @@ describe('Admin payments flow', () => {
 
       expect(payment.status).toBe('APPROVED');
       expect(subscription.status).toBe('ACTIVE');
-      expect(subscription.plan).toBe('BUSINESS'); // parsed from note
+      expect(subscription.plan).toBe('BUSINESS'); // from requestedPlan column
       // Extended ~30 days from original end (which was in the future)
       const diffDays = Math.round(
         (subscription.currentPeriodEnd.getTime() - originalEnd.getTime()) /

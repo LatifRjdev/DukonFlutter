@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
   OnModuleInit,
   Logger,
 } from '@nestjs/common';
@@ -253,6 +254,22 @@ export class SubscriptionsService implements OnModuleInit {
       throw new BadRequestException('Invalid plan');
     }
 
+    // One pending request at a time. Nothing used to stop a second, and
+    // adminApprovePayment has no cross-payment guard either, so an admin
+    // working the queue approved both and the subscription gained two periods
+    // for one payment's money. A double submit is the ordinary way this
+    // happened: the receipt flow reported failure after creating the request
+    // until the branch two steps below this one fixed it.
+    const existingPending = await this.prisma.payment.findFirst({
+      where: { subscriptionId: subscription.id, status: 'PENDING' },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (existingPending) {
+      throw new ConflictException(
+        'A payment request is already awaiting review',
+      );
+    }
+
     // Same helper the card's price came from, so the merchant is charged the
     // number they were shown. These were two separate expressions with
     // different rounding.
@@ -269,6 +286,10 @@ export class SubscriptionsService implements OnModuleInit {
         method: dto.paymentMethod as any,
         status: 'PENDING',
         note: `Plan change request to ${dto.plan}`,
+        // The note stays as prose; THIS is the data. Reading the plan back out
+        // of the note with a regex is what made a manual payment silently
+        // fail to change anything.
+        requestedPlan: dto.plan as any,
       },
     });
 
@@ -389,13 +410,11 @@ export class SubscriptionsService implements OnModuleInit {
       );
     }
 
-    let newPlan = subscription.plan;
-    if (payment.note) {
-      const match = payment.note.match(/Plan change request to (\w+)/);
-      if (match) {
-        newPlan = match[1] as any;
-      }
-    }
+    // From the column, not from the note. The regex this replaces silently
+    // left the plan unchanged whenever it failed to match — which it does for
+    // every manual payment, since the admin writes that note freely.
+    // A null requestedPlan means extend the period and leave the plan alone.
+    const newPlan = payment.requestedPlan ?? subscription.plan;
 
     const now = new Date();
 
@@ -403,7 +422,11 @@ export class SubscriptionsService implements OnModuleInit {
     const base =
       subscription.currentPeriodEnd > now ? subscription.currentPeriodEnd : now;
     const newPeriodEnd = new Date(base);
-    newPeriodEnd.setDate(newPeriodEnd.getDate() + 30);
+    // Plans are sold monthly. adminCreateManualPayment takes periodDays from
+    // the admin instead, deliberately — that path exists for non-standard
+    // grants, and the difference between the two is intentional, not a bug.
+    const planPeriodDays = 30;
+    newPeriodEnd.setDate(newPeriodEnd.getDate() + planPeriodDays);
 
     const [updatedPayment, updatedSubscription] =
       await this.prisma.$transaction([
@@ -422,6 +445,19 @@ export class SubscriptionsService implements OnModuleInit {
             plan: newPlan,
             currentPeriodEnd: newPeriodEnd,
             currentPeriodStart: now,
+          },
+        }),
+        this.prisma.payment.updateMany({
+          where: {
+            subscriptionId,
+            status: 'PENDING',
+            id: { not: paymentId },
+          },
+          data: {
+            status: 'REJECTED',
+            reviewedAt: now,
+            reviewedBy,
+            rejectionReason: `Superseded by approved payment ${paymentId}`,
           },
         }),
       ]);
