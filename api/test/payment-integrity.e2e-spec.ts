@@ -68,6 +68,10 @@ describe('Payment integrity (e2e)', () => {
   afterAll(async () => {
     await prisma.payment.deleteMany({ where: { subscriptionId } });
     await prisma.subscription.deleteMany({ where: { storeId } });
+    // adminApprovePayment's sendPush writes a Notification row (FK on
+    // storeId/userId) — delete it before the store/user or the deletes
+    // below fail on the foreign key constraint.
+    await prisma.notification.deleteMany({ where: { storeId } });
     await prisma.store.deleteMany({ where: { id: storeId } });
     await prisma.user.deleteMany({ where: { id: userId } });
     await app.close();
@@ -118,5 +122,102 @@ describe('Payment integrity (e2e)', () => {
       paymentMethod: 'CASH',
     } as any);
     expect(payment.requestedPlan).toBe('PREMIUM');
+  });
+
+  it('should take the plan from the column even when the note disagrees', async () => {
+    // A disagreeing fixture is the only way to prove the regex is gone rather
+    // than merely unused: with both saying PREMIUM, either implementation
+    // passes.
+    const payment = await prisma.payment.create({
+      data: {
+        subscriptionId,
+        amount: 600,
+        currency: 'TJS',
+        method: 'CASH',
+        status: 'PENDING',
+        note: 'Plan change request to BUSINESS',
+        requestedPlan: 'PREMIUM',
+      },
+    });
+
+    await subs.adminApprovePayment(subscriptionId, payment.id, 'admin-e2e');
+
+    const sub = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+    expect(sub!.plan).toBe('PREMIUM');
+  });
+
+  it('should extend the period without changing the plan when no plan was requested', async () => {
+    const before = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+    const payment = await prisma.payment.create({
+      data: {
+        subscriptionId,
+        amount: 400,
+        currency: 'TJS',
+        method: 'CASH',
+        status: 'PENDING',
+        note: 'Оплата за тариф Бизнес',
+      },
+    });
+
+    await subs.adminApprovePayment(subscriptionId, payment.id, 'admin-e2e');
+
+    const after = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+    expect(after!.plan).toBe(before!.plan);
+    expect(after!.currentPeriodEnd.getTime()).toBeGreaterThan(
+      before!.currentPeriodEnd.getTime(),
+    );
+  });
+
+  it('should reject the other pending payments and extend the period only once', async () => {
+    // Inserted directly: Task 2's guard makes two pending rows unreachable
+    // through the API, but rows created before that guard already exist.
+    const [a, b] = await Promise.all([
+      prisma.payment.create({
+        data: {
+          subscriptionId,
+          amount: 400,
+          currency: 'TJS',
+          method: 'CASH',
+          status: 'PENDING',
+          requestedPlan: 'BUSINESS',
+        },
+      }),
+      prisma.payment.create({
+        data: {
+          subscriptionId,
+          amount: 400,
+          currency: 'TJS',
+          method: 'CASH',
+          status: 'PENDING',
+          requestedPlan: 'BUSINESS',
+        },
+      }),
+    ]);
+
+    const before = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+
+    await subs.adminApprovePayment(subscriptionId, a.id, 'admin-e2e');
+
+    const other = await prisma.payment.findUnique({ where: { id: b.id } });
+    expect(other!.status).toBe('REJECTED');
+    expect(other!.rejectionReason).toContain(a.id);
+
+    const after = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+    const days =
+      (after!.currentPeriodEnd.getTime() - before!.currentPeriodEnd.getTime()) /
+      86400000;
+    // THIRTY, not sixty. The status change alone would not catch a double
+    // extension — this assertion is the one that matters.
+    expect(Math.round(days)).toBe(30);
   });
 });

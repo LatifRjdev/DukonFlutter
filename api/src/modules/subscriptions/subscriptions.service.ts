@@ -410,13 +410,11 @@ export class SubscriptionsService implements OnModuleInit {
       );
     }
 
-    let newPlan = subscription.plan;
-    if (payment.note) {
-      const match = payment.note.match(/Plan change request to (\w+)/);
-      if (match) {
-        newPlan = match[1] as any;
-      }
-    }
+    // From the column, not from the note. The regex this replaces silently
+    // left the plan unchanged whenever it failed to match — which it does for
+    // every manual payment, since the admin writes that note freely.
+    // A null requestedPlan means extend the period and leave the plan alone.
+    const newPlan = payment.requestedPlan ?? subscription.plan;
 
     const now = new Date();
 
@@ -424,7 +422,11 @@ export class SubscriptionsService implements OnModuleInit {
     const base =
       subscription.currentPeriodEnd > now ? subscription.currentPeriodEnd : now;
     const newPeriodEnd = new Date(base);
-    newPeriodEnd.setDate(newPeriodEnd.getDate() + 30);
+    // Plans are sold monthly. adminCreateManualPayment takes periodDays from
+    // the admin instead, deliberately — that path exists for non-standard
+    // grants, and the difference between the two is intentional, not a bug.
+    const planPeriodDays = 30;
+    newPeriodEnd.setDate(newPeriodEnd.getDate() + planPeriodDays);
 
     const [updatedPayment, updatedSubscription] =
       await this.prisma.$transaction([
@@ -443,6 +445,19 @@ export class SubscriptionsService implements OnModuleInit {
             plan: newPlan,
             currentPeriodEnd: newPeriodEnd,
             currentPeriodStart: now,
+          },
+        }),
+        this.prisma.payment.updateMany({
+          where: {
+            subscriptionId,
+            status: 'PENDING',
+            id: { not: paymentId },
+          },
+          data: {
+            status: 'REJECTED',
+            reviewedAt: now,
+            reviewedBy,
+            rejectionReason: `Superseded by approved payment ${paymentId}`,
           },
         }),
       ]);
