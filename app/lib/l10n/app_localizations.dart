@@ -3430,6 +3430,18 @@ abstract class AppLocalizations {
   /// **'Истекла'**
   String get subscriptionExpiredStatus;
 
+  /// Subscription-status badge for PAST_DUE — the subscription lapsed and is billable, and the server already refuses every gated feature. Distinct from `subscriptionExpiredStatus` ("Истекла", ran out and was not renewed) and from `cancelled` ("Отменена", the merchant's own decision): all three are refused by the backend, but they are three different things for the merchant to do next
+  ///
+  /// In ru, this message translates to:
+  /// **'Просрочена'**
+  String get subscriptionPastDueStatus;
+
+  /// Subscription-status badge for a status value the server sent that the app does not recognise. Same value as `subscriptionPaymentUnknownStatus` but a different enum — that one is for a Payment row's status, this one for the Subscription's; kept separate per this ARB's pattern of not merging same-value keys across features. Exists so no code path can print a raw enum name again: the page's `default:` used to return the status string itself, which is how PAST_DUE reached a merchant's screen in Latin capitals
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус неизвестен'**
+  String get subscriptionUnknownStatus;
+
   /// Plan card line while a subscription is on trial. Abbreviated "дн." rather than a spelled-out form because the count is interpolated and Russian needs three different endings (1 день, 2 дня, 5 дней) — the project deliberately uses String placeholders with no ICU plural, so an abbreviation is the only form that is correct for every count. The line only began rendering once the bloc read trialEndsAt; before that both branches of the expiry text produced an empty string.
   ///
   /// In ru, this message translates to:
@@ -4239,6 +4251,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Заявка отправлена, ожидайте подтверждения'**
   String get subscriptionRequestSent;
+
+  /// Snackbar when the plan-change request was created but the receipt image failed to upload. It points the merchant at support rather than at a retry on purpose: there is no UI for attaching a receipt to an existing payment, and resubmitting the form would create a second pending request, since request-change does not de-duplicate. Distinct from `subscriptionRequestSent`, where the receipt did attach
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.'**
+  String get subscriptionRequestSentWithoutReceipt;
 
   /// Snackbar shown when a debt payment is submitted while offline and queued for later sync
   ///

@@ -1,5 +1,4 @@
 import '../../../core/errors/app_message.dart';
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
@@ -12,8 +11,8 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   final DioClient _dioClient;
 
   SubscriptionBloc({required DioClient dioClient})
-      : _dioClient = dioClient,
-        super(SubscriptionInitial()) {
+    : _dioClient = dioClient,
+      super(SubscriptionInitial()) {
     on<SubscriptionLoadRequested>(_onLoadRequested);
     on<SubscriptionReceiptUploaded>(_onReceiptUploaded);
     on<SubscriptionPlanChangeRequested>(_onPlanChangeRequested);
@@ -30,8 +29,7 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       // appeared. The payments endpoint existed all along and nothing called
       // it — the UI, the l10n keys, the state field and the route were all
       // present but never connected.
-      final res =
-          await _dioClient.get('/stores/${event.storeId}/subscription');
+      final res = await _dioClient.get('/stores/${event.storeId}/subscription');
       final data = res.data as Map<String, dynamic>? ?? {};
       // History is secondary: if it fails, the plan card, the limits and the
       // plan-change flow must still render. Future.wait would have replaced
@@ -39,8 +37,9 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       // it failed.
       List<dynamic> payments = const [];
       try {
-        final paid = await _dioClient
-            .get('/stores/${event.storeId}/subscription/payments');
+        final paid = await _dioClient.get(
+          '/stores/${event.storeId}/subscription/payments',
+        );
         payments = paid.data as List<dynamic>? ?? const [];
       } catch (_) {
         // Degrades to the pre-existing behaviour: the history section hides
@@ -57,37 +56,79 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     Emitter<SubscriptionState> emit,
   ) async {
     emit(SubscriptionUploading());
+
+    // Order matters, and it used to be reversed. The receipt attaches to a
+    // Payment row, and that row is created by request-change — so the request
+    // has to come first and its id has to be carried into the upload path.
+    // Reversed, the upload had no id, hit a route that does not exist
+    // (`upload-receipt` without `/:paymentId`), 404'd, and the request never
+    // ran at all: paying by card recorded nothing.
+    //
+    // This try wraps ONLY the POST, so its catch means "the request did not
+    // happen". Everything after it means the opposite, and must not tell the
+    // merchant their request failed — see the comment above the upload below.
+    final Response<dynamic> response;
     try {
-      // 1. Upload receipt image
-      final file = File(event.receiptPath);
+      response = await _dioClient.post<dynamic>(
+        '/stores/${event.storeId}/subscription/request-change',
+        data: {'plan': event.plan, 'paymentMethod': event.paymentMethod},
+      );
+    } catch (e) {
+      emit(SubscriptionError(mapErrorToAppMessage(e)));
+      return;
+    }
+
+    // 2xx means the Payment row exists, whatever the body looks like. So an
+    // unreadable body is the same situation as a failed upload — request
+    // created, receipt not attached — and gets the same answer, including the
+    // reload, which is what lets reality correct the message: the pending
+    // banner appears if the row is really there and stays away if it is not.
+    // Reporting a flat error here instead would invite a resubmission, and two
+    // pending payments can both be approved, each extending the period.
+    String? paymentId;
+    try {
+      paymentId = (response.data as Map<String, dynamic>?)?['id'] as String?;
+    } catch (_) {
+      paymentId = null;
+    }
+    if (paymentId == null || paymentId.isEmpty) {
+      emit(
+        const SubscriptionActionSuccess(
+          AppMessage.subscriptionRequestSentWithoutReceipt,
+        ),
+      );
+      add(SubscriptionLoadRequested(storeId: event.storeId));
+      return;
+    }
+
+    // Past this point the request exists. An upload failure must NOT read as a
+    // flat failure: requestChange does not de-duplicate pending payments, so a
+    // merchant who resubmitted would create a second request for the same plan.
+    try {
       final formData = FormData.fromMap({
-        'receipt': await MultipartFile.fromFile(
-          file.path,
+        // Named 'file' because the route is FileInterceptor('file', ...) —
+        // subscriptions.controller.ts:95. It used to be 'receipt'.
+        'file': await MultipartFile.fromFile(
+          event.receiptPath,
           filename: 'receipt.jpg',
         ),
       });
-      await _dioClient.post(
-        '/stores/${event.storeId}/subscription/upload-receipt',
+      await _dioClient.post<dynamic>(
+        '/stores/${event.storeId}/subscription/upload-receipt/$paymentId',
         data: formData,
       );
-
-      // 2. Create change request
-      await _dioClient.post(
-        '/stores/${event.storeId}/subscription/request-change',
-        data: {
-          'plan': event.plan,
-          'paymentMethod': event.paymentMethod,
-        },
+      emit(const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent));
+    } catch (_) {
+      emit(
+        const SubscriptionActionSuccess(
+          AppMessage.subscriptionRequestSentWithoutReceipt,
+        ),
       );
-
-      emit(const SubscriptionActionSuccess(
-          AppMessage.subscriptionRequestSent));
-
-      // Reload
-      add(SubscriptionLoadRequested(storeId: event.storeId));
-    } catch (e) {
-      emit(SubscriptionError(mapErrorToAppMessage(e)));
     }
+
+    // Reloads either way, so the pending-payment banner confirms the request
+    // exists even when the receipt did not attach.
+    add(SubscriptionLoadRequested(storeId: event.storeId));
   }
 
   Future<void> _onPlanChangeRequested(
@@ -99,13 +140,9 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     try {
       await _dioClient.post(
         '/stores/${event.storeId}/subscription/request-change',
-        data: {
-          'plan': event.plan,
-          'paymentMethod': event.paymentMethod,
-        },
+        data: {'plan': event.plan, 'paymentMethod': event.paymentMethod},
       );
-      emit(const SubscriptionActionSuccess(
-          AppMessage.subscriptionRequestSent));
+      emit(const SubscriptionActionSuccess(AppMessage.subscriptionRequestSent));
       add(SubscriptionLoadRequested(storeId: event.storeId));
     } catch (e) {
       emit(SubscriptionError(mapErrorToAppMessage(e)));
@@ -127,11 +164,16 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     // and reads no field off this. Two PENDING rows are reachable, since
     // requestChange creates one without checking for an existing one, so this
     // takes the newest by sorting rather than trusting the server's order.
-    final pending = payments
-        .where((p) => paymentStatusKind(p.status) == PaymentStatusKind.pending)
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    final PaymentRecord? pendingPayment = pending.isEmpty ? null : pending.first;
+    final pending =
+        payments
+            .where(
+              (p) => paymentStatusKind(p.status) == PaymentStatusKind.pending,
+            )
+            .toList()
+          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final PaymentRecord? pendingPayment = pending.isEmpty
+        ? null
+        : pending.first;
 
     final limitsRaw = data['limits'] as Map<String, dynamic>?;
     final featuresRaw = data['features'] as Map<String, dynamic>?;

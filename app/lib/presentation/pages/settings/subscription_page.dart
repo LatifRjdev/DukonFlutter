@@ -13,6 +13,7 @@ import '../../blocs/store/store_state.dart';
 import '../../l10n/app_message_l10n.dart';
 import '../../widgets/common/app_snackbar.dart';
 import 'payment_status.dart';
+import 'subscription_status.dart';
 import 'package:dukonpro/l10n/app_localizations.dart';
 
 // ─── Plan metadata ────────────────────────────────────────────────────────────
@@ -106,34 +107,33 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   // ─── Status helpers ──────────────────────────────────────────────────────
 
-  Color _statusColor(String status) {
-    switch (status) {
-      case 'ACTIVE':
-        return AppColors.success;
-      case 'TRIAL':
-        return AppColors.info;
-      case 'EXPIRED':
-        return AppColors.error;
-      case 'CANCELLED':
-        return context.textMuted;
-      default:
-        return context.textMuted;
-    }
-  }
+  // Both switches are exhaustive over SubscriptionStatusKind with no `default`,
+  // so a value added to the enum fails the build instead of silently taking a
+  // neutral grey and printing its own name. `_statusLabel`'s old `default:`
+  // returned the raw status, which is how PAST_DUE reached a merchant's screen
+  // in Latin capitals.
+  Color _statusColor(String status) => switch (subscriptionStatusKind(status)) {
+    SubscriptionStatusKind.active => AppColors.success,
+    SubscriptionStatusKind.trial => AppColors.info,
+    // PAST_DUE shares EXPIRED's error colour rather than CANCELLED's muted
+    // one: it is a problem the merchant has to act on, not a settled end
+    // state.
+    SubscriptionStatusKind.pastDue => AppColors.error,
+    SubscriptionStatusKind.expired => AppColors.error,
+    SubscriptionStatusKind.cancelled => context.textMuted,
+    SubscriptionStatusKind.unknown => context.textMuted,
+  };
 
   String _statusLabel(String status) {
-    switch (status) {
-      case 'ACTIVE':
-        return AppLocalizations.of(context)!.subscriptionActiveStatus;
-      case 'TRIAL':
-        return AppLocalizations.of(context)!.subscriptionTrialStatus;
-      case 'EXPIRED':
-        return AppLocalizations.of(context)!.subscriptionExpiredStatus;
-      case 'CANCELLED':
-        return AppLocalizations.of(context)!.cancelled;
-      default:
-        return status;
-    }
+    final l10n = AppLocalizations.of(context)!;
+    return switch (subscriptionStatusKind(status)) {
+      SubscriptionStatusKind.active => l10n.subscriptionActiveStatus,
+      SubscriptionStatusKind.trial => l10n.subscriptionTrialStatus,
+      SubscriptionStatusKind.pastDue => l10n.subscriptionPastDueStatus,
+      SubscriptionStatusKind.expired => l10n.subscriptionExpiredStatus,
+      SubscriptionStatusKind.cancelled => l10n.cancelled,
+      SubscriptionStatusKind.unknown => l10n.subscriptionUnknownStatus,
+    };
   }
 
   String _planLabel(String plan) {
@@ -478,38 +478,37 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     // Switching on the mapped kind rather than the raw string: the raw switch
     // tested for 'CONFIRMED', which PaymentStatus does not contain, so every
     // APPROVED payment landed in the default branch and read as pending.
-    final (Color statusColor, String statusLabel) =
-        switch (paymentStatusKind(payment.status)) {
+    final (Color statusColor, String statusLabel) = switch (paymentStatusKind(
+      payment.status,
+    )) {
       PaymentStatusKind.approved => (
-          AppColors.success,
-          l10n.subscriptionPaymentConfirmedStatus,
-        ),
+        AppColors.success,
+        l10n.subscriptionPaymentConfirmedStatus,
+      ),
       PaymentStatusKind.rejected => (
-          AppColors.error,
-          l10n.subscriptionPaymentRejectedStatus,
-        ),
+        AppColors.error,
+        l10n.subscriptionPaymentRejectedStatus,
+      ),
       PaymentStatusKind.pending => (
-          AppColors.warning,
-          l10n.subscriptionPaymentPendingStatus,
-        ),
+        AppColors.warning,
+        l10n.subscriptionPaymentPendingStatus,
+      ),
       PaymentStatusKind.failed => (
-          AppColors.error,
-          l10n.subscriptionPaymentFailedStatus,
-        ),
+        AppColors.error,
+        l10n.subscriptionPaymentFailedStatus,
+      ),
       PaymentStatusKind.refunded => (
-          AppColors.info,
-          l10n.subscriptionPaymentRefundedStatus,
-        ),
+        AppColors.info,
+        l10n.subscriptionPaymentRefundedStatus,
+      ),
       PaymentStatusKind.unknown => (
-          context.textSecondary,
-          l10n.subscriptionPaymentUnknownStatus,
-        ),
+        context.textSecondary,
+        l10n.subscriptionPaymentUnknownStatus,
+      ),
     };
 
     return Semantics(
-      label: AppLocalizations.of(
-        context,
-      )!.a11yPaymentOf(statusLabel),
+      label: AppLocalizations.of(context)!.a11yPaymentOf(statusLabel),
       button: true,
       child: GestureDetector(
         onTap: () => _showPaymentDetail(payment),
@@ -541,8 +540,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       const SizedBox(height: 2),
                       Text(
                         payment.adminNote!,
-                        style:
-                            TextStyle(fontSize: 12, color: context.textMuted),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: context.textMuted,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -621,10 +622,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          AppLocalizations.of(
-            ctx,
-          )!.subscriptionPaymentDialogTitle(
-              DateFormat('dd.MM.yyyy').format(payment.createdAt)),
+          AppLocalizations.of(ctx)!.subscriptionPaymentDialogTitle(
+            DateFormat('dd.MM.yyyy').format(payment.createdAt),
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,

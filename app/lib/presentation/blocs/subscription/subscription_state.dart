@@ -1,17 +1,23 @@
 import 'package:equatable/equatable.dart';
 import '../../../core/errors/app_message.dart';
 import '../../../core/constants/api_endpoints.dart';
+import '../../pages/settings/subscription_status.dart';
 
 // ─── Supporting models ────────────────────────────────────────────────────────
 
+// `maxStores` was removed here in 2026-10: the column was dropped from
+// SubscriptionPlanConfig in 2026-05 (see api/src/common/guards/plan-limit.helper.ts)
+// because each store carries its own subscription, so a per-merchant store cap
+// had no architectural anchor. This class kept reading it with a `?? 1`
+// fallback, so it silently read as 1 forever, and seven test references kept it
+// looking real — three `.having` assertions and four fixture literals. Nothing
+// rendered it, which is why there was no visible defect to notice.
 class SubscriptionLimits extends Equatable {
-  final int maxStores; // -1 = unlimited
   final int maxProducts;
   final int maxStaff;
   final int maxDiscounts;
 
   const SubscriptionLimits({
-    required this.maxStores,
     required this.maxProducts,
     required this.maxStaff,
     required this.maxDiscounts,
@@ -19,21 +25,16 @@ class SubscriptionLimits extends Equatable {
 
   factory SubscriptionLimits.fromJson(Map<String, dynamic> json) =>
       SubscriptionLimits(
-        maxStores: (json['maxStores'] as num?)?.toInt() ?? 1,
         maxProducts: (json['maxProducts'] as num?)?.toInt() ?? 500,
         maxStaff: (json['maxStaff'] as num?)?.toInt() ?? 2,
         maxDiscounts: (json['maxDiscounts'] as num?)?.toInt() ?? 0,
       );
 
-  factory SubscriptionLimits.defaults() => const SubscriptionLimits(
-        maxStores: 1,
-        maxProducts: 500,
-        maxStaff: 2,
-        maxDiscounts: 0,
-      );
+  factory SubscriptionLimits.defaults() =>
+      const SubscriptionLimits(maxProducts: 500, maxStaff: 2, maxDiscounts: 0);
 
   @override
-  List<Object?> get props => [maxStores, maxProducts, maxStaff, maxDiscounts];
+  List<Object?> get props => [maxProducts, maxStaff, maxDiscounts];
 }
 
 // Keep in sync with SubscriptionsService.getSubscription()'s `features` object
@@ -71,14 +72,14 @@ class SubscriptionFeatures extends Equatable {
       );
 
   factory SubscriptionFeatures.defaults() => const SubscriptionFeatures(
-        hasReportsAll: false,
-        hasExport: false,
-        hasTelegram: false,
-        hasAllPush: false,
-        hasDelivery: false,
-        hasInventory: false,
-        hasEcommerceIntegration: false,
-      );
+    hasReportsAll: false,
+    hasExport: false,
+    hasTelegram: false,
+    hasAllPush: false,
+    hasDelivery: false,
+    hasInventory: false,
+    hasEcommerceIntegration: false,
+  );
 
   bool hasFeature(String key) {
     switch (key) {
@@ -103,21 +104,26 @@ class SubscriptionFeatures extends Equatable {
 
   @override
   List<Object?> get props => [
-        hasReportsAll,
-        hasExport,
-        hasTelegram,
-        hasAllPush,
-        hasDelivery,
-        hasInventory,
-        hasEcommerceIntegration,
-      ];
+    hasReportsAll,
+    hasExport,
+    hasTelegram,
+    hasAllPush,
+    hasDelivery,
+    hasInventory,
+    hasEcommerceIntegration,
+  ];
 }
 
 class PaymentRecord extends Equatable {
   final String id;
   final double amount;
-  final String method; // CARD, CASH
-  final String status; // PENDING, CONFIRMED, REJECTED
+  // Both are raw server enum values. Named rather than listed: a restated list
+  // is what rots. `// CARD, CASH` omitted MOBILE_TRANSFER, and
+  // `// PENDING, CONFIRMED, REJECTED` named three of six and invented one —
+  // CONFIRMED has never been in PaymentStatus, which is precisely the mistake
+  // that made an approved payment read "Ожидает" until PR #85.
+  final String method; // enum PaymentMethod in api/prisma/schema.prisma
+  final String status; // enum PaymentStatus — read via paymentStatusKind()
   final DateTime createdAt;
   final String? receiptUrl;
   final String? adminNote;
@@ -133,23 +139,25 @@ class PaymentRecord extends Equatable {
   });
 
   factory PaymentRecord.fromJson(Map<String, dynamic> json) => PaymentRecord(
-        id: json['id'] as String? ?? '',
-        amount: (json['amount'] as num?)?.toDouble() ?? 0,
-        method: json['method'] as String? ?? 'CARD',
-        status: json['status'] as String? ?? 'PENDING',
-        createdAt: json['createdAt'] != null
-            ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ?? DateTime.now()
-            : DateTime.now(),
-        // The column is `receiptImage` and holds a path relative to the API
-        // host, not a URL. Reading 'receiptUrl' meant the receipt block never
-        // rendered; keeping it relative would have meant Image.network failing
-        // on every one.
-        receiptUrl: _receiptUrl(json['receiptImage'] as String?),
-        // `rejectionReason` is the admin's reason for refusing; `note` is the
-        // general note a request carries. The old key 'adminNote' is neither,
-        // so a rejected payment never showed why.
-        adminNote: (json['rejectionReason'] as String?) ?? (json['note'] as String?),
-      );
+    id: json['id'] as String? ?? '',
+    amount: (json['amount'] as num?)?.toDouble() ?? 0,
+    method: json['method'] as String? ?? 'CARD',
+    status: json['status'] as String? ?? 'PENDING',
+    createdAt: json['createdAt'] != null
+        ? DateTime.tryParse(json['createdAt'] as String)?.toLocal() ??
+              DateTime.now()
+        : DateTime.now(),
+    // The column is `receiptImage` and holds a path relative to the API
+    // host, not a URL. Reading 'receiptUrl' meant the receipt block never
+    // rendered; keeping it relative would have meant Image.network failing
+    // on every one.
+    receiptUrl: _receiptUrl(json['receiptImage'] as String?),
+    // `rejectionReason` is the admin's reason for refusing; `note` is the
+    // general note a request carries. The old key 'adminNote' is neither,
+    // so a rejected payment never showed why.
+    adminNote:
+        (json['rejectionReason'] as String?) ?? (json['note'] as String?),
+  );
 
   /// `receiptImage` is stored as e.g. `uploads/receipts/abc.jpg`.
   static String? _receiptUrl(String? path) {
@@ -160,8 +168,15 @@ class PaymentRecord extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, amount, method, status, createdAt, receiptUrl, adminNote];
+  List<Object?> get props => [
+    id,
+    amount,
+    method,
+    status,
+    createdAt,
+    receiptUrl,
+    adminNote,
+  ];
 }
 
 // ─── States ───────────────────────────────────────────────────────────────────
@@ -178,8 +193,13 @@ class SubscriptionInitial extends SubscriptionState {}
 class SubscriptionLoading extends SubscriptionState {}
 
 class SubscriptionLoaded extends SubscriptionState {
-  final String plan; // START, BUSINESS, PREMIUM
-  final String status; // TRIAL, ACTIVE, EXPIRED, CANCELLED
+  final String plan; // enum SubscriptionPlan: START, BUSINESS, PREMIUM
+  /// Raw `enum SubscriptionStatus` from `api/prisma/schema.prisma`. Read it via
+  /// [kind] rather than comparing strings here: this comment listed four of the
+  /// five values until 2026-10, omitting the one the file had no handling for —
+  /// PAST_DUE — and [kind]'s mapping is tested against the schema, so it cannot
+  /// drift the same way.
+  final String status;
   final DateTime? expiresAt;
   final int? trialDaysLeft;
   final double? adminDiscount;
@@ -200,21 +220,34 @@ class SubscriptionLoaded extends SubscriptionState {
     this.pendingPayment,
   });
 
-  bool get isExpired => status == 'EXPIRED' || status == 'CANCELLED';
-  bool get isActive => status == 'ACTIVE' || status == 'TRIAL';
+  /// The server's gate, stated once: `feature-flag.helper.ts` allows ACTIVE and
+  /// TRIAL and refuses everything else.
+  bool get isActive =>
+      kind == SubscriptionStatusKind.active ||
+      kind == SubscriptionStatusKind.trial;
+
+  /// Deliberately the negation of [isActive] and not a second list. It used to
+  /// be `EXPIRED || CANCELLED`, which left PAST_DUE in neither — so the plan
+  /// card, whose gradient this getter chooses, rendered a lapsed subscription
+  /// in full colour while the backend refused every gated feature. Anything the
+  /// server will refuse has to look refused, including a status this app has
+  /// not heard of.
+  bool get isExpired => !isActive;
+
+  SubscriptionStatusKind get kind => subscriptionStatusKind(status);
 
   @override
   List<Object?> get props => [
-        plan,
-        status,
-        expiresAt,
-        trialDaysLeft,
-        adminDiscount,
-        limits,
-        features,
-        payments,
-        pendingPayment,
-      ];
+    plan,
+    status,
+    expiresAt,
+    trialDaysLeft,
+    adminDiscount,
+    limits,
+    features,
+    payments,
+    pendingPayment,
+  ];
 }
 
 class SubscriptionError extends SubscriptionState {

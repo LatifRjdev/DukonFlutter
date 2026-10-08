@@ -1842,6 +1842,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get subscriptionExpiredStatus => 'Истекла';
 
   @override
+  String get subscriptionPastDueStatus => 'Просрочена';
+
+  @override
+  String get subscriptionUnknownStatus => 'Статус неизвестен';
+
+  @override
   String subscriptionTrialDaysLeftLine(String days) {
     return 'Пробный период: осталось $days дн.';
   }
@@ -2280,6 +2286,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get subscriptionRequestSent =>
       'Заявка отправлена, ожидайте подтверждения';
+
+  @override
+  String get subscriptionRequestSentWithoutReceipt =>
+      'Заявка отправлена, но чек не загрузился. Свяжитесь с поддержкой.';
 
   @override
   String get paymentQueuedOfflineMessage =>
