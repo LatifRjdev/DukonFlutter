@@ -901,6 +901,33 @@ Named in the spec, deliberately not in this plan:
 
 ## Follow-ups worth filing
 
+Planned before execution:
+
 1. Configure `flutter_native_splash` with the mark on the gradient ground, so launch stops flashing white.
-2. Add `scripts/brand/npm test && npm run verify` to CI so a regenerated-wrong icon cannot merge.
+2. Add `cd scripts/brand && npm test && npm run verify` to CI so a regenerated-wrong icon cannot merge.
 3. Revisit the bar group's optical centring during final balancing — the spec records this as the one open question.
+
+Surfaced during execution, worth keeping:
+
+4. **The iOS 18 tinted variant is shaped differently from the dark one.** `ios_dark.png` is the bare mark on transparency; `ios_tinted.png` is the whole plate desaturated, 96% opaque. That matches the package's documented contract — its README asks only for "a grayscale image" for tinted, and the `desaturate_tinted_to_grayscale_ios` convenience flag desaturates the *plated* icon — but it is inconsistent with how the dark variant hands the system a bare mark. Apple's HIG page could not be read (it renders client-side). **Check on a real iOS 18 device before store submission.** If the tinted icon shows as a flat tinted square rather than the mark on a system ground, change `render.mjs` to emit the greyscale mark on transparency.
+
+5. **At 16 px the bars wash out and the mark reads as a plain arch.** Confirmed on the contact sheet. This is the designed degradation — the arch was itself a finalist mark, which is why this geometry was chosen — and 16 px only occurs in the browser favicon and the small Finder view, never on Android (48 dp floor) or iOS (20 pt floor). Recorded so nobody re-discovers it as a bug. Revisit only if the web surface becomes important.
+
+6. **`verify.mjs` checks the five SVG sources exist but not that they contain anything.** The PNGs get size, alpha, hue and safe-zone assertions; the SVGs get `existsSync`. An empty or truncated SVG would pass.
+
+7. **`lockupSvg`'s `bg` parameter has a dead falsy branch** (`render.mjs`). Both call sites pass a colour, so the transparent-ground lockup is never produced. Either use it or drop the branch.
+
+8. **`android/app/src/main/res/values/colors.xml` still defines `ic_launcher_background` as `#FFFFFF`.** It was already orphaned before this work; now the adaptive XML definitively does not reference it, since the background is a PNG layer.
+
+9. **Consider splitting the SVG serializer out of `geometry.mjs`.** Deferred deliberately during review — at 76 lines the file was fine and splitting ahead of a need is guesswork. `render.mjs` is now a second consumer; a third would make the split worth doing.
+
+10. **The verifier prints duplicate `missing:` lines** when a file is absent, because several assertions check the same file independently. Only visible in the red state, so it costs nothing today, but `[...new Set(failures)]` would tidy it.
+
+## What execution changed about the plan
+
+Two things in this plan were wrong when written, and both were caught before they reached code:
+
+- The verifier's comment claimed Flutter's logo has "near-zero mean saturation". Measured: hue 200 / saturation **0.78**, against our plate's hue 249 / saturation 0.75. Hue is what discriminates; saturation does not. Corrected in `382b499` before Task 2 ran.
+- Task 7 was written from memory of Next.js rather than from `admin/node_modules/next/dist/docs`, as `admin/AGENTS.md` requires. Three errors: the sidebar is dark so the light lockup would have sat in a white box, the lucide glyph sits beside a "DukonPro Admin" span that had to survive, and `Store` could not be dropped from the import because `navItems` still uses it.
+
+One thing in the *review* was wrong: the suggested `ARCH_BOUNDS` extraction split path coordinates by index parity, which desyncs after each `V` command. It would have produced `{x1:112, y1:132, x2:254, y2:396}` against the true `{x1:132, y1:112, x2:380, y2:396}` — a broken test that passes. Reviews need verifying too.
