@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  CANVAS, CENTRE, PLATE_RADIUS, MARK_SCALE, MARK_PATH,
+  CANVAS, CENTRE, PLATE_RADIUS, MARK_SCALE, MARK_PATH, GRADIENT_ID,
   gradientDef, markSvg, plateSvg, iconSvg,
 } from './geometry.mjs';
 import { outline, CAP_RATIO } from './wordmark.mjs';
@@ -35,11 +35,11 @@ function lockupSvg(bg, duk, pro) {
   const w = Math.ceil(L.pad * 2 + L.icon + L.gap + a.width + b.width);
   const h = L.icon + L.pad * 2;
   const plate =
-    `<rect width="${CANVAS}" height="${CANVAS}" rx="${PLATE_RADIUS}" fill="url(#b)"/>` +
+    `<rect width="${CANVAS}" height="${CANVAS}" rx="${PLATE_RADIUS}" fill="url(#${GRADIENT_ID})"/>` +
     `<g transform="translate(${CENTRE},${CENTRE}) scale(${MARK_SCALE}) translate(-${CENTRE},-${CENTRE})">` +
     `<path fill="#FFFFFF" fill-rule="evenodd" d="${MARK_PATH}"/></g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
-    `<defs>${gradientDef('b')}</defs>` +
+    `<defs>${gradientDef(GRADIENT_ID)}</defs>` +
     (bg ? `<rect width="${w}" height="${h}" fill="${bg}"/>` : '') +
     `<g transform="translate(${L.pad},${L.pad}) scale(${L.icon / CANVAS})">${plate}</g>` +
     `<g transform="translate(${L.pad + L.icon + L.gap},${baseY})">` +
