@@ -895,7 +895,7 @@ Install the debug APK and look at the launcher. Confirm: the icon is the arch wi
 
 Named in the spec, deliberately not in this plan:
 
-- **Splash screen.** `flutter_native_splash: 2.4.4` is installed but unconfigured; the splash is still default white.
+- **Splash screen.** ~~`flutter_native_splash: 2.4.4` is installed but unconfigured; the splash is still default white.~~ **This was wrong when written.** `flutter_native_splash` was already configured at the time — pointing `image`/`image_dark` at `assets/icon/icon.png` with Material-blue colours (`#1565C0`/`#0D47A1`), not left at package defaults. The splash was never "default white"; it was shipping Flutter's default *blue* Material splash. This has since been fixed on this branch (`app/flutter_native_splash.yaml` now points at `assets/icon/splash.png` with the brand's indigo/violet colours), so the item is resolved — see follow-up #1 below.
 - **Printing the mark on receipts.** `mark-mono.svg` and `monochrome.png` are produced here, but wiring them into the ESC/POS path touches the printing code.
 - **Store marketing assets.** Feature graphic 1024×500, screenshots.
 
@@ -903,7 +903,7 @@ Named in the spec, deliberately not in this plan:
 
 Planned before execution:
 
-1. Configure `flutter_native_splash` with the mark on the gradient ground, so launch stops flashing white.
+1. ~~Configure `flutter_native_splash` with the mark on the gradient ground, so launch stops flashing white.~~ **Also wrong as filed** — `flutter_native_splash` was already configured (see the corrected "Out of scope" note above); the actual gap was that it pointed at the Material-blue colours and the plated `icon.png` left over from an earlier commit, not at the brand mark. **Done on this branch**: it now points `image`/`image_dark` at `assets/icon/splash.png` (the bare mark, matching the layered-background pattern Android/iOS splash already use) with `color`/`color_dark` set to the brand's indigo (`#6366F1`) / dark violet (`#0F0A1A`).
 2. Add `cd scripts/brand && npm test && npm run verify` to CI so a regenerated-wrong icon cannot merge.
 3. Revisit the bar group's optical centring during final balancing — the spec records this as the one open question.
 
