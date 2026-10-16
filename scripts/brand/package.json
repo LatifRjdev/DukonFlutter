@@ -1,0 +1,16 @@
+{
+  "name": "dukonpro-brand",
+  "private": true,
+  "type": "module",
+  "description": "Generates the DukonPro brand mark and every icon asset from one canonical geometry.",
+  "scripts": {
+    "test": "node --test",
+    "render": "node render.mjs",
+    "verify": "node verify.mjs",
+    "sheet": "node contact-sheet.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5",
+    "fontkit": "^2.0.4"
+  }
+}
