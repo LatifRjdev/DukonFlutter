@@ -96,6 +96,13 @@ test('ARCH_BOUNDS matches the coordinates actually written in ARCH', () => {
   // a curve interior past its listed points. If the arch were reshaped so an extreme
   // fell strictly inside a curve instead of at a listed point, this would need to
   // sample the curve (see archLeftWallXAtY) rather than just listing coordinates.
+  //
+  // This duplicates roughly the same walk as geometry.mjs's own parseArchCubics,
+  // deliberately: ARCH_BOUNDS is a hand-copied constant being checked against ARCH,
+  // and this test's job is to catch the two drifting apart. Importing and reusing
+  // parseArchCubics here would make the test verify the module's parser against
+  // itself — passing even if that parser were the thing that broke. Keep the
+  // duplication; don't "DRY" this one.
   const tokens = ARCH.match(/[A-Za-z][^A-Za-z]*/g);
   let x = 0;
   let y = 0;

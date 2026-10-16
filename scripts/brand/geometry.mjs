@@ -17,8 +17,9 @@ export const MARK_SCALE = 0.89;
 
 // Indigo (#6366F1) to violet (#8B5CF6), per the agreed brand mark spec. The 55% stop
 // (#7C6AF0) is a deliberate custom colour, not the linear RGB midpoint of the two end
-// colours (which would be #7761F3) — it was hand-picked to keep the transition visually
-// smooth given sRGB gamma rather than mathematically exact.
+// colours (which would round to #7761F4: R (99+139)/2=119=0x77, G (102+92)/2=97=0x61,
+// B (241+246)/2=243.5, rounds up to 244=0xF4) — it was hand-picked to keep the
+// transition visually smooth given sRGB gamma rather than mathematically exact.
 export const GRADIENT = [
   { offset: '0%', color: '#6366F1' },
   { offset: '55%', color: '#7C6AF0' },
@@ -52,9 +53,12 @@ export const MARK_PATH = [ARCH, ...BARS].join(' ');
 /**
  * Distance from canvas centre to the arch's bottom corner, after MARK_SCALE.
  * Used as a stand-in for the arch's farthest point from centre overall: the bottom
- * corner (187.0 units unscaled) beats the apex (144.0 units unscaled) because the
- * arch is taller than it is wide, so checking just the corner is sufficient here —
- * it would not be if the arch's proportions changed enough to flip that comparison.
+ * corner combines a half-width of 124 and a bottom offset of 140 in quadrature to
+ * 187.0 units unscaled, beating the apex's 144.0 units. The corner keeps winning as
+ * long as the apex's distance from centre stays under 187 — i.e. as long as the
+ * apex's y stays below roughly 69 (CENTRE - 187). The apex is currently at y=112, so
+ * there is about 43 units of apex-height headroom before this shortcut would need to
+ * also check the apex.
  */
 export function scaledCornerRadius() {
   const dx = CENTRE - ARCH_BOUNDS.x1;
@@ -98,9 +102,17 @@ function parseArchCubics(d) {
   return cubics;
 }
 
-const [LEFT_FLANK] = parseArchCubics(ARCH);
-// Where the curved flank meets the straight vertical wall.
-const KNEE_Y = LEFT_FLANK.p0.y;
+// Both flanks: [0] runs knee(254)->apex(112) on the left, [1] runs apex(112)->knee(254)
+// on the right. Each is sampled directly in archLeftWallXAtY/archRightWallXAtY below —
+// deliberately NOT derived from one another by mirroring x = CANVAS - leftX, even
+// though the arch is in fact an exact mirror today. Mirroring would make
+// archRightWallXAtY blind to a one-sided reshape of the right flank: it would go on
+// confidently reporting the (unchanged) left flank's mirror, and every containment
+// check against it would stay green while checking a wall that no longer exists.
+const [LEFT_FLANK, RIGHT_FLANK] = parseArchCubics(ARCH);
+// Where each curved flank meets its straight vertical wall.
+const LEFT_KNEE_Y = LEFT_FLANK.p0.y;
+const RIGHT_KNEE_Y = RIGHT_FLANK.p3.y;
 
 function cubicPoint(c, t) {
   const mt = 1 - t;
@@ -110,9 +122,28 @@ function cubicPoint(c, t) {
   };
 }
 
-// Finds x at a given y along a cubic that is monotonic in y. Bisection, not a
-// closed-form solve, because a single monotonic flank is all this needs — valid here
-// because this specific flank is a smooth curve from knee to apex with no inflection.
+// A cubic bezier's y is guaranteed monotonic if its four control points' y values are
+// strictly monotonic (the derivative is then a combination of same-signed differences,
+// so it can't change sign) — that is the actual precondition xAtY's bisection needs,
+// not "no inflection" and not "smooth". Asserted at module load, against both flanks,
+// so a reshape that breaks it fails loudly instead of letting bisection quietly
+// converge to a wrong root.
+function assertStrictlyMonotonicY(cubic, label) {
+  const ys = [cubic.p0.y, cubic.p1.y, cubic.p2.y, cubic.p3.y];
+  const deltas = ys.slice(1).map((v, i) => v - ys[i]);
+  const monotonic = deltas.every((d) => d < 0) || deltas.every((d) => d > 0);
+  if (!monotonic) {
+    throw new Error(`${label} flank's control points are not strictly monotonic in y: ${ys.join(', ')}`);
+  }
+}
+
+assertStrictlyMonotonicY(LEFT_FLANK, 'left');
+assertStrictlyMonotonicY(RIGHT_FLANK, 'right');
+
+// Finds x at a given y along a cubic whose y is strictly monotonic (guaranteed by
+// assertStrictlyMonotonicY above, checked once at module load rather than per call).
+// Bisection, not a closed-form solve, because a single monotonic flank is all this
+// needs.
 function xAtY(cubic, targetY) {
   const descending = cubic.p0.y > cubic.p3.y;
   let lo = 0;
@@ -131,17 +162,23 @@ function xAtY(cubic, targetY) {
 
 /**
  * X coordinate of the arch's left wall at a given y: the straight vertical wall
- * below the knee, the curved flank above it. Derived from ARCH's own parsed
- * coordinates (not hand-copied), so a reshaped arch can't silently drift out of
- * sync with what callers think the wall is.
+ * below the knee, the curved flank above it. Both branches are derived from ARCH's
+ * own parsed coordinates (not hand-copied), so a reshaped arch can't silently drift
+ * out of sync with what callers think the wall is.
  */
 export function archLeftWallXAtY(y) {
-  return y >= KNEE_Y ? ARCH_BOUNDS.x1 : xAtY(LEFT_FLANK, y);
+  if (!Number.isFinite(y)) throw new Error(`archLeftWallXAtY: y must be finite, got ${y}`);
+  return y >= LEFT_KNEE_Y ? LEFT_FLANK.p0.x : xAtY(LEFT_FLANK, y);
 }
 
-/** Mirror of archLeftWallXAtY about the canvas centre (CANVAS = 2 * CENTRE). */
+/**
+ * X coordinate of the arch's right wall at a given y, sampled directly from the
+ * right flank — see the comment above the flank parsing for why this is not just
+ * `CANVAS - archLeftWallXAtY(y)`.
+ */
 export function archRightWallXAtY(y) {
-  return CANVAS - archLeftWallXAtY(y);
+  if (!Number.isFinite(y)) throw new Error(`archRightWallXAtY: y must be finite, got ${y}`);
+  return y >= RIGHT_KNEE_Y ? RIGHT_FLANK.p3.x : xAtY(RIGHT_FLANK, y);
 }
 
 // --- SVG assembly ------------------------------------------------------------
