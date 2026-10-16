@@ -287,11 +287,13 @@ async function expectBrandColoured(rel) {
   const file = p(rel);
   if (!existsSync(file)) return fail(`missing: ${rel}`);
   const { hue, sat } = await meanHsl(file);
-  // Our plate lives at hue 235-260 (indigo to violet).
-  // Flutter's own logo is a light blue around hue 200 with near-zero mean saturation.
+  // Measured, not guessed: our plate reads hue 249 / sat 0.75, and the Flutter
+  // logo this replaces reads hue 200 / sat 0.78. Hue is what separates them —
+  // 200 sits 25 degrees below the lower bound. Saturation does NOT discriminate
+  // between the two; it is here only to catch a blank or greyscale render.
   if (hue < 225 || hue > 275) {
     fail(`${rel}: mean hue ${hue.toFixed(0)}° is outside the brand range 225-275°. ` +
-         `This is what Flutter's default logo looks like — the asset was not regenerated.`);
+         `Hue 200 means this is still Flutter's default logo — the asset was not regenerated.`);
   }
   if (sat < 0.15) {
     fail(`${rel}: mean saturation ${sat.toFixed(2)} is too low; expected a coloured plate`);
