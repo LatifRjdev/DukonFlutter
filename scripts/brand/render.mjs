@@ -12,8 +12,12 @@ import { outline, CAP_RATIO } from './wordmark.mjs';
 const ROOT = resolve(import.meta.dirname, '../..');
 const BRAND = resolve(ROOT, 'app/assets/brand');
 const ICON = resolve(ROOT, 'app/assets/icon');
+const ANDROID_FASTLANE = resolve(ROOT, 'app/android/fastlane/metadata/android/ru-RU/images');
+const IOS_FASTLANE = resolve(ROOT, 'app/ios/fastlane/metadata/ru-RU');
 mkdirSync(BRAND, { recursive: true });
 mkdirSync(ICON, { recursive: true });
+mkdirSync(ANDROID_FASTLANE, { recursive: true });
+mkdirSync(IOS_FASTLANE, { recursive: true });
 
 // density 144 renders the 512-unit viewBox at 1024px before any resize
 const png = (svg, size = 1024) =>
@@ -65,4 +69,23 @@ await png(markSvg('#FFFFFF')).toFile(resolve(ICON, 'adaptive_fg.png'));
 await png(markSvg('#FFFFFF')).toFile(resolve(ICON, 'monochrome.png'));
 await png(markSvg('#FFFFFF')).toFile(resolve(ICON, 'ios_dark.png'));
 await png(iconSvg()).greyscale().toFile(resolve(ICON, 'ios_tinted.png'));
-console.log('png   icon, adaptive_bg, adaptive_fg, monochrome, ios_dark, ios_tinted');
+// Bare mark on transparency for flutter_native_splash — distinct from
+// adaptive_fg.png because the splash ground is already a solid colour, so a
+// plated icon here would double up on background. Own file, own name: the
+// two consumers may diverge later.
+await png(markSvg('#FFFFFF')).toFile(resolve(ICON, 'splash.png'));
+console.log('png   icon, adaptive_bg, adaptive_fg, monochrome, ios_dark, ios_tinted, splash');
+
+// ---- store listing icons (fastlane) -------------------------------------
+// Both stores require an opaque icon (Google Play rejects alpha implicitly by
+// flattening it itself with unpredictable results; the App Store rejects it
+// outright), but iconSvg()'s plate has rounded corners, so the corners render
+// transparent, not pre-painted. Flattened against white, matching what
+// flutter_launcher_icons' own `remove_alpha_ios: true` already does for the
+// shipped iOS app icon (verified empirically: the straight-alpha edge pixels
+// sharp/librsvg produce already carry the correct gradient-edge RGB, not a
+// black-premultiplied one, so compositing over white blends cleanly with no
+// dark fringe at the rounded-corner boundary).
+await png(iconSvg(), 512).flatten({ background: '#FFFFFF' }).toFile(resolve(ANDROID_FASTLANE, 'icon.png'));
+await png(iconSvg(), 1024).flatten({ background: '#FFFFFF' }).toFile(resolve(IOS_FASTLANE, 'icon.png'));
+console.log('png   fastlane icon (android 512, ios 1024)');

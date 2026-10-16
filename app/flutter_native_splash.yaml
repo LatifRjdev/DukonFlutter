@@ -1,15 +1,18 @@
 flutter_native_splash:
-  color: "#1565C0"
-  image: assets/icon/icon.png
-  color_dark: "#0D47A1"
-  image_dark: assets/icon/icon.png
+  # gradientStart / darkBackground from app/lib/core/constants/app_colors.dart —
+  # #6366F1 is also the web theme_color. Was Material blue (#1565C0/#0D47A1),
+  # left over from flutter_native_splash's own defaults.
+  color: "#6366F1"
+  image: assets/icon/splash.png
+  color_dark: "#0F0A1A"
+  image_dark: assets/icon/splash.png
   android_12:
-    color: "#1565C0"
-    image: assets/icon/icon.png
-    icon_background_color: "#1565C0"
-    color_dark: "#0D47A1"
-    image_dark: assets/icon/icon.png
-    icon_background_color_dark: "#0D47A1"
+    color: "#6366F1"
+    image: assets/icon/splash.png
+    icon_background_color: "#6366F1"
+    color_dark: "#0F0A1A"
+    image_dark: assets/icon/splash.png
+    icon_background_color_dark: "#0F0A1A"
   fullscreen: false
   android: true
   ios: true
