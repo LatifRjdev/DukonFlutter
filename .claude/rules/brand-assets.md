@@ -36,6 +36,12 @@ globs: "scripts/brand/**/*.mjs,app/assets/icon/**,app/assets/brand/**,app/flutte
   pipeline's inputs — actually carry the regenerated art. Run it after the
   `flutter_launcher_icons`/`flutter_native_splash` step above, since that is
   what populates the platform trees it checks.
+- **`flutter_native_splash:create` is not idempotent.** Every run appends three
+  blank lines to `app/web/index.html`, even when no asset changed, so they
+  accumulate. It is a whitespace bug in the package, not a signal that anything
+  went wrong. Discard that one file after running the sequence above
+  (`git checkout -- app/web/index.html`) unless you genuinely changed the splash
+  markup. Every other output of that command is deterministic.
 - **Trap:** `adaptive_icon_foreground_inset` in `app/flutter_launcher_icons.yaml`
   must stay `0`. The package default is 16 (`android:inset="16%"` on both
   foreground and monochrome), and the mark already carries `scale(0.89)` for
