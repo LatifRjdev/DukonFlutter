@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "description": "Generates the DukonPro brand mark and every icon asset from one canonical geometry.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test",
     "render": "node render.mjs",
