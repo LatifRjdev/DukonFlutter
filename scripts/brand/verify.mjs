@@ -1,9 +1,9 @@
 // Asserts the generated asset set. Exits non-zero on the first failure.
 // Run after render.mjs and after flutter_launcher_icons.
 import sharp from 'sharp';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { SAFE_RADIUS, CANVAS } from './geometry.mjs';
+import { SAFE_RADIUS, CANVAS, iconSvg } from './geometry.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const p = (rel) => resolve(ROOT, rel);
@@ -43,6 +43,18 @@ async function expectBrandColoured(rel) {
   }
   if (sat < 0.15) {
     fail(`${rel}: mean saturation ${sat.toFixed(2)} is too low; expected a coloured plate`);
+  }
+}
+
+/** Byte-identical to iconSvg() — catches a hand-copied file going stale after
+ * geometry.mjs changes, not just a missing one. */
+function expectMatchesIcon(rel) {
+  const file = p(rel);
+  if (!existsSync(file)) return fail(`missing: ${rel}`);
+  const actual = readFileSync(file, 'utf8');
+  const expected = iconSvg();
+  if (actual !== expected) {
+    fail(`${rel}: stale — does not match geometry.mjs's iconSvg(). Re-run \`npm run render\`.`);
   }
 }
 
@@ -117,6 +129,14 @@ for (const rel of [
 ]) {
   if (!existsSync(p(rel))) fail(`missing: ${rel}`);
 }
+
+// admin/app/icon.svg (Next.js App Router favicon convention) and
+// admin/public/brand-icon.svg (what Sidebar renders) are both the app icon,
+// written by render.mjs — not hand-copied. Checked byte-for-byte against
+// iconSvg() so a `npm run render` that nobody re-ran after a geometry change
+// is caught as stale, not just as missing.
+expectMatchesIcon('admin/app/icon.svg');
+expectMatchesIcon('admin/public/brand-icon.svg');
 
 // --- shipped platform outputs ------------------------------------------------
 // Everything above only checks the pipeline's *inputs* (app/assets/icon,

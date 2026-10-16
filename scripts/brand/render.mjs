@@ -14,10 +14,14 @@ const BRAND = resolve(ROOT, 'app/assets/brand');
 const ICON = resolve(ROOT, 'app/assets/icon');
 const ANDROID_FASTLANE = resolve(ROOT, 'app/android/fastlane/metadata/android/ru-RU/images');
 const IOS_FASTLANE = resolve(ROOT, 'app/ios/fastlane/metadata/ru-RU');
+const ADMIN_APP = resolve(ROOT, 'admin/app');
+const ADMIN_PUBLIC = resolve(ROOT, 'admin/public');
 mkdirSync(BRAND, { recursive: true });
 mkdirSync(ICON, { recursive: true });
 mkdirSync(ANDROID_FASTLANE, { recursive: true });
 mkdirSync(IOS_FASTLANE, { recursive: true });
+mkdirSync(ADMIN_APP, { recursive: true });
+mkdirSync(ADMIN_PUBLIC, { recursive: true });
 
 // density 144 renders the 512-unit viewBox at 1024px before any resize
 const png = (svg, size = 1024) =>
@@ -61,6 +65,15 @@ for (const [name, svg] of Object.entries(sources)) {
   writeFileSync(resolve(BRAND, name), svg);
   console.log(`svg   ${name}`);
 }
+
+// ---- admin panel copies ---------------------------------------------------
+// admin/app/icon.svg is Next.js's App Router favicon convention; admin/public/
+// brand-icon.svg is what Sidebar renders via <Image src="/brand-icon.svg">.
+// Both are just the app icon — written here, not hand-copied, so they can
+// never drift from app/assets/brand/icon.svg.
+writeFileSync(resolve(ADMIN_APP, 'icon.svg'), sources['icon.svg']);
+writeFileSync(resolve(ADMIN_PUBLIC, 'brand-icon.svg'), sources['icon.svg']);
+console.log('svg   admin/app/icon.svg, admin/public/brand-icon.svg');
 
 // ---- PNG inputs for flutter_launcher_icons ------------------------------
 await png(iconSvg()).toFile(resolve(ICON, 'icon.png'));
