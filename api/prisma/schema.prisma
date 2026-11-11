@@ -53,7 +53,7 @@ model RefreshToken {
 model Store {
   id        String        @id @default(uuid())
   ownerId   String
-  owner     User          @relation("StoreOwner", fields: [ownerId], references: [id])
+  owner     User          @relation("StoreOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   name      String
   category  StoreCategory
   currency  Currency      @default(TJS)
@@ -495,7 +495,7 @@ model Staff {
   storeId    String
   store      Store     @relation(fields: [storeId], references: [id])
   userId     String
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   role       StaffRole
   salary     Decimal?  @db.Decimal(12, 2)
   commission Decimal?  @db.Decimal(5, 2)
@@ -1067,7 +1067,7 @@ model Notification {
   storeId   String
   store     Store    @relation(fields: [storeId], references: [id])
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   type      String // LOW_STOCK, NEW_SALE, SHIFT_CLOSED, DELIVERY_COMPLETED, DEBT_REMINDER
   title     String
   body      String
