@@ -1,9 +1,19 @@
-import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Put,
+  Delete,
+  Body,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
@@ -39,5 +49,23 @@ export class UsersController {
     @Body() dto: ChangePasswordDto,
   ) {
     return this.usersService.changePassword(userId, dto.currentPassword, dto.newPassword);
+  }
+
+  @Delete('me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete the current account and all data under it',
+    description:
+      'Required by Google Play for any app with sign-in. Removes the user, ' +
+      'the stores they own and everything inside those stores. Irreversible.',
+  })
+  @ApiResponse({ status: 204, description: 'Account deleted' })
+  @ApiResponse({ status: 400, description: 'An owned store still has staff' })
+  @ApiResponse({ status: 401, description: 'Password is incorrect' })
+  async deleteAccount(
+    @CurrentUser('id') userId: string,
+    @Body() dto: DeleteAccountDto,
+  ): Promise<void> {
+    await this.usersService.deleteAccount(userId, dto.password);
   }
 }

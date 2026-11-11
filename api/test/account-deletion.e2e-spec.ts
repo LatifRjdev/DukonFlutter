@@ -2,6 +2,8 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { UsersService } from '../src/modules/users/users.service';
+import * as bcrypt from 'bcrypt';
 
 /**
  * Account deletion is a Google Play requirement for any app with sign-in.
@@ -64,6 +66,89 @@ describe('account deletion', () => {
     expect(await prisma.user.findUnique({ where: { id: user.id } })).toBeNull();
     expect(
       await prisma.store.findUnique({ where: { id: store.id } }),
+    ).toBeNull();
+  });
+
+  it('should refuse deletion when an owned store still has other staff', async () => {
+    const owner = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}2`,
+        name: 'Owner',
+        password: await bcrypt.hash('correct-password', 12),
+      },
+    });
+    const colleague = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}3`,
+        name: 'Colleague',
+        password: await bcrypt.hash('irrelevant', 12),
+      },
+    });
+    const store = await prisma.store.create({
+      data: { name: 'Staffed Store', ownerId: owner.id, category: 'GROCERY' },
+    });
+    await prisma.staff.create({
+      data: { storeId: store.id, userId: colleague.id, role: 'CASHIER' },
+    });
+
+    const service = app.get(UsersService);
+    await expect(
+      service.deleteAccount(owner.id, 'correct-password'),
+    ).rejects.toThrow(/staff/i);
+
+    // The guard must leave everything standing, not half-delete.
+    expect(
+      await prisma.user.findUnique({ where: { id: owner.id } }),
+    ).not.toBeNull();
+    expect(
+      await prisma.store.findUnique({ where: { id: store.id } }),
+    ).not.toBeNull();
+  });
+
+  it('should refuse deletion when the password is wrong', async () => {
+    const user = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}4`,
+        name: 'Wrong Pass',
+        password: await bcrypt.hash('right-password', 12),
+      },
+    });
+
+    const service = app.get(UsersService);
+    await expect(
+      service.deleteAccount(user.id, 'wrong-password'),
+    ).rejects.toThrow(/password/i);
+
+    expect(
+      await prisma.user.findUnique({ where: { id: user.id } }),
+    ).not.toBeNull();
+  });
+
+  it('should delete an owner whose store has no staff but has business data', async () => {
+    const user = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}5`,
+        name: 'Busy Owner',
+        password: await bcrypt.hash('correct-password', 12),
+      },
+    });
+    const store = await prisma.store.create({
+      data: { name: 'Busy Store', ownerId: user.id, category: 'GROCERY' },
+    });
+    const product = await prisma.product.create({
+      data: { storeId: store.id, name: 'Чай', sellPrice: 12, quantity: 5 },
+    });
+
+    const service = app.get(UsersService);
+    await service.deleteAccount(user.id, 'correct-password');
+
+    expect(await prisma.user.findUnique({ where: { id: user.id } })).toBeNull();
+    expect(
+      await prisma.store.findUnique({ where: { id: store.id } }),
+    ).toBeNull();
+    // The whole point of cascading from the owner: business data goes too.
+    expect(
+      await prisma.product.findUnique({ where: { id: product.id } }),
     ).toBeNull();
   });
 });

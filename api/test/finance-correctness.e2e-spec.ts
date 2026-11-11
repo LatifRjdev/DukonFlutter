@@ -10,8 +10,20 @@ import { AppModule } from '../src/app.module';
 describe('Finance correctness — DB CHECK constraints', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let testStoreId: string;
-  let testUserId: string;
+  // Initialised to '' rather than left undefined, for the reason cogs.e2e-spec
+  // spells out: Prisma drops an undefined filter field, so
+  // `deleteMany({ where: { id: undefined } })` becomes `deleteMany({})` and
+  // empties the table. afterAll runs even when beforeAll throws.
+  //
+  // This used to be survivable by accident — the foreign keys into `stores`
+  // were ON DELETE RESTRICT, so a bare deleteMany failed instead of wiping the
+  // database. Account deletion needed those to cascade, which removed the
+  // accidental safety net and made this declaration load-bearing.
+  let testStoreId = '';
+  // Initialised to '' so a throw in beforeAll cannot turn afterAll's
+  // deleteMany into an unfiltered one: Prisma drops an undefined filter
+  // field, and `deleteMany({})` empties the table.
+  let testUserId = '';
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({

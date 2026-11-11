@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -72,5 +73,47 @@ export class UsersService {
     });
 
     return { message: 'Password changed successfully' };
+  }
+
+  /**
+   * Deletes the account and everything that cascades from it: the stores this
+   * user owns, and every product, sale, customer and document beneath them.
+   *
+   * Refuses while an owned store still has other staff. Removing someone
+   * else's workplace without warning is not a safe default, and the owner can
+   * resolve it themselves by removing the staff or handing the store over.
+   *
+   * Wrong password raises 401 rather than the 400 `changePassword` uses for
+   * the same check: the client has to tell "you typed it wrong" apart from
+   * "you still have staff", and a status code is the only signal it gets.
+   */
+  async deleteAccount(userId: string, password: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, password: true },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new UnauthorizedException('Password is incorrect');
+
+    const blockingStaff = await this.prisma.staff.findFirst({
+      where: {
+        store: { ownerId: userId },
+        userId: { not: userId },
+        isActive: true,
+      },
+      select: { store: { select: { name: true } } },
+    });
+
+    if (blockingStaff) {
+      throw new BadRequestException(
+        `Store "${blockingStaff.store.name}" still has other staff. ` +
+          'Remove them or transfer the store, then try again.',
+      );
+    }
+
+    await this.prisma.user.delete({ where: { id: userId } });
   }
 }
