@@ -1,9 +1,28 @@
 flutter_launcher_icons:
-  android: "ic_launcher"
-  ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/icon/icon.png"
-  adaptive_icon_round: true
+
+  android: "ic_launcher"
+  adaptive_icon_background: "assets/icon/adaptive_bg.png"
+  adaptive_icon_foreground: "assets/icon/adaptive_fg.png"
+  adaptive_icon_monochrome: "assets/icon/monochrome.png"
+  # Must stay 0. The package default is 16 and lands in the adaptive XML as
+  # android:inset="16%" on both foreground and monochrome. Our mark already
+  # carries scale(0.89) for the safe zone; the two would multiply to 0.605 and
+  # the icon would ship visibly smaller than its neighbours.
+  adaptive_icon_foreground_inset: 0
+
+  ios: true
   remove_alpha_ios: true
+  image_path_ios_dark_transparent: "assets/icon/ios_dark.png"
+  image_path_ios_tinted_grayscale: "assets/icon/ios_tinted.png"
+
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#6366F1"
+    theme_color: "#6366F1"
+
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"

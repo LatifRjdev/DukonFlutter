@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   LayoutDashboard,
   Users,
@@ -47,7 +48,13 @@ export function Sidebar() {
     <aside className="flex h-screen w-60 flex-col border-r border-slate-200 bg-slate-900 text-white">
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5 border-b border-slate-700">
-        <Store className="h-6 w-6 text-blue-400" />
+        <Image
+          src="/brand-icon.svg"
+          alt=""
+          width={512}
+          height={512}
+          className="h-6 w-6 rounded-[6px]"
+        />
         <span className="font-bold text-lg tracking-tight">DukonPro Admin</span>
       </div>
 
