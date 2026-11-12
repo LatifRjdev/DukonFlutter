@@ -5,6 +5,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { unlink } from 'fs/promises';
+import { resolve, sep } from 'path';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -124,6 +126,51 @@ export class UsersService {
       );
     }
 
+    // Collect the receipt images BEFORE the delete: once the cascade runs,
+    // the rows naming these files are gone and the files would be orphaned on
+    // disk forever. The privacy policy says receipts are deleted with the
+    // account, and a cascade alone only deletes the database row.
+    const receipts = await this.prisma.payment.findMany({
+      where: {
+        subscription: { store: { ownerId: userId } },
+        receiptImage: { not: null },
+      },
+      select: { receiptImage: true },
+    });
+
     await this.prisma.user.delete({ where: { id: userId } });
+
+    await this.removeReceiptFiles(
+      receipts
+        .map((p) => p.receiptImage)
+        .filter((path): path is string => path !== null),
+    );
+  }
+
+  /**
+   * Best-effort deletion of uploaded receipt images.
+   *
+   * Runs after the account is already gone, so a failure here must not throw:
+   * the caller would report an error for a deletion that actually succeeded,
+   * and the user cannot retry — there is no account left to retry with. A
+   * leftover file is a smaller problem than that.
+   *
+   * Every path is re-resolved under `uploads/receipts` and rejected if it
+   * escapes. These values are written by our own upload handler, which
+   * generates the filename, so they are not attacker-controlled today — the
+   * check is here so that stays true if the column is ever populated from
+   * somewhere else.
+   */
+  private async removeReceiptFiles(paths: string[]): Promise<void> {
+    const root = resolve(process.cwd(), 'uploads', 'receipts');
+    for (const stored of paths) {
+      try {
+        const full = resolve(process.cwd(), stored);
+        if (full !== root && !full.startsWith(root + sep)) continue;
+        await unlink(full);
+      } catch {
+        // Already gone, never written, or unreadable — nothing to do.
+      }
+    }
   }
 }

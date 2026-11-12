@@ -145,7 +145,7 @@ enum SubscriptionStatus {
 model Payment {
   id              String        @id @default(uuid())
   subscriptionId  String
-  subscription    Subscription  @relation(fields: [subscriptionId], references: [id])
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
   amount          Decimal       @db.Decimal(12, 2)
   currency        Currency
   method          PaymentMethod
@@ -209,7 +209,7 @@ model ExternalProductMapping {
   storeId           String
   store             Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   productId         String
-  product           Product  @relation(fields: [productId], references: [id])
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   externalProductId String
   createdAt         DateTime @default(now())
 
@@ -312,7 +312,7 @@ enum ProductUnit {
 model StockMovement {
   id         String       @id @default(uuid())
   productId  String
-  product    Product      @relation(fields: [productId], references: [id])
+  product    Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
   type       MovementType
   quantity   Int
   unitCost   Decimal?     @db.Decimal(12, 2)
@@ -409,7 +409,7 @@ model SaleItem {
   saleId           String
   sale             Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
   productId        String
-  product          Product  @relation(fields: [productId], references: [id])
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productName      String
   quantity         Int
   unitPrice        Decimal  @db.Decimal(12, 2)
@@ -429,7 +429,7 @@ model SaleItem {
 model DebtPayment {
   id        String          @id @default(uuid())
   saleId    String
-  sale      Sale            @relation(fields: [saleId], references: [id])
+  sale      Sale            @relation(fields: [saleId], references: [id], onDelete: Cascade)
   amount    Decimal         @db.Decimal(12, 2)
   method    SalePaymentType
   notes     String?
@@ -523,7 +523,7 @@ model Shift {
   storeId         String
   store           Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   staffId         String
-  staff           Staff       @relation(fields: [staffId], references: [id])
+  staff           Staff       @relation(fields: [staffId], references: [id], onDelete: Cascade)
   openedAt        DateTime    @default(now())
   closedAt        DateTime?
   openingCash     Decimal     @db.Decimal(12, 2)
@@ -649,7 +649,7 @@ model SupplierPayment {
   storeId    String
   store      Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
   supplierId String
-  supplier   Supplier        @relation(fields: [supplierId], references: [id])
+  supplier   Supplier        @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   amount     Decimal         @db.Decimal(12, 2)
   method     SalePaymentType
   notes      String?
@@ -688,9 +688,9 @@ enum InventoryStatus {
 model InventoryItem {
   id          String    @id @default(uuid())
   inventoryId String
-  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
   productId   String
-  product     Product   @relation(fields: [productId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   systemQty   Int
   actualQty   Int?
   difference  Int?
@@ -841,9 +841,9 @@ enum PayrollStatus {
 model Payroll {
   id              String        @id @default(uuid())
   payrollPeriodId String
-  payrollPeriod   PayrollPeriod @relation(fields: [payrollPeriodId], references: [id])
+  payrollPeriod   PayrollPeriod @relation(fields: [payrollPeriodId], references: [id], onDelete: Cascade)
   staffId         String
-  staff           Staff         @relation(fields: [staffId], references: [id])
+  staff           Staff         @relation(fields: [staffId], references: [id], onDelete: Cascade)
   baseSalary      Decimal       @db.Decimal(12, 2)
   commission      Decimal       @default(0) @db.Decimal(12, 2)
   commissionRate  Decimal?      @db.Decimal(5, 2)
@@ -916,7 +916,7 @@ model Delivery {
   storeId   String
   store     Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
   saleId    String         @unique
-  sale      Sale           @relation(fields: [saleId], references: [id])
+  sale      Sale           @relation(fields: [saleId], references: [id], onDelete: Cascade)
   address   String
   courierId String?
   courier   Staff?         @relation(fields: [courierId], references: [id])
@@ -963,7 +963,7 @@ model InventoryCountItem {
   inventoryCountId String
   inventoryCount   InventoryCount @relation(fields: [inventoryCountId], references: [id], onDelete: Cascade)
   productId        String
-  product          Product        @relation(fields: [productId], references: [id])
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
   expectedQty      Float
   actualQty        Float?
 

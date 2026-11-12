@@ -8,6 +8,8 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { UsersService } from '../src/modules/users/users.service';
 import * as bcrypt from 'bcrypt';
+import { mkdir, writeFile, access } from 'fs/promises';
+import { join } from 'path';
 
 /**
  * Account deletion is a Google Play requirement for any app with sign-in.
@@ -142,6 +144,174 @@ describe('account deletion', () => {
     expect(
       await prisma.user.findUnique({ where: { id: user.id } }),
     ).not.toBeNull();
+  });
+
+  it('should delete an owner whose store carries a full business history', async () => {
+    // The point of this test is the shape of the fixture, not the assertion.
+    //
+    // The earlier "business data" test seeded a store with one product, which
+    // every version of the schema could delete. It therefore passed while
+    // account deletion was broken for every real merchant: the foreign keys
+    // into `stores` cascaded, but the tables hanging off THOSE children were
+    // still RESTRICT. One sale gives you a sale_item; one subscription payment
+    // gives you a payments row; either stopped the cascade dead.
+    //
+    // So this builds a store that looks like a store — sale with line items,
+    // stock movement, customer, supplier with a recorded payment, subscription
+    // with a payment, staff member with a shift — and deletes the owner. Run it
+    // against the pre-cascade schema and it fails on a foreign key.
+    const user = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}6`,
+        name: 'Real Merchant',
+        password: await bcrypt.hash('correct-password', 12),
+      },
+    });
+    const store = await prisma.store.create({
+      data: { name: 'Real Store', ownerId: user.id, category: 'GROCERY' },
+    });
+    const product = await prisma.product.create({
+      data: { storeId: store.id, name: 'Нон', sellPrice: 5, quantity: 100 },
+    });
+    const customer = await prisma.customer.create({
+      data: { storeId: store.id, name: 'Покупатель', updatedAt: new Date() },
+    });
+    const sale = await prisma.sale.create({
+      data: {
+        storeId: store.id,
+        customerId: customer.id,
+        receiptNo: 'FIXTURE-0001',
+        subtotal: 10,
+        total: 10,
+        paymentType: 'CASH',
+        paidAmount: 10,
+        updatedAt: new Date(),
+      },
+    });
+    await prisma.saleItem.create({
+      data: {
+        saleId: sale.id,
+        productId: product.id,
+        productName: 'Нон',
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
+      },
+    });
+    await prisma.stockMovement.create({
+      data: { productId: product.id, type: 'SALE', quantity: -2 },
+    });
+    const supplier = await prisma.supplier.create({
+      data: { storeId: store.id, name: 'Поставщик', updatedAt: new Date() },
+    });
+    await prisma.supplierPayment.create({
+      data: {
+        storeId: store.id,
+        supplierId: supplier.id,
+        amount: 50,
+        method: 'CASH',
+      },
+    });
+    const subscription = await prisma.subscription.create({
+      data: {
+        storeId: store.id,
+        plan: 'BUSINESS',
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 3600 * 1000),
+        updatedAt: new Date(),
+      },
+    });
+    await prisma.payment.create({
+      data: {
+        subscriptionId: subscription.id,
+        amount: 400,
+        currency: 'TJS',
+        method: 'CASH',
+        status: 'APPROVED',
+      },
+    });
+    // The owner's own staff row: deleteAccount only blocks on OTHER staff.
+    const ownStaff = await prisma.staff.create({
+      data: { storeId: store.id, userId: user.id, role: 'OWNER' },
+    });
+    await prisma.shift.create({
+      data: { storeId: store.id, staffId: ownStaff.id, openingCash: 0 },
+    });
+
+    const service = app.get(UsersService);
+    await service.deleteAccount(user.id, 'correct-password');
+
+    expect(await prisma.user.findUnique({ where: { id: user.id } })).toBeNull();
+    expect(
+      await prisma.store.findUnique({ where: { id: store.id } }),
+    ).toBeNull();
+    // Spot-check both cascade levels: the store's own children, and the rows
+    // that hang off those children.
+    expect(
+      await prisma.product.findUnique({ where: { id: product.id } }),
+    ).toBeNull();
+    expect(await prisma.saleItem.count({ where: { saleId: sale.id } })).toBe(0);
+    expect(
+      await prisma.payment.count({ where: { subscriptionId: subscription.id } }),
+    ).toBe(0);
+    expect(
+      await prisma.supplierPayment.count({ where: { supplierId: supplier.id } }),
+    ).toBe(0);
+    expect(
+      await prisma.shift.count({ where: { staffId: ownStaff.id } }),
+    ).toBe(0);
+  });
+
+  it('should delete the uploaded receipt file, not just its database row', async () => {
+    // A cascade deletes the `payments` row. The image it names is a file on
+    // disk, and nothing in the database layer can reach it — so without an
+    // explicit unlink the receipt outlives the account it belongs to. The
+    // privacy policy promises otherwise.
+    const dir = join(process.cwd(), 'uploads', 'receipts');
+    await mkdir(dir, { recursive: true });
+    const filename = `fixture-${Date.now()}.png`;
+    const diskPath = join(dir, filename);
+    await writeFile(diskPath, 'not really a png');
+    const storedPath = `uploads/receipts/${filename}`;
+
+    const user = await prisma.user.create({
+      data: {
+        phone: `${FIXTURE_PHONE_PREFIX}7`,
+        name: 'Receipt Owner',
+        password: await bcrypt.hash('correct-password', 12),
+      },
+    });
+    const store = await prisma.store.create({
+      data: { name: 'Receipt Store', ownerId: user.id, category: 'GROCERY' },
+    });
+    const subscription = await prisma.subscription.create({
+      data: {
+        storeId: store.id,
+        plan: 'BUSINESS',
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 3600 * 1000),
+        updatedAt: new Date(),
+      },
+    });
+    await prisma.payment.create({
+      data: {
+        subscriptionId: subscription.id,
+        amount: 400,
+        currency: 'TJS',
+        method: 'CASH',
+        status: 'APPROVED',
+        receiptImage: storedPath,
+      },
+    });
+
+    // The file is there before the deletion, so its absence afterwards means
+    // something removed it rather than it never having existed.
+    await expect(access(diskPath)).resolves.toBeUndefined();
+
+    const service = app.get(UsersService);
+    await service.deleteAccount(user.id, 'correct-password');
+
+    await expect(access(diskPath)).rejects.toThrow();
   });
 
   it('should delete an owner whose store has no staff but has business data', async () => {
