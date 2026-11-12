@@ -42,6 +42,10 @@ void main() {
       AppMessage.serverError: 'Ошибка сервера — попробуйте позже',
       AppMessage.cacheError: 'Ошибка локального хранилища',
       AppMessage.unknownError: 'Не удалось выполнить операцию',
+      AppMessage.accountDeletionWrongPassword: 'Неверный пароль',
+      AppMessage.accountDeletionStaffRemain:
+          'В магазине остались сотрудники. Удалите их или передайте магазин, '
+          'затем повторите.',
       AppMessage.profileUpdated: 'Профиль обновлён',
       AppMessage.passwordChanged: 'Пароль успешно изменён',
       AppMessage.expenseAdded: 'Расход добавлен',
@@ -58,6 +62,7 @@ void main() {
       AppMessage.investmentCreated: 'Вложение добавлено',
       AppMessage.investmentUpdated: 'Вложение обновлено',
       AppMessage.investmentDeleted: 'Вложение удалено',
+      AppMessage.accountDeleted: 'Аккаунт удалён',
     };
 
     // Covering every member, so a new one cannot be added without a row here.
@@ -83,6 +88,12 @@ void main() {
       AppMessage.serverError,
       AppMessage.cacheError,
       AppMessage.unknownError,
+      // Account deletion's two refusals. They exist precisely BECAUSE the
+      // generic badRequest/forbidden text does not tell the user which of the
+      // two happened, so this test earning its keep means they stay distinct
+      // from those two and from each other.
+      AppMessage.accountDeletionWrongPassword,
+      AppMessage.accountDeletionStaffRemain,
     ];
 
     final strings = errors.map((m) => m.resolve(l10n)).toList();

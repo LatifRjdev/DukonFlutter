@@ -23,6 +23,16 @@ abstract class AuthRemoteDatasource {
 
   Future<void> logout();
 
+  /// `DELETE /users/me` — destroys the account, the stores this user owns and
+  /// everything inside them. Irreversible, and required by Google Play for any
+  /// app with sign-in.
+  ///
+  /// Throws [ServerException] with `statusCode` 403 when [password] does not
+  /// match, and 400 when an owned store still has other active staff. The
+  /// caller distinguishes the two by status: the exception's `message` is
+  /// diagnostic-only and must not be shown (see exceptions.dart).
+  Future<void> deleteAccount(String password);
+
   /// Hits `GET /users/me` against the backend with the current access token
   /// to confirm the session is still valid. Returns the up-to-date [User]
   /// payload on success; throws [UnauthorizedException] if the server says
@@ -126,6 +136,18 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<void> logout() async {
     try {
       await _dioClient.post(ApiEndpoints.logout);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> deleteAccount(String password) async {
+    try {
+      await _dioClient.delete(
+        ApiEndpoints.userMe,
+        data: {'password': password},
+      );
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

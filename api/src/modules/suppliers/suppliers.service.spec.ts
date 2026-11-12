@@ -149,6 +149,18 @@ function makePrismaFake() {
           return true;
         });
       }),
+      // `remove` counts payments before deleting a supplier. The database
+      // used to enforce this with an ON DELETE RESTRICT key; that key now
+      // cascades so account deletion can get through, so the guarantee lives
+      // in the service and needs to be reachable from this fake.
+      count: jest.fn(async ({ where }: any) => {
+        return Array.from(payments.values()).filter((p) => {
+          if (where?.supplierId && p.supplierId !== where.supplierId)
+            return false;
+          if (where?.storeId && p.storeId !== where.storeId) return false;
+          return true;
+        }).length;
+      }),
     },
     $transaction: jest.fn(async (fn: any) => fn(tx)),
   };
@@ -217,6 +229,44 @@ describe('SuppliersService', () => {
       ).rejects.toBeInstanceOf(NotFoundException);
       // Original record is untouched.
       expect(prisma._suppliers.get('sup-A')!.name).toBe('Acme Wholesale');
+    });
+  });
+
+  describe('remove', () => {
+    // The database used to refuse this: supplier_payments had an ON DELETE
+    // RESTRICT key into suppliers. Account deletion needed that key to
+    // cascade — a merchant must not be blocked from deleting their own
+    // account by their own supplier history — so the refusal moved here.
+    // Without these tests, dropping the check would leave no failing test
+    // and would silently start erasing financial records.
+    it('should refuse to delete a supplier that has recorded payments', async () => {
+      seedSupplier({ debt: 200 });
+      await service.addPayment('store-A', 'sup-A', {
+        amount: 75,
+        method: 'CASH',
+      } as any);
+
+      await expect(service.remove('store-A', 'sup-A')).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+      expect(prisma._suppliers.has('sup-A')).toBe(true);
+    });
+
+    it('should delete a supplier that has no payments', async () => {
+      seedSupplier();
+
+      await service.remove('store-A', 'sup-A');
+
+      expect(prisma._suppliers.has('sup-A')).toBe(false);
+    });
+
+    it('should throw NotFoundException for a supplier in another store', async () => {
+      seedSupplier({ id: 'sup-A', storeId: 'store-A' });
+
+      await expect(service.remove('store-B', 'sup-A')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+      expect(prisma._suppliers.has('sup-A')).toBe(true);
     });
   });
 

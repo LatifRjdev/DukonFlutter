@@ -65,8 +65,30 @@ export class SuppliersService {
     });
   }
 
+  /**
+   * Deleting a supplier destroys their payment history with them, so this
+   * refuses while any payment exists.
+   *
+   * That refusal used to come from the database: `supplier_payments` had an
+   * ON DELETE RESTRICT foreign key, which surfaced as a raw Prisma constraint
+   * error rather than something a user could read. Account deletion needed
+   * that key to cascade — a merchant deleting their account must not be
+   * blocked by their own supplier history — so the guarantee moved up here,
+   * where it can say what is wrong and still holds for this endpoint.
+   */
   async remove(storeId: string, id: string) {
     await this.findOne(storeId, id);
+
+    const paymentCount = await this.prisma.supplierPayment.count({
+      where: { supplierId: id },
+    });
+    if (paymentCount > 0) {
+      throw new BadRequestException(
+        `Supplier has ${paymentCount} recorded payment(s). ` +
+          'Deleting them would erase that financial history.',
+      );
+    }
+
     return this.prisma.supplier.delete({ where: { id } });
   }
 

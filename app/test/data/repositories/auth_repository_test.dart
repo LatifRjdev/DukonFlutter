@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'package:dukonpro/core/errors/exceptions.dart';
 import 'package:dukonpro/data/datasources/local/auth_local_datasource.dart';
+import 'package:dukonpro/data/datasources/local/cart_local_datasource.dart';
 import 'package:dukonpro/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:dukonpro/data/repositories/auth_repository_impl.dart';
 import 'package:dukonpro/domain/entities/user.dart';
@@ -11,9 +13,18 @@ class _MockAuthRemoteDatasource extends Mock implements AuthRemoteDatasource {}
 
 class _MockAuthLocalDatasource extends Mock implements AuthLocalDatasource {}
 
+class _MockCartLocalDatasource extends Mock implements CartLocalDatasource {}
+
+class _MockDatabase extends Mock implements Database {}
+
+class _MockBatch extends Mock implements Batch {}
+
 void main() {
   late _MockAuthRemoteDatasource remote;
   late _MockAuthLocalDatasource local;
+  late _MockCartLocalDatasource cart;
+  late _MockDatabase database;
+  late _MockBatch batch;
   late AuthRepositoryImpl repo;
 
   final testUser = User(
@@ -36,7 +47,32 @@ void main() {
   setUp(() {
     remote = _MockAuthRemoteDatasource();
     local = _MockAuthLocalDatasource();
-    repo = AuthRepositoryImpl(remoteDatasource: remote, localDatasource: local);
+    cart = _MockCartLocalDatasource();
+    database = _MockDatabase();
+    batch = _MockBatch();
+    repo = AuthRepositoryImpl(
+      remoteDatasource: remote,
+      localDatasource: local,
+      database: database,
+      cart: cart,
+    );
+
+    // Only deleteAccount touches these two. The table list stands in for the
+    // live schema from injection.dart's _initDatabase.
+    when(() => database.query(
+          'sqlite_master',
+          columns: any(named: 'columns'),
+          where: any(named: 'where'),
+        )).thenAnswer((_) async => [
+          {'name': 'products'},
+          {'name': 'sales'},
+          {'name': 'categories'},
+          {'name': 'sync_queue'},
+        ]);
+    when(() => database.batch()).thenReturn(batch);
+    when(() => batch.commit(noResult: any(named: 'noResult')))
+        .thenAnswer((_) async => <Object?>[]);
+    when(() => cart.clear()).thenAnswer((_) async {});
 
     when(() => local.saveTokens(
           accessToken: any(named: 'accessToken'),
@@ -218,6 +254,82 @@ void main() {
       when(() => remote.logout()).thenThrow(const ServerException('boom'));
 
       await expectLater(repo.logout(), completes);
+    });
+  });
+
+  group('deleteAccount', () {
+    test('should empty every local table when the server accepts', () async {
+      when(() => remote.deleteAccount(any())).thenAnswer((_) async {});
+
+      await repo.deleteAccount('hunter2');
+
+      // The account no longer exists server-side, so the device's cached copy
+      // of its stores, products and sales has to go with it. One DELETE per
+      // table, and the table list comes from sqlite_master rather than a
+      // hardcoded list — see the comment on the implementation.
+      verify(() => batch.execute('DELETE FROM "products"')).called(1);
+      verify(() => batch.execute('DELETE FROM "sales"')).called(1);
+      verify(() => batch.execute('DELETE FROM "categories"')).called(1);
+      verify(() => batch.execute('DELETE FROM "sync_queue"')).called(1);
+      verify(() => batch.commit(noResult: true)).called(1);
+    });
+
+    test('should clear the cart and the session when the server accepts',
+        () async {
+      when(() => remote.deleteAccount(any())).thenAnswer((_) async {});
+
+      await repo.deleteAccount('hunter2');
+
+      verify(() => remote.deleteAccount('hunter2')).called(1);
+      verify(() => cart.clear()).called(1);
+      verify(() => local.deleteTokens()).called(1);
+      verify(() => local.deleteUser()).called(1);
+    });
+
+    test('should leave everything in place when the server refuses', () async {
+      // The one case that matters most. Unlike logout, this must NOT clear
+      // local state on failure: the account still exists, so a wrong password
+      // or a store that still has staff has to leave the user signed in with
+      // their data intact — otherwise a typo wipes the device.
+      when(() => remote.deleteAccount(any()))
+          .thenThrow(const ServerException('Password is incorrect',
+              statusCode: 403));
+
+      await expectLater(
+        repo.deleteAccount('wrong'),
+        throwsA(isA<ServerException>()),
+      );
+
+      verifyNever(() => database.batch());
+      verifyNever(() => cart.clear());
+      verifyNever(() => local.deleteTokens());
+      verifyNever(() => local.deleteUser());
+    });
+
+    test('should rethrow the status code so the caller can tell the two '
+        'refusals apart', () async {
+      when(() => remote.deleteAccount(any())).thenThrow(
+          const ServerException('still has staff', statusCode: 400));
+
+      await expectLater(
+        repo.deleteAccount('hunter2'),
+        throwsA(isA<ServerException>()
+            .having((e) => e.statusCode, 'statusCode', 400)),
+      );
+    });
+
+    test('should still end the session when wiping local data fails',
+        () async {
+      // Past the server call the account is already gone, so cleanup is
+      // best-effort: a failing wipe must not strand the user signed in to an
+      // account that no longer exists.
+      when(() => remote.deleteAccount(any())).thenAnswer((_) async {});
+      when(() => database.batch()).thenThrow(const CacheException('disk'));
+
+      await expectLater(repo.deleteAccount('hunter2'), completes);
+
+      verify(() => local.deleteTokens()).called(1);
+      verify(() => local.deleteUser()).called(1);
     });
   });
 

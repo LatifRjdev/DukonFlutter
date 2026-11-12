@@ -24,6 +24,8 @@ extension AppMessageL10n on AppMessage {
     AppMessage.serverError => l10n.errorServer,
     AppMessage.cacheError => l10n.errorCache,
     AppMessage.unknownError => l10n.errorUnknown,
+    AppMessage.accountDeletionWrongPassword => l10n.deleteAccountWrongPassword,
+    AppMessage.accountDeletionStaffRemain => l10n.deleteAccountStaffRemain,
 
     // Successes. Six of these keys already existed; `passwordChanged`
     // reads "Пароль успешно изменён", one word longer than the literal the
@@ -44,5 +46,6 @@ extension AppMessageL10n on AppMessage {
     AppMessage.investmentCreated => l10n.investmentCreated,
     AppMessage.investmentUpdated => l10n.investmentUpdated,
     AppMessage.investmentDeleted => l10n.investmentDeleted,
+    AppMessage.accountDeleted => l10n.deleteAccountSuccess,
   };
 }

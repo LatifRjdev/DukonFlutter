@@ -112,4 +112,5 @@ class RouteNames {
   static const String subscription = '/settings/subscription';
   static const String loyaltySettings = '/settings/loyalty';
   static const String loyaltyAnalytics = '/settings/loyalty/analytics';
+  static const String deleteAccount = '/settings/delete-account';
 }

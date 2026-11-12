@@ -1241,6 +1241,25 @@
   "settingsLogoutButton": "Выйти из аккаунта",
   "@settingsLogoutButton": { "description": "Settings page — full-width logout button at the bottom of the page. Distinct from `logout` (\"Выйти\"), the bare confirm button inside the logout dialog" },
 
+  "settingsDeleteAccountEntry": "Удалить аккаунт",
+  "@settingsDeleteAccountEntry": { "description": "Settings page — destructive link under the logout button, opens the account-deletion screen. Distinct from `delete` (\"Удалить\"), the generic verb" },
+
+  "deleteAccountTitle": "Удаление аккаунта",
+  "@deleteAccountTitle": { "description": "Account-deletion screen — app bar title. The noun phrase, as a screen heading; `settingsDeleteAccountEntry` is the imperative that navigates here" },
+  "deleteAccountWarning": "Это действие необратимо. Будут удалены ваш аккаунт, ваши магазины и все данные в них: товары, продажи, клиенты, долги и отчёты.",
+  "@deleteAccountWarning": { "description": "Account-deletion screen — names exactly what is destroyed. Must stay in step with the public deletion page and the privacy policy" },
+  "deleteAccountPasswordLabel": "Введите пароль для подтверждения",
+  "@deleteAccountPasswordLabel": { "description": "Account-deletion screen — password field label. Fuller than the generic `password` (\"Пароль\") on purpose: it states why the password is being asked for again" },
+  "deleteAccountConfirmButton": "Удалить аккаунт навсегда",
+  "@deleteAccountConfirmButton": { "description": "Account-deletion screen — the destructive confirm button. \"навсегда\" is deliberate: the last word before an irreversible action" },
+  "deleteAccountSuccess": "Аккаунт удалён",
+  "@deleteAccountSuccess": { "description": "Confirmation shown as the user is returned to the login screen after deletion" },
+  "deleteAccountStaffRemain": "В магазине остались сотрудники. Удалите их или передайте магазин, затем повторите.",
+  "@deleteAccountStaffRemain": { "description": "Error when the server refuses deletion (400) because an owned store still has other active staff. Deleting someone else's workplace is not a safe default, so the owner has to resolve it first" },
+  "deleteAccountWrongPassword": "Неверный пароль",
+  "@deleteAccountWrongPassword": { "description": "Error when the confirmation password does not match (server returns 403). Distinct from `errorForbidden` (\"Недостаточно прав\"), the generic 403 text, which would be misleading here" },
+
+
   "subscriptionFeatureSalesReport": "Отчёт продаж",
   "subscriptionFeatureCurrencies": "Валюты",
   "subscriptionFeatureAllReports": "Все отчёты",

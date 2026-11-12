@@ -58,6 +58,7 @@ import '../../presentation/pages/supplier/supplier_list_page.dart';
 import '../../presentation/pages/supplier/supplier_detail_page.dart';
 import '../../presentation/pages/supplier/supplier_form_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
+import '../../presentation/pages/settings/delete_account_page.dart';
 import '../../presentation/pages/settings/edit_profile_page.dart';
 import '../../presentation/pages/settings/change_password_page.dart';
 import '../../presentation/pages/settings/my_stores_page.dart';
@@ -597,6 +598,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.changePassword,
         builder: (context, state) => const ChangePasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.deleteAccount,
+        builder: (context, state) => const DeleteAccountPage(),
       ),
       GoRoute(
         path: RouteNames.printerSettings,

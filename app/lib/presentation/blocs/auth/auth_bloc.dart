@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import '../../../core/errors/app_message.dart';
 import '../../../core/errors/error_messages.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../domain/entities/user.dart';
@@ -29,6 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
+    on<AuthAccountDeletionRequested>(_onAccountDeletionRequested);
     on<AuthSendOtpRequested>(_onSendOtpRequested);
     on<AuthVerifyOtpRequested>(_onVerifyOtpRequested);
     on<AuthForgotPasswordRequested>(_onForgotPasswordRequested);
@@ -113,6 +115,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     await _authRepository.logout();
     await _bindSentryUser(null);
     emit(AuthUnauthenticated());
+  }
+
+  Future<void> _onAccountDeletionRequested(
+    AuthAccountDeletionRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.deleteAccount(event.password);
+      await _bindSentryUser(null);
+      emit(AuthAccountDeleted());
+      emit(AuthUnauthenticated());
+    } catch (e) {
+      emit(AuthFailure(_mapDeletionError(e)));
+    }
+  }
+
+  /// The two refusals the user can do something about, told apart by status
+  /// code. `mapErrorToAppMessage` would flatten them into "Некорректные данные"
+  /// and "Недостаточно прав", neither of which says what went wrong — and the
+  /// exception's own `message` is diagnostic-only and must not be shown.
+  ///
+  /// 403 rather than 401 for a wrong password is deliberate on the server side:
+  /// the Dio interceptor treats any 401 as an expired token and would refresh
+  /// and replay the DELETE. See UsersService.deleteAccount in the API.
+  AppMessage _mapDeletionError(Object error) {
+    if (error is ServerException) {
+      if (error.statusCode == 403) {
+        return AppMessage.accountDeletionWrongPassword;
+      }
+      if (error.statusCode == 400) {
+        return AppMessage.accountDeletionStaffRemain;
+      }
+    }
+    return mapErrorToAppMessage(error);
   }
 
   Future<void> _onSendOtpRequested(AuthSendOtpRequested event, Emitter<AuthState> emit) async {

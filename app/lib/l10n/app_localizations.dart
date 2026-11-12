@@ -3304,6 +3304,54 @@ abstract class AppLocalizations {
   /// **'Выйти из аккаунта'**
   String get settingsLogoutButton;
 
+  /// Settings page — destructive link under the logout button, opens the account-deletion screen. Distinct from `delete` ("Удалить"), the generic verb
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт'**
+  String get settingsDeleteAccountEntry;
+
+  /// Account-deletion screen — app bar title. The noun phrase, as a screen heading; `settingsDeleteAccountEntry` is the imperative that navigates here
+  ///
+  /// In ru, this message translates to:
+  /// **'Удаление аккаунта'**
+  String get deleteAccountTitle;
+
+  /// Account-deletion screen — names exactly what is destroyed. Must stay in step with the public deletion page and the privacy policy
+  ///
+  /// In ru, this message translates to:
+  /// **'Это действие необратимо. Будут удалены ваш аккаунт, ваши магазины и все данные в них: товары, продажи, клиенты, долги и отчёты.'**
+  String get deleteAccountWarning;
+
+  /// Account-deletion screen — password field label. Fuller than the generic `password` ("Пароль") on purpose: it states why the password is being asked for again
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите пароль для подтверждения'**
+  String get deleteAccountPasswordLabel;
+
+  /// Account-deletion screen — the destructive confirm button. "навсегда" is deliberate: the last word before an irreversible action
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт навсегда'**
+  String get deleteAccountConfirmButton;
+
+  /// Confirmation shown as the user is returned to the login screen after deletion
+  ///
+  /// In ru, this message translates to:
+  /// **'Аккаунт удалён'**
+  String get deleteAccountSuccess;
+
+  /// Error when the server refuses deletion (400) because an owned store still has other active staff. Deleting someone else's workplace is not a safe default, so the owner has to resolve it first
+  ///
+  /// In ru, this message translates to:
+  /// **'В магазине остались сотрудники. Удалите их или передайте магазин, затем повторите.'**
+  String get deleteAccountStaffRemain;
+
+  /// Error when the confirmation password does not match (server returns 403). Distinct from `errorForbidden` ("Недостаточно прав"), the generic 403 text, which would be misleading here
+  ///
+  /// In ru, this message translates to:
+  /// **'Неверный пароль'**
+  String get deleteAccountWrongPassword;
+
   /// No description provided for @subscriptionFeatureSalesReport.
   ///
   /// In ru, this message translates to:

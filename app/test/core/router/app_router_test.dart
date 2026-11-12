@@ -158,6 +158,7 @@ void main() {
       RouteNames.settings,
       RouteNames.editProfile,
       RouteNames.changePassword,
+      RouteNames.deleteAccount,
       RouteNames.printerSettings,
       RouteNames.myStores,
       RouteNames.discounts,

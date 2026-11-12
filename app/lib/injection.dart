@@ -276,6 +276,10 @@ Future<void> initDependencies() async {
     () => AuthRepositoryImpl(
       remoteDatasource: sl<AuthRemoteDatasource>(),
       localDatasource: sl<AuthLocalDatasource>(),
+      // Account deletion wipes the device's cached business data; logout does
+      // not. See AuthRepositoryImpl.deleteAccount.
+      database: sl<Database>(),
+      cart: sl<CartLocalDatasource>(),
     ),
   );
 
