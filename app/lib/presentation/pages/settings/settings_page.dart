@@ -526,6 +526,23 @@ class _SettingsPageState extends State<SettingsPage> {
                               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           ),
                         ),
+                        const SizedBox(height: 8),
+
+                        // Account deletion. Below logout and deliberately
+                        // quieter than it — a plain text link rather than a
+                        // second outlined button — so the irreversible action
+                        // does not compete for attention with the reversible
+                        // one. It is not a _buildTile: that helper paints
+                        // every icon AppColors.primary, which would read as
+                        // ordinary navigation.
+                        Center(
+                          child: TextButton(
+                            onPressed: () => context.push(RouteNames.deleteAccount),
+                            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+                            child: Text(l10n.settingsDeleteAccountEntry,
+                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                          ),
+                        ),
                         const SizedBox(height: 24),
                       ],
                     );

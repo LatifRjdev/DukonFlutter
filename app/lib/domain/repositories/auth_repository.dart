@@ -17,6 +17,19 @@ abstract class AuthRepository {
 
   Future<void> logout();
 
+  /// Destroys the account on the server and wipes what this device cached for
+  /// it. Irreversible; required by Google Play for any app with sign-in.
+  ///
+  /// Unlike [logout], this clears the offline business data too: the server has
+  /// deleted the stores and everything in them, so the cached copy is no longer
+  /// a cache of anything.
+  ///
+  /// Throws before touching local state if the server refuses, so a failed
+  /// attempt leaves the user signed in with their data intact. Distinguish the
+  /// refusals by `ServerException.statusCode`: 403 means the password did not
+  /// match, 400 that an owned store still has other active staff.
+  Future<void> deleteAccount(String password);
+
   Future<bool> isAuthenticated();
 
   Future<String?> getAccessToken();

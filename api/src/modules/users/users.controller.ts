@@ -61,7 +61,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 204, description: 'Account deleted' })
   @ApiResponse({ status: 400, description: 'An owned store still has staff' })
-  @ApiResponse({ status: 401, description: 'Password is incorrect' })
+  @ApiResponse({ status: 403, description: 'Password is incorrect' })
   async deleteAccount(
     @CurrentUser('id') userId: string,
     @Body() dto: DeleteAccountDto,

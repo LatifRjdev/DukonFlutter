@@ -32,6 +32,18 @@ enum AppMessage {
   /// ServerException whose status code has no specific mapping.
   unknownError,
 
+  /// Account deletion refused because the confirmation password did not match
+  /// (server returns 403). Its own member rather than reusing [forbidden]:
+  /// "Недостаточно прав" would be actively misleading — the user has every
+  /// right to delete their account, they just mistyped.
+  accountDeletionWrongPassword,
+
+  /// Account deletion refused because a store this user owns still has other
+  /// active staff (server returns 400). Its own member rather than reusing
+  /// [badRequest]: "Некорректные данные" says nothing about what to do, and
+  /// this is the one error here the user can actually act on.
+  accountDeletionStaffRemain,
+
   // ── Successes ────────────────────────────────────────────────────────────
   // One member per distinct string, not per state class: ExpenseActionSuccess
   // alone carries three.
@@ -57,4 +69,8 @@ enum AppMessage {
   investmentCreated,
   investmentUpdated,
   investmentDeleted,
+
+  /// Shown as the user is returned to the login screen after their account was
+  /// deleted.
+  accountDeleted,
 }

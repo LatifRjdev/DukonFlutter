@@ -1780,6 +1780,32 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsLogoutButton => 'Выйти из аккаунта';
 
   @override
+  String get settingsDeleteAccountEntry => 'Удалить аккаунт';
+
+  @override
+  String get deleteAccountTitle => 'Удаление аккаунта';
+
+  @override
+  String get deleteAccountWarning =>
+      'Это действие необратимо. Будут удалены ваш аккаунт, ваши магазины и все данные в них: товары, продажи, клиенты, долги и отчёты.';
+
+  @override
+  String get deleteAccountPasswordLabel => 'Введите пароль для подтверждения';
+
+  @override
+  String get deleteAccountConfirmButton => 'Удалить аккаунт навсегда';
+
+  @override
+  String get deleteAccountSuccess => 'Аккаунт удалён';
+
+  @override
+  String get deleteAccountStaffRemain =>
+      'В магазине остались сотрудники. Удалите их или передайте магазин, затем повторите.';
+
+  @override
+  String get deleteAccountWrongPassword => 'Неверный пароль';
+
+  @override
   String get subscriptionFeatureSalesReport => 'Отчёт продаж';
 
   @override

@@ -1,5 +1,9 @@
 import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  INestApplication,
+} from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { UsersService } from '../src/modules/users/users.service';
@@ -92,9 +96,17 @@ describe('account deletion', () => {
     });
 
     const service = app.get(UsersService);
-    await expect(
-      service.deleteAccount(owner.id, 'correct-password'),
-    ).rejects.toThrow(/staff/i);
+    // The status code is load-bearing, not just the wording: the mobile client
+    // tells "you still have staff" (400) apart from "wrong password" (403) by
+    // status alone, because the exception's message never reaches the UI.
+    const thrown = await service
+      .deleteAccount(owner.id, 'correct-password')
+      .then(
+        () => null,
+        (e: unknown) => e,
+      );
+    expect(thrown).toBeInstanceOf(BadRequestException);
+    expect((thrown as BadRequestException).getStatus()).toBe(400);
 
     // The guard must leave everything standing, not half-delete.
     expect(
@@ -115,9 +127,17 @@ describe('account deletion', () => {
     });
 
     const service = app.get(UsersService);
-    await expect(
-      service.deleteAccount(user.id, 'wrong-password'),
-    ).rejects.toThrow(/password/i);
+    // 403, deliberately not 401: the client's Dio interceptor treats any 401 as
+    // an expired token, so it would refresh and replay the DELETE. See the
+    // reasoning on UsersService.deleteAccount.
+    const thrown = await service
+      .deleteAccount(user.id, 'wrong-password')
+      .then(
+        () => null,
+        (e: unknown) => e,
+      );
+    expect(thrown).toBeInstanceOf(ForbiddenException);
+    expect((thrown as ForbiddenException).getStatus()).toBe(403);
 
     expect(
       await prisma.user.findUnique({ where: { id: user.id } }),

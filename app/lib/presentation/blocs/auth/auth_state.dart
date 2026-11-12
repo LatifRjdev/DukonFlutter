@@ -20,6 +20,11 @@ class AuthAuthenticated extends AuthState {
 
 class AuthUnauthenticated extends AuthState {}
 
+/// The account was deleted. Emitted just before [AuthUnauthenticated] so the
+/// screen can confirm it and navigate, while anything watching for a plain
+/// sign-out still sees the state it expects.
+class AuthAccountDeleted extends AuthState {}
+
 class AuthFailure extends AuthState {
   final AppMessage message;
   const AuthFailure(this.message);

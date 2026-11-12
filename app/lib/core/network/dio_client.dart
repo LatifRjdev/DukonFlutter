@@ -53,8 +53,12 @@ class DioClient {
     Options? options,
   }) => _dio.put<T>(path, data: data, options: options);
 
+  // `data` mirrors post/put. DELETE with a body is unusual but needed here:
+  // deleting an account requires re-confirming the password, and a secret does
+  // not belong in a query string, where it would land in server access logs.
   Future<Response<T>> delete<T>(
     String path, {
+    dynamic data,
     Options? options,
-  }) => _dio.delete<T>(path, options: options);
+  }) => _dio.delete<T>(path, data: data, options: options);
 }

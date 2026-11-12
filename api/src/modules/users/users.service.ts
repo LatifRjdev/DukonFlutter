@@ -2,7 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -83,9 +83,19 @@ export class UsersService {
    * else's workplace without warning is not a safe default, and the owner can
    * resolve it themselves by removing the staff or handing the store over.
    *
-   * Wrong password raises 401 rather than the 400 `changePassword` uses for
-   * the same check: the client has to tell "you typed it wrong" apart from
-   * "you still have staff", and a status code is the only signal it gets.
+   * Wrong password raises 403, not 401 and not the 400 `changePassword` uses
+   * for the same check. The client has to tell "you typed it wrong" apart from
+   * "you still have staff", and the status code is the only signal it gets —
+   * the exception's `message` is diagnostic and never reaches the UI.
+   *
+   * 401 is specifically wrong here even though "wrong password" sounds like it.
+   * The mobile client's Dio interceptor treats any 401 as an expired access
+   * token: it silently refreshes and REPLAYS the request. The refresh succeeds
+   * (this user's session is perfectly valid — they just mistyped), so a typo
+   * would fire a pointless second DELETE, and a refresh that happened to fail
+   * would sign the user out for mistyping a password. 403 means "authenticated,
+   * but this is refused", which is exactly the case, and no interceptor
+   * touches it.
    */
   async deleteAccount(userId: string, password: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
@@ -96,7 +106,7 @@ export class UsersService {
     if (!user) throw new NotFoundException('User not found');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new UnauthorizedException('Password is incorrect');
+    if (!isMatch) throw new ForbiddenException('Password is incorrect');
 
     const blockingStaff = await this.prisma.staff.findFirst({
       where: {

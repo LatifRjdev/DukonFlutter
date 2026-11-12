@@ -235,4 +235,37 @@ void main() {
       expect(find.text('БИЗНЕС до 30.03.2026'), findsNothing);
     });
   });
+  group('SettingsPage — account deletion entry', () {
+    // Google Play requires the deletion path to be reachable from inside the
+    // app. The settings golden does not cover this: it captures a fixed
+    // viewport and the entry sits below the fold, so the golden is byte-for-
+    // byte identical with and without it. This test is the only thing that
+    // would notice the entry disappearing.
+    testWidgets('should offer account deletion below the logout button',
+        (tester) async {
+      when(() => storeBloc.state).thenReturn(
+        StoreLoaded(
+          stores: [_store(ownerId: user.id)],
+          selectedStore: _store(ownerId: user.id),
+        ),
+      );
+      when(() => subscriptionBloc.state).thenReturn(SubscriptionInitial());
+
+      await pumpPageWithTheme(
+        tester,
+        page(),
+        brightness: Brightness.light,
+        wrap: wrapWithBlocs,
+        size: const Size(412, 900),
+      );
+
+      // Both live at the very bottom of the page, past the subscription card.
+      await tester.drag(find.byType(ListView), const Offset(0, -2000));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Удалить аккаунт'), findsOneWidget);
+      expect(find.text('Выйти из аккаунта'), findsOneWidget);
+    });
+  });
+
 }

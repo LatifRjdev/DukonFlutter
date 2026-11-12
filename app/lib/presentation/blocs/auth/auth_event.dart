@@ -41,6 +41,15 @@ class AuthRegisterRequested extends AuthEvent {
 
 class AuthLogoutRequested extends AuthEvent {}
 
+/// Deletes the account outright, password-confirmed. Not a variant of logout:
+/// it destroys the account server-side and wipes this device's cached data.
+class AuthAccountDeletionRequested extends AuthEvent {
+  final String password;
+  const AuthAccountDeletionRequested(this.password);
+  @override
+  List<Object?> get props => [password];
+}
+
 class AuthSendOtpRequested extends AuthEvent {
   final String phone;
   const AuthSendOtpRequested({required this.phone});

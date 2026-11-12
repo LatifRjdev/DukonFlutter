@@ -35,6 +35,7 @@ class _FakeDioClient extends Fake implements DioClient {
   @override
   Future<Response<T>> delete<T>(
     String path, {
+    dynamic data,
     Options? options,
   }) async {
     deleteCallCount++;

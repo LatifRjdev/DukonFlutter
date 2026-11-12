@@ -1,17 +1,30 @@
+import 'package:sqflite/sqflite.dart';
+
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/local/auth_local_datasource.dart';
+import '../datasources/local/cart_local_datasource.dart';
 import '../datasources/remote/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
   final AuthLocalDatasource _localDatasource;
 
+  /// Only [deleteAccount] uses these two: an account that no longer exists on
+  /// the server must not leave its products, sales and cart behind on the
+  /// device. Ordinary logout deliberately keeps them.
+  final Database _database;
+  final CartLocalDatasource _cart;
+
   AuthRepositoryImpl({
     required AuthRemoteDatasource remoteDatasource,
     required AuthLocalDatasource localDatasource,
+    required Database database,
+    required CartLocalDatasource cart,
   })  : _remoteDatasource = remoteDatasource,
-        _localDatasource = localDatasource;
+        _localDatasource = localDatasource,
+        _database = database,
+        _cart = cart;
 
   @override
   Future<({User user, String accessToken, String refreshToken})> register({
@@ -76,6 +89,48 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (_) {
       // Ignore remote logout errors; always clear local state.
     }
+    await _localDatasource.deleteTokens();
+    await _localDatasource.deleteUser();
+  }
+
+  @override
+  Future<void> deleteAccount(String password) async {
+    // Deliberately NOT wrapped in a catch, unlike logout. Logout can ignore a
+    // server error because the local session is the thing being ended either
+    // way. Here the server is the only thing that can actually delete the
+    // account, so if it refuses — wrong password, staff still in a store — the
+    // user has to stay signed in with everything intact and see why.
+    await _remoteDatasource.deleteAccount(password);
+
+    // Past this point the account is gone server-side, so every step below is
+    // best-effort cleanup: failing here must not leave the user staring at an
+    // error for an account that no longer exists.
+    try {
+      // The live schema is created in injection.dart's _initDatabase: products,
+      // sales, categories and the sync queue. Read from sqlite_master rather
+      // than hardcoded, because a hardcoded list silently stops covering any
+      // table added later and the failure mode is a deleted account's business
+      // data sitting on the device, which nothing fails loudly about.
+      final tables = await _database.query(
+        'sqlite_master',
+        columns: ['name'],
+        where: "type = 'table' AND name NOT LIKE 'sqlite_%' "
+            "AND name NOT LIKE 'android_%'",
+      );
+      final batch = _database.batch();
+      for (final row in tables) {
+        batch.execute('DELETE FROM "${row['name'] as String}"');
+      }
+      await batch.commit(noResult: true);
+    } catch (_) {
+      // A wipe that fails is bad but not worth blocking sign-out over.
+    }
+    try {
+      await _cart.clear();
+    } catch (_) {
+      // Same.
+    }
+
     await _localDatasource.deleteTokens();
     await _localDatasource.deleteUser();
   }
