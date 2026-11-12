@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  CANVAS, CENTRE, PLATE_RADIUS, MARK_SCALE, MARK_PATH, GRADIENT_ID,
+  CANVAS, CENTRE, PLATE_RADIUS, MARK_SCALE, MARK_PATH, GRADIENT, GRADIENT_ID,
   gradientDef, markSvg, plateSvg, iconSvg,
 } from './geometry.mjs';
 import { outline, CAP_RATIO } from './wordmark.mjs';
@@ -102,3 +102,78 @@ console.log('png   icon, adaptive_bg, adaptive_fg, monochrome, ios_dark, ios_tin
 await png(iconSvg(), 512).flatten({ background: '#FFFFFF' }).toFile(resolve(ANDROID_FASTLANE, 'icon.png'));
 await png(iconSvg(), 1024).flatten({ background: '#FFFFFF' }).toFile(resolve(IOS_FASTLANE, 'icon.png'));
 console.log('png   fastlane icon (android 512, ios 1024)');
+
+// ---- Play Store feature graphic -----------------------------------------
+// Exactly 1024x500 and opaque — Google Play rejects any other size and does
+// not accept an alpha channel.
+//
+// Composition is centred with wide margins on purpose. Play crops this to
+// different aspect ratios across its surfaces and, where the listing has a
+// promo video, overlays a play button over the middle. Anything near an edge
+// is liable to be cut; anything small in the dead centre is liable to be
+// covered. So: one centred lockup, large, with nothing in the corners.
+//
+// The tagline is lifted verbatim from the first clause of the store listing's
+// own short_description.txt rather than written fresh, so the graphic cannot
+// drift from the approved copy. It is set in the TEXT face — the wordmark
+// face has no Cyrillic and would render it blank.
+const FEATURE = { w: 1024, h: 500 };
+
+function featureGraphicSvg() {
+  const iconSize = 132;
+  const typeSize = 86;
+  const tagSize = 30;
+  const gap = 28;
+  const tagGap = 34;
+
+  const duk = outline('Dukon', typeSize, L.track);
+  const pro = outline('Pro', typeSize, L.track);
+  const tag = outline('Касса и учёт магазина', tagSize, 0, 'text');
+
+  const lockupW = iconSize + gap + duk.width + pro.width;
+  const lockupX = (FEATURE.w - lockupW) / 2;
+  // The whole block (lockup + tagline) is centred vertically as one unit,
+  // rather than centring the lockup and letting the tagline push it off.
+  const blockH = iconSize + tagGap + tagSize;
+  const top = (FEATURE.h - blockH) / 2;
+  const capH = CAP_RATIO * typeSize;
+  const typeBaseline = top + iconSize / 2 + capH / 2;
+  const tagBaseline = top + iconSize + tagGap + tagSize * 0.72;
+
+  const plate =
+    `<rect width="${CANVAS}" height="${CANVAS}" rx="${PLATE_RADIUS}" fill="#FFFFFF" fill-opacity="0.14"/>` +
+    `<g transform="translate(${CENTRE},${CENTRE}) scale(${MARK_SCALE}) translate(-${CENTRE},-${CENTRE})">` +
+    `<path fill="#FFFFFF" fill-rule="evenodd" d="${MARK_PATH}"/></g>`;
+
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${FEATURE.w}" height="${FEATURE.h}" ` +
+    `viewBox="0 0 ${FEATURE.w} ${FEATURE.h}">` +
+    `<defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">` +
+    GRADIENT.map(
+      (g) => `<stop offset="${g.offset}" stop-color="${g.color}"/>`,
+    ).join('') +
+    `</linearGradient></defs>` +
+    `<rect width="${FEATURE.w}" height="${FEATURE.h}" fill="url(#fg)"/>` +
+    `<g transform="translate(${lockupX},${top}) scale(${iconSize / CANVAS})">${plate}</g>` +
+    `<g transform="translate(${lockupX + iconSize + gap},${typeBaseline})">` +
+    `<path fill="#FFFFFF" d="${duk.d}"/>` +
+    `<g transform="translate(${duk.width},0)">` +
+    `<path fill="#FFFFFF" fill-opacity="0.82" d="${pro.d}"/></g>` +
+    `</g>` +
+    `<g transform="translate(${(FEATURE.w - tag.width) / 2},${tagBaseline})">` +
+    `<path fill="#FFFFFF" fill-opacity="0.88" d="${tag.d}"/></g>` +
+    `</svg>`
+  );
+}
+
+const featureSvg = featureGraphicSvg();
+if (featureSvg.includes('NaN')) {
+  throw new Error('featureGraphic contains NaN — refusing to write');
+}
+writeFileSync(resolve(BRAND, 'feature-graphic.svg'), featureSvg);
+await sharp(Buffer.from(featureSvg), { density: 144 })
+  .resize(FEATURE.w, FEATURE.h)
+  .flatten({ background: '#6366F1' })
+  .png()
+  .toFile(resolve(ANDROID_FASTLANE, 'featureGraphic.png'));
+console.log('png   fastlane featureGraphic (1024x500)');

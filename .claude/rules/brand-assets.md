@@ -12,8 +12,8 @@ globs: "scripts/brand/**/*.mjs,app/assets/icon/**,app/assets/brand/**,app/flutte
 - `scripts/brand/render.mjs` derives every asset from `geometry.mjs`:
   the SVGs in `app/assets/brand/`, the PNG inputs in `app/assets/icon/`,
   the admin panel's `admin/app/icon.svg` / `admin/public/brand-icon.svg`,
-  and the fastlane store-listing icons. It is the only thing that writes
-  any of them.
+  the fastlane store-listing icons, and the Play Store feature graphic.
+  It is the only thing that writes any of them.
 - After any change, run this exact sequence:
   ```
   cd scripts/brand && npm test && npm run render && npm run verify
@@ -42,6 +42,22 @@ globs: "scripts/brand/**/*.mjs,app/assets/icon/**,app/assets/brand/**,app/flutte
   went wrong. Discard that one file after running the sequence above
   (`git checkout -- app/web/index.html`) unless you genuinely changed the splash
   markup. Every other output of that command is deterministic.
+- **Trap: Plus Jakarta Sans has no Cyrillic.** `wordmark.mjs` exposes two
+  faces — `display` (Plus Jakarta Sans ExtraBold, the wordmark face) and
+  `text` (Inter SemiBold, which the app already ships). Any Russian, Tajik or
+  Uzbek string in a rendered asset must pass `'text'` as `outline`'s fourth
+  argument. Asking the display face for Cyrillic used to produce .notdef for
+  every letter and draw *nothing* — no error from fontkit, sharp or librsvg,
+  exactly the silent-wrong-output failure that made us drop opentype.js.
+  `outline` now throws on an uncovered character, and `verify.mjs` separately
+  checks that the feature graphic's tagline band is not blank.
+- The Play Store feature graphic is `featureGraphic.png` under the ru-RU
+  fastlane images directory: exactly 1024x500, opaque, under 15 MB — Play
+  rejects the upload on any of the three. Its tagline is lifted verbatim from
+  the first clause of `short_description.txt`, so edit that file rather than
+  the graphic. Composition stays centred with wide margins because Play crops
+  this to several aspect ratios and overlays a play button over the middle
+  when the listing has a video.
 - **Trap:** `adaptive_icon_foreground_inset` in `app/flutter_launcher_icons.yaml`
   must stay `0`. The package default is 16 (`android:inset="16%"` on both
   foreground and monochrome), and the mark already carries `scale(0.89)` for

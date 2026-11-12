@@ -113,3 +113,48 @@ test('width reflects GPOS kerning, not bare glyph.advanceWidth', () => {
     'width matches the UNkerned sum — looks like xAdvance was swapped for advanceWidth',
   );
 });
+
+// --- Second face -----------------------------------------------------------
+// The feature graphic needs a Russian tagline, and the wordmark face cannot
+// set one: Plus Jakarta Sans ships no Cyrillic. fontkit does not complain
+// about that — it substitutes .notdef and returns a path — so the only sign
+// would be a blank word in a published store asset. These pin the guard.
+
+test('the display face refuses Cyrillic instead of rendering it blank', () => {
+  assert.throws(
+    () => outline('Касса', 40, 0, 'display'),
+    /no glyph for/,
+    'Plus Jakarta Sans has no Cyrillic; this must fail loudly, not silently',
+  );
+});
+
+test('the text face sets Cyrillic', () => {
+  const { d, width } = outline('Касса и учёт магазина', 40, 0, 'text');
+  assert.ok(!d.includes('NaN'), 'path data contains NaN');
+  assert.ok(d.startsWith('M'), 'path data should start with a moveto');
+  assert.ok(width > 0, `expected a positive width, got ${width}`);
+});
+
+test('the text face still measures against its own unitsPerEm', () => {
+  // Inter and Plus Jakarta Sans have different UPMs, so a hardcoded module
+  // constant would silently mis-scale every string set in the second face.
+  const inter = fontkit.openSync(
+    resolve(import.meta.dirname, '../../app/assets/fonts/Inter-SemiBold.ttf'),
+  );
+  const size = 40;
+  const run = inter.layout('Касса');
+  const expected =
+    run.positions.reduce((sum, p) => sum + p.xAdvance, 0) *
+    (size / inter.unitsPerEm);
+  const { width } = outline('Касса', size, 0, 'text');
+  assert.ok(
+    Math.abs(width - expected) < 1e-6,
+    `expected ${expected}, got ${width}`,
+  );
+});
+
+test('the default face is still the wordmark face', () => {
+  const explicit = outline('DukonPro', 40, 0, 'display').width;
+  const implied = outline('DukonPro', 40, 0).width;
+  assert.equal(implied, explicit);
+});

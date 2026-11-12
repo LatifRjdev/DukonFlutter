@@ -1,7 +1,7 @@
 // Asserts the generated asset set. Exits non-zero on the first failure.
 // Run after render.mjs and after flutter_launcher_icons.
 import sharp from 'sharp';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SAFE_RADIUS, CANVAS, iconSvg } from './geometry.mjs';
 
@@ -73,6 +73,59 @@ async function expectAlpha(rel, wanted) {
   const m = await sharp(file).metadata();
   if (!!m.hasAlpha !== wanted) {
     fail(`${rel}: expected hasAlpha=${wanted}, got ${!!m.hasAlpha}`);
+  }
+}
+
+async function expectUnderBytes(rel, limit) {
+  const file = p(rel);
+  if (!existsSync(file)) return fail(`missing: ${rel}`);
+  const { size } = statSync(file);
+  if (size > limit) {
+    fail(`${rel}: ${size} bytes exceeds the ${limit}-byte limit`);
+  }
+}
+
+/**
+ * Asserts that a horizontal band of the image contains pixels markedly
+ * lighter than the band's own background — i.e. that something was drawn
+ * there.
+ *
+ * Written for the feature graphic's tagline. Plus Jakarta Sans has no
+ * Cyrillic, so setting that line in the wrong face yields .notdef for every
+ * letter and draws nothing, with no error from fontkit, sharp or librsvg.
+ * wordmark.mjs now throws on that, but this is the check that would notice if
+ * the guard were ever removed or the text swapped for an uncovered script.
+ *
+ * Compares against the band's own mean rather than a fixed threshold, because
+ * the background is a gradient and its brightness differs top to bottom.
+ */
+async function expectInkInBand(rel, fromY, toY) {
+  const file = p(rel);
+  if (!existsSync(file)) return fail(`missing: ${rel}`);
+  const img = sharp(file).removeAlpha();
+  const { width, height } = await img.metadata();
+  const top = Math.round(height * fromY);
+  const bandH = Math.round(height * toY) - top;
+  const { data } = await sharp(file)
+    .removeAlpha()
+    .extract({ left: 0, top, width, height: bandH })
+    .greyscale()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  let sum = 0;
+  for (const v of data) sum += v;
+  const mean = sum / data.length;
+  // White text on the brand gradient lands far above the local mean; the
+  // bare gradient has no such pixels at all.
+  const ink = data.reduce((n, v) => n + (v > mean + 40 ? 1 : 0), 0);
+  const ratio = ink / data.length;
+  if (ratio < 0.005) {
+    fail(
+      `${rel}: band ${fromY}-${toY} of the height is blank (${(ratio * 100).toFixed(3)}% ` +
+        `bright pixels). The tagline did not render — most likely set in a face ` +
+        `with no glyphs for it.`,
+    );
   }
 }
 
@@ -200,6 +253,21 @@ await expectBrandColoured('app/android/fastlane/metadata/android/ru-RU/images/ic
 await expectSize('app/ios/fastlane/metadata/ru-RU/icon.png', 1024, 1024);
 await expectAlpha('app/ios/fastlane/metadata/ru-RU/icon.png', false);
 await expectBrandColoured('app/ios/fastlane/metadata/ru-RU/icon.png');
+
+// Play Store feature graphic. Google Play rejects anything that is not
+// exactly 1024x500, rejects an alpha channel, and caps the file at 15 MB.
+// Each is a hard upload failure, so each is checked rather than assumed.
+const FEATURE_GRAPHIC =
+  'app/android/fastlane/metadata/android/ru-RU/images/featureGraphic.png';
+await expectSize(FEATURE_GRAPHIC, 1024, 500);
+await expectAlpha(FEATURE_GRAPHIC, false);
+await expectBrandColoured(FEATURE_GRAPHIC);
+await expectUnderBytes(FEATURE_GRAPHIC, 15 * 1024 * 1024);
+// The tagline is the reason this file needs a second font face, and a missing
+// glyph renders as nothing at all rather than as an error. A graphic with the
+// words silently dropped would still be 1024x500, still opaque and still the
+// right hue — so the only way to catch it here is to look for the ink.
+await expectInkInBand(FEATURE_GRAPHIC, 0.66, 0.84);
 
 if (failures.length) {
   console.error(`\n${failures.length} check(s) failed:\n`);
