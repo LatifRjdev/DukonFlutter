@@ -9,8 +9,39 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
-        tools:targetApi="s"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+        tools:targetApi="s"
+        tools:node="replace"/>
+
+    <!--
+      Location: capped at Android 11, and `tools:node="replace"` is doing real
+      work here — do not drop either.
+
+      Nothing in this app reads location. There is no geolocation package and
+      no call site. BLE scanning on Android 11 and below simply could not find
+      a printer without a location permission; from Android 12 the
+      `neverForLocation` flag on BLUETOOTH_SCAN above covers that instead.
+
+      The problem is bluetooth_print_plus. Its own manifest declares
+      ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION and a BLUETOOTH_SCAN with
+      no `neverForLocation`, all uncapped. Without `tools:node="replace"` the
+      merger takes the library's unrestricted version, and a merged manifest
+      from an earlier build confirms it: COARSE_LOCATION appeared in the
+      shipped permission set even though this file never mentioned it.
+
+      Shipping that means asking every user for precise location to print a
+      receipt, and Play requires a Location Permissions Declaration for an app
+      that requests it — one this app cannot honestly fill in, because it
+      never uses the data.
+
+      COARSE is declared here only so there is something to replace the
+      library's copy with; the app does not want it on any version.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30"
+        tools:node="replace"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30"
+        tools:node="replace"/>
 
     <!-- Notifications -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
